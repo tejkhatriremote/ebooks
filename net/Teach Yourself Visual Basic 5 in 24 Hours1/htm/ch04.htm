@@ -1,0 +1,964 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch03.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch05.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 4</A>
+	<UL>
+		<LI><A HREF="#Heading2">Examining Labels, Buttons, and Text Boxes</A>
+		<UL>
+			<LI><A HREF="#Heading3">Control Focus</A>
+			<UL>
+				<LI><A HREF="#Heading4">Figure 4.1.</A>
+				<LI><A HREF="#Heading5">Figure 4.2.</A>
+			</UL>
+			<LI><A HREF="#Heading6">The Mouse and Hotkeys Need No Focus</A>
+			<LI><A HREF="#Heading7">Related Properties</A>
+			<LI><A HREF="#Heading8">Tab Order</A>
+			<LI><A HREF="#Heading9">Command Buttons</A>
+			<LI><A HREF="#Heading10">Labels</A>
+			<UL>
+				<LI><A HREF="#Heading11">Figure 4.3.</A>
+				<LI><A HREF="#Heading12">Figure 4.4.</A>
+				<LI><A HREF="#Heading13">Figure 4.5.</A>
+				<LI><A HREF="#Heading14">Figure 4.6.</A>
+			</UL>
+			<LI><A HREF="#Heading15">Text Boxes</A>
+			<UL>
+				<LI><A HREF="#Heading16">Figure 4.7.</A>
+				<LI><A HREF="#Heading17">Figure 4.8.</A>
+			</UL>
+			<LI><A HREF="#Heading18">Form Properties</A>
+			<LI><A HREF="#Heading19">Summary</A>
+			<LI><A HREF="#Heading20">Q&amp;A</A>
+			<LI><A HREF="#Heading21">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading22">Quiz</A>
+				<LI><A HREF="#Heading23">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 4</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Examining Labels,
+Buttons, and Text Boxes</FONT></H2>
+<P>It's time to get serious about controls! This lesson dives deeply into the three
+most common controls and explains how you can use them and manage them in your applications.
+By the time you complete this lesson, you will have mastered labels, command buttons,
+and text boxes. In addition, you will learn more about how to properly set up a form.</P>
+<P>You'll place labels on forms to display information. Command buttons give the
+user pushbutton control within applications. Text boxes get information from the
+user and process that information inside the program.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>How to set up focus order
+	<P>
+	<LI>When the Cancel property triggers events
+	<P>
+	<LI>How to set a command button's Default property
+	<P>
+	<LI>Which common properties are important
+	<P>
+	<LI>How to adjust label sizes for long text values
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">Control Focus</FONT></H3>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>The currently active control
+at runtime has the focus.</P>
+<P>Before looking at this lesson's three controls, you need to master the concept
+of focus. Focus is a runtime concept. At runtime, only one window, form (which appears
+as a window), or control can have the focus. The window or form currently in focus
+is the form whose title bar is highlighted (typically colored blue). The control
+with the current focus has an outlined border or caption.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Don't confuse
+	focus with a selected control. At design time you select controls by clicking them
+	to display their sizing handles. At runtime, one control always has the focus, and
+	users can change the focus by pressing Tab or Shift+Tab. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Focus is important because the focus determines what the next keystroke or Enter
+keypress will activate. For example, consider the screen shown in Figure 4.1. The
+figure shows a VB session with several windows, including two windows from the executing
+program. The center window is the window with the focus, and you know so because
+of the highlighted title bar. Therefore, the center window is the window that receives
+keystrokes if and when the user presses a key.</P>
+<P>Only one control on the active window can have the focus. The check box labeled
+AutoSize has the current focus. Notice the outline around the control. In other words,
+despite the other windows on the screen at the time, if the user presses Enter under
+Figure 4.1's circumstances, the check box receives that Enter keystroke. If you understand
+the way check boxes work, you know that a check box is either checked or unchecked,
+meaning that the control determines one of two states. If the user presses Enter,
+the AutoSize check box will turn to unchecked.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Of course the
+	user can click the AutoSize check box to uncheck the control. In addition, the user
+	can click any control in any window on the screen and that control would receive
+	the click. Focus refers to a window's and control's capability to receive keystrokes.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><A NAME="Heading4"></A><A HREF="../art/ch04/04cce01.jpg"><FONT COLOR="#000077">Figure
+4.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>Learning to spot windows and controls
+with the focus. </I><BR>
+<BR>
+Different controls display the focus in different ways. Only one of Figure 4.2's
+seven command buttons can have the focus at any one time. Can you spot the command
+button that has the focus? The extra dotted outline around the Images command button
+lets you know that the Images command button has the focus and that command button
+will receive an Enter keypress if the user presses Enter.<BR>
+<BR>
+<A NAME="Heading5"></A><A HREF="../art/ch04/04cce02.jpg"><FONT COLOR="#000077">Figure
+4.2.</FONT></A><FONT COLOR="#000077"> </FONT><I>One of these seven command buttons
+has the focus.</I>
+<H3 ALIGN="CENTER"><A NAME="Heading6"></A><FONT COLOR="#000077">The Mouse and Hotkeys
+Need No Focus</FONT></H3>
+<P>As stated earlier, a mouse click does not have to worry about focus. Wherever
+the user clicks, the mouse gets the mouse click no matter which window and control
+had the focus before the click. In addition, within the active window, the user can
+select any control by pressing that control's hotkey. For example, with Figure 4.2
+showing, the user could press Alt+X to select the command button labeled Text Box
+even though the command button labeled Images has the focus.</P>
+<P>An Enter keypress has no inherent location. Without focus, Windows would have
+no way to determine where or what the Enter keypress is to activate. With a hotkey,
+Windows keeps the hotkey possibility within the window with the focus. In other words,
+if two windows appear on your screen and both contain controls with Alt+S keystrokes,
+only the active window with the current focus would receive and respond to Alt+S.</P>
+<P>The mouse is inherently directional as well as functional. When you click the
+mouse button over any window's control on the screen, Windows knows for certain that
+you wanted to click over that control. No ambiguity can exist as could happen with
+the Enter key. Therefore, focus does not apply to the mouse.
+<H3 ALIGN="CENTER"><A NAME="Heading7"></A><FONT COLOR="#000077">Related Properties</FONT></H3>
+<P>A command button's Cancel property relates somewhat to focus. Whereas the focus
+determines which control gets the Enter keypress, a command button's Cancel property
+determines which command button gets a simulated Click event when the user presses
+the Esc key.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Often, a command
+	button used to exit an application or close a dialog box has its Cancel property
+	set to True. Therefore, you can close such applications or dialog boxes by clicking
+	the command button or by pressing Esc. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A command button's Default property also relates somewhat to focus. When a form
+first appears, the command button with the Default property of True receives the
+Click event when the user presses Enter. Another control might have the focus at
+that time, but if a command button has a Default property value of True, that button
+receives a Click event if the user presses Enter unless the user moves the focus
+to another command button before pressing Enter. Only one command button can have
+a Default value of True at any one time. As soon as you assign a command button's
+Default value True, either at design time or at runtime, any other command button
+on the form with a True Default value immediately changes to False. Therefore, Visual
+Basic protects a form's integrity by ensuring that only one command button can have
+a True Default value at any one time.
+<H3 ALIGN="CENTER"><A NAME="Heading8"></A><FONT COLOR="#000077">Tab Order</FONT></H3>
+<P>The user can move the focus from control to control by pressing Tab (or Shift+Tab
+to move the focus backward). If you place eight controls on an application's form,
+what focus order will result? In other words, as the user presses Tab, will the controls
+get the focus from a left-to-right or from a top-to-bottom order?</P>
+<P>VB sets the default focus order in the order you place controls on the form. Therefore,
+if you place the top control first and the bottom control second, and then insert
+a third control in the middle of the form, the focus order will not move down the
+form in the order the user probably expects.</P>
+<P>You do not always place controls on a form in the same order in which you want
+to set the focus. Therefore, controls that can receive the focus support a property
+called the TabIndex property. The first control in the focus order has a TabIndex
+property of 0, the second control in the focus order has a TabIndex of 1, and so
+on. If you place controls on the form and then later want to modify the focus order,
+you need to change the controls' TabIndex property values.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Not all controls
+	can actually accept the focus. For example, a label cannot receive keystrokes, so
+	a label never gets the focus. The Label control does include the TabIndex property,
+	however. By setting the label's TabIndex value to one more than a text box next to
+	the label, you can add a hotkey to the label's Caption property, and the user then
+	has a way to hotkey to the text box. Text boxes do not support hotkey keystrokes
+	by themselves. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading9"></A><FONT COLOR="#000077">Command Buttons</FONT></H3>
+<P>Command buttons appear in almost every window of every Windows application. Command
+buttons determine when the user wants to do something, such as exit the application
+or begin printing. In almost every case, you will perform these tasks to add a command
+button to an application:
+
+<DL>
+	<DD><B>1. </B>Locate and size the command button on the form.<BR>
+	<B><BR>
+	2.</B> Change the command button's Name and Caption properties. (The Caption property
+	holds the text that appears on the command button.)<BR>
+	<B><BR>
+	3.</B> Add code to the command button's Click event procedure.
+</DL>
+
+<P>Although the command button control supports 36 properties, you'll only set the
+Name and Caption properties in most cases. In addition, although command button controls
+support 15 events, you'll only write code for the Click event in most cases. After
+all, a command button resides on most forms just so the user can click the button
+to trigger some event that the user is ready to start.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>By the way,
+	you can set some properties only at design time (such as a control's Name property),
+	you can set some properties both at design time and at runtime inside event procedures
+	and other module code (such as a caption), and you can set some properties only at
+	runtime from within the program (such as a list box's entries). All of a control's
+	properties that appear in the Properties window are settable at design time, and
+	some of those you can set at runtime as well. As you learn more about Visual Basic,
+	you will become familiar with the properties you can set only at runtime. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Although you'll set the command button's Name and Caption properties most of the
+time, setting the Caption property often requires that you change the font to increase
+or decrease the text size and style on the caption. Of course, you might want to
+center the caption text or, perhaps, left-justify or right-justify the text, so you
+also might need to change the Alignment property. In reality, you'll also set the
+Left, Height, Top, and Width properties when you size and locate the command button
+because, as you learned in Hour 3, &quot;Controls and Properties,&quot; these properties
+update automatically when you place and size controls.</P>
+<P>As you can see, although you only seem to set a couple properties for most controls,
+the other properties really do play important roles, and you'll almost always end
+up setting several properties to finalize your application. Table 4.1 lists some
+of the most common command button properties that you'll set.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>An icon is a small graphical
+image, stored in a file with the .ICO filename extension, that often appears on toolbar
+buttons.</P>
+<CENTER>
+<P><B>Table 4.1. Common command button properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BackColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the command button's background color. Click the BackColor's palette down
+			arrow to see a list of colors and click Categorized to see a list of common Windows
+			control colors. Before the command button displays the background color, you must
+			change the Style property from 0-Standard to 1-Graphical.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Cancel</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the command button gets a Click event if the user presses Esc.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Caption</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the text that appears on the command button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Default</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines if the command button responds to an Enter keypress even if another control
+			has the focus.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Enabled</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the command button is active. Often, you'll change the Enabled
+			property at runtime with code when a command button is no longer needed and you want
+			to gray out the command button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Font</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Produces a Font dialog box in which you can set the caption's font name, style, and
+			size.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Height</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the height of the command button in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Left</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the command button's left edge to the Form window's
+			left edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MousePointer</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the shape of the mouse cursor when the user moves the mouse over the command
+			button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Picture</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the name of an icon graphic image that appears on the command button as long
+			as the Style property is set to 1-Graphical.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Style</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the command button appears as a standard Windows command button
+			(if set to 0-Standard) or a command button with a color and possible picture (if
+			set to 1-Graphical).</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">TabIndex</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the order of the command button in the focus order.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">TabStop</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the command button can receive the focus.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ToolTipText</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the text that appears as a tooltip at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Top</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the command button's top edge to the Form window's
+			top edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Visible</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the command button appears or is hidden from the user. (Invisible
+			controls cannot receive the focus until the running code changes the Visible property
+			to True.)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Width</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the width of the command button in twips.</TD>
+	</TR>
+</TABLE>
+
+</CENTER>
+<CENTER>
+<H3><A NAME="Heading10"></A><FONT COLOR="#000077">Labels</FONT></H3>
+</CENTER>
+<P>Labels hold the primary text that appears on a form. Often, programmers use labels
+to place titles around the form and to label text boxes so users know what to type
+into the text box. Visual Basic supports several other ways to put text on forms,
+but when you use the Label control, your code can subsequently, at runtime, change
+the label's text so that different messages can appear when needed. Figure 4.3 shows
+a Form window that contains a label used for the application's title.<BR>
+<BR>
+<A NAME="Heading11"></A><A HREF="../art/ch04/04cce03.jpg"><FONT COLOR="#000077">Figure
+4.3.</FONT></A><FONT COLOR="#000077"> </FONT><I>A label forms the title on this form.
+</I><BR>
+<BR>
+When you place labels on a form, you'll almost always set the Label control's Name
+property and type a new Caption value. In addition, you'll want to change the Font
+property and possibly the label's color and style. You will rarely write event procedure
+code for labels, so a label's overhead is fairly small and the programming effort
+required to manipulate labels is minimal.</P>
+<P>Table 4.2 lists the most common Label control properties that you'll set as you
+work with the Label control.</P>
+<CENTER>
+<P><B>Table 4.2. Common label properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Alignment</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the label's caption appears left-justified, centered, or right-justified
+			within the label's boundaries.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">AutoSize</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Enlarges the label's size properties, when True, if you assign a caption that is
+			too large to fit in the current label's boundaries at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BackColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the label's background color. Click the BackColor's palette down arrow
+			to see a list of colors and click Categorized to see a list of common Windows control
+			colors.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BackStyle</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the background shows through the label or if the label covers
+			up its background text, graphics, and color.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BorderStyle</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether a single-line border appears around the label.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Caption</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the text that appears on the label.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Enabled</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the label is active. Often, you'll change the Enabled property
+			at runtime with code when a label is no longer needed.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Font</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Produces a Font dialog box in which you can set the caption's font name, style, and
+			size.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ForeColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the color of the label's text.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Height</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the height of the label's outline in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Left</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the label's left edge to the Form window's left edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MousePointer</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the shape of the mouse cursor when the user moves the mouse over the label.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">TabIndex</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the order of the label in the focus order. Although the label cannot receive
+			the direct focus, the label can be part of the focus order.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ToolTipText</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the text that appears as a tooltip at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Top</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the label's top edge to the Form window's top edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Visible</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the label appears or is hidden from the user.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Width</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the width of the label in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">WordWrap</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the label expands to fit whatever text appears in the caption.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>Labels can present problems if they receive text that is too large for the label
+boundaries. Putting captions in labels seems easy until you think about the effects
+that can occur if the label is too large or too small to hold the text. By using
+certain property combinations, you can add automatically adjusting labels for whatever
+text the labels need to hold.</P>
+<P>Suppose that you design a label that contains this long caption:</P>
+<PRE><FONT COLOR="#0066FF">This label's caption is extremely long-winded, just like the author.
+</FONT></PRE>
+<P>A label is rarely wide enough or tall enough to hold a caption this long. If you
+attempt to type text into a label's Caption property that is longer than what fits
+within the label's size properties (Left, Height, Top, and Width), one of the following
+things can take place, depending on how you have set up the label:
+
+<UL>
+	<LI>The text might not fit inside the label, and Visual Basic truncates the text.
+	Figure 4.4 shows what can happen in this case.
+	<P>Set the AutoSize property to False if you want the label to remain the same size
+	and not resize automatically to fit the Caption property value. If the code assigns
+	long text, the label might not hold the entire caption, but the label will not expand
+	and get in the way of other controls.
+	<LI>The label automatically expands downward to hold the entire caption in a multiline
+	label. Figure 4.5 shows the result.
+</UL>
+
+<P><A NAME="Heading12"></A><A HREF="../art/ch04/04cce04.jpg"><FONT COLOR="#000077">Figure
+4.4.</FONT></A><FONT COLOR="#000077"> </FONT><I>The label cannot display the entire
+caption.</I>
+<H6></H6>
+<P><A NAME="Heading13"></A><A HREF="../art/ch04/04cce05.jpg"><FONT COLOR="#000077">Figure
+4.5.</FONT></A><FONT COLOR="#000077"> </FONT><I>The label resizes downward to hold
+the entire Caption property.</I>
+
+<UL>
+	<LI>To expand the label downward when needed to hold the caption, set both the AutoSize
+	and WordWrap properties to True. Subsequently, if the code changes the caption to
+	hold a long line of text, the label will expand to display the entire message.
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Obviously, if
+	you don't plan to change a label during a program's execution, you can size the label
+	to fit the Caption property value at design time, and you don't have to worry about
+	the AutoSize and WordWrap properties. You only need to concern yourself with these
+	properties if event procedures or other code might possibly change the label's caption.
+	
+<HR>
+<BR>
+	
+<HR>
+<A NAME="WARNING"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Set WordWrap
+	to True before you set the AutoSize property to True. If you set AutoSize first,
+	the label expands horizontally before you have a chance to set the WordWrap property.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+
+<UL>
+	<LI>The label automatically expands horizontally across the screen to hold the entire
+	caption in a long label control. Figure 4.6 shows the result.
+</UL>
+
+<P><A NAME="Heading14"></A><A HREF="../art/ch04/04cce06.jpg"><FONT COLOR="#000077">Figure
+4.6.</FONT></A><FONT COLOR="#000077"> </FONT><I>A horizontally resizing label could
+bump off other controls.</I>
+
+<DL>
+	<DD>A long label like this is not necessarily a bad label. Depending on the length
+	of the text that you assign to the label during the program's execution, there might
+	be plenty of screen space to display long labels. To automatically expand the label
+	horizontally, set the AutoSize property to True but leave WordWrap set to False.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading15"></A><FONT COLOR="#000077">Text Boxes</FONT></H3>
+</CENTER>
+<P>Text boxes accept user input. Although several other controls accept user input,
+text boxes are perhaps the easiest to set up and respond to. In addition, a text
+box is simple for your users to use, and they see text boxes on Windows forms all
+the time.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can set a default
+	value at design time or at runtime so that the user initially sees text in the text
+	box. The user can either change the default text or accept the text by pressing Enter
+	when the text box comes into focus. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 4.7 shows a running application with two text boxes that accept user input.</P>
+<P>Table 4.3 lists the common properties associated with text boxes. By familiarizing
+yourself with the properties now, you will be able to more quickly produce applications
+as you learn more about Visual Basic.<BR>
+<BR>
+<A NAME="Heading16"></A><A HREF="../art/ch04/04cce07.jpg"><FONT COLOR="#000077">Figure
+4.7.</FONT></A><FONT COLOR="#000077"><I> </I></FONT><I>Two text boxes request user
+information.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>As you are beginning
+	to see, many properties for many controls overlap. Most controls contain Left, Height,
+	Top, and Width properties as well as the Visible property. Therefore, when you learn
+	the properties for one control, you are learning properties for many other controls.
+	When you first began learning Visual Basic just a few hours ago, you may have wondered
+	how you could learn all the properties that go with all the possible Windows controls.
+	You can now see that many controls support the same properties, so learning about
+	the control properties is not as difficult of a task as it may first seem. 
+<HR>
+<BR>
+	
+<HR>
+<A NAME="WARNING"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>The Caption
+	property is the most common property that displays text on a control such as a command
+	button and a label. Text Box controls do not support the Caption property. The Text
+	property holds text for Text Box controls. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<P><B>Table 4.3. Common text box properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Alignment</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the text box's text appears left-justified, centered, or right-justified
+			within the text box's boundaries.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BackColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the text box's background color. Click the BackColor property's palette
+			down arrow to see a list of colors and click Categorized to see a list of common
+			Windows control colors.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BorderStyle</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether a single-line border appears around the text box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Enabled</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the text box is active. Often, you'll change the Enabled property
+			at runtime with code when a text box is no longer needed.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Font</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Produces a Font dialog box in which you can set the Text property's font name, style,
+			and size.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ForeColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the color of the text box's text.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Height</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the height of the text box's outline in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Left</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the text box's left edge to the Form window's left
+			edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Locked</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the user can edit the text inside the text box that appears.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MaxLength</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the number of characters the user can type into the text box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MousePointer</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the shape of the mouse cursor when the user moves the mouse over the text
+			box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MultiLine</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Lets the text box hold multiple lines of text or sets the text box to hold only a
+			single line of text. Add scrollbars if you wish to put text in a multiline text box
+			so your users can scroll through the text.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">PasswordChar</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the character that appears in the text box when the user enters a password
+			(keeps prying eyes from knowing what the user enters into a text box).</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ScrollBars</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether scrollbars appear on the edges of a multiline text box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">TabIndex</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the order of the text box in the focus order.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">TabStop</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the text box can receive the focus.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Text</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the value of the text inside the text box. The Text property changes at runtime
+			as the user types text into the text box. If you set an initial Text property value,
+			that value becomes the default value that appears in the text box when the user first
+			sees the text box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ToolTipText</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the text that appears as a tooltip at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Top</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the text box's top edge to the Form window's top edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Visible</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the text box appears or is hidden from the user.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Width</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the width of the text box in twips.</TD>
+	</TR>
+</TABLE>
+
+</CENTER>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you are unsure
+	how to use a particular control's property, click the property in the Properties
+	window and press F1 to read the online help. In addition to a detailed help screen
+	that describes the property, such as the one shown in Figure 4.8, many of the help
+	screens also contain an Example hypertext jump that shows an example of the property
+	in action. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><A NAME="Heading17"></A><A HREF="../art/ch04/04cce08.jpg"><FONT COLOR="#000077">Figure
+4.8.</FONT></A><FONT COLOR="#000077"> </FONT><I>You can press F1 to request help
+for any selected property.</I>
+<CENTER>
+<H3><A NAME="Heading18"></A><FONT COLOR="#000077">Form Properties</FONT></H3>
+</CENTER>
+<P>Forms have properties that you can and should set when you create an application.
+Being the background of your application, the form's properties help set the stage
+for the rest of the project. The form supports more property values than the other
+controls described in this lesson, but Table 4.4 lists only the most common properties
+that you'll need.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>Pixel stands for picture
+element and represents the smallest addressable graphic dot on your monitor.</P>
+<CENTER>
+<P><B>Table 4.4. Common form properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BackColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the form's background color. Click the BackColor's palette down arrow to
+			see a list of colors and click Categorized to see a list of common Windows control
+			colors.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">BorderStyle</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines how the Form window appears. The BorderStyle property specifies whether
+			the user can resize the form and also determines the kind of form you wish to display.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Caption</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays text on the form's title bar at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ControlBox</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the form appears with the Control menu icon. The Control menu
+			appears when your application's user clicks the Control menu icon.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Enabled</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the form is active. Often, you'll change the Enabled property
+			at runtime with code when a form is no longer needed. Generally, only multiform applications,
+			such as MDI applications, need to modify a form's Enabled property.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Font</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Produces a Font dialog box in which you can set the text's font name, style, and
+			size.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ForeColor</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the color of the form's text.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Height</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the height of the form's outline in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Icon</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Describes the icon graphic image displayed on the taskbar when the user minimizes
+			the form.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Left</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the form's left edge to the screen's left edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MaxButton</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies whether a maximize window button appears on the form.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MinButton</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies whether a minimize window button appears on the form.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">MousePointer</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the shape of the mouse cursor when the user moves the mouse over the form.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Moveable</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies whether the user can move the form at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Picture</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines a graphic image that appears on the form's background at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ScaleMode</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the form's measurements appear in twips, pixels (the smallest
+			graphic dot image possible), inches, centimeters, or other measurements.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">ShowInTaskbar</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the form appears on the Windows taskbar.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">StartUpPosition</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the state (centered or default) of the form at application startup.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Top</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the number of twips from the form's top edge to the Form window's top edge.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Visible</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the form appears or is hidden from the user.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Width</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the width of the form in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">WindowState</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the initial state (minimized, maximized, or normal) in which the window
+			appears at runtime.</TD>
+	</TR>
+</TABLE>
+
+</CENTER>
+<CENTER>
+<H3><A NAME="Heading19"></A><FONT COLOR="#000077">Summary</FONT></H3>
+</CENTER>
+<P>Today you have learned the concept of focus. You must know about focus before
+working more with Visual Basic controls because focus determines the order of controls
+and which controls are active at any one time.</P>
+<P>Most of this lesson describes the three fundamental controls that appear on almost
+every application's Form window: command buttons, labels, and text boxes. Many of
+the control properties overlap between these and other controls so you can easily
+master the properties that are important.</P>
+<P>The next hour dives head first into the Visual Basic programming language so you
+can begin to build applications internally now that you've learned how to design
+application windows using the fundamental controls.
+<CENTER>
+<H3><A NAME="Heading20"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+</CENTER>
+
+<DL>
+	<DD><B>Q How do I know which control has the focus?<BR>
+	<BR>
+	A</B> Generally, you'll quickly learn to recognize focus once you've worked with
+	focus a short time. The focus appears different depending on the collection of controls
+	that appear on the form. Most of the time, the focus appears as a dotted outline
+	around a caption or an option. You'll know which window has the focus because the
+	focus window's title bar will be colored and the others' will be grayed out. If you
+	really cannot determine which control has the focus, press the Tab key a few times.
+	You will see the focus jump from control to control.<BR>
+	<BR>
+	<B>Q How can I learn all the properties?<BR>
+	<BR>
+	A</B> People who have written Visual Basic programs for years don't know every property
+	for every control. The Properties window is always at most one menu away, and it
+	always displays a control's properties. Therefore, don't worry about learning all
+	the properties. Generally, if you need to adjust the location, size, look, or behavior
+	of a control, a property probably exists to handle that operation.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading21"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+</CENTER>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<CENTER>
+<H4><A NAME="Heading22"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> True or false: A selected control (the control with its sizing handles
+	showing) is the control with the focus.<BR>
+	<B><BR>
+	2.</B> True or false: When the user clicks the mouse over a control in a window that
+	does not have the focus, the clicked control still gets the focus.<BR>
+	<B><BR>
+	3.</B> Which control works best for titles: labels or text boxes?<BR>
+	<B><BR>
+	4.</B> What can you do to close a Form window when the user presses Esc?<BR>
+	<B><BR>
+	5.</B> Which property disables a text box from triggering events when the user types
+	or clicks the text box?<BR>
+	<B><BR>
+	6.</B> Why do you think labels fail to support a GetFocus event?<BR>
+	<B><BR>
+	7. </B>What happens if you set a label's AutoSize property to True before setting
+	the WordWrap property to True if the label holds a long caption value?<BR>
+	<B><BR>
+	8. </B>Why should you avoid adding too many autosizing labels to the form at one
+	time?
+</DL>
+
+<CENTER>
+<H4><A NAME="Heading23"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Write a Visual Basic application that displays an appropriate form
+	title and asks the user for his first and last names in two separate text boxes.
+	Add a command button that terminates the program when the user clicks the command
+	button, presses the command button's hotkey, or presses Esc.<BR>
+	<B><BR>
+	2.</B> Create an application with five command buttons. Reverse the focus order so
+	that when you run the application and press the Tab key several times, the focus
+	order flows upward through the command buttons.<BR>
+	<B><BR>
+	3.</B> Write an application that displays three labels with the same long label Caption
+	property in each. Don't display the entire caption in the first label. Display the
+	caption horizontally in the second label. Display the caption vertically down the
+	window in the third label. You may have to expand the Form window to its full size
+	(perhaps by setting the Form window's WindowState property to 2-Maximized).
+	<CENTER>
+	<DD><BR>
+	<BR>
+	<A HREF="ch03.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch05.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A></CENTER>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

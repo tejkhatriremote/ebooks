@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=495-499//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch15/15-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 16<br>COM Threading Models
+</FONT></H2>
+<p><b>In This Chapter</B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>COM Threading Alternatives <i>496</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Choosing Between the STA and MTA <i>503</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Marshalling Between COM Apartments <i>512</I></B>
+</DL>
+<p>When developing COM components and applications that use those components, you need to understand COM&#146;s threading models. This chapter discusses how multithreading was added to the Component Object Model by introducing the idea of <i>apartments</I>.</P>
+<p>In this chapter, you&#146;ll learn how your application can take advantage of the COM apartment model. You&#146;ll also learn the costs and benefits associated with using different types of apartments as well as the rules imposed by COM on using apartments.</P>
+<h3><a name="Heading2"></A><font color="#000077">COM Threading Alternatives</FONT></H3>
+<p>Before discussing the different threading models available for COM objects today under Windows 2000, let&#146;s review how the original COM release partitioned COM objects.
+</P>
+<p>When the Component Object Model was released in 1993, it was strictly single threaded. You had two alternatives to choose from when implementing your COM objects:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;As an in-process server, using a DLL to host your COM object
+<dd><b>&#149;</B>&nbsp;&nbsp;As an out-of-process server, using an EXE to host your COM object
+</DL>
+<p>These options are discussed in the next few sections.
+</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">In-process COM Servers Prior to Apartments</FONT></H4>
+<p>Today, as in previous releases of COM, in-process objects are located in DLLs that are loaded by clients and mapped into the clients&#146; processes by the operating system. Back in the old single-threaded days, there was no overhead imposed by COM&#151;method calls from the client to the COM object incur only one level of indirection through the object&#146;s interface. As you&#146;ll see later in this chapter, in-process calls can still be this efficient.
+</P>
+<p>When a client requests the operating system to create an instance of a COM object, a series of steps are performed by the operating system and the COM server. Figure 16.1 shows how a client interacted with an in-process server prior to the introduction of apartments.</P>
+<p>As shown in Figure 16.1, the steps performed to create and use an instance of an in-process COM object are as follows:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The client asks the operating system for an instance of a COM object by calling <small>CoCreateInstance</SMALL>.
+<dd><b>2.</B>&nbsp;&nbsp;The operating system searches the Registry for a <small>CLSID</SMALL> and loads the in-process server DLL.
+<dd><b>3.</B>&nbsp;&nbsp;The operating system calls <small>DllGetClassObject</SMALL> to retrieve the class factory for the COM server.
+<dd><b>4.</B>&nbsp;&nbsp;The operating system uses the class factory to create an instance of the COM object.
+<dd><b>5.</B>&nbsp;&nbsp;The operating system returns an interface pointer for the COM object to the client.
+<dd><b>6.</B>&nbsp;&nbsp;The client calls through the interface pointer to a function in the DLL.
+</DL>
+<p>A major drawback with in-process servers is that they&#146;re not as robust as out-of-process servers. Just like any other DLL, an in-process server is located in the client&#146;s address space, and if it&#146;s poorly written, it can easily cause the client process to crash.
+</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-01.jpg',337,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-01.jpg',337,420)"><font color="#000077"><b>Figure 16.1</B></FONT></A>&nbsp;&nbsp;A client interacts directly with a COM in-process server.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Out-of-Process Servers Prior to Apartments</FONT></H4>
+<p>Out-of-process servers are located in EXE files that are located and launched by the Windows 2000 operating system in a process that&#146;s separate from the client&#146;s process. This causes a bit of a problem, because all Win32 processes have separate and distinct address spaces. This means that the address of an interface pointer in one process is meaningless if provided directly to a client process.
+</P>
+<p>When COM sees that two processes need to communicate, it creates the necessary plumbing to allow this to happen, as shown in Figure 16.2. The client process communicates through an in-process object known as a <i>proxy</I>, and the COM object communicates through an in-process object known as a <i>stub</I>.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-02.jpg',500,149 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-02.jpg',500,149)"><font color="#000077"><b>Figure 16.2</B></FONT></A>&nbsp;&nbsp;COM uses proxy and stub objects to communicate across process boundaries.</P>
+<p>The communication between the proxy and stub objects is performed using the Microsoft <i>Object Remote Procedure Call (ORPC)</I> protocol. The process of moving data and addresses across the RPC boundary is known as <i>marshaling</I>. Marshaling between apartments is covered later in this chapter. More advanced details about marshaling are discussed in Chapter 17, &#147;Custom COM Objects.&#148;</P>
+<p>There are several advantages to using the proxy and stub architecture for communicating with out-of-process COM objects:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The architecture is similar to standard DCE RPC, so it&#146;s based on a body of work that&#146;s well understood within the computing industry.
+<dd><b>&#149;</B>&nbsp;&nbsp;The architecture could be easily extended to distributed cases for DCOM, as you&#146;ll see in Chapter 20, &#147;DCOM.&#148;
+<dd><b>&#149;</B>&nbsp;&nbsp;For the most part, clients and servers can work transparently with other parties via interface pointers without requiring conditional code to deal with in-process servers versus out-of-process servers.
+</DL>
+<p>In almost all cases, the only way a client can detect that a COM object is located &#147;out of process&#148; is that function calls to the COM object take longer to complete.
+</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Managing Memory Across Processes</FONT></H4>
+<p>When clients and servers are located in separate address spaces, and memory is allocated and shared between these clients and servers, you know that life is going to become complicated. In COM, straightforward rules have been developed to help simplify the process of allocating and sharing memory between COM components:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Top-level pointers passed as parameters refer to storage allocated by the caller.
+<dd><b>&#149;</B>&nbsp;&nbsp;If memory is passed as an input parameter, it belongs to the client (the <i>caller</I>) of the function. The server (the <i>callee</I>) must make a local copy of the memory if it&#146;s going to use the memory the function returns.
+<dd><b>&#149;</B>&nbsp;&nbsp;If dynamically allocated memory is passed as an output parameter, it&#146;s allocated by the callee and becomes the caller&#146;s responsibility after the function returns.
+<dd><b>&#149;</B>&nbsp;&nbsp;If a parameter is used as input and output, the callee must properly release the memory before allocating storage to contain the output.
+</DL>
+<p>The <i>COM task allocator</I> is responsible for managing memory used by COM objects. When memory is marshaled, COM can only help you marshal storage if it has been allocated with the task allocator.</P>
+<p>The COM task allocator exposes functions that work very much like the standard C runtime <small>malloc</SMALL>, <small>free</SMALL>, and <small>realloc</SMALL> functions. You can use the COM task allocator in two ways:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Directly, by using <small>IMalloc</SMALL> interface member functions
+<dd><b>&#149;</B>&nbsp;&nbsp;Indirectly, by using <small>CoTaskMem<i>XXX</I></SMALL> API helper functions
+</DL>
+<p><font size="+1"><b>Using the IMalloc Interface</B></FONT></P>
+<p>Here&#146;s a simplified definition of the <small>IMalloc</SMALL> interface:</P>
+<!-- CODE //-->
+<pre>
+interface IMalloc : public IUnknown
+{
+public:
+   virtual void* STDMETHODCALLTYPE Alloc(ULONG cb) = 0;
+   virtual void* STDMETHODCALLTYPE Realloc(void* pv, ULONG cb) = 0;
+   virtual void  STDMETHODCALLTYPE Free(void* pv) = 0;
+   virtual ULONG STDMETHODCALLTYPE GetSize(void* pv) = 0;
+   virtual int   STDMETHODCALLTYPE DidAlloc(void* pv) = 0;
+   virtual void  STDMETHODCALLTYPE HeapMinimize(void) = 0;
+};
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch15/15-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

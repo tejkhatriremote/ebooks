@@ -1,0 +1,230 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=959-962//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch29/29-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 28.6 contains the source code for the frmMain form.
+</P>
+<p><b>Listing 28.6</B> Sending Messages to a Message Queue Using Visual Basic<hr></P>
+<!-- CODE //-->
+<pre>
+Option Explicit
+
+&#145; Variables needed to interact with the message queue
+Dim msmqInfo As New MSMQQueueInfo
+Public msmqDest As MSMQQueue
+
+
+Private Sub cmd_Click(Index As Integer)
+
+    Dim fQueueOpen As Boolean
+
+    If Index = 0 Then
+        &#145; Close application
+        End
+    Else
+        &#145; Open queue
+        fQueueOpen = OpenMessageQueue(txt(0).Text, txt(1).Text)
+    End If
+
+    If fQueueOpen Then
+        If msmqDest.IsOpen Then
+            &#145; Display form
+            frmMsg.Show vbModal
+        End If
+    End If
+
+End Sub
+
+Private Function OpenMessageQueue(strComputer As String, _
+                             strQueue As String) As Boolean
+
+On Error GoTo errHandler
+    OpenMessageQueue = False
+
+    msmqInfo.PathName = strComputer &amp &#147;\&#148; &amp strQueue
+    Set msmqDest = msmqInfo.Open(MQ_SEND_ACCESS, MQ_DENY_NONE)
+
+    OpenMessageQueue = True
+    Exit Function
+
+errHandler:
+   MsgBox &#147;Couldn&#146;t open queue:&#148; &#43; Chr(13) &#43; Err.Description _
+           &#43; Chr(13) &#43; &#147;Error code: &#148; &#43; Hex(Err.Number)
+
+ End Function
+
+Private Sub Form_Unload(Cancel As Integer)
+
+    Set msmqInfo = Nothing
+    Set msmqDest = Nothing
+
+End Sub
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Most of the work in frmMain is performed in the <small>OpenMessageQueue</SMALL> function. The <small>PathName</SMALL> property for <small>msmqInfo</SMALL>, the <small>MSMQQueueInfo</SMALL> variable, is set to the user-provided message queue path. The value of <small>msmqDest</SMALL> is set to a reference to the message queue opened by calling <small>msmqInfo.Open</SMALL>. After the message queue is successfully opened, a new form will be displayed that prompts the user to write one or more messages to the message queue.</P>
+<p>The frmMsg form, shown in Figure 28.7, is used to collect messages from the user that are written to the message queue.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-07.jpg',320,138 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-07.jpg',320,138)"><font color="#000077"><b>Figure 28.7</B></FONT></A>&nbsp;&nbsp;The message-handling form used by MSMQSendMsg.</P>
+<p>The properties for the controls used in frmMsg are provided in Table 28.2.
+</P>
+<table width="100%"><td caption valign="TOP" align="LEFT" colspan="4"><b>Table 28.2</B> Properties for Controls in frmMsg
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th valign="TOP" align="LEFT" width="20%"><i>Control</I>
+<th valign="TOP" align="LEFT" width="20%"><i>Name</I>
+<th valign="TOP" align="LEFT" width="20%"><i>Index</I>
+<th valign="TOP" align="LEFT" width="40%"><i>Caption</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Button
+<td valign="TOP" align="LEFT">cmd
+<td valign="TOP" align="LEFT">0 
+<td valign="TOP" align="LEFT">&ampClose
+<tr>
+<td valign="TOP" align="LEFT">Button
+<td valign="TOP" align="LEFT">cmd
+<td valign="TOP" align="LEFT">1
+<td valign="TOP" align="LEFT">&ampSend
+<tr>
+<td valign="TOP" align="LEFT">Button
+<td valign="TOP" align="LEFT">cmd
+<td valign="TOP" align="LEFT">2
+<td valign="TOP" align="LEFT">&ampQuit
+<tr>
+<td valign="TOP" align="LEFT">TextBox
+<td valign="TOP" align="LEFT">txtMsg
+<tr>
+<td colspan="4"><hr>
+<tr>
+</TABLE>
+<p>Listing 28.7 contains the source code for the frmMain form.
+</P>
+<p><b>Listing 28.7</B> Sending Messages to a Message Queue Using Visual Basic<hr></P>
+<!-- CODE //-->
+<pre>
+Option Explicit
+
+Dim msg As New MSMQMessage
+
+Private Sub cmd_Click(Index As Integer)
+
+    If Index = 0 Then
+        End
+    ElseIf Index = 1 Then
+        msg.Label = &#147;Test Message&#148;
+        msg.Body = txtMsg.Text
+        msg.Send frmMain.msmqDest
+    Else
+        msg.Label = &#147;Last Message&#148;
+        msg.Body = &#147;q&#148;
+        msg.Send frmMain.msmqDest
+        Unload Me
+    End If
+
+    txtMsg.Text = &#147;&#148;
+
+End Sub
+
+
+Private Sub Form_Unload(Cancel As Integer)
+    Set msg = Nothing
+
+End Sub
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>If the user clicks the Send button, properties are defined for <small>msg</SMALL>, which is an instance of the <small>MSMQMessage</SMALL> object. The message is sent to the message queue by calling <small>msg.Send</SMALL> and passing the destination message queue as a parameter. If the user clicks Quit, a <small>&#147;Q&#148;</SMALL> string is sent to the message queue, and the form is unloaded.</P>
+<h3><a name="Heading20"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter has discussed the Microsoft Message Queue Server, also known as MSMQ. The most commonly used properties and features of MSMQ were discussed, such as how the ability for messages to be sent and received between clients might be disconnected from the network. Several examples were also provided in both C/C<small>&#43;&#43;</SMALL> and Visual Basic.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch29/29-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

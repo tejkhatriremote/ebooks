@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=664-667//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 20.6 provides an example of using <small>CoInitializeSecurity</SMALL> with a Win32 <small>SECURITY_DESCRIPTOR</SMALL> structure.</P>
+<p><b>Listing 20.6</B> Using <small>SECURITY_DESCRIPTOR</SMALL> to Provide Security Attributes to <small>CoInitializeSecurity</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+SECURITY_DESCRIPTOR* pSecurityDescriptor;
+PACL                 pAccessControlList;
+DWORD                cbSecurityDescriptor;
+DWORD                cbAccessControlList;
+
+// Set the size of the security descriptor, assuming that we
+// will only have one entry in the DACL.
+cbSecurityDescriptor = sizeof(SECURITY_DESCRIPTOR)&#43;
+                       (2 * sizeof(ACCESS_ALLOWED_ACE))&#43;
+                       sizeof(ACL)&#43;
+                       GetSidLengthRequired(8);
+// Allocate a chunk o&#146; RAM for the security descriptor
+pSecurityDescriptor = (SECURITY_DESCRIPTOR*)calloc(1,
+                                                                                                     cbSecurityDescriptor);
+if(!pSecurityDescriptor)
+{
+    // Handle error - not enough memory
+}
+
+InitializeSecurityDescriptor(pSecurityDescriptor,
+                             SECURITY_DESCRIPTOR_REVISION);
+
+// The DACL is located immediately after the security descriptor,
+// find it and initialize it.
+pAccessControlList = (PACL)((PUCHAR)pSecurityDescriptor &#43;
+                                      sizeof(SECURITY_DESCRIPTOR));
+cbAccessControlList = cbSecurityDescriptor &#150;
+                                       sizeof(SECURITY_DESCRIPTOR);
+InitializeAcl(pAccessControlList,
+              cbAccessControlList,
+              ACL_REVISION);
+
+// Look up user mickeyw, and use his SID to make an entry
+// in the DACL, along with System.
+DWORD        cbDomain = MAX_PATH;
+DWORD        cbSid = MAX_PATH;
+PSID         pSid = calloc(1, cbSid);
+WCHAR        szDomain[MAX_PATH];
+SID_NAME_USE sidUse;
+
+BOOL fLookup = LookupAccountName(NULL,
+                                 L&#147;mickeyw&#148;,
+                                 pSid,
+                                 &ampcbSid,
+                                 szDomain,
+                                 &ampcbDomain,
+                                 &ampsidUse);
+if(fLookup == FALSE)
+{
+    // Handle error - could not find user mickeyw
+    // (This is likely to happen on non-codev
+    // domains :)
+
+}
+
+PSID pSidSystem = GetSystemSid();
+PSID pSidProcessOwner = GetProcessOwnerSid();
+PSID pSidProcessGroup = GetProcessGroupSid();
+
+AddAccessAllowedAce(pAccessControlList,
+                    ACL_REVISION,
+                    COM_RIGHTS_EXECUTE,
+                    pSid);
+
+AddAccessAllowedAce(pAccessControlList,
+                    ACL_REVISION,
+                    COM_RIGHTS_EXECUTE,
+                    pSidSystem);
+
+SetSecurityDescriptorDacl(pSecurityDescriptor,
+                          TRUE,
+                          pAccessControlList,
+                          FALSE);
+SetSecurityDescriptorGroup(pSecurityDescriptor,
+                           pSidProcessGroup,
+                           FALSE);
+SetSecurityDescriptorOwner(pSecurityDescriptor,
+                           pSidProcessOwner,
+                           FALSE);
+
+HRESULT hrSec = CoInitializeSecurity(pSecurityDescriptor,
+                                    -1,
+                                     0,
+                                     NULL,  // Reserved
+                                     RPC_C_AUTHN_LEVEL_CONNECT,
+                                     RPC_C_IMP_LEVEL_IDENTIFY,
+                                     NULL,
+                                     0,
+                                     0);
+
+FreeSid(pSidSystem);
+free(pSecurityDescriptor);
+free(pSid);
+free(pSidProcessOwner);
+free(pSidProcessGroup);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 20.6 starts off by creating a security descriptor that contains a DACL with two ACEs&#151;one for the author and another for the system account. When <small>CoInitializeSecurity</SMALL> is called with a pointer to a <small>SECURITY_DESCRIPTOR</SMALL> structure, you don&#146;t need to pass any specific capability flags in the eighth parameter.</P>
+<p>Listing 20.6 makes use of some helper functions that retrieve the group and owner for the current process, as well as the SID for the built-in System account. These functions are provided in Listing 20.7.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

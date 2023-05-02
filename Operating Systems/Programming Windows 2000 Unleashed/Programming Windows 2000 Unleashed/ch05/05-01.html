@@ -1,0 +1,233 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Structured Exception Handling</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=05//-->
+<!--PAGES=159-163//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch04/04-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 5<br>Structured Exception Handling
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Looking at the Exception-handling Basics <i>160</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Understanding How SEH Works <i>161</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Termination Handlers <i>162</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Exception Handlers <i>166</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>C<small>&#43;&#43;</SMALL> Exception Handling <i>172</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Integrating Win32 SEH with C<small>&#43;&#43;</SMALL> Exception Handling <i>179</I></B>
+</DL>
+<p>This chapter explains how you can use exception handling to make your Windows 2000 applications more robust. You&#146;ll learn about structured exception handling (SEH) offered by Windows 2000 as well as ANSI C<small>&#43;&#43;</SMALL> standard exception handling. You&#146;ll also see how ANSI C<small>&#43;&#43;</SMALL> exception handling and Windows 2000 SEH can be integrated with each other.</P>
+<h3><a name="Heading2"></A><font color="#000077">Looking at the Exception-handling Basics</FONT></H3>
+<p>Handling errors and special cases is a major cause of frustration for many programmers. Much of the code presented in examples in programming books or in sample programs deals with the <i>normal case</I>&#151;code executed when a program is executed as expected. Adding source code that checks for errors often clutters a listing and makes it less clear. Listing 5.1 tests the return values of all function calls and handles errors by displaying a message to the user.</P>
+<p><b>Listing 5.1</B> Handling Errors by Testing Return Values<hr></P>
+<!-- CODE //-->
+<pre>
+   int ConcatStrings(TCHAR* pszDest, TCHAR* pszSrc, int cDest)
+   {
+       TCHAR* pResult = NULL;
+       if(pszDest &amp&amp pszSrc)
+       {
+           int nDest = lstrlen(pszDest);
+           int nSrc = lstrlen(pszSrc);
+           if((nDest &#43; nSrc) &lt cDest)
+               pResult = lstrcat(pszDest, pszSrc);
+       }
+       if(pResult)
+           return lstrlen(pResult);
+       else
+           return 0;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The general term <i>exception handling</I> refers to using mechanisms that separate error-handling code from source code executed in the normal case. These mechanisms help separate source code used for normal processing from the source code executed to recover from errors. Listing 5.2 shows an example of exception handling using Windows 2000 structured exception handling to deal with error conditions.</P>
+<p><b>Listing 5.2</B> Dealing with Errors Using Structured Exception Handling<hr></P>
+<!-- CODE //-->
+<pre>
+   int ConcatStrings(TCHAR* pszDest, TCHAR* pszSrc, int cDest)
+   {
+       _ _try
+       {
+           TCHAR* pResult = lstrcat(pszDest, pszSrc);
+           return lstrlen(pResult);
+       }
+       _ _except(EXCEPTION_EXECUTE_HANDLER)
+       {
+           return 0;
+       }
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>As you can see, exception handling is useful because it helps preserve the flow of the essential source code by moving the error-handling code into a separate block. The second version of <small>ConcatStrings</SMALL> will catch every error caught by the first version, but it uses less code and has a simpler construction.</P>
+<p>When programming for Windows 2000, you have three exception-handling options:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Use structured exception handling offered by the Windows 2000 operating system.
+<dd><b>&#149;</B>&nbsp;&nbsp;Use ANSI C<small>&#43;&#43;</SMALL> exception handling offered by your C<small>&#43;&#43;</SMALL> compiler.
+<dd><b>&#149;</B>&nbsp;&nbsp;Integrate the exception handling between Windows 2000 and your C<small>&#43;&#43;</SMALL> compiler.
+</DL>
+<p>All three approaches are discussed in this chapter.
+</P>
+<h3><a name="Heading3"></A><font color="#000077">Understanding How SEH Works</FONT></H3>
+<p>When an exception is detected by Windows 2000, the executing thread is suspended immediately and processing shifts from User mode to Kernel mode. Control is transferred to the <i>exception dispatcher</I>, which is responsible for finding a way to handle the new exception.</P>
+<p>If an exception handler isn&#146;t available for the exception, the exception dispatcher transfers control to a system-wide exception handler, which displays a dialog box similar to the one shown in Figure 5.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch05/images/05-01.jpg',338,165 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch05/images/05-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch05/images/05-01.jpg',338,165)"><font color="#000077"><b>Figure 5.1</B></FONT></A>&nbsp;&nbsp;The standard dialog box displayed for unhandled exceptions.</P>
+<p>On the other hand, if an exception handler can be found, control is passed to it. Then the application, if it&#146;s coded to take advantage of exception handling, can handle the error gracefully. Even if you choose to terminate your application, catching exceptions enables you to
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Clean up data in external databases.
+<dd><b>&#149;</B>&nbsp;&nbsp;Restore allocated resources.
+<dd><b>&#149;</B>&nbsp;&nbsp;Send detailed information to the event log.
+<dd><b>&#149;</B>&nbsp;&nbsp;Provide detailed failure information to the user to help debug the problem.
+</DL>
+<p>Any of these options is much better than displaying an application error dialog box to the user.
+</P>
+<h3><a name="Heading4"></A><font color="#000077">Using Termination Handlers</FONT></H3>
+<p>The most basic form of structured exception handling offered by Windows 2000 is the termination handler. A <i>termination handler</I> is a block of code that is guaranteed to be executed. Termination handlers often are used in situations in which memory or other resources must be freed before a function returns. Listing 5.3 shows how a termination handler is used to ensure that heap memory is released inside a function.</P>
+<p><b>Listing 5.3</B> Using a Termination Handler to Guarantee Memory Is Released<hr></P>
+<!-- CODE //-->
+<pre>
+   BOOL SomeFunc()
+   {
+       int*   p = 0;
+       _ _try
+       {
+           // Use p in here
+       }
+       _ _finally
+       {
+           delete [] p;
+       }
+       return fReturn;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Here are the SEH keywords in the code fragment:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>_ _try</SMALL>. Marks the beginning of an exception <small>try</SMALL> block.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>_ _finally</SMALL>. Marks the beginning of a termination-handler block.
+</DL>
+<p>The <small>_ _try</SMALL> and <small>_ _finally</SMALL> keywords are prefixed with double underscores, and are C/C<small>&#43;&#43;</SMALL> language extensions. Other compilers may offer different keywords to take advantage of Win32 SEH.</P>
+<p>Note that in Listing 5.3, the <small>return</SMALL> statement is outside the <small>_ _try</SMALL> and <small>_ _finally</SMALL> blocks. This is good coding practice, and it encourages an easy-to-follow structure for your code. You can include <small>return</SMALL> and <small>goto</SMALL> statements inside a <small>_ _try</SMALL> block, but the path of execution can become difficult to trace and your code&#146;s performance will suffer.</P>
+<p>Listing 5.4 shows an example of source code that exits prematurely from a <small>_ _try</SMALL> block.</P>
+<p><b>Listing 5.4</B> An Example of the Wrong Way to Exit from a <small>_ _try</SMALL> Block<hr></P>
+<!-- CODE //-->
+<pre>
+   long CalcAndLogFactorial(int n)
+   {
+       long  lResult;
+       _ _try
+       {
+           if(n &gt 2)
+           {
+               for(lResult = 1; n &gt 1; n--)
+                   lResult *= n;
+           }
+           else
+               return (long)n;
+       }
+       _ _finally
+       {
+           // Store result in log file.
+       }
+       return lResult;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>If <small>CalcAndLogFactorial</SMALL> is called with a parameter of 2 or less, the parameter value is returned from the function. For a larger value of <small>n</SMALL>, the factorial is calculated as the sum of the product of all integers from 1 to <small>n</SMALL>.</P>
+<p>If the value of <small>n</SMALL> is greater than 2, the factorial is calculated and execution flows through to the body of the <small>_ _finally</SMALL> block. After the <small>_ _finally</SMALL> block is executed, the factorial is returned by the <small>return lResult</SMALL> statement. The flow of execution is more complicated for cases in which the value of <small>n</SMALL> is 2 or less. First, the return value is stored; then the code inside the termination handler is executed. After the termination handler executes, control returns to the <small>return</SMALL> statement, and the value of <small>n</SMALL> is returned to the caller.</P>
+<p>Whenever a premature exit from a <small>_ _try</SMALL> block is detected, the termination block must be called. If the premature exit occurs due to a <small>return</SMALL>, the <small>return</SMALL> value is stored until after the termination handler executes.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch04/04-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

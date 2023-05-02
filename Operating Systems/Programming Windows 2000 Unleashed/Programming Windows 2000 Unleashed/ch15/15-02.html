@@ -1,0 +1,227 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:OLE Drag and Drop</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=15//-->
+<!--PAGES=477-480//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="15-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Using the DVTARGETDEVICE Structure</FONT></H4>
+<p>The <small>DVTARGETDEVICE</SMALL> structure is used to describe a device that data is rendered for, and it&#146;s defined as shown in Listing 15.3.</P>
+<p><b>Listing 15.3</B> The <small>DVTARGETDEVICE</SMALL> Structure<hr></P>
+<!-- CODE //-->
+<pre>
+typedef struct tagDVTARGETDEVICE
+{
+    DWORD tdSize;
+    WORD  tdDriverNameOffset;
+    WORD  tdDeviceNameOffset;
+    WORD  tdPortNameOffset;
+    WORD  tdExtDevmodeOffset;
+    BYTE  tdData[1];
+}DVTARGETDEVICE;
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Think of the <small>DVTARGETDEVICE</SMALL> structure as a header for a block of data. Immediately following the structure is a series of Unicode strings that contain information that can be used to create a device context. Each entry in the <small>DVTARGETDEVICE</SMALL> structure contains an offset into the block of data. For example, <small>tdDriverNameOffset</SMALL> contains the number of bytes from the beginning of the structure to the beginning of the string that holds the driver name string, as shown in Figure 15.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-01.jpg',229,139 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-01.jpg',229,139)"><font color="#000077"><b>Figure 15.1</B></FONT></A>&nbsp;&nbsp;The offsets stored in <small>DVTARGETDEVICE</SMALL> are offsets into a Unicode data block.
+</P>
+<p>The <small>DVASPECT</SMALL> enumerated type specifies the amount of detail present in a particular rendering of the data. If you&#146;re dealing with text, this value almost certainly will be <small>DVASPECT_CONTENT</SMALL>, meaning that the rendering should represent the full content of the data. When dealing with graphical data or more complex items, however, other values often are used. Here are the possible values for <small>DVASPECT</SMALL>:</P>
+<dl>
+<dd>&#149; <small>DVASPECT_CONTENT</SMALL>. Specifies full content. This value requests a representation of an object so that it can be displayed as an embedded object inside a container.
+<dd>&#149; <small>DVASPECT_DOCPRINT</SMALL>. Specifies a representation of the data content as though it were printed to a printer using the Print command from the File menu. The data may span several pages.
+<dd>&#149; <small>DVASPECT_ICON</SMALL>. Specifies an icon that represents the object.
+<dd>&#149; <small>DVASPECT_THUMBNAIL</SMALL>. Specifies a small thumbnail sketch of the data content from the object. A thumbnail is typically a 120&#215;120 pixel Device Independent Bitmap, which is sometimes stored inside a metafile.
+</DL>
+<p>Only one of the listed values can be used at any given time&#151;no bitwise ORing is allowed.
+</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Using the STGMEDIUM Structure</FONT></H4>
+<p>The <small>STGMEDIUM</SMALL> structure represents a general-purpose storage object. It basically replaces the global memory handle used to transfer data with the Windows 2000 Clipboard. Listing 15.4 shows the definition of <small>STGMEDIUM</SMALL>.</P>
+<p><b>Listing 15.4</B> The <small>STGMEDIUM</SMALL> Structure<hr></P>
+<!-- CODE //-->
+<pre>
+typedef struct tagSTGMEDIUM
+{
+    DWORD tymed;
+    union
+    {
+        HBITMAP hBitmap;
+        HMETAFILEPICT hMetafilePict;
+        HENHMETAFILE hEnhMetaFile;
+        HGLOBAL hGlobal;
+        LPWSTR lpszFileName;
+        IStream *pstm;
+        IStorage *pstg;
+    } u;
+    IUnknown *pUnkForRelease;
+}STGMEDIUM;
+typedef STGMEDIUM *LPSTGMEDIUM;
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Here are the members of the <small>STGMEDIUM</SMALL> structure:</P>
+<dl>
+<dd>&#149; <small>tymed</SMALL>. Specifies the type of storage used to represent the data object. A list of possible values is provided later in this section.
+<dd>&#149; A union of several variables used to refer to the data object&#146;s storage. The union&#146;s currently valid member can be determined by examining the <small>tymed</SMALL> variable.
+<dd>&#149; <small>pUnkForRelease</SMALL>. A pointer to an <small>IUnknown</SMALL> method that can be called to release storage for <small>IStorage</SMALL> and <small>IStream</SMALL> objects. This value may be <small>NULL</SMALL>.
+</DL>
+<p>The possible values for <small>tymed</SMALL> and the corresponding union variable used to refer to the data object are provided in Table 15.1.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 15.1</B> Possible Values for <small>tymed</SMALL> and Relevant Union Members
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Value of</I> <small>tymed</SMALL>
+<th width="60%" align="LEFT" valign="TOP"><i>Corresponding Union Member</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_NULL</SMALL>
+<td align="LEFT" valign="TOP">No data
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_HGLOBAL</SMALL>
+<td align="LEFT" valign="TOP"><small>hGlobal</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_FILE</SMALL>
+<td align="LEFT" valign="TOP"><small>lpszFileName</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_ISTREAM</SMALL>
+<td align="LEFT" valign="TOP"><small>pstm</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_ISTORAGE</SMALL>
+<td align="LEFT" valign="TOP"><small>pstg</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_GDI</SMALL>
+<td align="LEFT" valign="TOP"><small>hBitmap</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_MFPICT</SMALL>
+<td align="LEFT" valign="TOP"><small>hMetaFilePict</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>TYMED_ENHMF</SMALL>
+<td align="LEFT" valign="TOP"><small>hEnhMetaFile</SMALL>
+<tr>
+<td colspan="2"><hr>
+<tr>
+</TABLE>
+<p>As you&#146;ll see later in this chapter, during a drag-and-drop operation, you often need to free storage that&#146;s represented by a <small>STGMEDIUM</SMALL> structure. There&#146;s no need for you to try to determine which particular type of object needs to be released from the structure. If you find yourself in a position where you must release the storage contained in a <small>STGMEDIUM</SMALL> structure, call <small>ReleaseStgMedium</SMALL>, passing the address of the <small>STGMEDIUM</SMALL> structure as a parameter. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+ReleaseStgMedium(&amp;stg);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>ReleaseStgMedium</SMALL> takes care of determining the proper release method for any <small>STGMEDIUM</SMALL> object.</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Using the IDataObject Interface</FONT></H4>
+<p>All data objects must expose the <small>IDataObject</SMALL> interface. Through <small>IDataObject</SMALL>, a data object provides access to all the information required for implementing all sorts of data transfer. The OLE Clipboard, ActiveX controls, and OLE drag and drop all make use of this interface.</P>
+<p>A simplified version of the <small>IDataObject</SMALL> interface definition is shown in Listing 15.5.</P>
+<p><b>Listing 15.5</B> The <small>IDataObject</SMALL> Interface Declaration<hr></P>
+<!-- CODE //-->
+<pre>
+interface IDataObject : public IUnknown
+{
+public:
+    HRESULT GetData(FORMATETC* pformatetcIn, STGMEDIUM* pmedium);
+    HRESULT GetDataHere(FORMATETC* pformatetc, STGMEDIUM* pmedium);
+    HRESULT QueryGetData(FORMATETC* pformatetc);
+    HRESULT GetCanonicalFormatEtc(FORMATETC* pformatectIn,
+                                  FORMATETC  *pformatetcOut);
+    HRESULT SetData(FORMATETC* pformatetc,
+                    STGMEDIUM* pmedium,
+                    BOOL fRelease);
+    HRESULT EnumFormatEtc(DWORD dwDirection,
+                          IEnumFORMATETC** ppenumFormatEtc);
+    HRESULT DAdvise(FORMATETC* pformatetc,
+                    DWORD advf,
+                    IAdviseSink* pAdvSink,
+                    DWORD* pdwConnection);
+    HRESULT DUnadvise(DWORD dwConnection);
+    HRESULT EnumDAdvise(IEnumSTATDATA** ppenumAdvise);
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="15-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

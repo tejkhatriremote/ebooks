@@ -1,0 +1,150 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Advanced Troubleshooting Methodology</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=32//-->
+<!--PAGES=10361039//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="1034-1036.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="1039-1042.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Scenario 2: Nothing in the Print Queue Will Print</B></FONT></P>
+<dl>
+<dd><b>Explore the boundaries.</B>&nbsp;&nbsp;When you contact Bob regarding his printing issue, he tells you that he has been trying to print for the last two hours but nothing is coming out of the printer. Bob tells you that there were no messages when he tried to print other than the pop-up message that the job was successfully printed. Windows 2000 is accepting the print jobs when he submits them, but nothing is coming out.
+<dd><b>Ask the simple questions.</B>&nbsp;&nbsp;You investigate the simple issues first. The print device is connected and plugged in. It does display indicator lights, so you know that it is turned on and getting power. The cables are connected. Bob tells you that it printed fine yesterday, but hasn&#146;t printed at all this morning. He insists that nothing has been changed on his computer, no software added, no hardware changed.
+<dd><b>Track the possible approaches.</B>&nbsp;&nbsp;You decide that some of the possibilities are that he might be printing to a different printer and doesn&#146;t realize it, or that something is wrong with the print queue.
+<dd><b>Test the approaches.</B>&nbsp;&nbsp;You check the Printers folder on Bob&#146;s computer and verify the setting for his locally attached HP LaserJet. Next, you verify that this printer is set as the default, and that he has not redirected the output to another network printer. Opening the printer icon, you discover a long list of jobs that Bob submitted earlier today. Every job he has tried to print is listed, and the job on top of the list is a report from Excel.
+<p>You try checking to make sure that the printer has not been Paused. Everything looks fine, but no print jobs will process. You determine that the queue itself has become either corrupted or jammed.
+</P>
+<dd><b>Repair the problem.</B>&nbsp;&nbsp;After closing the Printers folder, you open the Administrative Tools folder and double-click the Services icon. You scroll down the list to find the Spooler service and highlight it. You stop the service, wait a few seconds, then start it again.
+<blockquote>
+<p><font size="-1"><hr><b>TIP:&nbsp;&nbsp;</B>When the Spooler service becomes corrupt, or a job gets jammed in the queue, stopping and restarting the service may be enough to resolve the issue with no further effort.<hr></FONT>
+</BLOCKQUOTE>
+<p>After restarting the Spooler service, you examine the queue and find that the jobs are unchanged. At this point, the most likely cause is a corrupted document stuck at the top of the queue. Make a note as to the document size and timestamp. Stop the Spooler again, then open Explorer.
+</P>
+<p>Using Explorer, open the <tt>%SystemRoot%\System32\Spool\Printers</TT> folder. Find the files with the approximate timestamp of the print job that was stuck at the top of the queue. There will be two files, one with the extension <tt>.spl</TT>, the other with the extension <tt>.shd</TT>. If you have trouble deleting the <tt>*.spl</TT> file, you may still be able to fix the problem by renaming the <tt>*.shd</TT> file and restarting the Spooler service.
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Windows 2000 uses two files for each print job submitted. The first is the actual spool file (<tt>*.spl</TT>), which contains the formatted data to be printed. The second is the shadow file (<tt>*.shd</TT>), which is basically a transaction file for the print job.<hr></FONT>
+</BLOCKQUOTE>
+</P>
+<p>After successfully deleting the two files, you restart the Spooler and immediately the print jobs begin to print.
+</P>
+<dd><b>Provide closure</B>&nbsp;&nbsp;Talking with Bob, you describe the issue as a corrupted print job that acted like a cork in a bottle, plugging up the queue. This could have been caused by a problem with the printer settings, the queue itself being corrupt, or most likely the document being corrupt. In the last case, Bob could open the document in the original program and select Save As from the File menu to save a new copy of the document without the corruption.
+</DL>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Other Print Troubleshooting Steps</FONT></H4>
+<p>There are several standard troubleshooting steps that you can add to your support toolbox. We have already discussed one of the most important&#151;asking simple questions. Believe it or not, verifying that the print device is plugged in and turned on can solve many problems. This is no reflection on either the intelligence of the user or their knowledge of computing. Some <i>very</I> experienced people have called Support with printing issues that were solved by either plugging in the print device or turning it on. We&#146;ve all done it at some time.</P>
+<p>Assuming that the print device is plugged in and turned on, and that you have verified the parallel cable as well, you need to test the print subsystem directly. One of the really good tests to perform here is to see whether Notepad can print. Notepad has the honor of being the simplest form of printing available in Windows 2000. If you can print from Notepad, but not from Word, the issue is more likely with Word than with Windows 2000.</P>
+<p>If you are troubleshooting a non-PostScript print device, you can try the following command at a command prompt:</P>
+<!-- CODE SNIP //-->
+<pre>
+   <b>Type dir &gt; lpt:1</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This copies the output of a Dir command directly to the print device and bypasses the spooling provided by Windows 2000. If this fails, or if the output is garbled, the issue may be a bad cable, faulty parallel port, or other hardware problem. If it works, then you know the problem exists in Windows 2000 or the program.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Redirecting the output of a command to the port will not work if you are testing a PostScript device.<hr></FONT>
+</BLOCKQUOTE>
+<p>If any devices are connected to the computer&#146;s parallel port between the computer and the print device, you should remove them and try printing again. Windows 2000 is often not very forgiving about sharing ports with multiple devices.
+</P>
+<p>Try a generic driver for the print device. If you are using a PostScript device, try installing the Apple LaserWriter driver. This is a very basic PostScript driver. If it works, then you have identified the problem as a bad <tt>*.ppd</TT> driver for the PostScript print device. If it is a non-PostScript device, try the Generic-Text Only driver.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>PostScript printers don&#146;t really have a printer driver. Instead they use a PostScript Printer Description file (<tt>*.ppd</TT>), which is essentially a text file that describes how to send print jobs to the print device.<hr></FONT>
+</BLOCKQUOTE>
+<p>An issue that is often overlooked is the amount of space available for the spool file. Check to make sure that plenty of free space remains on the partition where Windows 2000 is installed. Try printing from another operating system on the same computer if there is a dual-boot configuration. Or you could even try printing from the same application on a different computer.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="1034-1036.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="1039-1042.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

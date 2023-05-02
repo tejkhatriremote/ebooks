@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Owner Draw and Custom Draw</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=12//-->
+<!--PAGES=385-387//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="12-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<table width="100%">
+<td caption align="LEFT" valign="TOP" colspan="2"><b>Table 12.3</B> Possible Values for <small>itemState</SMALL>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="30%" align="LEFT" valign="TOP"><i>Value</I>
+<th width="70%" align="LEFT" valign="TOP"><i>Description</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_DEFAULT</SMALL>
+<td align="LEFT" valign="TOP">Draw as the default item
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_DISABLED</SMALL>
+<td align="LEFT" valign="TOP">Draw as disabled
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_FOCUS</SMALL>
+<td align="LEFT" valign="TOP">Draw with the input focus
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_COMBOBOXEDIT</SMALL>
+<td align="LEFT" valign="TOP">Draw in the edit window of a combo box
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_CHECKED</SMALL>
+<td align="LEFT" valign="TOP">The menu item is checked
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_GRAYED</SMALL>
+<td align="LEFT" valign="TOP">The menu item is grayed
+<tr>
+<td align="LEFT" valign="TOP"><small>ODS_SELECTED</SMALL>
+<td align="LEFT" valign="TOP">The menu item is selected
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>If the owner-drawn control is a list box or combo box, the <small>WM_DRAWITEM</SMALL> message will be sent once for every item that must be drawn. For example, if eight items are visible in an owner-drawn list box, <small>WM_DRAWITEM</SMALL> will be sent at least eight times when the list box is initially displayed.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Handling the WM_MEASUREITEM Message</FONT></H4>
+<p>Before asking for an item to be drawn, Windows will send the control a <small>WM_MEASUREITEM</SMALL> message to determine the size of the item (owner-drawn buttons will not receive this message). If you&#146;re using MFC, this message will be translated by the framework into an <small>OnMeasureItem</SMALL> function call. If the control is a variable-size list box, the <small>WM_MEASUREITEM</SMALL> message is sent for each item in the control. For fixed-size list boxes, the message is sent only once.</P>
+<p>The <small>WM_MEASUREITEM</SMALL> message has one parameter: a pointer to a <small>MEASUREITEMSTRUCT</SMALL> structure. This structure must be updated so that Windows will provide enough room for the owner-drawn item to be drawn. Here are the most commonly used members of <small>MEASUREITEMSTRUCT</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemID</SMALL>. Contains an identifier for the item to be drawn. For a menu item, this member contains the resource ID. For a list box or combo box, this member contains the zero-based index of the item to be drawn. List boxes and combo boxes will send -1 for empty controls when the focus rectangle should be drawn for the entire control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemWidth</SMALL>. Must be set to the width of the item, in pixels.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemHeight</SMALL>. Must be set to the height of the item, in pixels.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemData</SMALL>. Contains a 32-bit value previously associated with the item by the application.
+</DL>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Handling the WM_COMPAREITEM Message</FONT></H4>
+<p>The list box and combo box controls provide lists of items that can (optionally) be sorted. For owner-drawn list boxes and combo boxes, the owner of the control must be prepared to sort items contained in the controls, if the <small>LBS_SORT</SMALL> (for list boxes) or <small>CBS_SORT</SMALL> (for combo boxes) style bits are set. Windows will send the control&#146;s owner a <small>WM_COMPAREITEM</SMALL> message to request that two items contained in the control be compared. If you&#146;re using MFC, this message will be translated into an <small>OnCompareItem</SMALL> function call by the framework.</P>
+<p>The <small>WM_COMPAREITEM</SMALL> message has one parameter: a pointer to a <small>COMPAREITEMSTRUCT</SMALL> structure. This structure must be updated so that Windows can determine the relative positions of items located inside the owner-drawn control. Here are the most commonly used members of <small>COMPAREITEMSTRUCT</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemID1</SMALL>. Contains the item identifier of the first item to be compared.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemData1</SMALL>. Contains a 32-bit value previously associated with the first item by the application.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemID2</SMALL>. Contains the item identifier of the second item to be compared.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemData2</SMALL>. Contains a 32-bit value previously associated with the second item by the application.
+</DL>
+<p>The owner of the control must compare the relative order of the two items and return one of these values:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;-1 (if the first item should be placed before the second item)
+<dd><b>&#149;</B>&nbsp;&nbsp;0 (if both items are equivalent)
+<dd><b>&#149;</B>&nbsp;&nbsp;1 (if the second item should be placed before the first item)
+</DL>
+<p>If the relative order of items in the control is not important, the control should not be given a sorted attribute.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Handling the WM_DELETEITEM Message</FONT></H4>
+<p>Owner-drawn list boxes and combo boxes normally contain pointers to dynamically allocated objects. When an item that uses a block of dynamic memory is deleted, Windows sends a <small>WM_DELETEITEM</SMALL> message to the control&#146;s owner. If multiple items are removed from the control (if the control is destroyed, for example), a <small>WM_DELETEITEM</SMALL> message will be sent for every item that is deleted. If you&#146;re using MFC, the framework will translate this message into an <small>OnDeleteItem</SMALL> function call.</P>
+<p>The <small>WM_DELETEITEM</SMALL> message has one parameter: a pointer to a <small>DELETEITEM</SMALL> structure. This structure is used to identify the item that is being deleted from the control. The most commonly used member of this structure is the <small>itemData</SMALL> member, which contains a 32-bit value previously associated with the control item. This 32-bit value is typically a pointer to a dynamically created object.</P>
+<h3><a name="Heading8"></A><font color="#000077">OwnDraw: An Owner Draw Example</FONT></H3>
+<p>As an example of using owner-drawn controls, the CD-ROM accompanying this book includes a dialog-based MFC project named OwnDraw. The OwnDraw project includes an owner-drawn list box that displays its items as though each item were a pushbutton control.
+</P>
+<p>Figure 12.1 shows the main dialog box for the OwnDraw project.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-01.jpg',335,203 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-01.jpg',335,203)"><font color="#000077"><b>Figure 12.1</B></FONT></A>&nbsp;&nbsp;The dialog box used by the OwnDraw project.</P>
+<p>Three new controls were added to the project, as listed in Table 12.4.
+</P>
+<table width="100%"><td caption align="LEFT" valign="TOP" colspan="3"><b>Table 12.4</B> Controls Used in the OwnDraw Dialog Box
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="20%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Resource ID</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Attributes</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">List box
+<td align="LEFT" valign="TOP"><small>IDC_LIST</SMALL>
+<td align="LEFT" valign="TOP">Owner draw fixed, unsorted
+<tr>
+<td align="LEFT" valign="TOP">Edit
+<td align="LEFT" valign="TOP"><small>IDC_EDIT</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Add pushbutton
+<td align="LEFT" valign="TOP"><small>IDC_ADD</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>ClassWizard was used to associate member variables with the list box and edit controls, as shown in Table 12.5.
+</P>
+<table width="100%"><td caption align="LEFT" valign="TOP" colspan="5"><b>Table 12.5</B> Member Variables Associated with Controls in OwnDraw
+<tr>
+<td colspan="5"><hr>
+<tr>
+<th width="20%" align="LEFT" valign="TOP"><i>Control ID</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Class</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Variable</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Category</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Type</I>
+<tr>
+<td colspan="5"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_LIST</SMALL>
+<td align="LEFT" valign="TOP"><small>COwnDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_list</SMALL>
+<td align="LEFT" valign="TOP">Control
+<td align="LEFT" valign="TOP"><small>CListBox</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT</SMALL>
+<td align="LEFT" valign="TOP"><small>COwnDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_strEdit</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>CString</SMALL>
+<tr>
+<td colspan="5"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="12-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

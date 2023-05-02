@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=596-600//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Handling Button Clicks</B></FONT></P>
+<p>Three messages are used to draw the control and report events when the user clicks the PopButton control. <small>WM_LBUTTONUP</SMALL> and <small>WM_LBUTTONDOWN</SMALL> messages are sent from the operating system as the user presses and releases the primary mouse button over the control. In response to these messages, the control is drawn in either the down state (for <small>WM_LBUTTONDOWN</SMALL>) or the raised state (for <small>WM_LBUTTONUP</SMALL>).</P>
+<p>When the user clicks the PopButton control, the underlying button will generate a <small>BN_CLICKED</SMALL> notification message. This message is used to create an <small>OnClicked</SMALL> event that&#146;s sent to the control&#146;s container.</P>
+<p><font size="+1"><b>Handling the Focus Rectangle</B></FONT></P>
+<p>One important visual indicator supplied by any user interface component is the focus rectangle. If the focus rectangle isn&#146;t drawn correctly, the user may be confused about the input state of the control.
+</P>
+<p>Two messages are used to draw the focus rectangle. The <small>WM_SETFOCUS</SMALL> message is sent just before the control receives input focus and causes the familiar dotted focus rectangle to be drawn around the control. The <small>WM_KILLFOCUS</SMALL> message is sent just before focus is lost by the control and causes the focus rectangle to be removed.</P>
+<p>It&#146;s so important that the focus rectangle be drawn correctly that Windows offers an API function that handles it all for you:</P>
+<!-- CODE SNIP //-->
+<pre>
+DrawFocusRect(hdc, lprc);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You call <small>DrawFocusRect</SMALL> with two parameters: the device context that you&#146;re drawing into and the rectangle that describes the focus rectangle&#146;s boundaries. This function is also called to remove the focus rectangle&#151;if you call it a second time with the same rectangle, the focus rectangle is removed.</P>
+<h4 align="LEFT"><a name="Heading26"></A><font color="#000077">Creating the PopBtn Project</FONT></H4>
+<p>The PopBtn project is used to create the PopButton control; it was created using the Visual C<small>&#43;&#43;</SMALL> ATL Control Wizard. The control is a DLL project, as shown in its ATL COM Wizard page in Figure 18.16.</P>
+<p><a name="Fig16"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-16.jpg',477,383 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-16t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-16.jpg',477,383)"><font color="#000077"><b>Figure 18.16</B></FONT></A>&nbsp;&nbsp;The ATL COM Wizard, as used to create the PopBtn project.</P>
+<p>The PopBtn ActiveX control project does not use any of the optional features offered by ATL Control Wizard. None of these options is suitable for this ActiveX control:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Allow merging of proxy/stub code</I>. This option doesn&#146;t apply to ActiveX controls because they&#146;re always used in process. Selecting this option doesn&#146;t cause any real harm, but it does increase the size of your control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Support MFC</I>. The entire purpose of ATL is to enable the creation of small, fast controls. In keeping with that theme, the PopBtn project does not use MFC. If you must use MFC, be aware that you&#146;re adding a large amount of mainly unnecessary code to your control project. If you can&#146;t live without MFC, consider using the MFC Library for your control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Support MTS</I>. This option adds support for the Microsoft Transaction Server threading model. This option isn&#146;t selected for the PopBtn project because it&#146;s not an MTS component.
+</DL>
+<p>Click Finish to generate the PopBtn project files.
+</P>
+<p><font size="+1"><b>Adding the PopButton Control Class to the PopBtn Project</B></FONT></P>
+<p>The ActiveX component in the PopBtn project is implemented by adding an ATL object into the project with the ATL Object Wizard. Start by selecting New ATL Object from the Insert menu.
+</P>
+<p>There are several different categories of ATL objects available from the ATL Object Wizard:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Objects</I>. As discussed in Chapter 17, this category contains different types of custom COM objects.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Controls</I>. Contains different types of ActiveX controls that can be added to your project, as discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Miscellaneous</I>. Contains a dialog box object that can be added to your project.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Data Access</I>. Contains data provider and consumer objects.
+</DL>
+<p>There are seven different types of control objects:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Full Control</I>. Generates an object that implements a full ActiveX control that can be hosted in all containers
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Property Page</I>. Generates an object that provides a property page
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Composite Control</I>. Generates an object that can contain multiple windows
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>HTML Control</I>. Generates an object that uses a Web page as its user interface
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Lite Control</I>. Similar to a full control but supports only the minimum interfaces required for Internet Explorer
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Lite Composite Control</I>. Similar to a composite control but supports only the minimum interfaces required for Internet Explorer
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Lite HTML Control</I>. Similar to an HTML control but supports only the minimum interfaces required for Internet Explorer
+</DL>
+<p>The PopBtn project will implement a full control. Select Controls from the list box on the left side of the wizard and then select Full Control as the control type, as shown in Figure 18.17.
+</P>
+<p><a name="Fig17"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-17.jpg',413,257 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-17t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-17.jpg',413,257)"><font color="#000077"><b>Figure 18.17</B></FONT></A>&nbsp;&nbsp;The ATL Object Wizard.</P>
+<p>After you&#146;ve selected the type of control to be built, you must define the control&#146;s attributes using the ATL Object Wizard dialog box. This dialog box has four tabs, with each tab used to define a different set of properties for the control.
+</P>
+<p>The number of tabs available for an ATL object varies depending on the object type. A full control has four tabs, as shown in Figure 18.18.</P>
+<p><a name="Fig18"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-18.jpg',421,278 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-18t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-18.jpg',421,278)"><font color="#000077"><b>Figure 18.18</B></FONT></A>&nbsp;&nbsp;The ATL Object Wizard Properties dialog box.</P>
+<p>The Names tab for a full control is just like the Names tab used in custom COM objects in Chapter 17. The name of the ATL object added to the PopBtn project is <small>PopButton</SMALL>. The properties in the Names tab for the PopButton object are provided in Table 18.10. You&#146;ll only need to fill in the short name for the ATL Object&#151;the other fields will be filled in automatically.</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 18.10</B> Contents of the Names Tab for the PopButton Control
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="30%" align="LEFT" valign="TOP"><i>Property</I>
+<th width="70%" valign="TOP" align="LEFT"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Short Name
+<td valign="TOP" align="LEFT"><small>PopButton</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Class
+<td valign="TOP" align="LEFT"><small>CPopButton</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">.H File
+<td valign="TOP" align="LEFT"><small>PopButton.h</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">.CPP File
+<td valign="TOP" align="LEFT"><small>PopButton.cpp</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">CoClass
+<td valign="TOP" align="LEFT"><small>PopButton</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Interface
+<td valign="TOP" align="LEFT"><small>IPopButton</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Type
+<td valign="TOP" align="LEFT"><small>PopButton</SMALL> Class
+<tr>
+<td valign="TOP" align="LEFT">Prog ID
+<td valign="TOP" align="LEFT"><small>PopBtn.PopButton</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The second tab is labeled Attributes and, again, is identical to the Attributes tab discussed in Chapter 17. This tab is used to collect information about the threading model and other object attributes, as shown in Figure 18.19.
+</P>
+<p><a name="Fig19"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-19.jpg',420,278 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-19t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-19.jpg',420,278)"><font color="#000077"><b>Figure 18.19</B></FONT></A>&nbsp;&nbsp;The ATL object attributes used for PopButton.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

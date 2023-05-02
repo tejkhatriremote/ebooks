@@ -1,0 +1,220 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=240-244//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-14.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Issue a sleep command in the background for 100 seconds. Make note of the process ID (PID), so you can kill it right away.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 74% kill -SEGV 16965
+[1]    Segmentation fault   sleep 100 (core dumped)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Send a <small>kill</SMALL> request to force the process to dump a core file on exiting the process.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 75% ls -al core
+-rw-r--r--    1 apps user      99420 Nov 28 12:54 core
+rocket 76% file core
+core:    core dump of &#145;sleep&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can now see that the core file never grows over the 1000KB limit set on it. If a limit size of 0 is set for the <small>coredumpsize</SMALL>, a core file is never created.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 77% rm core
+rocket 78% <b>limit coredumpsize 0</B>
+rocket 79% sleep 100 &amp
+[1] 16971
+rocket 80% kill -SEGV 16971
+[1]    Segmentation fault   sleep 100
+rocket 81% ls -al core
+Cannot access core: No such file or directory
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>If you need to modify the size of the core file and you are unconcerned about the size when an application or program crashes, set the limit size on the core file.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Often you find the disk space on workstations reaching capacity. In some cases, if the root filesystem fills up, the system is sluggish or might even crash. If you know that there is a strong chance that the disks would be full if a core dump were to take place, you might want to set the limit. In many cases, the message logging system catches any major errors, such as memory parity or disk I/O errors.
+</P>
+<p>If the <small>coredumpsize</SMALL> is set to 0 and an application or a program keeps crashing consistently, free up some disk space, change the limit of the <small>coredumpsize</SMALL> back to unlimited, and let the application crash again so you can get a copy of the core dump.</P>
+<p>I have seen some specific applications have 1GB of RAM with a 2GB internal system disk. When applications crashed there was no room for a core file, so I had to rely on the system logs for hardware errors and the programmers were stuck without core files to diagnose the software problems.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>kill, limit</SMALL></P>
+<h3><a name="Heading26"></A><font color="#000077">6.13 uuencode and uudecode</FONT></H3>
+<h4 align="LEFT"><a name="Heading27"></A><font color="#000077">6.13.1 Description</FONT></H4>
+<p>There is still a need for UNIX administrators to understand the conversion process of <small>uuencoding</SMALL> binary files into ASCII text and <small>uudecoding</SMALL> them back to binary.</P>
+<p><font size="+1"><b>Example One: Encoding a Binary File</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+uuencode [file] name
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When encoding a binary file into an ASCII file, three filenames get passed to the <small>uuencode</SMALL> command. The first is the name of the actual file being uuencoded. The second is the name that the file will become after the uuencoded file is decoded. This can be the same as the first name. The third is the filename the uuencoded file is stored as. The last filename usually has the .uu extension tacked to the end of the file. It might all sound confusing, but it&#146;ll all make sense in a minute.</P>
+<p>For example, suppose there&#146;s a new compiled version of a program called <small>top</SMALL> in binary format. You would have to uuencode the file before you could email it to a friend. It works like this:</P>
+<!-- CODE //-->
+<pre>
+rocket 82% uuencode top top.new &gt top.uu
+rocket 83% more top.uu
+begin 755 top.new
+M?T5,1@$&#147;&#145;0&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#148;&#145;&#145;@&#145;&#145;&#145;&#145;!$&#145;&#145;9=&#145;&#145;&#145;&#145;#0&#145;&#145;&#146;C0(&#145;&#145;&#145;)&#145;&#145;T&#145;&#148;&#145;&#145;
+M!P&#145;H&#145;!@&#145;%P&#145;&#145;&#145;&#145;8&#145;&#145;&#145;&#145;T$&#145;&#145;&#145;-!&#145;&#145;&#145;#0&#145;&#145;&#145;#@&#145;&#145;&#145;&#145;X&#145;&#145;&#145;&#145;&#145;0&#145;&#145;&#145;&#145;$&#145;&#145;&#145;&#145;&#145;P&#145;&#145;
+M&#145;100&#145;&#145;$4$&#145;&#145;!%&#145;&#145;&#145;&#145;!$&#145;&#145;&#145;&#145;1&#145;&#145;&#145;&#145;!&#145;&#145;&#145;&#145;&#145;%P&#145;&#145;&#145;&#148;&#145;&#145;&#145;!*!&#145;&#145;&#145;2@0&#145;&#145;$H&#145;&#145;&#145;&#145;
+.
+.
+.
+M&#145;*$&#145;&#145;&#145;&#145;(&#145;&#145;&#145;&#145;&#145;Q&#145;!:&#148;&#145;&#145;&#145;&amp@@&#145;&#145;&#145;%Y&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;$&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;%M&lt&#145;&#145;&#145;
+M&#146;@@&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;!P&#145;&#145;&#145;&#145;!S&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;$&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;!E&#145;&#145;&#145;&#145;&#145;,&#145;&#145;&#145;&#145;&#145;
+&lt&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;=S&#145;&#145;&#145;&#145;&amp&gt&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;$&#145;
+&#145;
+end
+</PRE>
+<!-- END CODE //-->
+<p>You can see that the uuencoded file top.uu can be viewed because it is now an ASCII file. The file is also marked by <small>begin</SMALL> and <small>end</SMALL> markers. Following the <small>begin</SMALL> marker, on the first line of the file is the permission that the file top.new has when it is decoded. This filename (top.new) is the same as the second name that was used at the time <small>uuencode</SMALL> was run on the binary file. The file is now ready to be emailed to a friend, posted to a Usenet newsgroup, or about anything else you want to do with it.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 84% mail friend@foo.com &lt top.uu
+</PRE>
+<!-- END CODE SNIP //-->
+<p>It is possible to uuencode a file and email it all in one command. As you might remember from section 4.5, &#147;Mail a Process,&#148; you can pipe the output of a command or process to an email address.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 85% uuencode top top.new | mail friend@foo.com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the file arrives at the destination email address it is ready to be uudecoded, or the email client interprets it for the recipient.
+</P>
+<p>It is possible to uuencode a series of files within a particular directory by creating a quick script that processes each file and uuencodes it.</P>
+<!-- CODE //-->
+<pre>
+vi uuall
+
+
+#! /bin/sh
+
+for uufile in &#145;ls -1&#145;
+do
+  uuencode $uufile $uufile &gt $uufile.uu
+done
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the shell to be used.
+</P>
+<p>Line 2: Process each file in the current directory.</P>
+<p>Line 4: While processing through each file, uuencode it with its current name and place a .uu extension on the uuencoded file.</P>
+<p>When the <small>uuall</SMALL> script is executed, it progresses through a directory and all the files are uuencoded.</P>
+<!-- CODE //-->
+<pre>
+rocket 64% ls -al
+total 458
+drwxr-xr-x    2 ugu user         512 Jan 2 16:46 ./
+drwxr-xr-x   31 ugu user        2048 Jan 2 16:45 ../
+-rw-r--r--    1 ugu user       45898 Jan 2 16:46 ugu.gif
+-rw-r--r--    1 ugu user       81920 Jan 2 16:46 uguboard.tar
+-rwxr-xr-x    1 ugu user        3854 Jan 2 16:46 ugugrab*
+
+rocket 65% uuall
+
+rocket 66% ls -la
+total 1084
+drwxr-xr-x    2 ugu user         512 Jan 2 16:48 ./
+drwxr-xr-x   31 ugu user        2048 Jan 2 16:45 ../
+-rw-r--r--    1 ugu user       45898 Jan 2 16:46 ugu.gif
+-rw-r--r--    1 ugu user       71042 Jan 2 16:48 ugu.gif.uu
+-rw-r--r--    1 ugu user       81920 Jan 2 16:45 uguboard.tar
+-rw-r--r--    1 ugu user      112899 Jan 2 16:48 uguboard.tar.uu
+-rwxr-xr-x    1 ugu user        3854 Jan 2 16:46 ugugrab*
+-rw-r--r--    1 ugu user        5336 Jan 2 16:48 ugugrab.uu
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-14.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

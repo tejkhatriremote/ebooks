@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Understanding the Architecture</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=18//-->
+<!--PAGES=543-545//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch17/540-542.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="545-549.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 18<br>Understanding the Architecture
+</FONT></H2>
+<dl>
+<dt><b>Featuring:</B>
+<dt>Understanding Rings and Things: CPU Privilege Levels
+<dt>Designing Architecture Independence
+<dt>Designing Robustness
+<dt>Working with Windows 2000&#146;s Major Modules
+<dt>Managing Memory in Windows 2000
+</DL>
+<p><big><big>B</BIG></BIG>uilding an operating system is all about choices and trade-offs. Consequently, no single operating system is the best for every user and every need, although we&#146;d argue that Windows 2000 is in the running. Understanding those choices and trade-offs makes understanding Windows 2000 easier.</P>
+<p>Judging by most books on operating systems, publishers and writers seem to believe that operating system internals are of interest only to programmers. We don&#146;t think that point of view is defensible. Support people, power users, and troubleshooters will have a better understanding of Windows 2000&#146;s problems and strengths if they are comfortable with terms such as <i>GDI, User,</I> and <i>WOWEXEC.</I></P>
+<p>In this chapter, we take you on a tour of Windows 2000&#146;s main components, its client-server structure, and its environment subsystems. We also look at a controversial change in Windows 2000&#146;s architecture&#151;the decision to move the graphical user interface (GUI) from ring 3 into ring 0. Now, if you&#146;re not a hardware type and are saying to yourself, &#147;Hmm &#133; I try to answer the phone by the third ring. What&#146;s ring 0?&#148; then stay tuned; it&#146;ll all be clear soon.</P>
+<h3><a name="Heading2"></A><font color="#000077">Understanding Rings and Things: CPU Privilege Levels</FONT></H3>
+<p>Despite the intention that Windows 2000 would be an architecture-independent operating system, Windows 2000 does include a few elements that are common to most processors. (<i>Architecture-independent</I> really means processor-independent.) One of the most important concepts related to architecture independence is the notion of <i>memory protection and privilege</I>.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">A Major Software Problem: Clobbering Memory</FONT></H4>
+<p>Put two programs into a computer, and you&#146;ll soon experience the problem of keeping those programs from damaging each other. Even if your computer is running a <i>multitasking operating system</I>&#151;that is, an operating system that supports more than one program running at a time&#151;a potential problem lurks. Applications can grow and shrink dynamically, as required by their owners. You start up Word for Windows (WinWord to those of us who write about it a lot), and it may initially ask the operating system for only a couple of megabytes of RAM. But insert a few big graphics, and before you know it, WinWord is grabbing megabytes by the fistful.</P>
+<p>What happens if Word needs four more megabytes, but the operating system has only two more to give it? A well-behaved application would accept the bad news and deal with it. But a buggy application (and unfortunately every application is at least a <i>little</I> buggy) might start writing to the memory that it owns and then keep going, and going, and going, right on past its allotted memory region. In the process, the errant application would overwrite another application&#146;s memory, damaging that application. This problem is probably the most common and most troublesome of programming errors, and it&#146;s known by many names. Back when one of us wrote mainframe Fortran for a living, we called it an 0C1 or an 0C4, for the error messages that it generated. Some programmers would say the bad application was &#147;scribbling&#148; all over another application&#146;s memory; still others would refer to the application &#147;clobbering&#148; the other application&#146;s memory.</P>
+<p>Windows 3.1 programs caused this problem all the time. When the Windows 3.1 operating system noticed the problem, it would report a <i>general protection fault</I>, or GPF.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Anti-Clobber Features</FONT></H4>
+<p>Now, GPFs aren&#146;t necessarily a bad thing. When a GPF occurs, it means that the CPU and the operating system are working together to detect and stop berserk applications before they start destroying other applications. GPFs were a problem in Windows 3.1 because Windows 3.1 didn&#146;t use the built-in protection of the CPU chip effectively. As a result, Windows 3.1 was good at sounding the alarm, but not so good at mustering the troops to keep the infidels from the gate; although this isn&#146;t a book about Windows 3.1, we explain a bit more about GPFs later.
+</P>
+<p>Applications strayed out of their assigned memory areas so often in Windows 3.1 programs that a company named Numega has made a fair amount of money selling a product called Bounds-Checker that helps you catch a program in the act of stepping out of its allowed memory space. Although Bounds-Checker is one of the truly great debugging applications of our time, Numega should never have <i>needed</I> to write it&#151;checking for memory clobbering is the operating system&#146;s job, not the job of some third-party utility.</P>
+<p>A large portion of the instability in Windows 3.1 can be traced to the system&#146;s laissez-faire attitude about how its applications use memory. An example is a word processor scribbling all over a spreadsheet&#151;but what&#146;s to keep the word processor from scribbling all over the <i>operating system</I>?</P>
+<p>In the case of Windows 3.1, <i>nothing</I> stops the word processor from scribbling all over the operating system, and that&#146;s why Windows 3.1 is so easy to crash. Windows 2000&#146;s designers wanted to do better than that.</P>
+<p>As it turns out, most modern processors include a built-in feature called the <i>memory protection model</I> that makes building an operating system with zero tolerance for memory clobbers fairly simple.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch17/540-542.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="545-549.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=776-779//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Defining Some Theory</B></FONT></P>
+<p>To build a clean Web application, you need to identify the activities. Is this activity the same as an activity from the COM&#43; services? The answer is yes. However, there&#146;s an extra dimension. In the COM&#43; activity, the state is only kept within it. There&#146;s no discussion on how the activity, as defined in the previous COM&#43; chapters, was started.
+</P>
+<p>Look at Figure 23.4. The logon routines have been encapsulated into two activities: The first is a logon activity, and the second is a registration activity. Once the logon activity has been cleared, the main operations activity can be started.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-04.jpg',199,158 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-04.jpg',199,158)"><font color="#000077"><b>Figure 23.4</B></FONT></A>&nbsp;&nbsp;An improved business decision diagram.</P>
+<p>The individual activities make up a transaction. However, to get to the activities, you must define an extra step of dependencies. For example, to get to the main operations activity, you need to pass the logon activity. The registration activity can be accessed from the root action or from a failed logon activity. However, the registration activity cannot be used to access the main operations activity. This is a dependency definition.
+</P>
+<p>Between the various activities, a context must be kept. This context defines which activities have been cleared; it has nothing to do with transaction or COM&#43; contexts. Some argue that this is not a good thing, because it requires more resources. This is true, but with an efficient context design, it becomes simpler to build Web applications.</P>
+<p><font size="+1"><b>Types of Web Activities</B></FONT></P>
+<p>Web activity design can be classified in five general categories:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Information</I>. This is the simplest type of activity. It&#146;s a read-only operation that can be password protected, database driven, or use static pages. It&#146;s <i>informational</I> because the global key has no impact on how the data is generated or displayed. When this information is being generated, it can either be used with ASP directly or call a component. This type of task is a one-to-many distribution mechanism. An example would be the display of news or corporate pages.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Need to know</I>. This is a read-only activity, like the information activity, but it&#146;s dependent on the global key. When the page content is generated, it considers the global key and then potentially shows unique content for each global key. An example would be the displaying of a paycheck, which is unique for each person.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Application</I>. This is an input/output activity. It&#146;s dependent on the global key and displays information that directly correlates with the global key. When data is input, the global key is required to correlate the data being saved to the user. A key characteristic of this task is that it uses components for its input/output operations. An example would be a registration system, which allows the editing of attendee details by the attendee.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Anonymous</I>. This is an input/output activity, but it does not require a global key. The difference between this and the application task is that there&#146;s no global key. This does not mean that the <small>Session</SMALL> object is not used. The <small>Session</SMALL> object may still be used, but only to determine that the current user is the same user. An example would be an attendee who&#146;s registering for a conference, but the details are filled out once and never seen again on the Web site.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Add-on</I>. There are activities that do not fall into any of the preceding categories. They may or may not require a global key. These tasks might not even be Web based. The point of these tasks is to perform certain other tasks that are not part of the main business process. Code may have to be written and some parts of other tasks may be reused, but they stand alone. Examples are data backups, database-filling operations, and system maintenance.
+</DL>
+<p>Why the various activities? By being able to distinguish the various types of activities, you can define dependencies to the task. In the logon example, the registration activity is anonymous. This makes it possible to place the registration almost anywhere in the process flow. The logon activity is anonymous as well. However, the main operations activity can be either need-to-know or application. This means the dependency of the global key needs to be defined. Being able to split the activities makes it possible for you to build modular, reusable Web applications.
+</P>
+<h3><a name="Heading9"></A><font color="#000077">Implementing the Theory</FONT></H3>
+<p>The preceding activity technique cannot be enforced and is purely optional. However, by using it, your application development is much simpler. The rest of this chapter focuses on the implementation of activities and some common ASP tasks.
+</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Processing HTML Forms</FONT></H4>
+<p>The most common operation in a Web application is the processing of Web forms. To do this, you use a <small>Request</SMALL> object to retrieve the information about the form.</P>
+<p>The <small>QueryString</SMALL> and <small>Form</SMALL> collections perform the same function but are used in different situations. For example, consider the following HTML form:</P>
+<!-- CODE //-->
+<pre>
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&ltTITLE&gt&lt/TITLE&gt
+&lt/HEAD&gt
+&ltBODY&gt
+&ltform action=formProc.asp method=post&gt
+&ltbr&gtField 1: &ltINPUT type=&#148;text&#148; id=txtField1 name=txtField1&gt
+&ltbr&gtField 2: &ltINPUT type=&#148;text&#148; id=txtField2 name=txtField2&gt
+&ltINPUT type=&#148;submit&#148; value=&#148;Submit&#148; id=submit1 name=submit1&gt
+&lt/form&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>In this HTML form, the action involves the ASP page <small>formProc.asp</SMALL>. The method is of the type <small>POST</SMALL>. In HTTP, it&#146;s possible to pass parameters from the client to the server using <small>POST</SMALL> or <small>GET</SMALL>. The difference between the two is where the parameters are located in the HTTP header. Also, <small>POST</SMALL> can handle larger amounts of data (which can even be binary). The <small>GET</SMALL> method can handle only regular HTML form parameters. In this sample ASP page, you&#146;ll want to read the value of the fields txtField1 and txtField2.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B><p>There&#146;s something strange about the <small>INPUT</SMALL> tags. There are two attributes, <small>ID</SMALL> and <small>NAME</SMALL>, and both have the same name. Why? The answer is because of DHTML. In DHTML, to be able to reference an element using a name, you must include an <small>ID</SMALL> attribute. However, for legacy purposes, the <small>NAME</SMALL> attribute has been kept because the form-processing functionality requires it. Therefore, you need to keep both attributes and label them the same.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Here&#146;s the <small>formproc.asp</SMALL> page:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=Javascript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+
+&ltp&gtForm collection
+&ltbr&gtField 1: &lt%=Request.Form(&#147;txtField1&#148;)%&gt
+&ltbr&gtField 2: &lt%=Request.Form(&#147;txtField2&#148;)%&gt
+&lt/p&gt
+
+&ltp&gtQuerystring collection
+&ltbr&gtField 1: &lt%=Request.QueryString(&#147;txtField1&#148;)%&gt
+&ltbr&gtField 2: &lt%=Request.QueryString(&#147;txtField2&#148;)%&gt
+&lt/p&gt
+
+&ltp&gtFull collection
+&ltbr&gtField 1: &lt%=Request(&#147;txtField1&#148;)%&gt
+&ltbr&gtField 2: &lt%=Request(&#147;txtField2&#148;)%&gt
+&lt/p&gt
+
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

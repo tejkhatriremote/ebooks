@@ -1,0 +1,247 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=463-467//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="14-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>After these changes have been made and ClassWizard is closed, the necessary Automation skeleton functions are added to your project. ClassWizard also adds dispatch maps to the <small>CAutoBubDoc</SMALL> class and modifies the <small>AutoBub.odl</SMALL> file.</P>
+<p>The complete implementation for the new Automation functions is provided in Listing 14.5.</P>
+<p><b>Listing 14.5</B> Automation Methods Added to the <small>CAutoBubDoc</SMALL> Class</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CAutoBubDoc::Clear()
+{
+    m_rgBubble.RemoveAll();
+    UpdateAllViews(NULL);
+}
+
+void CAutoBubDoc::Add(long clr, short nYPos, short nXPos, short nRadius)
+{
+    CBubble     bub;
+
+    bub.m_nRadius = nRadius;
+    bub.m_ptCenter.x = nXPos;
+    bub.m_ptCenter.y = nYPos;
+    bub.m_clr = clr;
+
+    AddBubble(bub);
+
+    UpdateAllViews(NULL);
+}
+
+long CAutoBubDoc::CountIs()
+{
+    return GetCount();
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Note that the Automation functions make use of the existing functions whenever possible.</P>
+<p>The ODL file created by ClassWizard is provided in Listing 14.6. Some of the comments have been removed for clarity. You don&#146;t have to enter this code yourself&#151;it&#146;s provided here so that you can see how the Automation methods and properties are declared using the Microsoft ODL syntax.</P>
+<p>ODL (or <i>Object Definition Language</I>) is similar to the more modern IDL (or <i>Interface Definition Language</I>), which is used to define COM interfaces. Using IDL is discussed in Chapter 16, &#147;COM Threading Models.&#148;</P>
+<p><b>Listing 14.6</B> The AutoBub ODL File</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+[ uuid(06A6EDEB-A2FD-11CF-9C7D-000000000000), version(1.0) ]
+library AutoBub
+{
+    importlib(&#147;stdole32.tlb&#148;);
+
+    //  Primary dispatch interface for CAutoBubDoc
+
+    [ uuid(06A6EDEC-A2FD-11CF-9C7D-000000000000) ]
+    dispinterface IAutoBu
+    {
+        properties:
+            //{{AFX_ODL_PROP(CAutoBubDoc)
+            [id(1)] long Count;
+            //}}AFX_ODL_PROP
+
+        methods:
+            //{{AFX_ODL_METHOD(CAutoBubDoc)
+            [id(2)] void Clear();
+            [id(3)] void Add(long clr, short x, short y, short r);
+            //}}AFX_ODL_METHOD
+    };
+
+    //  Class information for CAutoBubDoc
+    [ uuid(06A6EDEA-A2FD-11CF-9C7D-000000000000) ]
+    coclass CAutoBubDoc
+    {
+        [default] dispinterface IAutoBu;
+    };
+    //{{AFX_APPEND_ODL}}
+};
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>One final change must be made for the AutoBub project. By default, Automation servers are not displayed when launched by an Automation controller. This behavior is useful for many Automation servers; however, it defeats the purpose of the AutoBub application. The <small>CAutoBubApp::InitInstance</SMALL> function must be modified as shown in Listing 14.7. <small>InitInstance</SMALL> is a fairly large function, so I&#146;ve highlighted the changed lines and omitted most of the unchanged lines.</P>
+<p><b>Listing 14.7</B> Modifications to the <small>CAutoBubApp::InitInstance</SMALL> Function</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+BOOL CAutoBubApp::InitInstance()
+{
+.
+.
+.
+    // Check to see if launched as OLE server
+    if (cmdInfo.m_bRunEmbedded || cmdInfo.m_bRunAutomated)
+    {
+        // Register all OLE server (factories) as running.  This
+        // enables the OLE libraries to create objects from other
+        // applications.
+        COleTemplateServer::RegisterAll();
+
+        // Application was run with /Automation.  Okay to show the
+        // main window in this case.
+        if (!ProcessShellCommand(cmdInfo))
+            return FALSE;
+        return TRUE;
+    }
+.
+.
+.
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>After making these changes, compile and run the AutoBub project. AutoBub is now ready to be used as a Automation server. In the next two sections, you&#146;ll create Automation controllers using Visual Basic and VBScript.</P>
+<h3><a name="Heading13"></A><font color="#000077">Using Visual Basic to Create an Automation Controller</FONT></H3>
+<p>The classic Automation controller is Visual Basic. Although Visual Basic now supports early binding via the virtual function table, it&#146;s still a very popular Automation controller. In this section, you&#146;ll create a 32-bit application that drives AutoBub through its Automation interface. This application, named AutoBasic, displays a dialog box that can be used to add bubbles to an instance of AutoBub. The main form used in the AutoBasic project is shown in Figure 14.9.
+</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-09.jpg',262,210 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-09.jpg',262,210)"><font color="#000077"><b>Figure 14.9</B></FONT></A>&nbsp;&nbsp;The main form used by the AutoBasic project.</P>
+<p>The control name properties are listed in Table 14.9. Properties not listed should be set to their default values. The Apply and Close pushbuttons are elements in a control array named <small>cmd</SMALL>.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 14.9</B> Name Properties for Controls in the Main AutoBasic Form
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Resource ID</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">X Edit control
+<td align="LEFT" valign="TOP"><small>txtXPos</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Y Edit control
+<td align="LEFT" valign="TOP"><small>txtYPos</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Apply pushbutton
+<td align="LEFT" valign="TOP"><small>cmd(0)</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Close pushbutton
+<td align="LEFT" valign="TOP"><small>cmd(1)</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Red Edit control
+<td align="LEFT" valign="TOP"><small>txtRed</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Green Edit control
+<td align="LEFT" valign="TOP"><small>txtGreen</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Blue Edit control
+<td align="LEFT" valign="TOP"><small>txtBlue</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Radius Edit control
+<td align="LEFT" valign="TOP"><small>txtRadius</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>Code in a Visual Basic project is placed into procedures and functions, depending on the object and event affected by the code. Declarations that are used for the entire project belong in the (General) object section. Add a declaration under (General) for the Automation object. It should look like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Dim BubbleMachine As Object
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Before the Automation object can be used, it must be initialized by calling the <small>CreateObject</SMALL> function. <small>CreateObject</SMALL> locates the AutoBub server, creates an instance of it, finds its <small>IDispatch</SMALL> interface, and initializes the <small>BubbleMachine</SMALL> object. Add the code provided in Listing 14.8 as the <small>Load</SMALL> procedure for the <small>Form</SMALL> object.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="14-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

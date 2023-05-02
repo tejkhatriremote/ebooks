@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=923-925//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="27-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 27.4 begins by initializing the COM runtime library and performing serverless binding to the Users node in Active Directory. The <small>ADsGetObject</SMALL> function is used to execute the bind operation and return a pointer to the <small>IDirectorySearch</SMALL> interface.</P>
+<p>The <small>SetSearchPrefs</SMALL> function is called to define parameters used for the search operation. <small>SetSearchPrefs</SMALL> fills an array of <small>ADS_SEARCHPREF_INFO</SMALL> with values that define parameters for the search operation, such as the maximum amount of time that can be spent on the search, the maximum size of a result, and the scope of the search operation. <small>SetSearchPrefs</SMALL> isn&#146;t shown here, but it can be found on the CD-ROM that accompanies the book. The preferences for the search are associated with the <small>IDirectorySearch</SMALL> interface by calling the <small>SetSearchPreference</SMALL> method and passing the array of <small>ADS_SEARCHPREF_INFO</SMALL> and the number of elements in the array as parameters.</P>
+<p>Next, the <small>IDirectorySearch::ExecuteSearch</SMALL> method is called. This function takes four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An LDAP search filter. In this case, the results are filtered to include only directory users.
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of Unicode strings that contain the columns to be returned in the search result.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of columns to be searched.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>ADS_SEARCH_HANDLE</SMALL> structure that&#146;s used for further operations on the search result.
+</DL>
+<p>The <small>IDirectorySearch::GetNextRow</SMALL> method is called to retrieve the first row from the search result. The contents for each column in the row are retrieved using the <small>GetColumn</SMALL> method. The data for each column is returned in an <small>ADS_SEARCH_COLUMN</SMALL> structure, which is cracked and printed in the <small>PrintColumnToConsole</SMALL> function. This function is not shown here due to its size, but it can be found on the accompanying CD-ROM as part of the Search project. Columns and rows are iterated until the search result has been completely parsed.</P>
+<p>After all columns and rows have been displayed, the search handle is released by calling the <small>CloseSearchHandle</SMALL> function, followed by releasing interface pointers and uninitializing the COM runtime library.</P>
+<p><font size="+1"><b>Using ADSI Persistent-Object Interfaces</B></FONT></P>
+<p>ADSI persistent-object interfaces are used to manage directory objects that are permanent members of the directory, such as users, computers, and domains. Here are the interfaces in this category:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsCollection</SMALL>. An interface that&#146;s used to represent a set of data. A client uses this interface to enumerate the elements in the set.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsComputer</SMALL>. An interface that represents the attributes of a computer, including its name, description, operation system, and owner.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsDomain</SMALL>. An interface that represents information about a network domain, such as the maximum password age and other password attributes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsFileService</SMALL>. An interface that represents a file service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsFileShare</SMALL>. An interface that enables the management of network file share information, such as its description or the number of users permitted to access the share point.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsGroup</SMALL>. An interface that facilitates group membership management through the directory service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsLocality</SMALL>. An interface that enables management of locality information in directories that organize membership by region.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsMembers</SMALL>. An interface that&#146;s used to manage a collection of directory objects that belong to a particular group.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsO</SMALL>. An interface that enables management of organization or company information in directories that categorize membership by organization.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsOU</SMALL>. An interface that enables management of departmental information in directories that categorize membership by organizational unit.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsPrintjob</SMALL>. An interface that&#146;s used to manage a print job in a printer queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsPrintQueue</SMALL>. An interface that enables management of printer information, such as the printer&#146;s name and description.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsService</SMALL>. An interface that represents a running system service, such as the RAS or fax service. The <small>IADsFileService</SMALL> interface is derived from <small>IADsService</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsUser</SMALL>. An interface that enables management of user account information, such as a user&#146;s password, name, description, phone number, and department.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="27-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

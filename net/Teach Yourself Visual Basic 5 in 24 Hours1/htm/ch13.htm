@@ -1,0 +1,799 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch12.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch14.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 13</A>
+	<UL>
+		<LI><A HREF="#Heading2">Modular Programming</A>
+		<UL>
+			<LI><A HREF="#Heading3">Structured Programming</A>
+			<LI><A HREF="#Heading4">Calling Procedures and Returning from Them</A>
+			<LI>
+			<LI><A HREF="#Heading6">Why Code External Modules?</A>
+			<UL>
+				<LI><A HREF="#Heading7">Figure 13.1.</A>
+			</UL>
+			<LI><A HREF="#Heading8">Coding Subroutines</A>
+			<UL>
+				<LI><A HREF="#Heading9">Figure 13.2.</A>
+				<LI><A HREF="#Heading10">Figure 13.3.</A>
+			</UL>
+			<LI><A HREF="#Heading11">Listing 13.1. A cost</A>
+			<LI><A HREF="#Heading12">of sales subroutine.</A>
+			<LI><A HREF="#Heading13">Coding Functions</A>
+			<LI><A HREF="#Heading14">Listing 13.2. Calculating postage</A>
+			<LI><A HREF="#Heading15">with a function procedure.</A>
+			<LI><A HREF="#Heading16">Coding Arguments</A>
+			<LI><A HREF="#Heading17">Receiving by Reference and by Value</A>
+			<LI><A HREF="#Heading18">Listing 13.3. Some procedures can</A>
+			<LI><A HREF="#Heading19">change the sending procedures arguments.</A>
+			<LI><A HREF="#Heading20">Summary</A>
+			<LI><A HREF="#Heading21">Q&amp;A</A>
+			<LI><A HREF="#Heading22">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading23">Quiz</A>
+				<LI><A HREF="#Heading24">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 13</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Modular Programming</FONT></H2>
+<P>This lesson covers the theory of good, structured programming techniques. By breaking
+your application into several procedures, you'll streamline your coding efforts,
+write more accurate code, and speed subsequent maintenance. Before you can successfully
+write well-structured code, you'll have to master argument passing. This lesson examines
+Visual Basic's two argument-passing methods and describes when and why you would
+choose one over the other.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>What benefits structured programming offers
+	<P>
+	<LI>Why short, numerous procedures beat long procedures
+	<P>
+	<LI>How to write your own functions and subroutines
+	<P>
+	<LI>When to use functions
+	<P>
+	<LI>How to code argument lists
+	<P>
+	<LI>Why VB uses two argument-passing methods
+	<P>
+	<LI>How to protect passed arguments
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">Structured Programming</FONT></H3>
+<P>You already know the best way to structure programs because you can use Microsoft's
+Visual Basic design as a guide. The small event procedures you've seen and coded
+are perfect examples of the correct way to code. Don't write long routines that do
+everything; instead, write small code procedures that each perform only one task,
+such as respond to a user's keystroke. If the keystroke is to trigger a bunch of
+things, keep the event procedure small and call other small procedures that do the
+detailed work.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>Structured programming is
+a programming method you use to break long programs into numerous small procedures,
+putting off the details as long as possible.</P>
+<P>For example, suppose that you need to perform the following tasks when the user
+clicks a Reconcile command button in a checkbook application:
+
+<DL>
+	<DD><B>1.</B> Display checks next to cleared items.<BR>
+	<B><BR>
+	2.</B> Total the cleared items.<BR>
+	<B><BR>
+	3.</B> Total the uncleared items.<BR>
+	<B><BR>
+	4.</B> Recommend an action if the manual checkbook balance and the checkbook computer
+	file's balance do not match.<BR>
+	<B><BR>
+	5.</B> Print a reconciliation report.
+</DL>
+
+<P>Such a detailed response to a single command button click would take many screens
+of code. Nevertheless, the <TT>Click()</TT> event procedure does not have to be many
+screens. Instead, you could insert a series of procedure calls that do the detailed
+work and keep the <TT>Click()</TT> procedure small like this:</P>
+<PRE><FONT COLOR="#0066FF">Private Sub cmdReconcile_Click ()
+  Call ClearItems ()
+  Call UnClearItems ()
+  If ChkBkIsBalanced () Then
+    Call OutBalanceAction ()
+  End If
+  Call ReconcilePrint ()
+End Sub
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You are now learning
+	about a topic called structured programming. In structured programming you delay
+	coding details for as long as you can. Keep subdividing your code procedures so they
+	simply control procedures that call more detailed procedures until you finally reach
+	the point where a task cannot be further subdivided. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>All of this event procedure's called procedures should themselves be as small
+as possible and only perform a single task, or a series of calls to other procedures.
+All of your code becomes a structured, manageable set of routines that each perform
+a single task or that control other tasks.</P>
+<P>Not only does structured programming make writing code easier, it makes managing
+code really simple. If your application contains a bug, you can more easily locate
+the bug because you follow the thread of procedures until you get to the routine
+that controls the logic with the bug. If your unclear balance is incorrect, you can
+go directly to the procedure that computes that balance and then locate the problem
+without affecting lots of other code around that routine.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>The called procedure is the
+procedure called by another procedure.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>The calling procedure is
+the procedure that triggers another's execution.
+<H3 ALIGN="CENTER"><A NAME="Heading4"></A><FONT COLOR="#000077">Calling Procedures
+and Returning from Them</FONT></H3>
+<P>The previous section discusses calling procedures. You have learned about the
+<TT>Call</TT> keyword, but you've not been exposed to <TT>Call</TT> before now. That
+is, you've not been directly exposed to <TT>Call</TT> even though you have performed
+a similar action by using the built-in <TT>Val()</TT> and <TT>Format()</TT> functions.</P>
+<P>When one procedure contains a <TT>Call</TT> statement, the <TT>Call</TT> statement
+puts the current procedure on hold and executes the called procedure. Here is one
+of the formats of the <TT>Call</TT> statement:</P>
+<PRE><FONT COLOR="#0066FF">Call Procedure
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The <TT>Call</TT>
+	keyword is sometimes optional, as you'll see later in this lesson. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Therefore, when one procedure's execution reaches its <TT>Call</TT> statement,
+that procedure is put on hold and execution begins at the called Procedure. Once
+the called procedure ends (whether it ends with the <TT>End Sub</TT> statement or
+an <TT>Exit Sub</TT> statement or by other means), the called procedure returns control
+to the calling procedure. The same thing happens when you call the built-in functions
+because a built-in function is a special kind of procedure: Your code temporarily
+stops, and the built-in function's code takes over and uses the argument and finally
+returns a value as well as control back to your code.</P>
+<P>You've seen event procedures and you've executed the built-in function procedures,
+and Visual Basic supports two other kinds of procedures:
+
+<UL>
+	<LI>Standard subroutine procedures
+	<P>
+	<LI>Standard function procedures that you write
+</UL>
+
+<P>A standard subroutine or function procedure does not respond to an event. A standard
+procedure only executes when called from elsewhere in the program.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>If a procedure
+	is defined with the <TT>Private</TT> keyword, then only procedures elsewhere within
+	that module can call that procedure. If a procedure is defined with the <TT>Public</TT>
+	keyword, all procedures in the project can call the procedure. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Standard procedures, whether they are subroutines or functions, can reside either
+inside a form module (following the event procedures) or inside an external module
+file you add to your project. Figure 13.1 illustrates the difference between subroutines
+and functions. The calling code calls both and they both do work. The subroutine
+does not return a value to the calling procedure. The function does return a value
+to the calling procedure, and the calling procedure must do something with that value
+such as assign the value to a variable or control. By the way, you'll understand
+all that's happening in Figure 13.1 before this lesson is over, so if some of it
+confuses you right now, don't be alarmed.
+<H3 ALIGN="CENTER"><A NAME="Heading6"></A><FONT COLOR="#000077">Why Code External
+Modules?</FONT></H3>
+<P>Generally, programmers put general-purpose <TT>Public</TT> procedures in their
+external modules (modules that are not form modules). These general-purpose subroutines
+and functions perform work such as calculations and printed output that you may want
+to repeat in several different applications. For example, if you want to incorporate
+Visual Basic code that prints your letterhead in two or more applications, you can
+write the code once, store the code in a standard module, and then add that module
+to whatever application needs the letterhead printed. The application's regular form
+module code might call the external module's letterhead routine when ready for the
+printed letterhead, such as before the body of a specific report prints. To add an
+external module to a project, simply right-click over the Project Explorer window
+and select Add Module. The extra module appears in the Explorer window and in the
+Code window. You then can switch between modules by double-clicking the module name
+in the Explorer window. The <TT>Sub</TT> keyword indicates that you're coding a subroutine
+and <TT>Function</TT> indicates that you're writing a function. Of course, you can
+put standard subroutines and functions inside form modules and you should do that
+if your event procedures get too long. The standard procedures serve to break down
+the longer problem into more manageable structured routines, as described earlier
+in this lesson.<BR>
+<BR>
+<A NAME="Heading7"></A><A HREF="../art/ch13/13cce01.jpg"><FONT COLOR="#000077">Figure
+13.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>Both subroutines and functions do
+work, but only functions return values. </I><BR>
+<BR>
+As Figure 13.1 illustrates, when you want to write a procedure that performs a task
+but does not need to return a value, write a subroutine procedure. If you need to
+write a procedure that performs a task and returns a value, such as a calculated
+result, write a function procedure. You can pass arguments to either kind of procedure.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A standard function procedure
+is a standalone non-event procedure that does work when called by another procedure
+and returns a single value to that called procedure.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A standard subroutine procedure
+is a standalone non-event procedure that does work when called by another procedure.
+<H3 ALIGN="CENTER"><A NAME="Heading8"></A><FONT COLOR="#000077">Coding Subroutines</FONT></H3>
+<P>You'll find uses for subroutines as you begin writing larger applications. For
+example, suppose you were writing a company sales status program. You might need
+a specialized routine that calculates a cost of sales value and displays that value
+in a label. By putting that code in a subroutine procedure, you help separate the
+task from other tasks and make the application more manageable. In addition, if several
+procedures in the application need the calculation, you can call the procedure from
+every place that needs it instead of repeating the same code in every place.</P>
+<P>To create a subroutine procedure, perform these steps:
+
+<DL>
+	<DD><B>1.</B> Make up an appropriate name for the procedure using the same naming
+	rules as you use for variables. Give the procedure a meaningful name such as <TT>CostOfSales</TT>.<BR>
+	<B><BR>
+	2.</B> Determine whether you want to put the procedure in the form module or in a
+	separate external module. If you think you'll use the code in other applications,
+	add a new module to your Project Explorer window, but if the code goes with this
+	application only, you can add the code to the current form module.<BR>
+	<B><BR>
+	3.</B> Open the Code window and scroll to the bottom. On a blank line below the last
+	line type <TT>Private Sub CostOfSales()</TT>. (If you fail to type the parentheses,
+	Visual Basic adds them for you because all procedure names terminate with the parentheses
+	to hold possible arguments.) As soon as you press Enter, Visual Basic adds the end
+	of the procedure, as shown in Figure 13.2's Code window.
+</DL>
+
+<P><A NAME="Heading9"></A><A HREF="../art/ch13/13cce02.jpg"><FONT COLOR="#000077">Figure
+13.2. </FONT></A><I>You must fill in the procedure's body.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Instead of locating
+	the end of the module and typing the first line, you could also select Tools | Add
+	Procedure to open Figure 13.3's dialog box and set up a new subroutine (or function)
+	procedure. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><A NAME="Heading10"></A><A HREF="../art/ch13/13cce03.jpg"><FONT COLOR="#000077">Figure
+13.3.</FONT></A><FONT COLOR="#000077"> </FONT><I>You can insert new procedures from
+this Add Procedure dialog box. </I><BR>
+<BR>
+Once Visual Basic creates the place for the procedure, you can add the body of the
+code. For example, Listing 13.1 shows how you might code a cost of sales subroutine
+procedure. The procedure's job is to calculate the cost of sales from text box values
+and assign the cost to a label named <TT>lblCost</TT>.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>If you
+	put code such as Listing 13.1 in an external module, you must precede all control
+	names with the form name that contains those controls. Therefore, precede the text
+	boxes and labels with the form name that contains those text boxes and labels (for
+	example, <TT>frmSales.txtTotalInv.Text</TT> and <TT>frmSales.lblCost.Caption</TT>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading11"></A><FONT COLOR="#000077">Listing 13.1. A
+cost of sales subroutine.</FONT></H3>
+<PRE><FONT COLOR="#0066FF">
+Private Sub CostOfSales()
+  ` Computes a cose of sales and
+  ` displays that code in a label
+  Dim curGrossSales As Currency
+  Dim curCostSales As Currency
+  Dim sngOverHead As Single
+  Dim sngInventoryFctr As Single
+  Dim sngPilferFctr As Single
+
+  ` Store initial variable values from controls
+  curGrossSales = txtGross.Text
+  sngInventoryFctr = txtTotalInv.Text * 0.38
+  sngPilferFctr = txtPilfer.Text
+  sngOverHead = 0.21 ` Fixed overhead percentage
+
+  curCostSales = curGrossSales - (sngInventoryFctr * curGrossSales)
+  curCostSales = curCostSales - (sngPilferFctr * curGrossSales)
+  curCostSales = curCostSales - (sngOverHead * curGrossSales)
+  lblCost.Caption = Format(curCostSales, &quot;Currency&quot;)
+<TT>End Sub</TT></FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Use default
+	property values for the text boxes and labels if you want to shorten your code somewhat.
+	Coding just <TT>txtTotalInv</TT> accomplishes the same purpose as coding <TT>txtTotalInv.Text</TT>
+	because <TT>Text</TT> is the default property for all text boxes. <TT>Caption</TT>
+	is the default property for labels. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>To call this procedure, another procedure (such as a <TT>Click()</TT> event procedure
+or another standard procedure) can issue either of these statements:</P>
+<PRE><FONT COLOR="#0066FF">
+Call CostOfSales()   ` Calls the CostOfSales() subroutine
+
+CostOfSales          ` Calls the CostOfSales() subroutine
+</FONT></PRE>
+<P>If the subroutine uses no arguments, you don't need to use <TT>Call</TT> and the
+parentheses to trigger the subroutine's execution. If <TT>CostOfSales()</TT> did
+use one or more arguments, you would not need <TT>Call</TT>, but you could leave
+off the <TT>Call</TT> keyword.
+<H3 ALIGN="CENTER"><A NAME="Heading13"></A><FONT COLOR="#000077">Coding Functions</FONT></H3>
+<P>You can write your own general-purpose function procedures that are not tied to
+specific events. You can call these functions from any Visual Basic application just
+as you can subroutine procedures. Function procedures work just like subroutine procedures
+in every way; you call them from elsewhere in the code. Unlike subroutine procedures,
+however, a function procedure always returns a value.</P>
+<P>If you run across a needed calculation and Visual Basic has no built-in function
+equivalent, you can write your own function that returns that calculated value. When
+you call the function, you must do something with the returned value. You cannot
+put a function call on a line by itself as you can with a subroutine. If <TT>CalcTax()</TT>
+is a function, you cannot call the function like this:</P>
+<PRE><FONT COLOR="#0066FF">CalcTax ()  ` Problem!
+</FONT></PRE>
+<P>The <TT>CalcTax()</TT> function will return a value and you must do something
+with that value. Therefore, you'll usually assign the return value like this:</P>
+<PRE><FONT COLOR="#0066FF">lblAmt.Caption = CalcTax()   ` Okay
+</FONT></PRE>
+<P>You can also use the function call inside an expression, like this:</P>
+<PRE><FONT COLOR="#0066FF">curAmount = Estimate * .2 + CalcTax() * .14
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You should code
+	as though the function call becomes its return value. In other words, when <TT>CalcTax()</TT>
+	returns from doing its job, the return value temporarily replaces the function call
+	inside the expression. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The functions that you write aren't quite as built-in as Visual Basic's built-in
+functions, but they behave the same way. Your functions never become part of VB's
+repertoire, but you can put them in any module that needs to access them. Over time,
+you will write many general-purpose function and subroutine procedures and you might
+want to keep a module library of common routines that you'll use throughout different
+applications. To use one of the procedures that you write, you can add that procedure's
+module to whatever application needs the procedure.</P>
+<P>You will write new function procedures the same way you write new subroutine procedures
+(with Tools | Add Procedure or by typing the first function procedure's line at the
+end of the module). Use the <TT>Function</TT> keyword in place of <TT>Sub</TT>. The
+following statements would code the beginning and ending statements from a <TT>CalcTax()</TT>
+function:</P>
+<PRE><FONT COLOR="#0066FF">Public Function CalcTax () As Single
+
+End Function
+</FONT></PRE>
+<P>You'll notice something extra on that function's opening statement: <TT>As Single</TT>.
+In addition to using the <TT>Function</TT> keyword, you must also specify the function's
+return value data type in the function's opening declaration line. Therefore, this
+<TT>CalcTax()</TT> function returns a single-precision data type.</P>
+<P>Listing 13.2 contains a function that computes the postage for a letter or package
+using the following rules:
+
+<DL>
+	<DD><B>1.</B> The post office charges 32 cents for 8 ounces or less.<BR>
+	<BR>
+	<B>2.</B> Add 15 cents for each 4 ounces above the first 8.<BR>
+	<BR>
+	<B>3.</B> The weight cannot exceed 24 ounces.
+</DL>
+
+<P>The function's code assumes that the letter or package weight appears in a text
+box control named <TT>txtWeight.Text</TT>. In addition, the weight must appear as
+ounces. Therefore, any application that uses this function must make sure these conditions
+are met before calling the function.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Listing 13.2's
+	function procedure uses no arguments. You'll learn how to code arguments in the next
+	section. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading14"></A><FONT COLOR="#000077">Listing 13.2. Calculating
+postage with a function procedure.</FONT></H3>
+<PRE><FONT COLOR="#0066FF">
+Public Function Postage() As Currency
+  ` Calculate postage based on the
+  ` weight of a letter or package
+  Dim curPostHold As Currency
+  Dim intWeight As Integer
+  Dim intPress As Integer  ` MsgBox() return
+  
+  ` Grab the weight from the text box
+  ` and convert to number for comparison
+  intWeight = Val(txtWeight.Text)
+  
+  Select Case intWeight
+    Case Is &lt;= 8:  curPostHold = 0.32
+    
+    Case Is &lt;= 12: curPostHold = 0.47
+    
+    Case Is &lt;= 16: curPostHold = 0.62
+    
+    Case Is &lt;= 20: curPostHold = 0.77
+    
+    Case Is &lt;= 24: curPostHold = 0.92
+    
+    Case Is &gt;= 24:
+      intPress = MsgBox(&quot;Weight is too heavy&quot;, _
+                 vbExclamation, &quot;Error&quot;)
+      curPostHold = 0#
+  End Select
+  
+  Postage = curPostHold   ` Return the value
+<TT>End Function</TT> </FONT></PRE>
+<P><BR>
+Listing 13.2 demonstrates the way you return the value from a function. There is
+no variable declared named <TT>Postage</TT>, yet the second-to-last line assigns
+a value to <TT>Postage</TT>. <TT>Postage</TT> is the name of the function, not a
+variable! Inside a function procedure, when you assign a value to the function's
+name, the function uses that value as the return value. This function does not actually
+end until the <TT>End Function</TT> statement is reached, but the return value is
+set right before the terminating statement.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If you ever
+	need to terminate a subroutine or function from somewhere in the body of the routine
+	instead of at its normal termination point, use the <TT>Exit Sub</TT> or <TT>Exit
+	Function</TT> statement. Be sure to set a return value of some kind to the function
+	name before terminating a function because the function requires a return value.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading16"></A><FONT COLOR="#000077">Coding Arguments</FONT></H3>
+<P>Variables that are local to a procedure can only be used inside that procedure.
+Variables declared inside a module's <TT>general</TT> section are global to the module
+and available throughout the entire module. Variables declared with <TT>Public</TT>
+instead of <TT>Dim</TT> inside the <TT>general</TT> section are global to the entire
+project.</P>
+<P>You've seen throughout the first part of this book that you should avoid global
+variables as much as possible and use only local variables. If, however, you only
+use local variables but you write lots of small procedures (as you should), how can
+the procedures share data? If all the data is local, then a called procedure has
+no access to the calling procedure's data. As you probably suspect, you'll share
+data through argument lists. When one procedure must call another procedure, and
+the called procedure needs information from the calling procedure, the calling procedure
+can send that information inside the argument list.</P>
+<P>Suppose one procedure calculates a value and a second procedure must use that
+value in a different calculation before displaying a result on the form. You need
+to know how to pass local data from the procedure that defines the local variable
+to other procedures that need to work with that value.</P>
+<P>When you call a built-in function, you pass one or more arguments to the function
+so that the function's internal code has data to work with. When you call your own
+subroutine and function procedures, you also can pass arguments to them. The arguments
+are nothing more than the passing procedure's local variables that the receiving
+procedure needs to work with.</P>
+<P>Once you pass data, that data is still local to the original passing procedure,
+but the receiving procedure has the opportunity to work with those values for the
+time of the procedure execution. Depending on how you pass the arguments, the receiving
+procedure might even be able to change those values so that when the passing procedure
+regains control, its local variables have been modified by the called procedure.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The passed argument
+	name (or names) does not have to be the same as used in the receiving procedure.
+	Therefore, you might call a subroutine with <TT>Call CalcIt(X)</TT> and the subroutine
+	begins with this declaration line: <TT>Public Sub CalcIt(Y As Int)</TT>. Although
+	in this case both <TT>X</TT> and <TT>Y</TT> refer to the same value, the receiving
+	subroutine procedure uses a different name from the passing procedure. The only argument
+	list requirements are that the calling and receiving argument lists must match in
+	number of arguments and they must match in data type order. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You must declare the receiving argument list's data types for each argument. If
+you must pass and receive more than one argument, separate the passed arguments and
+the received arguments (along with their declared data types) with commas. The following
+statement passes the three values to a subroutine:</P>
+<PRE><FONT COLOR="#0066FF">Call RecProc(I, J, K)
+</FONT></PRE>
+<P>The following statement declares the <TT>RecProc()</TT> procedure:</P>
+<PRE><FONT COLOR="#0066FF">Public Sub RecProc (I As Integer, J As Integer, K As Single)
+</FONT></PRE>
+<P>The calling procedure already knows the data types of <TT>I</TT>, <TT>J</TT>,
+and <TT>K</TT>, but those values are unknown to <TT>RecProc()</TT>. Therefore, you'll
+have to code the data type of each received argument so that the receiving function
+knows the data type of each sent argument.</P>
+<P>If a subroutine or function procedure is to receive arrays, don't indicate the
+array subscripts inside the argument list. The following <TT>Sub</TT> statement defines
+a general-purpose subroutine procedure that accepts four arrays as arguments:</P>
+<PRE><FONT COLOR="#0066FF">Public Sub WriteData (GNames() As String, CBalc() As Currency, 
+&#194;CDate() As Variant, CRegion() As Integer)
+</FONT></PRE>
+<P>The built-in <TT>UBound()</TT> function returns the highest subscript that's defined
+for any given array. The following statement, which might appear inside the <TT>WriteData()</TT>
+subroutine, stores the highest possible subscript for the <TT>CNames()</TT> array,
+so the subroutine won't attempt to access an array subscript outside the defined
+limit:</P>
+<PRE><FONT COLOR="#0066FF">intHighSub = UBound(CNames)
+</FONT></PRE>
+<P>Remember that <TT>Call</TT> is funny about its argument parentheses. If you use
+<TT>Call</TT>, you must also enclose the arguments in parentheses. You may omit the
+<TT>Call</TT> keyword, but if you do, omit the parentheses as well. Here is a <TT>Call</TT>
+statement equivalent to that shown earlier with parentheses:</P>
+<PRE><FONT COLOR="#0066FF">RecProc I, J, K          ` No Call, no parens!
+</FONT></PRE>
+<H3 ALIGN="CENTER"><A NAME="Heading17"></A><FONT COLOR="#000077">Receiving by Reference
+and by Value</FONT></H3>
+<P>Visual Basic lets you pass arguments two ways: by reference and by value. The
+way you use them determines whether the receiving procedure can change the arguments
+so that those changes remain in effect after the calling procedure regains control.
+If you pass and receive by reference (the default method), the calling procedure's
+passed local variables may be changed in the receiving procedure. If you pass and
+receive by value, the calling procedure can access and change its received arguments,
+but those changes don't retain their effects in the calling procedure.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Passing by reference
+	is sometimes called passing by address. In some languages, by address and by reference
+	mean two different things, but not in Visual Basic. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>When passing by reference, subroutines and functions can always use their received
+values and also change those arguments. If a receiving procedure changes one of its
+arguments, the corresponding variable in the calling procedure is also changed. Therefore,
+when the calling procedure regains control, the value (or values) that the calling
+procedure sent as an argument to the called subroutine may be different from the
+situation before the call.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>By reference is a way in
+which you pass values and allow the called procedure to change those values. Also
+called by address.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>By value is a way in which
+you pass values and protect the calling procedure's passed data so that the called
+procedure cannot change the data.</P>
+<P>Arguments are passed by reference, meaning that the passed arguments can be changed
+by their receiving procedure. If you want to keep the receiving procedure from being
+able to change the calling procedure's arguments, you must pass the arguments by
+value. To pass by value, precede any and all receiving argument lists with the <TT>ByVal</TT>
+keyword, or enclose the passed arguments in parentheses.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If you want
+	to be clear, use the <TT>ByRef</TT> keyword. But passing by reference is the default
+	method if you don't specify <TT>ByRef</TT>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>It's generally safer to receive arguments by value because the calling procedure
+can safely assume that its passed values won't be changed by the receiving procedure.
+Nevertheless, there may be times when you want the receiving procedure to permanently
+change values passed to it, and you'll need to receive those arguments by reference.</P>
+<P>Listing 13.3 shows two subroutine procedures. One, named <TT>Changes()</TT>, receives
+arguments by address. The second procedure, <TT>NoChanges()</TT> receives its arguments
+by value. Even though both procedures multiply their arguments by two, those changes
+affect the calling procedure's variables only when <TT>Changes()</TT> is called but
+not when <TT>NoChanges()</TT> is called.
+<H3 ALIGN="CENTER"><A NAME="Heading18"></A><FONT COLOR="#000077">Listing 13.3. Some
+procedures can change the sending procedures arguments.</FONT></H3>
+<PRE><FONT COLOR="#0066FF">
+Sub Changes (N As Integer, S As Single)
+  ` Receives arguments by reference
+  N = N * 2 ` Double both 
+  S = S * 2 `   arguments
+  ` When the calling routine regains control,
+  ` its two local variables will now be twice
+  ` as much as they were before calling this.
+End Sub
+
+Sub NoChanges (ByVal N As Integer, ByVal S As Single)
+  ` Receives arguments by value
+  N = N * 2     ` Double both
+  S = S * 2     `   arguments
+  ` When the calling routine regains control,
+  ` its two local variables will not be
+  ` changed from their original values
+<TT>End Sub</TT> </FONT></PRE>
+<P><BR>
+As you can see, <TT>Changes()</TT> receives its arguments by reference. (Remember
+that the default passing method is by reference, even if you omit <TT>ByRef</TT>.)
+Therefore, when the procedure doubles the arguments, the calling procedure's argument
+variables change as well.</P>
+<P>In <TT>NoChanges()</TT>, the procedure receives its arguments by value. Therefore,
+nothing <TT>NoChanges()</TT> does can change those values in the calling procedure.
+<H3 ALIGN="CENTER"><A NAME="Heading20"></A><FONT COLOR="#000077">Summary</FONT></H3>
+<P>In this lesson you have learned how to write programs that are properly structured
+so that you can more easily and quickly write and debug the code. By coding small
+and numerous modules, and by putting off details until you're ready to code a procedure
+that performs a single task (although that task may take a few statements), you'll
+write code that you can easily debug and modify later.</P>
+<P>Once you break a program into several procedures, however, you must be careful
+to pass arguments to the procedures that need them. The way you pass arguments determines
+how the passing procedure's argument values change. If you pass by reference, the
+passing procedure's values are protected and always left unchanged, no matter what
+the called procedure does to them.</P>
+<P>Now that you've learned how to write your own procedures, you're ready for Hour
+14, &quot;Built-in Functions Save Time,&quot; which describes many of VB's built-in
+functions that you can use in your own programs.
+<H3 ALIGN="CENTER"><A NAME="Heading21"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+
+<DL>
+	<DD><B>Q I've always coded long procedures and my programs work, so why should I
+	write structured code now?<BR>
+	<BR>
+	A</B> If your way works well, the structured way would be working even better. When
+	you test your applications, you must wade through lots of code, searching for problem
+	areas. When you test structured applications, however, you can usually narrow the
+	bug down to one or two small procedures. Making a change to correct the bug rarely
+	affects other procedures, but when your code is in a few long procedures that do
+	lots of work, a change could adversely affect surrounding code.<BR>
+	<BR>
+	<B>Q If I'm careful, what does it matter how I receive arguments?<BR>
+	<BR>
+	A</B> The method you use to pass and receive arguments, either by reference or by
+	value, does not just protect data. Sometimes you want a called procedure to change
+	the calling procedure's argument values. A function procedure can only return a single
+	value, but if you want a function procedure to modify several values, pass those
+	values by reference and then make the function procedure (or even the subroutine
+	procedure) modify each of those values. When the calling procedure regains control,
+	the passed arguments will hold values changed by the called procedure.
+</DL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading22"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<H4 ALIGN="CENTER"><A NAME="Heading23"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+
+<DL>
+	<DD><B>1.</B> What are two reasons for writing structured programs?<BR>
+	<BR>
+	<B>2. </B>True or false: Structured code is useful for getting to code details as
+	fast as possible.<BR>
+	<BR>
+	<B>3.</B> True or false: You can write your own functions.<BR>
+	<BR>
+	<B>4.</B> What is wrong with the following subroutine declaration?
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">Public Subroutine DoItSub ()</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD><B>5. </B>When is the <TT>Call</TT> keyword optional in subroutine calling?<BR>
+	<BR>
+	<B>6. </B>The following code appears in a form module's <TT>general</TT> section.
+	Is <TT>X</TT> a local, module-global, or project-global variable? What about <TT>Y</TT>?
+	Would your answers be different if this appeared in an external module as opposed
+	to a form module?
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">Dim X As Integer
+Public Y As Integer</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD><B>7. </B>What is wrong with the following function declaration?
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">Public Function DoCalc(intAge As Integer, strCoNames(45) As String)</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD><B>8.</B> Why does the called procedure need to know the data types for passed
+	values?<BR>
+	<BR>
+	<B>9.</B> How does one procedure get local data from a calling procedure?<BR>
+	<BR>
+	<B>10. </B>Which keyword is optional: <TT>ByRef</TT> or <TT>ByVal</TT>?
+</DL>
+
+<H4 ALIGN="CENTER"><A NAME="Heading24"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+
+<DL>
+	<DD><B>1.</B> Write a general-purpose standard function procedure that accepts a
+	numeric integer argument and returns that argument multiplied by 10.<BR>
+	<BR>
+	<B>2. </B>Write a standard subroutine procedure that accepts three single-precision
+	arguments and displays those three values in labels named <TT>lblSng1</TT>, <TT>lblSng2</TT>,
+	and <TT>lblSng3</TT>.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch12.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch14.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

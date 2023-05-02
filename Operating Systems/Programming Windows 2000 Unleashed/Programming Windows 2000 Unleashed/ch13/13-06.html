@@ -1,0 +1,268 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=429-433//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Exporting the Required DLL Functions</B></FONT></P>
+<p>The module-definition file for the CppExt project is provided in Listing 13.8. The DLL exports two functions: <small>DllCanUnloadNow</SMALL> and <small>DLLGetClassObject</SMALL>. These exports are listed as <small>PRIVATE</SMALL> because they&#146;ll only be used by the COM library.</P>
+<p><b>Listing 13.8</B> The Module Definition File for CppExt<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+LIBRARY     CppExt
+DESCRIPTION &#147;Shell extension for CPP files&#148;
+
+EXPORTS
+    DllCanUnloadNow PRIVATE
+    DllGetClassObject PRIVATE
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p><font size="+1"><b>Creating the Class Declarations</B></FONT></P>
+<p>Two classes are declared in the <small>CppExt.h</SMALL> header file. The <small>CCppShellExt</SMALL> class is the actual context menu extension class. The <small>CClassFactory</SMALL> class implements the class object and is used to create instances of <small>CCppShellExt</SMALL>.</P>
+<p>Save the contents of Listing 13.9 as <small>CppExt.h</SMALL>. There&#146;s no need to add it to the CppExt project, because it&#146;s included by the <small>CppExp.cpp</SMALL> file.</P>
+<p><b>Listing 13.9</B> The <small>CppExt.h</SMALL> Header File<hr></P>
+<!-- CODE //-->
+<pre>
+// The class ID for the CPP file extension
+/* d3d834c0-9a3b-11cf-82a0-00608cca2a2a */
+DEFINE_GUID( CLSID_CppExtension, 0xd3d834c0, 0x9a3b, 0x11cf, 0x82,
+             0xa0, 0x00, 0x60, 0x8c, 0xca, 0x2a, 0x2a );
+
+#define     OFFSET_COUNTLINES   0
+
+//
+// A typical class factory, nothing out of the ordinary. Includes
+// the IClassFactory and IUnknown interfaces
+class CClassFactory : public IClassFactory
+{
+public:
+    CClassFactory();
+    ~CClassFactory();
+
+    // IUnknown
+    STDMETHODIMP QueryInterface(REFIID riid, LPVOID* ppv);
+    STDMETHODIMP_(ULONG) AddRef();
+    STDMETHODIMP_(ULONG) Release();
+
+    // IClassFactory
+    STDMETHODIMP CreateInstance(LPUNKNOWN punk,
+                                REFIID riid,
+                                LPVOID* ppv);
+    STDMETHODIMP LockServer(BOOL f);
+
+protected:
+    ULONG   m_cRef;
+};
+
+//
+// The CCppShellExt class
+// As a context menu handler, the CCppShellExt class implements the
+// IContextMenu and IShellExtInit interfaces.
+class CCppShellExt: public IContextMenu, IShellExtInit
+{
+    ULONG   m_cRef;
+    wchar_t m_szFile[MAX_PATH];
+public:
+    CCppShellExt();
+    ~CCppShellExt();
+    //
+    // IUnknown
+    STDMETHODIMP QueryInterface(REFIID riid, LPVOID* ppv);
+    STDMETHODIMP_(ULONG) AddRef();
+    STDMETHODIMP_(ULONG) Release();
+    //
+    // IContextMenu
+    STDMETHODIMP QueryContextMenu(HMENU hMenu,
+                                  UINT  nMenuIndex,
+                                  UINT  nFirstID,
+                                  UINT  nLastID,
+                                  UINT  nFlags);
+    STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO pInfo);
+    STDMETHODIMP GetCommandString(UINT  nItemID,
+                                  UINT  nFlags,
+                                  UINT* pReserved,
+                                  LPSTR pszName,
+                                  UINT  cchMax);
+    //
+    // IShellExtInit
+    STDMETHODIMP Initialize(LPCITEMIDLIST pidl,
+                            LPDATAOBJECT  pObj,
+                            HKEY          hKeyProgID);
+private:
+    //
+    // Operations
+    void DoCountCppFile(LPCMINVOKECOMMANDINFO pInfo);
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>There are two sections to the <small>CppExt.h</SMALL> file. The first half of the file is almost identical to any header file that declares a class that implements the <small>IClassFactory</SMALL> interface. The <small>CClassFactory</SMALL> class implements the <small>IClassFactory</SMALL> and <small>IUnknown</SMALL> interfaces; this declaration can be copied and pasted into any server module you implement.</P>
+<p>The second half of the file declares the <small>CCppShellExt</SMALL> class. This class implements three interfaces: <small>IUnknown</SMALL>, <small>IShellExt</SMALL>, and <small>IShellExtInit</SMALL>. With the exception of the <small>DoCountCppFile</SMALL> function, this code can be reused for any server that implements a context menu extension.</P>
+<p><font size="+1"><b>Implementing the In-process Server Module</B></FONT></P>
+<p>The actual implementation of the in-process server is spread out over the next few pages. All this code is physically located in the <small>CppExt.cpp</SMALL> source file. Separating it into three separate listings, however, helps simplify the explanation.</P>
+<p>Listing 13.10 presents the first part of the <small>CppExt.cpp</SMALL> source file and deals with the basic DLL functions performed by all in-process servers.</P>
+<p><b>Listing 13.10</B> Basic In-process Server Functions in <small>CppExt.cpp</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &ltwindowsx.h&gt
+#include &ltshlobj.h&gt
+#include &ltmbstring.h&gt
+
+#pragma data_seg(&#147;.text&#148;)
+#define INITGUID
+#include &ltinitguid.h&gt
+#include &ltshlguid.h&gt
+#pragma data_seg()
+
+#include &#147;CppExt.h&#148;
+
+LONG    g_cRef = 0;
+HANDLE  g_hInst = NULL;
+
+// -------------------------------------------------------------
+// General DLL functions
+// -------------------------------------------------------------
+// Main DLL entry point - stash the module instance handle for use
+// later, return TRUE in all cases.
+
+extern &#147;C&#148; int APIENTRY
+
+DllMain(HANDLE hInst, ULONG uReason, LPVOID pRes)
+{
+    if(uReason == DLL_PROCESS_ATTACH)
+        g_hInst = hInst;
+    return TRUE;
+}
+
+//
+// Every InProc server must support DllGetClassObject. The only
+// object supported by this server is CLSID_CppExtension, all
+// other requests are rejected. For our extension, a ClassFactory
+// object is created, and a QIF is performed for the requested
+// interface through the ClassFactory.
+STDAPI DllGetClassObject(REFCLSID rcid, REFIID riid, LPVOID *ppv)
+{
+    HRESULT hr;
+    *ppv = NULL; // Always clear the &#147;out&#148; parameter
+
+    if(rcid != CLSID_CppExtension)
+        hr = CLASS_E_CLASSNOTAVAILABLE;
+    else
+    {
+        CClassFactory* pFactory = new CClassFactory;
+        if(pFactory == NULL)
+            hr = E_OUTOFMEMORY;
+        else
+        {
+            hr = pFactory-&gtQueryInterface(riid, ppv);
+        }
+    }
+    return hr;
+}
+//
+// DllCanUnloadNow is called by the OS to determine if the inproc
+// server can be unloaded. If the global reference count is greater
+// than zero, S_FALSE is returned to prevent unloading.
+STDAPI DllCanUnloadNow()
+{
+    HRESULT hr = S_FALSE;
+    if(g_cRef == 0)
+        hr = S_OK;
+    return hr;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>DllGetClassObject</SMALL> function is very similar to a class factory. This function checks that the requesting CLSID matches <small>CLSID_CppExtension</SMALL> and creates an instance of the class factory. The class factory then is queried for the requested interface, and the result is returned to the COM library.</P>
+<p>Listing 13.11 contains the next set of functions implemented in <small>CppExt.cpp</SMALL>. This listing contains <small>CClassFactory</SMALL>, which implements the <small>IClassFactory</SMALL> interface.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

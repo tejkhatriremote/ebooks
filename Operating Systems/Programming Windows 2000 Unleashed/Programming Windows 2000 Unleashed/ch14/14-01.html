@@ -1,0 +1,169 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=445-449//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch13/13-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 14<br>Automation
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Creating Programmable Applications Using Automation <i>446</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>The <small>IDispatch</SMALL> Interface <i>447</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Creating an Automation Server Using MFC <i>456</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Visual Basic to Create an Automation Controller <i>466</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Automation in VBScript <i>469</I></B>
+</DL>
+<p>Automation is probably the most commonly used COM technology. By exposing portions of their applications that use Automation interfaces, the developers of Visio and Microsoft Word, for example, have made their programs much more flexible and open to extension by end users.
+</P>
+<p>In this chapter, you&#146;ll see an example of an application that supports Automation developed using MFC. You&#146;ll also see how you can use Visual Basic and VBScript to control applications that allow themselves to be controlled through automation.</P>
+<p>This chapter focuses on using Automation to control full applications. Later, in Chapter 17, &#147;Custom COM Objects,&#148; you&#146;ll use Automation to control simple components.</P>
+<h3><a name="Heading2"></A><font color="#000077">Creating Programmable Applications Using Automation</FONT></H3>
+<p><i>Automation</I> (formerly known as <i>OLE Automation</I>) allows applications to expose to the outside world selected parts of their functionality. An Automation server exposes properties and methods through the <small>IDispatch</SMALL> interface. Tools such as the Windows Scripting Host (WSH), Visual Basic, Visual Basic for Applications (VBA), and other programs that are clients of an Automation server are known as Automation controllers. The relationship between Automation servers and controllers is shown in Figure 14.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-01.jpg',500,324 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-01.jpg',500,324)"><font color="#000077"><b>Figure 14.1</B></FONT></A>&nbsp;&nbsp;Automation controllers and servers communicate through the <small>IDispatch</SMALL> interface.
+</P>
+<p>Automation methods are functions exposed to the outside world. For example, Microsoft Word enables you to create and print documents through its Automation methods. A property corresponds to an attribute of an object exposed through Automation. Examples of properties include the size of a document or the font and color used by a particular object.
+</P>
+<h3><a name="Heading3"></A><font color="#000077">The IDispatch Interface</FONT></H3>
+<p>The interface used for Automation is <small>IDispatch</SMALL>, which must be implemented by any object that supports Automation as a server. To determine whether a particular COM object supports Automation, a client can simply call <small>QueryInterface</SMALL> for <small>IDispatch</SMALL>. If an interface pointer is returned, the COM object is an Automation server, and the controller can access the server&#146;s properties and methods.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Data Types Used with IDispatch</FONT></H4>
+<p>Automation is a language-independent interface primarily used by scripting languages such as VBScript. Automation is also very useful when it&#146;s convenient for the client to discover new properties and methods from a server at runtime, as can be done with Visual Basic and VBA. Microsoft has also built client-side Automation support into Visual J<small>&#43;&#43;</SMALL> and into Visual C<small>&#43;&#43;</SMALL> through MFC.</P>
+<p>This flexibility in clients comes at a cost, however. Data passed through this interface must be represented in such a way that all programming languages can understand it. COM defines a set of language-neutral strings, characters, arrays, and other data types that can be exchanged by Automation controllers and servers.</P>
+<p>Two data types are associated with Automation:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BSTR</SMALL> is a basic string type that&#146;s language independent. The string is similar to strings used in C, with extensions to make it usable in other languages.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VARIANT</SMALL> is a tagged union type used to transfer portably various types across a single interface.
+</DL>
+<p>These types are discussed in the following sections.
+</P>
+<p><font size="+1"><b>The Basic String Type</B></FONT></P>
+<p>The C and C<small>&#43;&#43;</SMALL> languages define a simple string type as an array of characters terminated by a zero. Unfortunately, most other languages use different representations for their string types. For this reason, COM defines its own &#147;basic string&#148; type, or <small>BSTR</SMALL>.</P>
+<p>A <small>BSTR</SMALL> consists of a Unicode C-style string, prefixed by a four-byte value containing the length of the string, as shown in Figure 14.2. When using a <small>BSTR</SMALL> in a C or C<small>&#43;&#43;</SMALL> program, you can treat the <small>BSTR</SMALL> much like an ordinary string.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-02.jpg',500,307 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-02.jpg',500,307)"><font color="#000077"><b>Figure 14.2</B></FONT></A>&nbsp;&nbsp;A <small>BSTR</SMALL> includes the length of the string.
+</P>
+<p>Although a <small>BSTR</SMALL> may look very much like a C-style string when you&#146;re reading it, take care when modifying a <small>BSTR</SMALL>. In particular, never free a <small>BSTR</SMALL> using <small>free</SMALL> or <small>delete</SMALL>. Also, you should never change the length of a <small>BSTR</SMALL> using the C string library, because these routines will not change the prefixed length of the <small>BSTR</SMALL>.</P>
+<p>Windows 2000 provides alternate functions that must be used to manipulate <small>BSTR</SMALL> types. The most commonly used functions include the following:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SysAllocString</SMALL> creates a <small>BSTR</SMALL> containing the contents of a string passed as a parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SysFreeString</SMALL> frees a previously allocated <small>BSTR</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SysReAllocString</SMALL> changes the contents of a <small>BSTR</SMALL> to contain the contents of a string passed as a parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SysAllocStringLen</SMALL> creates a <small>BSTR</SMALL> and copies a string to it.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SysReAllocStringLen</SMALL> changes the contents of a <small>BSTR</SMALL> to contain a substring of a string passed as a parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SysStringLen</SMALL> returns the length of a <small>BSTR</SMALL>.
+</DL>
+<p>A problem that many C and C<small>&#43;&#43;</SMALL> programmers encounter is that a <small>BSTR</SMALL> may have embedded <small>&#145;\0&#146;</SMALL> characters inside the string. If you use the C string library functions to determine the length of a <small>BSTR</SMALL>, the value will be truncated at the first zero value contained in the string. You should always use the <small>SysStringLen</SMALL> function to determine the length of a <small>BSTR</SMALL>.</P>
+<p><font size="+1"><b>Using the _bstr_t Data Type</B></FONT></P>
+<p>The <small>BSTR</SMALL> type can be difficult to manage, especially if you&#146;re new to COM programming using C or C<small>&#43;&#43;</SMALL>. Because the C and C<small>&#43;&#43;</SMALL> languages don&#146;t define the <small>BSTR</SMALL> type, the compiler can&#146;t enforce safe programming practices&#151;it will very happily compile code that creates memory leaks or access violations, like this:</P>
+<!-- CODE //-->
+<pre>
+#include &lt;windows.h&gt;
+#include &lt;wchar.h&gt;
+void BadIdea(BSTR&amp; bstr)
+{
+    // Allocate a BSTR that is never released.
+    BSTR bstrLocal = SysAllocString(L&#147;This string will leak.&#148;);
+    // Overwrite a BSTR using a CRT function.
+    wcscpy(bstr, L&#147;This may cause an access violation.&#148;);
+}
+
+int wmain()
+{
+    BSTR bstr = SysAllocString(L&#147;Foo&#148;);
+    BadIdea(bstr);
+    wprintf(L&#147;%s\n&#148;, (wchar_t*)bstr);
+    SysFreeString(bstr);
+
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p>Beginning with Visual C<small>&#43;&#43;</SMALL> 5.0, the <small>_bstr_</SMALL>t class is available to help simplify working with <small>BSTR</SMALL> types. The <small>_bstr_t</SMALL> class is defined in <small>comutil.h</SMALL>, along with other useful goodies that can make your COM programming life simpler (such as the <small>_variant_t</SMALL> type, which will be discussed in the section titled &#147;Using the <small>_variant_t</SMALL> Data Type&#148;).</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch13/13-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

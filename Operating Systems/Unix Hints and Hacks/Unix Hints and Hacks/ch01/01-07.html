@@ -1,0 +1,213 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Topics in Administration</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=01//-->
+<!--PAGES=033-036//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Example Two: New /etc/passwd File</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Although this probably isn&#146;t the best method, it works. If you want the system to remain in a multiuser state while you work and not allow any users to log in to the system, move the original system password file into place.</P>
+<!-- CODE SNIP //-->
+<pre>
+# cp /etc/passwd /etc/passwd.BAK
+# cp /etc/passwd.orig /etc/passwd
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Step 1: While no one else is on the system, back up the current password file.
+</P>
+<p>Step 2: Copy the original system password file into place.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>If the original system password file wasn&#146;t kept, strip out all user account entries from /etc/passwd. Make sure that step 1 has been executed first!</FONT><hr>
+</BLOCKQUOTE>
+<p>If users are logged in while this procedure is executed, they will experience difficulties in accessing their files. This is because all the user information (UID, GID, shell, and so on) was removed from the password file and the system is confused as to who the user logged in is.
+</P>
+<p>If no one is logged in to the system at the time of this procedure then there are no accounts in the password file that users can use to get into the system.</P>
+<p><font size="+1"><b>Example Three: Modify /etc/inetd.conf</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Another way to continue to work in a multiuser state and make sure no one can log in to the system is to disable the remote daemons in /etc/inetd.conf that allow users to gain access to the system. When a user connects to the system over the network, the system uses the <small>inetd</SMALL> daemon to establish that connection. If the <small>inetd</SMALL> daemons don&#146;t know about the connection that is trying to be established then the system will not make the connection.</P>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/inetd.conf
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Step 1: From a shell prompt, edit the inetd configuration file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+#login   stream  tcp     nowait  root    /usr/sbin/tcpd
+&#8658; in.rlogind
+#shell stream  tcp     nowait  root    /usr/sbin/tcpd
+åin.rshd -L
+#ftp   stream  tcp     nowait  root    /usr/sbin/wu.ftpd
+åwu.ftpd -a -T350
+å#telnet  stream  tcp     nowait  root    /usr/sbin/tcpd
+in.telnetd
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Step 2: Disable the remote connection daemons by commenting them out with the <small>#</SMALL> character at the beginning of the line.</P>
+<!-- CODE SNIP //-->
+<pre>
+# ps -ax | grep inetd
+
+77  ?  S     0:00 /usr/sbin/inetd
+14003  p0 S     0:00 grep inet
+
+# kill -HUP 77
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Step 3: Get the process ID of the <small>inetd</SMALL> daemon and restart the daemon by issuing the <small>kill -HUP</SMALL> command.</P>
+<!-- CODE //-->
+<pre>
+# ftp rocket
+ftp: connect: Connection refused
+
+# telnet rocket
+Trying rocket...
+Connected to rocket.
+Escape character is &#145;^]&#148;.
+
+Connection closed by foreign host.
+#
+</PRE>
+<!-- END CODE //-->
+<p>Step 4: Attempt to connect to the machine with <small>ftp</SMALL> or <small>telnet</SMALL> from a remote system. Keep in mind that <small>telnet</SMALL> (on the local system you made the changes on) still works.</P>
+<p>It is very important to remember to reactivate these daemons after your changes have been made. I know it sounds ridiculous, but it is easy to overlook after working for hours making changes to the system.</P>
+<p><font size="+1"><b>Example Four: Disabling the Network</B></FONT></P>
+<p>Flavors: AT&T and BSD
+</P>
+<p>There is a brute-force method for disabling all network connectivity to keep users off. It is not recommended, but it does work when the system must be taken off the network. Instead of pulling the network cable from the interface, you can simply disable the interface.</P>
+<p>Again, this is not recommended, because so many other possible daemons are relying on the network being up. If NFS, DNS, or NIS/YP are running, the system can hang at certain times or lock up. There would also be problems with sendmail and remote sessions. Even though it appears that this pretty clumsy, there are times when it is effective. The UNIX command <small>ifconfig</SMALL> takes the interface down in seconds.</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+ifconfig <i>interface</I> down
+<b>ifconfig</B> <i>interface</I> <b>up</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After the interface is taken down and your work is finished, the <small>ifconfig</SMALL> command brings the interface back online when it receives the <small>up</SMALL> argument or when the system is rebooted.</P>
+<p>On AT&T-style systems there is a networking script in the /etc/init.d directory that gets executed at boot time. The script accepts a <small>start</SMALL> and <small>stop</SMALL> signal. When a <small>stop</SMALL> signal is sent to the script, it will not only shut down the interface, it will also kill all the necessary networking related daemons as well.</P>
+<!-- CODE SNIP //-->
+<pre>
+# /etc/init.d/network stop
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is a more efficient way of disabling the network. Whenever possible, this method should be used instead of the previous <small>ifconfig</SMALL> method.</P>
+<p><font size="+1"><b>Example Five: Blocking Telnet and Remote Shell Accesses</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>There is a file called /etc/nologin that does not by default exist. When the file is created, with or without any size, it denies all remote access to a system. A message can be placed within the file describing why access is being denied.</P>
+<p>At the moment the file is created, no new users are able to log in to the system. All the users that are logged in at the time the file was created remain on the system until they are killed off or exit on their own. When the file is removed, all remote access resumes.</P>
+<p>If network configurations are not being tampered with, you don&#146;t plan to log out, or a reboot of the system is not required in your task, you can do everything yourself remotely from another system.</P>
+<p>Step 1: Log in multiple shells into the system. (In case one hangs on you, there are other shells to work in.)</P>
+<p>Step 2: Create the nologin file</P>
+<p>Step 3: Kill everyone off the system</P>
+<p>Step 4: Do your work</P>
+<p>Step 5: Remove the nologin file</P>
+<p>This works because nologin affects all new connects as mentioned previously. After you have your connections into the system, you are free to do your work undisturbed.</P>
+<p>There are two ways to handle the nologin file. The first way locks users out:</P>
+<!-- CODE SNIP //-->
+<pre>
+# touch /etc/nologin
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Using the <small>touch</SMALL> command creates the file and no access is granted to anyone attempting to <small>telnet</SMALL> in remotely. But locking the users out without telling them why is a little rude and you will probably get some phone calls wanting to know what&#146;s going on.</P>
+<p>The second provides a message to the users:</P>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/nologin
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Step 1: Create and edit the file /etc/nologin:
+</P>
+<dl>
+<dd>The system is down right now for routine maintenance and should be back online by 23:00. Please check back at this time.
+<dl>
+<dd>Thank you for your understanding, the UNIX Admins
+</DL>
+</DL>
+<p>Step 2: Add a polite message to describe the actions that are taking place. (See the Real World Experience that follows for types of message content.)
+</P>
+<p>The /etc/nologin file works on all flavors for locking out remote shell and telnet sessions from all systems. Some of the newer AT&ampT-type versions have added remote FTP sessions to this file as well. Test this on the flavor in your environment. If this is true, you won&#146;t have to apply example six to your environment.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

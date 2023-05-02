@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=191-194//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>If you&#146;re using a makefile, the name of the map file is specified using the <small>/map</SMALL> switch on the linker command line:</P>
+<!-- CODE SNIP //-->
+<pre>
+/map:&#147;myDll.map&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A map file is fairly large, even for small C<small>&#43;&#43;</SMALL> programs. The section you&#146;re interested in looks something like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+Address         Publics by Value           Rva&#43;Base   Lib:Object
+
+0001:00000000   ??2CVMListNode@@SAPAXI@Z   00401000 f listnode.obj
+0001:000000b2   ??3CVMListNode@@SAXPAX@Z   004010b2 f listnode.obj
+0001:000001f0   ??0CVMList@@QAE@XZ         004011f0 f list.obj
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The symbol names in the Publics by Value column are the mangled C<small>&#43;&#43;</SMALL> names used by this C<small>&#43;&#43;</SMALL> application.</P>
+<p>If you&#146;re exporting a large number of symbols from your DLL, you should export your them <i>by ordinal</I>, meaning that they are referenced by ordinal number instead of name. This slightly speeds up the search for individual symbols in a library; this approach is used in the MFC DLLs.</P>
+<p>To export by ordinal, add an &#147;at&#148; sign (<small>@</SMALL>) followed by an ordinal number after every symbol in the <small>EXPORTS</SMALL> portion of the DEF file:</P>
+<!-- CODE SNIP //-->
+<pre>
+LIBRARY      &#147;FOO&#148;
+EXPORTS
+             GetData  @1
+             SetData  @2
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The linker generates export and import libraries that use the associated ordinal instead of the name to reference each symbol. The numbers used as ordinals must begin with 1, and they must be consecutive.
+</P>
+<p><font size="+1"><b>Using__declspec, dllimport, and dllexport</B></FONT></P>
+<p>As you can see, managing the DEF file can be a big headache. If you&#146;re using a current C<small>&#43;&#43;</SMALL> compiler, you can probably avoid dealing with the EXPORTS section of the DEF file altogether. Visual C<small>&#43;&#43;</SMALL> uses the <small>__declspec</SMALL> keyword, for example, to add extra attributes when declaring a function or variable name:</P>
+<!-- CODE SNIP //-->
+<pre>
+int __declspec(dllexport) foo();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>__declspec</SMALL> keyword is specific to Visual C<small>&#43;&#43;</SMALL>, and it has many possible parameter values. The following two values are useful when you&#146;re declaring DLLs:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dllexport</SMALL>. Declares a function or variable as exported from a DLL
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dllimport</SMALL>. Declares a function or variable as imported from a DLL
+</DL>
+<p>In some cases, using <small>dllexport</SMALL> and <small>dllimport</SMALL> enables the compiler to generate more efficient code than using a DEF file, because the compiler can identify which symbols are exported and imported from the DLL, rather than forcing the linker to perform all the work independently.</P>
+<p>A slight amount of complexity is added to your declarations when using <small>__declspec</SMALL>. Consider a DLL that exports a function named <small>foo</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+int foo(int)
+{
+    // Does something useful...
+    return 1216;
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When building the DLL, <small>foo</SMALL> is declared using <small>dllexport</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+int __declspec(dllexport) foo(int);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When importing the DLL, <small>foo</SMALL> is declared using <small>dllimport</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+int __declspec(dllimport) foo(int);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>At first glance, this seems to require two header files&#151;one file used when building the DLL and another header file used by clients of the DLL. This approach is certainly possible, but it will result in a great deal of work when the DLL is modified. Instead of using two header files, the examples in this chapter use conditional compilation to ensure that the proper declaration is used, as Listing 6.2 demonstrates.
+</P>
+<p><b>Listing 6.2</B> A Header File Using <small>__declspec</SMALL> with Conditional Compilation</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+// Conditional compilation for DLL declarations
+
+#ifdef ESPRESSO_DLL
+// export function from library
+#define FUNC_DECL  __declspec(dllexport)
+#else
+// import function from library
+#define FUNC_DECL  __declspec(dllimport)
+#endif
+
+int  FUNC_DECL GetLatteFoamDensity(void);
+
+void FUNC_DECL SetLatteFoamDensity(int nDensity);
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In the DLL implementing these functions, <small>ESPRESSO_DLL</SMALL> is defined before the header file is included, resulting in <small>__declspec(dllexport)</SMALL> being used for the declarations. When this header is used without defining <small>ESPRESSO_DLL</SMALL>, the<small>__declspec(dllimport)</SMALL> declaration is used.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Loading a DLL at Load Time</FONT></H4>
+<p>An executable can contain information about the DLLs it needs to have loaded. This information is placed into the EXE file by the linker and is used by Windows 2000 when an application is launched.
+</P>
+<p>When the EXE is started, Windows 2000 is responsible for locating the DLLs needed by the application and resolving the address for each of the references made to the DLL. This type of loading is call <i>implicit loading</I>, because it occurs automatically when the EXE is launched.</P>
+<p>Windows 2000 searches for DLLs in the following order:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The directory containing the EXE file that owns the process
+<dd><b>&#149;</B>&nbsp;&nbsp;The current directory
+<dd><b>&#149;</B>&nbsp;&nbsp;The Windows 2000 system directory
+<dd><b>&#149;</B>&nbsp;&nbsp;The Windows 2000 directory
+<dd><b>&#149;</B>&nbsp;&nbsp;The directories listed in the <small>PATH</SMALL> environment variable
+</DL>
+<p>If any of the DLLs associated with an application cannot be found or fails to load for any other reason, the application terminates.
+</P>
+<p>Every DLL that&#146;s found is treated like a memory-mapped file, and its contents are mapped into the process of the starting application. Because it&#146;s treated like a memory-mapped file, only the parts of the DLL that actually are used are loaded into physical memory.</P>
+<p>As discussed earlier in the chapter, if a DLL used by an application is already in use by another process, Windows 2000 creates another mapping for the new process and increments a reference count stored internally by the operating system. This counter is incremented when processes attach to a DLL, and it&#146;s decremented when processes detach or are terminated. When this counter reaches 0, the DLL is released.</P>
+<p>To notify the linker that your application depends on a DLL, you must link your application with an import library created for the DLL. Visual C<small>&#43;&#43;</SMALL> creates an import library automatically when building DLL projects created by AppWizard.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Loading a DLL at Runtime</FONT></H4>
+<p>The second method you can use to load a DLL is <i>runtime</I> or <i>dynamic loading</I>. With this method, you can attempt to explicitly load a DLL using <small>LoadLibrary</SMALL>, as Listing 6.3 shows.</P>
+<p><b>Listing 6.3</B> Using <small>LoadLibrary</SMALL> to Load a DLL at Runtime</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+typedef int(*PFUNC)(void);
+.
+.
+.
+HINSTANCE   hLibInstance;
+hLibInstance = LoadLibrary(_T(&#147;FuncDll&#148;));
+if(hLibInstance != NULL)
+{
+    PFUNC pFunc = (PFUNC)GetProcAddress(hLibInstance,
+                                        _T(&#147;GetUltimateAnswer&#148;));
+    if(pFunc != NULL)
+    {
+        int n = pFunc();
+        _tprintf(_T(&#147;The answer is %d\n&#148;), n);
+    }
+    FreeLibrary(hLibInstance);
+}
+else
+{
+    _tprintf(_T(&#147;Couldn&#146;t load library\n&#148;));
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

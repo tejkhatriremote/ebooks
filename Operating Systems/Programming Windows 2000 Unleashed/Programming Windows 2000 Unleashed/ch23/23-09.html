@@ -1,0 +1,187 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=794-797//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In JavaScript, the object is created using the function <small>taskManager</SMALL> and then specifying the data members (<small>this.isOk</SMALL>) and data methods (<small>this.writeOut</SMALL>). The name of the class is the same as the name of the function&#151;<small>taskManager</SMALL>. The <small>taskManager</SMALL> class is a wrapper to a series of <small>Session</SMALL> variables&#151;<small>currentTask</SMALL> and <small>currentStep</SMALL>. They keep track of where the user is currently. The <small>isOk</SMALL> method retrieves the current local task from the URL and then compares it to the <small>Session(&#147;currentTask&#148;)</SMALL> variable. If they do not match, the current page is redirected to the <small>Session(&#147;defaultPage&#148;)</SMALL> default page. Otherwise, the current step is checked to make sure it&#146;s one greater than the last successfully finished page.</P>
+<p>Here&#146;s how to implement this class in the <small>Session(&#147;defaultPage&#148;)</SMALL> default page:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%@ Language=&#148;javascript&#148; %&gt
+&lt!--#include file=&#148;../task.asp&#148; --&gt
+&lt%
+var task = new taskManager;
+task.atDefault();
+%&gt
+&ltHTML&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The JavaScript object is created using the new <small>taskManager</SMALL> command. Because this is the default page, it&#146;s assumed that the current task is okay. This is because the <small>atDefault()</SMALL> command will make sure the correct page is loaded and that the current task is executing.</P>
+<p>Then, in each of the task-associated pages, the following code must be added:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=&#148;javascript&#148; %&gt
+&lt!--#include file=&#148;../task.asp&#148; --&gt
+&lt%
+var task = new taskManager;
+if( task.isOk( 1) == false) {
+
+    }
+%&gt
+&ltHTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>In this case, the method <small>task.isOk</SMALL> is called. It checks to make sure the page can be called after the default page. If so, the method returns <small>True</SMALL>. If it returns <small>False</SMALL>, the page needs to handle the failure. An example would be to redirect to another page so that the task state could be made valid.</P>
+<p><font size="+1"><b>The Point of JavaScript Objects</B></FONT></P>
+<p>The point of this sample object was not to show a foolproof way of developing a redirection&#151;it lacks the dependency-enforcement steps needed for the solution to be complete. However, what it shows is how development can be object oriented within a scripting environment. Notice also how the files are included using the server-side <small>include</SMALL> command <small>&lt!--#include ... --&gt</SMALL>. The other aspect of the JavaScript object is that it has access to all the ASP server objects, such as <small>Response</SMALL> and <small>Request</SMALL>.</P>
+<p>Is it recommended that you use JavaScript objects in your development processes? The answer is a definite yes. However, you should keep the development of these objects to the length of about what was shown in the redirection or a bit more. Let&#146;s put it this way: You do not want to write thousand-line scripts, because they will be slow and hard to maintain. Writing objects based in a scripting language is quicker than invoking the C<small>&#43;&#43;</SMALL> environment and building full-blown objects. JavaScript objects cannot inherit and therefore are ill-suited for complex object-oriented development. They are best-suited for a shallow task simplification. When I use the term shallow, I mean development, which could be solved using macros. Scripting does not support macros, therefore objects are the applicable solution. For example, throughout the DevDays Web site, a series of database connections to retrieve user information was constantly used. This code was moved into an object, which makes it easier to write the code.</P>
+<p>This ends our discussion of writing tasks and defining an architecture for Web applications. From here, we&#146;ll discuss content, component calling, and creation. Order is an important aspect of Web applications. This is especially true if the Web site will live beyond six months and pieces of it will be reused. Without order, it doesn&#146;t matter how clean and simple the components have been written; the Web application will become a nightmare with very obscure bugs.</P>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">A Simpler Way of Managing Objects</FONT></H4>
+<p>Creating objects using the <small>Server.CreateObject</SMALL> notation can be a bit tedious because of the extra script code required. It&#146;s possible to write the following in the <small>global.asa</SMALL> file:</P>
+<!-- CODE SNIP //-->
+<pre>
+&ltOBJECT SCOPE=Session RUNAT=server PROGID=Simple.Object id=MyObject&gt
+&lt/OBJECT&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this example, the object is created when a session starts, as specified by the <small>SCOPE</SMALL> attribute. This way of creating the object has an advantage in that it&#146;s simpler to reference the object, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+MyObject.someMethod( param1);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SCOPE</SMALL> tag can also be <small>Application</SMALL>, which means there will be only one instance of the object created. This is also called a <i>singleton</I>. If neither scope is specified and the text is embedded within a page, the object is created using page scope.</P>
+<p><font size="+1"><b>Cleaning Up the Objects</B></FONT></P>
+<p>After an object has been created, you may want to remove the object from memory. Using the <small>Remove</SMALL> method, you can specify an object and have it removed. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+Session.Contents.Remove(&#147;someitem&#148;)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This method is not limited to objects&#151;it can include numeric or string values.
+</P>
+<p>If all the items need to be cleared, the method <small>RemoveAll</SMALL> is used:</P>
+<!-- CODE SNIP //-->
+<pre>
+Session.Contents.RemoveAll()
+</PRE>
+<!-- END CODE SNIP //-->
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Working with Binary Data</FONT></H4>
+<p>Handling large amounts of data requires extra effort within ASP. Using a <small>POST</SMALL> method, you can upload megabytes of data to a server. Handling binary data on the server side cannot be accomplished using standard techniques.</P>
+<p><font size="+1"><b>Reading Binary Data</B></FONT></P>
+<p>The method <small>Request.BinaryRead</SMALL> needs to be used when you&#146;re reading binary data. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ LANGUAGE=&#148;VBSCRIPT&#148; %&gt
+&lt%
+Server.ScriptTimeout = 36000
+PostSize = Request.TotalBytes
+
+BytesRead = 0
+For i = 1 to (PostSize/1024)
+
+ReadSize=1024
+PostData = Request.BinaryRead(ReadSize)
+BytesRead = BytesRead &#43; ReadSize
+Next
+
+ReadSize=TotalBytes - BytesRead
+If ReadSize &lt&gt 0 Then
+PostData = Request.BinaryRead(ReadSize)
+         BytesRead = BytesRead &#43; ReadSize
+End If
+
+Response.Write BytesRead
+Response.Write &#147; bytes were read.&#148;
+%&gt
+</PRE>
+<!-- END CODE //-->
+<p>Because a large <small>POST</SMALL> can take quite a bit of time to execute, you need to change the timeout script (<small>Server.ScriptTimeout</SMALL>). Otherwise, the script will time out before the information is uploaded. The next step is to determine how many bytes have been uploaded using the method <small>Request.TotalBytes</SMALL>. Next, via a loop, you can read the bytes in packet sizes of 1KB (1,024 bytes) using <small>Request.BinaryRead</SMALL>. This method asks for just one parameter, which specifies the number of bytes that can be retrieved. Returned is a variant that contains an array of single-byte values.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

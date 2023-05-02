@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=916-920//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="27-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In Listing 27.1, the <small>wmain</SMALL> function begins by declaring a Unicode string containing a fragment of an LDAP DN. The <small>wszQuery</SMALL> string is initialized as this:</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://CN=Users,
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In order to be useful, the string must include domain components, like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://CN=Users,DC=codevtech,DC=com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The purpose of this code fragment is to add the domain components to the <small>wszQuery</SMALL> string.</P>
+<p>After initializing the COM runtime library, the <small>wmain</SMALL> function in Listing 27.1 calls <small>ADsGetObject</SMALL> to bind to the <small>rootDSE</SMALL> directory object. The <small>ADsGetObject</SMALL> function is asked to return a pointer to the <small>IADs</SMALL> interface, a base interface that&#146;s supported by all ADSI objects. <small>IADs</SMALL> is used to retrieve basic attribute information about an object&#151;in this case, the <small>IADs::Get</SMALL> method is used to retrieve <small>DefaultNamingContext</SMALL>, which fills a variant type with a string containing the local domain components:</P>
+<!-- CODE SNIP //-->
+<pre>
+CN=codevtech,CN=com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The remaining code in Listing 27.1 concatenates the local domain components with the current value of <small>wszQuery</SMALL>, resulting in a string that can be used to bind to the Users node of the directory on any system.</P>
+<p>Determining the serverless binding string in Visual Basic is much simpler than using the equivalent C<small>&#43;&#43;</SMALL> code. Listing 27.2 is an example of a code fragment that&#146;s the Visual Basic version of serverless binding.</P>
+<p><b>Listing 27.2</B> Serverless Binding in Visual Basic<hr></P>
+<!-- CODE //-->
+<pre>
+Private Sub ServerlessBind()
+    Dim rootDSE As IADs
+    Dim strPath As String
+
+    Set rootDSE = GetObject(&#147;LDAP://rootDSE&#148;)
+    strPath = &#147;LDAP://CN=Users,&#148; &amp _
+              rootDSE.Get(&#147;defaultNamingContext&#148;)
+    &#145;&#146; The strPath string now contains a DN for the Users node
+    &#145;&#146; in the directory.
+
+    &#145;&#146; Remaining code omitted
+
+
+End Sub
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 27.2, the <small>ServerlessBind</SMALL> function sets a pointer to the <small>rootDSE</SMALL> ADSI object. Next, the default naming context is retrieved and appended to the string <small>&#147;LDAP://Users,&#148;</SMALL>, forming a DN for the Users node in the directory.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">COM Interfaces Exposed by ADSI</FONT></H4>
+<p>Ten categories of COM interfaces are offered by ADSI:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Core</I>. Interfaces that provide basic management of ADSI objects
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Non-Automation</I>. Interfaces that do not use Automation and enable C and C<small>&#43;&#43;</SMALL> clients to have low-overhead access to ADSI objects
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Persistent object</I>. Interfaces that manage persistent data in the directory
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Dynamic object</I>. Interfaces that work with dynamic data, such as commands, in the directory service
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Security</I>. Interfaces that provide authentication and authorization facilities to an ADSI client
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Property Cache</I>. Interfaces used to manipulate properties in the property cache
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Extension</I>. Interfaces that enable a client to extend the functionality of existing ADSI classes
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Schema</I>. Interfaces that enable the directory schema to be managed and extended
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Data Type</I>. Interfaces that support access to ADSI data types
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Utility</I>. Interfaces that are used to provide helper functions, such as parsing ADSI pathnames
+</DL>
+<p>The following sections describe the more commonly used interface categories in more detail.
+</P>
+<p><font size="+1"><b>Using ADSI Core Interfaces</B></FONT></P>
+<p>The ADSI core interfaces are used to manage directory objects and include the following dual interfaces:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADs</SMALL>. This interface is supported by every directory object and is used to manage basic information about the object, such as its path, name, description, and other basic properties, as well as information about the object&#146;s container.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsContainer</SMALL>. This interface is supported by all directory container objects and enables a client to enumerate and manage child objects.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsNamespaces</SMALL>. An interface used to manage the collection of namespaces in the directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsOpenDSObject</SMALL>. This interface is used when a client must supply security credentials and obtain a security context before interacting with the underlying directory service.
+</DL>
+<p>Listing 27.3 contains a fragment of a C<small>&#43;&#43;</SMALL> program that illustrates how the <small>IADs</SMALL> and <small>IADsNamespaces</SMALL> interfaces can be used to display the name of each namespace in the directory. This program is part of the Namespace project that can be found on the CD-ROM that accompanies this book.</P>
+<p><b>Listing 27.3</B> Using <small>IADs</SMALL> and <small>IADsNamespaces</SMALL> to Enumerate the Directory Namespaces<hr></P>
+<!-- CODE //-->
+<pre>
+int wmain()
+{
+    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    IADsContainer* pNamespaces = NULL;
+    HRESULT hr = ADsGetObject(L&#147;ADs:&#148;,
+                              IID_IADsContainer,
+                              (void**)&amppNamespaces);
+    if(FAILED(hr))
+    {
+        ErrorHandling(L&#147;ADsGetObject&#148;);
+        return 0;
+    }
+    // Create an ADSI enumerator for the collection.
+    IEnumVARIANT*  pEnum = NULL;
+    hr = ADsBuildEnumerator(pNamespaces, &amppEnum);
+    if(FAILED(hr))
+    {
+        ErrorHandling(L&#147;ADsBuildEnumerator&#148;);
+        pNamespaces-&gtRelease();
+        CoUninitialize();
+        return 0;
+    }
+    // While the enumerator continues to fetch new elements...
+    wprintf(L&#147;Name\t\tClass\n&#148;);
+    while(SUCCEEDED(hr))
+    {
+        BSTR    bstrName, bstrClass;
+        ULONG   ulFetch = 0;
+        VARIANT var;
+        // Retrieve the next element from the collection.
+        hr = ADsEnumerateNext(pEnum, 1, &ampvar, &ampulFetch);
+        if(!ulFetch) break;
+        // QI the element for the IADs interface.
+        IADs*      pNamespace = NULL;
+        IDispatch* pDisp = V_DISPATCH(&ampvar);
+        hr = pDisp-&gtQueryInterface(&amppNamespace);
+        if(SUCCEEDED(hr))
+        {
+            // Display information about the collection element.
+            pNamespace-&gtget_Name(&ampbstrName);
+            pNamespace-&gtget_Class(&ampbstrClass);
+
+            wprintf(L&#147;%-15s%-15s\n&#148;, bstrName,
+                                 bstrClass);
+            // Free BSTRs and interface.
+            SysFreeString(bstrName);
+            SysFreeString(bstrClass);
+
+            pNamespace-&gtRelease();
+        }
+        pDisp-&gtRelease();
+    }
+    // Clean up enumerator.
+    ADsFreeEnumerator(pEnum);
+    CoUninitialize();
+    return 0;
+
+:}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="27-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

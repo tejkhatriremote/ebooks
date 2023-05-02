@@ -1,0 +1,173 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:An Introduction to COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=21//-->
+<!--PAGES=704-706//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="21-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>To use this class, you must follow these steps:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Associate an active connection with the view by setting <small>objConnection</SMALL> with an active <small>clsDBConnect</SMALL> object.
+<dd><b>2.</B>&nbsp;&nbsp;The property view, when it&#146;s set, builds a simple <small>SELECT * from [view]</SMALL> statement.
+<dd><b>3.</B>&nbsp;&nbsp;If any criterion needs to be added, you need to call the <small>AddLongCriterion</SMALL> or <small>AddStringCriterion</SMALL> method, which adds the following to the SQL select statement:
+<!-- CODE SNIP //-->
+<pre>
+WHERE param1=value1 AND ... paramx=valuex
+</PRE>
+<!-- END CODE SNIP //-->
+<br>The difference between the string and the long criteria is that the string requires extra quotes.
+<dd><b>4.</B>&nbsp;&nbsp;Finally, the method execute is called. It creates the recordset by calling <small>objRecordset.Open</SMALL> with the built-in SQL statement and active DB connection. It&#146;s assumed that you&#146;ll want a forward-only cursor (<small>adOpenForwardOnly</SMALL>) and that it will be a read-only operation.
+</DL>
+<p>When <small>execute</SMALL> is called, how does ADO know whether there are any records? The old way used to be to ask for the record count. If it was zero, there were no records. However, in ADO and OLE DB, this is not possible. The reason is simple&#151;current databases have millions and millions of records. Asking for a record count would require unnecessary processing time. Therefore, to figure out whether there are any records available, you need to see whether the recordset cursor has set the beginning of file (BOF) and end of file (EOF) to <small>True</SMALL>. This means that the cursor is at the beginning and end of the recordset at the same time. This can only occur when there are no records. In the example, if the recordset exists, the cursor is set to the first record using <small>MoveFirst</SMALL>.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B><p>Even if you try to use a record count, most times it will not even work or will give an incorrect answer.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b><i>Consuming the Class</I></B></FONT></P>
+<p>The last step is to consume the class with a new method in the client object called <small>GetClient</SMALL>, which is based on the client ID. This method retrieves a client from the resource and sets its appropriate properties:</P>
+<!-- CODE //-->
+<pre>
+Public Function GetClient(inpId As Long) As Boolean
+    Dim objCon As New clsDBConnect
+    Dim objSQL As New clsDBSQLExecute
+
+    If objCon.Connect() = False Then
+        GoTo EXIT_GetClient
+    End If
+
+    Set objSQL.objConnection = objCon
+    objSQL.view = &#147;viewClients&#148;
+    objSQL.AddLongCriterion &#147;id&#148;, inpId
+    If objSQL.Execute() = False Then
+        GoTo EXIT_GetClient
+    End If
+
+    mvarcompanyName = objSQL.objRecordset.Fields(&#147;company_name&#148;)
+    mvarstreet = objSQL.objRecordset.Fields(&#147;street&#148;)
+    mvarcity = objSQL.objRecordset.Fields(&#147;city&#148;)
+
+    GetClient = True
+    Exit Function
+
+EXIT_GetClient:
+    GetClient = False
+End Function
+</PRE>
+<!-- END CODE //-->
+<p>This method follows the consumer steps. The only additional requirement is that you need to call <small>clsDBConnect.Connect</SMALL> before you call <small>clsDBSQLExecute.Execute</SMALL>. Otherwise, an error will occur. If no errors occur, the resultset is correct. To retrieve the values from the recordset object, call the <small>Recordset.Fields</SMALL> collection directly. The <small>Fields</SMALL> collection accepts as an index a numeric or field name value.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B><p>Although it&#146;s tempting to use a numeric index in the <small>Fields</SMALL> collection, you should avoid doing so. The problem is that, in most cases, people call a <small>SELECT</SMALL> using <small>SELECT *</SMALL>. This is easier, but if the view is altered, the index may be incorrect. A solution would be to name the fields directly. However, sometimes views have about 50 fields. Maintaining this number of fields in a <small>SELECT</SMALL> statement becomes cumbersome. What&#146;s more, using indexes to reference the fields becomes cryptic&#151;what is 1 in field terms? Therefore, you should take the performance hit and use the field names directly.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><b>Accessing a Stored Procedure</B></P>
+<p>This process involves the use of stored procedures to add, delete, or update a record or records. In this case, the simple ADO command will be rewritten to use the following stored procedure:</P>
+<!-- CODE SNIP //-->
+<pre>
+CREATE PROCEDURE addSimpleClient
+    @companyName varchar(255),
+    @street varchar(255),
+    @city varchar( 255)
+AS
+    insert into clients (company_name, street, city)
+       VALUES (@companyName, @street, @city)
+    return -100
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The previously defined SQL stored procedure is simple in that it only calls the SQL <small>INSERT</SMALL> statement. An argument could be made to convert this into an <small>INSERT</SMALL> statement. However, this stored procedure does not do any error handling. Since this is an add procedure, very often the add stored procedure will do an update when the client exits. The advantage of doing this is that when adding or updating a record it is only one roundtrip.</P>
+<p><font size="+1"><b><i>Defining the Stored Procedure Class</I></B></FONT></P>
+<p>A new class to simplify stored procedures would be very similar in design to the view class. The objective is to automate the calling of stored procedures. The following assumptions are made:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;No resultsets are returned on a general basis. (A very large database vendor makes returning recordsets very complicated and therefore this assumption is ideal.)
+<dd><b>&#149;</B>&nbsp;&nbsp;The first parameter is always a return code and specifies the error code of the stored procedure. This value is dependent on the database and needs to be established appropriately.
+<dd><b>&#149;</B>&nbsp;&nbsp;By default, the character parameters have a predetermined length if not specified.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="21-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

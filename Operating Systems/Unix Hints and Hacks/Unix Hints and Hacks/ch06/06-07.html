@@ -1,0 +1,241 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=216-220//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Symbolic links are extremely flexible. They can cross filesystems and networks to other systems. Most of all, you can have multiple names pointing to the same piece of data, and that data can be either a file or a directory.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>On some flavors of UNIX the current path follows the link, and on others it doesn&#146;t.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 33% ls -al
+lrwxrwxrwx  1 root            6 Jun 22  1995 /usr/people/
+<b>&#8658;</B>jimmy -&gt /home/people/jimmy
+rocket 34% cd /usr/people/jimmy
+rocket 35% pwd
+<b>/home/people/jimmy</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This sometimes confuses a user and makes them wonder whether their files have changed or disappeared. You then have to assure them that nothing has happened to their files and possibly spend a little time explaining what transpired. If you notify the user before the changes, you can possibly avoid any later phone calls.
+</P>
+<p>There is a caveat in creating a symbolic link to a filesystem that is NFS-mounted. If that NFS mount point goes stale, you tend to see the system acting sluggishly with any directory that has a link pointing to the slate mount point. For this reason, you want to keep all symbolic links local to a server and never point one to a filesystem over NFS mount points.</P>
+<p>Whenever possible, it is always better to have many local symbolic links pointing to areas in the local system, rather than many local symbolic links pointing to directories across an NFS mount point.</P>
+<p>If you have the ability to have one host or server trusted by all other systems, you can create symbolic links to all the important files on all the systems. This way you never have to log in to a remote system to change any files. There is some security risk at the cost of doing all the administration from one location. If that one system is fully compromised, your entire network of hosts could be at risk. To limit the risk, the password file and the root .rhost file should not be included in this list of configuration files. Here is how it works:</P>
+<!-- CODE //-->
+<pre>
+# mkdir /usr/ADMIN
+# cd /usr/ADMIN
+# mkdir motd inetd.conf sendmail.cf
+# ls -l
+drwxr-----   2 root     sys        1024 Nov 23 18:08 inetd.conf/
+drwxr-----   2 root     sys        1024 Nov 23 18:09 motd/
+drwxr-----   2 root     sys        1024 Nov 23 18:07 sendmail.cf/
+
+# cd motd
+# ln -s /hosts/earth/etc/motd earth
+# ln -s /hosts/pluto/etc/motd pluto
+# ln -s /hosts/saturn/etc/motd saturn
+
+# ls -l
+lrwxrwxrwx   1 root     sys            21 Nov 23 18:09 earth -&gt 
+<b>&#8658;</B>/hosts/earth/etc/motd
+lrwxrwxrwx   1 root     sys            21 Nov 23 18:09 pluto -&gt 
+<b>&#8658;</B>/hosts/pluto/etc/motd
+lrwxrwxrwx   1 root     sys            22 Nov 23 18:09 saturn -&gt
+<b>&#8658;</B>/hosts/saturn/etc/motd
+</PRE>
+<!-- END CODE //-->
+<p>Now, whenever you need to update the message-of-the-day file on all the systems you support, you don&#146;t have to log in to each and every system to make the change. The files that would make good candidates for this would be sendmail.cf, inetd.conf, ttys, inittab, hosts, and even the filesystem table.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<small>ln</SMALL>
+<h3><a name="Heading10"></A><font color="#000077">6.5 Finding Files with grep</FONT></H3>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">6.5.1 Description</FONT></H4>
+<p>There is a way to use <small>grep</SMALL> to quickly find files faster than <small>find</SMALL> can process them.</P>
+<p><font size="+1"><b>Example One: Using find with grep</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> [<i>dir</I>] <b>-print</B> | <b>grep</B> [<i>pattern</I>]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is one of the simplest things that is often overlooked in large installations. The need for searching files becomes a necessity. There are always cases where you or a user forget the location of a file. Using the <small>find</SMALL> command to search for a pattern that matches within a file is a simple command to execute. There is the traditional way of searching for complete words with the <small>find</SMALL> command:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 36% find /disk2/data -name rout -print
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There is a problem if there are no files or directories with the name <i>rout.</I> The traditional <small>find</SMALL> command does not search for partial words. You must know the entire word. If there is a file somewhere on the system that contains vital routing information, and all you know is that at least part of the word <i>rout</I> is in the filename, you can <small>grep</SMALL> from the output of the <small>find</SMALL> command any part of the word <i>rout.</I></P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 37% find /disk2/data -print | grep rout
+/disk2/data/admin/route.gz
+<b>/disk2/data/configs/routing.txt</B>
+/disk2/data/docs/route.ps
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This method is slower than applying the complete name to the command. Sometimes the entire name of the file or directory is unknown and you need the flexibility to pass only part of the actual word to the <small>find</SMALL> command so that the file or directory can be found.</P>
+<p><font size="+1"><b>Example Two: Using grep on a find List File</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> [<i>dir</I>] <b>-print</B> &gt [<i>file</I>]
+<b>grep</B> [<b>-i</B>] [<i>pattern</I>] [<i>file</I>]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This method is for the servers and systems that maintain hundreds of thousands of files. When filesystems on one machine process through many levels of the structure, the best thing is to take nightly snapshots of all the files that the system contains. Then use a program that outputs the filename and the entire path into a file that can be searched.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# find / -print &gt /disk2/ADMIN/filelist.txt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Start by getting every file on the system. This <small>find</SMALL> command starts at the root level and redirects (<small>&gt</SMALL>) all the output into the filelist.txt file. The output consists of the full path and filename of every file on the system.</P>
+<p>All that has to be done now is to <small>grep</SMALL> through the large list of files for the file you are looking for:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 38% grep -i rout /disk2/ADMIN/filelist.txt
+/disk2/data/admin/route.gz
+<b>/disk2/data/configs/routing.txt</B>
+/disk2/data/docs/Router.ps
+/disk2/data/docs/route.ps
+</PRE>
+<!-- END CODE SNIP //-->
+<p>What would take a minimum of several minutes can now be done in several seconds. One problem that you face is that files change on a daily basis. What is not there one day might be there the next. To solve this problem, all you have to do is to make a crontab entry for the <small>find</SMALL> command to execute in the early morning before anyone comes in to work.</P>
+<!-- CODE SNIP //-->
+<pre>
+30 2 * * * find / -print &gt /disk2/ADMIN/filelist.txt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Now every day at 2:30 a.m., a fresh list of files that are most current on the system is stored on the system. With this in place to run nightly, you only have to make it easier for the users to be able to access it. This can take the form of a simple script. Write the script <small>ffind</SMALL> to search for a pattern that is passed to it or prompt for a pattern if one is not passed to it.</P>
+<!-- CODE //-->
+<pre>
+# vi /usr/local/ffind
+
+#! /bin/sh
+FILELIST=&#147;/disk2/ADMIN/filelist.txt&#148;
+PATTERN=&#147;$1&#148;
+if [ -z &#147;$PATTERN&#148; ]; then
+  echo -n &#147;Search: &#148;
+  read PATTERN
+fi
+grep -I &#147;$PATTERN&#148; $FILELIST
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the shell.
+</P>
+<p>Line 2: Define the variable for the file that will be searched.</P>
+<p>Line 3: Get and search for patterns that might have been passed to the script.</P>
+<p>Line 4: Test to see whether a search pattern was passed to the script.</P>
+<p>Line 5: If no search pattern was passed to the script, notify the user to enter a pattern to search for.</P>
+<p>Line 6: If no search pattern was passed to the script, accept input from the user for the pattern to search.</P>
+<p>Line 7: Continue on in the script.</P>
+<p>Line 8: The filelist.txt file is searched for anything matching the contents of the string in the variable <small>PATTERN.</SMALL> If the pattern is found, it is sent to STDOUT and displayed to the user.</P>
+<!-- CODE //-->
+<pre>
+rocket 39% ffind <b>rout</B>
+/disk2/data/admin/route.gz
+/disk2/data/configs/routing.txt
+/disk2/data/docs/Router.ps
+/disk2/data/docs/route.ps
+
+rocket 40% ffind
+Search: <b>rout</B>
+/disk2/data/admin/route.gz
+/disk2/data/configs/routing.txt
+/disk2/data/docs/Router.ps
+/disk2/data/docs/route.ps
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

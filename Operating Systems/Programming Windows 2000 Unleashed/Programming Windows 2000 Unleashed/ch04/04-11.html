@@ -1,0 +1,305 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-11//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-12.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<h3><a name="Heading23"></A><font color="#000077">Taking Advantage of the Encrypted File System</FONT></H3>
+<p>One of the new features in Windows 2000 is the Encrypted File System (or EFS). EFS uses the Win32 Crypto API to encrypt the contents of a file so that they can&#146;t be viewed by an unauthorized person.
+</P>
+<p>There are a couple of limitations to using EFS:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;EFS is not enabled unless there&#146;s a recovery key defined for the system. This makes it a little bit more difficult to encrypt a file and then forget how to recover it.
+<dd><b>&#149;</B>&nbsp;&nbsp;EFS is only supported for the NTFS file system. If you&#146;re using one of the many flavors of the FAT file system, you&#146;re out of luck.
+</DL>
+<p>To create a file that&#146;s encrypted, use <small>CreateFile</SMALL> with the <small>FILE_ATTRIBUTE_ENCRYPTED</SMALL> flag. To encrypt a file that&#146;s already created, call <small>EncryptFile</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fEncrypted = EncryptFile(pszTargetFile);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>NTFS file compression and encryption are mutually exclusive. If you try to encrypt a compressed file, it will be automatically uncompressed.
+</P>
+<p>There are two ways to determine whether a file is encrypted: You can check the file attributes by calling <small>GetFileAttributes</SMALL>, or you can use the more direct <small>FileEncryptionStatus</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fStatus = FileEncryptionStatus(pszTargetFile, &ampdwStatus);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>FileEncryptionStatus</SMALL> has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The file pathname
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>DWORD</SMALL> that will be set to an encryption status value
+</DL>
+<p>The following values can be returned for the file encryption status:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ENCRYPTABLE</SMALL>. The file can be encrypted but is not.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_IS_ENCRYPTED</SMALL>. The file is encrypted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_SYSTEM_ATTR</SMALL>. The file is part of the operating system and can&#146;t be encrypted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ROOT_DIR</SMALL>. The file is a root directory and can&#146;t be encrypted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_SYSTEM_DIR</SMALL>. The file is the system directory and can&#146;t be encrypted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_UNKNOWN</SMALL>. The file has an unknown status.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_SYSTEM_NOT_SUPPORT</SMALL>. The file can&#146;t be encrypted because the file system doesn&#146;t support encryption.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_USER_DISALLOWED</SMALL>. This value is not currently returned but is reserved for future use.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_READ_ONLY</SMALL>. The file cannot be encrypted because it&#146;s read-only.
+</DL>
+<table width="100%">
+<td valign="TOP" align="LEFT" width="5%"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-02i.jpg"><td valign="TOP" align="LEFT" width="95%">As an example of how the file encryption functions are used, this book&#146;s CD-ROM includes Crypt, a console mode application that encrypts, decrypts, and checks the status of files.
+</TABLE>
+<p>The source code for <small>crypt.c</SMALL> is provided in Listing 4.16.</P>
+<p><b>Listing 4.16</B> A Console Mode Program That Uses the Encrypting File System</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Crypt.c
+ *
+ * Allows a user to encrypt, decrypt, or query the encryption
+ * status for files on an NTFS volume.
+ *
+ * Usage:
+ *    Crypt {C|D|Q} filename
+ *           C = Encrypt file
+ *           D = Decrypt file
+ *           Q = Query file encryption status
+ *
+ *
+ * This example program is from &#147;Programming Windows 2000
+ * Unleashed&#148;, by Mickey Williams.
+*/
+
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+LPTSTR pszTargetFile;
+TCHAR  chAction;      // see ACTION_*
+
+#define ACTION_ENCRYPT &#145;C&#146;
+#define ACTION_DECRYPT &#145;D&#146;
+#define ACTION_QUERY   &#145;Q&#146;
+
+VOID Usage(VOID);
+
+#ifdef _UNICODE
+#define TOUPPER(x) towupper(x)
+#else
+#define TOUPPER(x) toupper(x)
+#endif
+
+int _tmain(int argc, TCHAR* argv[])
+{
+    if(argc != 3)
+    {
+        Usage();  // display usage information
+        return 1;
+    }
+    chAction = TOUPPER(*argv[1]);
+    pszTargetFile = argv[2];
+
+    switch(chAction)
+    {
+        case ACTION_ENCRYPT:
+            if(!EncryptFile(pszTargetFile))
+            {
+                _tprintf(_T(&#147;EncryptFile failed!\n&#148;));
+                return 1;
+            }
+            _tprintf(_T(&#147;Encryption succeeded\n&#148;));
+            break;
+        case ACTION_DECRYPT:
+            if(!DecryptFile(pszTargetFile, 0))
+            {
+                _tprintf(_T(&#147;DecryptFile failed!\n&#148;));
+                return 1;
+            }
+            _tprintf(_T(&#147;Decryption succeeded\n&#148;));
+            break;
+        case ACTION_QUERY:
+        {
+            DWORD  dwStatus;
+            LPTSTR psz;
+            if(!FileEncryptionStatus(pszTargetFile, &ampdwStatus))
+            {
+                _tprintf(_T(&#147;FileEncryptionStatus failed!&#148;));
+                return 1;
+            }
+            switch(dwStatus)
+            {
+                case FILE_ENCRYPTABLE:
+                psz = _T(&#147;can be encrypted.&#148;);
+                break;
+
+                case FILE_IS_ENCRYPTED:
+                psz = _T(&#147;is encrypted.&#148;);
+                break;
+
+                case FILE_SYSTEM_ATTR:
+                psz = _T(&#147;is not encryptable - system file.&#148;);
+                break;
+
+                case FILE_ROOT_DIR:
+                psz = _T(&#147;is not encryptable - root directory.&#148;);
+                break;
+
+                case FILE_SYSTEM_DIR:
+                psz = _T(&#147;is not encryptable - system directory&#148;);
+                break;
+
+                case FILE_UNKNOWN:
+                psz = _T(&#147;has unknown encryption status.&#148;);
+                break;
+
+                case FILE_SYSTEM_NOT_SUPPORT:
+                psz = _T(&#147;is not encryptable - no FS support.&#148;);
+                break;
+
+                case FILE_READ_ONLY:
+                psz = _T(&#147;is a read-only file.&#148;);
+                break;
+
+                default:
+                psz = _T(&#147;has unknown encryption status.&#148;);
+            }
+            _tprintf(_T(&#147;The file %s\n&#148;), psz);
+            break;
+        }
+        default:
+        _tprintf(_T(&#147;Unknown action request. Must be C, D, or Q\n&#148;));
+        Usage();
+    }
+    return 0;
+}
+
+VOID Usage(VOID)
+{
+    _tprintf(_T(&#147;Invalid number of parameters \n\n&#148;));
+    _tprintf(_T(&#147;Usage:\n&#148;));
+    _tprintf(_T(&#147;\tCrypt {C|D|Q} filename \n\n&#148;));
+    _tprintf(_T(&#147;\tC = Encrypt\n&#148;));
+    _tprintf(_T(&#147;\tD = Decrypt\n&#148;));
+    _tprintf(_T(&#147;\tQ = Query encryption status\n&#148;));
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Compile and run <small>crypt.c</SMALL>. You can encrypt, decrypt, or determine a file&#146;s encryption status by passing two parameters to Crypt on the command line:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A command character&#151;either C (for encryption), D (for decryption), or Q (for a query).
+<dd><b>&#149;</B>&nbsp;&nbsp;The file or directory&#146;s pathname.
+</DL>
+<h3><a name="Heading24"></A><font color="#000077">Using File-Notification Functions</FONT></H3>
+<p>Windows 2000 also allows you to request to be notified when files or directories are erased, updated, or created. When you request to be notified, Windows 2000 returns a handle. You can use this handle to determine when the notification has been made.
+</P>
+<p>Three functions are used to implement file notifications:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindFirstChangeNotification</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindNextChangeNotification</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindCloseChangeNotification</SMALL>
+</DL>
+<p><small>FindFirstChangeNotification</SMALL> is used to open a handle to control the notification process:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hNotify = FindFirstChangeNotification(szRootDir,
+                                             fIncludeSubdirs,
+                                             dwFilter);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>FindFirstChangeNotification</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The pathname to the directory that will cause a notification to be created.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>BOOL</SMALL> that specifies if subdirectories are included in the directories that are watched for changes. If this parameter is <small>FALSE</SMALL>, only changes to the specified directory will result in a notification.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>DWORD</SMALL> consisting of one or more filter values that specify events that will result in a notification.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-12.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

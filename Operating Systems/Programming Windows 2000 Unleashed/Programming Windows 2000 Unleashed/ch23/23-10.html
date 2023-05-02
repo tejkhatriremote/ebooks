@@ -1,0 +1,192 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=797-800//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Writing Binary Data</B></FONT></P>
+<p>The other task is writing binary data. This step is not more complicated, but it does require the additional step of defining what the data is. Consider the following example:
+</P>
+<!-- CODE //-->
+<pre>
+&lt%
+Response.Buffer = true;
+Response.ContentType = &#147;image/gif&#148;;
+
+var objBinary = Server.CreateObject(&#147;Example.BinaryObject&#148;);
+
+Response.BinaryWrite( objBinary.binaryPicture);
+Response.End();
+%&gt
+</PRE>
+<!-- END CODE //-->
+<p>Keep in mind that if binary data is being sent, no other data can be sent. There&#146;s only one output stream, and when a commitment is made to send binary data, any other operations will cause stream corruption. To simplify the sending of the data, the first step is to create a buffer using <small>Response.Buffer = True</SMALL>. Then, the binary data type needs to be specified using <small>Response.ContentType</SMALL>. This is a MIME data type. If this is not specified, the client browser will assume the data is a text file and process it as such. In this case, the data is an image file.</P>
+<p>The data is written to the stream using <small>Response.BinaryWrite</SMALL>. It accepts only a single parameter&#151;a variant array of single bytes. Finally, when all the binary data has been written, it can be sent using <small>Response.End</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Writing Dynamic Code</FONT></H4>
+<p>You can write Web applications using ASP and Dynamic HTML in two ways. First, you can write the code in a normal programming environment. This means that the variables and modules are predetermined. The other way is to write applications using the dynamic nature of the Web.
+</P>
+<p><font size="+1"><b>Generating Code</B></FONT></P>
+<p>One way of writing dynamic code is to separate the client-side and server-side data. Consider the following ASP code:
+</P>
+<!-- CODE //-->
+<pre>
+Here is some text (
+&lt%
+<i>if( testValue == true) {
+Response.Write( &#147;My Success&#148;);</I>
+}
+%&gt
+)
+
+&ltBR&gt
+Here is some other text (
+&lt%<i>if( testValue == true) {%&gt
+My success</I>
+&lt%}%&gt
+)
+</PRE>
+<!-- END CODE //-->
+<p>Both methods produce the following output:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Here is some text (My Success)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The difference between the two is that the first output is created by an ASP built-in object. The second uses the inherent script-processing power.
+</P>
+<p>In the first block, if the test is successful, the string is written using <small>Response.Write</SMALL>. Using this mechanism, it&#146;s difficult for you to update the string with anything that contains HTML text because the passed-in data is a buffer that needs to be assembled. If the data needs to be assembled using a tool such as the Visual InterDev Designer, it&#146;s not possible, because the designer will not read the buffer.</P>
+<p>The second solution has its advantages. When the page is scanned, the <small>if</SMALL> block appears above and below the <small>My Success</SMALL> string. On a programming level, the <small>My Success</SMALL> HTML would be translated as a sort of super variable that needs to be sent to the client. This is a superior design method because this page can be scanned by the Visual InterDev Designer and modified to be any HTML. It&#146;s also easier to read because it makes a clear distinction between client-side code and server-side code. However, this involves many hours of development.</P>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">Dynamic Content Sizing</FONT></H4>
+<p>One thing that&#146;s very annoying about Web sites is that they&#146;re programmed to a certain size. If the Web browser client area is altered, the Web page does not adjust to fit the new screen area. The Web is not static; it is dynamic. The content has the ability to adjust itself to the surrounding environment. So, if dynamic Web pages are so much better, why the static trend? The answer is that it&#146;s easier to control the user experience with static pages. This is important because a bad Web site will create a bad experience. Solving this problem involves a multistep solution. The first step is to split the Web page into multiple sections, as per the original design.
+</P>
+<p>The effect that&#146;s desired is that when the browser is widened, the text will adjust, but when the browser is narrowed, the text adjusts to a point. What you want to avoid is a situation where the browser is made so narrow that the user must constantly scroll to read your content. Here&#146;s the way to avoid this:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lttable width=&#148;100%&#148;&gt
+&lttr&gt
+    &lttd&gt
+        &ltbr&gt&ltimg src=&#148;images/1ptrans.gif&#148; height=&#148;5&#148;&gt&ltbr&gt
+    &lt/td&gt
+&lt/tr&gt
+&lt/table&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here, a table is created at the full width of the screen. However, within one of the cells is a transparent image. The transparent image is the minimum width of the cell. The image could be a 1-pixel&#150;high image. What the image does is force a toolbar to appear when the minimum size has been reached. At that point, the cell does not shrink, and the formatting appears &#147;as is.&#148; When the cell is increased, the text automatically resizes itself.
+</P>
+<p>The other desired effect is to be able to place controls and text at certain locations, even if the browser changes width. Consider the example shown in Figure 23.7.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-07.jpg',768,572 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-07.jpg',768,572)"><font color="#000077"><b>Figure 23.7</B></FONT></A>&nbsp;&nbsp;Centering a control on a page.</P>
+<p>In this example, the calendar control is kept in the center of the Web page. The way to accomplish this is to use the HTML <small>span</SMALL> and <small>table</SMALL> tags, like this:</P>
+<!-- CODE //-->
+<pre>
+&ltspan style=&#148;BACKGROUND: lawngreen; WIDTH: 62%&#148;&gt
+&lttable width=&#148;100%&#148; border=0&gt
+&lttr&gt
+&lttd align=right &gt
+&ltOBJECT classid=clsid:B0FD63A1-F41D-11D1-A555-00C04F94E891
+height=178 width=210&gt
+&lt/OBJECT&gt
+&lt/td&gt
+&lt/tr&gt
+&lt/table&gt
+&lt/span&gt
+&ltspan style=&#148;BACKGROUND: lawngreen; WIDTH: 33%&#148;&gt
+&ltp&gt
+&ltcenter&gtYou will need to adjust this&lt/center&gt
+&ltcenter&gt&lta href=&#148;something&#148; class=Item id=link1&gtlink 1&lt/a&gt&lt/center&gt
+&ltcenter&gt&lta href=&#148;something&#148; class=Item id=link2&gtlink 2&lt/a&gt&lt/center&gt
+&ltcenter&gt&lta href=&#148;something&#148; class=Item id=link3&gtlink 3&lt/a&gt&lt/center&gt
+&lt/P&gt
+&lt/span&gt
+</PRE>
+<!-- END CODE //-->
+<p>There are two <small>span</SMALL> areas. One has a width of 62 percent, and the other has a width of 33 percent. If the <small>span</SMALL> areas are followed with a <small>BR</SMALL> tag, then both are placed at the same level. When the browser is resized, the <small>span</SMALL> areas are automatically realigned. The purpose of the <small>span</SMALL> areas is to create regions where content can be placed. In this example, one region contains a table where the calendar control is aligned to the right. In the other region a series of hyperlinks appears. Why use the <small>span</SMALL> areas and not a table&#151;wouldn&#146;t both achieve the same thing? The problem is that when elements are placed within a table and then updated dynamically, it causes flicker. The hyperlinks in the other region have the mouse &#147;roll-on&#148; and &#147;roll-off&#148; events to make them switch colors. Color switching updates a table and causes a flicker.</P>
+<p>However, using <small>span</SMALL> does have its problems, as well. Consider some other content that has multiple span areas. If one of those <small>span</SMALL> areas does not allow a minimum sizing, the <small>span</SMALL> areas will realign themselves on two separate regions above each other. To avoid this, use the one-pixel, transparent-image trick and a minimum size will be enforced.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,79 @@
+
+                          Leergutautomaten - a short description
+                                          or
+                           How to cheat those bottle grabbers
+                        =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Die deutsche GmbH TOMRA Systems (www.tomra.de) ist eine der wichtigsten
+deutschen Leergutautomatenfabrikanten, die u.a. Kunden wie die EDEKA-Gruppe hat.
+
+Leergutautomaten ermöglichen eine fast personalfreie Annahme von Leergut
+z.B. in Super- oder Getränkemärkten.
+Das System ist recht simple:
+
+Das vom Kunden aufgegebene Leergut wird auf bestimmte Kriterien wie z.B.
+Gewicht, Höhe/Breite geprüft. Anhand der gewonnen Werte wird der
+Rückgabewert aufgelistet und durch Bestätigen einer Taste ein Bon
+ausgedruckt (bzw. nach einem bestimmten Timeout, die Angabe annuliert).
+Dieser Bon enthält einen EAN-Code (dargestellt als Barcode) und ein
+paar Informationen.
+Gibt man diesen Bon an der Kasse ab, so ließt die Kasse den Barcode, zieht
+den angegebenen Betrag ab. Die Kassiererin muss nun den Barcode mit einem
+EDDING-Stift durchstreichen um ein mehrmaliges Verwenden zu verhindern.
+ 
+Die Rückgabewerte solcher Automaten sind erstaunlich hoch und reichen bei
+kleinen Supermärkten von 300.-DM/Tag bis zu 20.000 DM/Tag bei großen
+SB-Warenhäusern (Quelle: TOMRA GmbH).
+
+Kommen wir zum Punkt. Bei den TOMRA-Systemen (andere hab ich noch nicht
+getestet) entdeckte ich folgendes:
+
+Das eingesetze System TOMRA 410 ist zwar nicht mehr aktuell (kein spacy
+Cyber-Design mit abgerundeten Ecken, LCD-Disply und solchen Crap) doch
+sind mir bei den Bons keine Änderungen aufgefallen.
+Ich hab die Daten beim Edeka durch einen befreundeten Kassierer getestet.
+
+Der EAN-Code auf dem Bon sieht folgendermaßen aus:
+(Dargestellt als maschinenlesbarer Barcode)
+
+2 100996 000607
+^   ^  ^    ^ ^
+|   |  |    | |
+|   |  |    | -- EAN-Checksum, sehr simple Berechnung
+|   |  |    -- Normalerweiße die EAN-Produktnummer (vom Hersteller)
+|   |  |       In unserem Fall jedoch der Leergutpreis (60 Pfg.)
+|   |  |-----  Eine spezielle Checksum, hier 6 (=60 Pfg.)
+|   |--------- Normalerweiße die EAN-Herstellernummer (vom Inst. vergeben)
+|              Hier die interne Nummer für das Leergut
+|------------- Der EAN-Ländercode
+
+Gleiche Beträge zu unterschiedlichen Zeiten erzeugen den gleichen
+EAN-Code!!!!
+
+Dieser Code wird von der Kasse gelesen und mit dem PLU (Price Look-Up)
+Interface ausgewertet. Manuell koennte ihn der Kassierer auch eingeben,
+jedoch werden die Leergutausschüttungen an der Kasse am Abend mit
+den Beträgen des Leergutautomaten verglichen!
+
+Ausserdem enthält der Bon folgende Informationen (nicht maschinenlesbar)
+ > die Anschrift der Filiale
+ > Datum/Uhrzeit
+ > Auflistung des abgegebenen Leerguts
+ > den Gesamtpreis
+ > eine Bonnummer, die bei jedem Bon inkrementiert wird
+ > Eine Seriennummer des Automaten
+ 
+Der Bon wird mit einem Thermodrucker auf ein spzielles Bonpapier ausgedruckt.
+Auf der Rückseite des Bonpapiers befinden sich mehrere TOMRA Logos
+(dieses Papier kann man in div. Kassensystemengeschäften ordern) - der Bon
+wird allerdings nicht vom Personal auf diese Logos überprüft!!
+
+You see, es ist ein leichtes sich mittels dieser Technik den Weekend-Phun
+zu finanzieren. Leergutabgaben bis 20 DM sind am Wochenende keine Seltenheit.
+
+Soweit die very Short-Description. Ich werde mir demnächst andere
+Automaten wie BottleComp (HL, MiniMal), etc... anschauen
+
+boldface
+
+

@@ -1,0 +1,186 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=529-533//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>You can define a different pointer type attribute for each pointer by using the pointer type attribute immediately before the parameter:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT Snore([in, ref] short* pDecibels);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Typically, you&#146;ll use a single pointer type for most of your pointers. You can define a default pointer type that will be used for all pointers in an interface with the <small>pointer_default</SMALL> attribute:</P>
+<!-- CODE SNIP //-->
+<pre>
+[
+    object,
+    uuid(12345678-1234-1234-1234-000000000099),
+    pointer_default(unique)
+]
+interface ICat : ISleepyAnimal
+{
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The default pointer type will be set to <small>ref</SMALL> if you don&#146;t specify a default pointer type.</P>
+<p>The full pointer type allows pointer <i>aliasing</I>, where multiple pointers in the function call may refer to the same address. In return for this capability, you incur the cost required when the interface is marshaled&#151;each pointer must be stored in a dictionary that&#146;s consulted in order to properly handle aliased pointers.</P>
+<p>The full and unique pointer types also allow <small>NULL</SMALL> values, so the marshaling code must test to ensure that values aren&#146;t written to a <small>NULL</SMALL> address. This gives you some flexibility when using your interface, but it increases the work required at runtime.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Using Direction Attributes in IDL</FONT></H4>
+<p>Every parameter in an IDL source file has an attribute that includes its direction. This enables the MIDL compiler to create the proper marshaling code for the interface. There are three options:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>[in]</SMALL>. Specifies a parameter that&#146;s sent from the client to the server. If the server has a use for the data after the function call completes, it must make a local copy of the data, because it actually belongs to the caller.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>[out]</SMALL>. Specifies a parameter that carries data from the server to the client. This parameter must be a pointer. The client allocates the top-level pointer, but any allocations other than to the top-level pointer are made by the server and become the client&#146;s responsibility.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>[in,out]</SMALL>. Specifies that data is allocated by the client and passed to the server, which may optionally free the data and allocate new data for the client. This parameter must be a pointer. The new data, if any, becomes the client&#146;s responsibility.
+</DL>
+<h3><a name="Heading10"></A><font color="#000077">Creating Custom Components Using ATL</FONT></H3>
+<p>The ActiveX Template Library, or <i>ATL</I>, is a template-based library that simplifies the building of very efficient COM objects and ActiveX controls. COM objects built with ATL are much smaller than COM objects built using MFC. In fact, COM objects built using ATL approach the size of objects built from scratch without a class library.</P>
+<p>The latest version of ATL, version 3.0, is included with the Visual C<small>&#43;&#43;</SMALL> 6.0 compiler. ATL 3.0 includes support for a wide variety of COM objects, such as small COM objects that do not present a user interface, ActiveX controls derived from standard Windows controls, controls optimized for Internet Explorer, and many more.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Commonly Used ATL Classes</FONT></H4>
+<p>No matter what type of COM object you plan on building with ATL, there are a few classes you&#146;ll use for every project:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CComObject</SMALL>. Implements <small>IUnknown</SMALL> for your COM object. ATL also includes specialized versions of this class, such as <small>CComObjectStack</SMALL>, if your COM object lives on the stack, and <small>CComAggObject</SMALL> for aggregated COM objects. The <small>CComObject</SMALL> class defined for your project uses multiple inheritance to derive from all interfaces supported by the COM object it represents.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CComObjectRootEx</SMALL>. A template class that includes the basic <small>IUnknown</SMALL> functionality used by <small>CComObject</SMALL>. This is a template that&#146;s instantiated using a threading model class as a parameter. The threading model class contains functions that are threading-model dependent, such as <small>AddRef</SMALL> and <small>Release</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CComObjectRoot</SMALL>. A <small>typedef</SMALL> made for each project that consists of <small>CComObjectRootEx</SMALL> parameterized with the appropriate threading model class.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CComModule</SMALL>. Provides the implementation for a COM server suitable for an EXE or DLL. <small>CComModule</SMALL> manages the class factory, class objects, and component registration.
+</DL>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Using the ATL COM Interface Map</FONT></H4>
+<p>ATL uses macros to implement support for <small>QueryInterface</SMALL> through an interface map. These macros are similar to the macros used by MFC to implement message maps.</P>
+<p>Conceptually, the ATL interface map macros create a map collection, with each map entry containing an interface ID and information used to find the appropriate interface in the COM object, as shown in Figure 17.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-04.jpg',500,166 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-04.jpg',500,166)"><font color="#000077"><b>Figure 17.4</B></FONT></A>&nbsp;&nbsp;The ATL interface map simplifies support for multiple interfaces.</P>
+<p>There are several interface map macros. Here are the three most commonly used macros:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BEGIN_COM_MAP</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>END_COM_MAP</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>COM_INTERFACE_ENTRY</SMALL>
+</DL>
+<p>The interface map begins with the <small>BEGIN_COM_MAP</SMALL> macro and ends with the <small>END_COM_MAP</SMALL> macro. Between these two macros, more macros can be used to specify the interfaces supported by the COM object:</P>
+<!-- CODE SNIP //-->
+<pre>
+BEGIN_COM_MAP(CMonkey)
+    COM_INTERFACE_ENTRY(IEatBananas)
+END_COM_MAP()
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>BEGIN_COM_MAP</SMALL> macro is called with the COM object&#146;s ATL class as a parameter. All entries inside the interface map are treated as members of this class.</P>
+<p>The <small>COM_INTERFACE_ENTRY</SMALL> macro is called with the name for the supported interface. The ATL framework uses the Visual C<small>&#43;&#43;</SMALL> <small>__uuidof()</SMALL> operator to determine the IID of the interface and adds the interface to the COM object&#146;s interface map.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Using ATL Wizards</FONT></H4>
+<p>Two wizards are supplied by Visual C<small>&#43;&#43;</SMALL> to simplify the building of custom COM objects with the ActiveX Template Library:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>ATL COM AppWizard</I> is used to create a project that build a module&#151;either a DLL, EXE, or service&#151;that hosts COM objects.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>ATL Object Wizard</I> allows you to add a COM object to your project.
+</DL>
+<p>These wizards are discussed in the next two sections.
+</P>
+<p><font size="+1"><b>Using the ATL COM AppWizard</B></FONT></P>
+<p>The easiest way to create an ATL project is to use the ATL COM AppWizard. This wizard creates a skeleton project for you, based on the type of project you select (see Figure 17.5).
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-05.jpg',476,383 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-05.jpg',476,383)"><font color="#000077"><b>Figure 17.5</B></FONT></A>&nbsp;&nbsp;The ATL COM AppWizard.</P>
+<p>You can build three types of projects using the ATL COM AppWizard:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>DLL</I>. The module will be built as an in-process DLL. As discussed in previous chapters, this is the most efficient type of COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>EXE</I>. The module will be built as an out-of-process server. As discussed in earlier chapters, this type of COM object is more robust than a DLL object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Service</I>. The module will be built as a Windows 2000 service.
+</DL>
+<p>If you choose to build your project as a DLL, you have three additional options that are enabled in the lower half of the wizard page:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Allow merging of proxy/stub code</I>. This option enables you to include the proxy/stub marshaling code in your DLL, thus reducing the work required to deploy the DLL on other machines. If you do not check this box, you&#146;ll need to distribute a separate proxy/stub DLL with the DLL that contains your COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Support MFC</I>. This option enables MFC support in your ATL project. If you absolutely cannot live without MFC in your project, select this check box.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Support MTS</I>. This option adds the MTS libraries to your project.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

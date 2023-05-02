@@ -1,0 +1,1057 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw020.htm -->
+<HTML><HEAD><TITLE>Lesson 2 - Using Child Shells</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=2,LnIdx="Lesson "+Ln;function sLnk(toPg,lName,sMsg) {if (typeof bdm!=='undefined') document.write("<A HREF='"+toPg+"' onMouseOver='window.status=\""+lName+" - "+sMsg+"\";return true' onMouseOut='window.status=\"\"'>"+lName+"</A>");};</SCRIPT>
+
+<SCRIPT language=JavaScript src="Lesson 2 - Using Child Shells_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 2 - Using Child Shells_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 2 - Using Child Shells_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Image();M.src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>Using child shells</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Compare the shell programs, <B>Explorer</B> and <SPAN 
+  class=fs>COMMAND.COM</SPAN> 
+  <LI>Open, and work in, child
+  <SCRIPT>cn('command')</SCRIPT>
+   shells 
+  <LI>Examine two special child
+  <SCRIPT>cn('command')</SCRIPT>
+   shells that are useful in scripting 
+  <LI>Learn how to trace and debug errors in Batch scripts</LI></UL><SPAN 
+class=fa>&nbsp;NT/2000/XP&nbsp;</SPAN> This Lesson relies on features found 
+<SPAN class=br>only</SPAN> in Windows 95/98/ME. Users of <NOBR>
+<SCRIPT>cn('Windows NT/2000/XP')</SCRIPT>
+</NOBR>, see <NOBR>
+<SCRIPT>sLnk("nt2000xp.zip","Add-on Pack2.1","ZipFile with instructions, workarounds, and a Batch file to help Windows NT/2000/XP users")</SCRIPT>
+</NOBR>then you may prefer to skip to Lesson 3.
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Each Lesson relies on your files from 
+the previous one. It's better to use your own files, but if you can't, download 
+a copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 1";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson1.zip">end&nbsp;of&nbsp;Lesson&nbsp;1</A> 
+and click<IMG src="Lesson 2 - Using Child Shells_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Shell programs:</SPAN><BR>What are they?</P></DIV>
+<DIV class=bd>
+<P><BR>A <B>shell</B> is a program designed to run commands or other programs 
+for you. When we first set up the <SPAN class=tsk>BatchWindow</SPAN>, we created 
+a shortcut to <SPAN class=fs>COMMAND.COM</SPAN>, which is one of the two 
+principal Windows shells. The other one is Windows <B>Explorer</B> (for which 
+the main program file is <SPAN class=fs>EXPLORER.EXE</SPAN> in your Windows 
+folder).</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Comparison of use.</SPAN></P></DIV>
+<DIV class=bd>
+<P><B>Explorer</B> and <SPAN class=fs>COMMAND.COM</SPAN> have common features, 
+but are wholly different in use:</P></DIV>
+<DIV class=lm>
+<P>1: Mode of working<BR>&nbsp;</P></DIV>
+<DIV class=bd>
+<P>
+<UL>
+  <LI><B>Explorer</B><IMG src="Lesson 2 - Using Child Shells_files/bcab.gif">GUI 
+  (Graphical User Interface): point-and-click in its display window 
+  <LI><SPAN class=fs>COMMAND.COM</SPAN><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">command line: type your 
+  commands at a prompt <IMG alt="C:\CSW> prompt" 
+  src="Lesson 2 - Using Child Shells_files/pr.gif"></LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>2: Run a program<BR>&nbsp;</P></DIV>
+<DIV class=bd>
+<P>
+<UL>
+  <LI><B>Explorer</B><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">double-click program file 
+  with mouse 
+  <LI><SPAN class=fs>COMMAND.COM</SPAN><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">type program name at the 
+  command prompt</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>3: Launch data file<BR>&nbsp;</P></DIV>
+<DIV class=bd>
+<P>
+<UL>
+  <LI><B>Explorer</B><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">double-click data file, the 
+  appropriate program starts 
+  <LI><SPAN class=fs>COMMAND.COM</SPAN><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">not available (you must 
+  start appropriate program)</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>4: File management<BR>&nbsp;</P></DIV>
+<DIV class=bd>
+<P>
+<UL>
+  <LI><B>Explorer</B><IMG src="Lesson 2 - Using Child Shells_files/bcab.gif">use 
+  drag-and-drop on file listing built in to its interface 
+  <LI><SPAN class=fs>COMMAND.COM</SPAN><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">separate commands to list, 
+  copy, move, delete and rename</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Using a child shell:</SPAN><BR>A shell inside a 
+shell</P></DIV>
+<DIV class=bd>
+<P><BR>Since a shell is a program that can run programs, a shell can run itself. 
+Try the following simple experiment with Explorer: 
+<UL>
+  <LI>Start Windows Explorer 
+  <LI>Navigate to the file <SPAN class=fs>EXPLORER.EXE</SPAN> in your Windows 
+  folder 
+  <LI>Double-click it to run it </LI></UL><B>Explorer</B> launches another 
+instance of <B>Explorer</B> in a new window. This second shell instance, 
+launched by the shell itself, is called a child shell. Close <B>Explorer</B> 
+now.
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>You can do this with <SPAN class=fs>COMMAND.COM</SPAN>, too. Its prompt (the 
+<IMG alt="C:\CSW> prompt" src="Lesson 2 - Using Child Shells_files/pr.gif"> that 
+you see in our <NOBR><SPAN class=tsk>BatchWindow</SPAN>)</NOBR> signals it's 
+ready to run programs. If you type its own name at its prompt (just
+<SCRIPT>cn('command')</SCRIPT>
+ will do), it will run another instance of itself.</P>
+<P>The new child shell inherits the environment (including environment 
+variables) of its parent. And since the appearance of the prompt is coded in 
+such a variable, the prompt looks the same, too. Unless you know what to look 
+for, you might miss the difference.</P></DIV>
+<DIV class=lm>
+<P>Practising with shells</P></DIV>
+<DIV class=bd>
+<P>That's the theory, let's see what it means in practice. You start a
+<SCRIPT>cn('command')</SCRIPT>
+ shell by typing <SPAN class=qfs>command</SPAN> at the prompt. You exit a
+<SCRIPT>cn('command')</SCRIPT>
+ shell with the
+<SCRIPT>cn('EXIT')</SCRIPT>
+ command.</P>
+<P>We have a command shell open now: our <SPAN class=tsk>BatchWindow</SPAN>. So 
+let's try exiting from it. In the <SPAN class=tsk>BatchWindow</SPAN>, just type 
+<SPAN class=qfs>exit</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN> &#8211; as soon as you press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> the <SPAN CLASS=tsk>BatchWindow</SPAN> closes!','C:&#92;CSW>exit');</SCRIPT>
+
+<DIV class=lm>
+<P>Let's avoid that in future!</P></DIV>
+<DIV class=bd>
+<P>We'll remember to avoid doing that again! Now we'll have to set everything up 
+properly once more. We need to close, then open windows in order. That way, we 
+keep the order of buttons on the Taskbar that we're used to: 
+<UL>
+  <LI>Right-click the <SPAN class=tsk>&nbsp;Exercise&nbsp;</SPAN> button on the 
+  Taskbar 
+  <LI>Click <SPAN class=qu>close</SPAN>, to close it 
+  <LI>Open the <SPAN class=tsk>BatchWindow</SPAN> again, then come back 
+here</LI></UL>The next Exercise will open the <SPAN 
+class=tsk>&nbsp;Exercise&nbsp;</SPAN> window again.
+<P></P></DIV>
+<DIV class=lm>
+<P>Opening a child shell</P></DIV>
+<DIV class=bd>
+<P>Now we'll open a child shell first, then exit from that
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>command</SPAN>. The <SPAN CLASS=tsk>BatchWindow</SPAN> title bar is now <NOBR><SPAN CLASS=tle>BatchWindow - COMMAND</SPAN></NOBR> to show that a program (<SPAN CLASS=fs>COMMAND.COM</SPAN>) is running.','C:&#92;CSW>command<BR><BR><BR>Microsoft(R) Windows <SPAN CLASS=dtd>yy</SPAN><BR><NOBR>   (C)Copyright Microsoft Corp 1981-<SPAN CLASS=dtd>yyyy</SPAN>.</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> The years <SPAN class=qfx>yy</SPAN> 
+and <SPAN class=qfx>yyyy</SPAN> will vary with your current Windows 
+version.</P></DIV>
+<DIV class=lm>
+<P>Window title shows running program name</P></DIV>
+<DIV class=bd>
+<P>The <SPAN class=tsk>BatchWindow</SPAN> title bar changes to show <NOBR><SPAN 
+class=tle>BatchWindow - COMMAND</SPAN></NOBR> because the program <SPAN 
+class=fs>COMMAND.COM</SPAN> is now running. </P>
+<P>The <SPAN class=tsk>BatchWindow</SPAN> button on the Taskbar also shows you 
+the change, as well. A DVM window title usually shows the program name whenever 
+one is running. </P>
+<P>Now risk the
+<SCRIPT>cn('EXIT')</SCRIPT>
+ command again!
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN>. The <SPAN CLASS=tsk>BatchWindow</SPAN> title bar reverts to <NOBR><SPAN CLASS=tle>BatchWindow</SPAN></NOBR> showing the child shell has closed. The parent shell and the DVM window stay open.','C:&#92;CSW>exit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Our DVM runs in a special CPU mode</P></DIV>
+<DIV class=bd>
+<P>When we created the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> shortcut, 
+as with all DVMs (DOS boxes), it was simply a shortcut to <SPAN 
+class=fs>COMMAND.COM</SPAN>. Each DVM is simply a (special) window running this 
+shell. However, Windows doesn't show the name of this top-level shell, but 
+allows you to give its window any title you please: <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> in our case.</P>
+<P>Windows uses a special mode of the CPU (central processing unit) to run DVMs. 
+It's usually known as <B>V86</B> mode (=Virtual 8086 mode), because it emulates 
+the x8086 microprocessor that was at the heart of the original IBM Personal 
+Computer. Each DVM emulates a separate, small Personal Computer running MS-DOS 
+in a window, and you can have as many separate DVMs as you wish.</P></DIV>
+<DIV class=lm>
+<P>The child environment is a copy of the parent</P></DIV>
+<DIV class=bd>
+<P>We said that the child shell inherits its parent environment. But changes you 
+then make in the child environment don't affect the environment of the parent 
+shell. Let's investigate the consequences of that with a few Exercises.</P>
+<P>Set a variable named <SPAN class=qfs>here</SPAN> to the text <SPAN 
+class=qfs>We are in the main shell</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Set the variable <SPAN CLASS=qfx>here</SPAN> to the text <SPAN CLASS=qfx>We are in the main shell</SPAN> like this.','<NOBR>C:&#92;CSW>set here=We are in the main shell </NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Confirm with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Now
+<SCRIPT>cn('ECHO')</SCRIPT>
+ the variable to confirm what it contains
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>echo.%here%</SPAN> and <SPAN CLASS=bb>ECHO</SPAN> expands the variable, displaying its contents.','C:&#92;CSW>echo.%here%<BR><NOBR>We are in the main shell</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Suppressing the copyright information</P></DIV>
+<DIV class=bd>
+<P>The copyright information, which we saw when we used
+<SCRIPT>cn('command')</SCRIPT>
+ on its own, can be suppressed with the <SPAN class=fs>/k</SPAN> switch. Open a 
+child shell again, but this time use the <SPAN class=fs>/k</SPAN> switch with
+<SCRIPT>cn('command')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>command /k</SPAN> and as before, the title bar becomes <NOBR><SPAN CLASS=tle>BatchWindow - COMMAND</SPAN></NOBR> to show that we&#39;re in a child shell but this time the copyright information is not displayed.','C:&#92;CSW&#62;command /k<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <SPAN class=fs>/k</SPAN> stands for <SPAN class=fs>K</SPAN>eep</P></DIV>
+<DIV class=bd>
+<P>The <SPAN class=fs>/k</SPAN> (for <SPAN class=fs>K</SPAN>eep) switch leaves 
+(keeps) the child shell running, so we can continue to work in it. The effect is 
+the same as typing
+<SCRIPT>cn('command')</SCRIPT>
+ alone, but it's useful in Batch work for suppressing the display of the 
+copyright information.</P>
+<P>However, because it suppresses any message, you need to watch the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title bar to realise that we're now 
+running in a child shell.</P>
+<P>Now
+<SCRIPT>cn('ECHO')</SCRIPT>
+ our variable again to confirm we inherited it correctly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the same <SPAN CLASS=bb>ECHO</SPAN> command to display the variable&#39;s contents and confirm that its value was inherited from the parent shell.','C:&#92;CSW>echo.%here%<BR><NOBR>We are in the main shell</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Making changes in the child environment</P></DIV>
+<DIV class=bd>
+<P>We're in a child shell now, so our variable isn't a correct description any 
+more. Let's change it with
+<SCRIPT>cn('SET')</SCRIPT>
+ so it holds the text <NOBR><SPAN class=qfs>Now in the child shell</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Change the variable <SPAN CLASS=qfx>here</SPAN> to contain the text <SPAN CLASS=qfx>Now in the child shell</SPAN> like this.','<NOBR>C:&#92;CSW>set here=Now in the child shell </NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Confirm with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Expand and display the variable again to confirm it changed
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the same <SPAN CLASS=bb>ECHO</SPAN> command to display the variable&#39;s new contents.','C:&#92;CSW>echo.%here%<BR><NOBR>Now in the child shell</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Changes in the child shell are lost on exit</P></DIV>
+<DIV class=bd>
+<P>Now close (exit) the child shell. As we close the child shell, all changes we 
+made to variables there are <SPAN class=br>lost</SPAN>. Use the
+<SCRIPT>cn('EXIT')</SCRIPT>
+ command as before
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN>. The <SPAN CLASS=tsk>BatchWindow</SPAN> title bar changes back to <NOBR><SPAN CLASS=tle>BatchWindow</SPAN></NOBR> to show that the child shell has closed.','C:&#92;CSW>exit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the variable</P></DIV>
+<DIV class=bd>
+<P>Now
+<SCRIPT>cn('ECHO')</SCRIPT>
+ the <SPAN class=qfs>here</SPAN> variable to see what it contains
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Now when you expand the variable, you find that the original value that we loaded has been restored (now we&#39;re no longer in the child shell).','C:&#92;CSW>echo.%here%<BR><NOBR>We are in the main shell</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The parent does not inherit from the child</P></DIV>
+<DIV class=bd>
+<P>When we return to the parent shell, the change made in the child is lost. The 
+variable reverts to the value we set in the main (parent) shell. Inheritance is 
+strictly one-way.</P>
+<P><SPAN class=fg>&nbsp;Note 1&nbsp;</SPAN> A child shell is really a separate 
+memory space. It receives (inherits) a copy of the environment memory from its 
+parent, but doesn't pass changes back.</P>
+<P><SPAN class=fg>&nbsp;Note 2&nbsp;</SPAN> Although a child shell has its own 
+memory, it shares the <B>same</B> disk space. So any file changes you make in a 
+child shell (such as deleting or creating files) will <SPAN 
+class=br>remain</SPAN> after exit. This means that if you want to pass 
+information back to a parent shell, you can write it to a file.</P></DIV>
+<DIV class=lm>
+<P>Working in a child shell</P></DIV>
+<DIV class=bd>
+<P>If we want to work in a child shell (we'll see why this is useful soon), we 
+can make use of the way the environment memory works. As we learnt in 
+Lesson&nbsp;1, the appearance of the prompt is coded in the <SPAN 
+class=fs>PROMPT</SPAN> environment variable. We can change this in the child 
+environment. It will act as a reminder we're in a child shell.</P>
+<P>Now open a child shell with
+<SCRIPT>cn('command')</SCRIPT>
+ again
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>command /k</SPAN> to suppress copyright information, and the <SPAN CLASS=tsk>BatchWindow</SPAN> title bar changes to <NOBR><SPAN CLASS=tle>BatchWindow - COMMAND</SPAN></NOBR> to show that <SPAN CLASS=fs>COMMAND.COM</SPAN> is running.','C:&#92;CSW>command /k<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Changing the prompt in the child shell</P></DIV>
+<DIV class=bd>
+<P>A special command,
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ , is available to change the prompt environment variable (though you can use
+<SCRIPT>cn('SET')</SCRIPT>
+ to change it, if you wish).</P>
+<P>We'll use it now to change the look of the prompt. Remember that the normal 
+look is defined as <B>$p$g</B>. The <B>$p</B> means display <NOBR>
+<SCRIPT>cn('current drive')</SCRIPT>
+</NOBR>and path to <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>, and the <B>$g</B> means display a <SPAN 
+class=ky>&nbsp;&gt;&nbsp;</SPAN> symbol. We'll change the normal prompt to show 
+the word <SPAN class=qu>shell</SPAN> in front of the normal prompt, to remind us 
+we're in a child shell
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>prompt shell $p$g</SPAN> to prefix the normal prompt with <SPAN CLASS=qfx>shell</SPAN>.','<NOBR>C:&#92;CSW>prompt shell $p$g </NOBR><BR><BR>shell C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> The
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ command we used has the same effect as typing:</P>
+<P><NOBR><SPAN class=cl>set prompt=shell $p$g</SPAN></NOBR></P>
+<P>You can regard the
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ command as a slightly shorter alternative to the above.</P></DIV>
+<DIV class=lm>
+<P>The prompt now reminds us we're in a shell</P></DIV>
+<DIV class=bd>
+<P>In the <SPAN class=tsk>BatchWindow</SPAN>, press <SPAN 
+class=ky>&nbsp;Return&nbsp;</SPAN> a few times to satisfy yourself that the new 
+prompt we've created persists
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> three times and each time the new prompt is displayed as a reminder that we&#39;re in a child shell.','shell C:&#92;CSW><BR>shell C:&#92;CSW><BR>shell C:&#92;CSW><BR>shell C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Now
+<SCRIPT>cn('EXIT')</SCRIPT>
+ the shell</P></DIV>
+<DIV class=bd>
+<P>Close the child shell again, and watch what happens to the prompt
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN>. The <SPAN CLASS=tsk>BatchWindow</SPAN> title bar changes back to <NOBR><SPAN CLASS=tle>BatchWindow</SPAN></NOBR> to show that the child shell has closed. At the same time, the parent prompt returns because the change we made was in the child shell and it isn&#39;t inherited by the parent shell.','shell C:&#92;CSW>exit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Prompt appearance returns to parent style</P></DIV>
+<DIV class=bd>
+<P>Just as the change to our variable, <SPAN class=qfs>here</SPAN>, was lost 
+when we closed the child shell, the appearance of the prompt is also restored. 
+Incidentally, this saves our having to reset it.</P>
+<P>We shall be using some special child shells frequently in the following 
+Lessons. They are intended to help us understand both how to write, and how to 
+debug, our Batch scripts.</P>
+<P>So it will help to make it easy to open them, and change the prompt 
+appearance (as a reminder we're in a special situation). Later in this Lesson 
+we'll write a simple script to do the job for us. So read on (and do keep 
+careful track of the "command"s that follow).</P></DIV>
+<DIV class=lm>
+<P>Using <NOBR><SPAN class=qfs>command /k</SPAN></NOBR> to run one 
+command</P></DIV>
+<DIV class=bd>
+<P>If you've been glancing at the /? help for each command as we've introduced 
+it, you may have seen (in the help for
+<SCRIPT>cn('command')</SCRIPT>
+ itself – just type <NOBR><SPAN class=qfs>command /?</SPAN></NOBR>) this 
+note:</P>
+<P><NOBR><SPAN class=qu>/K command&nbsp;&nbsp;&nbsp;&nbsp;Executes the specified 
+command and continues running.</SPAN></NOBR></P>
+<P>and wondered precisely which "command" is which. Since
+<SCRIPT>cn('command')</SCRIPT>
+ runs commands and is itself called "command", it's sometimes confusing! This is 
+what it means:</P>
+<P>/K <SPAN class=og>SomeCommand</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;Run <SPAN 
+class=og>SomeCommand</SPAN> in a child shell (and keep that shell 
+open).</P></DIV>
+<DIV class=lm>
+<P>Our
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ change is <B>one</B> such command</P></DIV>
+<DIV class=bd>
+<P>Since <NOBR><SPAN class=qfs>prompt shell $p$g</SPAN></NOBR> is a single 
+command, it could be the <SPAN class=og>SomeCommand</SPAN> that we put on the 
+same line with <NOBR><SPAN class=qfs>command /k</SPAN></NOBR></P>
+<P>Then
+<SCRIPT>cn('command')</SCRIPT>
+ will execute it in the child shell <B>and</B> keep the child shell open. The 
+effect is that we start in the child shell with the prompt changed already
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>command /k prompt shell $p$g</SPAN></NOBR> and the <SPAN CLASS=tsk>BatchWindow</SPAN> title bar changes to <NOBR><SPAN CLASS=tle>BatchWindow - COMMAND</SPAN></NOBR> and the prompt also changes at the same time.','<NOBR>C:&#92;CSW&#62;command /k prompt shell $p$g</NOBR><BR><BR>shell C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The added command is run in the child shell</P></DIV>
+<DIV class=bd>
+<P>Our
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ change was executed in the new child shell (although we typed it in the 
+parent). Let's
+<SCRIPT>cn('EXIT')</SCRIPT>
+ and confirm that the parent prompt wasn't changed
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN> and our original prompt  returns (and the <SPAN CLASS=tle>&nbsp;BatchWindow&nbsp;</SPAN> title, too).','shell C:&#92;CSW&#62;exit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Let's review shells</P></DIV>
+<DIV class=bd>
+<P>There's quite a lot to digest here. So, before we go on with further 
+Exercises, let's review what we've learnt about shells so far.</P></DIV>
+<DIV class=lm>
+<P>A new shell is almost like a "new" window</P></DIV>
+<DIV class=bd>
+<P>A child shell has a new memory space. It's almost like another DVM window, 
+which is superimposed exactly over our <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>. The "new" window has a new title: 
+<SPAN class=tle>&nbsp;BatchWindow-COMMAND&nbsp;</SPAN>. <IMG height=165 
+alt="Two MS-DOS windows cascaded (they show a smaller typeface than you would use)" 
+hspace=5 src="Lesson 2 - Using Child Shells_files/shview.gif" width=309 
+align=right vspace=5> When we close the child, we revert to the original DVM 
+shell we open when we click on our <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> shortcut at the beginning of a 
+Lesson.</P></DIV>
+<SCRIPT>kdg(1)</SCRIPT>
+
+<DIV class=lm>
+<P>But not quite</P></DIV>
+<DIV class=bd>
+<P>Unlike opening a truly separate DVM window, however, the new shell 
+<B>inherits</B> the current values of any environment variables in its parent, 
+including any changes we make <B>before</B> opening it. (A truly new DVM window 
+starts with only your standard set of system-wide environment variables loaded 
+each time.)</P></DIV>
+<DIV class=lm>
+<P>Changes in child shell are lost as it's closed</P></DIV>
+<DIV class=bd>
+<P>Any changes to variables that we then make in the new child shell affect 
+<B>only</B> itself. They don't affect the "background" parent, and so they're 
+lost when the child is closed.</P>
+<P><SPAN class=fg>&nbsp;Note 1&nbsp;</SPAN> Remember that the child shell shares 
+the files on disk with its parent. So all changes to files (or new files we 
+create) in a child shell <SPAN class=br>remain</SPAN> when we close it.</P>
+<P><SPAN class=fg>&nbsp;Note 2&nbsp;</SPAN> Shells can be used in complex ways 
+in Batch scripts, and are an advanced topic. We've covered them now because 
+there are two simple uses of shells that will be very helpful in developing and 
+debugging our Batch scripts.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Two special shells:</SPAN><BR>Child shells with useful 
+scripting features</P></DIV>
+<DIV class=bd>
+<P><BR>Apart from <SPAN class=fs>/k</SPAN>,
+<SCRIPT>cn('command')</SCRIPT>
+ accepts other switches that alter its behaviour. Using these, you can open a 
+child shell with special features. There are two special child shells we need to 
+know about: 
+<OL>
+  <LI><B>Return-code</B> shell 
+  <LI><B>Debug-mode</B> shell </LI></OL>Knowing how to use them will help when 
+writing and debugging Batch scripts.
+<P></P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>1: Return-code shell</SPAN><BR>See information 
+returned</P></DIV>
+<DIV class=bd>
+<P><BR>Many programs return information that your scripts can use in the form of 
+a <B>return code</B>. In Batch parlance, this is also known as an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ . This return code is a single byte, stored in memory when the program 
+finishes: it can take any value from <NOBR><SPAN class=fs>0</SPAN> to <SPAN 
+class=fs>255</SPAN></NOBR>. There are no general rules for the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s a Program returns, but usually: 
+<UL>
+  <LI><SPAN class=fs>0</SPAN> (zero)<IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">Program reports everything 
+  OK (or simply nothing to report) 
+  <LI><SPAN class=fs>1</SPAN> (and other small values)<IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">useful items of information 
+  (specific to Program) 
+  <LI><SPAN class=fs>250</SPAN> - <SPAN class=fs>255</SPAN><IMG 
+  src="Lesson 2 - Using Child Shells_files/bcab.gif">Program reports error 
+  conditions or warnings</LI></UL>Your scripts can detect these return codes and 
+act on them.
+<P></P></DIV>
+<DIV class=lm>
+<P>Some GUI programs return such codes</P></DIV>
+<DIV class=bd>
+<P>Interestingly, informative return codes are returned even by pure Windows GUI 
+programs, not just command-line utilities. However, you must use the
+<SCRIPT>cn('start')</SCRIPT>
+ command (as we used for <B>Notepad</B>) to receive return codes from GUI 
+programs.</P></DIV>
+<DIV class=lm>
+<P>The <B>ScanDisk</B> program returns
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s</P></DIV>
+<DIV class=bd>
+<P>For example, you can start the Windows GUI version of <B>ScanDisk</B> from 
+the command line (its name is <B>scandskw</B>). Try it now, and when the 
+<B>ScanDisk</B> window opens, click its <SPAN class=tsk>&nbsp;Close&nbsp;</SPAN> 
+button to stop it immediately
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /w scandskw</SPAN>. As soon as its window opens, click the <SPAN CLASS=tsk>&nbsp;Close&nbsp;</SPAN> button to abort the disk check. In a second or two the prompt returns.','C:&#92;CSW>start /w scandskw<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <SPAN class=fs>254</SPAN> is invisible</P></DIV>
+<DIV class=bd>
+<P>Windows sent you a return code of <SPAN class=fs>254</SPAN>, to indicate that 
+<B>ScanDisk</B> was stopped by the user (namely <B>you</B>), before it finished. 
+But you didn't see it. Normally, you must specifically test for it (we'll see 
+how to do this in Lesson&nbsp;3).</P>
+<P>This makes working with return codes difficult, especially when you are 
+planning scripts that need to test for them. While you're learning, it's very 
+useful to have Windows tell you whenever a return code is changed.</P></DIV>
+<DIV class=lm>
+<P>Using the <SPAN class=fs>/z</SPAN> switch to monitor return-codes</P></DIV>
+<DIV class=bd>
+<P>If you open a
+<SCRIPT>cn('command')</SCRIPT>
+ shell with the switch <SPAN class=fs>/z</SPAN>, Windows reports each time the 
+return-code is reset by a command (even if the command resets the code to its 
+current value).</P>
+<P>Let's try opening a <B><NOBR>return-code</NOBR></B> shell with <SPAN 
+class=fs>/z</SPAN>. We'll add the <SPAN class=fs>/k</SPAN> switch after it, so 
+we suppress copyright information and keep the new shell running
+<SCRIPT>ex()</SCRIPT>
+ </P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>command /z /k</SPAN>. The window title becomes <NOBR><SPAN CLASS=tle>BatchWindow - COMMAND</SPAN></NOBR>, the current <SPAN CLASS=bb>ERRORLEVEL</SPAN> is reset to zero and this is reported.','C:&#92;CSW&#62;command /z /k<BR>Return code (ERRORLEVEL):   0<BR>WARNING: Reloaded COMMAND.COM transient<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <SPAN class=fs>/k</SPAN> switch must be last switch on its line</P></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note 1&nbsp;</SPAN> Usually, the order of switches is 
+not very important. However, when you use the <SPAN class=fs>/k</SPAN> switch of
+<SCRIPT>cn('command')</SCRIPT>
+ , it must be the <SPAN class=br>last</SPAN> of the switches on its 
+command-line.</P>
+<P><SPAN class=fg>&nbsp;Note 2&nbsp;</SPAN> "Transient" means a shell you can
+<SCRIPT>cn('EXIT')</SCRIPT>
+ from. However, the warning isn't very helpful, since if you do use <NOBR><SPAN 
+class=qfx>command /z /<SPAN class=or>p</SPAN> /k</SPAN></NOBR> to load a <SPAN 
+class=br>p</SPAN>ermanent
+<SCRIPT>cn('command')</SCRIPT>
+ shell (which ignores an
+<SCRIPT>cn('EXIT')</SCRIPT>
+ instruction), the "transient" message still appears!</P></DIV>
+<DIV class=lm>
+<P>Reset the prompt as a reminder</P></DIV>
+<DIV class=bd>
+<P>Again, change the prompt to remind us we're in a return-code child shell
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>prompt RCode $p$g</SPAN> to prefix the normal prompt with <SPAN CLASS=qfs>RCode</SPAN> as a reminder we&#39;re now in a Return-Code shell.','<NOBR>C:&#92;CSW>prompt RCode $p$g </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Try <B>scandskw</B> again</P></DIV>
+<DIV class=bd>
+<P>Try <B>scandskw</B> once more. Again, click <SPAN 
+class=tsk>&nbsp;Close&nbsp;</SPAN> to stop it immediately
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /w scandskw</SPAN>, click <SPAN CLASS=tsk>&nbsp;Close&nbsp;</SPAN>. In a second or two the prompt returns, and this time the previously invisible return code is reported (you must use the <NOBR><SPAN CLASS=fs>/w</SPAN>ait</NOBR> switch of <SPAN CLASS=bb>start</SPAN> to receive the code).','RCode C:&#92;CSW>start /w scandskw<BR><NOBR>Return code (ERRORLEVEL): 254</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>The return code, which we were previously unaware of, is now reported. For 
+interest, this is the full list of return codes (with meanings) that 
+<B>ScanDisk</B> may report:</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fs>0</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Drive checked, no errors found</SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>1</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Errors found, all fixed</SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>250&nbsp;&nbsp;</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Check could not start — cannot load or find <SPAN 
+      class=fs>DSKMAINT.DLL</SPAN></SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>251</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Check could not start — insufficient 
+  memory</SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>252</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Errors found, but at least some were not 
+    fixed</SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>253</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>At least one drive could not be checked</SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>254</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Check was cancelled by user</SPAN></TD></TR>
+  <TR>
+    <TD><SPAN class=tab><SPAN class=fs>255</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Check was terminated because of an 
+  error</SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>For pure Windows GUI programs, such as <B>ScanDisk</B>, you must use
+<SCRIPT>cn('start')</SCRIPT>
+ with the <SPAN class=fs>/w</SPAN> <NOBR>(<SPAN class=fs>w</SPAN> = wait</NOBR> 
+for the started program to finish) in order to receive the return 
+code.</P></DIV>
+<DIV class=lm>
+<P>Without <SPAN class=fs>/w</SPAN> switch, only a default <SPAN 
+class=fs>0</SPAN> is received</P></DIV>
+<DIV class=bd>
+<P>Let's see what happens if you forget this. Repeat the <B>scandskw</B> 
+command, but this time don't use <SPAN class=fs>/w</SPAN> switch with
+<SCRIPT>cn('start')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start scandskw</SPAN>, click <SPAN CLASS=tsk>&nbsp;Close&nbsp;</SPAN>. In a second or two the prompt returns, but there is no informative return code without the <SPAN CLASS=fs>/w</SPAN>ait switch.','RCode C:&#92;CSW>start scandskw<BR><NOBR>Return code (ERRORLEVEL):   0</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Without <SPAN class=fs>/w</SPAN>ait no useful code is returned</P></DIV>
+<DIV class=bd>
+<P>All you receive is a (default) zero code. The <SPAN class=fs>/w</SPAN> switch 
+makes the script wait for the return code; without <SPAN class=fs>/w</SPAN> the 
+informative return code is missed.</P>
+<P>The same thing happens (not surprisingly) if you don't use
+<SCRIPT>cn('start')</SCRIPT>
+ at all. You may run <B>ScanDisk</B> without
+<SCRIPT>cn('start')</SCRIPT>
+ , but no useful code is returned. Try it
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>scandskw</SPAN>, click <SPAN CLASS=tsk>&nbsp;Close&nbsp;</SPAN> (the prompt returns without delay this time, and again there is no information returned).','RCode C:&#92;CSW>scandskw<BR><NOBR>Return code (ERRORLEVEL):   0</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Return-code shell and menus in scripts</P></DIV>
+<DIV class=bd>
+<P>A menu in a script allows its user to choose what happens next from several 
+options. The user's choice is passed back to the script by the
+<SCRIPT>cn('choice')</SCRIPT>
+ command as a return code (we'll study the
+<SCRIPT>cn('choice')</SCRIPT>
+ command in Lesson&nbsp;3). We'll make good use of the Return-code shell when we 
+study
+<SCRIPT>cn('choice')</SCRIPT>
+ and design Batch menus.</P></DIV>
+<DIV class=lm>
+<P>Clearing the return code</P></DIV>
+<DIV class=bd>
+<P>Before we learn to use
+<SCRIPT>cn('choice')</SCRIPT>
+ properly in Lesson&nbsp;3, we'll make one (unusual) use of it now to help us 
+practise clearing
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s. Using
+<SCRIPT>cn('choice')</SCRIPT>
+ with an invalid switch returns <SPAN class=fs>255</SPAN>. Let's try it now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the bad command <NOBR><SPAN CLASS=qfx>choice /x</SPAN></NOBR> &#8211; /x is an invalid switch for the <SPAN CLASS=fs>choice</SPAN> command.','RCode C:&#92;CSW&#62;choice /x<BR><NOBR>Invalid switch on command line. Expected form:</NOBR><BR><NOBR>    CHOICE [/C[:]choices] [/N] [/S] [/T[:]c,nn] [text]</NOBR><BR><BR>Return code (ERRORLEVEL): 255<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Opening a child shell clears
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Whenever you open a child shell, the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is cleared to <SPAN class=fs>0</SPAN>. Unlike environment variables, the child 
+and parent shell both share the same
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ byte in memory, so this action by the child shell clears the parent value, 
+too.</P></DIV>
+<DIV class=lm>
+<P>The <B>Single-use</B> shell switch <SPAN class=qfs>/c</SPAN></P></DIV>
+<DIV class=bd>
+<P>There is a further switch for
+<SCRIPT>cn('command')</SCRIPT>
+ that is useful here: <SPAN class=qfs>/c</SPAN>. This opens a <B>Single-use</B> 
+child shell for one command line only, and closes it automatically. The <SPAN 
+class=fs>/c</SPAN> switch is equivalent to typing two separate immediate mode 
+commands, one after the other: 
+<UL>
+  <LI><NOBR><SPAN class=cl>command /k</SPAN></NOBR> 
+  <LI><SPAN class=cl>exit</SPAN></LI></UL>It's normally used to run a single 
+command in a special shell (we'll see it used in <B>Debug-mode</B> later in the 
+Lesson).
+<P></P></DIV>
+<DIV class=lm>
+<P>Use <NOBR><SPAN class=qfs>command /c</SPAN></NOBR> to clear
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>We can make use of this switch to open a shell, do nothing, then close it 
+immediately again. In the process, it will clear the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ for us
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>command /c</SPAN></NOBR> to clear the return code. You may notice a momentary flash in the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title as the shell opens and closes again.','RCode C:&#92;CSW&#62;command /c<BR>Return code (ERRORLEVEL):   0<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> This is the normal way of ensuring the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is cleared to <SPAN class=fs>0</SPAN> (Because the basic Batch feature set is 
+quite small, it's not unusual to have to use side-effects of commands in this 
+way, in order to do what you need).</P></DIV>
+<DIV class=lm>
+<P>Now
+<SCRIPT>cn('EXIT')</SCRIPT>
+ the shell</P></DIV>
+<DIV class=bd>
+<P>Let's close the return code shell now. Use the command
+<SCRIPT>cn('EXIT')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfs>exit</SPAN> to close the return code shell. Our original prompt returns as the shell closes.','RCode C:&#92;CSW&#62;exit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Because we made the prompt change in our child shell, our original prompt is 
+restored when we
+<SCRIPT>cn('EXIT')</SCRIPT>
+ the Return-code shell, so we don't need to reset it. Our <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title also reverts to normal, showing 
+we've closed the child shell.</P></DIV>
+<DIV class=lm>
+<P>A simple script to open a Return-code shell</P></DIV>
+<DIV class=bd>
+<P>We'll use the Return-code shell many times during the following Lessons. So 
+let's write a very simple Batch script to open it for us, and set the reminder 
+prompt automatically. After all, doing simple repetitive tasks is exactly why 
+we're learning to write Batch scripts.</P>
+<P>We need to do two things:</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>1: open the Return-code shell</SPAN></TD>
+    <TD><NOBR><SPAN class=cl>command /z /k</SPAN></NOBR></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>2: change the prompt in it, as a 
+      reminder&nbsp;&nbsp;</SPAN></TD>
+    <TD><NOBR><SPAN class=cl>prompt RCode 
+$p$g</SPAN></NOBR></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>We saw that we can add a single extra command, such as a
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ change, on the command line that opens the child shell.</P></DIV>
+<DIV class=lm>
+<P>Putting both commands on one line</P></DIV>
+<DIV class=bd>
+<P>Let's try that again, but this time we'll include the Return-code shell 
+switch, <SPAN class=fs>/z</SPAN>. And remember, the <SPAN class=fs>/k</SPAN> 
+switch must be the last of the
+<SCRIPT>cn('command')</SCRIPT>
+ switches, so the <SPAN class=fs>/z</SPAN> must come before it
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Put both commands together like this: <NOBR><SPAN CLASS=qfx>command /z /k prompt RCode $p$g</SPAN></NOBR>','C:&#92;CSW&#62;command /z /k prompt RCode $p$g<BR>Return code (ERRORLEVEL):   0<BR>WARNING: Reloaded COMMAND.COM transient<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>The prompt is changed as we open the shell. As usual, the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title changes to <NOBR><SPAN 
+class=tle>BatchWindow - COMMAND</SPAN></NOBR> to show we're in a child 
+shell.</P></DIV>
+<DIV class=lm>
+<P>Now
+<SCRIPT>cn('EXIT')</SCRIPT>
+ the shell</P></DIV>
+<DIV class=bd>
+<P>Close the Return-code shell before we write the script. Use
+<SCRIPT>cn('EXIT')</SCRIPT>
+ as usual
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>exit</SPAN> and the shell closes and our normal prompt is restored.','RCode C:&#92;CSW&#62;exit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Start a new file: <SPAN class=fs>RC.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>That combined command line will work for us in a script, so let's create a 
+new script now. We'll call it <SPAN class=fs>RC.BAT</SPAN>, for Return-Code
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /min notepad RC.BAT</SPAN> in the <SPAN CLASS=tsk>BatchWindow</SPAN>. When <B>Notepad</B> asks if you want to create the file, click <SPAN CLASS=tsk>&nbsp;Yes&nbsp;</SPAN> or press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN>. <B>Notepad</B> opens in the background (as merely a button on the Taskbar). Go back to the Lesson window for now.','C:&#92;CSW&#62;start /min notepad RC.BAT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note 1&nbsp;</SPAN> We tend to use very short names for 
+any frequently used script. If you find it makes it hard to remember what it's 
+used for, you can use a long file name such as: <SPAN 
+class=fs>ReturnCodeShell.bat</SPAN>.</P>
+<P><SPAN class=fg>&nbsp;Note 2&nbsp;</SPAN> If you choose name with <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s, such as <NOBR><SPAN class=qfs>"Return<SPAN 
+class=bkhw>&nbsp;</SPAN>Code<SPAN 
+class=bkhw>&nbsp;</SPAN>Shell.bat"</SPAN></NOBR> you must enclose it in 
+"double-quotes" when using it on the command line, as above. In all your 
+command-line work, and in your Batch scripts, filenames with <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s in them should be surrounded with 
+"double-quotes".</P></DIV>
+<DIV class=lm>
+<P>Put the command line in the script</P></DIV>
+<DIV class=bd>
+<P>Since this is a script to save us time, a short name is best. Now type the 
+single command line to open the Return-code shell (and reset the prompt) into 
+the script</P>
+<P>We don't need to see it
+<SCRIPT>cn('ECHO')</SCRIPT>
+ as the script runs, so start with <NOBR><SPAN class=qfs>@ECHO OFF</SPAN></NOBR> 
+as usual
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Click the <B>Notepad</B> button on the Taskbar. Position its window in the bottom left corner of the screen. Start with <NOBR><SPAN CLASS=qfx>@ECHO OFF</SPAN></NOBR>, add the command line, and press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> at the end. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save changes when you finish.','@ECHO OFF<BR>command /z /k prompt RCode $p$g<BR>&nbsp;');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the new script</P></DIV>
+<DIV class=bd>
+<P>Once you've clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> to 
+save the changes, test the new script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Simply type <SPAN CLASS=qfx>rc</SPAN> (and press the <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> key) and the new <SPAN CLASS=fs>RC.BAT</SPAN> script does all the previous immediate mode work for us.','C:&#92;CSW&#62;rc<BR>Return code (ERRORLEVEL):   0<BR><NOBR>WARNING: Reloaded COMMAND.COM transient</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the normal prompt returns</P></DIV>
+<DIV class=bd>
+<P>The script has done all the work for us. Now close the shell, and check our 
+normal prompt returns correctly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>exit</SPAN> and the shell closes and our normal prompt is restored as usual.','RCode C:&#92;CSW&#62;exit<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>A good script displays progress messages</P></DIV>
+<DIV class=bd>
+<P>One of the first things we learnt was that a good script displays clear 
+instructions and progress reports on the screen. So let's add one with
+<SCRIPT>cn('ECHO')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the command to display the message, as shown, and click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>@ECHO OFF</SPAN><BR>ECHO.Opening Return-Code shell...<BR><SPAN CLASS=dtn>command /z /k PROMPT RCode $p$g</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>One more run to test</P></DIV>
+<DIV class=bd>
+<P>Changes saved? Let's do one more run to test it again
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Again, simply type <SPAN CLASS=qfx>rc</SPAN> (and don&#39;t forget to press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN>). This time we see the explanatory message.','C:&#92;CSW&#62;rc<BR>Opening Return-Code shell...<BR>Return code (ERRORLEVEL):   0<BR><NOBR>WARNING: Reloaded COMMAND.COM transient</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Messages help to document scripts</P></DIV>
+<DIV class=bd>
+<P>The message in the script will also help to remind us what the script does 
+when we read it. Now close the shell and check the prompt returns correctly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>exit</SPAN> and the shell closes and our normal prompt is restored.','RCode C:&#92;CSW&#62;exit<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>That will save time in future Lessons. Now let's finish up with a very brief 
+look at another shell, the debug-mode shell (we'll get lots more debugging 
+practice in later Lessons).</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>2: Debug-mode shell</SPAN><BR>Turning on debug mode to check a 
+script</P></DIV>
+<DIV class=bd>
+<P><BR>Remember that when a script doesn't seem to work properly, you can remove 
+the <NOBR><SPAN class=qfs>@ECHO OFF</SPAN></NOBR> line at the start to make all 
+the commands
+<SCRIPT>cn('ECHO')</SCRIPT>
+ to screen.</P>
+<P>A more powerful way to debug a script is to step through it, one line at a 
+time. The <SPAN class=fs>/y</SPAN> switch of
+<SCRIPT>cn('command')</SCRIPT>
+ turns on single-step debug mode.</P>
+<P>For debug-mode, you run your entire script as the <SPAN 
+class=og>SomeCommand</SPAN> in a Single-use shell command-line:</P>
+<P><NOBR><SPAN class=cl>command /y /c ScriptName</SPAN></NOBR></P>
+<P>Remember, unlike <SPAN class=fs>/k</SPAN>, the <SPAN class=fs>/c</SPAN> 
+switch uses the special shell for <SPAN class=og>SomeCommand</SPAN> and then 
+exits automatically when the script has finished (and so we don't need an
+<SCRIPT>cn('EXIT')</SCRIPT>
+ to close the debug-mode shell).</P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> With either <SPAN class=fs>/k</SPAN> 
+or <SPAN class=fs>/c</SPAN>, it must be the <SPAN class=br>last</SPAN> of any
+<SCRIPT>cn('command')</SCRIPT>
+ switches on the line.</P></DIV>
+<DIV class=lm>
+<P>Try Stepping through <SPAN class=fs>HIGHNOON.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>In debug mode, you are prompted before each line is run, and you can watch 
+the result of the script line by line.</P>
+<P>You would normally use this mode only to locate very troublesome errors, but 
+let's practise with our <SPAN class=fs>HIGHNOON.BAT</SPAN> script to see 
+single-stepping in action. Remember that the script looks like this:</P>
+<DIV class=nb>@ECHO OFF<BR>ECHO.<BR><NOBR>ECHO.Do not forsake me, Oh my 
+darling&nbsp;</NOBR><BR>ECHO.On this our wedding day.<BR>ECHO.</DIV></DIV>
+<DIV class=lm>
+<P></P></DIV>
+<DIV class=bd>
+<P>First you'll be asked if you want to run the script, then each line is 
+displayed with a prompt like this <SPAN class=qfs>[Enter=Y,Esc=N]?</SPAN> 
+<UL>
+  <LI>if you press <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> or <SPAN 
+  class=ky>&nbsp;Y&nbsp;</SPAN>, the line is run, and you're prompted for the 
+  next 
+  <LI>if you press <SPAN class=ky>&nbsp;Esc&nbsp;</SPAN> or <SPAN 
+  class=ky>&nbsp;N&nbsp;</SPAN>, that line is <B>not</B> run, and you're 
+  prompted for the next 
+  <LI>if you answer <SPAN class=ky>&nbsp;A&nbsp;</SPAN> (for All, but not listed 
+  in the prompt message) all the rest of the script is run without further 
+  prompting </LI></UL>Try it now, and when you are prompted, respond <SPAN 
+class=ky>&nbsp;Y&nbsp;</SPAN> each time
+<SCRIPT>ex()</SCRIPT>
+ :
+<P></P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>command /y /c highnoon.bat</SPAN> - answer <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> at each debug-mode prompt.','C:&#92;CSW>command /y /c highnoon.bat<BR>highnoon.bat [Enter=Y,Esc=N]?Y<BR>ECHO OFF [Enter=Y,Esc=N]?Y<BR>ECHO. [Enter=Y,Esc=N]?Y<BR><BR><NOBR>ECHO.Do not forsake me, Oh my darling [Enter=Y,Esc=N]?Y </NOBR><BR>Do not forsake me, Oh my darling<BR><NOBR>ECHO.On this our wedding day. [Enter=Y,Esc=N]?Y</NOBR><BR>On this our wedding day.<BR>ECHO. [Enter=Y,Esc=N]?Y<BR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Running <SPAN class=ky>&nbsp;A&nbsp;</SPAN>ll the rest</P></DIV>
+<DIV class=bd>
+<P>Try again, and now answer <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> twice, then 
+<SPAN class=ky>&nbsp;A&nbsp;</SPAN> to run the rest normally
+<SCRIPT>ex()</SCRIPT>
+ </P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>command /y /c highnoon.bat</SPAN> - answer <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> twice, then <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> to run the rest of the script normally.','C:&#92;CSW>command /y /c highnoon.bat<BR>highnoon.bat [Enter=Y,Esc=N]?Y<BR>ECHO OFF [Enter=Y,Esc=N]?Y<BR>ECHO. [Enter=Y,Esc=N]?<BR><BR>Do not forsake me, Oh my darling<BR>On this our wedding day.<BR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>After the initial prompting for the first lines, the remainder of the script 
+is run normally; notice that your <SPAN class=ky>&nbsp;A&nbsp;</SPAN> response 
+isn't displayed on screen.</P>
+<P>This can be a very useful way of watching a script in action, line-by-line, 
+while you check to see that each line behaves as you wish.</P></DIV>
+<DIV class=lm>
+<P>Close any child shell before closing the DVM</P></DIV>
+<DIV class=bd>
+<P>When you have a child shell open in a DVM window, you should close it (with 
+<NOBR>
+<SCRIPT>cn('EXIT')</SCRIPT>
+)</NOBR> before closing the DVM window. Otherwise, Windows won't be able to 
+close the DVM window properly, and will have to abort the process. We don't have 
+a child shell open now, so we can finish now and close the windows 
+normally.</P></DIV>
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","What&#39;s the purpose of Shell programs such as <SPAN CLASS=fs>COMMAND.COM</SPAN> or <SPAN CLASS=fs>EXPLORER.EXE</SPAN>?","They execute your commands, and run any other programs you choose. They usually help you manage files (list, copy, delete).","What command do you use to close the current <SPAN CLASS=fs>COMMAND.COM</SPAN> child shell?","<SPAN CLASS=cl>EXIT</SPAN> &#8211; if you are in the top-level shell of the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN>, or any other DVM window, <SPAN CLASS=bb>EXIT</SPAN> closes the window.","What is the command to restore the default appearance of the <SPAN CLASS=fs>PROMPT</SPAN> <IMG SRC=pr.gif>?","<SPAN CLASS=cl>prompt $p$g</SPAN> &#8211; for a list of the $codes and meanings, you can use the help switch <NOBR><SPAN CLASS=cl>prompt /?</SPAN></NOBR> (as with any command).","What command opens a new child shell, and <B>K</B>eeps it open?","<NOBR><SPAN CLASS=cl>command /k</SPAN></NOBR> &#8211; the <SPAN CLASS=fx>/k</SPAN> must be the last of any switches, as in <NOBR><SPAN CLASS=cl>command /z /k</SPAN></NOBR> to open a new Return-code shell.","What command opens a child shell for a single use and <B>C</B>loses it afterwards?","<NOBR><SPAN CLASS=cl>command /c</SPAN></NOBR> &#8211; the <SPAN CLASS=fx>/c</SPAN> must the last of any <SPAN CLASS=bb>command</SPAN> switches, for example, <NOBR><SPAN CLASS=cl>command /y /c DEMO.BAT</SPAN></NOBR> to run <SPAN CLASS=fs>DEMO.BAT</SPAN> in the Windows debugger.","How can you run the Batch file <SPAN CLASS=fs>DEMO.BAT</SPAN> one line at a time to help you debug it?","<NOBR><SPAN CLASS=cl>command /y /c DEMO.BAT</SPAN></NOBR>  &#8211; just a quick check you read the answer to that previous question!","How would you clear the current value of the <SPAN CLASS=fs>ERRORLEVEL</SPAN> to zero?","Use <NOBR><SPAN CLASS=cl>command /c</SPAN></NOBR> on its own. As well as opening and immediately closing a new child shell, it clears the <SPAN CLASS=bb>ERRORLEVEL</SPAN>.","What command <B>start</B>s a Windows program and <B>W</B>aits for it to finish before continuing?","<NOBR><SPAN CLASS=cl>start /w &#34;Program Name.exe&#34;</SPAN></NOBR> (use &#34;quotes&#34; round any name with <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s) <SPAN CLASS=bb>start</SPAN> with the <SPAN CLASS=fx>/w</SPAN> switch also returns any <SPAN CLASS=bb>ERRORLEVEL</SPAN> from the Windows program.");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>In this Lesson we have learnt to:
+<UL>
+  <LI>Understand shell programs, comparing <SPAN class=fs>Explorer</SPAN> and 
+  <SPAN class=fs>COMMAND.COM</SPAN> 
+  <LI>Open and close <NOBR>(
+  <SCRIPT>cn('EXIT')</SCRIPT>
+  )</NOBR> child
+  <SCRIPT>cn('command')</SCRIPT>
+   shells 
+  <LI>Use
+  <SCRIPT>cn('PROMPT')</SCRIPT>
+   to change the appearance of the default prompt <IMG 
+  src="Lesson 2 - Using Child Shells_files/pr.gif"> 
+  <LI>Be aware that the DVM window title changes when a child shell is in use 
+  <LI>Change child environment variables, checking they don't affect the parent 
+  <LI>Use an altered prompt appearance for immediate-mode work in a child shell 
+  <LI>Use a Return-code shell <SPAN class=qfs>command /z /k</SPAN> to make
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   changes visible 
+  <LI>Clear the
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   to zero with a Single-use shell <SPAN class=qfs>command /c</SPAN> 
+  <LI>Write a script to open a Return-code shell automatically 
+  <LI>Use <SPAN class=qfs>command /y /c</SPAN> (debug mode) to single-step 
+  through a script</LI></UL>Take a break for now, you've earned it. We've covered 
+a lot of theory in this Lesson that may be unfamiliar. If you found the going a 
+little tough, come back and work through it again once you've covered a few of 
+the following, more practical, Lessons.
+<P></P></DIV></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>The <A onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson2">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw030.htm">next&nbsp;Lesson</A>, where 
+we'll learn how to get a reply from a list of choices. See you then.</P></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

@@ -1,0 +1,237 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=588-592//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>As an example, consider a project named TestBtn that exposes a <small>ThreadID</SMALL> property. To enable this property, you would fill in the Add Property to Interface dialog box with the values from Table 18.8.</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 18.8</B> Sample Values for the Add Property to Interface Dialog Box
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="25%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="75%" valign="TOP" align="LEFT"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Property Type
+<td valign="TOP" align="LEFT"><small>long</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Property Name
+<td valign="TOP" align="LEFT"><small>ThreadID</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Parameters
+<td valign="TOP" align="LEFT">(none)
+<tr>
+<td valign="TOP" align="LEFT">Get Function
+<td valign="TOP" align="LEFT">Checked
+<tr>
+<td valign="TOP" align="LEFT">Put Function
+<td valign="TOP" align="LEFT">Checked
+<tr>
+<td valign="TOP" align="LEFT">PropPut
+<td valign="TOP" align="LEFT">Selected
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>Given these values, Visual C<small>&#43;&#43;</SMALL> would create the following IDL for the new property:</P>
+<!-- CODE SNIP //-->
+<pre>
+interface ITestButton : IDispatch
+{
+    // Existing interfaces omitted
+    [propget, id(1), helpstring(&#147;property ThreadID&#148;)]
+    HRESULT ThreadID([out, retval] long *pVal);
+    [propput, id(1), helpstring(&#147;property ThreadID&#148;)]
+    HRESULT ThreadID([in] long newVal);
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Visual C<small>&#43;&#43;</SMALL> would also create class member functions to implement the necessary interface declared by this IDL fragment. What Visual C<small>&#43;&#43;</SMALL> will <i>not</I> do is declare a member variable for you. You must add a member variable (if needed) and fill in the skeleton member functions provided by Visual C<small>&#43;&#43;</SMALL>, as shown in Listing 18.7.</P>
+<p><b>Listing 18.7</B> An Example of Member Functions Used to Provide Access to Custom Properties<hr></P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CTestButton::get_ThreadID(long *pVal)
+{
+    *pVal = m_threadID;
+    return S_OK;
+}
+STDMETHODIMP CTestButton::put_ThreadID(long newVal)
+{
+    m_threadID = newVal;
+    return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Visual C<small>&#43;&#43;</SMALL> will not automatically add the custom property to the property map, so it will not be persisted automatically. If you want the property to be persistent, you must add an entry to the property map using the <small>PROP_DATA_ENTRY</SMALL> macro, as shown in Listing 18.8.</P>
+<p><b>Listing 18.8</B> Adding a Custom Property to the Property Map<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+BEGIN_PROP_MAP(CTestButton)
+    PROP_DATA_ENTRY(&#147;_cx&#148;, m_sizeExtent.cx, VT_UI4)
+    PROP_DATA_ENTRY(&#147;_cy&#148;, m_sizeExtent.cy, VT_UI4)
+    PROP_DATA_ENTRY(&#147;ThreadID&#148;, m_threadID, VT_I4)
+    PROP_ENTRY(&#147;Caption&#148;, DISPID_CAPTION, CLSID_NULL)
+END_PROP_MAP()
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>The <small>PROP_DATA_ENTRY</SMALL> macro has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The description of the property
+<dd><b>&#149;</B>&nbsp;&nbsp;The member variable that contains the property&#146;s value
+<dd><b>&#149;</B>&nbsp;&nbsp;The Automation tag that suits the variable type
+</DL>
+<p>A complete list of valid Automation tags can be found in the Visual C<small>&#43;&#43;</SMALL> online documentation in the COM and ActiveX folder. One good source can be found if you search for a document titled &#147;<small>VARIANT</SMALL> and <small>VARIANTARG</SMALL>.&#148;</P>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">Using Ambient Properties with ATL</FONT></H4>
+<p>Ambient properties can be retrieved by calling functions implemented in the <small>CComControlBase</SMALL> class. Three of the most commonly used ambient properties and the functions used to access them are provided in Table 18.9.</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 18.9</B> Commonly Used Ambient Properties and Access Functions
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Property</I>
+<th width="60%" valign="TOP" align="LEFT"><i>Function</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Background Color
+<td valign="TOP" align="LEFT"><small>GetAmbientBackColor</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Foreground Color
+<td valign="TOP" align="LEFT"><small>GetAmbientForeColor</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Font
+<td valign="TOP" align="LEFT"><small>GetAmbientFont</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The online documentation for Visual C<small>&#43;&#43;</SMALL> has more examples of ambient property functions. Go to the index and search for topics that begin with <small>GetAmbient</SMALL>. <small>CComControlBase</SMALL> also has a catch-all member function named <small>GetAmbientProperty</SMALL> that will return the value of any ambient property given its <small>DISPID</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading22"></A><font color="#000077">Implementing Events in an ATL Project</FONT></H4>
+<p>Events are implemented in an ATL project by adding outgoing events to the project&#146;s <small>IDispatch</SMALL> interface for events. This interface is declared in the project&#146;s IDL file inside the library block, as shown in bold in the following code fragment:</P>
+<!-- CODE //-->
+<pre>
+[
+    uuid(7AFFD2D2-8701-11D2-B875-00104B36573E),
+    version(1.0),
+    helpstring(&#147;Foo 1.0 Type Library&#148;)
+]
+library FOOLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+    [
+        <b>uuid(7AFFD2E2-8701-11D2-B875-00104B36573E),
+        helpstring(&#147;_IFooExampleEvents Interface&#148;)
+    ]
+    dispinterface _IFooExampleEvents
+    {
+       properties:
+       methods:
+       [id(1), helpstring(&#147;method OnMyEvent&#148;)] HRESULT OnMyEvent();
+       [id(2), helpstring(&#147;method OnTheRoad&#148;)] HRESULT OnTheRoad();
+    };</B>
+    [
+        uuid(7AFFD2E1-8701-11D2-B875-00104B36573E),
+        helpstring(&#147;FooExample Class&#148;)
+    ]
+    coclass FooExample
+    {
+        [default] interface IFooExample;
+        [default, source] dispinterface _IFooExampleEvents;
+    };
+};
+</PRE>
+<!-- END CODE //-->
+<p>The name of the event interface is based on the name of the ATL object. In this IDL fragment, the event interface for the <small>FooExample</SMALL> ATL object is _<small>IFooExampleEvents</SMALL>.</P>
+<p>As discussed in Chapter 17, you must compile the project&#146;s type library before using the built-in Visual C<small>&#43;&#43;</SMALL> support for generating connection points. After you&#146;ve compiled the type library, connection points are added by right-clicking the ATL object&#146;s icon in the ClassView window and then selecting the Implement Connection Point menu item from the pop-up menu. A dialog box will be displayed, as shown in Figure 18.12.</P>
+<p><a name="Fig12"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-12.jpg',424,336 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-12t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-12.jpg',424,336)"><font color="#000077"><b>Figure 18.12</B></FONT></A>&nbsp;&nbsp;Implementing connection points for an ATL object.</P>
+<p>As shown in Figure 18.12, the dialog box will contain any interfaces suitable for generating connection points. Check the appropriate entry in the list box and click OK. The connection point class will be created with a name generated by prefixing <small>CProxy</SMALL> to the interface name. For example, given an event interface named <small>_ITestButtonEvents</SMALL>, the generated class will be named <small>CProxy_ITestButtonEvents</SMALL>.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

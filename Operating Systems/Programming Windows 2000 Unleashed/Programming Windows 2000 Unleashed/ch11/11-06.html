@@ -1,0 +1,229 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=366-370//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="11-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>As discussed earlier, the <small>CDibDoc</SMALL> class has two new member functions to return pointers to the bitmap and palette data members. Add the source code provided in Listing 11.7 to the <small>CDibDoc</SMALL> class.</P>
+<p><b>Listing 11.7</B> New <small>CDibDoc</SMALL> Member Functions to Return the Bitmap and Palette Pointers<hr></P>
+<!-- CODE //-->
+<pre>
+CDIBitmap* CDibDoc::GetBitmap()
+{
+    return &ampm_dib;
+}
+
+CPalette* CDibDoc::GetPalette()
+{
+    return m_pPal;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Main Frame Class Changes</FONT></H4>
+<p>When the Dib application receives a palette message, Windows 2000 actually sends the message to the application, where it will be routed to the <small>CMainFrame</SMALL> class. Because the <small>CMainFrame</SMALL> class has no knowledge about how the bitmap or palette is organized, it must forward these messages to the view class. When <small>CMainFrame</SMALL> receives a palette message from Windows, it must determine the active view and send it the message.</P>
+<p>ClassWizard was used to add message-handling functions for <small>WM_PALETTECHANGED</SMALL> and <small>WM_QUERYNEWPALETTE</SMALL>. The source code for the message-handling functions is shown in Listing 11.8.</P>
+<p><b>Listing 11.8</B> <small>CMainFrame</SMALL> Palette Message-handling Functions<hr></P>
+<!-- CODE //-->
+<pre>
+void CMainFrame::OnPaletteChanged(CWnd* pFocusWnd)
+{
+    CView* pView = GetActiveView();
+    if( pView )
+    {
+        HWND hWndFocus = pView-&gtGetSafeHwnd();
+        pView-&gtSendMessage( WM_PALETTECHANGED,
+                            (WPARAM)hWndFocus,
+                            (LPARAM)0 );
+    }
+}
+
+BOOL CMainFrame::OnQueryNewPalette()
+{
+    CView* pView = GetActiveView();
+    if( pView )
+    {
+        HWND hWndFocus = pView-&gtGetSafeHwnd();
+        pView-&gtSendMessage( WM_QUERYNEWPALETTE,
+                            (WPARAM)hWndFocus,
+                            (LPARAM)0 );
+    }
+    return TRUE;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">CDibView Class Changes</FONT></H4>
+<p>The <small>CDibView</SMALL> class has two main functions: drawing the 256-color bitmap and responding to palette messages. The <small>CDibView::OnDraw</SMALL> function must be modified to draw the bitmap, as shown in Listing 11.9.</P>
+<p><b>Listing 11.9</B> A New Version of <small>CDibView<i>::OnDraw</I></SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+void CDibView::OnDraw(CDC* pDC)
+{
+    CDibDoc* pDoc = GetDocument();
+    ASSERT_VALID(pDoc);
+
+    CPalette* pPal = pDoc-&gtGetPalette();
+    CPalette* pOldPal = pDC-&gtSelectPalette( pPal, FALSE );
+    pDC-&gtRealizePalette();
+
+    CDIBitmap* pBmp = pDoc-&gtGetBitmap();
+    pBmp-&gtDrawDIB( pDC, 0, 0 );
+
+    pDC-&gtSelectPalette( pOldPal, FALSE );
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><small>OnDraw</SMALL> fetches pointers to the bitmap and palette from <small>CDibDoc</SMALL>, using the new member functions added to the document class earlier. The palette is selected and realized and then the bitmap is drawn. After the bitmap is drawn, the previous palette is selected back into the DC.</P>
+<p>The <small>CMainFrame</SMALL> class forwards <small>WM_PALETTECHANGED</SMALL> and <small>WM_QUERYNEWPALETTE</SMALL> messages to the view class. However, there&#146;s one small problem&#151;ClassWizard does not offer direct support for palette messages sent to child window classes such as <small>CDibView</SMALL>. Therefore, some trickery is required. The following steps were used to convince ClassWizard to add palette message handling to the view class:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Open ClassWizard.
+<dd><b>2.</B>&nbsp;&nbsp;Select the <small>CDibView</SMALL> class.
+<dd><b>3.</B>&nbsp;&nbsp;Select the Class Info tab.
+<dd><b>4.</B>&nbsp;&nbsp;In the Advanced Options group, click the Message Filter combo box and select Topmost Frame instead of Child Window.
+<dd><b>5.</B>&nbsp;&nbsp;Select the Message Map tab and add the message-handling functions for <small>WM_PALETTECHANGED</SMALL> and <small>WM_QUERYNEWPALETTE</SMALL> to the <small>CDibView</SMALL> class.
+<dd><b>6.</B>&nbsp;&nbsp;Select the Class Info tab.
+<dd><b>7.</B>&nbsp;&nbsp;In the Advanced Options group, click the Message Filter combo box and select Child Window instead of Topmost Frame.
+<dd><b>8.</B>&nbsp;&nbsp;Close ClassWizard.
+</DL>
+<p>The source code for the palette message-handling functions is provided in Listing 11.10.
+</P>
+<p><b>Listing 11.10</B> New Functions Added to the <small>CDibView</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+// OnPaletteChanged - Handles WM_PALETTECHANGED, which is a
+// notification that a window has changed the current palette. If
+// this view did not change the palette, forward this message to
+// OnQueryNewPalette so the palette can be updated, and redrawn
+// if possible.
+void CDibView::OnPaletteChanged(CWnd* pFocusWnd)
+{
+    if( pFocusWnd != this )
+        OnQueryNewPalette();
+}
+// Notification that the view is about to become active,
+// and the view should realize its palette.
+BOOL CDibView::OnQueryNewPalette()
+{
+    CDibDoc* pDoc = GetDocument();
+    ASSERT_VALID(pDoc);
+
+    CBmpPalette* pPal = (CBmpPalette*)pDoc-&gtGetPalette();
+    if( pPal )
+    {
+        CDC*    pDC = GetDC();
+        CPalette* pOldPal = pDC-&gtSelectPalette( pPal, FALSE );
+        UINT uChanges = pDC-&gtRealizePalette();
+        pDC-&gtSelectPalette( pOldPal, FALSE );
+        ReleaseDC( pDC );
+        if( uChanges != 0 )
+            InvalidateRect( NULL );
+    }
+    return TRUE;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In most cases, <small>OnPaletteChanged</SMALL> calls the <small>OnQueryNewPalette</SMALL> function directly. The only exception is when the <small>WM_PALETTECHANGED</SMALL> message is sent because this view had updated the system palette. If this view is the foreground window, the Windows 2000 palette manager will give you first crack at setting the system&#146;s palette. If you&#146;re in the background, you only have access to the unused entries. If there&#146;s no more room in the palette, your palette will be mapped to the closest possible match.</P>
+<p>Remember to include the declarations for the <small>CDIBitmap</SMALL> class at the top of the <small>dibView.cpp</SMALL> source file, after the other <small>#include</SMALL> directives:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &#147;dib256.h&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Compile and run the Dib example. If you have a 256-color display, load a 256-color bitmap. Notice that you get all of the colors. If you run several instances of the program using different 256-color bitmaps, you may notice the palette change if you switch between windows. Figure 11.8 shows the Dib example displaying the 256-color Windows 2000 Server logo.
+</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-08.jpg',499,372 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-08.jpg',499,372)"><font color="#000077"><b>Figure 11.8</B></FONT></A>&nbsp;&nbsp;The Dib sample program displaying a 256-color bitmap.</P>
+<h3><a name="Heading16"></A><font color="#000077">Paths</FONT></H3>
+<p>A <i>path</I> is a GDI object that was first introduced in Windows NT 3.1. It&#146;s a collection of figures or shapes that can be combined to draw other figures or shapes or to create irregular clipping regions. When you use a path to describe a shape, the Windows 2000 GDI can display the path in one operation instead of a series of small building blocks. Although Windows 95 and Windows 98 now support GDI paths, they only support a subset of the functions available to you as a Windows 2000 programmer.</P>
+<p>A path is created by calling <small>BeginPath</SMALL>, describing the path endpoints, and calling <small>EndPath</SMALL>. This series of function calls is known as a <i>path bracket</I>. A sample path bracket is shown in Figure 11.9.</P>
+<p>As shown in Figure 11.9, 21 functions can be called in a path bracket. By combining these functions in a path, you can create a wide range of complicated shapes.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="11-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

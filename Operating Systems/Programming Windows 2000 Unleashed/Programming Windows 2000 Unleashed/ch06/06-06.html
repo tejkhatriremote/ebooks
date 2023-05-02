@@ -1,0 +1,231 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=204-208//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Examining a Payroll Record Class Stored in a DLL</B></FONT></P>
+<p>As an example of exporting a C<small>&#43;&#43;</SMALL> class from a DLL, the CD-ROM includes a project named ClassDll. The ClassDll project builds a DLL that exports <small>CPayrollRec</SMALL>a C<small>&#43;&#43;</SMALL> class that represents a payroll record.</P>
+<p>Listing 6.12 shows the <small>CPayrollRec</SMALL> class declaration, which can be found in the <small>payrec.h</SMALL> header file in the project directory.</P>
+<p><b>Listing 6.12</B> The Class Declaration for <small>CPayrollRec</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#pragma once
+#ifdef PAYREC_DLL
+#define CLASS_DECL __declspec(dllexport)
+#else
+#define CLASS_DECL __declspec(dllimport)
+#endif
+
+class CLASS_DECL CPayrollRec
+{
+public:
+    CPayrollRec();
+    CPayrollRec( double dRate, double dHours = 0.0 );
+    double GrossPay() const;
+private:
+    double m_dRate;
+    double m_dHours;
+
+};
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Listing 6.13 contains the source code for the <small>CPayrollRec</SMALL> function definitions, which can be found in the <small>payrec.cpp</SMALL> source file in the project directory.</P>
+<p><b>Listing 6.13</B> The Class Definition for <small>CPayrollRec</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#define PAYREC_DLL
+#include &#147;payrec.h&#148;
+
+CPayrollRec::CPayrollRec(): m_dRate(0.0), m_dHours(0.0)
+{
+}
+
+CPayrollRec::CPayrollRec(double dRate, double dHours)
+            :m_dRate(dRate), m_dHours(dHours)
+{
+}
+
+double CPayrollRec::GrossPay() const
+{
+    return m_dRate * m_dHours;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Compile the ClassDll project. Visual C<small>&#43;&#43;</SMALL> creates a DLL and an import LIB file for ClassDll.</P>
+<p><font size="+1"><b>Using the ClassDll Example in an Application</B></FONT></P>
+<p>The CD-ROM also includes Payroll, a project that demonstrates how you can use ClassDll in a Windows 2000 application. The Payroll project is a console mode application that creates and uses a <small>CPayrollRec</SMALL> object defined in ClassDll.</P>
+<p>Only one source file exists in the Payroll project, in addition to the <small>ClassDll.lib</SMALL> file and <small>payrec.h</SMALL> header file. Listing 6.14 provides the source code for <small>Payroll.cpp</SMALL>.</P>
+<p><b>Listing 6.14</B> The Source Code for <small>Payroll.cpp</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+#include &#147;payrec.h&#148;
+
+int main()
+{
+    CPayrollRec   theRec(2.5, 42.00);
+    _tprintf(_T(&#147;Current gross pay is $%.2f\n&#148;), theRec.GrossPay());
+    return 0;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Build the Payroll project. As is the case with the earlier examples, you first must copy the DLL <small>ClassDll.dll</SMALL> into the Payroll project&#146;s <small>Debug</SMALL> subdirectory. This ensures that the DLL is found when the application is started.</P>
+<p>Open an MS-DOS console and change to the Payroll project&#146;s <small>Debug</SMALL> subdirectory. Start the application by typing <small>Payroll</SMALL> at the DOS prompt. If everything goes as planned, the following output appears:</P>
+<!-- CODE SNIP //-->
+<pre>
+Current gross pay is $105
+</PRE>
+<!-- END CODE SNIP //-->
+<p>As you can see, using a C<small>&#43;&#43;</SMALL> class exported by a DLL is almost exactly like using a standard C function exported from a DLL.</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Using MFC and DLLs</FONT></H4>
+<p>Three basic ways exist to mix MFC and DLLs with your Windows 2000 application:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Your application uses a DLL that uses MFC internally, and the DLL is linked to the MFC DLL dynamically. In MFC terminology, the DLL is known as a <i>dynamically linked regular DLL</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;Your application uses a DLL that uses MFC internally, and the DLL is statically linked to the MFC Library. In MFC terminology, the DLL is known as a <i>statically linked regular DLL</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;Your application uses a DLL that extends the MFC Library by exposing classes that are derived from the MFC Class Library. In MFC terminology, the DLL is known as an <i>extension DLL</I>.
+</DL>
+<p>When a Windows application uses MFC, the default behavior is to use MFC in a shared DLL, as shown in Figure 6.6. This helps reduce the size of your application and helps your application load faster if another MFC application is already running.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-06.jpg',225,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-06.jpg',225,420)"><font color="#000077"><b>Figure 6.6</B></FONT></A>&nbsp;&nbsp;An MFC application using the MFC core code from the shared MFC DLL.</P>
+<p>As discussed earlier, another way to use the shared MFC DLL is by creating a regular DLL that uses the MFC DLL. The main application does not have to be MFC-based. In fact, it&#146;s possible to use a C interface between the main application and the DLL. Figure 6.7 illustrates this sort of interface.
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-07.jpg',360,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-07.jpg',360,420)"><font color="#000077"><b>Figure 6.7</B></FONT></A>&nbsp;&nbsp;Non-MFC applications using MFC code via a DLL.</P>
+<p>The most common way to use MFC in a DLL is with an extension DLL, as shown in Figure 6.8. An <i>extension DLL</I> uses the shared MFC Library and is called by an MFC-based application.</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-08.jpg',188,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-08.jpg',188,420)"><font color="#000077"><b>Figure 6.8</B></FONT></A>&nbsp;&nbsp;Using an extension DLL in an MFC application.</P>
+<p>The next few sections discuss the steps required to create and use MFC extension DLLs.
+</P>
+<p><font size="+1"><b>Initializing an MFC Extension DLL</B></FONT></P>
+<p>Every MFC extension DLL must perform some initialization in its DLL entry-point function. Listing 6.15 provides an example of a typical DLL entry point for an extension DLL. Actually, this function was created by AppWizard as part of an extension DLL project.
+</P>
+<p><b>Listing 6.15</B> Source Code Created by AppWizard for MFC Extension DLLs</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+static AFX_EXTENSION_MODULE theDLL = { NULL, NULL };
+extern &#147;C&#148; int APIENTRY
+DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+{
+    if (dwReason == DLL_PROCESS_ATTACH)
+    {
+        TRACE0(&#147;DLGINDLL.DLL Initializing!\n&#148;);
+        // Extension DLL one-time initialization
+        AfxInitExtensionModule(theDLL, hInstance);
+        // Insert this DLL into the resource chain
+        new CDynLinkLibrary(DlgInDllDLL);
+    }
+    else if (dwReason == DLL_PROCESS_DETACH)
+    {
+        TRACE0(&#147;DLGINDLL.DLL Terminating!\n&#148;);
+    }
+    return 1;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Even if you don&#146;t use AppWizard to create your extension DLL project, you should copy this function because it shows exactly how an extension DLL must be started and registered with the MFC framework.</P>
+<p>When a process is attached to an extension DLL, the global <small>AFX_EXTENSION_MODULE</SMALL> variable is used to track classes and other objects used in the DLL. A <small>CDynLinkLibrary</SMALL> object is created on the heap; this object is inserted into a list that&#146;s searched when resources are required by the process that loaded the DLL.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

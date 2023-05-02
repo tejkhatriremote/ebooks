@@ -1,0 +1,1332 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Loading and overlays
+Date: Fri, 13 May 2005 09:59:16 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0062_01C557A2.6C7B1010"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0062_01C557A2.6C7B1010
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker08.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Loading and overlays</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Loading and overlays</H1><I>$Revision: 2.3 $</I> <BR><I>$Date: =
+1999/06/15=20
+03:30:36 $</I>=20
+<P>
+<P>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Loading is the process of bringing a program into main memory so =
+it=20
+      can run. In this chapter we look at the loading process, =
+concentrating on=20
+      loading programs that have already been linked. Many systems used =
+to have=20
+      linking loaders that combined the linking and loading process, but =
+those=20
+      have now practically disappeared, with the only one I know of on =
+current=20
+      hardware being on MVS and the dynamic linkers we'll cover in =
+chapter 10.=20
+      Linking loaders weren't all that different from plain linkers, =
+with the=20
+      primary and obvious difference being that the output was left in =
+memory=20
+      rather than placed in a file. </TD></TR></TBODY></TABLE>
+<P>
+<H2>Basic loading</H2>We touched on most of the basics of loading in =
+Chapter 3,=20
+in the context of object file design. Loading is a little different =
+depending on=20
+whether a program is loaded by mapping into a process address space via =
+the=20
+virtual memory system or just read in using normal I/O calls.=20
+<P>
+<P>On most modern systems, each program is loaded into a fresh address =
+space,=20
+which means that all programs are loaded at a known fixed address, and =
+can be=20
+linked for that address. In that case, loading is pretty simple:=20
+<UL>
+  <LI>Read enough header information from the object file to find out =
+how much=20
+  address space is needed.=20
+  <LI>Allocate that address space, in separate segments if the object =
+format has=20
+  separate segments.=20
+  <LI>Read the program into the segments in the address space.=20
+  <LI>Zero out any bss space at the end of the program if the virtual =
+memory=20
+  system doesn't do so automatically.=20
+  <LI>Create a stack segment if the architecture needs one.=20
+  <LI>Set up any runtime information such as program arguments or =
+environment=20
+  variables.=20
+  <LI>Start the program. </LI></UL>If the program isn't mapped through =
+the virtual=20
+memory system, reading in the object file just means reading in the file =
+with=20
+normal "read" system calls. On systems which support shared read-only =
+code=20
+segments, the system needs to check whether there's already a copy of =
+the code=20
+segment loaded in and use that rather than making another copy.=20
+<P>
+<P>On systems that do memory mapping, the process is slightly more =
+complicated.=20
+The system loader has to create the segments, then arrange to map the =
+file pages=20
+into the segments with appropriate permissions, read-only (RO) or =
+copy-on-write=20
+(COW). In some cases, the same page is double mapped at the end of one =
+segment=20
+and the beginning of the next, RO in one and COW in the other, in =
+formats like=20
+compact Unix a.out. The data segment is generally contiguous with the =
+bss=20
+segment, so the loader has to zero out the part of the last page after =
+the end=20
+of the data (since the disk version usually has symbols or something =
+else=20
+there), and allocate enough zero pages following the data to cover the =
+bss=20
+segment.=20
+<P>
+<H2>Basic loading, with relocation</H2>A few systems still do load time=20
+relocation for executables, and many do load time relocation of shared=20
+libraries. Some, like MS-DOS, lack usable hardware relocation. Others, =
+like MVS,=20
+have hardware relocation but are descended from systems that didn't have =
+it.=20
+Some have hardware relocation but can load multiple executable programs =
+and=20
+shared libraries into the same address space, so linkers can't count on =
+having=20
+specific addresses available.=20
+<P>
+<P>As discussed in Chapter 7, load-time relocation is far simpler than =
+link-time=20
+relocation, because the entire program is relocated as a unit. If, for =
+example,=20
+the program is linked as though it would be loaded at location zero, but =
+is in=20
+fact loaded at location 15000, all of the places in the program that =
+require=20
+fixups will get 15000 added. After reading the program into memory, the =
+loader=20
+consults the relocation items in the object file and fixes up the memory =
+
+locations to which the items point.=20
+<P>
+<P>Load-time relocation can present a performance problem, because code =
+loaded=20
+at different virtual addresses can't usually be shared between address =
+spaces,=20
+since the fixups for each address space are different. One approach, =
+used by=20
+MVS, and to some extent by Windows and AIX is to create a shared memory =
+area=20
+present in multiple address spaces and load oft-used programs into that. =
+(MVS=20
+calls this this link pack area.) This has the problem that different =
+processes=20
+don't get separate copies of writable data, so the application has to be =
+written=20
+to allocate all of its writable storage explicitly.=20
+<P>
+<H2>Position-independent code</H2>One popular solution to the dilemma of =
+loading=20
+the same program at different addresses is position independent code =
+(PIC). The=20
+idea is simple, separate the code from the data and generate code that =
+won't=20
+change regardless of the address at which it's loaded. That way the code =
+can be=20
+shared among all processes, with only data pages being private to each =
+process.=20
+<P>
+<P>This is a surprisingly old idea. TSS/360 used it in 1966, and I don't =
+believe=20
+it was original there. (TSS was notoriously buggy, but I can report from =
+
+personal experience that the PIC features really worked.)=20
+<P>
+<P>On modern architectures, it's not difficult to generate PIC =
+executable code.=20
+Jumps and branches are generally either PC-relative or relative to a =
+base=20
+register set at runtime, so no load-time relocation is required for =
+them. The=20
+problem is with data addressing. The code can't contain any direct data=20
+addresses, since those would be relocatable and wouldn't be PIC. The =
+usual=20
+solution is to create a table of data addresses in a data page and keep =
+a=20
+pointer to that table in a register, so the code can use indexed =
+addressing=20
+relative to that register to pick up the data. This works at the cost of =
+an=20
+extra indirection for each data reference, but there's still the =
+question of how=20
+to get the initial data address into the register. ,=20
+<P>
+<H3>TSS/360 position independent code</H3>TSS took a brute-force =
+approach. Every=20
+routine had two addresses, the address of the code, known as the V-con =
+(short=20
+for V style address constant, which even non-PIC code needed) and the =
+address of=20
+the data, known as the R-con. The standard OS/360 calling sequence =
+requires that=20
+the caller provide an 18 word register save area pointed to by register =
+13. TSS=20
+extended the save area to 19 words and required that the caller place =
+callee's=20
+R-con into that 19th word before making the call, Figure 1. Each routine =
+had in=20
+its data segment the V-cons and R-cons for all of the routines that it =
+called,=20
+and stored the appropriate R-con into the outgoing save area before each =
+call.=20
+The main routine in a program received a save area from the operating =
+system=20
+which provided the initial R-con.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig08-01.html"><IMG=20
+      height=3D88 =
+src=3D"http://www.iecc.com/linker/thumb-linker08-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> TSS style two-address procedure call <BR>TSS =
+style=20
+      with R-con in the save area=20
+      <P><TT><BR>Caller: <BR>- copy R-con into <BR>save area <BR>- load =
+V-con=20
+      into R15 <BR>- Call via R15 Callee: <BR>- load R-con from save =
+area <BR>-=20
+      addresses of sub-procedures <BR>in data area=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>This scheme worked, but is poorly suited for modern systems. For one =
+thing,=20
+copying the R-cons made the calling sequence bulky. For another, it made =
+
+procedure pointers two words, which didn't matter in the 1960s but is an =
+issue=20
+now since in programs written in C, all pointers have to be the same =
+size. (The=20
+C standard doesn't mandate it, but far too much existing C code assumes =
+it to do=20
+anything else.)=20
+<P>
+<H3>Per-routine pointer tables</H3>A simple modification used in some =
+Unix=20
+systems is to treat the address of a procedure's data as the address of =
+the=20
+procedure, and to place a pointer to the procedure's code at that =
+address,=20
+Figure 2. To call a procedure, the caller loads the data address into an =
+agreed=20
+data pointer register, then loads the code address from the location =
+pointed to=20
+by the data pointer into a scratch register and calls the routine. This =
+is easy=20
+to implement, and has adequate if not fabulous performance.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig08-02.html"><IMG=20
+      height=3D88 =
+src=3D"http://www.iecc.com/linker/thumb-linker08-02.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 2:</I> Code via data pointers <BR>[ROMP style data =
+table=20
+      with code pointer at the beginning.]=20
+      <P><TT><BR>Caller: <BR>- Load pointer table <BR>address into RP =
+<BR>- Load=20
+      code address from <BR>0(RP) into RC <BR>- Call via RC Callee: =
+<BR>- RP=20
+      points to pointer <BR>table <BR>- Table has addresses of =
+<BR>pointer=20
+      tables for <BR>sub-procedures=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<H3>Table of Contents</H3>IBM's AIX uses a more sophisticated version of =
+this=20
+scheme. AIX programs group routines into <I>modules</I> with a module =
+typically=20
+being the object code generated from a single C or C++ source file or a =
+group of=20
+related source files. The data segment of each module contains a table =
+of=20
+contents (TOC), which contains the combined pointer tables for all of =
+the=20
+routines in the module as well as some of the small static data for the=20
+routines. Register 2 always contains the address of TOC for the current =
+module,=20
+permitting direct access to the static data in the TOC, and indirect =
+addressing=20
+of code and data to which the TOC contains pointers. Calls within a =
+single=20
+module are a single "call" instruction, since the caller and callee =
+share the=20
+same TOC. Inter-module calls have to switch TOCs before the call and =
+switch back=20
+afterwards.=20
+<P>
+<P>Compilers generate all calls as a call instruction, followed by a =
+placeholder=20
+no-op instruction, which is correct for intra-module calls. When the =
+linker=20
+encounters an inter-module call, it generates a routine called a global =
+linkage=20
+or <I>glink</I> at the end of the module's text segment. The glink saves =
+the=20
+caller's TOC on the stack, loads the callee's TOC and address from =
+pointers in=20
+the the caller's TOC, then jumps to the routine. The linker redirects =
+each=20
+inter-module call to the glink for the called routine, and patches the =
+following=20
+no-op to a load instruction that restores the TOC from the stack. =
+Procedure=20
+pointers are pointers to a TOC/code pair, and calls through a pointer =
+use a=20
+generic glink routine that uses the TOC and code address the pointer =
+points to.=20
+<P>
+<P>This scheme makes intra-module calls as fast as possible. =
+Inter-module calls=20
+returns are slowed somewhat by the detour through the glink routine, but =
+the=20
+slowdown is small compared to some of the alternatives we'll see in a =
+moment.=20
+<P>
+<H3>ELF position independent code</H3>Unix System V Release 4 (SVR4) =
+introduced=20
+a PIC scheme similar to the TOC scheme for its ELF shared libraries. The =
+SVR4=20
+scheme is now universally used by systems that use ELF executables, =
+Figure 3. It=20
+has the advantage of returning to the normal convention that the address =
+of a=20
+procedure is the address of the code for the procedure, regardless of =
+whether=20
+one is calling PIC code, found in shared ELF libraries, or non-PIC code, =
+found=20
+in regular ELF executables, at the cost of somewhat more per-routine =
+overhead=20
+than the TOC scheme's.=20
+<P>
+<P>Its designers noticed that an ELF executable consists of a group of =
+code=20
+pages followed by a group of data pages, and regardless of where in the =
+address=20
+space the program is loaded, the offset from the code to the data =
+doesn't=20
+change. So if the code can load its own address into a register, the =
+data will=20
+be at a known distance from that address, and references to data in the=20
+program's own data segment can use efficient based addressing with fixed =
+
+offsets.=20
+<P>
+<P>The linker creates a global offset table (GOT) containing pointers to =
+all of=20
+the global data that the executable file addresses. (Each shared library =
+has its=20
+own GOT, and if the main program were compiled with PIC, which it =
+normally=20
+isn't, it would have a GOT as well.) Since the linker creates the GOT, =
+there is=20
+only one pointer per ELF executable for each datum regardless of how =
+many=20
+routines in the executable refer to it.=20
+<P>
+<P>If a procedure needs to refer to global or static data, it's up to =
+the=20
+procedure itself to load up the address of the GOT. The details vary by=20
+architecture, but the 386 code is typical:=20
+<P><TT><BR>call .L2 ;; push PC in on the stack <BR>.L2: <BR>popl %ebx ;; =
+PC into=20
+register EBX <BR>addl $_GLOBAL_OFFSET_TABLE_+[.-.L2],%ebx ;; adjust ebx =
+to GOT=20
+address=20
+<P></TT>
+<P>It consists of a call instruction to the immediately following =
+location,=20
+which has the effect of pushing the PC on the stack but not jumping, =
+then a pop=20
+to get the saved PC in a register and an add immediate of the difference =
+between=20
+the address the GOT and address the target of the call. In an object =
+file=20
+generated by a compiler, there's a special R_386_GOTPC relocation item =
+for the=20
+operand of the addl instruction. It tells the linker to substitute in =
+the offset=20
+from the current instruction to the base address of the GOT, and also =
+serves as=20
+a flag to the linker to build a GOT in the output file. In the output =
+file,=20
+there's no relocation needed for the instruction since the distance from =
+the=20
+addl to the GOT is fixed.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig08-03.html"><IMG=20
+      height=3D61 =
+src=3D"http://www.iecc.com/linker/thumb-linker08-03.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 3:</I> PIC code and data with fixed offsets =
+<BR>picture of=20
+      code page showing constant offset to data even though loaded at =
+different=20
+      addresses in different address spaces. =
+</TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>Once the GOT register is loaded, code can reference local static data =
+using=20
+the GOT register as a base register, since the distance from a static =
+datum in=20
+the program's data segment to the GOT is fixed at link tine. Addresses =
+of global=20
+data aren't bound until the program is loaded (see Chapter 10), so to =
+reference=20
+global data, code has to load a pointer to the data from the GOT and =
+then=20
+deference the pointer. This extra memory reference makes programs =
+somewhat=20
+slower, although it's a cost that most programmers are willing to pay =
+for the=20
+convenience of dynamically linked libraries. Speed critical code can use =
+static=20
+shared libraries (Chapter 9) or no shared libraries at all.=20
+<P>
+<P>To support PIC, ELF defines a handful of special relocation types for =
+code=20
+that uses the GOT in addition R_386_GOTPC or its equivalent. The exact =
+types are=20
+architecture-specific, but the x86 is typical:=20
+<UL>
+  <LI><TT>R_386_GOT32</TT>: The relative location of the slot in the GOT =
+where=20
+  the linker has placed a pointer to the given symbol. Used for =
+indirectly=20
+  referenced global data.=20
+  <LI><TT>R_386_GOTOFF</TT>: The distance from the base of the GOT to =
+the given=20
+  symbol or address. Used to address static data relative to the GOT.=20
+  <LI><TT>R_386_RELATIVE</TT>: Used to mark data addresses in a PIC =
+shared=20
+  library that need to be relocated at load time. </LI></UL>
+<P>
+<P>For example, consider this scrap of C code:=20
+<P><TT><BR>static int a; /* static variable */ <BR>extern int b; /* =
+global=20
+variable */ <BR>... <BR>a =3D 1; b=3D 2;=20
+<P></TT>
+<P>Variable <TT>a</TT> is allocated in the bss segment of the object =
+file, which=20
+means it is at a known fixed distance from the GOT. Object code can =
+reference=20
+this variable directly, using the ebx as a base register and a =
+GOT-relative=20
+offset:=20
+<P><TT><BR>movl $1,a@GOTOFF(%ebx) ;; R_386_GOTOFF reference to variable =
+"a"=20
+<P></TT>
+<P>Variable <TT>b</TT> is global, and its location may not be known =
+until=20
+runtime if it turns out to be in a different ELF library or executable. =
+In this=20
+case, the object code references a pointer to <TT>b</TT> which the =
+linker=20
+creates in the GOT:=20
+<P><TT><BR>movl b@GOT(%ebx),%eax ;; R_386_GOT32 ref to address of =
+variable "b"=20
+<BR>movl $2,(%eax)=20
+<P></TT>
+<P>Note that the compiler only creates the R_386_GOT32 reference, and =
+it's up to=20
+the linker to collect all such references and make slots for them in the =
+GOT.=20
+<P>
+<P>Finally, ELF shared libraries contain R_386_RELATIVE relocation =
+entries that=20
+the runtime loader, part of the dynamic linker we examine in Chapter 10, =
+uses to=20
+do loadtime relocaion. Since the text in shared libraries is invariably =
+PIC,=20
+there's no relocation entries for the code, but data can't be PIC, so =
+there is a=20
+relocation entry for every pointer in the data segment. (Actually, you =
+can build=20
+a shared library with non-PIC code, in which case there will be =
+relocation=20
+entries for the text as well, although almost nobody does that since it =
+makes=20
+the text non-sharable.)=20
+<P>
+<H3>PIC costs and benefits</H3>The advantages of PIC are straighforward; =
+it=20
+makes it possible to load code without having to do load-time =
+relocation, and to=20
+share memory pages of code among processes even though they don't all =
+have the=20
+same address space allocated. The possible disadvantages are slowdowns =
+at load=20
+time, in procedure calls, in function prolog and epilog, and overall =
+slower=20
+code.=20
+<P>
+<P>At load time, although the code segment of a PIC file needn't be =
+relocated,=20
+the data segment does. In large libraries, the TOC or GOT can be very =
+large and=20
+it can take a long time to resolve all the entries. This is as much a =
+problem=20
+with dynamic linking, which we'll address in Chapter 10, as with PIC. =
+Handling=20
+R_386_RELATIVE items or the equivalent to relocate GOT pointers to data =
+in the=20
+same executable is fairly fast, but the problem is that many GOT entries =
+point=20
+to data in other executables and require a symbol table lookup to =
+resolve.=20
+<P>
+<P>Calls in ELF executables are usually dynamically linked, even calls =
+within=20
+the same library, which adds significant overhead. We revisit this in =
+Chapter=20
+10.=20
+<P>
+<P>Function prolog and epilogs in ELF files are quite slow. They have to =
+save=20
+and restore the GOT register, ebx in the x86, and the dummy call and pop =
+to get=20
+the program counter into a register are quite slow. From a performance=20
+viewpoint, the TOC approach used in AIX wins here, since each procedure =
+can=20
+assume that its TOC register is already set at procedure entry.=20
+<P>
+<P>Finally, PIC code is bigger and slower than non-PIC. The slowdown =
+varies=20
+greatly by architectures. On RISC systems with plenty of registers and =
+no direct=20
+addressing, the loss of one register to be the TOC or GOT pointer isn't=20
+significant, and lacking direct addressing they need a constant pool of =
+some=20
+sort anyway. The worst case is on the x86. It only has six registers, so =
+losing=20
+one of them to be the GOT pointer can make code significantly worse. =
+Since the=20
+x86 does have direct addressing, a reference to external data that would =
+be a=20
+simple MOV or ADD instruction in non-PIC code turns into a load of the =
+address=20
+followed by the MOV or ADD, which both adds an extra memory reference =
+and uses=20
+yet another precious register for the temporary pointer.=20
+<P>
+<P>Particularly on x86 systems, the performance loss in PIC code is =
+significant=20
+in speed-critical tasks, enough so that some systems retreat to a =
+sort-of-PIC=20
+approach for shared libraries. We'll revisit this issue in the next two=20
+chapters.=20
+<P>
+<H2>Bootstrap loading</H2>The discussions of loading up to this point =
+have all=20
+presumed that there's already an operating system or at least a program =
+loader=20
+resident in the computer to load the program of interest. The chain of =
+programs=20
+being loaded by other programs has to start somewhere, so the obvious =
+question=20
+is how is the first program loaded into the computer?=20
+<P>
+<P>In modern computers, the first program the computer runs after a =
+hardware=20
+reset invariably is stored in a ROM known as tbe bootstrap ROM. as in =
+"pulling=20
+one's self up by the bootstraps." When the CPU is powered on or reset, =
+it sets=20
+its registers to a known state. On x86 systems, for example, the reset =
+sequence=20
+jumps to the address 16 bytes below the top of the system's address =
+space. The=20
+bootstrap ROM occupies the top 64K of the address space and ROM code =
+then starts=20
+up the computer. On IBM-compatible x86 systems, the boot ROM code reads =
+the=20
+first block of the floppy disk into memory, or if that fails the first =
+block of=20
+the first hard disk, into memory location zero and jumps to location =
+zero. The=20
+program in block zero in turn loads a slightly larger operating system =
+boot=20
+program from a known place on the disk into memory, and jumps to that =
+program=20
+which in turn loads in the operating system and starts it. (There can be =
+even=20
+more steps, e.g., a boot manager that decides from which disk partition =
+to read=20
+the operating system boot program, but the sequence of increasingly =
+capable=20
+loaders remains.)=20
+<P>
+<P>Why not just load the operating system directly? Because you can't =
+fit an=20
+operating system loader into 512 bytes. The first level loader typically =
+is only=20
+able to load a single-segment program from a file with a fixed name in =
+the=20
+top-level directory of the boot disk. The operating system loader =
+contains more=20
+sophisticated code that can read and interpret a configuration file, =
+uncompress=20
+a compressed operating system executable, address large amounts of =
+memory (on an=20
+x86 the loader usually runs in real mode which means that it's tricky to =
+address=20
+more than 1MB of memory.) The full operating system can turn on the =
+virtual=20
+memory system, loads the drivers it needs, and then proceed to run =
+user-level=20
+programs.=20
+<P>
+<P>Many Unix systems use a similar bootstrap process to get user-mode =
+programs=20
+running. The kernel creates a process, then stuffs a tiny little =
+program, only a=20
+few dozen bytes long, into that process. The tiny program executes a =
+system call=20
+that runs /etc/init, the user mode initialization program that in turn =
+runs=20
+configuration files and starts the daemons and login programs that a =
+running=20
+system needs.=20
+<P>
+<P>None of this matters much to the application level programmer, but it =
+becomes=20
+more interesting if you want to write programs that run on the bare =
+hardware of=20
+the machine, since then you need to arrange to intercept the bootstrap =
+sequence=20
+somewhere and run your program rather than the usual operating system. =
+Some=20
+systems make this quite easy (just stick the name of your program in=20
+AUTOEXEC.BAT and reboot Windows 95, for example), others make it nearly=20
+impossible. It also presents opportunities for customized systems. For =
+example,=20
+a single-application system could be built over a Unix kernel by naming =
+the=20
+application /etc/init.=20
+<P>
+<H2>Tree structured overlays</H2>We close this chapter with a =
+description of=20
+tree-structured overlays, a widely used scheme in the days before =
+virtual memory=20
+to fit programs into memories smaller than the programs. Overlays are =
+another=20
+technique that dates back to before 1960, and are still in use in some=20
+memory-constrained environments. Several MS-DOS linkers in the 1980 =
+supported=20
+them in a form nearly identical to that used 25 years earlier on =
+mainframe=20
+computers. Although overlays are now little used on conventional =
+architectures,=20
+the techniques that linkers use to create and manage overlays remain=20
+interesting. Also, the inter-segment call tricks developed for overlays =
+point=20
+the way to dynamic linking. In environments like DSPs with constrained =
+program=20
+address spaces, overlay techniques can be a good way to squeeze programs =
+in,=20
+especially since overlay managers tend to be small. The OS/360 overlay =
+manager=20
+is only about 500 bytes, and I once wrote one for a graphics processor =
+with a=20
+512 word address space that used only a dozen words or so.=20
+<P>
+<P>Overlaid programs divide the code into a tree of segments, such as =
+the one in=20
+Figure 4.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig08-04.html"><IMG=20
+      height=3D103 =
+src=3D"http://www.iecc.com/linker/thumb-linker08-04.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 4:</I> A typical overlay tree <BR>ROOT calls A and D. =
+A=20
+      calls B and C, D calls E and F. =
+</TD></TR></TBODY></TABLE></CENTER>
+<P>The programmer manually assigns object files or individual object =
+code=20
+segments to overlay segments. Sibling segments in the overlay tree share =
+the=20
+same memory. In the example, segments A and D share the same memory, B =
+and C=20
+share the same memory, and E and F share the same memory. The sequence =
+of=20
+segments that lead to a specific segment is called a path, so the path =
+for E=20
+includes the root, D, and E.=20
+<P>
+<P>When the program starts, the system loads the root segment which =
+contains the=20
+entry point of the program. Each time a routine makes a "downward" =
+inter-segment=20
+call, the overlay manager ensures that the path to the call target is =
+loaded.=20
+For example, if the root calls a routine in segment A, the overlay =
+manager loads=20
+section A if it's not already loaded. If a routine in A calls a routine =
+in B the=20
+manager has to ensure that B is loaded, and if a routine in the root =
+calls a=20
+routine in B, the manager ensures that both A and B are loaded. Upwards =
+calls=20
+don't require any linker help, since the entire path from the root is =
+already=20
+loaded.=20
+<P>
+<P>Calls across the tree are known as <I>exclusive</I> calls and are =
+usually=20
+considered to be an error since it's not possible to return. Overlay =
+linkers let=20
+the programmer force exclusive calls for situations where the called =
+routine is=20
+known not to return.=20
+<P>
+<H3>Defining overlays</H3>Overlay linkers created overlaid executables =
+from=20
+ordinary input object files. The objects don't contain any overlay =
+instructions,=20
+Intstead, the programmer specifies the overlay structure with a command =
+language=20
+that the linker reads and interprets. Figure 5 shows the same overlay =
+structure=20
+as before, with the names of the routines loaded into each segment.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig08-05.html"><IMG=20
+      height=3D97 =
+src=3D"http://www.iecc.com/linker/thumb-linker08-05.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 5:</I> A typical overlay tree <BR>ROOT contains rob =
+and rick=20
+      <BR>calls A with aaron and andy and D. <BR>A calls B (bill and =
+betty) and=20
+      C (chris), D (dick, dot) calls E (edgar) and F (fran).=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>Figure 6 shows the linker commands that one might give to the IBM 360 =
+linker=20
+to create this structure. Spacing doesn't matter, so we've indented the =
+commands=20
+to show the tree structure. OVERLAY commands define the beginning of =
+each=20
+segment; commands with the same overlay name define segments that =
+overlay each=20
+other. Hence the first OVERLAY AD defines segment A, and the second =
+defines=20
+segmnt D. Overlay segments are defined in a depth first left to right =
+tree walk.=20
+INCLUDE commands name logical files for the linker to read.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 6 --></TD>
+    <TD><I>Figure 6:</I> Linker commands <BR>
+      <P><TT><BR>INCLUDE ROB <BR>INCLUDE RICK <BR>OVERLAY AD <BR>INCLUDE =
+AARON,=20
+      ANDY <BR>OVERLAY BC <BR>INCLUDE BILL, BETTY <BR>OVERLAY BC =
+<BR>INCLUDE=20
+      CHRIS <BR>OVERLAY AD <BR>INCLUDE DICK, DOT <BR>OVERLAY EF =
+<BR>INCLUDE=20
+      EDGAR <BR>OVERLAY EF <BR>INCLUDE FRAN=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>It's up to the programmer to lay out overlays to be space effiecent. =
+The=20
+storage allocated for each segment is the maximum length of any of the =
+segments=20
+that occupy the same space. For example, assume that the file lengths in =
+decimal=20
+are as follows. l r,l n. Name Size _ rob 500 rick 1500 aaron 3000 andy =
+1000 bill=20
+1000 betty 1000 chris 3000 dick 3000 dot 4000 edgar 2000 fran 3000 The =
+storage=20
+allocation, looks like Figure 7. Each segment starts immediately after =
+the=20
+preceding segment in the path, and the total program size is the length =
+of the=20
+longest path. This program is fairly well balanced, with the longest =
+path being=20
+11500 and the shortest being 8000. Juggling the overlay structure to =
+find one=20
+that is as compact as possible while still being valid (no exclusive =
+calls) and=20
+reasonably efficient is a black art requiring considerable trial and =
+error.=20
+Since the overlays are defined entirely in the linker, each trial =
+requires a=20
+relink but no recompilation.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 7 --></TD>
+    <TD><I>Figure 7:</I> Overlay storage layout <BR>
+      <P><TT><BR>0 rob <BR>500 rick 2000 aaron 2000 dick <BR>5000 andy =
+5000 dot=20
+      6000 bill 6000 chris <BR>7000 betty 9000 ---- 9000 edgar 9000 fran =
+
+      <BR>8000 ---- 11000 ---- 12000 ----=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<H3>Implementation of overlays</H3>The implementation of overlays is=20
+surprisingly simple. Once the linker determines the layout of the =
+segments,=20
+relocates the code in each segment appropriately based on the memory =
+location of=20
+the segment. The linker needs to create a segment table which goes in =
+the root=20
+segment, and, in each segment, glue code for each routine that is the =
+target of=20
+a downward call from that segment.=20
+<P>
+<P>The segment table, Figure 8, lists each segment, a flag to note if =
+the=20
+segment is loaded, the segment's path. and information needed to load =
+the=20
+segment from disk.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 8 --></TD>
+    <TD><I>Figure 8:</I> Idealized segment table <BR>
+      <P><TT><BR>struct segtab { <BR>struct segtab *path; // preceding =
+segment=20
+      in path <BR>boolean ispresent; // true if this segment is loaded =
+<BR>int=20
+      memoffset; // relative load address <BR>int diskoffset; // =
+location in=20
+      executable <BR>int size; // segment size <BR>} segtab[];=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>The linker interposes the glue code in front of each downward call so =
+the=20
+overlay manager can ensure that the required segment(s) are loaded. =
+Segments can=20
+use glue code in higher level but not lower level routines. For example, =
+if=20
+routines in the root call aaron, dick, and betty, the root needs glue =
+code for=20
+each of those three symbols. If segment A contains calls to bill, betty, =
+and=20
+chris, A needs glue code for bill and chris, but can use the glue for =
+betty=20
+already present in the root. All downward calls (which are to global =
+symbols)=20
+are resolved to glue code, Figure 9, rather than to the actual routine. =
+The glue=20
+code has to save any registers it changes, since it has to be =
+transparent to the=20
+calling and called routine, then jump into the overlay manager, =
+providing the=20
+address of the real routine and an indication of which segment that =
+address is=20
+in. Here we use a pointer, but an index into the segtab array would work =
+as=20
+well.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 9 --></TD>
+    <TD><I>Figure 9:</I> Idealized glue code for x86 <BR>
+      <P><TT><BR>glue'betty: call load_overlay <BR>.long betty // =
+address of=20
+      real routine <BR>.long segtab+N // address of segment B's segtab=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>At runtime, the system loads in the root segment and starts it. At =
+each=20
+downward call, the glue code calls the overlay manager. The manager =
+checks the=20
+target segment's status. If the segment is present, the manager just =
+jumps to=20
+the real routine. If the segment is not present, the manager loads the =
+target=20
+segment and any unloaded preceding segments in the path, marks any =
+conflicting=20
+segments as not present, marks the newly loaded segments as present, and =
+jumps.=20
+<P>
+<H3>Overlay fine points</H3>As always, details make elegant tree =
+structured=20
+overlays messier than they might be.=20
+<P>
+<H4>Data</H4>We've been talking about structuring code overlays, without =
+any=20
+consideration of where the data goes. Individual routines may have =
+private data=20
+loaded into the segments with the routines, but any data that has to be=20
+remembered from one call to the next needs to be promoted high enough in =
+the=20
+tree that it won't get unloaded and reloaded, which would lose any =
+changes made.=20
+In practice, it means that most global data usually ends up in the root. =
+When=20
+Fortran programs are overlaid, overlay linkers can position common =
+blocks=20
+appropriately to be used as communication areas. For example, if dick =
+calls=20
+edgar and fran, and the latter two both refer to a common block, that =
+block has=20
+to reside in segment D to be a communication area.=20
+<P>
+<H4>Duplicated code</H4>Frequently the overall structure of an overlaid =
+program=20
+can be improved by duplicating code. In our example, imagine that chris =
+and=20
+edgar both call a routine called greg which is 500 bytes long. A single =
+copy of=20
+greg would have to go in the root, increasing the total loaded size of =
+the=20
+program, since placing it anywhere else in the tree would require a =
+forbidden=20
+exclusive call from either chris or edgar. On the other hand, if both =
+segments C=20
+and E include copies of greg, the overall loaded size of the program =
+doesn't=20
+increase, since the end of segment C would grow from 9000 to 9500 and of =
+E from=20
+11000 to 11500, both still smaller than the 12000 bytes that F requires. =
+
+<P>
+<H4>Multiple regions</H4>Frequently, a program's calling structure =
+doesn't map=20
+very well to a single tree. Overlay systems handle multiple code =
+regions, with a=20
+separate overlay tree in each region. Calls between regions always go =
+through=20
+glue code. The IBM linker supports up to four regions, although in my =
+experience=20
+I never found a use for more than two.=20
+<P>
+<H3>Overlay summary</H3>Even though overlays have been rendered largely =
+obsolete=20
+by virtual memory, they remain of historical interest because were the =
+first=20
+significant use of link-time code generation and modification. They =
+require a=20
+great deal of manual programmer work to design and specify the overlay=20
+structure, generally with a lot of trial and error ``digital origami'', =
+but they=20
+were a very effective way to squeeze a large program into limited =
+memory.=20
+<P>
+<P>Overlays originated the important technique of "wrapping" call =
+instructions=20
+in the linker to turn a simple procedure call into one that did more =
+work, in=20
+this case, loading the required overlay. Linkers have used wrapping in a =
+variety=20
+of ways. The most important is dynamic linking, which we cover in =
+chapter 10, to=20
+link to a called routine in a library that may not have been loaded yet. =
+
+Wrapping is also useful for testing and debugging, to insert checking or =
+
+validation code in front of a suspect routine without changing or =
+recompiling=20
+the source file.=20
+<P>
+<H2>Exercises</H2>Compile some small C routines with PIC and non-PIC =
+code. How=20
+much slower is the PIC code than non-PIC? Is it enough slower to be =
+worth having=20
+non-PIC versions of libraries for programmers in a hurry?=20
+<P>
+<P>In the overlay example, assume that dick and dot each call both edgar =
+and=20
+fran, but dick and dot don't call each other. Restructure the overlay so =
+that=20
+dick and dot share the same space, and adjust the structure so that the =
+call=20
+tree still works. How much space does the overlaid program take now?=20
+<P>
+<P>In the overlay segment table, there's no explicit marking of =
+conflicting=20
+segments. When the overlay manager loads a segment and the segment's =
+path, how=20
+does the manager determine what segments to mark as not present?=20
+<P>
+<P>In an overlaid program with no exclusive calls, is it possible that a =
+series=20
+of calls could end up jumping to unloaded code anyway? In the example =
+above,=20
+what happens if rob calls bill, which calls aaron, which calls chris, =
+then the=20
+routines all return? How hard would it be for the linker or overlay =
+manager to=20
+detect or prevent that problem?=20
+<P>
+<H2>Project</H2>
+<P>
+<P><I>Project 8-1:</I> Add a feature to the linker to "wrap" routines. =
+Create a=20
+linker switch=20
+<P><TT><BR>-w name=20
+<P></TT>
+<P>that wraps the given routine. Change all references in the program to =
+the=20
+named routine to be references to <TT>wrap_name</TT>. (Be sure not to =
+miss=20
+internal references within the segment in which the name is defined.) =
+Change the=20
+name of the routine to <TT>real_name</TT>. This lets the programmer =
+write a=20
+wrapper routine called <TT>wrap_name</TT> that can call the original =
+routine as=20
+<TT>real_name</TT>.=20
+<P>
+<P><I>Project 8-2:</I> Starting the linker skeleton from chapter 3, =
+write a tool=20
+that modifies an object file to wrap a name. That is, references to=20
+<TT>name</TT> turn into external references to <TT>wrap_name</TT>, and =
+the=20
+existing routine is renamed <TT>real_name</TT>. Why would one want to =
+use such a=20
+program rather than building the feature into the linker. (Hint: =
+consider the=20
+case where you're not the author or maintainer of the linker.)=20
+<P>
+<P><I>Project 8-3:</I> Add support to the linker to produce executables =
+with=20
+position-independent code We add a few new four-byte relocation types:=20
+<P><TT><BR>loc seg ref GA4 <BR>loc seg ref GP4 <BR>loc seg ref GR4 =
+<BR>loc seg=20
+ref ER4=20
+<P></TT>
+<P>The types are:=20
+<UL>
+  <LI><TT>GA4</TT>: (GOT address) At location loc, store the distance to =
+the=20
+  GOT.=20
+  <LI><TT>GP4</TT>: (GOT pointer) Put a pointer to symbol ref in the =
+GOT, and at=20
+  location loc, store the GOT-relative offset of that pointer.=20
+  <LI><TT>GR4</TT>: (GOT relative) Location loc contains an address in =
+segment=20
+  ref. Replace that with the offset from the beginning of the GOT to =
+that=20
+  address.=20
+  <LI><TT>ER4</TT>: (Executable relative) Location loc contains an =
+address=20
+  relative to the beginning of the executable. The ref field is ignored. =
+
+</LI></UL>
+<P>
+<P>In your linker's first pass, look for GP4 relocation entries, build a =
+GOT=20
+segment with all the required pointers, and allocate the GOT segment =
+just before=20
+the data and BSS segments. In the second pass, handle the GA4, GP4, and =
+GR4=20
+entries. In the output file, create ER4 relocation entries for any data =
+that=20
+would have to be relocated if the output file were loaded at other than =
+its=20
+nominal address. This would include anything marked by an A4 or AS4 =
+relocation=20
+entry in the input. (Hint: Don't forget the GOT.) </P></BODY></HTML>
+
+------=_NextPart_000_0062_01C557A2.6C7B1010
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker08-01.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABYAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2wgZx
+gZz/AHfamBAeuP8AvmjP48+vtTxwAfYd6kkaIx6DHH8NDKF4xxz/AA0u48AY7d6TgA9D1/ipiIJm
+EYG3BdjgAjrT1YFym08dyuKe4TqcEg5HPTinYHTr+NAxu3I468dqaRgjj8hTiwAxkY46mkznrg/j
+QAFRg49+xo2d/wChpemcEdD3p3ynPI6/3qAICMNxn8jTlA4/D1pwVSeo7fxUg5OPp/FQIlyO4/nR
+Tc5/i6f7VFIYq5z1HX19qha6VZfLBGeO/wDn1rD8Q2dt5rXMt3qUDPtjb7Kq8gAtjcVzg7TkA/hk
+1kaXfW1rJJNa3OsXRiiklS3lfKlVUbhgcZztAB5+bjg5pgdjbXKXABUn8cjvU3JOOO/esCTxVFFb
+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
+ooAMc8+g7U7jAA68dveiigQ4dOT39KKKKkD/2Q==
+
+------=_NextPart_000_0062_01C557A2.6C7B1010
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker08-02.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABYAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2vyR+
+R9D6U0KM4Pt2oMyIyoWUMx+VS3J47Uzzoych1OMA/N0NTYkUoM8HnjtT+BnPoe1G4YyMf99UhPBO
+Qcj+9RYCKR9hUYJ3vtHHt/8AWpqS5l2lWAPIOw8/4VMSuO3X19qNwPf/AMep2AYMY454HY0vXt+h
+pRggYx2/ipSQRzjv/FRYQhB6j8eDQcA556+hrIPifSUup4GudkkJcOHVgBtzkg45HBGfUYqNvFuh
+hyDfp144b/CgZshcnvnj1pwz1+lZVh4h0rUJ1htbtZJChfbhhwMZ6jqMjirqXcZ2kBuSB0NAiyCO
+cgHn3opUIK56f8CopDMjxBaW08cck8NxLtBjJhbkK5VW4GSePm4H8JrmILfTbXV4jBoustLJKnzy
+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
+UUVIz//Z
+
+------=_NextPart_000_0062_01C557A2.6C7B1010
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker08-03.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA9AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2LTtQ
+g1bSrW/hR1iuIllVXADAEZGas8c45/KmlkTAZ1UfdHIHbpUhAAIDDp61JIxnjjHzMBn1IFQ/aoS2
+0SIf+BCiQgzjPPyt79xTiI1A3Lkgk9M/0pgRyX9pGwWS5hQnkBnUd6WO9tpT+7uYn4BO11Pr6fQ1
+RurHS75xJd2aSuhwHaMnHJ749z+ZrOGo+GPD9wyRwrbOVXdst3PGTjovqT+dAGpd6xFahSLW8uFZ
+QQ1vAZB39KqTeJRHCrjR9XctnCLaHOB6+lLH/ZXiJjLHJM/ko0ZX54xh1IPBAycZ5qAaDpAtCm66
+EQbzSxuXBBC+uc9DQBZj8Rq5CnStWQsD960OB8u7nH5fXij/AISSMy7TpGrY2ht32Q+/+H6irmnx
+WlnB5EE7FXYkCaYu2emATz26VeyVxyOvrQBS0/Uk1DzAtpeW6oRg3MOzdyemfpV3g4HOPwpQ2M5I
+/P3o3dOfTvQAm0YHPb2ooY4x9KKBHOeI1uXkCR6JLewgLIZElA+YbuMdeMDoD971FZ1hZ6jZXq3k
+egXIm8s4zfDbjHAbJPPJ7cV245B5/Dn0ph5J57H1oGRDJaBmXaxzuGemRn+lSHg9O/HJ9aZLxJGP
+cnv6f/Xpcgjkn/JoEQZH2WUEHOG9fU1JA6CJQCOOCM1FlfJnGefm/LJpIbK0dN728JZiTuKDOTnv
+QMZ5c7XjTfaYvL24VCDkHA759j+dYmtxhZt58mUlGKbrSSfBzzyDgdfr1roDaRDASS4U+onfjj0J
+xQbSXr9vucf7qen+7QBzXmXVvfgLbmWKLldlmzbcgMdrbuDn2PPrW9DqBWYW0yztLwodYH2En3xj
+86qa5aKIoriaa1kkjfC/bYwUxg5xgZzx+WazV8RXjwytFqGjb1lSNSrSFFzuPJx1IAx26+1AHUbZ
+x0dPfINL++XBGw89DmuZg8QancXK2qTaU87HGxBOec+u3j6/Q1qOPEKyAo2mFSR9/wAzK8D0685o
+A1lLlRuxnHYmilbJwR6e9FBIy4aVLaVoYw8oQlEJA3HHAz25rA0vU9Xluo47/Tlt4SDvlNwhwcZP
+Gc4zgDHrWlqeiabqzo99bLK8alVYnG0HB7H1UH8KoxeDfDyRqp06N9o+87EljjqeaCjQnkMw3wRx
+ykAmNSRhjtOOe3OOazLN9Zkuo1vNNtIIA2Hb5ScY6gBjjnAx29+2rBbww4gjiVYYl2ovBAHGB/Op
+/Jh4xEn/AHyPWgRDDbW7oX8mNjuIztH941Bd6FpuoSQtc2SN5IwgBKgZIJ4BweVB/CrsOPLXAwDz
+xjualGMj1x7UAZFh4b0vTLg3NlamKZhtJEjHI64wTWqB1BGB6/hSqw6Hj8qaT19Pw9KYCuiupDqr
+L6EZpvkQkjEUfXJ+Qdc//XNSAZBGP5Uhwv19OPWkAiwoGysaBs5yFHrTsEDgD8qbnOPr7etLhRx3
+P0oAcRwOB09KKQsowMZ49qKLAKeV6/r7Un3VPI+maxPCOoXOq+ENMvbuTfcTQhpGAxuPIzgVuf3v
+p/SkNorocS9eofPP+0KmOQBz34596aIFLHBZSc8g+uM03yF7vKef+ehHf2pgLbk+Qmf7o707kkc9
+vWlChFCjOBgDn3oJwR9BQAg56H9aUD5c5/zimhvQc5p4+5n2/pQIUnr83603vyQPx96UcjPSmkcj
+rz7+9ADs44yD+PvSZyeCPzpx9Oevr704LzjJxQBGSePmHT1opsrbSoxniimhWP/Z
+
+------=_NextPart_000_0062_01C557A2.6C7B1010
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker08-04.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABnAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2wkjJ
+y3UdqYWPPLdfSnMTjOT1HakB6ksevpSIG7uSSWHPpSSSpEu6VwoJwN3GadtySctjcMcVFcsw2Nub
+5ZF7epAP86AD7TA279+oGR3FJ9pgOf8ASFIB9fpVTWtfsNAtFub+V443k2KRGWycFuw9FJ/CqjeM
+dHUMDcTbg33VtpCWAzyuF+Zflb5hkcdeRQBqte2wB/0hRyOpFKtzAWCpMGYkfKCKg07V7bVfP+zm
+YiCQRsZIWQZwDwSOeCDketWLoNmN9xwsg7eox/WgCYk5OM9R2o5IOSevpTQ3ysctwRxinFyQTz1G
+eKAEHGfvdfSlI+9lieRxikycnDHr6UpO4bcnG4dqBhnk/MfyoozydpJGfT/61FAAxyDgsOR2pAc5
+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
+Gf/Z
+
+------=_NextPart_000_0062_01C557A2.6C7B1010
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker08-05.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABhAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rbwT
+z0PelB5PXg+tKT8p47HtSYB5IHXn5akkMk5/HvWLr11qVlb+bp9tJdyGQAxKQNq7SSemeqgfj36V
+s7htPA7/AMNQpIPPk2jdyF4HA4/+vTA5Zda16Qsq6POrYbbu3YJxnGduBg5Gejfw10PnpBDGbu48
+qUqCw3gAHHOM+9Oaa5BUG3GCDkrzis66g8Oarcbrz7FPPuAUl+SM/L0NAF5bi3ld0W/aRlByiumf
+5VYSFCSP3w2tjmQ+n1rJij0PSJ2+zC0ibBR03gbemeCevA/IVppO8qLJHEvlMAQy8/8A6+P5UAPm
+h2x7lklG3r82ePxqYDJ6MOfb0qvJNttJWZCchxkIf5VIjqx+XBUnjC+1AD8tt/i6e1Sc5/i/T0qP
+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
+
+------=_NextPart_000_0062_01C557A2.6C7B1010--

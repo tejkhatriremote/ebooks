@@ -1,0 +1,810 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw030.htm -->
+<HTML><HEAD><TITLE>Lesson 3 - Using choice and ERRORLEVELs</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=3,LnIdx="Lesson "+Ln;</SCRIPT>
+
+<SCRIPT language=JavaScript 
+src="Lesson 3 - Using choice and ERRORLEVELs_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 3 - Using choice and ERRORLEVELs_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 3 - Using choice and ERRORLEVELs_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Image();M.src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>Use of
+<SCRIPT>cn('choice')</SCRIPT>
+ and
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ codes</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Use the
+  <SCRIPT>cn('choice')</SCRIPT>
+   command to get replies from a list of options 
+  <LI>Use the
+  <SCRIPT>cn('IF')</SCRIPT>
+   test to check
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   s 
+  <LI>Write a simple script that gets a reply to a question </LI></UL><SPAN 
+class=fg>&nbsp;Note&nbsp;</SPAN> Each Lesson relies on your files from the 
+previous one. It's better to use your own files, but if you can't, download a 
+copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 2";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson2.zip">end&nbsp;of&nbsp;Lesson&nbsp;2</A> 
+and click<IMG src="Lesson 3 - Using choice and ERRORLEVELs_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.
+<P></P></DIV>
+<DIV class=lm>
+<P>Creating a menu of choices in a script</P></DIV>
+<DIV class=bd>
+<P>More than any other feature, what distinguishes a good script from a mediocre 
+one is a menu to allow the person using it to control what the script does. Once 
+you know how to create menus, you'll probably use them in most of your 
+scripts.</P>
+<P>In summary, the process is: 
+<UL>
+  <LI>the script displays a list of options (typically using
+  <SCRIPT>cn('ECHO')</SCRIPT>
+   for this) 
+  <LI>a reply key is associated with each of the options, using
+  <SCRIPT>cn('choice')</SCRIPT>
+   
+  <LI>the script waits for the person using it to press one of the reply keys 
+  <LI>the key pressed is returned as an
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   numeric code 
+  <LI>the script tests the
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   returned 
+  <LI>the test result is used to decide what the script does next</LI></UL>We know 
+how to display text with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ , so let's look at the next steps. To specify a list of reply keys (and get one 
+in reply from the user), we need the command:
+<SCRIPT>cn('choice')</SCRIPT>
+ .
+<P></P></DIV>
+<DIV class=lm>
+<P>By default,
+<SCRIPT>cn('choice')</SCRIPT>
+ has two replies, <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> and <SPAN 
+class=ky>&nbsp;N&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>You list the reply keys you decide to accept in a switch on the
+<SCRIPT>cn('choice')</SCRIPT>
+ command-line. The
+<SCRIPT>cn('choice')</SCRIPT>
+ command will wait for a reply, and return an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ that tells your script what it was. If a key is pressed that is not on the 
+list,
+<SCRIPT>cn('choice')</SCRIPT>
+ beeps, and simply waits for one that is on the list.</P>
+<P>The default list built into English language versions of the
+<SCRIPT>cn('choice')</SCRIPT>
+ command is <SPAN class=qfs>yn</SPAN>, and to reply you must press either: 
+<UL>
+  <LI><SPAN class=ky>&nbsp;Y&nbsp;</SPAN> - uppercase or lowercase (short for 
+  <B>yes</B>), or 
+  <LI><SPAN class=ky>&nbsp;N&nbsp;</SPAN> - uppercase or lowercase (short for 
+  <B>no</B>)</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>By default replies are case-insensitive</P></DIV>
+<DIV class=bd>
+<P>You can make
+<SCRIPT>cn('choice')</SCRIPT>
+ case-sensitive to replies, but by default, it isn't (which is usually more 
+convenient). Let's try using choice with its default replies
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice</SPAN> and you&#39;re presented with the two default replies. Press <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> and it&#39;s accepted. An invisible return code corresponding to this reply is generated.','C:&#92;CSW>choice<BR>[Y,N]?Y<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The command waits for a reply from its list</P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('choice')</SCRIPT>
+ command displays the list of acceptable replies, a <SPAN 
+class=ky>&nbsp;?&nbsp;</SPAN>, then waits for your reply. The reply accepted is 
+then displayed in uppercase (whether or not you typed it in uppercase), unless 
+you add the <SPAN class=fs>/s</SPAN> case-sensitive switch (explained 
+later).</P>
+<P>Now reply with an <SPAN class=ky>&nbsp;N&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice</SPAN>, then press <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN> and again it&#39;s accepted and an invisible return code generated. It&#39;s different from the (invisible) code that was returned for <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> (at the moment, there&#39;s no indication of that).','C:&#92;CSW>choice<BR>[Y,N]?N<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Wrong reply is beeped</P></DIV>
+<DIV class=bd>
+<P>Now try an unsuitable response; try the keys <SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN> <SPAN class=ky>&nbsp;A&nbsp;</SPAN> <SPAN 
+class=ky>&nbsp;B&nbsp;</SPAN> in turn
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice</SPAN>, then press each of <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> in turn. They are each rejected without even being echoed on screen, and the prompt does not return.','C:&#92;CSW>choice<BR>[Y,N]?<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Abort with <SPAN class=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>The command waits for a suitable response. You can abort the command by 
+pressing <SPAN class=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN> (hold down <SPAN 
+class=ky>&nbsp;Ctrl&nbsp;</SPAN> and press <NOBR><SPAN 
+class=ky>&nbsp;C&nbsp;</SPAN>)</NOBR>. Try this now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Press <SPAN CLASS=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN> and the command is aborted and the prompt returns. The <SPAN CLASS=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN> key combination will often abort a hung command (which is worth remembering).','C:&#92;CSW>choice<BR>[Y,N]?^C<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Use a Return-code shell to see what's happening</P></DIV>
+<DIV class=bd>
+<P>In those Exercises,
+<SCRIPT>cn('choice')</SCRIPT>
+ has been returning a code for the key we pressed. We'll work in a Return-code 
+shell and see what has been happening. Open a Return-code child shell in the 
+<SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> now with our script <SPAN 
+class=fs>RC.BAT</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>rc</SPAN> to run our Return-code shell script. Remember, it opens the Return-code shell and changes the prompt for us (as a reminder).','C:&#92;CSW&#62;rc<BR>Opening Return-Code shell...<BR>Return code (ERRORLEVEL):   0<BR><NOBR>WARNING: Reloaded COMMAND.COM transient</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The prompt change is a reminder</P></DIV>
+<DIV class=bd>
+<P>The script changes the prompt in the Return-code shell for us (purely as a 
+convenient reminder). Remember, the original prompt will be restored 
+automatically when we
+<SCRIPT>cn('EXIT')</SCRIPT>
+ the Return-code shell.</P></DIV>
+<DIV class=lm>
+<P>The reply is returned as an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('choice')</SCRIPT>
+ command returns an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ code that is simply the reply key's position in the list.</P>
+<P>In a script you would test for the code returned, then act accordingly. In 
+our Return-code shell, we'll see the code displayed. Try the <SPAN 
+class=ky>&nbsp;Y&nbsp;</SPAN> and <SPAN class=ky>&nbsp;N&nbsp;</SPAN> replies 
+again
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice</SPAN>, then press <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> and now we can see that code <SPAN CLASS=fs>1</SPAN> is returned.','RCode C:&#92;CSW>choice<BR>[Y,N]?Y<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Reply <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> is first in the list</P></DIV>
+<DIV class=bd>
+<P>Since <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> is the <B>first</B> reply key in 
+the default list, an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ of <SPAN class=fs>1</SPAN> is returned to show it was pressed. Now try an <SPAN 
+class=ky>&nbsp;N&nbsp;</SPAN> response
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice</SPAN>, then press <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN>. Code <SPAN CLASS=fs>2</SPAN> is returned, since <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN> is <B>second</B> in the reply list.','RCode C:&#92;CSW>choice<BR>[Y,N]?N<BR>Return code (ERRORLEVEL):   2<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>A Return-code shell makes codes visible</P></DIV>
+<DIV class=bd>
+<P>Now we can see the effect of giving different replies from the
+<SCRIPT>cn('choice')</SCRIPT>
+ list. Working in a Return-code shell is a good idea when developing scripts for 
+any commands that pass information via
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ codes.</P></DIV>
+<DIV class=lm>
+<P>Setting the reply list with the <SPAN class=fs>/c</SPAN> switch</P></DIV>
+<DIV class=bd>
+<P>We can set our own list of acceptable reply keys. Simply add the list to the
+<SCRIPT>cn('choice')</SCRIPT>
+ command line prefixed with <SPAN class=fs>/c:</SPAN> (the <SPAN 
+class=ky>&nbsp;:&nbsp;</SPAN> isn't strictly necessary, but it makes the list 
+stand out more clearly from the switch letter). By the way, don't leave a <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN> in the list. If you do, the items in the list 
+after the <SPAN class=ky>&nbsp;Space&nbsp;</SPAN> won't be used properly.</P>
+<P>Suppose we want the user to choose from the three replies <SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN>, <SPAN class=ky>&nbsp;A&nbsp;</SPAN> and <SPAN 
+class=ky>&nbsp;B&nbsp;</SPAN>. We specify the list of acceptable replies like 
+this:</P>
+<P><SPAN class=cl>choice /c:qab</SPAN></P>
+<P>Of course, a script would have
+<SCRIPT>cn('ECHO')</SCRIPT>
+ commands (before this line) to tell the user what these replies mean, that is, 
+what actions they'll result in. We won't worry about that for now (except to 
+observe that a <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> for Quit option is useful on 
+most menus).</P></DIV>
+<DIV class=lm>
+<P>Each reply returns a different code</P></DIV>
+<DIV class=bd>
+<P>Try it now. Type the command three times, replying with each of the keys 
+<SPAN class=ky>&nbsp;Q&nbsp;</SPAN>, <SPAN class=ky>&nbsp;A&nbsp;</SPAN>, and 
+<SPAN class=ky>&nbsp;B&nbsp;</SPAN> in turn
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qab</SPAN>, then press <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> to see return code <SPAN CLASS=fs>1</SPAN>. Repeat the command, answering with <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> to return <SPAN CLASS=fs>2</SPAN> and once more with <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> to return <SPAN CLASS=fs>3</SPAN>.','RCode C:&#92;CSW>choice /c:qab<BR>[Q,A,B]?Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW>choice /c:qab<BR>[Q,A,B]?A<BR>Return code (ERRORLEVEL):   2<BR><BR>RCode C:&#92;CSW>choice /c:qab<BR>[Q,A,B]?B<BR>Return code (ERRORLEVEL):   3<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>A <SPAN class=fs>/c</SPAN> reply list overrides the usual defaults</P></DIV>
+<DIV class=bd>
+<P>Check that it won't work with other keys. Try
+<SCRIPT>cn('choice')</SCRIPT>
+ with the same reply list, but this time answer with <SPAN 
+class=ky>&nbsp;Y&nbsp;</SPAN>, and then <SPAN class=ky>&nbsp;N&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qab</SPAN> and try pressing <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> and <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN>. Although they are the default keys (when there is no list specified), they&#39;re rejected because they&#39;re not on the list.','RCode C:&#92;CSW>choice /c:qab<BR>[Q,A,B]?<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Aborting with <SPAN class=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN> gives zero return 
+code</P></DIV>
+<DIV class=bd>
+<P>Abort the command with <SPAN class=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Press <SPAN CLASS=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN> and the command is aborted and the prompt returns.','RCode C:&#92;CSW>choice /c:qab<BR>[Q,A,B]?^C<BR>Return code (ERRORLEVEL):   0<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>When
+<SCRIPT>cn('choice')</SCRIPT>
+ is aborted by <SPAN class=ky>&nbsp;Ctrl&nbsp;C&nbsp;</SPAN> it returns code 
+<SPAN class=fs>0</SPAN> (zero). In this case a zero
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ means that something went wrong – the user aborted the command.</P></DIV>
+<DIV class=lm>
+<P>If there's an error, you receive code <SPAN class=fs>255</SPAN></P></DIV>
+<DIV class=bd>
+<P>As we saw in Lesson&nbsp;2, if there's an error in the
+<SCRIPT>cn('choice')</SCRIPT>
+ command-line syntax, such as <NOBR><SPAN class=qfs>choice /x</SPAN></NOBR> (an 
+invalid switch), the line returns <SPAN class=fs>255</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /x</SPAN> (which is an invalid command line since <SPAN CLASS=fx>/x</SPAN> is not a valid switch). This is the command line we used in the previous Lesson to generate a return code of <SPAN CLASS=fs>255</SPAN>.','RCode C:&#92;CSW>choice /x<BR>Invalid switch on command line. Expected form:<BR><NOBR>    CHOICE [/C[:]choices] [/N] [/S] [/T[:]c,nn] [text]</NOBR><BR><BR>Return code (ERRORLEVEL): 255<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The code is the position of the reply in the list</P></DIV>
+<DIV class=bd>
+<P>As we said, the rule for values returned is: when a key in your list is 
+pressed,
+<SCRIPT>cn('choice')</SCRIPT>
+ simply returns the position of it in your <SPAN class=fs>/c:</SPAN> reply list. 
+We've already seen that</P>
+<P><SPAN class=cl>choice /c:qab</SPAN> 
+<UL>
+  <LI>returns <SPAN class=fs>1</SPAN> if the first key is pressed: <SPAN 
+  class=ky>&nbsp;Q&nbsp;</SPAN> 
+  <LI>returns <SPAN class=fs>2</SPAN> if the second key is pressed: <SPAN 
+  class=ky>&nbsp;A&nbsp;</SPAN> 
+  <LI>returns <SPAN class=fs>3</SPAN> if the third key is pressed: <SPAN 
+  class=ky>&nbsp;B&nbsp;</SPAN> 
+  <LI>and so on... (if there were any more keys in the list)</LI></UL>This rule is 
+very easy to remember. If you put the same key twice in the list,
+<SCRIPT>cn('choice')</SCRIPT>
+ returns the code corresponding to the first position the key occurs
+<SCRIPT>ex()</SCRIPT>
+ :
+<P></P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qaba</SPAN> and reply <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> (code <SPAN CLASS=fs>2</SPAN> is returned, since the <B>first</B> occurrence of <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> in the list is position <NOBR><SPAN CLASS=fs>2</SPAN>)</NOBR>.','RCode C:&#92;CSW>choice /c:qaba<BR>[Q,A,B,A]?A<BR>Return code (ERRORLEVEL):   2<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <SPAN class=fs>/s</SPAN> case-sensitive switch</P></DIV>
+<DIV class=bd>
+<P>However, you can mix uppercase and lowercase letters if you specify that
+<SCRIPT>cn('choice')</SCRIPT>
+ should be case-sensitive to replies by using the <SPAN class=fs>/s</SPAN> 
+switch. Try this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qabA /s</SPAN> and reply <SPAN CLASS=ky>&nbsp;a&nbsp;</SPAN>. Type it again and reply <NOBR><SPAN CLASS=ky>&nbsp;Shift&nbsp;</SPAN>+<SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN></NOBR> (we see a different reply code for each, since the <SPAN CLASS=fs>/<SPAN CLASS=or>s</SPAN></SPAN> = case-<SPAN CLASS=br>s</SPAN>ensitive switch was used).','RCode C:&#92;CSW>choice /c:qabA /s<BR>[q,a,b,A]?a<BR>Return code (ERRORLEVEL):   2<BR><BR>RCode C:&#92;CSW>choice /c:qabA /s<BR>[q,a,b,A]?A<BR>Return code (ERRORLEVEL):   4<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The case-sensitive switch isn't often used</P></DIV>
+<DIV class=bd>
+<P>When you replied lowercase <SPAN class=ky>&nbsp;a&nbsp;</SPAN>,
+<SCRIPT>cn('choice')</SCRIPT>
+ returned position <SPAN class=fs>2</SPAN>. But when you replied uppercase <SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN> it returned position <SPAN class=fs>4</SPAN>. The 
+<SPAN class=fs>/s</SPAN> case-sensitive switch is not often used. We'll use some 
+other
+<SCRIPT>cn('choice')</SCRIPT>
+ switches later in the Course.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+testing:</SPAN><BR>In a script you must test for the code returned</P></DIV>
+<DIV class=bd>
+<P><BR>We've seen that working in a Return-code shell makes it easy to see 
+what's happening with commands that pass information in this way. Working this 
+way is purely so that we can see the results during developing and testing. The 
+final script will run in a normal shell. Our script will have to test for the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ returned when the user makes a selection from its menu.</P></DIV>
+<DIV class=lm>
+<P>The test uses
+<SCRIPT>cn('IF')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>We use the
+<SCRIPT>cn('IF')</SCRIPT>
+ command for this purpose, and the format of the test is:</P>
+<P><SPAN class=cl>IF ERRORLEVEL n&nbsp;</SPAN>&nbsp; (followed by a command to 
+be executed if the test is true)</P>
+<P>The <SPAN class=fs>n</SPAN> is the value you test for. The command you add 
+must be on the same line. We'll use an
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command, so that we see a message whenever the test is true. When the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ test is false, the command attached to it is <B>not</B> executed.</P></DIV>
+<DIV class=lm>
+<P>The test is for greater-than-or-equal-to</P></DIV>
+<DIV class=bd>
+<P>We know the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ return code can take any value from <SPAN class=fs>0</SPAN> to <SPAN 
+class=fs>255</SPAN> (inclusive), and you can test for any number, <SPAN 
+class=fs>n</SPAN>, in this range. But, and this is an important "but":</P>
+<P>The test is true if the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is <SPAN class=br>greater than or equal to</SPAN> the value <SPAN 
+class=fs>n</SPAN> that you test for. It's a common mistake to assume the test is 
+for strict equality. <B>It is not</B>, it's a test for <SPAN class=br>greater 
+than or equal to</SPAN>. We'll remind ourselves of this potential pitfall 
+incessantly. Let's get some practice.</P></DIV>
+<DIV class=lm>
+<P>Test for greater-than-or-equal-to <SPAN class=fs>4</SPAN></P></DIV>
+<DIV class=bd>
+<P>We know that the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ in the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> is <SPAN 
+class=fs>4</SPAN>, so let's just try out the test now. We'll test for a value of 
+<SPAN class=fs>4</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command line <SPAN CLASS=qfx>if errorlevel 4 echo.it is 4</SPAN> and since the test is true, the <SPAN CLASS=bb>ECHO</SPAN> command is executed.','<NOBR>RCode C:&#92;CSW>if errorlevel 4 echo.it is 4 </NOBR><BR>it is 4<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>The test is true, the current level is <SPAN class=br>greater than or equal 
+to</SPAN> <SPAN class=fs>4</SPAN> (since it's equal to <NOBR><SPAN 
+class=fs>4</SPAN>)</NOBR>, so the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command was executed.</P></DIV>
+<DIV class=lm>
+<P>Test for greater-than-or-equal-to <SPAN class=fs>5</SPAN></P></DIV>
+<DIV class=bd>
+<P>Now test for a value of <SPAN class=fs>5</SPAN>. Remember the
+<SCRIPT>cn('IF')</SCRIPT>
+ test will ask if the current value is <SPAN 
+class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>5</SPAN>. We know it's 
+not, so this test will fail
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command line <SPAN CLASS=qfx>if errorlevel 5 echo.it is 5</SPAN> and since this time the test is false, the <SPAN CLASS=bb>ECHO</SPAN> command isn&#39;t executed.','<NOBR>RCode C:&#92;CSW>if errorlevel 5 echo.it is 5 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>This time, the test is false, the current level is <B>not</B> <SPAN 
+class=br>greater than or equal to</SPAN> <SPAN class=fs>5</SPAN> (since we know 
+it's still <NOBR><SPAN class=fs>4</SPAN>)</NOBR>, so the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command is <B>not</B> executed.</P></DIV>
+<DIV class=lm>
+<P>Test for a value below current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>The test is true whenever we test for a value less than the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ . Test for a value of <SPAN class=fs>3</SPAN> to confirm this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command line <SPAN CLASS=qfx>if errorlevel 3 echo.it is 3</SPAN> and since the test is true, the <SPAN CLASS=bb>ECHO</SPAN> command is executed (even though our message isn&#39;t correct).','<NOBR>RCode C:&#92;CSW>if errorlevel 3 echo.it is  3 </NOBR><BR>it is 3<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The test is for greater-than-or-equal-to</P></DIV>
+<DIV class=bd>
+<P>The test is true, the current level is <SPAN class=br>greater than or equal 
+to</SPAN> <SPAN class=fs>3</SPAN> (it's still <NOBR><SPAN 
+class=fs>4</SPAN>)</NOBR>, so the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command is executed. Of course, the message echoed is not true, but that's our 
+fault: we should have worded our command line to read something like:</P>
+<P><NOBR><SPAN class=cl>if errorlevel 3 echo.it is greater than or equal to 
+3</SPAN></NOBR></P>
+<P>Each of the other messages (in
+<SCRIPT>ex(7)</SCRIPT>
+ and <NOBR>
+<SCRIPT>ex(8)</SCRIPT>
+)</NOBR> should have been worded in this cautious way to be strictly true 
+whenever they are displayed.</P></DIV>
+<DIV class=lm>
+<P>The test is always for greater-than-or-equal-to</P></DIV>
+<DIV class=bd>
+<P>We can't emphasize it enough — whenever you use a test like: 
+<UL>
+  <LI><NOBR><SPAN class=qfs>if errorlevel 3</SPAN></NOBR> followed by your 
+  command</LI></UL>you must always remember to think of it as the full version: 
+<UL>
+  <LI><NOBR><SPAN class=qfs>if errorlevel </SPAN><SPAN class=qu><SPAN 
+  class=br>is greater than or equal to</SPAN></SPAN><SPAN class=qfs> 
+  3</SPAN></NOBR> followed by your command</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Asking a question:</SPAN><BR>A script with a menu</P></DIV>
+<DIV class=bd>
+<P><BR>Let's write a simple script with a menu – well, it's really just a single 
+question with lots of possible answers, but technically, it's a menu. Start 
+<B>Notepad</B> from the command line, as usual. We'll call the new script <SPAN 
+class=fs>MENU.BAT</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /min notepad MENU.BAT</SPAN> in the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN>. Click <SPAN CLASS=qu>Yes</SPAN> or press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> when <B>Notepad</B> asks if you want to create a new file.','<NOBR>RCode C:&#92;CSW>start /min notepad MENU.BAT</NOBR><BR>Return code (ERRORLEVEL):   0<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Ask a question and get an answer</P></DIV>
+<DIV class=bd>
+<P>We'll
+<SCRIPT>cn('ECHO')</SCRIPT>
+ a question, then use
+<SCRIPT>cn('choice')</SCRIPT>
+ to get an answer. Type the script. Make sure you press <SPAN 
+class=ky>&nbsp;Return&nbsp;</SPAN> at the end of the last line to terminate it 
+properly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Click the <B>Notepad</B> button on the Taskbar. Position its window in the bottom left of the screen. Type this script (make sure you don&#39;t miss any letters from the alphabet). Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> and leave <B>Notepad</B> open.','@ECHO OFF<BR>ECHO.Norma Baker later became Marilyn Monroe<BR>ECHO.What was the initial of her middle name? <BR>choice /c:abcdefghijklmnopqrstuvwxyz<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the script</P></DIV>
+<DIV class=bd>
+<P>No letters missed from the alphabet? <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> 
+pressed after the last line? And <SPAN class=qu>File</SPAN>, <SPAN 
+class=qu>Save</SPAN> clicked? Let's test what we have so far. Run it, and answer 
+<SPAN class=ky>&nbsp;K&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;K&nbsp;</SPAN> which is the 11th letter of the alphabet.','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?K </NOBR><BR>Return code (ERRORLEVEL):  11<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Add
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ test</P></DIV>
+<DIV class=bd>
+<P>Well, Windows got the return code right – <SPAN class=ky>&nbsp;K&nbsp;</SPAN> 
+definitely is the 11th letter of the alphabet even if it's not the right answer! 
+By the way, remember, it's only while we're in a Return-code shell we can 
+actually see the return codes for the answers displayed like this.</P></DIV>
+<DIV class=lm>
+<P>The right answer = <SPAN class=ky>&nbsp;J&nbsp;</SPAN> which would return 
+<SPAN class=fs>10</SPAN></P></DIV>
+<DIV class=bd>
+<P>We know that the answer is <SPAN class=ky>&nbsp;J&nbsp;</SPAN> (for Jean), 
+and that <SPAN class=ky>&nbsp;K&nbsp;</SPAN> is wrong. But our script doesn't. 
+We need to code some tests for whether or not an answer is right.</P></DIV>
+<DIV class=lm>
+<P>Designing efficient
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ tests</P></DIV>
+<DIV class=bd>
+<P>Let's try an assortment of answers, some always later in the alphabet than 
+the right answer, and others always earlier than the right answer. Then the best 
+way to design the right
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ tests will gradually become clearer.</P>
+<P>If we press <SPAN class=ky>&nbsp;L&nbsp;</SPAN>, which is also wrong, we'll 
+get code <SPAN class=fs>12</SPAN> returned. And the rest of the alphabet, all 
+the way to <SPAN class=ky>&nbsp;Z&nbsp;</SPAN> (which would give <NOBR><SPAN 
+class=fs>26</SPAN>)</NOBR>, would be wrong, too
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>menu</SPAN>, then reply <SPAN CLASS=ky>&nbsp;Z&nbsp;</SPAN> and confirm that code <SPAN CLASS=fs>26</SPAN> is returned.','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?Z </NOBR><BR>Return code (ERRORLEVEL):  26<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Ruling out the <SPAN class=fs>11</SPAN>th and all following letters</P></DIV>
+<DIV class=bd>
+<P>All the letters from <SPAN class=ky>&nbsp;K&nbsp;</SPAN> to <SPAN 
+class=ky>&nbsp;Z&nbsp;</SPAN> will return codes <SPAN class=br>greater than or 
+equal to</SPAN> <SPAN class=fs>11</SPAN>. We can handle them with one test: 
+<NOBR><SPAN class=qfs>IF ERRORLEVEL 11</SPAN></NOBR> since <SPAN 
+class=br>greater than or equal to</SPAN> <SPAN class=fs>11</SPAN> is exactly 
+what it is testing for.</P>
+<P>Let's use that test to display a message that the answer is wrong
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the test (press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> at the end since it&#39;s the last line), then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>choice /c:abcdefghijklmnopqrstuvwxyz </SPAN><BR>IF ERRORLEVEL 11 ECHO.Sorry, that&#39;s wrong! <BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script again</P></DIV>
+<DIV class=bd>
+<P>You remembered the <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> at the end, and 
+to click <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>? Let's check the 
+script. Run it and answer <SPAN class=ky>&nbsp;K&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>menu</SPAN>, then reply <SPAN CLASS=ky>&nbsp;K&nbsp;</SPAN> and now the script (correctly) tells us that we are wrong.','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?K </NOBR><BR>Return code (ERRORLEVEL):  11<BR>Sorry, that&#39;s wrong!<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with <SPAN class=ky>&nbsp;Z&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Check that the script knows <SPAN class=ky>&nbsp;Z&nbsp;</SPAN> is wrong now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>menu</SPAN>, then reply <SPAN CLASS=ky>&nbsp;Z&nbsp;</SPAN> and, once again, we&#39;re correctly told it&#39;s wrong.','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?Z </NOBR><BR>Return code (ERRORLEVEL):  26<BR>Sorry, that&#39;s wrong!<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>More wrong answers</P></DIV>
+<DIV class=bd>
+<P>Run the script again, and this time answer <SPAN 
+class=ky>&nbsp;I&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;I&nbsp;</SPAN> (since the return code is less than <SPAN CLASS=fs>11</SPAN>, it doesn&#39;t trigger our present test).','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?I </NOBR><BR>Return code (ERRORLEVEL):   9<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Codes for <SPAN class=ky>&nbsp;I&nbsp;</SPAN> to <SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN> are below the right answer</P></DIV>
+<DIV class=bd>
+<P>If we press <SPAN class=ky>&nbsp;H&nbsp;</SPAN>, which is also wrong, we'll 
+get code <SPAN class=fs>8</SPAN> returned. And the rest of the alphabet, back to 
+<SPAN class=ky>&nbsp;A&nbsp;</SPAN> (which would give <NOBR><SPAN 
+class=fs>1</SPAN>)</NOBR>, would be wrong, too
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> to get code <SPAN CLASS=fs>1</SPAN>. We need a test to detect that all these codes are too low to be the correct answer.','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?A </NOBR><BR>Return code (ERRORLEVEL):   1<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <NOBR><SPAN class=qfs>IF NOT</SPAN></NOBR> test</P></DIV>
+<DIV class=bd>
+<P>Replies from <NOBR><SPAN class=ky>&nbsp;A&nbsp;</SPAN> = <SPAN 
+class=fs>1</SPAN></NOBR> to <NOBR><SPAN class=ky>&nbsp;I&nbsp;</SPAN> = <SPAN 
+class=fs>9</SPAN></NOBR> give codes that are <SPAN class=fs>NOT</SPAN> <SPAN 
+class=br>greater than or equal to</SPAN> <SPAN class=fs>10</SPAN>. We can handle 
+them with the other version of the
+<SCRIPT>cn('IF')</SCRIPT>
+ test – <NOBR><SPAN class=qfs>IF NOT</SPAN></NOBR>.</P>
+<P><NOBR><SPAN class=qfs>IF NOT ERRORLEVEL 10</SPAN></NOBR> is true for all 
+return code values strictly less than <SPAN class=fs>10</SPAN>. Let's add that 
+test. Again, we'll use it to say the answer is wrong
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the test (press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> at the end), then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>choice /c:abcdefghijklmnopqrstuvwxyz<BR>IF ERRORLEVEL 11 ECHO.Sorry, that&#39;s wrong!</SPAN><BR>IF NOT ERRORLEVEL 10 ECHO.Sorry, that&#39;s wrong! <BR> ');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>Remember: –&nbsp;&nbsp;</SPAN></TD>
+    <TD><NOBR><SPAN class=tab><SPAN class=qfs>IF NOT ERRORLEVEL 
+      10</SPAN></SPAN></NOBR></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>means: –</SPAN></TD>
+    <TD><SPAN class=tab>if the code returned is <SPAN class=fs>NOT</SPAN> 
+      <SPAN class=br>greater than or equal to</SPAN> <SPAN 
+      class=fs>10</SPAN></SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm>
+<P>Use a wrong answer that's too low</P></DIV>
+<DIV class=bd>
+<P>We've clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>, so 
+check the script again. This time we'll reply with a letter that we know is too 
+low in the alphabetical reply list. Try <SPAN class=ky>&nbsp;D&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;D&nbsp;</SPAN> and we&#39;re (correctly) told we&#39;re wrong &#8211; which is right!','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?D </NOBR><BR>Return code (ERRORLEVEL):   4<BR>Sorry, that&#39;s wrong!<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>What if we're right?</P></DIV>
+<DIV class=bd>
+<P>Our script has nothing to deal with a right answer yet. Try it out
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;J&nbsp;</SPAN> (this reply returns <SPAN CLASS=fs>10</SPAN> which doesn&#39;t trigger either of our tests).','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?J </NOBR><BR>Return code (ERRORLEVEL):  10<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>We ruled out answers from <SPAN class=ky>&nbsp;K&nbsp;</SPAN> to <SPAN 
+class=ky>&nbsp;Z&nbsp;</SPAN> with one
+<SCRIPT>cn('IF')</SCRIPT>
+ test for <SPAN class=fs>11</SPAN>. And we ruled out answers from <SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN> to <SPAN class=ky>&nbsp;I&nbsp;</SPAN> with one 
+<NOBR><SPAN class=fs>IF NOT</SPAN></NOBR> test for <SPAN 
+class=fs>10</SPAN>.</P></DIV>
+<DIV class=lm>
+<P>No exact equality test</P></DIV>
+<DIV class=bd>
+<P>Unfortunately, there isn't an <NOBR><SPAN class=fs>IF exactly 
+equal</SPAN></NOBR> test – which would be useful here. However, we can combine 
+two tests in one line.</P>
+<P>If we start with a test <NOBR><SPAN class=fs>IF NOT ERRORLEVEL 
+11</SPAN></NOBR>, that test is true for all the reply letters <SPAN 
+class=fs>NOT</SPAN> <SPAN class=br>greater than or equal to</SPAN> the 11th – in 
+other words, those from <SPAN class=ky>&nbsp;A&nbsp;</SPAN> to <SPAN 
+class=ky>&nbsp;J&nbsp;</SPAN>. </P></DIV>
+<DIV class=lm>
+<P>Combining two tests</P></DIV>
+<DIV class=bd>
+<P>Any command we add on to that is executed <B>only if</B> the reply is <SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN> to <SPAN class=ky>&nbsp;J&nbsp;</SPAN>. If we add 
+a test that's only true for <SPAN class=ky>&nbsp;J&nbsp;</SPAN> to <SPAN 
+class=ky>&nbsp;Z&nbsp;</SPAN>, then only the reply <SPAN 
+class=ky>&nbsp;J&nbsp;</SPAN> would satisfy both tests. Since <SPAN 
+class=ky>&nbsp;J&nbsp;</SPAN> is the <SPAN class=fs>10</SPAN>th letter, we need 
+to add <NOBR><SPAN class=fs>IF ERRORLEVEL 10</SPAN></NOBR>:</P>
+<P><NOBR><SPAN class=cl>IF NOT ERRORLEVEL 11 IF ERRORLEVEL 
+10&nbsp;</SPAN></NOBR> true <B>only</B> for
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ =<SPAN class=fs>10</SPAN></P>
+<P>This is what we need. Add that combination, with a suitable message
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the combination that tests for an exact return code of <SPAN CLASS=fs>10</SPAN> (press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> at the end). Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>choice /c:abcdefghijklmnopqrstuvwxyz<BR>IF ERRORLEVEL 11 ECHO.Sorry, that&#39;s wrong!<BR>IF NOT ERRORLEVEL 10 ECHO.Sorry, that&#39;s wrong!</SPAN><BR>IF NOT ERRORLEVEL 11 IF ERRORLEVEL 10 ECHO.Yes, J for Jean <BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>It would work the other way round, too</P></DIV>
+<DIV class=bd>
+<P>The combination also works the other way around, since only <SPAN 
+class=ky>&nbsp;J&nbsp;</SPAN>=<SPAN class=fs>10</SPAN> passes both tests:</P>
+<P><NOBR><SPAN class=cl>IF ERRORLEVEL 10 IF NOT ERRORLEVEL 
+11&nbsp;</SPAN></NOBR> true <B>only</B> for
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ =<SPAN class=fs>10</SPAN></P></DIV>
+<DIV class=lm>
+<P>Test the script</P></DIV>
+<DIV class=bd>
+<P>You remembered to press <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> at the end 
+of the line, and to click <SPAN class=qu>File</SPAN>, <SPAN 
+class=qu>Save</SPAN>? Run the script again, this time answer <SPAN 
+class=ky>&nbsp;J&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;J&nbsp;</SPAN> and the script now tells us we&#39;re correct.','RCode C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR><NOBR>[A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z]?J </NOBR><BR>Return code (ERRORLEVEL):  10<BR>Yes, J for Jean<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Suppress option list</P></DIV>
+<DIV class=bd>
+<P>We'll add one final touch. With this use of
+<SCRIPT>cn('choice')</SCRIPT>
+ , we don't really need to see the whole alphabet listed on screen each time. 
+You can suppress the display of the
+<SCRIPT>cn('choice')</SCRIPT>
+ reply list with the <SPAN class=fs>/n</SPAN> switch. Add this to the
+<SCRIPT>cn('choice')</SCRIPT>
+ command line in the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the <SPAN CLASS=fx>/<SPAN CLASS=or>n</SPAN></SPAN> switch to <SPAN CLASS=br>n</SPAN>ot show the reply list, and click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>ECHO.What was the initial of her middle name?</SPAN><BR><SPAN CLASS=dtn>choice /c:abcdefghijklmnopqrstuvwxyz</SPAN> /n<BR><SPAN CLASS=dtn>IF ERRORLEVEL 11 ECHO.Sorry, that&#39;s wrong!</SPAN><BR>');</SCRIPT>
+
+<DIV class=lm>
+<P>Close Return-code shell</P></DIV>
+<DIV class=bd>
+<P>Let's exit the Return-code shell before we test the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN>. The <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title bar changes back to <NOBR><SPAN CLASS=tle>&nbsp;BatchWindow&nbsp;</SPAN></NOBR> to show that the Return-code shell has closed, and the parent prompt returns.','RCode C:&#92;CSW>exit<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Try a letter that's too low</P></DIV>
+<DIV class=bd>
+<P>We clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> so run 
+<SPAN class=fs>MENU.BAT</SPAN> again, and answer <SPAN 
+class=ky>&nbsp;I&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;I&nbsp;</SPAN> which is too low and is handled by our <NOBR><SPAN CLASS=fs>IF NOT</SPAN></NOBR> test.','C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR>I<BR>Sorry, that&#39;s wrong!<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Try one that's too high</P></DIV>
+<DIV class=bd>
+<P>Now try replying <SPAN class=ky>&nbsp;K&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;K&nbsp;</SPAN> which is handled by our straightforward <SPAN CLASS=fs>IF</SPAN> test.','C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR>K<BR>Sorry, that&#39;s wrong!<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Get the answer right</P></DIV>
+<DIV class=bd>
+<P>And finally – get it right!
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>menu</SPAN></NOBR>, then reply <SPAN CLASS=ky>&nbsp;J&nbsp;</SPAN> and the combination <SPAN CLASS=fs>IF</SPAN> test confirms we are finally correct!','C:&#92;CSW>menu<BR>Norma Baker later became Marilyn Monroe<BR>What was the initial of her middle name?<BR>J<BR>Yes, J for Jean<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Now, along with the young man in the 22nd row&nbsp;
+<SCRIPT>ibx('ib0')</SCRIPT>
+, we'll say Goodbye Norma Jean.</P></DIV><SPAN class=ib id=ib0>In <B>Candle in 
+the Wind</B> (Elton John on Phonogram CD 846949-2), the lyricist Bernie Taupin 
+wrote (of Marilyn Monroe):<BR>"Goodbye Norma Jean,<BR>Though I never knew you at 
+all.<BR>You had the grace to hold yourself,<BR>While those around you 
+crawled.<BR>Goodbye Norma Jean,<BR>From the young man in the 22nd row..."</SPAN> 
+
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","In the command <NOBR><SPAN CLASS=cl>choice /c:abcde</SPAN></NOBR> what <SPAN CLASS=fs>ERRORLEVEL</SPAN> does a reply <SPAN CLASS=ky>&nbsp;C&nbsp;</SPAN> return?","<SPAN CLASS=bb>ERRORLEVEL</SPAN> <SPAN CLASS=bp>3</SPAN>, since it&#39;s the <SPAN CLASS=bp>third</SPAN> in order in the list <SPAN CLASS=fx>/c:abcde</SPAN> specified.","If you reply <SPAN CLASS=ky>&nbsp;C&nbsp;</SPAN> to <NOBR><SPAN CLASS=cl>choice /c:abcde</SPAN></NOBR> is the test <NOBR><SPAN CLASS=cl>IF ERRORLEVEL 2</SPAN></NOBR> true?","Yes, because <SPAN CLASS=ky>&nbsp;C&nbsp;</SPAN> returns <SPAN CLASS=bp>3</SPAN> and the <SPAN CLASS=bb>IF</SPAN> test for <SPAN CLASS=bp>2</SPAN> is true for any <SPAN CLASS=bb>ERRORLEVEL</SPAN> that is <SPAN CLASS=br>greater-than-or-equal-to</SPAN> <SPAN CLASS=bp>2</SPAN>.","How could you write an <SPAN CLASS=fs>IF</SPAN> test that&#39;s true for <NOBR><SPAN CLASS=fs>ERRORLEVEL 0</SPAN></NOBR> but not higher values?","<NOBR><SPAN CLASS=cl>IF NOT ERRORLEVEL 1</SPAN></NOBR> &#8211; a test for <SPAN CLASS=bp>1</SPAN> is true for all values <SPAN CLASS=br>greater-than-or-equal-to</SPAN> <SPAN CLASS=bp>1</SPAN>, so the negation is true only for <SPAN CLASS=bp>0</SPAN>.","How could you write an <SPAN CLASS=fs>IF</SPAN> test that&#39;s true for <NOBR><SPAN CLASS=fs>ERRORLEVEL 6</SPAN></NOBR> but not for higher or lower values (hint: you need two <SPAN CLASS=fs>IF</SPAN>s)?","Use <NOBR><SPAN CLASS=cl>IF ERRORLEVEL 6</SPAN></NOBR> (true for <SPAN CLASS=bp>6</SPAN> and more), with, on the <SPAN CLASS=br>same line</SPAN>, the test <NOBR><SPAN CLASS=cl>IF NOT ERRORLEVEL 7</SPAN></NOBR> (true for strictly less than <SPAN CLASS=bp>7</SPAN>). This combined test (and either part may come first) is true only for <SPAN CLASS=bp>6</SPAN>.","By default, <SPAN CLASS=fs>choice</SPAN> displays its reply list. What switch ensures it&#39;s <SPAN CLASS=fs>n</SPAN>ot displayed?","<SPAN CLASS=cl>/n</SPAN> as in <NOBR><SPAN CLASS=cl>choice /c:qny /n</SPAN></NOBR> &#8211; if you use <SPAN CLASS=fx>/n</SPAN>, you&#39;ll also need a separate message showing what replies are valid.","In the command <NOBR><SPAN CLASS=cl>choice /c:abcde</SPAN></NOBR> what <SPAN CLASS=fs>ERRORLEVEL</SPAN> would the reply <SPAN CLASS=ky>&nbsp;F&nbsp;</SPAN> return?","None; <SPAN CLASS=bb>choice</SPAN> beeps, and waits for one of the replies specified in the list: <SPAN CLASS=fx>abcde</SPAN>","Who wrote the <B>Candle in the Wind</B> lyric?<BR>&nbsp;","Bernie Taupin (he wrote most of Elton John&#39;s lyrics) &#8211; just checking whether or not you read that last <B>InfoBox</B> above!");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>In this Lesson we have learnt how to: 
+<UL>
+  <LI>Offer choices to the script user with the
+  <SCRIPT>cn('choice')</SCRIPT>
+   command 
+  <LI>Use a Return-code shell to see the reply codes generated by
+  <SCRIPT>cn('choice')</SCRIPT>
+   
+  <LI>Define the reply list in
+  <SCRIPT>cn('choice')</SCRIPT>
+   with the <SPAN class=fs>/c:</SPAN> switch 
+  <LI>Set an
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   of <SPAN class=fs>255</SPAN> with an invalid command syntax: <SPAN 
+  class=fs>choice /x</SPAN> 
+  <LI>Define a case-sensitive reply list in
+  <SCRIPT>cn('choice')</SCRIPT>
+   with the <SPAN class=fs>/s</SPAN> switch 
+  <LI>Test for
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   values with the <SPAN class=br>greater-than-or-equal-to</SPAN> test 
+  <LI>Use
+  <SCRIPT>cn('IF')</SCRIPT>
+   <NOBR><SPAN class=fs>NOT</SPAN></NOBR>
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   to test for return codes <SPAN class=br>less-than</SPAN> a given value 
+  <LI>Combine two
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   tests in one line to test for <SPAN class=br>exact-equality</SPAN> 
+  <LI>Write a Batch script to ask a question and act on the answer 
+supplied</LI></UL>The /? help for
+<SCRIPT>cn('external')</SCRIPT>
+ commands doesn't list the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s they return, but (when you're on-line) you can get our list (click<IMG 
+src="Lesson 3 - Using choice and ERRORLEVELs_files/bca.gif">
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ and use the link).
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>The <A onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson3">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw040.htm">next&nbsp;Lesson</A>, where 
+we'll write another script to work with
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s. See you then.</P></DIV></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

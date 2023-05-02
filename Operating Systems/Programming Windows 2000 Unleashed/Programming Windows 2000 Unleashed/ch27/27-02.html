@@ -1,0 +1,194 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=909-913//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="27-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>ADSI is an abstraction layer that enables any Automation-compatible client to have access to directory services. The focus of this chapter is on using ADSI to access Active Directory. However, ADSI can be used to access any directory that&#146;s compatible with Novell NDS or LDAP 2.0. Examples of directory services that can be accessed through ADSI include Novell&#146;s NDS, Netscape&#146;s Directory Server, and SLAPD from the University of Michigan.
+</P>
+<p>An ADSI client communicates with the ADSI provider, which acts as a proxy for the directory service. The client usually does not need to access the directory service directly.</P>
+<p>ADSI was originally released as an add-on to Windows NT 4.0 and could be used to manage the Windows NT 4.0 directory service (NTDS), Internet Information Server, and Novell NDS. Most interfaces exposed by ADSI are Automation-compatible and are suitable for use with any programming language that supports Automation, such as Visual Basic and VBScript, in addition to C and C<small>&#43;&#43;</SMALL> clients. If you are using a language that supports vtable binding, such as C or C<small>&#43;&#43;</SMALL>, you can also take advantage of ADSI&#146;s more efficient non-Automation interfaces.</P>
+<p>ADSI also includes an OLE DB provider so that you can use OLE DB and ADO to manipulate directory service information. Although using OLE DB to manage Active Directory is not discussed in this chapter, sample programs are included in the Platform SDK that demonstrate this usage.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Using ADSI in Visual Basic and Visual C++</FONT></H4>
+<p>Before we dive into the examples in this chapter, here are a few tips for working with ADSI in Visual Basic and Visual C<small>&#43;&#43;</SMALL>.</P>
+<p>When using ADSI in Visual Basic, you must add a reference to the Active DS type library.</P>
+<p>If you&#146;re using Visual C<small>&#43;&#43;</SMALL> to create an ADSI client, you must perform the following tasks:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Include the <small>activeds.h</SMALL> header file.
+<dd><b>&#149;</B>&nbsp;&nbsp;Link to the <small>activeds.lib</SMALL> and <small>adsiid.lib</SMALL> libraries.
+<dd><b>&#149;</B>&nbsp;&nbsp;Use Unicode strings when calling ADSI functions. The examples in this chapter are all compiled using Unicode.
+</DL>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">ADSI Binding Strings</FONT></H4>
+<p>The first step in working with directory objects using ADSI is to bind to a directory object. As part of the binding process, ADSI and the directory will locate the directory object that you&#146;re interested in, authenticate your security credentials, and create an ADSI COM object to manage your interaction with the directory object.
+</P>
+<p>The act of binding requires you to specify at least three things if you&#146;re using C or C<small>&#43;&#43;</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The bind string that identifies the object you&#146;re interested in
+<dd><b>&#149;</B>&nbsp;&nbsp;The COM interface ID that identifies the COM interface that you&#146;ll use initially to interact with the directory
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a COM interface pointer that will contain your requested interface when the binding function returns
+</DL>
+<p>These three items are the <i>minimum</I> requirement for binding to a directory object using ADSI. You may also specify a user name and password that will be used to generate credentials for the bind operation.</P>
+<p>The bind string, also known as the ADsPath, has different formats for different ADSI directory providers. Here are the four providers that ship with Windows 2000:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Novell NetWare
+<dd><b>&#149;</B>&nbsp;&nbsp;Novell NDS
+<dd><b>&#149;</B>&nbsp;&nbsp;Windows NT
+<dd><b>&#149;</B>&nbsp;&nbsp;LDAP
+</DL>
+<p>Only the LDAP provider is used with Active Directory, and this is the provider used for almost all of this chapter&#146;s examples. Some examples also use <small>ADs:</SMALL>, which is the top-level ADSI provider namespace. For information about other ADSI providers, consult the Platform SDK documentation.</P>
+<p>An LDAP ADsPath always begins like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The provider name is case sensitive and must include a colon, which is considered part of the provider&#146;s name. Immediately following the provider name, the ADsPath may contain a server name, IP address, or domain name. Here are examples:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://ace.codevtech.com
+LDAP://codevtech.com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The ADsPath may also specify a port number if a port other than the well-known LDAP port (389) is used:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://ace.codevtech.com:2555
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In order to bind to a specific object in the directory, you must specify a directory object using a distinguished name:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://ace.codevtech.com/CN=Jen Smith,CN=Users,DC=codevtech,DC=com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If no server or domain name is specified, the Windows 2000 locator service will be used to find the best match for an Active Directory domain controller.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">ADSI Helper Functions</FONT></H4>
+<p>ADSI includes a set of helper functions that simplify tasks commonly performed in C and C<small>&#43;&#43;</SMALL>, such as creating an enumerator object and binding to a specific location in the directory. Here are some of the most commonly used helper functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADsGetObject</SMALL>. Binds to an ADSI object using the thread&#146;s current security credentials.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADsOpenObject</SMALL>. Like <small>ADsGetObject</SMALL>, this helper function binds to an ADSI object, except that it accepts specific user credentials to be used for the operation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADsGetLastError</SMALL>. Returns the last error code for the calling thread, including a text description or the error.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADsBuildEnumerator</SMALL>. Builds an enumerator object for an ADSI container passed as a parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADsEnumerateNext</SMALL>. Returns one or more elements from an enumerated collection.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADsFreeEnumerator</SMALL>. Releases resources previously allocated in a call to <small>ADsBuildEnumerator</SMALL>.
+</DL>
+<p><font size="+1"><b>Using ADsGetObject and ADsOpenObject</B></FONT></P>
+<p><small>ADsGetObject</SMALL> and <small>ADsOpenObject</SMALL> are used to bind to an element in the directory. Both functions locate the desired element and return an interface pointer on an ADSI object used to manage it. The <small>AdsOpenObject</SMALL> function takes a user name and password that are used to establish credentials for accessing the object.</P>
+<p>The <small>ADsGetObject</SMALL> function is the simpler of the two functions:</P>
+<!-- CODE SNIP //-->
+<pre>
+IADsDomain* pDomain = NULL;
+HRESULT hr = ADsGetObject(L&#147;WinNT://codevtech.com&#148;,
+                          IID_IADsDomain,
+                          (void**)&amppDomain);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ADsGetObject</SMALL> function has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode string that contains the directory path to the object. Some examples of paths are provided later in this section.
+<dd><b>&#149;</B>&nbsp;&nbsp;The interface ID that specifies the COM interface to be returned.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a COM interface pointer that will contain the requested interface pointer if the function succeeds.
+</DL>
+<p>The <small>ADsOpenObject</SMALL> function is similar to <small>ADsGetObject</SMALL>, except that it allows a user name and password to be passed as parameters:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = ADsOpenObject(L&#147;WinNT://codevtech.com&#148;,
+                           L&#147;Administrator&#148;,
+                           L&#147;rene&#148;,
+                           ADS_SECURE_AUTHENTICATION,
+                           IID_IADsContainer,
+                           (void**)&amppUsersContainer);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="27-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

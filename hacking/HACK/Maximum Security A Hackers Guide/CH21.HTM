@@ -1,0 +1,1004 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 21 -- Plan 9 from Bell Labs</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch20.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch20/ch20.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch22.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch22/ch22.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">21</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Plan 9 from Bell Labs</FONT></H1>
+</CENTER>
+<P>Almost thirty years ago, the team at Bell Labs (now Lucent Technologies) changed
+the world by developing what would later become the most popular networked operating
+system in history. From then until now, UNIX has ruled the Internet. Even if that
+were the only contribution ever made by Bell Labs personnel, it would have been sufficient.
+They would been have been held in high regard as having achieved something truly
+useful and important. As any programmer will tell you, however, the contributions
+from Bell Labs kept coming.</P>
+<P>In the early 1990s, the folks at Bell Labs were still busy. This time, however,
+they had more than 25 years of experience under their belts. With that experience,
+they challenged themselves to create the <I>ultimate</I> networked operating system.
+Did they succeed? You bet. It is called <I>Plan 9 from Bell Labs</I>.
+<H2><FONT COLOR="#000077"><B>The Basics</B></FONT></H2>
+<P>The team at Bell Labs (which includes such heavy-duty names as Ken Thompson and
+Dennis Ritchie) were reportedly dissatisfied with the then-current trends in computer
+technology. They realized that hardware considerations made networking a difficult
+proposition, one that didn't always work out in terms of cost effectiveness or performance.
+Hardware dependencies and proprietary design make networking more of a forced environment
+than a truly fluid, easy one. By <I>forced environment</I>, I mean that dozens of
+often disparate and incompatible protocols, drivers, and software are patched together
+to provide a shaky and sometimes unreliable integration of networks.</P>
+<P>Alas, although the Internet may sometimes be referred to as a miracle of distributed
+computing, it isn't. The current system works only because we have forced the TCP/IP
+stack upon a handful of architectures (many that were never designed to run these
+protocols). Thus, the Internet has the <I>appearance</I> of being an amalgamated,
+united network. On closer examination, however, it is clear that the Internet is
+exploiting only a very meager portion of the networking power at its disposal.</P>
+<P>Consider this: FTP is one of the most commonly used techniques to move information
+from one place to another. When a user transfers a file via FTP, he is a <I>remote</I>
+user, accessing some resource on a server in the void. The word <I>remote</I> is
+the key feature here. It denotes a condition wherein the user is isolated. To access
+the resources at the other end, the user must perform several actions (these may
+include initiating the FTP session, unzipping the file, placing it in the proper
+directory, and so on). FTP therefore places the user at arm's length. The use of
+the resource does not occur in a fluid environment.</P>
+<P>Similarly, and to an even greater extent, HTTP isolates the user. True, it appears
+to the user as though he is working interactively with a Web site, but he isn't.
+In fact, HTTP may isolate the user more than any other network protocol. For example,
+you are not logged in as you are with Telnet or FTP. In fact, you are connected only
+for the brief periods--seconds, actually--necessary for your client to relate which
+resources it needs. This is the farthest thing from a traditional shared network
+environment.</P>
+<P>In contrast, suppose that instead of retrieving a file and placing it in your
+physical location, you simply want to use the file momentarily. This is sometimes
+achieved through file sharing in proprietary network environments (environments where
+a directory or a file can be attached to the local machine). In such cases, the resource
+appears and behaves as though it is on the local machine. This technique is more
+akin to true, networked computing. It is a one-step process.</P>
+<P>Now imagine an operating system that was designed to interface in this manner
+with many different types of systems and hardware, an operating system that could
+provide this real networking to hundreds (or even thousands) of workstations, irrespective
+of hardware constraints. Imagine an operating system that makes FTP directories of
+remote machines appear as local directories (regardless of where the target server
+may be located). If you can imagine this, you are well on your way to understanding
+the basic characteristics of Plan 9.
+<H3><FONT COLOR="#000077"><B>What Plan 9 Is Not</B></FONT></H3>
+<P>Plan 9 is not UNIX, or any variant thereof. But if you install the demo distribution,
+you may initially be confused on this point. At first glance, it looks a lot like
+UNIX (particularly when you make a directory listing). Make no mistake, though. Plan
+9 is an entirely new operating system. As explained in the Plan 9 from AT&amp;T Bell
+Laboratories FAQ:
+
+<DL>
+	<DD>Plan 9 is itself an operating system; it doesn't run as an application under
+	another system. It was written from the ground up and doesn't include other people's
+	code. Although the OS's interface to applications is strongly influenced by the approach
+	of UNIX, it's not a replacement for UNIX; it is a new design.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Visit the Plan 9 FAQ <A HREF="javascript:if(confirm('http://www.ecf.toronto.edu/plan9/plan9faq.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ecf.toronto.edu/plan9/plan9faq.html'" tppabs="http://www.ecf.toronto.edu/plan9/plan9faq.html"><TT>http://www.ecf.toronto.edu/plan9/plan9faq.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Despite the fact that Plan 9 is an entirely different operating system, it does
+retain some of the look and feel of UNIX. There is still a shell (called <TT>rc</TT>)
+and that shell appears much like the popular shells available in most distributions
+of UNIX. Files, for example, can still be displayed in a UNIX-like long format, along
+with their attending permissions. Moreover, one can still differentiate between files
+and directories using the standard <TT>-F</TT> switch (in fact, many of the stock
+UNIX commands are available and most of these behave pretty much as they do on a
+UNIX box). However, the resemblance to UNIX is largely superficial. The underlying
+operating system works very differently.</P>
+<P>One of the chief differences is the way that Plan 9 treats objects (objects in
+this case being directories, files, processes, and so forth). Under Plan 9, all objects
+are treated as files. This technique has been implemented in UNIX as well (for example,
+UNIX treats many devices as files), but not to the extent that it has in Plan 9.
+<H3><FONT COLOR="#000077"><B>Machines That Run Plan 9</B></FONT></H3>
+<P>The reported architectures include
+
+<UL>
+	<LI>MIPS
+	<LI>SPARC
+	<LI>68020 (NeXT)
+	<LI>IBM compatibles
+</UL>
+
+<P>It is reported in the Plan 9 from AT&amp;T Bell Laboratories FAQ that various
+ports are also underway for the following systems:
+
+<UL>
+	<LI>SGI Indy
+	<LI>DEC Alpha
+	<LI>PowerPC
+	<LI>DECstation 2100 and 3100
+</UL>
+
+<P>My experience with installing the Plan 9 distribution has been on the IBM compatible
+platform. As you will see, I went through several generations of hardware before
+landing on the right combination.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>If you intend to install
+	Plan 9 as a hacking project, you would do well to visit <A HREF="javascript:if(confirm('http://www.ecf.toronto.edu/plan9/clone.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ecf.toronto.edu/plan9/clone.html'" tppabs="http://www.ecf.toronto.edu/plan9/clone.html"><TT>http://www.ecf.toronto.edu/plan9/clone.html</TT></A>.
+	This page describes the hardware that was used at Bell Labs, and will provide you
+	with a nice guideline of hardware that is known to work with Plan 9. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Some Concepts</B></FONT></H2>
+<P>Plan 9 was designed from the beginning as a networked operating system. As such,
+the concepts behind it relate more to networking than to the needs of the individual
+user. Its defining characteristics are the ways in which it handles networking. As
+noted in the press release for the product:
+
+<DL>
+	<DD>The Plan 9 system is based on the concept of distributed computing in a networked,
+	client-server environment. The set of resources available to applications is transparently
+	made accessible everywhere in the distributed system, so that it is irrelevant where
+	the applications are actually running.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find the press release
+	from which the preceding paragraph is excerpted at <A HREF="javascript:if(confirm('http://www.lucent.com/press/0795/950718.bla.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.lucent.com/press/0795/950718.bla.html'" tppabs="http://www.lucent.com/press/0795/950718.bla.html"><TT>http://www.lucent.com/press/0795/950718.bla.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>To understand how the Plan 9 system differs from other networked operating systems,
+examine Figure 21.1.</P>
+<P><A NAME="01"></A><A HREF="01-10.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch21/01.htm"><B>FIGURE 21.1.</B></A> <BR>
+<I>The typical network configuration (without Plan 9).</I></P>
+<P>The typical network configuration (the one most often seen in offices) uses a
+file server and a series of workstations. Each of the workstations is outfitted with
+a host of hardware and software (hard disk drives, adequate memory, a windowing system,
+and so forth) that provides it with the necessary power and networking to connect.
+System administrators and other, administrative personnel will recognize this setup
+to be an expensive one.</P>
+<P>Because the computer industry has enjoyed tremendous growth (particularly in the
+last few years), network designs like the one shown in Figure 21.1 are common. Nodes
+on such networks are usually Pentiums or PowerPCs. You may own such a network yourself.
+If you do, consider this: Is it necessary that you have such a powerful machine at
+each node? Or, could it be that this type of configuration is a profligate waste
+of enormous CPU power? For example, how much CPU power does the accounting department
+actually require? It depends on what operating system you are running. If you are
+running DOS-based applications over NetWare, the accounting department doesn't need
+much power at all. However, if you are running Windows 95, it will need speed and
+memory.</P>
+<P>That speed and memory, by the way, is being eaten purely by features that make
+your platform prettier and more user friendly. In practice, the average accounting
+task done in a DOS-based application would be barely noticeable to a Pentium processor.
+Contrast that with accounting done in Microsoft Excel on the Windows 95 platform.
+In reality, processor-intensive tasks requiring real power might include tasks like
+compiling large programs in C++. These tasks, even in a DOS environment, can tax
+a processor.</P>
+<P>So the first point is this: Modern network design wastes processor power by dispersing
+it, often where it is not most needed. But there are other key disadvantages to this
+typical network implementation. One is that files are strewn throughout the network,
+many of them deposited on this or that hard disk drive. How many times have you encountered
+the following situation:
+
+<DL>
+	<DD><B>1. </B>A machine along the network fails.<BR>
+	<BR>
+	<B>2. </B>The machine that failed has a file vital to office operations.<BR>
+	<BR>
+	<B>3. </B>You recover that file (usually by depositing the hard disk drive from the
+	failed machine into another, operable one, or by performing a restore).
+</DL>
+
+<P>If you have never encountered this situation, consider yourself lucky. I have
+seen it happen many times. Also, because users often store files locally (on their
+own workstation), employees must file share and therefore, their machines must always
+trust each other.</P>
+<P>Plan 9 takes a totally different approach. In Plan 9, the jobs of processing and
+file storage and separated, as are the machines that perform these tasks (see Figure
+21.2).</P>
+<P><A NAME="02"></A><A HREF="02-9.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch21/02.htm"><B>FIGURE 21.2.</B></A> <BR>
+<I>The Plan 9 networking concept.</I></P>
+<P>Note the CPU server in Figure 21.2. This would typically be a very powerful machine
+(probably multiprocessor) that would provide CPU services to remote workstations
+or terminals. This is complemented by a file server.</P>
+<P>This system has some important advantages. First, there is centralized control
+of files. This has obvious security advantages. Centralized file control also allows
+easier management of files. Moreover, it provides an environment in which permissions
+may be easily viewed and alteration of files may be more readily detected.</P>
+<P>Also (though this has little to do with security), as mentioned in the Plan 9
+documentation, this centralized file management is of benefit to a programming team.
+Project management is more easily accomplished and the system offers a sense of community
+for the programming team.</P>
+<P>Moreover, the Plan 9 system performs without a root operator. Users must be authenticated
+to gain access to privileged files or processes, and this authentication has been
+described as similar to authentication using MIT's Kerberos. Kerberos is a method
+of authenticating network connections and requests. To perform this authentication,
+Kerberos examines secret, ciphered keys belonging to the user. Passwords in Plan
+9 are therefore never passed across the network. This greatly enhances the security
+of the operating system. Moreover, user programs are reportedly never run as processes
+on the file server, and processes that are run belong to the individual user. Root
+does not exist.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To examine the internal
+	workings of Kerberos (and the procedural execution of authentication), visit <A HREF="javascript:if(confirm('http://www.pdc.kth.se/kth-krb/doc/kth-krb_2.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pdc.kth.se/kth-krb/doc/kth-krb_2.html'" tppabs="http://www.pdc.kth.se/kth-krb/doc/kth-krb_2.html"><TT>http://www.pdc.kth.se/kth-krb/doc/kth-krb_2.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Discarding the concept of root was an excellent idea. The majority of serious
+cracking techniques rely on exploiting programming weaknesses in processes that run
+as root. In Plan 9, there is no root, and therefore, no such processes.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>To my knowledge, there has not yet
+	been extensive focus on Plan 9 security outside the confines of Lucent Technologies
+	(previously AT&amp;T). Therefore, it is not known whether there are security flaws
+	inherent in Plan 9's design. The only thing that qualifies as a known bug at this
+	point (those who use it have thus far been pretty quiet) is that users can sometimes
+	log in as user <TT>none</TT> from a remote connection. I suspect that in the future,
+	as Plan 9 becomes more well known, various attacks will be instituted against the
+	system and bugs will likely surface. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In short, Plan 9 security is an area yet to be explored. Nonetheless, in terms
+of its network implementation and its basic design, Plan 9 already presents significant
+roadblocks to the cracker. Certainly, typical advanced techniques of attacking UNIX
+servers will probably fail when implemented against Plan 9. The future, however,
+remains to be seen.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I cannot stress the importance of
+	the concept of life without root. Nearly all operating systems evaluated as secure
+	maintain some concept of a root operator. The concept of root concentrates all the
+	power in a single place on the system. If a cracker can gain root, the struggle of
+	penetrating security is over. However, I should quickly point out that the absence
+	of root on a Plan 9 system does not mean that an administrator is not needed. In
+	fact, in certain respects, Plan 9 transforms the job of system administrator into
+	one of architect. In short, Plan 9 is designed for vast--if not massive--management
+	of network resources. Although still in the experimental stages, Plan 9 could change
+	the architecture of the Internet and with it, the concepts surrounding acceptable
+	security policies and implementations. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Applications Available for Plan 9</B></FONT></H3>
+<P>Admittedly, there are few native Plan 9 applications, but the list is growing.
+Remember: Plan 9 is an entirely new operating system, so the number of applications
+depends on how many individuals actually use the system.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>A caveat: The licensing restrictions
+	set forth by Bell Labs makes it very difficult to create commercial applications
+	for Plan 9. The licensing scheme has cast Plan 9 into a position of being available
+	only from Bell Labs at a high price and without hope in the near future of complete
+	commercialization. For now, therefore, Plan 9 remains largely under the purview of
+	researchers and hobbyists who are willing to shell out $300 for the system and documentation.
+	Many freelance programmers protest this situation, arguing that Plan 9 ought to have
+	licensing restrictions similar to those that apply to Linux. After all, why would
+	someone develop on a platform that may ultimately be barred from commercialization?
+	The answer is this: People would undertake such development for the pure pleasure
+	of discovering and hacking a new system. However, many hobbyists are unwilling to
+	pay the stiff licensing fee for the entire system. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Despite some licensing restrictions with Plan 9, some important applications have
+already been written:
+
+<UL>
+	<LI>An HTTPD server
+	<LI>Text editors
+	<LI>A version of MIT's X Window system
+</UL>
+
+<P>Moreover, the basic distribution of Plan 9 comes with a wide range of utilities
+and even a native Web browser called <I>Mothra</I>. Mothra may not be as colorful
+and user friendly as Netscape Navigator or Microsoft Internet Explorer, but it works
+quickly and efficiently. In fact, Plan 9 possesses few user-friendly features. It
+is a largely text-based environment. It is more practical than attractive, and many
+elements of its design are of significant interest to programmers.
+<H4><FONT COLOR="#000077"><B>SAM</B></FONT></H4>
+<P>The most prominent native application for Plan 9 is the SAM editor, which is a
+straight ASCII text editor with a twist. It has a command language that can be used
+to process repetitive tasks (much like a macro language, I suppose, but a bit more
+defined). On the surface, SAM operates in much the same way UNIX-based text editors.
+File names (single or multiple) can be specified on the command line. This loads
+the file(s) into a windowed area. There, the text can be clipped, pasted, cut, altered,
+edited, and saved.</P>
+<P>Like most UNIX-based text editors, SAM does not support multiple fonts, style
+sheets, or other amenities common to modern word-processing environments. In fact,
+Plan 9 would be a poor choice for anyone who relies on such amenities, for they do
+not exist within the system at this time.</P>
+<P>The SAM command language operates mainly on regular expressions and is suitable
+for inserting, deleting, finding, replacing, and so on. These functions are generally
+called by a single character, followed by your intended text. In other words, the
+text to be found, replaced and so forth.</P>
+<P>In short, SAM appears very bare bones, but really isn't. Learning the SAM command
+language takes a day or so, although you might need several weeks to become proficient.
+<H3><FONT COLOR="#000077"><B>Plan 9's Window System</B></FONT></H3>
+<P>Plan 9 has a window system called 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT>.
+After the system boots, it asks whether you want to load the window system. If you
+choose this option, 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT>
+appears. On first examination, 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT>
+looks extremely rudimentary (far more so than X, even). The opening screen presents
+one term window and a clock. Navigation is done largely with the mouse.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>To fully utilize the 8<FONT SIZE="1"><SUP>
+	1</SUP></FONT>/<FONT SIZE="1">2</FONT> windowing system, you need a three-button
+	mouse. A two-button mouse will work, but you will lack at least one menu and some
+	serious functionality. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>To size<B> </B>a window, click any portion of the blank screen. This invokes a
+menu with options including Size, Move, Delete, and Hide. After you choose an option,
+click the target window. For both the hide and delete functions, the window behaves
+as it would in X; it disappears or is deleted. However, for the move and size functions,
+you must work a little differently. After choosing the menu option, click the window
+once. Then, instead of directly sizing or moving the window, click the black screen
+again (this time with the right mouse button) and redraw your window. This may initially
+seem awkward, but you'll get used to it.</P>
+<P>8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> is extremely lightweight.
+Even on a machine with 8MB of RAM, 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT>
+responds quickly. On a Pentium 133 with 64MB of RAM, 8<SUP>1</SUP>/2 is incredibly
+fast.</P>
+<P>8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> is more dynamic than
+most other windowing systems. You can grab any text anywhere and use it as a command.
+In this regard, 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> could
+be called the ultimate cut-and-paste system. Text identifying objects (which is often
+read only on other platforms) can be grabbed at any point and dropped into any other
+part of 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT>. In fact, this
+feature is so prominent that new users may find themselves grabbing things without
+even knowing it. In addition, as part of this functionality, the cursor can be placed
+anywhere within a window. This is a significant change. Users of X and Microsoft
+Windows alike will find this feature to be fascinating. For example, although you
+can cut and paste from an XTERM or a MS-DOS windowed prompt, you cannot arbitrarily
+drop the cursor in any area and pick up typing again. In 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT
+SIZE="1">2</FONT>, you can.</P>
+<P>I suppose 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> can best
+be described as a window system optimized for programmers. Code and other data can
+be moved at any time from any position. But perhaps the most fascinating thing about
+8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> is that you can recursively
+run an instance of 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> within
+an 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT> window. To my knowledge,
+this functionality is indigenous only to 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT
+SIZE="1">2</FONT>. No other windowing system can perform such a task. (Funny. Although
+this is an extraordinary feature, I have not yet encountered a reason to use it.)</P>
+<P>The learning curve on 8<FONT SIZE="1"><SUP> 1</SUP></FONT>/<FONT SIZE="1">2</FONT>
+amounts to a day or two at most. If you are familiar with any implementation of X
+(or more directly, if you have ever used SunView), learning 8<FONT SIZE="1"><SUP>
+1</SUP></FONT>/<FONT SIZE="1">2</FONT> will be simple. To some extent, 8<FONT SIZE="1"><SUP>
+1</SUP></FONT>/<FONT SIZE="1">2</FONT> reminds me of SunView.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>SunView, a windowing system introduced
+	in early versions of SunOS (the operating system created by Sun Microsystems), is
+	extremely lightweight and, even on SunOS 4.1.3, is faster than Sun's later windowing
+	system, OpenWindows. OpenWindows is enormously popular among Sun users, although
+	it is perhaps slower--and not as visually stunning--as the Common Desktop Environment
+	(CDE), a new windowing system jointly developed by many UNIX vendors. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Programming in Plan 9</B></FONT></H2>
+<P>Ultimately, I would recommend Plan 9. If you are a programmer and are looking
+for a new and exciting operating system to develop on, Plan 9 is for you. It is exciting
+primarily because of its unusual design. And, although it is not UNIX, it has enough
+UNIXisms that UNIX users can hit the ground running. Moreover, the unique networking
+capabilities of Plan 9 present new opportunities for programmers.</P>
+<P>Programming in Plan 9 is not limited to C, though the real Plan 9 distribution
+does come with a native C compiler. This C compiler is designed to accommodate code
+for all the supported architectures, including (but probably not limited to)
+
+<UL>
+	<LI>IBM (Intel X86)
+	<LI>SPARC
+	<LI>68020
+	<LI>MIPS
+</UL>
+
+<P>The compiler accepts straight ANSI C, but be forewarned: If you have avoided learning
+some of the newer conventions, you may encounter difficulties. Rob Pike has written
+a paper describing Plan 9 C compiler usage. I highly recommend reading that paper
+in its entirety before attempting to code any serious application on the Plan 9 platform.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Rob Pike's paper, titled
+	&quot;How to Use the Plan 9 C Compiler,&quot; can be found online at <A HREF="javascript:if(confirm('http://kbs.cs.tu-berlin.de/~jutta/c/plan9c.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://kbs.cs.tu-berlin.de/%7Ejutta/c/plan9c.html'" tppabs="http://kbs.cs.tu-berlin.de/%7Ejutta/c/plan9c.html"><TT>http://kbs.cs.tu-berlin.de/~jutta/c/plan9c.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>If you plan to concentrate on porting applications to or from Plan 9, check out
+the ANSI-POSIX Environment (APE). The APE features a wide range of POSIX tools.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>An excellent technical
+	overview of APE written by Howard Trickey (&quot;APE--The ANSI/POSIX Environment&quot;)
+	can be found online at <TT>http://plan9.bell-labs.com/plan9/doc/ape.html</TT>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>POSIX stands for Portable Operating
+	System Interface, a standard that has been in the works for many years. This standard
+	is an effort on the part of developers to establish a unified UNIX. In other words,
+	if a program is fully POSIX compliant, it should run on any fully POSIX-compliant
+	platform, be it SunOS, Linux, AIX, HP-UX, or other versions of UNIX. For many years
+	(and even now) there have been both sharp and subtle differences between various
+	UNIX platforms that prevent easy porting of applications. The POSIX standard will
+	likely change that. To learn more about POSIX, visit <TT>http://csrc.ncsl.nist.gov/nistbul/csl91-10.txt</TT>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Garden-variety throwaway programming can also be done in rc, the shell environment
+of Plan 9.</P>
+<P>The complete distribution of Plan 9 also comes with extensive libraries, including
+one for the development of windowed applications intended to run within 8<FONT SIZE="1"><SUP>
+1</SUP></FONT>/<FONT SIZE="1">2</FONT> (windows are actually referred to as <I>panels</I>).
+Tom Duff has written quite a good paper on the development of panels in Plan 9. He
+likens the panel library to the popular development packages Tcl and Tk. Linux users
+will be familiar with Tcl and Tk. Both are languages (and development libraries)
+for use in generating X Window System applications. One of the most popular features
+about Tk is that you can build a windowed application using a language very similar
+to a macro language. It is possible to quickly develop applications using these tools
+because objects within the window environment are placed by the use of direct statements.
+For example, the command within a Tk script to create a button is:</P>
+<PRE><FONT COLOR="#0066FF">button .name_of_button &lt;options&gt;
+pack .name_of_button &lt;options&gt;
+</FONT></PRE>
+<P>Similarly, the development syntax for windowed applications intended for use in
+Plan 9 is reduced to direct statements (although this is still done using basic C).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>If you are interested
+	in developing windowed applications in Plan 9, Tom Duff's paper, &quot;A Quick Introduction
+	to the Panel Library,&quot; can be found online at <A HREF="javascript:if(confirm('ftp://plan9.bell-labs.com/plan9/doc/panel.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://plan9.bell-labs.com/plan9/doc/panel.html'" tppabs="ftp://plan9.bell-labs.com/plan9/doc/panel.html"><TT>ftp://plan9.bell-labs.com/plan9/doc/panel.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Another interesting aspect of Plan 9 is its inclusion of the Alef programming
+language. Alef is a relatively new language. Unfortunately, a discussion about the
+Alef language is beyond the scope of this book (that is a delicate way of saying
+that I know too little about Alef to provide you with quality information).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To find more information
+	about Alef, check out the language reference manual. It can be found online at <A
+	HREF="javascript:if(confirm('http://plan9.bell-labs.com/plan9/doc/ref.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://plan9.bell-labs.com/plan9/doc/ref.html'" tppabs="http://plan9.bell-labs.com/plan9/doc/ref.html"><TT>http://plan9.bell-labs.com/plan9/doc/ref.html</TT></A>.</P>
+	<P>Another important resource (probably even more valuable than the language reference
+	manual, especially for the newcomer to Alef) is the Alef mailing list. It can be
+	viewed online at <A HREF="javascript:if(confirm('http://plan9.wtf.nyc.ny.us/1996/0001.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://plan9.wtf.nyc.ny.us/1996/0001.html'" tppabs="http://plan9.wtf.nyc.ny.us/1996/0001.html"><TT>http://plan9.wtf.nyc.ny.us/1996/0001.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In all, Plan 9 is a very rich development environment. One thing that makes it
+especially exciting is that the field is wide open. It is a whole new operating system
+just waiting for new and useful applications to be written.
+<H2><FONT COLOR="#000077"><B>Installing the PC Distribution</B></FONT></H2>
+<P>You might want to try out a working demo of Plan 9; Bell Labs has generously provided
+such a distribution free of charge on the Internet. However, before you install Plan
+9, there are some things you should consider. One is whether you should even begin.
+As with any new operating system, you should expect bad things to happen. These may
+range from simple installation failures to data or disk corruption.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If such events occur, it is most
+	likely because you are using unsupported hardware. When the right hardware is used,
+	Plan 9 works beautifully. Of course, not everyone has the money to go out and acquire
+	the exact hardware used at Bell Labs. If your cash is limited, expect a certain amount
+	of trouble along the way. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Moreover, you'll experience a high level of frustration. If you have ever installed
+an operating system that is less than user friendly, you know the terrain. Cryptic
+errors may appear, and you will undoubtedly be forced to hack here and there. These
+obstacles will be particularly prominent if you are installing the four disk, free
+PC distribution on dubious hardware.
+<H3><FONT COLOR="#000077"><B>The Machine Targeted for Installation</B></FONT></H3>
+<P>The machine that you use should be free and clear. That is, under no circumstances
+should you install the Plan 9 distribution on a machine that you rely on to make
+a living (even if you are installing Plan 9 on a separate disk). There have been
+instances in which Plan 9 installations have permanently disabled the boot capabilities
+of other operating systems or partitions. The only reason you should make such an
+installation is if your job requires it (or if you are a programmer who loves adversity).
+Otherwise, use that old DX66 you have lying around in the closet.</P>
+<P>If you only have one machine and still want to experiment, get a rack-mount disk
+changer. This device allows you to switch hard disk drives quickly and easily. It
+works in exactly the same fashion as a slide-out car stereo. Your hard disk drive
+is secured in an enclosure that slides into your PC tower. In this manner, you can
+switch from your regular disk drive (containing the operating system you use for
+work) to the Plan 9 drive.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>To my knowledge, there have been
+	no known instances of Plan 9 installations damaging hardware, so there is no reason
+	why you should fear temporarily switching disks. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The machine need not be particularly fast, though I would recommend 66mHz or better.
+I have installed the distribution on a DX33mHz, a DX266mHz, a DX4120mHz, and a 133
+Pentium. To be honest, I did not find an incredible increase in speed between the
+120 and the 133, nor did I find the difference between the 66 and the 120 unbearable.
+However, the DX33 was admittedly quite slow.</P>
+<P>Memory is important. You will need at least 8MB. Some documents on the Internet
+suggest that there are individuals running Plan 9 with 4MB of RAM, and I believe
+it. However, of the seven times that I installed the PC distribution, I was twice
+confronted with an <TT>Out of Physical Memory</TT> message. This was, as it happens,
+a fatal error. Immediately following this message, the installation failed. On both
+occasions, I was using only 8MB of RAM. On an identical machine, after installing
+additional RAM, I managed to complete the installation successfully.
+<H3><FONT COLOR="#000077"><B>The Hard Disk Drive</B></FONT></H3>
+<P>What hard disk drive you use depends on what you are installing. If you are simply
+installing the PC distribution, you can successfully use a 40MB hard disk drive.
+However, if you intend to install the entire Plan 9 distribution from CD-ROM, you
+need a hard disk drive equal to or greater than 540MB.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>It has been reported in documentation
+	that a 500MB disk will suffice. As far as I can tell, this is not entirely accurate.
+	If you make a direct installation from the CD-ROM, you will require a 540MB disk
+	(or approximately 532MB). The only way to get around this is to first install the
+	basic four-disk PC distribution, and then more incisively install the remainder of
+	the distribution from CD-ROM. This eliminates many items that are intended for use
+	on other platforms. Be advised, however, that this is a more difficult path and may
+	result in problems getting your CD-ROM to catch. (Sometimes, the CD-ROM driver does
+	not properly initialize the CD-ROM drive.) It is a much better idea to make the full
+	install and later delete what you do not need. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>I recommend a 540 or 600MB drive. I should state that my installations were performed
+entirely with IDE drives and therefore, I cannot give background on SCSI-based installations.
+I obtained suitable results with the following drives:
+
+<UL>
+	<LI>MiniScribe 8051A (41MB) (Don't laugh. It worked flawlessly.)<BR>
+	<BR>
+	
+	<LI>Conner CFS540A (EZD03) (540MB)<BR>
+	<BR>
+	
+	<LI>Quantum Maverick ProDrive #MV54AO11 (514MB)<BR>
+	<BR>
+	
+	<LI>Maxtor 7245AT (243MB)
+</UL>
+
+<H3><FONT COLOR="#000077"><B>The Installation Process</B></FONT></H3>
+<P>I will assume that you are installing the four-disk PC distribution. This set
+of four diskette images is located online at <TT>ftp://plan9.bell-labs.com/plan9/pcdist/README.html</TT>.
+Download these into a temporary directory on your current hard disk drive.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The term <I>diskette images</I>
+	refers to four files located at the Plan 9 site. These files are exact copies of
+	four diskettes required to make an installation set for Plan 9. These files or images
+	must be downloaded to your local machine and written to floppy diskettes. 
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>It is important that you obtain the
+	disks from this site. Earlier versions of these boot disks may be available at other
+	locations, but you should not use them. On installation, earlier versions have a
+	tendency to damage other partitions on the disk drive. A typical example would be
+	where Plan 9 disabled a Linux partition during the installation process. Again, I
+	strongly advise against installing Plan 9 on any hard disk drive that contains vital
+	or irreplaceable information. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The diskette images at that location are
+
+<UL>
+	<LI><TT>disk1</TT>
+	<LI><TT>disk2.vd</TT>
+	<LI><TT>disk3.vd</TT>
+	<LI><TT>disk4.vd</TT>
+</UL>
+
+<P>After you download these diskette images, write them directly to a floppy.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Copying the diskette images to a
+	floppy involves a process that is different from copying files to a floppy. Copying
+	the diskette images directly to floppy will not suffice and will result in an installation
+	failure. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A number of utilities for writing disk images to floppy disks are available. The
+most popular is a program called <TT>DD.EXE.</TT> A DOS version (suitable for use
+under Windows 95) is available on-line at
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://access1.sun.com/drivers/utilities/dd.exe  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://access1.sun.com/drivers/utilities/dd.exe'" tppabs="http://access1.sun.com/drivers/utilities/dd.exe"><TT>http://access1.sun.com/drivers/utilities/dd.exe</TT></A>
+</UL>
+
+<P>Another utility used for this purpose (and one that is more widely available on
+the Internet) is <TT>RAWRITE.EXE</TT>. Linux users will be familiar with <TT>RAWRITE.EXE</TT>
+because it used to write the boot diskette images for Linux to a floppy. <TT>RAWRITE.EXE</TT>
+is available online at
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://sunsite.unc.edu/pub/Linux/distributions/slackware/install/RAWRITE.EXE  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://sunsite.unc.edu/pub/Linux/distributions/slackware/install/RAWRITE.EXE'" tppabs="ftp://sunsite.unc.edu/pub/Linux/distributions/slackware/install/RAWRITE.EXE"><TT>ftp://sunsite.unc.edu/pub/Linux/distributions/slackware/install/RAWRITE.EXE</TT></A>
+</UL>
+
+<P>After you write these images to a floppy, switch to the target machine (or hard
+disk drive). On the hard disk drive of the target disk, you must establish a DOS
+partition. The size of this partition is not particularly important (I use 10MB).
+It really only needs to be large enough to hold DOS and approximately 1.5MB of information
+in a directory called <TT>C:\PLAN9</TT>.
+<H3><FONT COLOR="#000077"><B>Partitioning the Disk</B></FONT></H3>
+<P>To partition the disk, use the <TT>FDISK.EXE</TT> utility (see Figure 21.3).</P>
+<P><A NAME="03"></A><A HREF="03-9.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch21/03.htm"><B>FIGURE 21.3.</B></A> <BR>
+<I>The FDISK utility.</I></P>
+<P>First, delete all partitions (you will be starting over with an entirely clean
+disk). Allocate whatever space you intend for the DOS area (I recommend at least
+11MB). After you reboot your machine, you will format this partition and install
+DOS onto it.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>At this stage, you should have a
+	hard disk drive with one DOS partition at least 11MB in size. The rest of your hard
+	disk drive should not contain any other type of partition. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Installing the Basic Plan 9 System</B></FONT></H3>
+<P>The remaining steps of this portion of the installation are simple. Boot with
+the Plan 9 boot diskette (this is the diskette to which you wrote the <TT>disk1</TT>
+file). During the boot process, you will see a series of messages; most are easy
+to read and interpret. Plan 9 tracks your memory and reports what portions of it
+are available. It identifies your hardware. Ultimately, it brings you to a nice blue
+screen, which contains the heading <I>System Installation &amp; Configuration</I>.</P>
+<P>From this screen, you perform the installation. Pressing the Enter key invokes
+a menu containing various installation options. Ensure that these are correct for
+your machine. When you are satisfied that these options are correct, choose the Install
+option.</P>
+<P>A window will appear, and many filenames will scroll past. Do not be alarmed.
+This is Plan 9's way of telling you which files were installed. When this process
+is complete, Plan 9 interrogates you about your hardware. Specifically, options must
+be set for your VGA, mouse, and so forth. Provide the necessary answers and choose
+Save Configuration from the menu.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Plan 9 gives you an opportunity
+	to change the options before they are committed to the disk. A dialog box appears,
+	listing your options. If they are incorrect, go back and change them. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>After the options have been saved, you can remove the floppy disk and reboot the
+machine. Your DOS should boot normally. As mentioned previously, almost all problems
+with this installation procedure occur at time of booting <TT>disk1</TT>. To my knowledge,
+there have been few instances of problems occurring on the reboot to DOS.
+<H3><FONT COLOR="#000077"><B>Installing the Remaining Diskette Files</B></FONT></H3>
+<P>After you reboot your machine, change your current directory to <TT>C:\PLAN9</TT>
+and type the letter <TT>B</TT> to load an installation program. You must define the
+target disk drive. This tells Plan 9 in which disk you intend to house the Plan 9
+file system. I am assuming here that you have a single disk, so this is not an issue.
+But if you are installing to a machine with multiple disks (and partitions), take
+extra care to ensure that it is the correct partition.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>If you choose the incorrect partition,
+	all your data on that partition will be lost. Be <I>absolutely</I> <I>certain</I>
+	that you have chosen the correct partition before you commit to the install procedure.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>After you choose your partition, Plan 9 begins the file system installation process.
+A dialog box appears, prompting you to insert the second disk into the floppy disk
+drive. After you do so, the installation of system files commences. You will again
+see a pop-up window with filenames scrolling by. Insert disks as the program requests
+them. When the installation procedure is complete, you will be prompted by a menu.
+Choose the option that says <TT>Make the newly installed Plan 9 the default</TT>.</P>
+<P>Congratulations. At this stage, the installation procedure has been completed.
+You can now remove the fourth disk, reboot your machine (choose this menu option),
+and begin to explore Plan 9.
+<H3><FONT COLOR="#000077"><B>Starting Plan 9</B></FONT></H3>
+<P>When you machine reboots, change your current directory to Plan 9. There, type
+the command</P>
+<PRE><FONT COLOR="#0066FF">B
+</FONT></PRE>
+<P>This loads the Plan 9 system. First, you will see many of the same messages you
+saw when you booted with the boot floppy (<TT>Disk1</TT>). The system will identify
+your hardware, count your memory, and describe some resources. When it is finished,
+a line that looks like the following will be printed to your terminal:</P>
+<PRE><FONT COLOR="#0066FF">root is from (local, 9600, 19200, il)[local!#H/hd0fs]:
+</FONT></PRE>
+<P>Press the Enter key. You will then be prompted with a line that looks like this:</P>
+<PRE><FONT COLOR="#0066FF">user[none]:
+</FONT></PRE>
+<P>Press the Enter key again. Depending on the speed of your system, you will soon
+be asked whether Plan 9 should start the window system. Choose Yes.</P>
+<P>If you have gotten this far, 8<SUP>1</SUP>/2 should load cleanly (barring some
+obscure error). If so, you will be presented with a bright screen (its color may
+depend on your video card; on mine, the screen is white), a clock, and a window with
+the contents of the <TT>README</TT> file printed within it. Welcome to Plan 9. (Look
+at the size of that mouse cursor!)</P>
+<P>Navigating the file system works much like it does in UNIX. You can use the CD
+command to get from directory to directory. Here are some minor notes that may assist
+you on your first test drive of Plan 9:
+
+<UL>
+	<LI>The <TT>-a</TT> option in the <TT>ls</TT> utility is not supported. You are not
+	crazy, it is simply not available in Plan 9.<BR>
+	<BR>
+	
+	<LI>The <TT>-F</TT> flag is supported in Plan 9. However, the output appears a bit
+	differently than in UNIX. The character that denotes a directory is found on the
+	extreme left of the table, not the right. It is easy to miss.<BR>
+	<BR>
+	
+	<LI>If you are a big fan of the <TT>MORE</TT> utility, you may be disappointed. Use
+	<TT>CAT</TT> instead.<BR>
+	<BR>
+	
+	<LI>If you want to get an overall look at the system, start ACME. This utility works
+	a similarly to a file manager, revealing files and directories. These can be opened
+	within the ACME environment.<BR>
+	<BR>
+	
+	<LI><TT>DF</TT> is not supported, but <TT>DU</TT> is.
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Plan 9 from Bell Labs is a new and unique operating system that offers an entirely
+new outlook on Internet security. Still, it is far from supplanting modern UNIX.
+(In fact, many people believe that the next commercially viable operating system
+will be Inferno from Lucent. To some extent, this is true, because Inferno is now
+being used in set-top boxes for interactive TV.)</P>
+<P>Plan 9 seems best suited for very large organizations. The system appears to have
+been designed expressly with the Internet in mind and on a grand scale. I would call
+it some finely crafted mortar with which to seal the cracks in modern networking
+techniques. Because there is little research available on the security model of Plan
+9, we must simply wait and see. However, as a hacking project, I cannot think of
+a better start than Plan 9 from Bell Labs.
+<H3><FONT COLOR="#000077"><B>Resources</B></FONT></H3>
+<P>Following are several resources on Plan 9, including sites on the WWW, papers,
+and mailing lists (of course, some may change by the time you read this book). It
+seems that the Plan 9 computing base is a small (but growing) faction, making information
+on this new operating system scarce.
+<H4><FONT COLOR="#000077"><B>Plan 9 on the WWW</B></FONT></H4>
+<P><B>The Plan 9 Server Document Directory</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://plan9.bell-labs.com/plan9/doc/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://plan9.bell-labs.com/plan9/doc/'" tppabs="ftp://plan9.bell-labs.com/plan9/doc/"><TT>ftp://plan9.bell-labs.com/plan9/doc/</TT></A>
+</UL>
+
+<P><B>The Plan 9 PC Diskette Installation Distribution</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://plan9.bell-labs.com/plan9/pcdist/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://plan9.bell-labs.com/plan9/pcdist/'" tppabs="ftp://plan9.bell-labs.com/plan9/pcdist/"><TT>ftp://plan9.bell-labs.com/plan9/pcdist/</TT></A>
+</UL>
+
+<P><B>The Plan 9 FAQ</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://plan9.bell-labs.com/plan9/faq.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://plan9.bell-labs.com/plan9/faq.html'" tppabs="http://plan9.bell-labs.com/plan9/faq.html"><TT>http://plan9.bell-labs.com/plan9/faq.html</TT></A>
+</UL>
+
+<P><B>Technical Documentation on Plan 9 (Papers)</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://plan9.bell-labs.com/plan9/vol2.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://plan9.bell-labs.com/plan9/vol2.html'" tppabs="http://plan9.bell-labs.com/plan9/vol2.html"><TT>http://plan9.bell-labs.com/plan9/vol2.html</TT></A>
+</UL>
+
+<P><B>Overview of the Plan 9 File System</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.emrtc.nmt.edu/~mikebaz/plan9.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.emrtc.nmt.edu/%7Emikebaz/plan9.html'" tppabs="http://www.emrtc.nmt.edu/%7Emikebaz/plan9.html"><TT>http://www.emrtc.nmt.edu/~mikebaz/plan9.html</TT></A>
+</UL>
+
+<P><B>The Plan 9 Mailing List Archive</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.cse.psu.edu/pub/plan9-fans/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.cse.psu.edu/pub/plan9-fans/'" tppabs="ftp://ftp.cse.psu.edu/pub/plan9-fans/"><TT>ftp://ftp.cse.psu.edu/pub/plan9-fans/</TT></A>
+</UL>
+
+<P><B>Online Bibliography on Plan 9</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://liinwww.ira.uka.de/bibliography/Os/plan9.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://liinwww.ira.uka.de/bibliography/Os/plan9.html'" tppabs="http://liinwww.ira.uka.de/bibliography/Os/plan9.html"><TT>http://liinwww.ira.uka.de/bibliography/Os/plan9.html</TT></A>
+</UL>
+
+<P><B>The Plan 9 Usenet Newsgroup</B>
+
+<UL>
+	<LI><A HREF="news:comp.os.plan9"><TT>news:comp.os.plan9</TT></A>
+</UL>
+
+<P><B>The Unofficial Plan 9 Page </B>(Very Good)
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ecf.toronto.edu/plan9/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ecf.toronto.edu/plan9/'" tppabs="http://www.ecf.toronto.edu/plan9/"><TT>http://www.ecf.toronto.edu/plan9/</TT></A>
+</UL>
+
+<P><B>Plan 9 Web Server at the University of York (UK)</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.plan9.cs.york.ac.uk/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.plan9.cs.york.ac.uk/'" tppabs="http://www.plan9.cs.york.ac.uk/"><TT>http://www.plan9.cs.york.ac.uk/</TT></A>
+</UL>
+
+<P><B>Official Plan 9 Home Page</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://plan9.bell-labs.com/plan9/index.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://plan9.bell-labs.com/plan9/index.html'" tppabs="http://plan9.bell-labs.com/plan9/index.html"><TT>http://plan9.bell-labs.com/plan9/index.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Articles and Such</B></FONT></H4>
+<P><B>Plan 9: Son of UNIX.</B> Robert Richardson. <I>LAN Magazine</I> (Volume 11,
+Page 41). August 1, 1996.</P>
+<P><B>Plan 9: Feature Film to Feature-Rich OS.</B> Paul Fillinich. <I>Byte Magazine
+</I>(Volume 21, Page 143). March 1, 1996.</P>
+<P><B>Plan 9 from AT&amp;T<I>.</I></B> David Bailey. <I>UNIX Review</I> (Volume 1,
+Page 27). January 1, 1996.</P>
+<P><B>Plan 9 from Bell Labs.</B> Rob Pike, Dave Presotto, and Phil Winterbottom.
+<I>Computing Systems Journal</I> (Volume 8, Page 221). Summer, 1995.</P>
+<P><B>Plan 9.</B> Sean Dorward, Rob Pike, and Dave Presotto. <I>UNIX Review</I> (Volume
+10, Page 28). April 1, 1992.</P>
+<P><B>Designing Plan 9.</B> Rob Pike, Dave Presotto, and Ken Thompson. <I>Dr. Dobb's
+Journal</I> (Volume 16, Page 49). January 1, 1991.</P>
+<P><B>Is Plan 9 Sci-Fi or UNIX for the Future?</B> Anke Goos. <I>UNIX World</I> (Volume
+7, Page 61). October 1, 1990.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="ch20.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch20/ch20.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch22.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch22/ch22.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

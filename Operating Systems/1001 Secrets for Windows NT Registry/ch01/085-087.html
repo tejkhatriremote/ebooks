@@ -1,0 +1,224 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:General System</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=1//-->
+<!--PAGES=085-087//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="082-084.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="087-090.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading22"></A><font color="#000077">TCP/IP</FONT></H3>
+<p><b>I-309</B> <big>P</BIG>roblem: when you try to connect to Web servers or FTP sites, you often time out or must retry many times before you finally connect. The problem may be that your time to live (TTL) is too small. TTL is a TCP/IP parameter that controls how many &#147;hops&#148; or routers your packet can go through before it is discarded by the network. Every time the packet goes through a router, its value is decremented by 1. When the value reaches zero, the packet is discarded. With the proliferation of servers and routers on the network, a value that was once a reasonable TTL is now not practical. To modify the TTL, change this entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters
+</TABLE>
+<p>Add the following value under the Parameters key:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">DefaultTTL
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>255
+</TABLE>
+<p>Restart your machine for these new values to take effect.
+</P>
+<p><b>I-310</B> <big>S</BIG>ometimes it isn&#146;t possible to check all the static routes of a remote machine. You can, however, see which persistent routes a particular system has set up. Use the following registry key and its associated values to see these routes.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT" valign="TOP"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters\ PersistentRoutes
+</TABLE>
+<p>Add the following value
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">204.56.55.100,255.255.255.255,127.0.0.1,1
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>
+</TABLE>
+<p>The value name is the actual route. The format is destination address,subnet mask,source address,metric. You must then make it a REG_SZ entry with a blank value. If you add or delete entries here, you must exit Regedt32.exe for them to take effect on the remote machine.
+</P>
+<p><b>I-311</B> <big>T</BIG>CP/IP on Windows NT uses a lot of different files for its information. These files are located in the following registry key.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>DatabasePath
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_EXPAND_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>%SystemRoot%\system32\drivers\etc
+</TABLE>
+<p>The actual files stored there are Hosts, Lmhosts, Networks, Protocols, and Services. By altering the directory where these files point, it is possible to have a central location or to have several different working sets of these files.
+</P>
+<p><b>I-312</B> <big>I</BIG>f you have trouble with PPTP connections timing out on particularly slow connections, try increasing the following registry parameter:</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>PPTPTcpMaxDataRetransmissions
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>9
+</TABLE>
+<p>Increasing the default value gives PPTP packets a better chance of getting through on heavily congested networks or particularly slow links. Restart your machine for this value to take effect.
+</P>
+<p><b>I-313</B> <big>I</BIG>f you have a mixed network and need your broadcast packets to be the 0-style broadcasts packets (that is, 0.0.0.0 instead of the default 1-style, or 255.255.255.255), change this registry value:</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>UseZeroBroadcast
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p><b>I-314</B> <big>I</BIG>f you have intermittent problems with your gateways (and who doesn&#146;t?), you probably have already established a set of alternate gateways. Use this registry entry to have Windows NT automatically switch to the backup gateway if the current gateway is not responding.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>EnableDeadGWDetect
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>The default value is 1, which enables the feature. Setting this value to 0 disables the detection. Restart your machine for this value to take effect.
+</P>
+<p><b>I-315</B> <big>B</BIG>y default, Windows NT tries to discover the maximum transmission unit (MTU) over a given path to a remote host. By finding the largest packet size it can send, Windows NT maintains a good throughput. Setting this value to 0 causes the MTU to be set to 576 bytes for all connections other than hosts or local subnet destinations.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Tcpip\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>EnablePMTUDiscovery
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>Restart your machine for these values to take effect.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="082-084.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="087-090.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

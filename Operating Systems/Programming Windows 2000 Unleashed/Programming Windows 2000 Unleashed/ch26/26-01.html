@@ -1,0 +1,193 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Pipes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=26//-->
+<!--PAGES=879-885//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch25/25-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2 align="CENTER"><font color="#000077"><i>Part V<br>Distributed Windows 2000 Services
+</I></FONT></H2>
+<p><b><big>In This Part</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Pipes <i>881</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Active Directory <i>905</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using MSMQ <i>929</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Cluster Server <i>963</I></B>
+</DL>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 26<br>Pipes
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Examining Pipe Types <i>882</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Anonymous Pipes <i>882</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Named Pipes <i>890</I></B>
+</DL>
+<p>This chapter focuses on the interprocess communication using pipes. A <i>pipe</I> is a point-to-point connection used to exchange data between two Windows processes. In this chapter, you&#146;ll learn about anonymous and named pipes, and you&#146;ll create several sample applications that demonstrate how pipes are used in Windows 2000 applications.</P>
+<h3><a name="Heading2"></A><font color="#000077">Examining Pipe Types</FONT></H3>
+<p>A <i>pipe</I> is a communications channel that Windows applications can use for interprocess communications. Two basic types of pipes exist:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Anonymous pipes</I>. Used primarily for communication between related processes, such as a parent and a child process. Anonymous pipes cannot be used over a network.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Named pipes</I>. Used for communication between any two processes that know the name of the pipe. Unlike anonymous pipes, named pipes can be accessed over a network.
+</DL>
+<p>When you&#146;re opening, reading, and writing to pipes, the standard Windows 2000 file-handling functions are used: <small>ReadFile</SMALL>, <small>ReadFileEx</SMALL>, <small>WriteFile</SMALL>, <small>WriteFileEx</SMALL>, and <small>CreateFile</SMALL>. In addition, named pipes support overlapped, asynchronous I/O, as discussed in Chapter 4, &#147;Files.&#148; Using named pipes for asynchronous I/O is discussed later in this chapter, in the section &#147;Using Named Pipes.&#148;</P>
+<h3><a name="Heading3"></A><font color="#000077">Using Anonymous Pipes</FONT></H3>
+<p>An anonymous pipe is used only for communication on the same machine, and almost always between a parent and a child process. An anonymous pipe is always asymmetrical: one end of the pipe is always used for writing, and one end always is used for reading. For bidirectional communication, you must use two pipes.
+</P>
+<p>When a parent process needs to communicate with a child process, anonymous pipes are used, as shown in Figure 26.1. The parent process substitutes the standard input and output handles of the child process with anonymous pipe handles. From the point of view of the child process, it&#146;s communicating with the standard input and output.</P>
+<p>Communication using anonymous pipes always involves blocking or polling. <i>Blocking</I>, which is discussed in Chapter 3, &#147;Threads and Processes,&#148; occurs when a thread is kept waiting for an operation to complete. <i>Polling</I>, as it relates to pipes, requires the calling process to continuously check to see if an operation has completed.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch26/images/26-01.jpg',227,195 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch26/images/26-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch26/images/26-01.jpg',227,195)"><font color="#000077"><b>Figure 26.1</B></FONT></A>&nbsp;&nbsp;Substituting pipe handles for standard input and output.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Creating and Closing an Anonymous Pipe</FONT></H4>
+<p>You create an anonymous pipe by calling the <small>CreatePipe</SMALL> function. <small>CreatePipe</SMALL> returns a <small>TRUE</SMALL> or <small>FALSE</SMALL> value, indicating whether the pipe was created. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fCreated = CreatePipe (&amphRead, &amphWrite, &ampsec, 0);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>CreatePipe</SMALL> uses four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the variable that will store the pipe&#146;s read handle
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the variable that will store the pipe&#146;s write handle
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>SECURITY_ATTRIBUTES</SMALL> structure, or <small>NULL</SMALL> to use a default security descriptor
+<dd><b>&#149;</B>&nbsp;&nbsp;The buffer size for the pipe, or 0 to use system default sizes
+</DL>
+<p>Anonymous pipe handles are usually inherited by a child process, which means that a valid <small>SECURITY_ATTRIBUTES</SMALL> structure must be used with anonymous pipes, because the default security descriptor will not allow a pipe handle to be inherited. The following code initializes a <small>SECURITY_ATTRIBUTES</SMALL> structure and uses it to create an anonymous pipe with inheritable handles:</P>
+<!-- CODE SNIP //-->
+<pre>
+SECURITY ATTRIBUTES sec;
+sec.nLength = sizeof(SECURITY ATTRIBUTES);
+sec.lpSecurityDescriptor = NULL;
+sec.bInheritHandle = TRUE;
+CreatePipe(&amphRead, &amphWrite, &ampsec, 0);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To close an anonymous pipe handle, you use the general-purpose <small>CloseHandle</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+CloseHandle (hRead);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A pipe is not destroyed until all open handles, including inherited handles, are closed.
+</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Reading and Writing to Anonymous Pipes</FONT></H4>
+<p>You use the <small>ReadFile</SMALL> and <small>WriteFile</SMALL> functions to read and write to anonymous pipes. These functions are blocking; they return only when the specified number of bytes are transferred or an I/O error occurs.</P>
+<p>To read from a pipe, you need to pass the pipe&#146;s read handle to <small>ReadFile</SMALL>, as in this example:</P>
+<!-- CODE //-->
+<pre>
+BOOL fRead = ReadFile (hRead,
+                       szBuffer,
+                       sizeof(szBuffer),
+                       &ampdwRead,
+                       NULL);
+if(fRead == FALSE || dwRead == 0)
+{
+    // Handle error
+}
+</PRE>
+<!-- END CODE //-->
+<p>The fifth parameter to <small>ReadFile</SMALL> normally is an <small>OVERLAPPED</SMALL> structure. This parameter is always <small>NULL</SMALL> for anonymous pipes because asynchronous communication is not performed. Feel free to create an <small>OVERLAPPED</SMALL> structure; Windows 2000 will just ignore it.</P>
+<p>To write to a pipe, you pass the pipe&#146;s write handle to the <small>WriteFile</SMALL> function, as shown in this code:</P>
+<!-- CODE //-->
+<pre>
+BOOL fWrite = WriteFile (hWrite,
+                         szBuffer,
+                         sizeof(szBuffer),
+                         &ampdwWritten,
+                         NULL);
+if(fWritten == FALSE || dwWritten == 0)
+{
+    // Handle error
+}
+</PRE>
+<!-- END CODE //-->
+<p>As with <small>ReadFile</SMALL>, the fifth parameter passed to <small>WriteFile</SMALL> is the address of an <small>OVERLAPPED</SMALL> structure that is ignored by Windows 2000 when writing to anonymous pipes.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Communicating with Another Process Using Anonymous Pipes</FONT></H4>
+<p>The parent process typically creates two anonymous pipes and allows the child process to inherit the pipe handles. As shown in Figure 26.1, the child process must have access to at least two of the four pipe handles&#151;the other two handles do not need to be inherited.
+</P>
+<p>In many cases, the child process may not be aware that it is communicating over a pipe. As discussed earlier, a common method for communicating with a child process is to change the standard input and output handles for the child process to use the pipe handles. The child process then can read and write to its standard input and output handles. When started from the command line, the child process acts like any other console mode application; when launched as a child process, it communicates exclusively with the parent process.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch25/25-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

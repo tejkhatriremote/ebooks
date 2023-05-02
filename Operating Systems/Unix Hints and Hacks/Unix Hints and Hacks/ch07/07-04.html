@@ -1,0 +1,215 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Displays and Emulations</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=07//-->
+<!--PAGES=257-261//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>echo</SMALL> statement creates a file called <small>^?</SMALL>. Then use the <small>chmod</SMALL> command to change the permissions to make the file executable.</P>
+<!-- CODE SNIP //-->
+<pre>
+UNIX(r) System V Release 4.0 (rocket)
+
+login: guest
+Password: *****
+Last login: Sun Nov 29 11:03:01 from planet
+Sun Microsystems Inc.   SunOS 5.5.1     Generic May 1996
+rocket 1% ^? [return]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Now when you log in to the system, you can immediately hit the Backspace (<small>^?</SMALL>) key and Return. Two quick keystrokes and you&#146;re finished; the Backspace key is set.</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>-rwxr-xr-x  1 guest       13 Nov 29 19:22</B>
+drwxr-xr-x 15 guest     1536 Nov  3 10:33 .
+drwxr-xr-x 36 root      1024 Jun  1  1998 ..
+-rw-r&#151;r&#151;    1 guest      247 Mar 21  1998 .cshrc
+-rw-r&#151;r&#151;    1 guest       62 Dec  8  1993 .login
+-rw-r&#151;r&#151;    1 guest       92 Sep 15  1994 .profile
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Depending on your defined terminal type, this script might not ever appear in a directory listing. It can appear as a blank line at the top of the listing, or it might have the filename <small>^?</SMALL>. Typically, no files should exist above the current directory (.) line of a directory listing. When a filename does (or does not) show up, this should alert a system administrator to a possible security issue. This method can be used at your discretion.</P>
+<p>Use Ctrl&#43;Backspace to get the Backspace when you are too lazy to type the <small>stty</SMALL> command. On most terminals, when the <small>^?</SMALL> appears, it can be removed with a Ctrl&#43;Backspace, and so can the rest of the characters that need erasing.</P>
+<p><font size="+1"><b>Example Two: Interrupt with Ctrl&#43;C</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+stty [options]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>One of the worst things you&#146;ll see is when you run <small>cat</SMALL> on a large file (or run a script) and hit Ctrl&#43;C and nothing happens. You often forget the name of an option in <small>stty</SMALL> that can help in this situation. It is the <small>intr</SMALL> (interrupt) option.</P>
+<!-- CODE SNIP //-->
+<pre>
+% stty intr ^c
+</PRE>
+<!-- END CODE SNIP //-->
+<p>It is simple to use, but it&#146;s the most commonly overlooked option in <small>stty</SMALL>. If you have the chance to set this in your startup files, add it and avoid wasting time in the future.</P>
+<p>Shell: sh, ksh</P>
+<!-- CODE SNIP //-->
+<pre>
+$ echo &#147;stty intr ^c&#148; &gt&gt .profile
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Shell: csh
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% echo &#147;stty intr ^c&#148; &gt&gt .cshrc
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This <small>stty</SMALL> option gets lost every once in a while when you log in across different platforms from the same terminal.</P>
+<p><font size="+1"><b>Example Three: Turning off echo</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+stty [options]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>stty</SMALL> provides an <small>echo</SMALL> option that keeps any keystrokes from being displayed to the terminal. From time to time when you&#146;re working in UNIX, you might accidentally run <small>cat</SMALL> on a directory or a binary file. If you have already done it, you know that a continuous stream of beeps and cryptic characters are sent to the terminal. If you are lucky enough to break out of the <small>cat</SMALL> command, you sometimes are left in a state where hitting a key does absolutely nothing. In cases such as this, the <small>echo</SMALL> in <small>stty</SMALL> might have been disabled. The <small>stty</SMALL> can be used to enable the echoing of keystrokes again.</P>
+<!-- CODE SNIP //-->
+<pre>
+% stty echo
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you wanted to turn off the echo of a keystroke for any reason, you can disable it with the <small>-echo</SMALL> option.</P>
+<!-- CODE SNIP //-->
+<pre>
+% stty -echo
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Some administrators and programmers use this as a poor man&#146;s way of hiding a password as it&#146;s being entered. Although the data packets are not encrypted over the network, it conceals any keystrokes that are made on the terminal.
+</P>
+<p>Here is a quick and dirty script that pops up from time to time as a Trojan horse when hackers try to compromise another user&#146;s password. The idea is that a hacker sources this script from a startup file, such as .cshrc, that has its permissions lowered. When this is placed at the top of the startup file or executed first, users can be deceived into thinking that they didn&#146;t accomplish a successful login. They enter their IDs and passwords again, and they are saved to an area that the hacker can read from. The users never know what happened.</P>
+<!-- CODE SNIP //-->
+<pre>
+echo &#147;Closed Connection.&#148;
+echo; echo;
+echo -n &#147;login: &#148;; read NAME
+echo -n &#147;Password: &#148;;
+stty -echo; read PASSWD; stty echo
+echo &#147;$NAME:$PASSWD&#148; &gt&gt ~hacker/passwords
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Display that an incorrect login entry was made (when in fact it wasn&#146;t).
+</P>
+<p>Line 2: Ask for the login name again, and read it into the variable <small>NAME</SMALL>.</P>
+<p>Line 3: Ask for the password.</P>
+<p>Line 4: Turn off the keystroke echo, accept the password, and turn the keystroke echo back on.</P>
+<p>Line 5: Write the ID and password out to a file that is world readable by the hacker and continue through the startup file.</P>
+<p>This little password-hacking script and similar versions have been seen in place of /usr/bin/login and the /bin/su programs when they have been compromised. With this information, I hope that you can develop a strategy against it.</P>
+<p><font size="+1"><b>Example Four: Setting Columns and Rows</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+stty [options]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the terminal emulation is not working and you try to <small>vi</SMALL> a file or use special advanced screen features on your terminal, verify that the columns and rows are set correctly in <small>stty</SMALL>. Usually you find that these are set by default to zero rows and zero columns.</P>
+<!-- CODE SNIP //-->
+<pre>
+% stty cols 80
+% stty rows 24
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The system assumes that the terminal type settings will default with the proper setting. Setting the columns to 80 and the rows to 24 can fix some emulation problems that exist at times.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The <small>stty</SMALL> enables you quick and manual control over the terminal characteristics that are set up on the system. The settings sometimes don&#146;t match the terminal you are working from and need to be manipulated in various ways.</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>It is sometimes difficult being with a user and trying to fix his problem while you are continually setting the options in <small>stty</SMALL>. Every time this happens, the user wants to know what you&#146;re doing and why. The explanation of why the terminal emulation is not functioning the way it should is one more thing that sounds broken to the user. Presetting these <small>stty</SMALL> options when you log in or referencing them from within a login file will fix these little annoyances.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>stty</SMALL></P>
+<h3><a name="Heading8"></A><font color="#000077">7.4 Hotkeys</FONT></H3>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">7.4.1 Description</FONT></H4>
+<p>Normal everyday functions can be set up as aliases to do the constant commands that occur regularly if they are not already set.
+</P>
+<p>Flavors: AT&ampT, BSD</P>
+<p>Shells: All</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

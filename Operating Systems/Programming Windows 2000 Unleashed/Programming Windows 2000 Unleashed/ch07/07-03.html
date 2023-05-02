@@ -1,0 +1,245 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=236-240//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Retrieving a SID for a User or Group</B></FONT></P>
+<p>The <small>LookupAccountName</SMALL> function is used to retrieve a <small>SID</SMALL> for a particular user or group:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fRet = LookupAccountName(_T(&#147;amigas.com&#148;),
+                              _T(&#147;ali&#148;),
+                              pSid,
+                              &ampcbSid,
+                              lpszRefDomain,
+                              &ampcbRefDomain,
+                              &ampsne);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>LookupAccountName</SMALL> function has seven parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the system where the lookup will take place (or <small>NULL</SMALL> to specify the local system).
+<dd><b>&#149;</B>&nbsp;&nbsp;The account name you&#146;re searching for.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SID</SMALL> that will receive the account&#146;s security identifier.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that contains the length, in bytes, of the <small>SID</SMALL> buffer. If he buffer is too small, the function will fail with a return code of <small>ERROR_INSUFFICIENT_BUFFER</SMALL>, and this parameter will be filled with the minimum required size for the <small>SID</SMALL> buffer.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a string buffer that will be filled with the account&#146;s domain name.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that contains the length, in bytes, of the previous parameter. If the buffer is too small, the function will fail with a return code of <small>ERROR_INSUFFICIENT_BUFFER</SMALL>, and this parameter will be filled with the minimum required size for the domain name.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>SID_NAME_USE</SMALL> variable that will be filled with a value from the <small>SID_NAME_USE</SMALL> enumeration that defines the type of account.
+</DL>
+<p>Typically, you&#146;ll call <small>LookupAccountName</SMALL> twice&#151;the first time with the <small>SID</SMALL> buffer size set to zero in order to determine the size of the account&#146;s <small>SID</SMALL>, and the second time with a properly sized <small>SID</SMALL> buffer to retrieve the <small>SID</SMALL>. Listing 7.2 contains a wrapper function around the <small>LookupAccountName</SMALL> function that retrieves the <small>SID</SMALL> for a specified account and then converts the <small>SID</SMALL> into string form.</P>
+<p><b>Listing 7.2</B> A Function That Retrieves <small>SID</SMALL>s in String Form</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void AccountNameToSidString(LPCTSTR  lpszSystem,
+                            LPCTSTR  lpszAccountName,
+                            LPTSTR   pszSidBuffer,
+                            DWORD    cbSidBuffer)
+{
+    PSID  pSid = NULL;
+    DWORD cbSid = 0;
+    TCHAR lpszRefDomain[256];
+    DWORD cbRefDomain = 256;
+    SID_NAME_USE sne;
+
+    BOOL fRet = LookupAccountName(lpszSystem,
+                                  lpszAccountName,
+                                  pSid,
+                                  &ampcbSid,
+                                  lpszRefDomain,
+                                  &ampcbRefDomain,
+                                  &ampsne);
+    /* First call is expected to fail */
+    if(fRet != FALSE)
+    {
+        HandleError(_T(&#147;LookupAccountName returned invalid val&#148;));
+        return;
+    }
+    DWORD dwErr = GetLastError();
+    if(dwErr == ERROR_INSUFFICIENT_BUFFER)
+    {
+        pSid = LocalAlloc(LPTR, cbSid);
+        if(!pSid)
+        {
+            HandleError(_T(&#147;LocalAlloc for SID failed&#148;));
+            return;
+        }
+        fRet = LookupAccountName(lpszSystem,
+                                 lpszAccountName,
+                                 pSid,
+                                 &ampcbSid,
+                                 lpszRefDomain,
+                                 &ampcbRefDomain,
+                                 &ampsne);
+        if(fRet == FALSE)
+        {
+            HandleError(_T(&#147;LookupAccountName #2 failed&#148;));
+            LocalFree(pSid);
+            return;
+        }
+    }
+    else
+    {
+        HandleError(_T(&#147;GetLastError returned invalid val&#148;));
+        return;
+    }
+
+    LPTSTR pszSidString = NULL;
+
+    ConvertSidToStringSid(pSid, &amppszSidString);
+    lstrcpyn(pszSidBuffer, pszSidString, cbSidBuffer);
+    LocalFree(pszSidString);
+    LocalFree(pSid);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 7.2, the <small>AccountNameToSidString</SMALL> function begins by calling <small>LookupAccountName</SMALL> with a <small>SID</SMALL> buffer that has a length of zero. The function is expected to fail with an error code of <small>ERROR_INSUFFICIENT_BUFFER</SMALL>. The <small>SID</SMALL> buffer is allocated using the minimum buffer length returned in the <small>cbSid</SMALL> parameter, and the <small>LookupAccountName</SMALL> function is called again to retrieve the account&#146;s <small>SID</SMALL>.</P>
+<p>After the <small>SID</SMALL> is obtained, it&#146;s converted into a string using the <small>ConvertSidToStringSid</SMALL> function and then copied into the caller&#146;s string buffer.</P>
+<p>A simple wrapper for the <small>LookupAccountName</SMALL> function is provided in Listing 7.3. The <small>AccountNameToSid</SMALL> function dynamically allocates a <small>SID</SMALL> for a user passed as a parameter to the function.</P>
+<p><b>Listing 7.3</B> A Function That Creates a <small>SID</SMALL> Based on a User Name</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+PSID AccountNameToSid(LPCTSTR  lpszAccountName)
+{
+    PSID  pSid = NULL;
+    DWORD cbSid = 0;
+    TCHAR lpszRefDomain[256];
+    DWORD cbRefDomain = 256;
+    SID_NAME_USE sne;
+
+    BOOL fRet = LookupAccountName(NULL,
+                                  lpszAccountName,
+                                  pSid,
+                                  &ampcbSid,
+                                  lpszRefDomain,
+                                  &ampcbRefDomain,
+                                  &ampsne);
+    /* First call is expected to fail */
+    if(fRet != FALSE)
+    {
+        return NULL;
+    }
+    DWORD dwErr = GetLastError();
+    if(dwErr == ERROR_INSUFFICIENT_BUFFER)
+    {
+        pSid = LocalAlloc(LPTR, cbSid);
+        if(!pSid)
+        {
+            return NULL;
+        }
+        fRet = LookupAccountName(NULL,
+                                 lpszAccountName,
+                                 pSid,
+                                 &ampcbSid,
+                                 lpszRefDomain,
+                                 &ampcbRefDomain,
+                                 &ampsne);
+        if(fRet == FALSE)
+        {
+            LocalFree(pSid);
+            return NULL;
+        }
+    }
+    else
+    {
+        return NULL;
+    }
+    return pSid;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 7.3, the <small>AccountNameToSid</SMALL> function works in much the same way as the <small>AccountNameToSidString</SMALL> function presented in Listing 7.2. The only difference is that instead of converting the <small>SID</SMALL> into string form, the <small>AccountNameToSid</SMALL> function passes the dynamically allocated <small>SID</SMALL> back to the caller.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Understanding ACE, DACL, and SACL Structures</FONT></H4>
+<p>The <small>ACE</SMALL>, <small>DACL</SMALL>, and <small>SACL</SMALL> structures form the heart of Windows 2000 security. The next few sections discuss how these structures are used.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

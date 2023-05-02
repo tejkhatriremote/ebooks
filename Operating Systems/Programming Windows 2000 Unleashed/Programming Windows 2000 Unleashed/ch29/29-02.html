@@ -1,0 +1,150 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=967-970//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Understanding Resource DLLs</B></FONT></P>
+<p>Every resource managed by the cluster service is managed through a resource DLL. Resource DLLs are used by the cluster service to start, stop, and manage failover of resources in the cluster. In order to manage your cluster resource or application, you have two choices:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;You can use the Generic Application or Generic Service resource DLLs included with MSCS.
+<dd><b>&#149;</B>&nbsp;&nbsp;You can create your own custom resource type and manage your resource through a custom resource DLL.
+</DL>
+<p>Creating a custom resource type will result in the best overall performance when running on a cluster, because the resource DLL can actively manage the resource on behalf on the cluster service.
+</P>
+<p><font size="+1"><b>Understanding Resource Monitors</B></FONT></P>
+<p>The resource monitor sits between the cluster service and a resource DLL. The resource monitor is an executable that has the responsibility of managing one or more in-process resource DLLs. Without the resource monitor acting as an isolation layer, a poorly written resource DLL could take down the entire clustering service. As it is, a resource DLL can, at most, interrupt service for other resource DLLs that share the same resource monitor.
+</P>
+<p>Using the Cluster Administrator, additional resource monitors can be used to manage resources in the cluster. This is typically done for debugging purposes or to isolate resource DLLs that are untrusted or suspected of being faulty.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Cluster Startup and Recovery</FONT></H4>
+<p>When a cluster node is started, it immediately looks for a cluster to join. It begins by searching for an existing cluster by using the private interconnect to communicate with other cluster nodes. If an existing cluster is found, the node will join the cluster and retrieve a copy of the cluster database.
+</P>
+<p>Applications can run on a cluster in two modes:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Active/Passive</I>. The application runs on one cluster node and is marked as passive on other nodes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Active/Active</I>. The application runs on each node in the cluster.
+</DL>
+<p>Most cluster-aware applications today run in Active/Passive mode. When an application runs in Active/Passive mode, two copies of the application are installed. When a failover occurs, the previously passive copy of the application becomes active, and the active application becomes passive.
+</P>
+<p>When an application runs in Active/Active mode, two instances of the application may run on one node, although the typical case is for each node to run one copy of the application. This configuration enables one virtual server to appear to enjoy twice the capacity of a single server.</P>
+<p>When an application runs in Active/Active mode, two copies of the application are passive, and two copies of the application are active.</P>
+<p>In both Active/Active and Active/Passive modes, clients connect to the server in the same way. Clients attach to the application through the cluster&#146;s virtual server, and they have no need to know which particular instance of the application they&#146;re using. When a failover occurs, the clients are disconnected from the server and must attempt to reconnect in order to gain access to the application again.</P>
+<h3><a name="Heading6"></A><font color="#000077">Using Clustering APIs</FONT></H3>
+<p>Three categories of APIs are used with MSCS:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Cluster Object Management APIs
+<dd><b>&#149;</B>&nbsp;&nbsp;Resource DLL APIs
+<dd><b>&#149;</B>&nbsp;&nbsp;Cluster Administration Extension DLL APIs
+</DL>
+<p>These API groups are discussed in the following sections.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Using Cluster Object Management APIs</FONT></H4>
+<p>Six types of cluster objects are managed through the Cluster Object Management API functions:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Groups
+<dd><b>&#149;</B>&nbsp;&nbsp;Nodes
+<dd><b>&#149;</B>&nbsp;&nbsp;Resources
+<dd><b>&#149;</B>&nbsp;&nbsp;Resource types
+<dd><b>&#149;</B>&nbsp;&nbsp;Networks
+<dd><b>&#149;</B>&nbsp;&nbsp;Network interfaces
+</DL>
+<p>Given these six types of cluster objects, there are also several ways for these objects to be managed:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;With control code functions and control codes.
+<dd><b>&#149;</B>&nbsp;&nbsp;With the <small>CClusPropList</SMALL> class.
+<dd><b>&#149;</B>&nbsp;&nbsp;Through the cluster database APIs.
+<dd><b>&#149;</B>&nbsp;&nbsp;Through direct manipulation of the cluster object using an object-specific function call.
+<dd><b>&#149;</B>&nbsp;&nbsp;By manipulating the Win32 System Registry. (Although possible, this method is not recommended by Microsoft, because you&#146;re bypassing controls and facilities that are built into the cluster service.)
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

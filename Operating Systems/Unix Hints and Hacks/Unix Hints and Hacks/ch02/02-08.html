@@ -1,0 +1,185 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=02//-->
+<!--PAGES=082-085//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch03/03-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Example Two: Running routed</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+    <b>routed [-q] [-s]</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>routed</SMALL> is very simple to use. This makes it attractive, but simple things can sometimes cause great headaches. Being a bit of a resource hog, this daemon can be definitely dangerous to run when used at the wrong time or in the wrong way. You must take caution when and how <small>routed</SMALL> is to be used. There are primarily two modes to run <small>routed</SMALL> in: quiet mode and server mode.</P>
+<!-- CODE SNIP //-->
+<pre>
+# route -q
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In quiet mode, set with the <small>-s</SMALL> option, the daemon receives any routing information that gets broadcast over the network. After this new routing information is received, it becomes integrated into the routing database and the kernel&#146;s routing table. This daemon should, in theory, run passively in the background, but that isn&#146;t always the case. This daemon is not to be trusted.</P>
+<!-- CODE SNIP //-->
+<pre>
+# route -s
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Server mode is set with the <small>-s</SMALL> option. It not only listens for broadcasts of routing information, but sprays the network every 30 seconds with information about routes that the server knows about. In large environments with a mixture of over 100 UNIX workstations and servers having the daemon running in server mode, there would be massive network traffic that consisted only of basic routing information. If the daemon were ever to be started in a server mode, it could be started only when a system has multiple network interface cards.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Packets need to find a way to their destination. In a large environment, the capability to statically route the packets to a particular gateway is a great benefit. When no router or gateway is available and isolated networks are in place, <small>routed</SMALL> is perfect for this scenario.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>When you receive a system from the vendors, they attempt to make it as easy to have up and running on a network as possible. <small>routed</SMALL> is often shipped to come up in server mode at the time your system boots up. All you have to do is give a new system an IP address and <small>routed</SMALL> starts collecting routing information. I find that users who acquire their own systems and try to set up as much as they can are notorious for leaving the <small>routed</SMALL> in server mode. If you are really concerned about the amount of potential traffic, attach a sniffer to your network and turn <small>routed</SMALL> on. See how much your network is actually affected.</P>
+<p>Why have one more process running on your system than you need? If you have routers and gateways in place, let them do the job you bought them for. If you pass the packets off to them, they deliver the packets to the proper destination.</P>
+<p>Recently I have found myself working in environments where two or three computers need to talk only to one another on an isolated network. Attaching each of them to a hublet and simply turning <small>routed</SMALL> on in server mode makes setup easy. If two computers need to talk and there are no hublets, just get a twisted Ethernet cable and turn on <small>routed</SMALL> again in server mode and you are finished.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages
+</P>
+<!-- CODE SNIP //-->
+<pre>
+ifconfig, netstat, route, routed
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading18"></A><font color="#000077">2.9 Get the Ethernet Address with arp</FONT></H3>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">2.9.1 Description</FONT></H4>
+<p>When you need an Ethernet (MAC) address and your system doesn&#146;t have a command to support displaying it, <small>arp</SMALL> outputs the information needed.</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>arp</B> hostname
+<b>arp -a</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>telnet</SMALL> in to a remote host that is on the same local segment of the network. Two commands are available within the <small>arp</SMALL> command; one searches the table for a specific host and the other displays all the entries in the table.</P>
+<!-- CODE //-->
+<pre>
+star 23% telnet rocket
+Trying 206.19.11.5...
+Connected to rocket.
+Escape character is &#145;^]&#146;.
+
+IRIX (rocket)
+
+login: johndoe
+Password:
+
+IRIX Release 6.4 IP22 rocket
+Copyright 1987-1996 Silicon Graphics, Inc. All Rights Reserved.
+Last login: Sun Sep 01 01:17:42 PDT 1998 by UNKNOWN@rocket
+
+rocket 1% arp star
+<b>star (206.19.11.203) at 8:0:69:9:72:91</B>
+
+rocket 2% arp -a
+pluto (206.19.11.10) at 0:60:b0:c4:2b:60
+<b>star (206.19.11.203) at 8:0:69:9:72:91</B>
+moon (206.19.11.161) at 0:e0:b0:e3:d7:49
+mars (206.19.11.201) at 0:c0:4f:87:91:ff
+
+rocket 3% exit
+Connection closed by foreign host.
+star 24%
+</PRE>
+<!-- END CODE //-->
+<p>The <small>arp</SMALL> table automatically maintains an entry listing for each machine that has recently communicated with the local host. This <small>arp</SMALL> table can also be manually modified to add or delete hosts in the table.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Some flavors of UNIX do not log the Ethernet address in a file or even have a command that returns the address to STDOUT. In most other cases the only way to get the address is to reboot the machine and get the address while the kernel probes the hardware on the system.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Because the Ethernet address is a unique ID, the address is requested by vendors for securing a software license key on the products. It is also needed for diagnosing network problems. When sniffers and packet filtering software monitor the network, they monitor traffic by the Ethernet addresses of the machines talking on the network.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+arp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>World Wide Web:
+</P>
+<p>Etherman&#151;<a href="../WebStripper/protected.html#link=ftp://ftp.physics.ohio-state.edu/unix/">ftp://ftp.physics.ohio-state.edu/unix/</A></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch03/03-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

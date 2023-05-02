@@ -1,0 +1,126 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:An Introduction to COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=21//-->
+<!--PAGES=684-687//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="21-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Isolation</B></FONT></P>
+<p>During a running transaction, data is altered and can be considered to be in a state of limbo. Consider the situation of the bank transferring money from one account to another. When money is debited from one account and placed in another, there&#146;s a state of limbo between when the original account is debited and the other account is credited. This limbo state requires a certain amount of time. If during this limbo state, another transaction needs to credit the account, which amount does it see? Does it see the old level or the new level? There&#146;s no conclusive answer, but transaction systems take the point of view that the data has not been altered. This means that if the other transaction wants to see the data, it sees the <i>old</I> data.</P>
+<p>The job of the transaction system is not yet complete. If the other transaction system wants to modify the data, the transactions must be kept isolated. The two updates must be kept isolated; otherwise, a potential update could occur on data that was supposed to be written.</P>
+<p>The other problem that may occur involves <i>stale</I> data. Transaction A reads some data. Transaction B reads and updates the data. Transaction B updates the data. The data held by Transaction B is considered stale. To get around this, you&#146;ll either need to write relative code or version-checking code. Relative code is used when the value in the record does not matter, because the other value is incremented or decremented. Version checking is used when the version of the data is checked before it&#146;s updated. This type of work is not done by the transaction system&#151;it must be done by the programmer.</P>
+<p><font size="+1"><b>Durability</B></FONT></P>
+<p>The concept of durability specifies that if anything goes wrong, the transacted data will still be there. This concept is very important because the scope of it involves more than just the software. Go back to the example of the money being withdrawn from the account. If the transaction goes through and the monies are given out, then a crash in the system will not influence the outcome of that transaction. When the system reboots from the crash, the transaction will still be there. If the system crash is from the result of the hard disk corruption and it requires a new hard disk and installation, then the transaction has been lost if the transaction is only stored on the one hard disk. Therefore, it&#146;s absolutely imperative that a certain amount of redundancy be used&#151;in other words, the transaction needs to be stored on some other media. The concept of durability ensures that no matter what the cause of the problem is, a completed transaction is a completed transaction. There&#146;s no way of undoing it, changing it, or deleting it.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B>Durability within a transaction is not just a software issue. It&#146;s a hardware <i>and</I> software issue. MTS/COM&#43; only supports the software aspect of durability. Once a transaction is written to hard disk, it&#146;s assumed to be durable. To ensure further durability, a cluster server with RAID needs to be implemented.
+</FONT><hr>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Types of Transactions</FONT></H4>
+<p>A transaction occurs when a series of business process steps is completed to get some result.
+</P>
+<p>When the actions are combined into a series of steps, they can be called transactions. To make a transaction system complete, transaction coordinators are required. They make it possible to roll back information or commit information. The simplest transaction type is known as a <i>flat transaction</I>.</P>
+<p><font size="+1"><b>Flat Transactions</B></FONT></P>
+<p>The flat transaction occurs when the series of business processes is in a sequential order&#151;in other words, there&#146;s a start point and an end point. If anything goes wrong in between, all the work is undone and removed from the various resources.
+</P>
+<p>Back in Figure 21.1, the first transaction occurs when the money is added to the account and then added to the database. This is the resource. To add this money, two steps are involved: the teller accepts the money and then adds it to the database. The teller manipulates some program that performs the necessary business logic to add the amount of money to the resource.</P>
+<p>The business logic is as follows:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>BEGIN</SMALL> transaction command is issued to the resource from the logic. It tells the resource that some work will commence and that a transaction context needs to be associated with the system user. If there are any other currently running transactions, they are not associated with the new transaction. In other words, it&#146;s a brand new context.
+<dd><b>&#149;</B>&nbsp;&nbsp;The client ID is retrieved from the resource. This information is stored within the logic. The transaction context manages any references to the resource. From this query, the client ID is used to modify the client&#146;s account.
+<dd><b>&#149;</B>&nbsp;&nbsp;The last step is for the logic to issue the <small>COMMIT WORK</SMALL> transaction command. Any work that has been done will be made durable if the two-phase commit is successful. The two-phase commit will be discussed shortly, but for now, consider it as a way of stating that the data will be made durable. If anything fails, a <small>ROLLBACK WORK</SMALL> is issued, which causes all work to be removed from the resource since the <small>BEGIN</SMALL> transaction command.
+</DL>
+<p>A flat transaction is considered <i>flat</I> because it can only contain one <small>BEGIN</SMALL> transaction command and one <small>COMMIT</SMALL> transaction command to make the data durable. Once a <small>BEGIN</SMALL> has been started, another <small>BEGIN</SMALL> would start another independent transaction.</P>
+<p>Flat transactions need to be timed properly, because, depending on the amount of time between a <small>BEGIN</SMALL> and a <small>COMMIT</SMALL> or <small>ROLLBACK</SMALL>, the system will be either scalable or slow. A large amount of time will cause resources to be locked, and any <small>ROLLBACK</SMALL> operations will require many steps to be replaced. A too-small amount of time will cause complicated resource states. The best flat transaction scheme is discussed in the next chapter in the section &#147;Activities.&#148;</P>
+<p><font size="+1"><b>Other Types of Transactions</B></FONT></P>
+<p>Other types of transactions exist; however, COM&#43; services do not support any of them. Therefore, if you know anything regarding save points, long transactions, and nested transactions, you should forget it for now.
+</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Two-Phase Commit</FONT></H4>
+<p>When a transaction needs to make the data durable, it calls a two-phase commit. Using a two-phase commit, a sort of communication occurs among the resources, the component, and the transaction coordinator. It is similar to getting married. In the marriage ceremony, the two people come together and hold hands. The priest asks the groom whether he wants to marry the bride. The groom replies yes. Then the priest asks the bride whether she wants to marry the groom. The bride says yes. Then the priest considers both parties to be married. The bride and groom are the resources and the priest is the transaction monitor.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="21-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

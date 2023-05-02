@@ -1,0 +1,168 @@
+The Internet Protocol Suite
+
+
+
+A network is a configuration of machines that exchange information among 
+them. In order for the network to function properly, the information
+originating at a sender must be transmitted along a communication line and
+delivered to the intended recipient in an intelligible form. Because different
+types of networking software and hardware need to interact to perform this
+function, network designers developed the concept of the communications
+protocol family (or suite). A network protocol is a set of formal rules
+explaining how software and hardware should interact within a network in order
+to transmit information. The Internet Protocol (IP) family is one such group
+of network protocols. It is centered around the IP. The other members of the
+IP family are Transmission Control Protocol (TCP, User Datagram Protocol
+(UDP), Address Resolution Protocol (ARP), Reverse Address Resolution Protocol
+(RARP), and Internet Control Message Protocol (ICMP).
+
+The entire family is popularly referred to as TCP/IP, reflecting the name 
+of the two main protocols.TCP/IP provides services to many different 
+types of host machines connected to heterogeneous networks. These networks
+may be wide area networks, such as X.25-base networks, but they also can be
+local area networks, such as one you might install in a single building.
+
+Note:   TCP/IP was originally developed by the United States Department 
+of Defense to run on the ARPANET, a packet-switching wide area network first
+demonstrated in 1972. Today the ARPANET is part of a wide area network known
+as the DoD (Department of Defense) Internet, or, for short, the Internet. 
+Many popular texts use the term Internet to describe both the protocol 
+family and the wide area network.
+
+The TCP/IP protocol structure can be conceptualized as being formed of a 
+series of layers as shown below.
+
+Layer           Network Services
+Application     Telnet, FTP, TFTP
+Transport       TCP, UDP
+Network         IP, ICMP
+Data Link       ARP, RARP, device driver (such as Ethernet)
+Physical        Cable or other device (such as Ethernet board)
+
+In TCP/IP jargon, a machine engaged in communication is termed either a 
+sending or receiving host. Every protocol layer on the sending host has its
+peer protocol layer on the receiving host. Each layer is required by design 
+to handle communications in a predetermined fashion.
+
+Each protocol formats communicated data and appends or removes information 
+from it. The protocol then passes the data to a lower layer on the sending
+host or a higher layer on the receiving host.
+
+Physical Layer
+
+The Physical Layer is the hardware level of the protocol model, which is 
+concerned with electronic signals. Physical Layer protocols send and receive
+data in the form of packets. A packet contains a source address, the
+transmission itself, and a destination address.
+
+TCP/IP supports a number of Physical Layer protocols, including Ethernet 
+and Token Ring. Ethernet is an example of a packet switching network; its
+communications channels are occupied only for the duration of the 
+transmission of a packet. The telephone network is an example of a
+circuit-switching network.
+
+Data Link Layer
+
+The Data Link Layer is concerned with addressing at the physical machine 
+level. Protocols at this layer are involved with communications 
+controllers, their chips, and their buffers. Ethernet is supported at this
+layer by TCP/IP.
+
+Two additional TCP/IP protocols, ARP and RARP, can be viewed as existing 
+between the network and data link layers. ARP is the Ethernet Address
+Resolution Protocol. It maps known IP addresses (32 bits long) to Ethernet
+addresses (48 bits long). RARP (or Reverse ARP) is the IP Address Resolution
+Protocol. It maps known Ethernet addresses (48 bits) to IP addresses (32
+bits), the reverse of ARP.
+
+Network Layer
+
+Internet Protocol (IP) and Internet Control Message Protocol (ICMP) are 
+the protocols present at the Network Layer.IP provides machine-to-machine 
+communication. It performs transmission routing by determining the path a
+transmission must take, based on the receiving machine?s IP address. IP also
+provides transmission-formatting services; it assembles data for transmission
+into an Internet datagram. If the datagram is outgoing (received from the
+higher layer protocols), IP attaches an IP header to it. This header contains
+a number of parameters, including the IP addresses of the sending and
+receiving hosts.
+
+ICMP sends error or control messages to other hosts. It provides communication of Internet software between machines.
+
+Transport Layer
+
+The TCP/IP Transport Layer protocols enable communications between 
+processes running on separate machines. Protocols at this level are TCP 
+and UDP.
+
+Transmission Control Protocol (TCP) enables applications to talk to each 
+other via virtual circuits, as thought they had a physical circuit between
+them. TCP is a connection-oriented, reliable protocol; any data written to 
+a TCP connection will be received by its peer in sequence, or an error
+indication will be returned.
+
+User Datagram Protocol (UDP) is the alternative protocol available at 
+the Transport Layer. UDP is a connectionless datagram protocol. Datagrams 
+are groups of information transmitted as a unit to and from the upper layer
+protocols on sending and receiving hosts. UDP datagrams use port numbers to
+specify sending and receiving processes. However, no attempt is made to
+recover from failure or loss; packets may be lost with no error indication
+returned.
+
+Whether TCP or UDP is used depends on the network applications invoked by 
+the user. For example, if the user invokes telnet, that application passes
+the user?s request to TCP. If the user?s request involves the Domain Name
+Services, that application passes the request to UDP.
+
+Application Layer
+
+A variety of TCP/IP protocols exist at the Application Layer. Here is a 
+description of some of the more widely used:
+
+telnet
+The Telnet protocol enables terminals and terminal-oriented processes to 
+communicate on a network running TCP/IP. It is implemented as the program
+telnet on the local machine and the daemon telnetd on the remote machine.
+Telnet provides a user interface through which two hosts can open
+communications with each other, then send information on a
+character-by-character or line-by-line basis. The application includes a
+series of commands.
+
+The telnetd daemon on the remote host handles requests from the telnet 
+command.
+
+ftp
+The File Transport Protocol (FTP) transfers files to and from a remote 
+network. The protocol includes the ftp command on the local machine and 
+ftpd daemon on the remote machine. ftp lets you specify on the command line the
+host with whom you want to initiate file transfer and options for 
+transferring the file. The ftpd daemon on the remote host handles the
+requests from your ftp command.
+
+tftp
+The Trivial File Transfer Protocol (TFTP) enables users to transfer files 
+to and from a remote machine. Like ftp, tftp is implemented as a program on
+the local machine and as a daemon (tftpd) on the remote machine. tftp 
+invokes a command interpreter for transferring files and maintains a 
+connection between two machines between file transfers.
+
+Domain Name Service
+The Domain Name Service (DNS) is a protocol that provides domain-name-to-
+address-mapping of forwarding hosts and mail recipients on a network.
+
+Other application layer protocols exist that are also implemented as a 
+program on the local machine and a daemon on the remote one; examples of
+these are rlogin and rlogind. Which permit a user to log in to a remote
+machine; rsh and rshd which enable the user to spawn a shell on a remote
+machine, and finger and fingerd, which permit a user to obtain information
+about users on remote machines.
+
+To avoid the need to have an excess of daemons running all times the 
+daemon inetd is initiated at start-up time. After consulting the
+/etc/inetd.conf file, inetd runs appropriate daemons as needed. For example,
+the daemon rlogind will be run by inetd whenever there is a request for a
+remote login from another machine, and only at that time and for the 
+duration of the remote login.
+
+guidob (guidob@synnergy.net)
+Synnergy Networks (c) 1998, http://www.synnergy.net

@@ -1,0 +1,158 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=503-506//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="16-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading7"></A><font color="#000077">Choosing Between the STA and MTA</FONT></H3>
+<p>COM is all about choices, particularly when it comes to selecting apartments. Both clients and COM objects get to select apartments for their threads&#151;COM will give everyone what they ask for, and it always works. However, if you want to obtain the maximum performance from your components, it helps to have an understanding of how COM creates apartments and manages communication between these apartments.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Selecting an Apartment for Each Thread</FONT></H4>
+<p>Each client selects a threading model for every thread used to access a COM object. Every thread must call <small>CoInitialize</SMALL> or <small>CoInitializeEx</SMALL> before touching COM objects or making calls to the COM library. Here&#146;s a call to <small>CoInitialize</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = CoInitialize(NULL);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is equivalent to requesting that the thread run in an STA:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Every thread that calls <small>CoInitialize</SMALL> or <small>CoInitializeEx</SMALL> with the <small>COINIT_APARTMENTTHREADED</SMALL> flag will cause a new STA to be created.</P>
+<p>To request that a thread run in the MTA that belongs to the process, call <small>CoInitializeEx</SMALL> with the <small>COINIT_MULTITHREADED</SMALL> flag:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Any threads that call <small>CoInitializeEx</SMALL> run in the same MTA for the process.</P>
+<p>If a thread attempts to access a COM object or call a COM function before calling <small>CoInitialize</SMALL> or <small>CoInitializeEx</SMALL>, the function will be rejected by the operating system, in most cases. Some parts of COM can be used before calling <small>CoInitialize</SMALL> or <small>CoInitializeEx</SMALL>. For example, the task allocator API functions and the <small>IMalloc</SMALL> interface can be used prior to initializing the COM library.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Which Apartment Is Best for Your Thread?</FONT></H4>
+<p>STA is fine for many applications, especially if the application is single threaded or if the COM objects are single threaded. As discussed later, it&#146;s always more efficient to match the apartment type of your components. For example, the Windows 2000 shell lives in STA; therefore, from a COM perspective, it&#146;s much more efficient for code that interacts with the shell to run in an STA than in an MTA.
+</P>
+<p>MTA is great when you have multiple threads that need access to COM objects, especially when those objects can run in an MTA. Unlike in an STA, threads in the MTA can share access to COM objects. In an STA, the COM object can only be accessed by the thread that created it, unless you explicitly take steps to allow access from another thread.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Selecting an Apartment for Each COM Object</FONT></H4>
+<p>Every COM server specifies the type of apartment that its COM objects must live in. Although only two different types of apartments exist, four different types of apartment declarations are available for COM objects:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Apartment</SMALL>. The object must live in an STA. Objects of this type are aware of the COM threading model and know that multiple instances of the object may exist in different STAs within the same process. This may require the class to synchronize access to common data structures.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Free</SMALL>. The object must live in the MTA. The object is aware of the threading model and can be called by multiple threads safely.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Both</SMALL>. The object can live in either the MTA or STA.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>No entry</SMALL>. The object is probably not thread aware and must live in the main STA. This type of object can ignore threading issues.
+</DL>
+<p>A COM server specifies a threading model in one of two ways:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Out-of-process servers indicate their threading model by calling <small>CoInitialize</SMALL> or <small>CoInitializeEx</SMALL> when the server is launched.
+<dd><b>&#149;</B>&nbsp;&nbsp;In-process servers are loaded into the calling process and never get a chance to call <small>CoInitializeEx</SMALL>. Therefore, they must indicate their threading model in the Registry.
+</DL>
+<p>In-process servers indicate the threading model in the Registry as a named value under the <small>InProcServer32</SMALL> key for the <small>CLSID</SMALL>, as shown in Figure 16.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-04.jpg',623,386 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-04.jpg',623,386)"><font color="#000077"><b>Figure 16.4</B></FONT></A>&nbsp;&nbsp;In-process servers specify their threading model with a Registry value.</P>
+<p>When an in-process server is launched, the operating system determines the appropriate apartment type for the object. If the apartment already exists, the server&#146;s class object is placed into the apartment; if necessary, a new apartment is created for the class object. Any instances of COM objects created by the class object will also be placed into this apartment.
+</P>
+<p>As discussed earlier, each threading model has its own set of advantages and disadvantages. Using a threading model of <small>Apartment</SMALL> allows a COM object to avoid many types of multithreading issues by guaranteeing that the object will live in an STA, whereas setting the threading model to <small>Free</SMALL> enables a COM object to take advantage of Win32 multithreading and live in an MTA. Objects that decline to state a threading model are refusing to take part in any sort of multithreading.</P>
+<p>But what about objects that specify <small>Both</SMALL> as a threading model? Why choose <small>Both</SMALL> rather than <small>Free</SMALL>? There&#146;s a subtle difference between specifying <small>Both</SMALL> or <small>Free</SMALL> as a threading model:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Choosing a threading model of <small>Free</SMALL> indicates that the COM class absolutely requires an MTA. For example, the class may require worker threads that will cause performance problems inside an STA.
+<dd><b>&#149;</B>&nbsp;&nbsp;Choosing a threading model of <small>Both</SMALL> indicates that the COM class is equipped to handle multithreaded apartments. However, because the COM object may be instantiated inside an STA, this option should not be used if the class creates worker threads.
+</DL>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Mismatched Apartments Between Client and COM Object</FONT></H4>
+<p>So, what happens when a client and COM object each select different types of apartments? The good news is that COM will automatically create the exact type of apartment requested&#151;regardless of whether it&#146;s a client or a COM class making the request. The bad news is that performance may suffer as a result.
+</P>
+<p>For example, consider the case where a client calls <small>CoInitializeEx</SMALL> with <small>COINIT_APARTMENTTHREADED</SMALL>, marking the thread as living in an STA. The thread then creates an instance of a COM object that lives in an STA. As shown in Figure 16.5, COM creates an STA, and the COM object and client can communicate directly.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-05.jpg',373,305 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-05.jpg',373,305)"><font color="#000077"><b>Figure 16.5</B></FONT></A>&nbsp;&nbsp;Communicating &#147;in process&#148; between compatible apartments does not require a proxy.</P>
+<p>The interaction shown in Figure 16.5 is very efficient and does not require the operating system to establish any sort of proxy for communication between the client and COM object.
+</P>
+<p>Now, consider the case where a client thread calls <small>CoInitializeEx</SMALL> with <small>COINIT_MULTITHREADED</SMALL>, marking the thread as living in an MTA, and creates an instance of a COM object that lives in an STA. As shown in Figure 16.6, the operating system creates an STA for the COM object and an MTA for the client&#146;s thread. The operating system then establishes a proxy/stub to manage communication between the COM object and client. This mechanism for cross-apartment communication is created even if the COM object is in process.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="16-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

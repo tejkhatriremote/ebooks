@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-07//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Using SetFilePointer</FONT></H4>
+<p>In situations in which you use random file access, such as accessing a disk-based database, you must change the position of the file pointer. To move the file pointer to a new position, you use the <small>SetFilePointer</SMALL> function, as shown in Listing 4.7.</P>
+<p><b>Listing 4.7</B> Using the <small>SetFilePointer</SMALL> Function</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwPos = SetFilePointer(hFile, dwOffset, NULL, FILE_BEGIN);
+if( dwPos != 0xffffffff )
+{
+    // seek succeeded
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>In Listing 4.7, <small>SetFilePointer</SMALL> is used to move to a known offset from the beginning of the file. <small>SetFilePointer</SMALL> has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The handle to the file.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of bytes to move the file pointer. If the value is positive, the pointer moves forward; a negative value moves it backward. Internally, Windows 2000 uses 64-bit values to move the file pointer. If the file pointer is moved more than 2<sup>31</SUP> bytes in one direction, you must use the nexty parameter for the higher 32-bit portion of the total 64-bit distance value.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an optional higher order word to move the file pointer. If this value is <small>NULL</SMALL>, the previous 32-bit value is used to move the file pointer. If this value is not <small>NULL</SMALL>, it&#146;s used as the higher 32-bit part of a 64-bit quantity used to move the file pointer. This is useful in cases in which your file sizes exceed 2<sup>32</SUP> bytes.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>move</SMALL> method for the seek request&#151;in this case, <small>FILE_BEGIN</SMALL>, which moves the file pointer to a position measured from the beginning of the file.
+</DL>
+<p>Three values are possible for the <small>move</SMALL> method:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_BEGIN</SMALL>. Specifies that the file pointer should be moved to a new position measured from the beginning of the file.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_CURRENT</SMALL>. Specifies that the file pointer is moved to a new position measured from its current location.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_END</SMALL>. Specifies that the file pointer is moved to a new location measured from the end of the file.
+</DL>
+<p><small>SetFilePointer</SMALL> returns <small>0xffffffff</SMALL> on failure. You can determine the cause of the error by calling <small>GetLastError</SMALL>. When <small>SetFilePointer</SMALL> is successful, the return value is the new file position. If the upper 32-bit parameter is not <small>NULL</SMALL>, the <small>DWORD</SMALL> variable pointed to by this parameter is filled with the higher order word for the new file position.</P>
+<p>A special case can occur when you&#146;re dealing with file sizes greater than 2<sup>32</SUP>&#151;sometimes <small>0xffffffff</SMALL> really is a valid value. When the 32-bit higher order word is used, <small>GetLastError</SMALL> returns <small>NO_ERROR</SMALL> if the return value is <small>0xffffffff</SMALL> and there is no error. Listing 4.8 demonstrates how to handle this case.</P>
+<p><b>Listing 4.8</B> Proper Handling of Return Values from <small>SetFilePointer</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+DWORD dwLow = SetFilePointer(hFile, dwOffset, &ampdwHigh, FILE_BEGIN);
+if(dwPos == 0xffffffff)
+{
+    if(GetLastError() != NO_ERROR)
+    {
+        // Handle error
+        return;
+    }
+}
+__int64 cFilePos = dwHigh;
+cFilePos &lt&lt 32;
+cFilePos &#43;= dwLow;
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>If you use this function in a multithreaded application or with asynchronous I/O, you must be careful not to change the pointer while it&#146;s being used. Protect your calls to <small>SetFilePointer</SMALL> using a <small>CriticalSection</SMALL> or <small>Mutex</SMALL> if necessary.</P>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">Using GetFileSize</FONT></H4>
+<p>You use the <small>GetFileSize</SMALL> function to retrieve the size of a file:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD cFile = GetFileSize(hFile, NULL);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>GetFileSize</SMALL> has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A file handle
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional pointer to a <small>DWORD</SMALL>, which stores the upper 32 bits of the file size if the file size can&#146;t be stored in a 32-bit value
+</DL>
+<p><small>GetFileSize</SMALL> returns the size of the file unless the file size cannot be stored in a 32-bit variable. If you&#146;re working with very large files that require 64-bit file sizes, you must pass a pointer to a <small>DWORD</SMALL> that stores the higher order 32-bit value of the file size, if needed, and then convert the two <small>DWORD</SMALL>s to a 64-bit quantity, as Listing 4.9 shows.</P>
+<p><b>Listing 4.9</B> Handling Large File Sizes with <small>GetFileSize</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+DWORD dwHigh;
+DWORD dwLow = GetFileSize(hFile, &ampdwHigh);
+if(dwLow == 0xffffffff)
+{
+    if(GetLastError() != NO_ERROR)
+    {
+        // Handle error here
+        return;
+    }
+}
+__int64 cFileSize = dwHigh;
+cFileSize &lt&lt 32;
+cFileSize &#43;= dwLow;
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h3><a name="Heading19"></A><font color="#000077">Using Asynchronous Input and Output</FONT></H3>
+<p>The one bottleneck that most Windows 2000 applications have in common is input and output. Unless you have a very simple application that never needs to read or write to a file, your application probably spends at least some of its time waiting for file I/O to be completed.
+</P>
+<p>With Windows 2000, you can take advantage of asynchronous file routines that enable your application to continue working while the operating system handles your input and output. Under 16-bit Windows and MS-DOS, a call to an input or output function was blocked or had to wait until the request was satisfied. Because disk I/O is much slower than memory access, this means your program has to wait, as shown in Figure 4.1. This is known as <i>synchronous I/O</I>.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-01.jpg',500,360 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-01.jpg',500,360)"><font color="#000077"><b>Figure 4.1</B></FONT></A>&nbsp;&nbsp;Synchronous file input and output.</P>
+<p>If you use the Windows 2000 asynchronous file routines, your application can continue to do other work while the operating system satisfies your I/O request, as shown in Figure 4.2. 
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-02.jpg',500,360 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-02.jpg',500,360)"><font color="#000077"><b>Figure 4.2</B></FONT></A>&nbsp;&nbsp;Asynchronous file input and output.</P>
+<p>You&#146;ll achieve better overall performance by using asynchronous I/O because you&#146;ll use your processing power more efficiently.
+</P>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Using Overlapped Input and Output</FONT></H4>
+<p>Windows 2000 offers an easy way for you to spin off asynchronous file input and output and perform other work while waiting for the I/O work to be completed. This sort of file I/O is called <i>overlapped I/O</I>, because other work can be performed while the operating system handles your I/O request.</P>
+<p>Using overlapped I/O is useful in situations in which you know that data must be read to or written from a file, and you can structure your code so that other work can be done while waiting for the I/O to be completed.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,166 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=169-172//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In some cases, when users work locally and a failure occurs, a user is right there asking for any possible disk drive that can be attached to the workstations to get him or her back up and running. There are two answers to this question depending on the type of administrator you are, who the user is, or what the environment is you are working in. You can blow one off from the cabinet and find a way to bring it back to life as you wipe the dust off your jeans; or set up an environment where everything is covered with 24/7 support and you don&#146;t have to worry about a thing. Not to mention, you won&#146;t get your suit dirty. Don&#146;t get me wrong; I have thrown away a couple pairs of nice slacks after crawling under raised floors, whereas other times, I went home with a clean T-shirt.
+</P>
+<p><font size="+1"><b>Example Two: Living Remotely</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>File servers generally have a fast network interface or even multiple interfaces, fast drives, a lot of memory, multiple CPUs, a lot of disk space, and full 24/7 support. They have some level of fault tolerance built in to them with either redundant controllers, power supplies, or raid arrays with a hot spare disk that can rebuild the array on-the-fly to a new disk waiting. Another necessity of file servers are shelf spares that are stored and can be put in by you or the vendor to minimize the amount of downtime. The design includes a backup solution complete with multiple high-density tape drives in a tape jukebox or library subsystem with full support. Did I mention this was a perfect world? At minimum, use a hot pluggable raid with shelf spares at the ready. Drives are usually the first to go.</P>
+<p>Of course if the network goes out, all access to the files are gone&#151;not only for one user, but for all the users. Likewise, if the system were to go down for any reason, all the users would be affected. One of the best parts for the users is when they experience a system drive failure on their workstations, they can walk over to another system on the network, (if one is available and configured similarly), log in, and continue to work until their systems are fixed.</P>
+<p>If home directories are being remotely accessed from a file server, it is best to have both systems talking the same versions of NFS. You should use a hard NFS mount instead of a soft. If the server does drop off the network for any reason, the local workstation reestablishes the mount point when the server comes back on the network. This should work in theory, but on some flavors of UNIX, the NFS mount can go into a stale state.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Home directories are a requirement for an account to function properly. Some flavors deny access to the system whereas others put you in the root directory. If a directory is not found for an account, email also does not get delivered to the account&#146;s mailbox file.
+</P>
+<p><font size="+1"><b>Real World Examples</B></FONT></P>
+<p>Many users have attempted to adapt the best of both worlds in an effort to work locally. Although they all worked, not all are the most efficient way to maintain your home directory.
+</P>
+<p>Some administrators set up work areas local for the user on their workstations and copy all the necessary files from a path down locally in the morning, work throughout the day, and copy the files back up to the server for the nightly backups to get the files. They gain the speed in working locally on the files. Because their home directory is still going over the network, if the server goes down off the network, the user is forced to be down also. They gain only speed.</P>
+<p>The increase in speed and capacity of removable storage has brought some users wanting to point their home directories to removable media. At the end of the day, they transfer the files up to the server to run a backup on them. These users often work from computer to computer, never staying very long at one system. Some users actually carry around external hard disk drives and consider them to be removable. They simply plug the SCSI cable into whatever computer they use for that day.</P>
+<p>Here&#146;s a true story. (It might sound good in theory&#151;well, maybe not. I give the administrator credit for originality.) A new Hierarchical Storage Management system (HSM) was brought into a company. After a certain percentage of a threshold limit was reached, the cache would write off to tape. If the cache didn&#146;t reach the threshold, it was set to flush the cache at the end of every night. All day long the admin was reading and writing to the HSM cache, knowing all the data would be archived off that evening. The next day, everything from cache was now on the tape, and at the end of the tape too. When he logged in to the system it took 3&#150;5 minutes to access any single file. Needless to say, the home directory isn&#146;t pointing there anymore I&#146;m told, but it did work.</P>
+<h3><a name="Heading14"></A><font color="#000077">5.7 Shells and the Password File</FONT></H3>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">5.7.1 Description</FONT></H4>
+<p>The last field in the password file reflects the command interpreter that is used by the account when logging in to a system.
+</P>
+<p><font size="+1"><b>Example One: Interpreting a Shell</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>chsh -s</B> <i>shell</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When you think of a shell, you think of the Bourne shell, or csh, tcsh, bash, and ksh. The Bourne shell (/bin/sh) typically is the default shell for most systems. Choosing a shell is a matter of personal preference.
+</P>
+<p>Flavor: BSD</P>
+<p>On BSD flavors, the user has the capability to switch to whatever shell he or she is most comfortable with. There is a list to choose from in the /etc/shells file that gets referenced and users are allowed to access their shell.</P>
+<!-- CODE SNIP //-->
+<pre>
+% chsh -s /bin/tcsh
+Changing shell for kxwexler
+Password:
+Shell changed.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There is no system administrator intervention; the user has the ability to make the changes on his or her own providing that the account actually resides on the local system. This works only with NIS/YP if the user is logged in to the system that was the NIS/YP master and the /etc/passwd file is mapped as the master password file. Changes won&#146;t take effect on all the slaves and clients until the next time the maps are pushed.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>Don&#146;t ever point the shell for root to a shell that lives in any partition other then the root partition. If a shell is defined in /usr/bin and the /usr partition is corrupted or doesn&#146;t mount, you will be unable to log in to a single user state. You will be forced to boot miniroot off the CDs or floppies and correct your mistake.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Example Two: Interpreting a Program</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>The reality is that any program that can be interpreted can go into the last field of the password file. This includes programs, applications, and even scripts. When the program is finished, there is no shell to drop in to, so you are logged out. Here is a simple example of how you could Telnet to a remote system and display the current time by logging in to it.</P>
+<p>First set up an account on the remote system called date, and point the shell to the name of the script that executes the <small>date</SMALL> command. Always have a password on the account if you can.</P>
+<!-- CODE //-->
+<pre>
+#vi /etc/passwd
+
+date:AdSf/oew.233d:165:100:Display the
+Date:/home/date:/hosts/date/
+&#8658;showdate
+
+# mkdir -p /home/date
+# chown date /home/date
+# chmod 700 /home/date
+</PRE>
+<!-- END CODE //-->
+<p>Create the script to display the date:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+vi /home/date/showdate
+
+#! /bin/sh
+/bin/date
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the shell to be used for the script.
+</P>
+<p>Line 2: Display the date to STDOUT.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

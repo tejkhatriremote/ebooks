@@ -1,0 +1,156 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=656-658//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The impersonation levels are defined as follows:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_IMP_LEVEL_ANONYMOUS</SMALL>. Not available in the initial release of Windows 2000. This value allows a client to connect to a server anonymously.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_IMP_LEVEL_IDENTIFY</SMALL>. Allows a server to impersonate the user for the purposes of checking the client&#146;s ACL. However, the server cannot access system objects while impersonating the client.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_IMP_LEVEL_IMPERSONATE</SMALL>. Allows the server to impersonate the client when acting on its behalf. Unlike earlier versions of Windows NT, Windows 2000 allows impersonation across multiple computers if cloaking is used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_IMP_LEVEL_DELEGATE</SMALL>. New to Windows 2000. This impersonation level allows the server to impersonate the client on this and other machines on the network.
+</DL>
+<p>The value stored as the <small>LegacyImpersonationLevel</SMALL> is not used if the COM server has called <small>CoInitializeSecurity</SMALL>. If this value is not set, and the server fails to call <small>CoInitializeSecurity</SMALL>, the operating system will use a value of <small>RPC_C_IMP_LEVEL_IDENTIFY</SMALL>.</P>
+<p>Mutual authentication enables both the client and server to authenticate the other party, instead of the more typical client-only authentication. This allows a client to ensure that the server is really who it says it is. By default, mutual authentication is turned off in Windows 2000. Mutual authentication was not available for Windows NT 4.0, and it&#146;s available in Windows 2000 only when Kerberos is used as the security provider. The <small>LegacyMutualAuthentication</SMALL> value is used to specify whether mutual authentication is in use. The <small>LegacyMutualAuthentication</SMALL> value has the <small>REG_SZ</SMALL> type and is located under <small>HKEY_LOCAL_MACHINE</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    LegacyMutualAuthentication=&lt<i>Y or N</I>&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The value is either <small>Y</SMALL>, to enable mutual authentication, or <small>N</SMALL>, to disable it. If the value is not found, mutual authentication is disabled.</P>
+<p>In a distributed environment, it&#146;s possible for a poorly written, or even malicious, program to call <small>AddRef</SMALL> or <small>Release</SMALL> on interfaces that it doesn&#146;t control. Enabling secure references forces the operating system to authenticate calls to <small>AddRef</SMALL> and <small>Release</SMALL> to ensure that these methods are called only by appropriate clients. The <small>LegacySecureReferences</SMALL> value is used to specify whether secure references are enabled. The <small>LegacySecureReferences</SMALL> value has the <small>REG_SZ</SMALL> type and is located under <small>HKEY_LOCAL_MACHINE</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    LegacySecureReferences=&lt<i>Y or N</I>&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The value is either <small>Y</SMALL>, to enable secure references, or <small>N</SMALL>, to disable them. If the value is not found, secure references are disabled.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Setting Security Attributes for a Process</FONT></H4>
+<p>Security attributes for a process can be set in two ways:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Through the Registry AppID associated with a process
+<dd><b>&#149;</B>&nbsp;&nbsp;Programmatically by calling <small>CoInitializeSecurity</SMALL>
+</DL>
+<p>These approaches are discussed in the following sections.
+</P>
+<p><font size="+1"><b>Controlling Security Through the AppID Key</B></FONT></P>
+<p>As discussed earlier in this chapter, every process that uses COM can be associated with an AppID. COM objects that are built using modern tools, such as Visual Basic or the ATL wizards in Visual C&#43;&#43;, will automatically generate AppIDs that are registered when the component is registered. Client applications do not automatically register themselves, so AppIDs must be added to the Registry through some other means, such as a Registry script or Registry API functions.
+</P>
+<p>Each AppID key may use four named values to specify process-wide security attributes:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RunAs</SMALL> is a <small>REG_SZ</SMALL> value that specifies the account to be used to execute the component. If the value is set to <small>Interactive User</SMALL>, the process will run with the credentials of the current interactive user. Running as the interactive user is very helpful during debugging, but it will not allow the component to run if no user is currently logged on to the machine. If the process is meant to run under a specific user account, you must use the DCOM Config utility to define a password.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LaunchPermission</SMALL> is a <small>REG_BINARY</SMALL> value that stores an ACL defining the security principals allowed to launch COM objects grouped in this AppID. This value overrides the <small>LegacyLaunchPermission</SMALL> value discussed earlier. A process can override this value by calling <small>CoInitializeSecurity</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>AccessPermission</SMALL> is a <small>REG_BINARY</SMALL> value that stores an ACL defining the security principals allowed to access COM objects grouped in this AppID. This value overrides the <small>LegacyAccessPermission</SMALL> value discussed earlier. A process can override this value by calling <small>CoInitializeSecurity</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>AuthenticationLevel</SMALL> is a <small>REG_DWORD</SMALL> value that specifies the authentication level for calls made to COM objects grouped under this AppID key. This named value has the same range of values as the <small>LegacyAuthenticationLevel</SMALL> value discussed earlier. If present, this value will override <small>LegacyAuthenticationLevel</SMALL>. A process can override this value by calling <small>CoInitializeSecurity</SMALL>.
+</DL>
+<p>Manipulating the Registry to provide security information is usually done with the DCOM configuration utility, which is discussed later in this chapter. Configuring the security attributes for clients and COM objects in this manner is sometimes called <i>declarative security</I>, as opposed to <i>programmatic security</I>, which is discussed in the next section.</P>
+<p><font size="+1"><b>Using CoInitializeSecurity to Define Security Attributes</B></FONT></P>
+<p>Using the Registry is useful in some cases, but finer control can be obtained by using programmatic security, such as calling specific COM functions and using COM interfaces to control security attributes. The primary function used to control COM security is <small>CoInitializeSecurity</SMALL>:</P>
+<!-- CODE //-->
+<pre>
+IAccessControl* pAccessCtrl = NULL;
+// Initialization of pAccessCtrl omitted...
+HRESULT hrSec = CoInitializeSecurity(pAccessCtrl,
+                                     -1,
+                                     NULL,
+                                     NULL,
+                                     RPC_C_AUTHN_LEVEL_CONNECT,
+                                     RPC_C_IMP_LEVEL_IDENTIFY,
+                                     NULL,
+                                     EOAC_ACCESS_CONTROL,
+                                     0);
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

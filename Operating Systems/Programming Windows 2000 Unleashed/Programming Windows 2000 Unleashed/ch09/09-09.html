@@ -1,0 +1,239 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=313-316//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch10/10-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>General-purpose functions that handle the event log, security attributes, and the current service status are located in the <small>Util.c</SMALL> source file. The source code for this file is provided in Listing 9.9.</P>
+<p><b>Listing 9.9</B> General-purpose Functions for the FileSpy Service<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+
+#include &#147;util.h&#148;
+#include &#147;svcmain.h&#148;
+
+extern SERVICE_STATUS_HANDLE  g_hSvcStatus;
+extern LPTSTR g_szService;
+extern BOOL g_fRunningAsService;
+
+
+/*
+ * The service status is kept as a global so that it can be easily
+ * re-sent if interrogated by the SCM.
+ */
+static SERVICE_STATUS  ss;
+
+/*
+ *  UpdateServiceStatus
+ *  Sends the current service status to the SCM. Also updates
+ *  the global service status structure.
+ */
+BOOL UpdateServiceStatus(SERVICE_STATUS_HANDLE hStatus,
+                         DWORD dwStatus,
+                         DWORD dwErrorCode,
+                         DWORD dwWaitHint)
+{
+    BOOL            fReturn = FALSE;
+    DWORD static    dwCheckpoint = 1;
+    DWORD           dwControls = SERVICE_ACCEPT_STOP;
+
+    if(g_fRunningAsService == FALSE) return FALSE;
+    ZeroMemory(&ampss, sizeof(ss));
+    ss.dwServiceType = SERVICE_WIN32;
+    ss.dwCurrentState = dwStatus;
+    ss.dwWaitHint = dwWaitHint;
+    if(dwErrorCode)
+    {
+        ss.dwWin32ExitCode = ERROR_SERVICE_SPECIFIC_ERROR;
+        ss.dwServiceSpecificExitCode = dwErrorCode;
+    }
+    // special cases that depend on the new state
+    switch(dwStatus)
+    {
+        case SERVICE_START_PENDING:
+            dwControls = 0;
+            break;
+        case SERVICE_RUNNING:
+        case SERVICE_STOPPED:
+            dwCheckpoint = 0;
+            break;
+    }
+    ss.dwCheckPoint = dwCheckpoint&#43;&#43;;
+    ss.dwControlsAccepted = dwControls;
+    return SetServiceStatus(hStatus, &ampss);
+}
+/*
+ * Sends the current service to the SCM.
+ */
+BOOL ReportCurrentServiceStatus(SERVICE_STATUS_HANDLE hStatus)
+{
+    return SetServiceStatus(hStatus, &ampss);
+}
+/*
+ * Sends a message to the event log.
+ */
+VOID WriteToEventLog(WORD wType, LPCTSTR pFormat, ...)
+{
+    TCHAR   szMsg[256];
+    LPTSTR  rgStr[1];
+    va_list pArg;
+    va_start(pArg, pFormat);
+      _vstprintf(szMsg, pFormat, pArg);
+    va_end(pArg);
+    rgStr[0] = szMsg;
+    if(g_fRunningAsService)
+    {
+        HANDLE  hEventSrc = NULL;
+        hEventSrc = RegisterEventSource(NULL, g_szService);
+        if(hEventSrc == NULL) return;
+        ReportEvent(hEventSrc,
+                    wType,
+                    0,
+                    0,
+                    NULL,
+                    1,
+                    0,
+                    rgStr,
+                    NULL);
+        DeregisterEventSource(hEventSrc);
+    }
+    else
+    {
+        // output with CR at the end of string.
+        _putts(szMsg);
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Declarations for functions implemented in <small>Util.c</SMALL> are found in the <small>Util.h</SMALL> header file, which can be found on the CD-ROM that accompanies this book.</P>
+<p>The message resource file for the FileSpy service, <small>FSpy.mc</SMALL>, is provided in Listing 9.10.</P>
+<p><b>Listing 9.10</B> The <small>FSpy.mc</SMALL> Message Resource File<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+; //Message file for FileSpy
+MessageID=0
+Language=English
+%1
+.
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>The <small>FSpy.mc</SMALL> message resource file is compiled using the message compiler and the following command line:</P>
+<!-- CODE SNIP //-->
+<pre>
+mc FSpy.mc
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Several files are generated after the compilation, including <small>MSG00001.bin</SMALL> and <small>FSpy.rc</SMALL>. These files must be copied into the project directory and added to the FileSpy project. After you&#146;ve built the FileSpy project, it can&#146;t be launched from the MMC until the service is registered. To register the FileSpy service, launch the service using the following command line:</P>
+<!-- CODE SNIP //-->
+<pre>
+FileSpy /register
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To unregister the service, launch the service using the following command line:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+FileSpy /unregister
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can run the FileSpy project in console mode by launching it in the Visual C&#43;&#43; debugger or by running the executable from the command line.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>When a service executable is launched from the command line, there&#146;s a short delay until the Service Control Manager times out and the process continues as a console mode application.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading17"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed writing services for Windows 2000. This chapter also presented examples for a fully functional service.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch10/10-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

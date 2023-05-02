@@ -1,0 +1,193 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Asynchronous COM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=19//-->
+<!--PAGES=619-624//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch18/18-13.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter19<br>Asynchronous COM
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Synchronous and Asynchronous Methods in COM <i>620</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Asynchronous Method Support in Windows 2000 <i>621</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>An Asynchronous COM Example <i>631</I></B>
+</DL>
+<p>This chapter discusses one of the most exciting developments in COM offered by Windows 2000: asynchronous method calls towards COM components. This new feature allows COM to be used in situations where it&#146;s not feasible to allow a client to block indefinitely until a server completes processing a request. This chapter discusses the new interfaces introduced to COM to support asynchronous methods calls and includes examples of using asynchronous COM method calls.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Synchronous and Asynchronous Methods in COM</FONT></H3>
+<p>Prior to Windows 2000, COM interfaces consisted primarily of synchronous method calls. The few asynchronous calls that existed in COM were used in the <small>IAdviseSink</SMALL> interface to implement DDE-like notification services. COM places restrictions on how these asynchronous functions are implemented&#151;you&#146;re not allowed to make a synchronous COM call from within any of the <small>IAdviseSink</SMALL> asynchronous methods.</P>
+<p>In a synchronous world, clients are not in control of their own destinies. A client is forced to wait while a server does its work. The client cannot perform other work once the method call has started, and the client has no way to cancel the method call. The client has no option but to wait for the method call the complete. Problems with server workload or network latency can seriously impact client performance.</P>
+<p>The primitive asynchronous support offered in <small>IAdviseSink</SMALL> did allow the client to invoke a method call and continue without work while the method completed, but there was no way for you to implement a custom interface that had these characteristics. <small>IAdvise</SMALL> gained its synchronous behavior through the sort of sleight of hand that&#146;s possible for operating system components.</P>
+<p>It was possible to implement asynchronous communication prior to Windows 2000 by using custom marshaling. As shown in Figure 19.1, this solution uses a thread pool in the marshaling proxy stub to give the appearance of asynchronous behavior.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-01.jpg',500,268 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-01.jpg',500,268)"><font color="#000077"><b>Figure 19.1</B></FONT></A>&nbsp;&nbsp;Roll-your-own asynchronous method calls using custom marshaling and a thread pool.</P>
+<p>Here&#146;s a list of the problems with implementing asynchronous method calls in this manner:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It&#146;s really difficult. Implementing custom marshaling and maintaining the thread pool requires a great deal of skill.
+<dd><b>&#149;</B>&nbsp;&nbsp;It doesn&#146;t work in cases where the client and server are in the same apartment. To support a full range of deployment options, you need a separate asynchronous calling scheme for intra-apartment cases.
+<dd><b>&#149;</B>&nbsp;&nbsp;It&#146;s not even really asynchronous. It appears to be asynchronous, but this behavior really depends on custom functions implemented in the proxy.
+<dd><b>&#149;</B>&nbsp;&nbsp;Custom marshaling increases your maintenance costs. If you add a new interface to a COM object that supports custom marshaling, you must rework your proxy and stub code.
+</DL>
+<p>What&#146;s needed is support for asynchronous method calls built into the operating system.
+</P>
+<h3><a name="Heading3"></A><font color="#000077">Asynchronous Method Support in Windows 2000</FONT></H3>
+<p>Asynchronous COM in Windows 2000 has some impressive characteristics:
+</P>
+<dl>
+<dd>&#149;	It works side by side with existing COM components.
+<dd>&#149;	Windows 2000 clients can make asynchronous calls to existing COM components by recompiling the proxy&#151;there&#146;s no need to recompile the component.
+<dd>&#149;	COM clients built for Windows NT 4.0 and earlier can still achieve the expected synchronous behavior when calling a Windows 2000 component.
+<dd>&#149;	No changes have been made to the DCOM wire protocol, so low-level tools will continue to work as expected with asynchronous COM.
+</DL>
+<p>You may be surprised that you can obtain asynchronous behavior without recompiling the COM server. As you&#146;ll see a later in this chapter, adding asynchronous capabilities to your COM objects may be as simple as making small changes to your IDL file and recompiling your proxy/stub DLL. Adding asynchronous capabilities to components used within the client&#146;s apartment requires changes in the COM object.
+</P>
+<p>Asynchronous COM introduces the <i>call object</I>, which is the focus point for all asynchronous method calls. The call object is created through <small>ICallFactory</SMALL>, a new interface exposed by objects that support asynchronous COM. As shown in Figure 19.2, the call object acts as an asynchronous intermediary to a COM object.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-02.jpg',314,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-02.jpg',314,420)"><font color="#000077"><b>Figure 19.2</B></FONT></A>&nbsp;&nbsp;The call object enables asynchronous behavior for a COM object.</P>
+<p>As will be described in detail later in this chapter, the call object exposes asynchronous interfaces to the client. When the client uses the asynchronous interface, the call object makes a synchronous call to the COM object. While the call object is managing the asynchronous call, it cannot be used for any other method calls.
+</P>
+<p>The synchronous interfaces still exist, and they can be called directly without involving the call object. Legacy clients that are not aware of the <small>ICallFactory</SMALL> interface will only use the synchronous interfaces.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Asynchronous Support in IDL</FONT></H4>
+<p>In order for an interface to be used asynchronously, it must be marked as asynchronous in the interface&#146;s IDL definition using the new Windows 2000 attribute named <small>async_uuid</SMALL>. Using <small>async_uuid</SMALL> as an attribute alerts the MIDL compiler that it should create asynchronous proxy/stub marshaling code for the interface. Listing 19.1 shows this new attribute highlighted in bold.</P>
+<p><b>Listing 19.1</B> Using the <small>async_uuid</SMALL> Interface Attribute to Define an Asynchronous Interface<hr></P>
+<!-- CODE //-->
+<pre>
+[
+    object,
+    uuid(00700700-7007-11D2-B889-00104B36573E),
+    <b>async_uuid(00800800-8008-11D2-B88A-00104B36573E),</B>
+
+    helpstring(&#147;ITakeTime Interface&#148;),
+    pointer_default(unique)
+]
+interface ITakeTime : IUnknown
+{
+    [helpstring(&#147;This method takes a while to execute&#148;)]
+    HRESULT TakeSomeTime([out]BSTR* pbstr);
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>async_uuid</SMALL> attribute specifies the interface ID that will be used for the asynchronous version of the interface. The synchronous version still exists, and it can be called by a client. The MIDL compiler generates a friendly symbolic name for the asynchronous interface that prefixes <small>Async</SMALL> to the existing interface name. Using the <small>ITakeTime</SMALL> definition from Listing 19.1, the MIDL compiler will create a new asynchronous interface named <small>AsyncITakeTime</SMALL>, similar to the definition shown in Listing 19.2.</P>
+<p><b>Listing 19.2</B> A Simplified Version of the MIDL-Generated Asynchronous Interface Definition<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+interface AsyncITakeTime : public IUnknown
+{
+public:
+    HRESULT Begin_TakeSomeTime(void);
+    HRESULT Finish_TakeSomeTime(BSTR *pbstrClerk);
+
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>The asynchronous interface defines two new methods for each method in the synchronous interface:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A method used to initiate processing of the asynchronous call. This method is prefixed with <small>Begin_</SMALL> and contains parameters with the <small>[in]</SMALL> attribute, if any.
+<dd><b>&#149;	A</B>&nbsp;&nbsp;method used to complete processing of the asynchronous call. This method is prefixed with <small>Finish_</SMALL> and contains parameters with the <small>[out]</SMALL> attribute, if any.
+</DL>
+<p>These asynchronous methods will exist in the proxy DLL after it&#146;s compiled. Clients that use a proxy DLL to communicate with a client in another apartment can use the rebuilt proxy/stub DLL to make asynchronous calls without rebuilding the COM server.
+</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Other New Asynchronous Components in Windows 2000</FONT></H4>
+<p>Several new interfaces and COM objects are used to implement asynchronous COM methods in Windows 2000:
+</P>
+<dl>
+<dd>&#149;	The <small>ICallFactory</SMALL> interface is used to create call objects. Any COM object that supports asynchronous behavior must expose this interface. It&#146;s possible, even desirable, to create a proxy that supports this interface, even though the underlying COM object may not.
+<dd>&#149;	The call object is used to provide a synchronization point for all asynchronous communication. All asynchronous interfaces and methods are exposed through call objects.
+<dd>&#149;	<small>AsyncI<i>Xxx</I></SMALL> interfaces are asynchronous versions of synchronous interfaces. As discussed in the previous section, the MIDL compiler automatically generates <small>AsyncI<i>Xxx</I></SMALL> interfaces in the header file that it generates from the IDL file.
+<dd>&#149;	<small>ISynchronize</SMALL> is an interface exposed by the call object that&#146;s used to determine whether an asynchronous method call has been completed.
+<dd>&#149;	<small>ICancelMethodCalls</SMALL> is an interface exposed by the call object that allows a client to cancel an asynchronous method call.
+</DL>
+<p>Each of these interfaces and COM objects is discussed in the following sections.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch18/18-13.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

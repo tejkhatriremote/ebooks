@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>- : W h o o Z o o : Ethernet MAC address spoofing in Linux : -</title>
+  
+  <meta name="Abstract" content="A document by Stephen Venter">
+  <meta name="author" content="sventer@rocketmail.com">
+  <meta name="description" content="A document by Stephen Venter describing Ethernet MAC address spoofing in Linux - MAC Spoofing">
+  <meta name="Distribution" content="Global">
+  <meta name="keywords" content="mac spoofing,mac spoof,whoozoo,stephen,venter,whoozoo.co.uk,Ethernet MAC address,spoofing,Ethernet MAC address">
+  <meta name="Revisit-After" content="7 Days">
+  <meta name="robots" content="FOLLOW,INDEX">
+  <meta http-equiv="Content-Language" content="EN-GB">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head>
+
+<body bgcolor="#ffffff" text="#000000">
+<p align="center"><font face="Verdana, Arial, Helvetica, sans-serif"><b><font size="5"><a name="top"></a>- : Ethernet MAC address spoofing in Linux
+: -</font></b><br>
+<a href="http://whoozoo.co.uk/index.html">[ home ]</a> </font></p>
+<!--<p align="right"><font face="Verdana, Arial, Helvetica, sans-serif"> <img src="/cgi-sys/Count.cgi?df=count-mac-spoof-linux.dat|display=Counter|ft=0|md=5|frgb=0;0;0|dd=E"></font></p>-->
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">2003-10-26
+<a target="_blank" href="http://whoozoo.co.uk/cv-stephenventer.pdf">Stephen
+Venter</a><br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><font size="2">For
+comments or feedback, refer to the Google Group <a target="_blank" href="http://groups-beta.google.com/group/WhooZoo_Feedback">WhooZoo_Feedback</a><br>
+Alternatively, send an email directly to this mailing list via <a target="_blank" href="mailto:WhooZoo_Feedback@googlegroups.com?subject=mac-spoof-linux.htm:">WhooZoo_Feedback@googlegroups.com</a>
+or email me directly via <a target="_blank" href="mailto:stephen.venter@gmail.com?subject=mac-spoof-linux.htm:">stephen.venter@gmail.com</a></font></font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"> ==<br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">1. <a href="#1">Intro</a><br>
+2. <a href="#2">Configuring the MAC via ifconfig</a><br>
+3. <a href="#3">Configuring the MAC automatically at boot time</a><br>
+4. <a href="#4">Final notes<br>
+</a>5. <a href="#5">Link Backs</a><br>
+<a href="http://groups-beta.google.com/group/WhooZoo_Feedback%20"></a></font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">==<a href="#top">[ return to top ]</a><a name="1"></a> <br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b>1.
+Intro</b><br>
+<br>
+This is my brief HOWTO for <a href="http://searchsecurity.techtarget.com/sDefinition/0,,sid14_gci213039,00.html" target="_blank">spoofing</a> an <a href="http://searchnetworking.techtarget.com/sDefinition/0,,sid7_gci212080,00.html" target="_blank">Ethernet</a> network card's <a href="http://searchnetworking.techtarget.com/sDefinition/0,,sid7_gci212506,00.html" target="_blank">MAC address</a>. MAC addresses are used for routing
+packets between physical devices (i.e. <a href="http://searchnetworking.techtarget.com/sDefinition/0,,sid7_gci212660,00.html" target="_blank">network interface cards</a>) on networks (like
+Ethernet networks).</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">Every
+network interface card (NIC) produced in the world has its own unique
+MAC address. A MAC address is made up of 6 sets of hexadecimal numbers
+(two-characters each), e.g. A1:B2:C3:D4:E5:F6</font></p>
+<p align="left"><b>1.1 My scenario<br>
+</b><font face="Verdana, Arial, Helvetica, sans-serif">My broadband ISP
+provides me Internet access for "registered servers". What it is
+actually using to "register" an individual server, i.e. to those
+machine's whose Ethernet card MAC addresses are registered with it.</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">I'm
+setting up a new Linux server to replace an old one and this new one
+has its own Ethernet network card - which thus has a different MAC
+address to that of the network card in the old box. I don't want to go
+thru the hassle of re-registering this new machine with them, so it is
+easier for me to spoof the MAC address by to hard-coding it within
+Ethernet configuration file.</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">I'm
+working with RedHat 9 here.</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">==<a href="#top">[ return to top ]</a><a name="2"></a><br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b>2.
+Configuring the MAC via ifconfig</b><br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"> The
+current Ethernet configuration is viewed by issuing the ifconfig
+command:</font></p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root]# ifconfig <br>
+      <b>eth0</b> Link encap:Ethernet <b>HWaddr 00:A0:C9:29:3C:68</b><br>
+inet addr:192.168.0.1 Bcast:192.168.0.255 Mask:255.255.255.0<br>
+UP BROADCAST MULTICAST MTU:1500 Metric:1<br>
+RX packets:0 errors:0 dropped:0 overruns:0 frame:0<br>
+TX packets:0 errors:4 dropped:0 overruns:0 carrier:4<br>
+collisions:0 txqueuelen:100 <br>
+RX bytes:0 (0.0 b) TX bytes:168 (168.0 b)<br>
+Interrupt:11 Base address:0xdf00 Memory:df9ff000-df9ff038</p>
+      <p>lo Link encap:Local Loopback <br>
+inet addr:127.0.0.1 Mask:255.0.0.0<br>
+UP LOOPBACK RUNNING MTU:16436 Metric:1<br>
+RX packets:51719 errors:0 dropped:0 overruns:0 frame:0<br>
+TX packets:51719 errors:0 dropped:0 overruns:0 carrier:0<br>
+collisions:0 txqueuelen:0 <br>
+RX bytes:3521447 (3.3 Mb) TX bytes:3521447 (3.3 Mb)</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>The MAC address of interest here is specified as "HWaddr
+00:A0:C9:29:3C:68"</p>
+<p>You can simply change the MAC address of the active interface by
+using the command in the format:</p>
+<blockquote>
+  <p>ifconfig [interface name] hw ether [new MAC address]</p>
+</blockquote>
+<p>So, in this example, the interface name is "eth0" and the new MAC
+address is "01:02:03:04:05:06":</p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root]# <b>ifconfig eth0 hw ether 01:02:03:04:05:06</b><br>
+[root]# ifconfig eth0<br>
+eth0 Link encap:Ethernet <b>HWaddr 01:02:03:04:05:06</b> <br>
+inet addr:192.168.0.1 Bcast:192.168.0.255 Mask:255.255.255.0<br>
+      <b>UP</b> BROADCAST MULTICAST MTU:1500 Metric:1<br>
+RX packets:0 errors:0 dropped:0 overruns:0 frame:0<br>
+TX packets:0 errors:4 dropped:0 overruns:0 carrier:4<br>
+collisions:0 txqueuelen:100 <br>
+RX bytes:0 (0.0 b) TX bytes:168 (168.0 b)<br>
+Interrupt:11 Base address:0xdf00 Memory:df9ff000-df9ff038 <br>
+      </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>This may not always work on an active (or "up") interface. In this
+case, de-activate (or "down") the interface first.</p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root]# ifconfig eth0 down</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Now bring it up again, specifying new MAC (here I changed the MAC
+again to a new one to accentuate the difference):</p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root]# ifconfig eth0 192.168.0.1 <b>hw ether
+11:12:13:14:15:16</b> up<br>
+[root]# ifconfig eth0<br>
+eth0 Link encap:Ethernet <b>HWaddr 11:12:13:14:15:16</b> <br>
+inet addr:192.168.0.1 Bcast:192.168.0.255 Mask:255.255.255.0<br>
+      <b>UP</b> BROADCAST MULTICAST MTU:1500 Metric:1<br>
+RX packets:0 errors:0 dropped:0 overruns:0 frame:0<br>
+TX packets:0 errors:4 dropped:0 overruns:0 carrier:4<br>
+collisions:0 txqueuelen:100 <br>
+RX bytes:0 (0.0 b) TX bytes:168 (168.0 b)<br>
+Interrupt:11 Base address:0xdf00 Memory:df9ff000-df9ff038 <br>
+      </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>&nbsp;</p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">==<a href="#top">[ return to top ]</a><a name="3"></a><br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b>3.
+Configuring the MAC automatically at boot time</b><br>
+</font></p>
+<p>Making the change as above (i.e. via the command line) will not
+guarantee that the interface will come up with this new MAC address
+when the machine is booted next. In order to ensure that the change is
+of a more permanent nature, you have to hard-code it within the
+configuration file for the Ethernet interface.</p>
+<p>The Ethernet configuration file for interface eth0 is the file
+ifcfg-eth0, located at (on a RedHat system):</p>
+<blockquote>
+  <p>/etc/sysconfig/network-scripts/ifcfg-eth0</p>
+</blockquote>
+<p align="left">Changing / adding the line starting with "HWADDR="<font face="Verdana, Arial, Helvetica, sans-serif"> <font color="#ff0000"><b>is
+SUPPOSED to </b></font>achieve the desired effect. Here is an example
+of one such a file after that line has been added at the bottom:</font></p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root@pii400 root]# cat
+/etc/sysconfig/network-scripts/ifcfg-eth0<br>
+DEVICE=eth0<br>
+BOOTPROTO=static<br>
+BROADCAST=192.168.0.255<br>
+IPADDR=192.168.0.3<br>
+NETMASK=255.255.255.0<br>
+NETWORK=192.168.0.0<br>
+ONBOOT=yes<br>
+      <b>HWADDR=31:32:33:34:35:36</b></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p align="left">However, when I reboot, it does NOT have the desired
+effect.</p>
+<p align="left">Also, if I try to use the command to restart the
+networking services ("service network restart"), i.e. to simulate what
+happens during a reboot of the machine, then I get the following error,
+and the MAC address does NOT come up as the new spoofed one that I want:</p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root]# service network restart<br>
+Shutting down interface eth0: <b>Device eth0 has different MAC address
+than expected, ignoring.</b><br>
+[<font color="#ff0000">FAILED</font>]<br>
+Shutting down loopback interface: [ OK ]<br>
+Setting network parameters: [ OK ]<br>
+Bringing up loopback interface: [ OK ]<br>
+Bringing up interface eth0: [ OK ]</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p align="left"></p>
+<p align="left">So after a little "googling" I found this discussion
+thread:</p>
+<blockquote>
+  <p>http://www.redhat.com/archives/redhat-list/2003-April/msg02721.html</p>
+</blockquote>
+<p>And implemented the suggestions there to get my machine to:</p>
+<blockquote>
+  <p>(a.) not enable this interface at boot time, by changing the
+"BOOTPROTO=" statement in my ifcfg-eth0 file to "<b>BOOTPROTO=none</b>"</p>
+  <p>(b.) editing the file containing LAST commands to be executed at
+boot time (/etc/rc.d/rc.local) to include the command to manually bring
+up this interface (as included within the section above):</p>
+  <blockquote>
+    <p><b>ifconfig eth0 hw ether 31:32:33:34:35:36</b></p>
+    <p>(b.1.) Remember, if that interface is intented to start up by
+getting an automatic IP address from a DHCP server, then you need to
+also put in the following line within the rc.local file:</p>
+    <blockquote>
+      <p><b>/sbin/dhcpcd eth0</b></p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+<p align="left">So now after rebooting the machine the interface has
+come up correctly with the specified (i.e. <b>spoofed</b>!) MAC
+address:</p>
+<table border="1" width="75%">
+  <tbody>
+    <tr>
+      <td bgcolor="#cccccc">
+      <p>[root]# ifconfig eth0<br>
+eth0 Link encap:Ethernet HWaddr 31:32:33:34:35:36 <br>
+inet addr:192.168.0.3 Bcast:192.168.0.255 Mask:255.255.255.0<br>
+UP BROADCAST MULTICAST MTU:1500 Metric:1<br>
+RX packets:0 errors:0 dropped:0 overruns:0 frame:0<br>
+TX packets:0 errors:4 dropped:0 overruns:0 carrier:4<br>
+collisions:0 txqueuelen:100 <br>
+RX bytes:0 (0.0 b) TX bytes:168 (168.0 b)<br>
+Interrupt:11 Base address:0xdf00 Memory:df9ff000-df9ff038 </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"> </font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">==<a href="#top">[ return to top ]</a><a name="4"></a><br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"><b>4.
+Final notes</b><br>
+</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">
+From what I recall, you cannot spoof the MAC of a secondary / aliased
+interfaces (like eth0:1), i.e. you can only spoof the MAC address of a
+primary interface (like eth0).</font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif"></font></p>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">==<a href="#top">[ return to top ]</a><a name="5"></a></font></p>
+<p style="font-weight: bold;"><font face="Verdana, Arial, Helvetica, sans-serif">5. Link Backs</font></p>
+<p style="font-weight: bold;"><font face="Verdana, Arial, Helvetica, sans-serif"><span style="font-weight: normal;">I would like to thank the following
+people &amp; sites for including references </span></font><font face="Verdana, Arial, Helvetica, sans-serif"><span style="font-weight: normal;">to this document i</span></font><font face="Verdana, Arial, Helvetica, sans-serif"><span style="font-weight: normal;">n their pages:</span></font></p>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="font-family: Verdana;"><a target="_blank" href="http://www.linuxquestions.org/questions/search.php?s=&amp;query=whoozoo&amp;excquery=&amp;optquery=&amp;phrquery=&amp;searchuser=&amp;exactname=yes&amp;forumchoice=-1&amp;titleonly=&amp;showposts=&amp;searchdate=365&amp;beforeafter=after&amp;sortby=lastpost&amp;sortorder=descending&amp;action=simplesearch&amp;Submit=Perform+Search">linuxquestions.org<br>
+      </a></td>
+      <td style="font-family: Verdana;">A number of posts at
+linuxquestions.org have references back to this document, including the
+"<a target="_blank" href="http://wiki.linuxquestions.org/wiki/MAC_address">MAC address WiKi</a>"</td>
+    </tr>
+    <tr>
+      <td style="font-family: Verdana;"><a target="_blank" href="http://axljab.homelinux.org/MAC_address_spoofing">axljab.homelinux.org</a></td>
+      <td style="font-family: Verdana;">RTFM-wiki: MAC address spoofing
+WiKi<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="font-family: Verdana;"><a target="_blank" href="http://www.daniweb.com/search/?q=whoozoo">daniweb.com</a></td>
+      <td style="font-family: Verdana;">Tech Talk Forum: Computer
+end-user technical support troubleshooting</td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-family: Verdana,Arial,Helvetica,sans-serif;"><br>
+Other link backs can be found via the "link:" search functions at
+search engines:<br>
+</span>
+<table style="margin-left: auto; margin-right: auto; text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <div style="margin-left: 40px;"><a target="_blank" href="http://search.msn.com/results.aspx?q=link%3Awhoozoo.co.uk%2Fmac-spoof-linux.htm&amp;FORM=QBHP"><span style="font-family: Verdana,Arial,Helvetica,sans-serif;">search.msn.com</span></a></div>
+      </td>
+      <td><span style="font-family: Verdana,Arial,Helvetica,sans-serif;">Mostly
+technical discussion forums.</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <div style="margin-left: 40px;"><a target="_blank" href="http://www.google.co.uk/search?hl=en&amp;q=link%3Awhoozoo.co.uk%2Fmac-spoof-linux.htm&amp;btnG=Google+Search&amp;meta="><span style="font-family: Verdana,Arial,Helvetica,sans-serif;">google.com</span></a></div>
+      </td>
+      <td><span style="font-family: Verdana,Arial,Helvetica,sans-serif;">For
+some reason the links search via Google is not as useful as the MSN one
+(at the time I published this update!)</span></td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-family: Verdana,Arial,Helvetica,sans-serif;"></span><br>
+<span style="font-family: Verdana,Arial,Helvetica,sans-serif;"></span>
+<p align="left"><font face="Verdana, Arial, Helvetica, sans-serif">==<a href="#top">[ return to top ]<br>
+</a></font></p>
+<p align="center"><font face="Verdana, Arial, Helvetica, sans-serif">-
+: <a href="http://whoozoo.co.uk/index.html">whoozoo.co.uk</a> : -</font></p>
+<table style="border: 1px solid rgb(170, 0, 51); font-size: small;" align="center">
+  <tbody>
+    <tr>
+      <td rowspan="2"> <img src="mac-spoof-linux_files/groups_medium.gif" alt="Google Groups" height="58" width="150"> </td>
+      <td align="center"><b>WhooZoo_Feedback</b></td>
+    </tr>
+    <tr>
+      <td align="center"><a href="http://groups-beta.google.com/group/WhooZoo_Feedback">Browse
+Archives</a> at <a href="http://groups-beta.google.com/">groups-beta.google.com</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</body></html>

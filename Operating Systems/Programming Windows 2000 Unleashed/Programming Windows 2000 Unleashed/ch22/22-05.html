@@ -1,0 +1,141 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=742-745//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b><i>Oops, Everything Went Wrong: SetAbort</I></B></FONT></P>
+<p>When everything goes wrong and any work performed on the transaction needs to be aborted, <small>SetAbort</SMALL> must be called. It will abort everything and force all objects to be deactivated when the control returns to the caller. This method is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HRESULT IObjectContext::SetAbort ( );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Again, as is the case with <small>DisableCommit, S_OK</SMALL> indicates that the method call was successful, and a return code of <small>CONTEXT_E_NOCONTEXT</SMALL> means that the object is not participating in a transaction but is running within the COM&#43; services.</P>
+<p><font size="+1"><b><i>Everything Is Okay: SetComplete</I></B></FONT></P>
+<p>This method is an indication that the transactional work committed thus far can be committed. The key word here is <i>indication</I>, because whether or not the transaction survives is up to the two-phase commit. If the two-phase commit is successful, the transactional work will be committed. Regardless of the result of the two-phase commit, the object is deactivated when it returns control to the caller. This method is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HRESULT IObjectContext::SetComplete ( );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Again, as is the case with <small>DisableCommit, S_OK</SMALL> indicates that the method call was successful, and a return code of <small>CONTEXT_E_NOCONTEXT</SMALL> means that the object is not participating in a transaction but is running within the COM&#43; services environment.</P>
+<p><font size="+1"><b><i>What to Do When Jumping Out of a Method</I></B></FONT></P>
+<p>Telling the COM&#43; services what you&#146;re doing is important because only then can COM&#43; services recover resources. If you do not tell COM&#43; services everything, then partially telling your resources what you are doing may result in unpredictable behavior, because when a COM object executes within a COM&#43; application, it uses just-in-time activation and deactivation. A COM&#43; object that does not implement this properly will create unreliable results.
+</P>
+<p><font size="+1"><b><i>An Activity Example</I></B></FONT></P>
+<p>Let&#146;s go through an example of creating an invoice. The purpose is to define the activities and which transaction outcome method to call. Here&#146;s the business process:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Get an order number.
+<dd><b>2.</B>&nbsp;&nbsp;Set the client name and address.
+<dd><b>3.</B>&nbsp;&nbsp;Add an ordered part to the order.
+<dd><b>4.</B>&nbsp;&nbsp;Keep adding parts until the order is complete.
+<dd><b>5.</B>&nbsp;&nbsp;Close the order.
+</DL>
+<p>What&#146;s the activity in this example? Is the activity step 1 only? Is it a combination of steps 1, 2, 3, and 4? The answer is that there are two activities. The first activity is the generation of the order number, and the second is the creation of the order.
+</P>
+<p>It would be optimal to make the activity all the steps. However, the problem is that the order entry could take many hours in the worst case. In this situation, the shared resource is the generation of the order number, because most order numbers are incremental. A long transaction would lock the record or records and not allow anyone else to generate any orders. A question then arises: What if the order does not get generated? The answer is that it&#146;s canceled and marked as canceled in the database. Although this is wasteful of order numbers, it&#146;s a determined result. In real life, if an order is filled out using paper and then stopped half-way through, the order is not re-created. It&#146;s considered canceled. Also, adding the programming resources to manage this using canceled order number reuse is not worth the programming effort.</P>
+<p>The second part of the transaction can be long because it&#146;s a personal transaction. This means no two people are creating the same order simultaneously&#151;or at least the chances of it are very small. Therefore, there&#146;s no resource lockup, because the records are locked to a specific person.</P>
+<p>When step 2 returns, the method calls <small>EnableCommit</SMALL>. This is correct because the order has an associated client. A forced commit would create an order that has no ordered items. Although this is not good financially, it&#146;s okay at the business level. An empty order does not induce any business processes. The advantage of calling <small>EnableCommit</SMALL> is that if the order is forced to be saved, the order creator does not need to go through all the steps of creating the order. Instead, he or she can simply search for the client and continue adding ordered items. Also, by no means is a <small>SetComplete</SMALL> or <small>SetAbort</SMALL> correct, because that would mean the activity is finished, which is not the case.</P>
+<p>Steps 3 and 4 involve the process of adding ordered parts to the order. Each time an order is added, <small>DisableCommit</SMALL> is called. The reason why this is correct is that half an order is not a valid state. Consider the situation where the data-entry person partially adds an order, goes for coffee, and then the data is written to the database. He or she may forget about the order and therefore send out half an order to the client. The client, in turn, will receive only half an order, which is frustrating for the client.</P>
+<p>Finally, if all goes okay, the order is closed in step 5. This method calls <small>SetComplete</SMALL>, which starts the two-phase commit. Now the object is deactivated and can be potentially reused or pooled, depending on the configuration.</P>
+<p>It&#146;s possible throughout any of these steps to call <small>SetAbort</SMALL> to cancel any part of the transaction. This causes an automatic erasing of the data from the resource and keeps the database clean.</P>
+<p><font size="+1"><b>Querying</B></FONT></P>
+<p>The querying methods are in place so that it&#146;s possible to decide which action to take. For example, there are situations when the component doesn&#146;t run within a transaction but rather within COM&#43; services. Should the component return an error stating that it must run within a transaction? That&#146;s a question for the application programmer. The next section discusses what type of transactional information can be discovered.
+</P>
+<p><font size="+1"><b><i>Is There a Transaction? IsInTransaction</I></B></FONT></P>
+<p>This entire long-winded discussion of transactions is not worth the paper it&#146;s printed on if the object is not participating in a transaction. Therefore, a check has to be available that tells the object whether it&#146;s in a transaction. This is the purpose of the method <small>IsInTransaction</SMALL>, which is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   BOOL IObjectContext::IsInTransaction ( );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the method returns a <small>TRUE</SMALL> value, the object is executing within a transaction. A <small>FALSE</SMALL> value indicates that the object is not executing within the context of a transaction. This method can also be partially used to check whether the object is configured properly in the COM&#43; services catalog. For example, if a check proves that the object is not in a transaction and yet the object is registered in a package, the transaction property is set to &#147;Does not support transactions.&#148; If this is unacceptable, the object can stop processing and send an error back to the caller.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

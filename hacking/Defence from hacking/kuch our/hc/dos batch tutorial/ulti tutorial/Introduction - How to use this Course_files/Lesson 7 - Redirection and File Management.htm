@@ -1,0 +1,1191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw070.htm -->
+<HTML><HEAD><TITLE>Lesson 7 - Redirection and File Management</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=7,LnIdx="Lesson "+Ln;</SCRIPT>
+
+<SCRIPT language=JavaScript 
+src="Lesson 7 - Redirection and File Management_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 7 - Redirection and File Management_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 7 - Redirection and File Management_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 7 - Redirection and File Management_files/r2.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Array();for (i=0;i<=2;i++) M[i]=new Image();M[0].src='pi.gif';M[1].src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>
+<SCRIPT>cn('Redirection')</SCRIPT>
+and the Temporary folder</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Learn to use
+  <SCRIPT>cn('redirection')</SCRIPT>
+   to create and append to files 
+  <LI>Understand <NOBR>
+  <SCRIPT>cn('current folder')</SCRIPT>
+  </NOBR>and <NOBR>
+  <SCRIPT>cn('current drive')</SCRIPT>
+  </NOBR>
+  <LI>Learn to use the
+  <SCRIPT>cn('CD')</SCRIPT>
+   command 
+  <LI>Learn to use a temporary folder for our workfiles </LI></UL><SPAN 
+class=fg>&nbsp;Note&nbsp;</SPAN> Each Lesson relies on your files from the 
+previous one. It's better to use your own files, but if you can't, download a 
+copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 6";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson6.zip">end&nbsp;of&nbsp;Lesson&nbsp;6</A> 
+and click<IMG 
+src="Lesson 7 - Redirection and File Management_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.
+<P></P></DIV>
+<DIV class=lm>
+<P>Creating test files</P></DIV>
+<DIV class=bd>
+<P>Our <SPAN class=fs>BKSETUP.BAT</SPAN> script needs to create some files in 
+our <SPAN class=fs>C:\BKTEST</SPAN> source folder. These will be used to test 
+our actual backup script (when we develop it). In this Lesson we'll see how to 
+create some suitable test files using
+<SCRIPT>cn('redirection')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Listing files from the command line with
+<SCRIPT>cn('DIR')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>So far, we've created six files in our work folder, <SPAN 
+class=fs>C:\CSW</SPAN>. Use the
+<SCRIPT>cn('DIR')</SCRIPT>
+ command to show them. Try it now with the <SPAN class=fs>/o</SPAN> switch
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command <SPAN CLASS=qfx>dir /o</SPAN> (the <SPAN CLASS=fx>/<SPAN CLASS=or>o</SPAN></SPAN> switch can <SPAN CLASS=br>o</SPAN>rder the list in many different ways - normal alphabetical order is the default when the switch is used alone as here. Always remember that when you&#39;re working in a DVM, you can get brief help on any command by typing the command name followed by <SPAN CLASS=fx>/?</SPAN>).','C:&#92;CSW&#62;dir /o<BR><BR><NOBR> Volume in drive C is <SPAN CLASS=dtd>YourDiskName</SPAN></NOBR><BR><NOBR> Volume Serial Number is <SPAN CLASS=dtd>nnnn-nnnn</SPAN></NOBR><BR> Directory of C:&#92;CSW<BR><BR><NOBR>.              &#60;DIR&#62;        <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> .</NOBR><BR><NOBR>..             &#60;DIR&#62;        <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> ..</NOBR><BR><NOBR>BKSETUP  BAT           914  <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> BKSETUP.BAT</NOBR><BR><NOBR>HIGHNOON BAT            95  <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> HIGHNOON.BAT</NOBR><BR><NOBR>HW       BAT            29  <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> HW.BAT</NOBR><BR><NOBR>LEVEL    BAT           301  <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> LEVEL.BAT</NOBR><BR><NOBR>MENU     BAT           297  <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> MENU.BAT</NOBR><BR><NOBR>RC       BAT            79  <SPAN CLASS=dtd>dd/mm/yy  hh:mm</SPAN> RC.BAT</NOBR><BR><NOBR>         6 file(s)          1,715 bytes</NOBR><BR><NOBR>         2 dir(s)   <SPAN CLASS=dtd>FreeDiskSpace</SPAN> bytes free</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note 1&nbsp;</SPAN> The disk label <SPAN 
+class=fs>YourDiskName</SPAN>, the serial number <SPAN class=fs>nnnn-nnnn</SPAN>, 
+the dates and times (and their format), and the <SPAN 
+class=fs>FreeDiskSpace</SPAN> will all depend on your system.</P>
+<P><SPAN class=fg>&nbsp;Note 2&nbsp;</SPAN> If your file sizes differ, you may 
+have extra <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s, <SPAN 
+class=ky>&nbsp;Tabs&nbsp;</SPAN>, or blank lines in some files. Extra white 
+space doesn't matter, as long as it's only for layout purposes.</P></DIV>
+<DIV class=lm>
+<P>Folder <NOBR>
+<SCRIPT>cn('dot alias')</SCRIPT>
+es</NOBR></P></DIV>
+<DIV class=bd>
+<P>The <SPAN class=qfx>.</SPAN> and <SPAN class=qfx>..</SPAN> at the top of
+<SCRIPT>cn('DIR')</SCRIPT>
+ lists (for subfolders) are folder <NOBR>
+<SCRIPT>cn('dot alias')</SCRIPT>
+es</NOBR>: 
+<UL>
+  <LI><SPAN class=qfx>.</SPAN> is shorthand for the <NOBR>
+  <SCRIPT>cn('current folder')</SCRIPT>
+  </NOBR>
+  <LI><SPAN class=qfx>..</SPAN> is shorthand for the parent of the <NOBR>
+  <SCRIPT>cn('current folder')</SCRIPT>
+  </NOBR></LI></UL>These two are a formal part of the folder index for any 
+subfolder (but not the root folder).
+<P></P></DIV>
+<DIV class=lm>
+<P>The
+<SCRIPT>cn('DIR')</SCRIPT>
+ <SPAN class=fs>/o</SPAN> combination lists in alphabetical order</P></DIV>
+<DIV class=bd>
+<P>The <SPAN class=fs>/o</SPAN> switch is useful; it returns a list in 
+alphabetical order. Without it, files are listed in the order they happen to 
+occur in the folder index (a low-level disk structure). The folder index order 
+is changed by some defragmentation utilities, so we'll normally use the <SPAN 
+class=fs>/o</SPAN> order in this Course. This way, the listings in the Exercises 
+will match what you see.</P>
+<P>The command <NOBR><SPAN class=cl>dir /o</SPAN></NOBR> is equivalent to the 
+explicit switch combo <NOBR><SPAN class=cl>dir /<SPAN class=hr>o</SPAN><SPAN 
+class=hg>g</SPAN><SPAN class=hb>n</SPAN><SPAN class=hp>e</SPAN></SPAN></NOBR> 
+which means list folder contents <SPAN class=br>o</SPAN>rdered by:
+<OL>
+  <LI><SPAN class=bg>g</SPAN>rouping subfolder names first, 
+  <LI>then in alphabetical order of file base <SPAN class=bb>n</SPAN>ame (the 
+  part before the extension) 
+  <LI>then in alphabetical order of <SPAN class=bp>e</SPAN>xtension (for files 
+  with same base name) </LI></OL>If you use <B>any</B> of the explicit options 
+with <SPAN class=fx>/o</SPAN>, you must specify <B>all</B> options you want. So, 
+<NOBR><SPAN class=cl>dir /<SPAN class=hr>o</SPAN><SPAN 
+class=hb>n</SPAN></SPAN></NOBR> lists files <SPAN class=br>o</SPAN>rdered by 
+base <SPAN class=bb>n</SPAN>ame, but doesn't group folders first, nor list same 
+base named files by extension. The
+<SCRIPT>cn('DIR')</SCRIPT>
+ ordering options are listed in the <NOBR><SPAN class=cl>dir /?</SPAN></NOBR> 
+help.
+<P></P></DIV>
+<DIV class=lm>
+<P>Printing the screen</P></DIV>
+<DIV class=bd>
+<P>If you have a printer attached to your system, and you want to print out a 
+complicated screenful of text from the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>, click on the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;&nbsp;</SPAN> button on the Taskbar (to bring 
+it into focus), and press the key combination <SPAN 
+class=ky>&nbsp;Shift&nbsp;</SPAN>+<SPAN 
+class=ky>&nbsp;PrintScrn&nbsp;</SPAN>.</P></DIV>
+<DIV class=lm>
+<P>A simpler
+<SCRIPT>cn('DIR')</SCRIPT>
+ listing</P></DIV>
+<DIV class=bd>
+<P>By adding the <SPAN class=fs>/b</SPAN> (for bare list) switch, we can make a 
+simpler listing
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command <SPAN CLASS=qfx>dir /<SPAN CLASS=or>o</SPAN> /<SPAN CLASS=ob>b</SPAN></SPAN> to make an <SPAN CLASS=br>o</SPAN>rdered (alphabetical) <SPAN CLASS=bb>b</SPAN>are (no details other than file name) list of filenames. This type of plain list is often useful in scripts.','C:&#92;CSW&#62;dir /o /b<BR>BKSETUP.BAT<BR>HIGHNOON.BAT<BR>HW.BAT<BR>LEVEL.BAT<BR>MENU.BAT<BR>RC.BAT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Creating files with
+<SCRIPT>cn('redirection')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>So far, we've created all our files with <B>Notepad</B>. In our Batch 
+scripts, we'll often use the
+<SCRIPT>cn('redirection')</SCRIPT>
+ operator&nbsp;
+<SCRIPT>cn('>')</SCRIPT>
+ to create files. Before we try this, let's introduce a little jargon.</P></DIV>
+<DIV class=lm>
+<P>Output <B>channels</B></P></DIV>
+<DIV class=bd>
+<P>We've used
+<SCRIPT>cn('ECHO')</SCRIPT>
+ and we know it writes text to the DVM screen, yes? Well, not really. Like most 
+of the commands we'll use,
+<SCRIPT>cn('ECHO')</SCRIPT>
+ writes to something called the
+<SCRIPT>cn('STDOUT')</SCRIPT>
+ output channel (that stands for STandDard OUTput). And, by default, Windows 
+points
+<SCRIPT>cn('STDOUT')</SCRIPT>
+ to the DVM screen. That's why
+<SCRIPT>cn('ECHO')</SCRIPT>
+ writes to the DVM display screen.</P>
+<P>Why does Windows work indirectly in this way? It's so that you can redirect
+<SCRIPT>cn('STDOUT')</SCRIPT>
+ elsewhere than the screen, if you wish. Then
+<SCRIPT>cn('ECHO')</SCRIPT>
+ 's (or another command's) output is sent where <B>you</B> choose. You use the
+<SCRIPT>cn('redirection')</SCRIPT>
+ operator
+<SCRIPT>cn('>')</SCRIPT>
+ (it's just the <SPAN class=ky>&nbsp;&gt;&nbsp;</SPAN> key).</P></DIV>
+<DIV class=lm>
+<P>Where can you send a command's output?</P></DIV>
+<DIV class=bd>
+<P>You can send a command's
+<SCRIPT>cn('STDOUT')</SCRIPT>
+ output to various
+<SCRIPT>cn('device')</SCRIPT>
+ s: 
+<UL>
+  <LI>
+  <SCRIPT>cn('CON')</SCRIPT>
+  – the DVM screen (and the default
+  <SCRIPT>cn('STDOUT')</SCRIPT>
+
+  <SCRIPT>cn('device')</SCRIPT>
+   )<BR>&nbsp; 
+  <LI>
+  <SCRIPT>cn('NUL')</SCRIPT>
+  – <SPAN class=qfs>ECHO.Message&gt;NUL</SPAN> sends the message into oblivion 
+  (suppresses it)<BR>&nbsp; 
+  <LI>
+  <SCRIPT>cn('PRN')</SCRIPT>
+  – <SPAN class=qfs>ECHO.Message&gt;PRN</SPAN> sends the message to the default 
+  printer (prints it)<BR>&nbsp; 
+  <LI>
+  <SCRIPT>cn('COM1')</SCRIPT>
+  – <SPAN class=qfs>ECHO.ath1&gt;COM1</SPAN> sends the message to the first 
+  serial port,<BR>if you have a modem connected there, and it's not in use: 
+  <UL>
+    <LI><SPAN class=fs>ath1</SPAN> should set it <B>off hook</B> (pick up and 
+    get a dialling tone) 
+    <LI><SPAN class=fs>ath0</SPAN> should restore the <B>on hook</B> condition 
+    (hang up again) </LI></UL>(Do try to resist the temptation to play with the 
+  modem now, we're <B>not</B> going to cover modem commands in this 
+Course!)</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>
+<SCRIPT>cn('Redirection')</SCRIPT>
+to files</P></DIV>
+<DIV class=bd>
+<P>But the most important
+<SCRIPT>cn('STDOUT')</SCRIPT>
+
+<SCRIPT>cn('redirection')</SCRIPT>
+ is to <SPAN class=br>files</SPAN>. End of theory. Let's practice.</P>
+<P>We know how to display text on the screen with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ , for example
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type this simple <SPAN CLASS=bb>ECHO</SPAN> command. Technically speaking, its output goes to <SPAN CLASS=bb>STDOUT</SPAN> which by default is the DVM screen.','C:&#92;CSW>echo.Alan Greenspan<BR>Alan Greenspan<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Now
+<SCRIPT>cn('ECHO')</SCRIPT>
+ to a file</P></DIV>
+<DIV class=bd>
+<P>The output of that
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command can be redirected to a file, like this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the same command, but add <SPAN CLASS=bb>redirection</SPAN> to the (new) <SPAN CLASS=fx>Greenspan.txt</SPAN> like this. This time we see no output in the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> because it&#39;s redirected to the file.','C:&#92;CSW>echo.Alan Greenspan>Greenspan.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Look for a new file</P></DIV>
+<DIV class=bd>
+<P>We saw no output displayed, it was redirected to the file we named. Check the 
+file list again and confirm a new file was created
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>dir /<SPAN CLASS=or>o</SPAN> /<SPAN CLASS=ob>b</SPAN></SPAN> to make an <SPAN CLASS=br>o</SPAN>rdered <SPAN CLASS=bb>b</SPAN>are list and our new file appears in it.','C:&#92;CSW&#62;dir /o /b<BR><SPAN CLASS=dtd>BKSETUP.BAT</SPAN><BR>Greenspan.txt<BR><SPAN CLASS=dtd>HIGHNOON.BAT<BR>HW.BAT<BR>LEVEL.BAT<BR>MENU.BAT<BR>RC.BAT</SPAN><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>And
+<SCRIPT>cn('TYPE')</SCRIPT>
+ its contents</P></DIV>
+<DIV class=bd>
+<P>As you see, a new file, <SPAN class=fs>Greenspan.txt</SPAN> was created, and 
+now appears in the list. You can display the contents of a text file with the
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>type greenspan.txt</SPAN> and confirm that the text was captured by our <SPAN CLASS=bb>redirection</SPAN>. You can capture <SPAN CLASS=bb>DIR</SPAN> listings of files and their details (creation dates and sizes) in a similar way, which is often useful (as we shall see in later Lessons).','C:&#92;CSW>type greenspan.txt<BR>Alan Greenspan<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The message was captured</P></DIV>
+<DIV class=bd>
+<P>The file contains the message redirected from our
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command.
+<SCRIPT>cn('Redirection')</SCRIPT>
+ is a powerful technique. We shall use it frequently from now on.</P></DIV>
+<DIV class=lm>
+<P>The operator
+<SCRIPT>cn('>')</SCRIPT>
+ deletes any same-name file</P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('redirection')</SCRIPT>
+ operator
+<SCRIPT>cn('>')</SCRIPT>
+ creates a new file. If a file with the same name already exists, it's <SPAN 
+class=br>deleted and replaced</SPAN> with the new file, so take care!</P>
+<P>Try it now with the <SPAN class=fs>Greenspan.txt</SPAN> file
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>echo.I worry incessantly>greenspan.txt</SPAN> (the capital <SPAN CLASS=ky>&nbsp;G&nbsp;</SPAN> in the old file name will be preserved, although its contents are overwritten). Notice that <SPAN CLASS=br>no warning</SPAN> is given when you overwrite a file&#39;s content with <SPAN CLASS=fx>&#62;</SPAN><SPAN CLASS=bb>redirection</SPAN> in this way!','C:&#92;CSW>echo.I worry incessantly>greenspan.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Previous version deleted</P></DIV>
+<DIV class=bd>
+<P>The previous contents are deleted and replaced; check the new contents
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type greenspan.txt</SPAN> to confirm the file now consists <SPAN CLASS=br>only</SPAN> of the new line.','C:&#92;CSW>type greenspan.txt<BR>I worry incessantly<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>The original contents of <SPAN class=fs>Greenspan.txt</SPAN> were 
+lost when we used
+<SCRIPT>cn('>')</SCRIPT>
+ a second time. When you use <SPAN class=qfs>&gt;FILENAME.EXT</SPAN> any 
+existing file with that name is <SPAN class=br>overwritten</SPAN>. 
+<P></P></DIV>
+<DIV class=lm>
+<P>Appending with
+<SCRIPT>cn('>>')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>If we want to append text to an existing file, we need to use the appending 
+form
+<SCRIPT>cn('>>')</SCRIPT>
+ of the
+<SCRIPT>cn('redirection')</SCRIPT>
+ operator. Try it now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>echo.that I might be too clear.>>greenspan.txt</SPAN> and this time the new line is appended (added) to the existing file. If the file doesn&#39;t exist already, the append operator creates a new file (so make sure you spell the filename correctly, or you&#39;ll simply create a new file instead of appending a line to the old file).','C:&#92;CSW>echo.that I might be too clear.>>greenspan.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The line is appended</P></DIV>
+<DIV class=bd>
+<P>Now look at the contents of <SPAN class=fs>Greenspan.txt</SPAN> with a
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type greenspan.txt</SPAN> to display the file (this quip was made by the Chairman of the Federal Reserve, Alan Greenspan, on 25th June 1995 in the New York Times).','C:&#92;CSW>type greenspan.txt<BR>I worry incessantly<BR>that I might be too clear.<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>
+<SCRIPT>cn('ECHO')</SCRIPT>
+adds a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> after the message text</P></DIV>
+<DIV class=bd>
+<P>The first
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command added a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> to its message text 
+(it actually adds a carriage-return linefeed combination). The appended new text 
+appears on a new line.
+<SCRIPT>cn('ECHO')</SCRIPT>
+ always adds a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> in this way, so each 
+addition goes on a new line.</P></DIV>
+<DIV class=lm>
+<P>Append some more lines</P></DIV>
+<DIV class=bd>
+<P>Use
+<SCRIPT>cn('>>')</SCRIPT>
+ again to append two more lines, to add the quotation reference
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type these two lines to append the quotation date (make sure you use double <SPAN CLASS=qfx>&#62;&#62;</SPAN> to append; and, again, make sure you type the file name correctly each time, or you&#39;ll create a new file instead of appending to the old one).','C:&#92;CSW>echo.Alan Greenspan, 25 June 1995>>greenspan.txt<BR><BR>C:&#92;CSW>echo.Chairman, Federal Reserve>>greenspan.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>And
+<SCRIPT>cn('TYPE')</SCRIPT>
+ the contents</P></DIV>
+<DIV class=bd>
+<P>Check the contents again with
+<SCRIPT>cn('TYPE')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type greenspan.txt</SPAN> to display all four lines we&#39;ve written into the file.','C:&#92;CSW>type greenspan.txt<BR>I worry incessantly<BR>that I might be too clear.<BR>Alan Greenspan, 25 June 1995<BR>Chairman, Federal Reserve<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>An
+<SCRIPT>cn('>>')</SCRIPT>
+ creates a new file if there's no existing one</P></DIV>
+<DIV class=bd>
+<P>The append operator
+<SCRIPT>cn('>>')</SCRIPT>
+ creates a new file if there isn't one already. This can be useful, for example, 
+when creating files that log activity:
+<SCRIPT>cn('>>')</SCRIPT>
+ will create a new log file whenever there's no log file started already, 
+otherwise it will append to an existing one.</P>
+<P>First, confirm we don't already have a file called <SPAN 
+class=fs>314159.TXT</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type 314159.txt</SPAN> and the command reports that there is no such file.','C:&#92;CSW>type 314159.txt<BR>File not found - 314159.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Append to create the file</P></DIV>
+<DIV class=bd>
+<P>Now use append, and it will create the file for you
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('<SPAN CLASS=bb>ECHO</SPAN> this text into the file with <SPAN CLASS=qfx>&#62;&#62;</SPAN> and a new file is created (the text is part of a mnenomic for the digits of the mathematical constant <IMG SRC=pi.gif>).','C:&#92;CSW>echo.Sir, I send a rhyme excelling>>314159.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>And
+<SCRIPT>cn('TYPE')</SCRIPT>
+ the file</P></DIV>
+<DIV class=bd>
+<P>Check the file with the
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command. It's a mnemonic for the first six digits of <IMG 
+src="Lesson 7 - Redirection and File Management_files/pi.gif">, the number of 
+letters in the each word matches the respective digit
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the <SPAN CLASS=bb>TYPE</SPAN> command to confirm the contents of the file.','C:&#92;CSW>type 314159.txt<BR>Sir, I send a rhyme excelling<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Appending files to files</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>cn('Redirection')</SCRIPT>
+works with most commands. For example, you can use it with the
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command to append one file to another.</P>
+<P>To see how this works, first create another new file to contain the next line 
+of the <IMG src="Lesson 7 - Redirection and File Management_files/pi.gif"> 
+mnemonic
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Write the second line of the mnemonic into a new file with <SPAN CLASS=bb>redirection</SPAN> (the number of letters in each word correspond to a digit in the decimal expansion of <IMG SRC=pi.gif>).','C:&#92;CSW>echo.In sacred truth and rigid spelling>265358.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>And
+<SCRIPT>cn('TYPE')</SCRIPT>
+ the file</P></DIV>
+<DIV class=bd>
+<P>Check the file contents with the
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the <SPAN CLASS=bb>TYPE</SPAN> command to confirm the contents of the file.','C:&#92;CSW>type 265358.txt<BR>In sacred truth and rigid spelling<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Combine the two files into a third file</P></DIV>
+<DIV class=bd>
+<P>Now use two
+<SCRIPT>cn('TYPE')</SCRIPT>
+ commands, redirected into a new file called <SPAN 
+class=fs>RhymeForPi.txt</SPAN>, and make sure you use
+<SCRIPT>cn('>>')</SCRIPT>
+ for the second command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=bb>TYPE</SPAN> twice, the first file with <SPAN CLASS=qfx>&#62;</SPAN>, the second with <SPAN CLASS=qfx>&#62;&#62;</SPAN> so that the second file&#39;s contents are appended to the <SPAN CLASS=fx>RhymeForPi.txt</SPAN> file created by the first <SPAN CLASS=bb>TYPE</SPAN> command.','C:&#92;CSW>type 314159.txt>RhymeForPi.txt<BR><BR>C:&#92;CSW>type 265358.txt>>rhymeforpi.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>And
+<SCRIPT>cn('TYPE')</SCRIPT>
+ the result</P></DIV>
+<DIV class=bd>
+<P>Now check the combined file
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the <SPAN CLASS=bb>TYPE</SPAN> command to show that the new file consists of the combined contents of the two files we created earlier. The number of letters in each of the twelve words of the mnemonic are a reminder of the first 12 digits of the decimal expansion of <IMG SRC=pi.gif>. The mnemonic actually continues further:<BR>&#34;Numerical sprites elucidate&#34;<BR>&#34;For me the lexicons dull weight&#34;<BR>but we think it&#39;s easier to remember 3.14159265358979323846, frankly.','C:&#92;CSW>type rhymeforpi.txt<BR>Sir, I send a rhyme excelling<BR>In sacred truth and rigid spelling<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>File clutter from scripts</P></DIV>
+<DIV class=bd>
+<P>We've now added four more files to our <SPAN class=fs>C:\CSW</SPAN> folder. 
+Now we're using
+<SCRIPT>cn('redirection')</SCRIPT>
+ , this sort of file clutter can build up very quickly. Check the full list of 
+our files now with
+<SCRIPT>cn('DIR')</SCRIPT>
+ , make an alphabetically ordered (<SPAN class=fs>/o</SPAN>), plain (<SPAN 
+class=fs>/b</SPAN> bare) list
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>dir /<SPAN CLASS=or>o</SPAN> /<SPAN CLASS=ob>b</SPAN></SPAN> to make an <SPAN CLASS=br>o</SPAN>rdered <SPAN CLASS=bb>b</SPAN>are list of the files (note that numerics are listed before alpha characters; in fact the ordering is based on the standard ASCII value of the characters).','C:&#92;CSW&#62;dir /o /b<BR>265358.TXT<BR>314159.TXT<BR>BKSETUP.BAT<BR>Greenspan.txt<BR>HIGHNOON.BAT<BR>HW.BAT<BR>LEVEL.BAT<BR>MENU.BAT<BR>RC.BAT<BR>RhymeForPi.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>List the <SPAN class=fs>TXT</SPAN> files only</P></DIV>
+<DIV class=bd>
+<P>Our four new files each have the extension <SPAN class=fs>TXT</SPAN>; the 
+others have the extension <SPAN class=fs>BAT</SPAN>. So we can use
+<SCRIPT>cn('DIR')</SCRIPT>
+ with a
+<SCRIPT>cn('wildcard')</SCRIPT>
+ to list only the <SPAN class=fs>TXT</SPAN> files we've created
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir *.txt /o /b</SPAN></NOBR> and the <SPAN CLASS=fx>*.txt</SPAN> wildcard specifies only files with extension <SPAN CLASS=fx>TXT</SPAN> (learning to create precisely configured lists of files with the <SPAN CLASS=bb>DIR</SPAN> command is a useful skill in Batch scripting).','C:&#92;CSW&#62;dir *.txt /o /b<BR>265358.TXT<BR>314159.TXT<BR>Greenspan.txt<BR>RhymeForPi.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Creating files in other folders</P></DIV>
+<DIV class=bd>
+<P>We've created files in our <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>, <SPAN class=fs>C:\CSW</SPAN>, with
+<SCRIPT>cn('redirection')</SCRIPT>
+ . We can create files in another folder in the same way, by including the path 
+as well as the file name.</P>
+<P>For example, most Windows 95/98/ME users have <SPAN 
+class=fs>C:\WINDOWS</SPAN> as their Windows folder. We could (but we won't) 
+create a small text file, <SPAN class=fs>S.TXT</SPAN>, in <SPAN 
+class=fs>C:\WINDOWS</SPAN>:</P>
+<P><NOBR><SPAN class=cl>ECHO.A file in the Windows 
+folder&gt;C:\WINDOWS\S.TXT</SPAN></NOBR></P>
+<P>Or create a similar file in our root folder (again don't) with the 
+command:</P>
+<P><NOBR><SPAN class=cl>ECHO.A file in the root 
+folder&gt;C:\S.TXT</SPAN></NOBR></P>
+<P>In each case, the <SPAN class=fs>S.TXT</SPAN> file would contain the text 
+message generated by
+<SCRIPT>cn('ECHO')</SCRIPT>
+ with a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> – a carriage-return linefeed 
+combination at the end of the line.</P></DIV>
+<DIV class=lm>
+<P>The folder must exist</P></DIV>
+<DIV class=bd>
+<P>When you include a path to a folder, the folder must exist already. The
+<SCRIPT>cn('redirection')</SCRIPT>
+ operator creates only files, <SPAN class=br>not</SPAN> folders. For example we 
+don't have a subfolder called <SPAN class=fs>TMP</SPAN> in our <SPAN 
+class=fs>C:\CSW</SPAN> folder. Try to create <SPAN class=fs>S.TXT</SPAN> in it
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Try to use <NOBR><SPAN CLASS=qfx>echo.A file in TMP>c:&#92;csw&#92;tmp&#92;S.TXT</SPAN></NOBR> and you receive an error message because the folder doesn&#39;t exist and <SPAN CLASS=bb>redirection</SPAN> won&#39;t create it.','<NOBR>C:&#92;CSW&#62;echo.A file in TMP>c:&#92;csw&#92;tmp&#92;S.TXT</NOBR><BR>File creation error<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Now create <SPAN class=fs>TMP</SPAN></P></DIV>
+<DIV class=bd>
+<P>We can create the <SPAN class=fs>TMP</SPAN> folder in <SPAN 
+class=fs>C:\CSW</SPAN> with the
+<SCRIPT>cn('MD')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>md TMP</SPAN></NOBR> to create <SPAN CLASS=fx>TMP</SPAN> as a subfolder of our <SPAN CLASS=bb>current folder</SPAN>. We could equally well have used <NOBR><SPAN CLASS=qfx>md c:&#92;csw&#92;TMP</SPAN></NOBR> (by the way, <SPAN CLASS=fs>md</SPAN> stands for <SPAN CLASS=fs>m</SPAN>ake <SPAN CLASS=fs>d</SPAN>irectory &#8211; &#34;directory&#34; is an older word for a simple disk folder).','C:&#92;CSW&#62;md TMP<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> In the above example, we used a <NOBR>
+<SCRIPT>cn('relative path')</SCRIPT>
+</NOBR>to <SPAN class=fs>TMP</SPAN> when we created it. When we don't specify a 
+full path to <SPAN class=fs>TMP</SPAN>, Windows assumes we mean the folder <SPAN 
+class=fs>C:\CSW\TMP</SPAN> (since <SPAN class=fs>C:\CSW</SPAN> is the <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>). Such <NOBR>
+<SCRIPT>cn('relative path')</SCRIPT>
+s</NOBR> can be used with most commands.</P></DIV>
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('DIR')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>We can check that <SPAN class=fs>TMP</SPAN> was created by using
+<SCRIPT>cn('DIR')</SCRIPT>
+ . Use the <SPAN class=fs>/o</SPAN> switch. As well as listing files 
+alphabetically, this useful switch lists any subfolders first
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir /<SPAN CLASS=or>o</SPAN> /b</SPAN></NOBR> as before. As well as alphabetically listing the filenames, the default <SPAN CLASS=br>o</SPAN>rdering lists subfolder names in a separate group first (a useful format for a listing).','C:&#92;CSW&#62;dir /o /b<BR>TMP<BR><SPAN CLASS=dtd>265358.TXT<BR>314159.TXT<BR>BKSETUP.BAT<BR>Greenspan.txt<BR>HIGHNOON.BAT<BR>HW.BAT<BR>LEVEL.BAT<BR>MENU.BAT<BR>RC.BAT<BR>RhymeForPi.txt</SPAN><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Try to create <SPAN class=fs>S.TXT</SPAN> again</P></DIV>
+<DIV class=bd>
+<P>Now try to create <SPAN class=fs>S.TXT</SPAN> in <SPAN class=fs>TMP</SPAN> 
+once more. This time it works
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>echo.A file in TMP>c:&#92;csw&#92;tmp&#92;S.TXT</SPAN></NOBR> once more and, because the target folder now exists, the file is successfully created.','<NOBR>C:&#92;CSW&#62;echo.A file in TMP>c:&#92;csw&#92;tmp&#92;S.TXT</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('DIR')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>We can check that <SPAN class=fs>S.TXT</SPAN> was created using
+<SCRIPT>cn('DIR')</SCRIPT>
+ , add the <SPAN class=fs>/s</SPAN> (include subfolder contents) switch
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir /o /b /<SPAN CLASS=or>s</SPAN></SPAN></NOBR> and <SPAN CLASS=br>s</SPAN>ubfolder contents are now also listed (after the main list).','C:&#92;CSW&#62;dir /o /b /s<BR><SPAN CLASS=dtd>C:&#92;CSW&#92;TMP<BR>C:&#92;CSW&#92;265358.TXT<BR>C:&#92;CSW&#92;314159.TXT<BR>C:&#92;CSW&#92;BKSETUP.BAT<BR>C:&#92;CSW&#92;Greenspan.txt<BR>C:&#92;CSW&#92;HIGHNOON.BAT<BR>C:&#92;CSW&#92;HW.BAT<BR>C:&#92;CSW&#92;LEVEL.BAT<BR>C:&#92;CSW&#92;MENU.BAT<BR>C:&#92;CSW&#92;RC.BAT<BR>C:&#92;CSW&#92;RhymeForPi.txt</SPAN><BR>C:&#92;CSW&#92;TMP&#92;S.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> With the <SPAN class=fs>/s</SPAN> 
+(include subfolder contents) switch, a plain (<SPAN class=fs>/b</SPAN>) list 
+also includes the full path of each item, to make it clear which folder each 
+item is located in.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>The idea of "Current":</SPAN><BR>Changing <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>with
+<SCRIPT>cn('CD')</SCRIPT>
+ command</P></DIV>
+<DIV class=bd>
+<P><BR>Our <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>is <SPAN class=fs>C:\CSW</SPAN> at the moment. To make the new folder 
+we've created become the <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>, we can use the
+<SCRIPT>cn('CD')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <NOBR><SPAN CLASS=qfx>cd tmp</SPAN></NOBR> to make <SPAN CLASS=fs>TMP</SPAN> the new <SPAN CLASS=bb>current folder</SPAN>. The <SPAN CLASS=bb>PROMPT</SPAN> changes to show that <SPAN CLASS=fs>C:&#92;CSW&#92;TMP</SPAN> is now the <SPAN CLASS=bb>current folder</SPAN>.','C:&#92;CSW&#62;cd tmp<BR><BR>C:&#92;CSW&#92;TMP&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>and the <NOBR>
+<SCRIPT>cn('current drive')</SCRIPT>
+</NOBR></P></DIV>
+<DIV class=bd>
+<P>The <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>is the folder Windows assumes we mean if we don't specify a folder 
+explicitly. So, when we used the command <NOBR><SPAN class=qfx>cd 
+tmp</SPAN></NOBR>, Windows assumed <SPAN class=fs>TMP</SPAN> was (the <NOBR>
+<SCRIPT>cn('relative path')</SCRIPT>
+</NOBR>to) a subfolder of the <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>at the time (shown in the
+<SCRIPT>cn('PROMPT')</SCRIPT>
+ ). It was, so the command was successful.</P>
+<P>To make <SPAN class=fs>C:\CSW</SPAN> the <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>again, we can't simply use <NOBR><SPAN class=qfx>cd csw</SPAN></NOBR> 
+because <SPAN class=fs>CSW</SPAN> is not a subfolder of the (new) <NOBR>
+<SCRIPT>cn('current folder')</SCRIPT>
+</NOBR>.</P>
+<P>We need to use <NOBR><SPAN class=qfx>cd \csw</SPAN></NOBR> where the initial 
+<SPAN class=ky>&nbsp;\&nbsp;</SPAN> is the shorthand for the root folder of the 
+<NOBR>
+<SCRIPT>cn('current drive')</SCRIPT>
+</NOBR>(the drive Windows assumes you mean if you don't specify a drive 
+explicitly). Since <SPAN class=fs>CSW</SPAN> is a subfolder of the root folder, 
+the
+<SCRIPT>cn('CD')</SCRIPT>
+ command will then find it.</P></DIV>
+<DIV class=lm>
+<P>Practise some
+<SCRIPT>cn('CD')</SCRIPT>
+ commands</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>ex(10)</SCRIPT>
+is in eight parts labelled <SPAN class=bg>(a)-(h)</SPAN> in the simulation 
+below. We'll try out some more
+<SCRIPT>cn('CD')</SCRIPT>
+ commands to make these ideas (and their syntax) clearer
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('<SPAN CLASS=bg>(a)</SPAN> Try to make <SPAN CLASS=fs>CSW</SPAN> current with <NOBR><SPAN CLASS=qfx>cd csw</SPAN></NOBR>. We get an error message because <SPAN CLASS=fs>CSW</SPAN> <SPAN CLASS=br>isn&#39;t</SPAN> a folder in the <SPAN CLASS=bb>current folder</SPAN> (the <SPAN CLASS=bb>PROMPT</SPAN> reminds us <SPAN CLASS=fs>C:&#92;CSW&#92;TMP</SPAN> is current).<BR><SPAN CLASS=bg>(b)</SPAN> Use <NOBR><SPAN CLASS=qfx>cd &#92;csw</SPAN></NOBR> and the <SPAN CLASS=bb>PROMPT</SPAN> changes to show <SPAN CLASS=fs>C:&#92;CSW</SPAN> is current once more.<BR><SPAN CLASS=bg>(c)</SPAN> We can use the full drive+folder name to avoid confusion. Let&#39;s make <SPAN CLASS=fs>TMP</SPAN> current again, and although <NOBR><SPAN CLASS=qfx>cd tmp</SPAN></NOBR> would do, we&#39;ll use the full version <NOBR><SPAN CLASS=qfx>cd c:&#92;csw&#92;tmp</SPAN></NOBR><BR><SPAN CLASS=bg>(d)</SPAN> Now make <SPAN CLASS=fs>CSW</SPAN> current again, also using the full drive+folder name <NOBR><SPAN CLASS=qfx>cd c:&#92;csw</SPAN></NOBR><BR><SPAN CLASS=bg>(e)</SPAN> Make TMP current once more (just use the short form) <NOBR><SPAN CLASS=qfx>cd tmp</SPAN></NOBR><BR><SPAN CLASS=bg>(f)</SPAN> Now make <SPAN CLASS=fs>CSW</SPAN> (the parent of <SPAN CLASS=fs>TMP</SPAN>) current again by using <NOBR><SPAN CLASS=qfx>cd ..</SPAN></NOBR> (remember, we learnt that <SPAN CLASS=fx>..</SPAN> is the <SPAN CLASS=fs>dot alias</SPAN> for parent)<BR><SPAN CLASS=bg>(g)</SPAN> Use <NOBR><SPAN CLASS=qfx>cd ..</SPAN></NOBR> again. The root folder becomes current (since it&#39;s the parent of <SPAN CLASS=fs>CSW</SPAN>)<BR><SPAN CLASS=bg>(h)</SPAN> Finally use the short form <NOBR><SPAN CLASS=qfx>cd csw</SPAN></NOBR> to make <SPAN CLASS=fs>CSW</SPAN> current once more. This short form is now valid, since <SPAN CLASS=fs>CSW</SPAN> truly is a subfolder of the root folder.','C:&#92;CSW&#92;TMP&#62;cd csw            <SPAN CLASS=hg>(a)</SPAN><BR>Invalid directory<BR><BR>C:&#92;CSW&#92;TMP&#62;cd &#92;csw           <SPAN CLASS=hg>(b)</SPAN><BR><BR>C:&#92;CSW&#62;cd c:&#92;csw&#92;tmp         <SPAN CLASS=hg>(c)</SPAN><BR><BR>C:&#92;CSW&#92;TMP&#62;cd c:&#92;csw         <SPAN CLASS=hg>(d)</SPAN><BR><BR>C:&#92;CSW&#62;cd tmp                <SPAN CLASS=hg>(e)</SPAN><BR><BR>C:&#92;CSW&#92;TMP&#62;cd ..             <SPAN CLASS=hg>(f)</SPAN><BR><BR>C:&#92;CSW&#62;cd ..                 <SPAN CLASS=hg>(g)</SPAN><BR><BR>C:&#92;&#62;cd csw                   <SPAN CLASS=hg>(h)</SPAN><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>To fix this syntax in your mind, repeat
+<SCRIPT>ex(9)</SCRIPT>
+ , and then glance through the Course Reference (by clicking) on
+<SCRIPT>cn('CD')</SCRIPT>
+ ,
+<SCRIPT>cn('current drive')</SCRIPT>
+ ,
+<SCRIPT>cn('current folder')</SCRIPT>
+ , and
+<SCRIPT>cn('relative path')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>The temporary folder:</SPAN><BR>A special folder for temporary 
+workfiles</SPAN></P></DIV>
+<DIV class=bd>
+<P><BR>We could use this new folder <SPAN class=fs>TMP</SPAN> for all the 
+workfiles our scripts create, but we won't.</P>
+<P>When Windows is installed, it creates a special folder intended for 
+workfiles. Windows loads the path to it in the system variable
+<SCRIPT>cn('TEMP')</SCRIPT>
+ , so your scripts can find it. Windows also uses this special
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder itself (for some operating system temporary files).</P></DIV>
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('SET')</SCRIPT>
+ to display current variable contents</P></DIV>
+<DIV class=bd>
+<P>We met the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ variable when we learnt to use
+<SCRIPT>cn('SET')</SCRIPT>
+ . Use
+<SCRIPT>cn('SET')</SCRIPT>
+ on its own to see what your system variables are currently set to
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>set</SPAN> on its own to list the contents of current variables.','C:&#92;CSW>set<BR><SPAN CLASS=dtd>winbootdir=C:&#92;WINDOWS<BR>COMSPEC=C:&#92;WINDOWS&#92;COMMAND.COM<BR><NOBR>PATH=C:&#92;WINDOWS;C:&#92;WINDOWS&#92;COMMAND</NOBR></SPAN><BR>TEMP=C:&#92;WINDOWS&#92;TEMP<BR><SPAN CLASS=dtd>PROMPT=$p$g<BR>windir=C:&#92;WINDOWS</SPAN><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> There may be variables set on your 
+system other than the standard ones we list here. And some of your standard 
+variable contents may differ from this list.</P></DIV>
+<DIV class=lm>
+<P>Some users set their own
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder</P></DIV>
+<DIV class=bd>
+<P>On most installations,
+<SCRIPT>cn('TEMP')</SCRIPT>
+ will be <SPAN class=fs>C:\WINDOWS\TEMP</SPAN> (as above). However, some users 
+prefer to set their own Windows
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder path, perhaps to match the path they may have used in an earlier 
+Operating System, such as <NOBR>MS-DOS</NOBR>. So how would we know what path to 
+use in a script that we wrote for them?</P>
+<P>The answer is that we can use <NOBR><SPAN class=fs>%TEMP%</SPAN></NOBR>, 
+which expands the variable that Windows defines for us. This will point to the 
+proper temporary files location. Then our scripts will work both on a standard 
+system <B>and</B> on a customised system.</P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Users who change their system
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder are required to change this variable to match their custom location, or 
+the temporary system files that Windows uses won't make use of their custom 
+workfiles folder, either.</P></DIV>
+<DIV class=lm>
+<P>A small problem with <SPAN class=ky>&nbsp;\&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>So we can use <NOBR><SPAN class=fs>%TEMP%</SPAN></NOBR> as the path for 
+temporary files (instead of <NOBR><SPAN class=fs>C:\CSW\TMP</SPAN>)</NOBR>, and 
+they'll be created properly in
+<SCRIPT>cn('TEMP')</SCRIPT>
+ ? And nothing can possibly go wrong?</P>
+<P>Well, not quite. There's a small problem with spurious <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN> characters.</P>
+<P>Suppose we were one of those users who'd customised their
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder. Imagine we've set it to <SPAN class=fs>C:\CSW\TMP</SPAN>, the folder 
+we've just created, and put this value in the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ variable. Or, let's not imagine, let's do it. We won't change
+<SCRIPT>cn('TEMP')</SCRIPT>
+ (although we could), we'll
+<SCRIPT>cn('SET')</SCRIPT>
+ a variable <SPAN class=fs>MYTEMP</SPAN> to practise with
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>set mytemp=C:&#92;CSW&#92;TMP</SPAN></NOBR> to set the variable. This is a similar format to the system <SPAN CLASS=bb>TEMP</SPAN> variable (in other words, we <B>haven&#39;t</B> added a trailing <SPAN CLASS=ky>&nbsp;&#92;&nbsp;</SPAN> to the path in the variable).','C:&#92;CSW&#62;set mytemp=C:&#92;CSW&#92;TMP<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check <SPAN class=fs>S.TXT</SPAN> with
+<SCRIPT>cn('DIR')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Now check that there is an <SPAN class=fs>S.TXT</SPAN> file in the <SPAN 
+class=fs>C:\CSW\TMP</SPAN> folder using
+<SCRIPT>cn('DIR')</SCRIPT>
+ in the ordinary way
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir c:&#92;csw&#92;tmp&#92;s.txt /b</SPAN></NOBR> (and the single filename specified in the <SPAN CLASS=bb>DIR</SPAN> command is listed).','C:&#92;CSW&#62;dir c:&#92;csw&#92;tmp&#92;s.txt /b<BR>S.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Repeat using <SPAN class=fs>MYTEMP</SPAN></P></DIV>
+<DIV class=bd>
+<P>We'll need to use commands like
+<SCRIPT>cn('DIR')</SCRIPT>
+ on the workfiles we create, and we'd use the path stored in the temporary files 
+variable when we did. Repeat the
+<SCRIPT>cn('DIR')</SCRIPT>
+ check, but use the expanded <NOBR><SPAN class=fs>%MYTEMP%</SPAN></NOBR> this 
+time. The
+<SCRIPT>cn('DIR')</SCRIPT>
+ check works equally well
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir %mytemp%&#92;s.txt /b</SPAN></NOBR> and the path we&#39;ve stored in the variable works just as well as the previous literal path we typed. So far, no problem.','C:&#92;CSW&#62;dir %mytemp%&#92;s.txt /b<BR>S.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The variable is expanded</P></DIV>
+<DIV class=bd>
+<P>Windows expands the variable before executing the
+<SCRIPT>cn('DIR')</SCRIPT>
+ command and so:</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>this</SPAN></TD>
+    <TD><SPAN class=tab><NOBR><SPAN class=qfx>dir <SPAN 
+      class=og>%mytemp%</SPAN>\s.txt /b</SPAN></NOBR></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>expands to&nbsp;&nbsp;&nbsp;</SPAN></TD>
+    <TD><NOBR><SPAN class=tab><SPAN class=qfx>dir <SPAN 
+      class=og>C:\CSW\TMP</SPAN>\s.txt /b</SPAN></NOBR></SPAN></TD>
+    <TD><SPAN class=tab>&nbsp;&nbsp;(the previous 
+command)</SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>So far, so good. What's the <SPAN class=ky>&nbsp;\&nbsp;</SPAN> 
+problem?</P></DIV>
+<DIV class=lm>
+<P>The trailing <SPAN class=ky>&nbsp;\&nbsp;</SPAN> problem</P></DIV>
+<DIV class=bd>
+<P>Some users prefer to set path names with a trailing <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN> character. In other words (and again we'll just 
+use our <SPAN class=fs>MYTEMP</SPAN> variable instead of the real
+<SCRIPT>cn('TEMP')</SCRIPT>
+ variable) they would do this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>set mytemp=C:&#92;CSW&#92;TMP&#92;</SPAN></NOBR> to load a path in <SPAN CLASS=fs>MYTEMP</SPAN> that contains a trailing <SPAN CLASS=ky>&nbsp;&#92;&nbsp;</SPAN>.','C:&#92;CSW&#62;set mytemp=C:&#92;CSW&#92;TMP&#92;<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Try the
+<SCRIPT>cn('DIR')</SCRIPT>
+ check again</P></DIV>
+<DIV class=bd>
+<P>Now try repeating exactly the same
+<SCRIPT>cn('DIR')</SCRIPT>
+ command again
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use exactly the same command as before <NOBR><SPAN CLASS=qfx>dir %mytemp%&#92;s.txt /b</SPAN></NOBR> (the trailing <SPAN CLASS=ky>&nbsp;&#92;&nbsp;</SPAN> confuses the <SPAN CLASS=bb>DIR</SPAN> command).','C:&#92;CSW&#62;dir %mytemp%&#92;s.txt /b<BR>Invalid directory<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The variable is expanded</P></DIV>
+<DIV class=bd>
+<P>As before, Windows expands the variable before executing the
+<SCRIPT>cn('DIR')</SCRIPT>
+ command, but now:</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>this</SPAN></TD>
+    <TD><SPAN class=tab><NOBR><SPAN class=qfx>dir <SPAN 
+      class=og>%mytemp%</SPAN>\s.txt /b</SPAN></NOBR></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>expands to&nbsp;&nbsp;&nbsp;</SPAN></TD>
+    <TD><NOBR><SPAN class=tab><SPAN class=qfx>dir <SPAN 
+      class=og>C:\CSW\TMP\</SPAN>\s.txt 
+/b</SPAN></NOBR></SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Although many commands will ignore a doubled <SPAN 
+class=ky>&nbsp;\\&nbsp;</SPAN> in a path,
+<SCRIPT>cn('DIR')</SCRIPT>
+ doesn't, and reports it as an invalid directory (=folder).</P>
+<P>If we use <SPAN class=fs>%mytemp%s.txt</SPAN> (leaving out the <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN> before <NOBR><SPAN class=fs>S.TXT</SPAN>)</NOBR>, 
+then it would work for users who inserted a trailing <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN> in the variable but fail for all those who don't. 
+And there's no way of knowing in advance which way people might store their
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder path.</P></DIV>
+<DIV class=lm>
+<P>The <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR></P></DIV>
+<DIV class=bd>
+<P>The solution is the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR><SPAN class=ky>&nbsp;.\&nbsp;</SPAN> which we can use instead of the 
+plain <SPAN class=ky>&nbsp;\&nbsp;</SPAN> after a variable containing a folder 
+path. Effectively, this corrects (emends) either format of folder path to one 
+that Windows can use.</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>If </SPAN></TD>
+    <TD><SPAN class=tab><NOBR><SPAN 
+      class=qfx>MYTEMP=C:\CSW\TMP</SPAN></NOBR></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>this</SPAN></TD>
+    <TD><SPAN class=tab><NOBR><SPAN class=qfx>dir <SPAN 
+      class=og>%mytemp%</SPAN>.\s.txt /b</SPAN></NOBR></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>expands to&nbsp;&nbsp;&nbsp;</SPAN></TD>
+    <TD><NOBR><SPAN class=tab><SPAN class=qfx>dir <SPAN 
+      class=og>C:\CSW\TMP</SPAN>.\s.txt 
+/b</SPAN></NOBR></SPAN></TD></TR></TBODY></TABLE>and Windows simply ignores the 
+<SPAN class=qfx>.</SPAN> in the path specification after the <SPAN 
+class=fs>TMP</SPAN>.</P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>If </SPAN></TD>
+    <TD><SPAN class=tab><NOBR><SPAN 
+      class=qfx>MYTEMP=C:\CSW\TMP\</SPAN></NOBR></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>this</SPAN></TD>
+    <TD><SPAN class=tab><NOBR><SPAN class=qfx>dir <SPAN 
+      class=ob>%mytemp%</SPAN>.\s.txt /b</SPAN></NOBR></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>expands to&nbsp;&nbsp;&nbsp;</SPAN></TD>
+    <TD><NOBR><SPAN class=tab><SPAN class=qfx>dir <SPAN 
+      class=ob>C:\CSW\TMP\</SPAN>.\s.txt 
+/b</SPAN></NOBR></SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>It's more complicated to see why this works. There now appears to be a folder 
+with the name <SPAN class=qfx>.</SPAN> in the path specification. Remember that 
+at the start of this Lesson we learnt that a single dot is the <NOBR>
+<SCRIPT>cn('dot alias')</SCRIPT>
+</NOBR>for whatever folder we are "in" now.</P></DIV>
+<DIV class=lm>
+<P>How Windows reads a <NOBR>
+<SCRIPT>cn('dot alias')</SCRIPT>
+</NOBR>path</P></DIV>
+<DIV class=bd>
+<P>This is how Windows reads that path: <SPAN class=qfx>C:\CSW\TMP\.\s.txt 
+/b</SPAN></P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>C:</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>On the <SPAN class=fs>C:</SPAN> drive</SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>\CSW&nbsp;&nbsp;</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Start with the root folder, look in the subfolder 
+      <SPAN class=fs>CSW</SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>\TMP</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>In the <SPAN class=fs>CSW</SPAN> subfolder, look in 
+      the subfolder <SPAN class=fs>TMP</SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>\.</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Treated as the <NOBR>
+      <SCRIPT>cn('dot alias')</SCRIPT>
+      </NOBR>for wherever we are now, so it has no effect</SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>\s.txt&nbsp;&nbsp;</SPAN></SPAN></TD>
+    <TD><SPAN class=tab>Still looking in the <SPAN class=fs>TMP</SPAN> folder, 
+      find the file <SPAN 
+class=fs>s.txt</SPAN></SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm>
+<P>That's the theory</P></DIV>
+<DIV class=bd>
+<P>That was the theory. Now let's see if it works. Try the
+<SCRIPT>cn('DIR')</SCRIPT>
+ command that just failed, but now use the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR><SPAN class=ky>&nbsp;.\&nbsp;</SPAN> where we previously used just <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir %mytemp%<NOBR><SPAN CLASS=bkhw>.</SPAN></NOBR>&#92;s.txt /b</SPAN></NOBR> with that all-important extra dot. Now, with the emending suffix, the <SPAN CLASS=bb>DIR</SPAN> command works.','C:&#92;CSW&#62;dir %mytemp%.&#92;s.txt /b<BR>S.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>That was with trailing <SPAN class=ky>&nbsp;\&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Remember, that was when the <SPAN class=fs>MYTEMP</SPAN> variable was set 
+<SPAN class=br>with</SPAN> a trailing <SPAN class=ky>&nbsp;\&nbsp;</SPAN>. 
+Expand the variable to check its current contents
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>echo.%mytemp%</SPAN></NOBR> to display the variable&#39;s current contents (or you could use the <SPAN CLASS=qfx>set</SPAN> command on its own to display all currently set variables).','C:&#92;CSW&#62;echo.%mytemp%<BR>C:&#92;CSW&#92;TMP&#92;<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Reset it without final <SPAN class=ky>&nbsp;\&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Now reset <SPAN class=fs>MYTEMP</SPAN> so it <SPAN class=br>doesn't</SPAN> 
+have a trailing <SPAN class=ky>&nbsp;\&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>set mytemp=C:&#92;CSW&#92;TMP</SPAN></NOBR> so that the path doesn&#39;t have a trailing <SPAN CLASS=ky>&nbsp;&#92;&nbsp;</SPAN> (this is the more usual way to set paths in variables).','C:&#92;CSW&#62;set mytemp=C:&#92;CSW&#92;TMP<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Repeat the
+<SCRIPT>cn('DIR')</SCRIPT>
+ check</P></DIV>
+<DIV class=bd>
+<P>Now use exactly the same
+<SCRIPT>cn('DIR')</SCRIPT>
+ command (with the same <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR><SPAN class=ky>&nbsp;.\&nbsp;</SPAN> to the variable name) and check we 
+can find our file <SPAN class=fs>S.TXT</SPAN> </P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir %mytemp%<NOBR><SPAN CLASS=bkhw>.</SPAN></NOBR>&#92;s.txt /b</SPAN></NOBR> with that all-important extra dot. Again, it works (the emending suffix normally ensures a path is usable with any command, whether or not a trailing <SPAN CLASS=ky>&nbsp;&#92;&nbsp;</SPAN> has been added).','C:&#92;CSW&#62;dir %mytemp%.&#92;s.txt /b<BR>S.TXT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>We'll always use <SPAN class=ky>&nbsp;.\&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>From now on, we'll create our workfiles in the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder, and we'll always use the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR>with the expanded variable name, thus:</P>
+<P><NOBR><SPAN class=qfx>%TEMP%.\WORKFILE.EXT</SPAN></NOBR></P>
+<P>and it won't matter whether or not the user has added a trailing <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN> to the path in
+<SCRIPT>cn('TEMP')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Clean up clutter</P></DIV>
+<DIV class=bd>
+<P>It's vital to clean up file clutter, so let's remove the temporary file <SPAN 
+class=fs>S.TXT</SPAN> we created and the <SPAN class=fs>TMP</SPAN> folder. We 
+can delete files with the
+<SCRIPT>cn('DEL')</SCRIPT>
+ command.</P>
+<P>Use the <SPAN class=fs>MYTEMP</SPAN> variable with the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR>, for practice. Use
+<SCRIPT>cn('DEL')</SCRIPT>
+ with the <SPAN class=fs>/p</SPAN>(=prompt) switch to make it display the file 
+specification
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>del %mytemp%.&#92;s.txt /p</SPAN></NOBR> and the <SPAN CLASS=qfx>/<SPAN CLASS=or>p</SPAN></SPAN> switch <SPAN CLASS=br>p</SPAN>rompts for confirmation and displays the filename. Reply <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> to confirm deletion (remember you can see a list of the switches any command accepts by typing the command name followed by <SPAN CLASS=fx>/?</SPAN> whenever you&#39;re working in a DVM).','C:&#92;CSW&#62;del %mytemp%.&#92;s.txt /p<BR><BR><NOBR>C:&#92;CSW&#92;TMP.&#92;S.TXT,    Delete (Y/N)?y</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Remove the <SPAN class=fs>TMP</SPAN> folder</P></DIV>
+<DIV class=bd>
+<P>Now it's empty, we'll remove the <SPAN class=fs>TMP</SPAN> folder with the
+<SCRIPT>cn('RD')</SCRIPT>
+ command. We can use any of these three commands:</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><NOBR><SPAN class=fx>rd <SPAN 
+      class=og>%temp%</SPAN></SPAN></NOBR></SPAN></TD>
+    <TD><SPAN class=tab>our variable will expand to <SPAN class=fx><SPAN 
+      class=og>C:\CSW\TMP</SPAN></SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><NOBR><SPAN class=fx>rd 
+      c:\csw\tmp&nbsp;&nbsp;&nbsp;</SPAN></NOBR></SPAN></TD>
+    <TD><SPAN class=tab>using the full path name as a literal (that is, not in 
+      a variable)</SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><NOBR><SPAN class=fs>rd tmp</SPAN></NOBR></SPAN></TD>
+    <TD><SPAN class=tab>using the
+      <SCRIPT>cn('relative path')</SCRIPT>
+       as a literal</SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>This time, we'll use the full path name
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>rd c:&#92;csw&#92;tmp</SPAN></NOBR> to remove the folder since we don&#39;t need it anymore.','C:&#92;CSW&#62;rd c:&#92;csw&#92;tmp<BR><BR>CC:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check we're tidy again</P></DIV>
+<DIV class=bd>
+<P>Check that the <SPAN class=fs>TMP</SPAN> folder has gone and then we've 
+finished for now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>dir /<SPAN CLASS=or>o</SPAN> /<SPAN CLASS=ob>b</SPAN></SPAN> to make an <SPAN CLASS=br>o</SPAN>rdered <SPAN CLASS=bb>b</SPAN>are list of the items that now remain and confirm the <SPAN CLASS=fs>TMP</SPAN> folder has gone.','C:&#92;CSW&#62;dir /o /b<BR>265358.TXT<BR>314159.TXT<BR>BKSETUP.BAT<BR>Greenspan.txt<BR>HIGHNOON.BAT<BR>HW.BAT<BR>LEVEL.BAT<BR>MENU.BAT<BR>RC.BAT<BR>RhymeForPi.txt<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","What single <SPAN CLASS=fs>DIR</SPAN> switch gives a listing that has: subfolders grouped first, then files listed alphabetically by base name, then by extension (for any with same base name)?","<NOBR><SPAN CLASS=cl>dir /o</SPAN></NOBR> &#8211; equivalent to the combination <NOBR><SPAN CLASS=cl>dir /ogne</SPAN></NOBR> which is normally the most useful standard list order.","How would you redirect a <NOBR><SPAN CLASS=cl>dir /o</SPAN></NOBR> list so it&#39;s written to a file (say, <SPAN CLASS=fs>DIRLIST.TXT</SPAN>)?","<NOBR><SPAN CLASS=cl>dir /o>DIRLIST.TXT</SPAN></NOBR> &#8211; capturing lists of folder contents to text files is one of the main uses of the <SPAN CLASS=bb>DIR</SPAN> command.","How would you append the list of <SPAN CLASS=fs>C:&#92;CSW</SPAN> files <NOBR><SPAN CLASS=cl>dir C:&#92;CSW&#92;*.* /o</SPAN></NOBR> to an existing file <SPAN CLASS=fs>LOG.TXT</SPAN>?","<NOBR><SPAN CLASS=cl>dir C:&#92;CSW&#92;*.* /o>>LOG.TXT</SPAN></NOBR> &#8211; the append operator <SPAN CLASS=bb>&#62;&#62;</SPAN> creates <SPAN CLASS=fs>LOG.TXT</SPAN> if the file doesn't exist already.","What do we mean by <SPAN CLASS=fs>current folder</SPAN>?<BR>&nbsp;","The <SPAN CLASS=bb>current folder</SPAN> is the folder assumed in any Batch commands whenever you don&#39;t explicitly specify a folder to be used. It&#39;s displayed in the standard <SPAN CLASS=bb>PROMPT</SPAN>.","How do you make the parent of the <SPAN CLASS=fs>current folder</SPAN> become the new <SPAN CLASS=fs>current folder</SPAN>?","<NOBR><SPAN CLASS=cl>cd ..</SPAN></NOBR> &#8211; the <SPAN CLASS=fx>..</SPAN> is the folder <SPAN CLASS=bb>dot alias</SPAN> for the parent of the <SPAN CLASS=bb>current folder</SPAN>.","How would you simply display the name of the <SPAN CLASS=fs>current folder</SPAN>?<BR>&nbsp;","<SPAN CLASS=cl>cd</SPAN> &#8211; <SPAN CLASS=bb>CD</SPAN> used alone displays the <SPAN CLASS=bb>current folder</SPAN> for the <SPAN CLASS=bb>current drive</SPAN>. The normal <SPAN CLASS=bb>PROMPT</SPAN> also shows this, too. <NOBR><SPAN CLASS=cl>cd d:</SPAN></NOBR> will display the <SPAN CLASS=bb>current folder</SPAN> for drive <SPAN CLASS=fs>D:</SPAN>","What is the <SPAN CLASS=fs>emending suffix</SPAN>, and what is it often used for?","The <SPAN CLASS=cl><SPAN CLASS=hr>.&#92;</SPAN></SPAN> in <NOBR><SPAN CLASS=cl>%FOLDER%<SPAN CLASS=hr>.&#92;</SPAN>FILE.EXT</SPAN></NOBR> is used to make sure the file specification expands correctly whether or not the folder name in <SPAN CLASS=fs>FOLDER</SPAN> contains a trailing <SPAN CLASS=ky>&nbsp;&#92;&nbsp;</SPAN> character.","How would you display the contents of the file <SPAN CLASS=fs>RC.BAT</SPAN> on the DVM screen?","<NOBR><SPAN CLASS=cl>type rc.bat</SPAN></NOBR> &#8211; the <SPAN CLASS=bb>TYPE</SPAN> command is for use <SPAN CLASS=br>only</SPAN> with plain text files (and all our Batch files are plain text files, of course).");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>We've covered a lot of ground in this Lesson. We have learnt how to: 
+<UL>
+  <LI>Use
+  <SCRIPT>cn('DIR')</SCRIPT>
+   to list files and folders alphabetically <SPAN class=br>o</SPAN>rdered with 
+  the <SPAN class=fs>/<SPAN class=or>o</SPAN></SPAN> switch 
+  <LI>Use
+  <SCRIPT>cn('DIR')</SCRIPT>
+   with the <SPAN class=fs>/<SPAN class=op>b</SPAN></SPAN> (<SPAN 
+  class=bp>b</SPAN>are or plain) switch and <SPAN class=fs>/<SPAN 
+  class=og>s</SPAN></SPAN> (include <SPAN class=bg>s</SPAN>ubfolders) switch 
+  <LI>Understand the folder <NOBR>
+  <SCRIPT>cn('dot alias')</SCRIPT>
+  es</NOBR> <SPAN class=qfx>.</SPAN> and <SPAN class=qfx>..</SPAN> 
+  <LI>(A reminder from Lesson 1) Print the DVM screen with <SPAN 
+  class=ky>&nbsp;Shift&nbsp;</SPAN>+<SPAN class=ky>&nbsp;PrintScrn&nbsp;</SPAN> 
+  <LI>Redirect the
+  <SCRIPT>cn('STDOUT')</SCRIPT>
+   output channel to
+  <SCRIPT>cn('device')</SCRIPT>
+   s such as
+  <SCRIPT>cn('PRN')</SCRIPT>
+   or
+  <SCRIPT>cn('COM1')</SCRIPT>
+   
+  <LI>Create files with the
+  <SCRIPT>cn('redirection')</SCRIPT>
+   operator
+  <SCRIPT>cn('>')</SCRIPT>
+   
+  <LI>Append to files with the append operator
+  <SCRIPT>cn('>>')</SCRIPT>
+   
+  <LI>Display the contents of text files with the
+  <SCRIPT>cn('TYPE')</SCRIPT>
+   command 
+  <LI>Combine files using
+  <SCRIPT>cn('TYPE')</SCRIPT>
+   and the append operator
+  <SCRIPT>cn('>>')</SCRIPT>
+   
+  <LI>Use
+  <SCRIPT>cn('wildcard')</SCRIPT>
+   s with
+  <SCRIPT>cn('DIR')</SCRIPT>
+   to limit the file types that it lists 
+  <LI>Create folders with
+  <SCRIPT>cn('MD')</SCRIPT>
+   and remove them again with
+  <SCRIPT>cn('RD')</SCRIPT>
+   
+  <LI>Change the <NOBR>
+  <SCRIPT>cn('current folder')</SCRIPT>
+  </NOBR>with
+  <SCRIPT>cn('CD')</SCRIPT>
+   
+  <LI>Create our workfiles in a temporary folder (in future we'll use the
+  <SCRIPT>cn('TEMP')</SCRIPT>
+   folder) 
+  <LI>Use the <NOBR>
+  <SCRIPT>cn('emending suffix')</SCRIPT>
+  </NOBR><SPAN class=ky>&nbsp;.\&nbsp;</SPAN> for reliable use of folder paths 
+  stored in variables 
+  <LI>Use
+  <SCRIPT>cn('DEL')</SCRIPT>
+   to remove workfiles (and keep the hard drive tidy)</LI></UL></DIV></DIV>
+<DIV class=lm>
+<P>The Course Reference has grown</P></DIV>
+<DIV class=bd>
+<P>Remember that the Course Reference grows. So, when you click on an item in 
+dark blue, such as
+<SCRIPT>cn('TEMP')</SCRIPT>
+ , <SPAN class=bg>additional</SPAN> information will often appear that <SPAN 
+class=br>didn't</SPAN> appear in earlier Lessons. These extra details wouldn't 
+have made sense at an earlier stage.</P></DIV>
+<DIV class=lm>
+<P>Review with the Course Reference List Box</P></DIV>
+<DIV class=bd>
+<P>You can also review all commands (and other items) covered so far by using 
+the Course Reference List Box, which appears at the top of each Lesson. </P>
+<P>
+<SCRIPT>refbox2('ref2','And occasionally elsewhere, as here ')</SCRIPT>
+</P></DIV>
+<DIV class=lm>
+<P>Commands to review</P></DIV>
+<DIV class=bd>
+<P>For example, now that we've covered
+<SCRIPT>cn('redirection')</SCRIPT>
+ , you'll find that the Course Reference for
+<SCRIPT>cn('CLS')</SCRIPT>
+ ,
+<SCRIPT>cn('ECHO')</SCRIPT>
+ , and
+<SCRIPT>cn('REM')</SCRIPT>
+ now shows
+<SCRIPT>cn('redirection')</SCRIPT>
+ syntax examples.</P></DIV>
+<DIV class=lm>
+<P>Now take a break</P></DIV>
+<DIV class=bd>
+<P>It's been a long session! The <A 
+onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson7">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw080.htm">next&nbsp;Lesson</A>, where 
+we'll make <SPAN class=fs>BKSETUP.BAT</SPAN> create our test subfolder and 
+sample content for it. See you then.</P></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

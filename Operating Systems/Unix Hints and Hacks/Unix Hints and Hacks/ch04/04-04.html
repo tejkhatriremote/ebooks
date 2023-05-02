@@ -1,0 +1,273 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=126-131//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>Before cutting log files in half, stop any and all processes that might have the log files open.
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Find the number of lines in the log file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% wc -l SYSLOG
+1234567
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Divide this number in half:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% echo &#147;1234567 / 2&#148; | bc
+617283
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>tail</SMALL> can deliver the last part of the file in two ways: by counting the distance in lines either down from the top of the file or up from the bottom of the file.</P>
+<p>For counting the distance in lines from the top use</P>
+<!-- CODE SNIP //-->
+<pre>
+% tail +617283 SYSLOG &gt SYSLOG.half
+</PRE>
+<!-- END CODE SNIP //-->
+<p>For counting the distance in lines from the bottom use
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% tail -617283 SYSLOG &gt SYSLOG.half
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This process can be quickly scripted to perform this function for you. In the script, pass through the name of the file to cut in half. Then determine what the size is, take half that total size, and use <small>tail</SMALL> to trim it down to size.</P>
+<!-- CODE SNIP //-->
+<pre>
+#! /bin/sh
+FILE=$1
+SIZE=`cat $FILE | wc -l`
+HALF=`echo $SIZE/2 | bc`
+echo &#147;Total size = $SIZE   Half = $HALF&#148;
+tail +${HALF} $FILE &gt $FILE.cut
+ls -l $FILE $FILE.cut
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the shell to use.
+</P>
+<p>Line 2: Pass in the file that is to be cut in half.</P>
+<p>Line 3: Determine the size of the file.</P>
+<p>Line 4: Take half the total value of the file to be cut.</P>
+<p>Line 5: Display the original size and what half the size is.</P>
+<p>Line 6: Cut the file in half, counting from the top down and writing the bottom half of the file out to a new filename.</P>
+<p>Line 7: Display a long listing of the old and new file.</P>
+<!-- CODE SNIP //-->
+<pre>
+xinu 1% cutit  backup.ugu.INDEX.Thu
+Total size =        1634885   Half = 817442
+-rw-r--r--    1 ugu user     100455424 Sep 16 23:33
+&#8658; backup.ugu.INDEX.Thu
+-rw-r--r--    1 ugu user      42082249 Sep 21 20:17
+&#8658; backup.ugu.INDEX.Thu.cut
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Sometimes you get huge log files that you cannot bring into a vi editor or do anything with. You see buffer overrun errors and often run out of disk space. Cutting the log files in half frees up disk space and makes the log files more manageable from an administration standpoint.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>At some point a process can run out of control, creating an incredible amount of the entries in your log file. If this were to happen over the weekend when no one was around, your disk would more than likely be full when you arrived at work on Monday morning. Depending on how much or what data you want, you have a couple of options.
+</P>
+<p>Stop any daemons or processes that are writing to that particular log file. Then find disk space on another partition, disk, or through an NFS mount point. If there is only an NFS mount point available, this might depend on the size of the file.</P>
+<p>If you want to get rid of the massive number of error messages that were logged in the file, <small>grep</SMALL> those out using a pattern that exists in all the error messages:</P>
+<!-- CODE SNIP //-->
+<pre>
+# grep -v &#147;ERROR dbase offline&#148; /var/adm/messages &gt
+&#8658; /var/adm/messages.new
+# mv /var/adm/messages.new /var/adm/messages.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you don&#146;t want the file at all, <small>null</SMALL> the file fast and reclaim all the lost disk space:</P>
+<!-- CODE SNIP //-->
+<pre>
+# cat /dev/null &gt /var/adm/messages
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you have some time to manipulate the file, move it to another area:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# mv /var/adm/messages /disk2/tmp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Then cut the file in half using the commands of the script discussed.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+bc, grep, tail, wc
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading10"></A><font color="#000077">4.5 Mail a Process</FONT></H3>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">4.5.1 Description</FONT></H4>
+<p>As processes or tasks are being monitored, one of the easiest forms of notification is email.
+</P>
+<p><font size="+1"><b>Example One: Piping mail</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+[command|script] | <b>mail</B> [<b>-s</B> subject] <b>address</B>
+[command|script] | Mail [-s subject] address
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can execute a command or script and pipe the output to the <small>mail</SMALL> command. A manual or scripted process takes the output from a command or script and writes it to a file. Then run the <small>mail</SMALL> command, read the file into it, and send the contents off to an email address.</P>
+<!-- CODE SNIP //-->
+<pre>
+# tail -20 /var/adm/suslog &gt /tmp/sulog
+# mail admin@rocket.ugu.com
+Subject: Root Access
+~r /tmp/sulog
+.
+# rm /tmp/sulog
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This entire process can be replaced by piping the command into mail:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# tail -20 /var/adm/sulog | mail -s &#147;Root Access&#148;
+&#8658; admin@rocket.ugu.com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The result is the last 20 lines from the file that record who logged in as superuser and mail the information to the system administrator.
+</P>
+<p>The crontab can also be set up to schedule a job and pipe any results out to <small>mail</SMALL>. This notifies an administrator when something might potentially have gone wrong with a scheduled backup. The backup script <small>backmeup</SMALL> simply <small>tar</SMALL>s all the files in the partition called /usr2.</P>
+<!-- CODE SNIP //-->
+<pre>
+#! /bin/sh
+tar -cf /dev/rst8 /usr2
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the shell.
+</P>
+<p>Line 2: Create a tar archive of the partition to a tape device.</P>
+<!-- CODE SNIP //-->
+<pre>
+5 2 * * * /usr/local/bin/backmeup | mail -s &#147;rocket Backups&#148;
+&#8658; admin@rocket.ugu.com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the scheduled cron jobs run at 2:05 a.m. the program <small>backmeup</SMALL> runs. If any errors occur during the process, the administrator is notified in the form of an email message.</P>
+<p><font size="+1"><b>Example Two: Redirecting mail</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>mail</B> [<b>-s</B> <i>subject]</I> <b>address</B> <b>&lt file</B>
+Mail [-s <i>subject</I>] address &lt file
+</PRE>
+<!-- END CODE SNIP //-->
+<p>While monitoring a system, informational files sometimes get created. If these need to get mailed, a file can be redirected into mail.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# mail -s &#147;Monitoring Results&#148; admin@rocket.ugu.com &lt
+&#8658; /var/log/monitor.log
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>If <small>mail</SMALL> is configured on the UNIX workstation or server and is not on an isolated network, it is a perfect tool to monitor the system.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Today, mail is commonly used by many UNIX administrators who have many servers and workstations at their sites to help in monitoring their systems. There are a few ways to use this method of notification:
+</P>
+<p><i>Mailing Lists</I> Mail the information to a mailing list that sends the information off to multiple admins. Set up an entry into the mail alias file similar to</P>
+<!-- CODE SNIP //-->
+<pre>
+admins: bill@ugu.com, paul@ugu.com, gloria@ugu.com
+</PRE>
+<!-- END CODE SNIP //-->
+<p><i>Paging server</I> Commercial software is available that sends pages to a text or numeric pager via an email message. The software runs on a server that has inbound mail configured. When the software receives the mail, it dials a preset phone number that is available through the paging service that you have an account with. When it establishes a connection, the mail message passes through the paging service and you receive the message. Email addresses are generally in the form <small>steve.mesh@pager.ugu.com</SMALL> or <small>smesh.pager@rocket.ugu.com</SMALL> and the mail is automatically processed by the server when it is received.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,345 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:General System</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=1//-->
+<!--PAGES=001-004//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ewtoc.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="004-007.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Section I<br>General System
+</FONT></H2>
+<p>This section covers a lot of ground. It includes tips for everything from using services on remote machines to successfully uninstalling software. You can change the way your inteface looks, customize your Run command, and ensure that your logon scripts run correctly&#151;and that&#146;s just the beginning.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Services</FONT></H3>
+<p><big>H</BIG>ave you ever needed to start a service on a remote machine? You can use the tools in the resource kit, but they often aren&#146;t handy or give curious results. Each service has a corresponding registry key and each key has a start value. Each service can have one of these start values:</P>
+<table width="100%"><tr>
+<td width="5%">
+<td width="10%">0x0
+<td width="75%">Boot
+<tr>
+<td>
+<td>0x1
+<td>System
+<tr>
+<td>
+<td>0x2
+<td>Automatic
+<tr>
+<td>
+<td>0x3
+<td>Manual
+<tr>
+<td>
+<td>0x4
+<td>Disabled
+</TABLE>
+<p>To alter the way a service starts, change the appropriate start value for each service. I give two examples and list common services and their registry keys for a generic Windows NT installation. Many other services are available; I just listed a few of the more common ones. Make sure you have your system backed up or have a spare test system when you go spelunking in here.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-1</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Atapi
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x0
+</TABLE>
+<p>This example starts the Atapi service when the machine boots.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-2</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Eventlog
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x2
+</TABLE>
+<p>This value makes the event log start automatically on the target computer. To change this configuration, run regedt32.exe and select the computer that has the service you wish to alter.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-3</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Alerter
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x3
+</TABLE>
+<p>This example makes the alerter service start manually on the target machine.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-4</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Browser
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x2
+</TABLE>
+<p>This example tells the browser service to start automatically every time Windows NT starts.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-5</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Busmouse
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x4
+</TABLE>
+<p>This example disables the busmouse service.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-6</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\DHCP
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x2
+</TABLE>
+<p>This example sets the DHCP client service to automatic startup mode.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-7</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Replicator
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x3
+</TABLE>
+<p>This example sets the directory replication service to manual start.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-8</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Messenger
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x2
+</TABLE>
+<p>This example automatically starts the messenger service so you can send and receive system broadcast messages.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-9</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Sermouse
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x2
+</TABLE>
+<p>This example sets the serial mouse service to start automatically.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-10</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\UPS
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Start
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0x4
+</TABLE>
+<p>This value controls the uninterruptible power supply service.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ewtoc.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="004-007.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

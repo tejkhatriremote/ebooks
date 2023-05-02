@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 13 -- How Filtering Routers Work</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;13</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Filtering Routers Work</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowFilteringRoutersWork">
+How Filtering Routers Work</A>
+</UL>
+
+<HR>
+<P>
+Often, routers are the first line of defense against unauthorized
+access to an intranet. The only way that anyone outside the intranet
+can get to the intranet is through a router, so it makes sense
+that the router will be the first place to put security rules
+into place. Routers can also be used within intranets to prevent
+internal security breaches.
+<P>
+Routers examine every packet coming into and going out of an intranet
+and decide where to send those packets so that they can be delivered
+to the proper address. They can control the type and direction
+of traffic permitted and essentially can also decide whether packets
+should even be delivered. In other words, they can block certain
+packets from coming into or going out of an intranet.
+<P>
+When routers are used in this way-to protect an intranet by blocking
+certain packets-they are called <I>filtering routers</I> or <I>screening
+routers</I>.
+<P>
+An intranet administrator establishes a filtering table that contains
+many rules about which packets are allowed to pass and which are
+to be dropped. Each packet coming into and going out of an intranet
+has a number of layers of information in it. These layers contain
+the data being sent and information about the kind of Internet
+resource being used (FTP, Telnet, and so forth), the source address
+and destination address of the packet, and other information.
+Filtering routers use the information in those layers to evaluate
+which rules in the filtering table apply to each packet. When
+packets pass through the router, the router examines the packets,
+looks at the filtering table, and then decides which action to
+take. The * wild card can be used at the end of IP addresses,
+for example, to apply rules to entire subnets or servers.
+<P>
+Rules can differ for incoming packets and outgoing packets. This
+means people inside the intranet can be given different levels
+of access to services and data, and prevent people from outside
+the intranet from getting at intranet resources and data.
+<P>
+For example, a filtering router can allow people from inside an
+intranet to use Telnet, but not allow anyone outside the intranet
+to Telnet into the intranet. It can block specific source addresses
+from accessing the intranet. A filtering router distinguishes
+between input and output ports traffic. Even if someone hacked
+into the IP header and forged an address to try to make it look
+as if they were a legitimate user, the router would recognize
+the address as an internal one coming in from the output port-a
+condition that could only be an attack and so the router would
+drop the packet.
+<H2><A NAME="HowFilteringRoutersWork"><FONT SIZE=5 COLOR=#FF0000>
+How Filtering Routers Work</FONT></A></H2>
+<P>
+Filtering routers, sometimes called screening routers, are the
+first line of defense against attacks on an intranet. Filtering
+routers examine every packet moving between networks on an intranet
+as well as from the Internet. An intranet administrator establishes
+the rules the routers use to make decisions about which packets
+should be passed or dropped.
+<OL>
+<LI>Different rules can be set up for incoming packets and outgoing
+packets so that intranet users can be given access to Internet
+services, while anyone on the Internet could be banned from accessing
+certain intranet services and data.
+<LI>Filtering routers can keep logs about filtering activity.
+Commonly, they track packets not allowed to pass between the Internet
+and the intranet, which would indicate an intranet has been under
+attack.
+<LI>The router examines the data in the IP header which wraps
+the data and the transport layer header information. That means
+that any given packet will have data in it, as well as two sets
+of headers-one from the transport layer, and one from the Internet
+layer. Filtering routers examine all these data and headers to
+decide whether to let packets pass.
+<LI>Source addresses are read from the IP header and compared
+to the source address listings in the filtering tables. Certain
+addresses may be known to be dangerous and including them in the
+table allows the router to drop that traffic.
+<LI>Routers can have different rules for subnets since they may
+require different levels of security. A subnet that contained
+highly private financial or competitive information might have
+many restrictions. An engineering subnet may have few restrictions
+on incoming or outgoing activities.
+<LI>A filtering router can allow users to have access to services
+like Telnet and FTP, while restricting Internet use of these services
+to access the intranet. This same technique can be used to prevent
+internal users from accessing restricted data on an intranet.
+For example, it can allow finance members outgoing use of FTP
+while dropping FTP requests from the engineering department into
+the finance department.
+<LI>Certain kinds of services are more dangerous than others.
+For example, FTP is used to download files but may bring files
+containing a virus. Telnet and the <I>rlogin</I> command (like
+Telnet but with a greater risk for security break-ins) are banned
+by rules in the filtering table that evaluate this type of service
+by the source or destination port number. Telnet addresses port
+23, and rlogin port 513.
+<LI><I>Address spoofing</I> is a common method of attack. In address
+spoofing, someone from outside the intranet forges a source address
+so that it looks to a router as if the source address is really
+someone from inside the intranet. The spoofer hopes to trick the
+filtering router into allowing greater access to the intranet
+than would be allowed an external originating address. Once the
+router was convinced that the spoofer was already inside the intranet,
+private files potentially could be sent outside the intranet.
+<LI>Filtering routers have a way of handling address spoofing.
+A rule can be established that tells the router to look at the
+source address in every incoming-but not outgoing-IP header. If
+the source address is internal, but the packet is coming from
+outside the intranet, the router would drop the packet.
+</OL>
+<HR>
+
+<CENTER><P><A HREF="ch12.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch14.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

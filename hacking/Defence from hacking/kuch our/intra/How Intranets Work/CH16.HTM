@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter  16 --  How Bastion Hosts Work</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;16</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Bastion Hosts Work</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowBastionHostsWork">
+How Bastion Hosts Work</A>
+</UL>
+
+<HR>
+<P>
+One of the best ways to protect an intranet from attack is to
+put a heavily fortified <I>bastion host</I> or <I>bastion server</I>
+in a firewall. Having a bastion host means that all access to
+an intranet from the Internet will be required to come through
+the bastion host. By concentrating all access in a single server,
+or a small group of servers, it's much easier to protect the entire
+intranet.
+<P>
+The bastion host does not provide intranet services itself. When
+it receives a request from the Internet for an intranet service,
+the host passes the request to the appropriate server. Subsequently,
+it takes the response and passes it back to the Internet.
+<P>
+Proxy server programs can also run on bastion hosts. That is,
+when someone on the intranet wants to get at an Internet resource,
+they first contact the proxy server on the bastion host, and the
+bastion host then relays the request to the Internet server. The
+Internet server sends the information to the proxy server on the
+bastion host, which in turn passes the information back to the
+user on the intranet.
+<P>
+Several means are taken to ensure that the bastion host is as
+secure as possible-and also to make sure that if the host is hacked
+into, intranet security won't be compromised.
+<P>
+To make the bastion host secure, it is stripped of all but the
+most basic services. A typical network server provides login,
+file, print, and other services, including access to additional
+servers. On a bastion host, those services have been prohibited.
+Since there are no user accounts, it's difficult for someone to
+break in using passwords. Since it has few services available,
+even if someone did break in, there wouldn't be much they could
+do with it.
+<P>
+For even more security, bastion hosts can be put on a private
+subnet (often referred to as a <I>perimeter network</I>), further
+isolating the host so that if someone breaks into it, they can
+only get access to that subnet, not to the rest of the intranet.
+A filtering router reviews packets coming from the private subnet,
+making sure that only authorized incoming requests pass through
+to the intranet.
+<P>
+Even more security measures can protect the server and intranet,
+sending alerts to intranet administrators if someone is trying
+to break in. The bastion host can log all access to it, and keep
+a secure backup of that log on a physically separate machine connected
+by the serial port so no one can gain access to the log remotely.
+System administrators can examine the log for signs of break-ins.
+Even more powerful are monitoring programs that watch the log
+and sound an alarm if it detects someone has been trying to break
+into the server. Auditing software can also constantly check the
+server software to see if it has been altered in any way-a possible
+sign that an intruder has successfully attacked it and taken control
+of its resources.
+<H2><A NAME="HowBastionHostsWork"><FONT SIZE=5 COLOR=#FF0000>
+How Bastion Hosts Work</FONT></A></H2>
+<P>
+A bastion host (also called a bastion server) is one of the main
+defenses in an intranet firewall. It's a heavily fortified server
+that sits inside the firewall, and it is the main point of contact
+between the intranet and the Internet. By having an isolated,
+heavily defended server as the main point of contact, the rest
+of the intranet resources can be shielded from attacks starting
+on the Internet.
+<UL>
+<LI>Bastion hosts are built so that every network service possible
+is disabled on them-the only thing the server does is allow for
+specified Internet access. So, for example, there should be no
+user accounts on a bastion server, so that no one can log into
+it and take control of it and then gain access to the intranet.
+Even the Network File System (NFS), which allows a system to access
+files across a network on a remote system, should be disabled,
+so that intruders can't gain access to the bastion server and
+then get at files on the intranet. The safest way to use bastion
+hosts is to put them on their own subnet as part of an intranet
+firewall. By putting them on their own network, if they are broken
+into, no other intranet resources are compromised.
+<LI>Bastion servers log all activity so that intranet administrators
+can tell if the intranet has been attacked. They often keep two
+copies of system logs for security reasons: In case one log is
+destroyed or tampered with, the other log is always available
+as a backup. One way to keep a secure copy of the log is to connect
+the bastion server via a serial port to a dedicated computer,
+whose only purpose is to keep track of the secure backup log.
+<LI>Automated monitors are even more sophisticated programs than
+auditing software. Automated monitors regularly check the bastion
+server's system logs, and send an alarm if it finds a suspicious
+pattern. For example, an alarm might be sent if someone attempted
+more than three unsuccessful logins.
+<LI>There can be more than one bastion host in a firewall. Each
+bastion host can handle one or more Internet services for the
+intranet. Sometimes, a bastion host can be used as a victim machine.
+This is a server that is stripped bare of almost all services
+except one specific Internet service. Victim machines can be used
+to provide Internet services that are hard to handle using proxying
+or a filtering router, or whose security concerns are not yet
+known. The services are put on the victim machine instead of a
+bastion host with other services. That way, if the server is broken
+into, other bastion hosts won't be affected.
+<LI>Placing a filtering router between the bastion host and the
+intranet provides additional security. The filtering router checks
+all packets between the Internet and the intranet, dropping unauthorized
+traffic.
+<LI>When a bastion server receives a request for a service, such
+as sending a Web page or delivering e-mail, the server doesn't
+handle the request itself. Instead, it sends the request along
+to the appropriate intranet server. The intranet server handles
+the request, and then sends the information back to the bastion
+server. The bastion server now sends the requested information
+to the requester on the Internet.
+<LI>Some bastion servers include auditing programs, which actively
+check to see whether an attack has been launched against them.
+There are a variety of ways to do auditing. One way to audit is
+to use a checksum program, which checks to see whether any software
+on the bastion server has been changed by an unauthorized person.
+A checksum program calculates a number based on the size of an
+executable program on the server. It then regularly calculates
+the checksum to see if it has changed. If it has changed, someone
+has altered the software, which could signal an attack.
+</UL>
+<HR>
+
+<CENTER><P><A HREF="ch15.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch17.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

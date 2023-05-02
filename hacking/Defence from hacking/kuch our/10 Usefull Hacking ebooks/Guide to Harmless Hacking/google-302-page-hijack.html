@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en"><head>
+<title>Page Hijack Exploit: 302, redirects and Google
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="keywords" content="302, redirect, highjack, redirects, meta, Google, MSN, page hijack, search engine result pages, serps">
+<meta name="description" content="An explanation of the page hijack exploit using 302 server redirects.">
+<meta name="copyright" content="2005 Claus Schmidt, clsc.net">
+
+<link rel="stylesheet" type="text/css" media="screen" href="../style-top.css">
+
+<style type="text/css">
+.lightblue {
+	border: 1px solid rgb(102,150,255);
+	background-color: rgb(102,150,255); 
+	color: rgb(255,255,255);
+	padding:5px;
+	margin-top:10px;
+	margin-bottom:40px;
+}
+</style>
+
+</head><body><div id="page"><div id="head">
+<div id="logo"><a class="logo" href="http://clsc.net/"><img src="http://clsc.net/clsc.net.gif" alt="clsc.net" height="32px" width="32px" align="middle" border="0">clsc.net</a>
+</div><div id="topnav">The firm: 
+ <a href="http://clsc.net/experience.htm">experience</a>
+ &nbsp;&nbsp;&nbsp;
+ <a href="http://clsc.net/contact.htm">contact</a>
+ &nbsp;&nbsp;&nbsp;
+ (<a href="http://clsc.net/old-site/dansk.htm">dansk</a>)
+<br>Sections:  <a href="http://clsc.net/news.php">net news</a>
+ &nbsp;&nbsp;
+ <a href="http://clsc.net/tools/">net tools</a>
+ &nbsp;&nbsp;
+ <a href="http://clsc.net/research/">net research</a>
+</div>
+
+	</div><div id="nav">
+
+<a class="nav" href="http://clsc.net/">clsc.net</a>
+ : <a class="nav" href="http://clsc.net/research/">net research</a>
+ : <a class="nav" href="google-302-page-hijack.htm">Page Hijack Exploit: 302, redirects and Google</a>
+
+	</div><div id="content">
+
+<h1>Page Hijack: The 302 Exploit, Redirects and Google</h1> 
+<strong>302 Exploit: How somebody elses page can appear instead of your page in the search engines. </strong>
+<br>By Claus Schmidt.
+
+<p><div class="lightblue"><strong>Abstract:</strong><br>
+An explanation of the page hijack exploit using 302 server redirects. This exploit allows any webmaster to have his own "virtual pages" rank for terms that pages belonging to another webmaster used to rank for. Succesfully employed, this technique will allow the offending webmaster ("the hijacker") to displace the pages of the "target" in the Search Engine Results Pages ("SERPS"), and hence (a) cause search engine traffic to the target website to vanish, and/or (b) further redirect traffic to any other page of choice.
+<hr><small>Published here on March 14, 2005.
+<br>Copyright: &copy; 2005 Claus Schmidt, clsc.net
+<br>Citations (quotes, not full-text copy) are considered fair use if accompanied by author name and a link to this web site or page.</small>
+</div>
+
+<p><small>I apologize in advance for typo's and such - i did not have much time to write all this.</small>
+<ul>
+<li><a href="#001">Disclaimer</a></li>
+<li><a href="#002">What is it?</a></li>
+<li><a href="#003">Which engines are vulnerable?</a></li>
+<li><a href="#004">Is it deliberate wrong-doing?</a></li>
+<li><a href="#005">What does it look like?</a></li>
+<ul><li><a href="#006">Example (anonymous)</a></li>
+</ul>
+<li><a href="#007">Who controls your pages in the search engines?</a></li>
+<li><a href="#008">The technical part: How it is done</a></li>
+<li><a href="#009">What you can - and can not - do about it</a></li>
+<li><a href="#010">Precautions against being hijacked</a></li>
+<li><a href="#011">Precautions against becoming a hijacker</a></li>
+<li><a href="#012">Recommended fix</a></li>
+<li><a href="#013">You can help</a></li>
+</ul></p>
+
+<a name="001"></a>
+<p><h2>Disclaimer</h2>
+This exploit is published here for one reason only: <b>To make the problem understandable and visible to as many people as possible in order to force action to be taken to prevent further abuse of this exploit</b>. As will be shown below, this action can only be taken by the search engines themselves. Neither clsc.net nor Claus Schmidt will encourage, endorse or justify any use of this exploit. On the contrary, I (as well as the firm) oppose strongly to any kind of hijacking.
+
+<a name="002"></a>
+<p><h2>What is it?</h2>
+
+A page hijack is a technique exploiting the way search engines interpret certain commands that a web server can send to a visitor. In essence, <b>it allows a hijacking website to replace pages belonging to target websites in the Search Engine Results Pages</b> ("SERPs"). 
+
+<p>When a visitor searches for a term (say, <a href="http://www.google.com/search?q=foo">foo</a>) a hijacking wemaster can replace the pages that appear for this search with pages that (s)he controls. The new pages that the hijacking webmaster inserts into the search engine are "virtual pages", meaning that they don't exist as real pages. They appear to the search engine as copies of the target pages, but having another web address ("<a href="http://www.google.com/search?q=define%3AURL">URL</a>") than the target pages.
+</p>
+
+<p>Once a hijack has taken place, <b>a malicious hijacker can redirect any visitor that clicks on the target page listing to any other page</b> the hijacker chooses to redirect to. If this redirect is hidden from the search engine spiders, this can be sustained for an indefinite period of time.
+</p>
+
+<p><strong>Possible abuses include</strong>: Make "adult" pages appear as eg. CNN pages in the search engines, set up false bank frontends, false storefronts, etc. All the "usual suspects" that is.
+</p>
+
+<a name="003"></a>
+<p><h2>Which engines are vulnerable?</h2>
+
+Search engines vulnerable to this exploit have been reported to include <a href="http://www.google.com">Google</a> and <a href="http://search.msn.com/">MSN Search</a>, probably others as well. The <a href="http://www.yahoo.com/">Yahoo!</a> search engine is at the time of writing the only major one which has managed to close the hole.
+
+<p>Below, the emphasis will be on Google as that one is by far the greatest search engine today in terms of usage - and allegedly also in terms of number of pages indexed
+</p>
+
+<a name="004"></a>
+<p><h2>Is it deliberate wrong-doing?</h2>
+
+<strong>I am not a lawyer</strong>, i should stress this. Further, the search engines affected by this operate on a worldwide scale, and laws tend to differ a lot among countries especially regarding the Internet.
+
+<p>That said, the answer is: <strong>Most likely not</strong>. This is a flaw on the technical side of the search engines. Some webmasters do of course exploit this flaw, but <b>almost all cases i've seen are <i>not</i> a deliberate attempt at hijacking</b>. The hijacker and the target are equally innocent as this is something that happens "internally" in the search engines, and in almost all cases the hijacker does not even know that (s)he is hijacking another page.
+</p>
+
+<p>It is important to stress that <strong>this is a search engine flaw</strong>. It affects innocent and un-knowing webmasters as these webmasters go about doing their normal routines, and maintaining their pages and links as usual. It is not so that you have to take steps that are in any way outside of the "normal" or "default" in order to either become hijacked or hijack others. On the contrary, <b>page hijacks are accomplished using everyday standard procedures and techniques used by most webmasters</b>.
+</p>
+
+<a name="005"></a>
+<p><h2>What does it look like?</h2>
+
+The Search Engine Results Pages ("SERPs") will look just like normal results to the searcher when a page hijack has occured. On the other hand, to a webmaster that knows where one of his pages used to be listed, it will look a little different. The webmaster will be able to identify it because (s)he will see his/her <b>page listed with an URL that does not belong to the site</b>. The URL is the part in green text under listings in Google.
+
+<a name="006"></a>
+<p><h3>Example (anonymous)</h3>
+
+<div>This example is only provided as an example. I am not implying anything whatsoever about intent, as i specifically state that in most cases <b>this is 100% un-intentional and totally unknown to the hijacker, which becomes so only by accident</b>. It is an error that resides within the search engines, and it is the sole fault of the search engines - not any other entity, be it webmasters, individuals, or companies of any kind. So, i have no reason to believe that what you see here is intentional, and i am in fact suggesting that the implied parties are both totally innocent.
+</p>
+<blockquote>
+<p><strong>Google search:</strong> <a href="http://www.google.com/search?num=100&q=%22BBC+News%22">"BBC News"</a>
+</p>
+<p><strong>Anonymous example from Google SERPs:</strong>
+</p>
+<blockquote>
+<span style="color:blue;text-decoration:underline;font-size:1.1em;"><span style="font-weight:bold;">BBC NEWS</span> | UK | 'Siesta syndrome' costs UK firms</span>
+<br>Healthier food and regular breaks are urged in an effort to stop Britain's
+<br>workplace "siesta syndrome".
+<br><span style="color:green;">r.example.tld/foo/rAndoMLettERS - 31k -</span> <span style="color:blue;text-decoration:underline;">Cached</span> - <span style="color:blue;text-decoration:underline;font-size:1.1em;">Similar pages</span> 
+</blockquote>
+<p><strong>Real URL for above page:</strong> <a href="http://news.bbc.co.uk/1/hi/uk/4240513.stm">news.bbc.co.uk/1/hi/uk/4240513.stm</a> 
+</p>
+</blockquote>
+</div>
+
+<p>By comparing the green URL with the real URL for the page you will see that they are not the same. The listing, the position in the SERPs, the exerpt from the page ("the snippet"), the headline, the cached result, as well as the document size are those of the real page. <b>The only thing that does not belong to the real page is the URL</b>, whis is written in green text, and also linked from the headline.
+</p>
+
+<p><small>(In the example above - if you manage to identify the real page in spite of attempts to keep it anonymous - the searcher will end up at the right page with the BBC, exactly as expected (and on the right URL as well). So, in that case there is clearly no malicious intent whatsoever, and nothing  suspicious going on).</small>
+</p>
+
+<a name="007"></a>
+<p><h2>Who controls your pages in the search engines?</h2>
+
+This is the essence of it all. In the example above, clearly the BBC controls whatever is displayed on the domain "news.bbc.co.uk", but BBC normally does not control what is displayed on domains that BBC does not own. So, <b>a mischievous webmaster controlling the "wrong URL" is free to redirect visitors to any URL of his liking once the hijack has taken place</b>. The searcher clicking on the hijacked result (thinking that (s)he will obtain a news story on UK firms) might in fact end up obtaining all kinds of completely unrelated kinds of "information" and/or offers in stead.
+
+<p>And here's the intriguing part: <b>The target</b> (the "hijacked webmaster") <b>has absolutely no methods available to stop this once it has taken place</b>. That's right. Once hijacked, you can not get your pages back. There are no methods that will work.
+</p>
+
+<a name="008"></a>
+<p><h2>The technical part: How it is done</h2>
+
+Here is the full recipe with every step outlined. It's extremely simplified to benefit non-tech readers, and hence not 100% accurate in the finer details, but even though i really have tried to keep it simple you may want to read it twice:
+
+<ol><li>Googlebot <small>(the "web spider" that Google uses to harvest pages)</small> visits a page with a redirect script. In this example it is a link that redirects to another page using a click tracker script, but it need not be so. </li>
+<li>This click tracker script issues a server response code "302 Found" when the link is clicked. This response code is the important part, it does not need to be caused by a click tracker script. Most webmaster tools use this response code per default, as it is standard in both ASP and PHP.</li>
+</li>
+<li>Googlebot indexes the content and makes a list of the links on that page <small>(including one or more links that are really a redirect script)</small></li>
+<li>Links are sent to a database for storage until another Googlebot is ready to spider them. <strong>At this point the connection breaks between your site and the site with the redirect script, so you (as webmaster) can do nothing about the following:</strong></li>
+<li>Some other Googlebot tries one of these links  - this one happens to be the redirect script <small>(Google has thousands of spiders, all are called "googlebot")</small></li>
+<li>It receives a "302 Found" status code and goes "<i>yummy, here's a nice new page for me</i>"</li>
+<li>It then receives a "Location: www.your-domain.tld" header and hurries to that address to get the content for the new page.</li>
+<li>It heads straight to your page without telling your server on what page it found the link it used to get there <small>(as, obviously, it doesn't know - another Googlebot fetched it)</small></li>
+<li>It has the URL <small>(which is the link it was given, not the page that link was on)</small>, so now it indexes your content as belonging to that URL.</li>
+<li>It deliberately chooses to keep the redirect URL, as the redirect script has just told it that the new location <small>(That is: The target URL, or your web page)</small> is just a <strong>temporary location</strong> for the content. That's what <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">302 means</a>: Temporary location for content.</li>
+<li>Bingo, <b>a brand new page is created</b> <small>(nevermind that it does not exist IRL, to Googlebot it does)</small></li>
+<li>Some other Googlebot finds your page at your right URL and indexes it.</li>
+<li>When both pages arrive at the reception of the "index" they are spotted by the "duplicate filter" as it is discovered that they are identical.</li>
+<li>The "duplicate filter" doesn't know that one of these pages is not a page but just a link. It has two URLs and identical content, so this is a piece of cake: Let the best page win. The other disappears.</li>
+<li>Optional: For mischievous webmasters only: For any other visitor than "Googlebot", make the redirect script point to any other page free of choise.
+</ol>
+
+<p><small>Added: There are many theories about how the last two steps (13-14) might work. One is the duplicate theory - another would be that the mass of redirects pointing to the page as being "temporary" passes the level of links declaring the page as "permanent". This one does not explain which URL will win, however. There are other theories, even quite obscure ones - all seem to have problems the duplicate theory does not have. The duplicate theory is the most consistent, rational, and straight-forward one i've seen sofar, but only the Google engineers know the exact way this works.
+</small>
+</p>
+
+<p>Here, "best page" is key. Sometimes the target page will win, sometimes the redirect script will win. Specifically, if the PageRank <small>(an internal Google "page popularity measure")</small> of the target page is lower that the PageRank of the hijacking page, it's most likely that the target page will drop out of the SERPs.
+</p>
+
+<p>However, examples of high PR pages being hijacked by script links from low PR pages have been observed as well. So, sometimes PR is not critical in order to make a hijack. One might even argue that -- as the way Google works is fully automatic -- if it is so "sometimes" then it has to be so "all the time". This implies that the examples we see of high PR pages hijacking low PR pages is just a co-occurence, PR is not the reason the hijack link wins. This, in turn, means that <b>any page is able to hijack any other page</b>, if the target page is not sufficiently protected (see <a href="#010">below</a>).
+</p>
+
+<p>So, essentially, by doing the right thing <small>(interpret a 302 as per <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">the RFC</a>)</small>, <b>the search engine (in the example, Google) allows another webmaster to convince it's web page spider that your website is nothing but a temporary holding place for content</b>.
+</p>
+
+<p>Further, this leads to <strong>creation of pages in the search engine index that are not real pages</strong>. And, if you are the target, you can do nothing about it. 
+</p>
+
+<a name="009"></a>
+<p><h2>What you can - and can not - do about it</h2>
+
+Note the bolded part of item #4 in the list above. At a very early stage the connection between your page and the hijacking page simply breaks. This menas that you can not put a script on your page that identifies if this is taking place. You can not "tell Googlebot" that your URL is the right URL for your page either.
+
+<p>Here are some common misconceptions. The first thoughts of technically skilled webmasters will be along the lines of "banning" something, ie. detecting the hijack by means of some kind of script and then performing some kind of action. Lets' clear up the misunderstandings first:
+</p>
+
+<p><b>You can't ban 302 referrers as such</b>
+<br>Why? Because your server will never know that a 302 is used for reaching it. This information is never passed to your server, so you can't instruct your server to react to it.
+</p>
+
+<p><b>You can't ban a "go.php?someurl" redirect script</b>
+<br>Why? Because your server will never know that a "go.php?someurl" redirect script is used for reaching it. This information is never passed to your server, so you can't instruct your server to react to it.
+</p>
+
+<p><b>Even if you could, it would have no effect with Google</b>
+<br>Why? Because Googlebot does not carry a referrer with it when it spiders, so you don't know where it's been before it visited you. As already mentioned, Googlebot could have seen a link to your page a lot of places, so it can't "just pick one". <strong>Visits by Googlebot have no referrers</strong>, so you can't tell Googlebot that one link that points to your site is good while another is bad.
+</p>
+
+<p><b>You CAN ban clickthrough from the page holding the 302 script - but it's no good</b>
+<br>Yes you can - but this will only hit legitimate traffic, meaning that surfers clicking from the redirect URL will not be able to view your page. It also means that you will have to maintain an ever-increasing list of individual pages linking to your site. For Googlebot (and any other SE spider) those links will still work, as they pass on no referrer. So, if you do this Googlebot will never know it.
+</p>
+
+<p><b>You CAN request removal of URLs from Google's index in some cases</b>
+<br>This is definitely not for the faint at heart. I will <b>not</b> recommend this, only note that some webmasters seem to have had success with it. If you feel it's not for you, then <b>don't do it</b>. The point here is that you as webmaster could try to get the redirect script deleted from Google. 
+
+<p>Google does accept requests for removal, as long as the page you wish to remove has one of these three properties:
+<ul><li>It returns a "404 Not Found" status code (or, perhaps even a "410 Gone" status code)</li>
+<li>It has this meta tag: &lt;meta name="robots" value="noindex"&gt;</li>
+<li>It is disallowed in the "robots.txt" file of the domain it belongs to</li>
+</ul>
+</p>
+
+<p>Only the first can be influenced by webmasters that do not control the redirect script, and the way to do will not be appealing to all. Simply, you have to make sure that the target page returns a 404, which means that the target page must be unavailable. Then you have to request removal of the <b>redirect script url</b>, ie. <i>not</i> the URL of the target page. <strong>Use extreme caution:</strong> If you request that the target page should be removed while it returns a 404 error, then it <i>will be removed</i> from Google's index. You don't want to remove your own page, only the redirect script.
+</p>
+<p>After the request is submitted, Google will spider the URL to examine if the requirements are met. When Googlebot has seen your pages via the redirect script and it has gotten a 404 error you can put your page back up.</p>
+
+
+<a name="010"></a>
+<p><h2>Precautions against being hijacked</h2>
+
+I have tracked this and related problems with the search engines literally for years. If there was something that you could easily do to fix it as a webmaster, i would have published it long time ago. That said, the points listed below will most likely make your pages harder to hijack. I will and can not promise immunity, though, and i specifically don't want to spread false hopes by promising that these will help you once a hijack has already taken place. On the other hand, once hijacked you will lose nothing by trying them.
+
+<ul>
+<li>Always redirect your "non-www" domain (example.com) to the www version (www.example.com) - or the other way round (i personally prefer non-www domains, but that's just because it appeals to my personal sense of convenience). The direction is not important. It is is important that you do it with a <a href="http://www.google.com/search?q=301+redirect">301 redirect</a> and not a 302, as the 302 is the one leading to duplicate pages. If you use the Apache web server, the way to do this is to insert the following in your root ".htaccess" file:
+<blockquote><pre>RewriteCond %{HTTP_HOST} !^www\.example\.com 
+RewriteRule (.*) http://www.example.com/$1 [R=301,L]</pre></blockquote>
+Or, for www-to-non-www redirection, use this syntax:
+<blockquote><pre>RewriteCond %{HTTP_HOST} !^example\.com 
+RewriteRule (.*) http://example.com/$1 [R=301,L]</pre></blockquote>
+</li>
+<li>Always use absolute internal linking on your web site (ie. include your full domain name in links that are pointing from one page of your site to another page on your site)</li>
+<li>Include a bit of always updated content on your pages (eg. a timestamp, a random quote, a page counter, or whatever)</li>
+<li>Use the <a href="http://www.google.com/search?q=base+href">&lt;base href=""&gt;</a> meta tag on all your pages</li>
+<li>Just like redirecting the non-www version of your domain to the www version, you can make all your pages "confirm their URL artificially" by inserting a 301 redirect from any URL to the exact same URL, and then serve a "200 OK" status code, as usual. If you use the Apache web server, the way to do this is to insert the following single line in your root ".htaccess" file:
+<blockquote><pre>RewriteRule (.*) http://example.com/$1 [R=301,L]</pre></blockquote>
+Insert "www." in front of the domain if you like that better (i don't personally, but that's just me). It is important that this is <strong>the last rule</strong> in your ".htaccess" file. If you do this you don't need to do the "non-www-to-www redirect", as that is built in into this one.</li>
+</ul>
+
+<a name="011"></a>
+<p><h2>Precautions against becoming a hijacker</h2>
+
+Of course you don't want to become a page hijacker by accident. The precautions you can take are:
+
+<ul>
+<li>If you use 302 redirects in any scripts, convert them to 301 redirects in stead
+<li>If you don't want to do this or are unable to do it, make sure your redirect scripts are disallowed in your "robots.txt" file (you could also do both).
+<li>After putting your redirect script URLs in "robots.txt", request <a href="http://www.google.com/remove.html">removal of all the script urls from Googles index</a> - ie. request removal of all items listed in "robots.txt". Contrary to popular belief, including an URL that is already indexed in "robots.txt" does not remove it from Google's index. It only makes sure that Googlebot does not revisit it. You have to request it removed to get it removed.
+<li>If you discover that you are listed as having hijacked a page in Google, make the script in question return a 404 error and then request <a href="http://www.google.com/remove.html">removal of the script url from Googles index</a>
+</ul>
+
+<a name="012"></a>
+<p><h2>Recommended fix</h2>
+
+This can not and should not be fixed by webmasters. It is an error that is generated by the search engines, it is only found within the search engines, and hence <b>it must be fixed by the search engines</b>. 
+
+<p>The fix i personally recommend is simple: <b>treat cross-domain 302 redirects differently that same-domain 302 redirects</b>. Specifically, treat same-domain 302 redirects exactly as per <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">the RFC</a>, but treat cross-domain 302 redirects just like a normal link.
+</p>
+
+<p>Meta redirects and other types of redirects should of course be treated the same way: Only according to RFC when it's within one domain - when it's across domains it must be treated like a simple link.
+</p>
+
+<a name="013"></a>
+<p><h2>You can help</h2>
+
+<p>For this to happen, we need to put some pressure on the search engines. What i did not tell you above is that this problem has been around for years. Literally (<a href="http://www.webmasterworld.com/forum3/23743.htm">see, eg. bottom of page here</a>). The search engines have failed to take it seriously, and hence their results pages are now filled with these wrong listings. It is not hard to find examples like the one i mentioned above.
+</p>
+
+<p>You can help in this process by putting pressure on the search engines, eg. by writing about the issue on your web page, in forums, or in your blog. Feel free to link to this page for the full story, but it's not required in any way unless you quote from it.
+</p>
+
+<p>&nbsp;</p>
+<hr>
+<div align="center">Document URL, if printed: http://clsc.net/research/google-302-page-hijack.htm</div>
+<hr>
+<small>A small part of this article was originally posted by the author at 4:30 pm on Mar 9, 2005 (utc +1), <a href="http://www.webmasterworld.com/forum30/28329.htm">here</a>
+<br>See specifically posts <a href="http://www.webmasterworld.com/forum30/28329-6-10.htm">#54</a>, <a href="http://www.webmasterworld.com/forum30/28329-8-30.htm">#218</a>, and <a href="http://www.webmasterworld.com/forum30/28329-10-30.htm">#279</a>.</small>
+
+
+<p>&nbsp;</p>
+	</div><div id="foot">
+
+&copy; 2003-2004 Claus Schmidt, clsc.net. This site follows <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fclsc.net;verbose=1">HTML 4</a> and <a href="http://jigsaw.w3.org/css-validator/validator?uri=clsc.net">CSS</a> standards.
+
+</div></div><p>&nbsp;</p></body></html>

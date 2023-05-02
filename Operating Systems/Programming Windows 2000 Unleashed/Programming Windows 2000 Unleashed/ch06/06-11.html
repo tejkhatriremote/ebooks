@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=224-227//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch07/07-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The functions in the Dll32 project are implemented in one file, <small>Dll32.c</SMALL>, which is provided in Listing 6.24. The functions are very simple&#151;most of the code in Listing 6.24 is devoted to displaying message boxes to trace program execution.</P>
+<p><b>Listing 6.24</B> The Implementation of Dll32 Functions in <small>Dll32.c</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Dll32.c
+ *
+ * Definitions for functions in the Dll32 project.
+ * This example program is part of &#147;Programming
+ * Windows 2000 Unleashed&#148;, by Mickey Williams.
+ *
+ */
+
+#include &ltwindows.h&gt
+#include &#147;dll32.h&#148;
+
+int  g_nSimple = 42;
+
+BOOL APIENTRY DllMain( HANDLE hModule,
+                        DWORD ul_reason_for_call,
+                        LPVOID lpReserved )
+{
+    switch(ul_reason_for_call)
+    {
+        case DLL_PROCESS_ATTACH:
+            MessageBox(NULL, &#147;Proc Attach&#148;, &#147;dll32.c&#148;, MB_OK);
+            DisableThreadLibraryCalls(hModule);
+            break;
+
+        case DLL_PROCESS_DETACH:
+            MessageBox(NULL, &#147;Proc Detach&#148;, &#147;dll32.c&#148;, MB_OK);
+            break;
+    }
+    return TRUE;
+}
+
+void __stdcall GetPascalVar(int* pn)
+{
+    if(pn)
+    {
+        char szMsg[80];
+        wsprintf(szMsg,
+                 &#147;GetPascalVar - Returning %d as parameter value&#148;,
+                 g_nSimple);
+        MessageBox(NULL, szMsg, &#147;dll32.c&#148;, MB_OK);
+        *pn = g_nSimple;
+    }
+}
+
+void __stdcall SetPascalVar(int n)
+{
+    char szMsg[80];
+    wsprintf(szMsg,
+             &#147;SetPascalVar - Received %d as parameter value&#148;,
+             n);
+    MessageBox(NULL, szMsg, &#147;dll32.c&#148;, MB_OK);
+
+    g_nSimple = n;
+}
+
+int  __stdcall GetPascalVarRet(int* pn)
+{
+    int  nRet = 0;
+    char szMsg[80];
+    if(pn)
+    {
+        wsprintf(szMsg,
+              &#147;GetPascalVarRet - Returning %d as parameter value&#148;,
+              g_nSimple);
+        MessageBox(NULL, szMsg, &#147;dll32.c&#148;, MB_OK);
+
+        *pn = g_nSimple;
+        nRet = 21;
+    }
+    wsprintf(szMsg,
+             &#147;GetPascalVarRet - Returning %d as return value&#148;,
+             nRet);
+    MessageBox(NULL, szMsg, &#147;dll32.c&#148;, MB_OK);
+    return nRet;
+}
+
+int  __stdcall SetPascalVarRet(int n)
+{
+    char szMsg[80];
+    wsprintf(szMsg,
+             &#147;SetPascalVarRet - Received %d as parameter value&#148;,
+             n);
+    MessageBox(NULL, szMsg, &#147;dll32.c&#148;, MB_OK);
+
+    g_nSimple = n;
+    return n;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>To successfully test the Client16 project, follow these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Build the Client16 project using Visual C<small>&#43;&#43;</SMALL> 1.5.
+<dd><b>2.</B>&nbsp;&nbsp;Build the Dll32 project using a 32-bit version of Visual C<small>&#43;&#43;</SMALL>.
+<dd><b>3.</B>&nbsp;&nbsp;Copy <small>Dll32.dll</SMALL> into a directory where Client16 can find it&#151;for example, the same directory as the Client16 executable file.
+<dd><b>4.</B>&nbsp;&nbsp;Run Client16 and select items from its Test menu. As you select items on the Test menu, message boxes will display the progress of the generic thunk.
+</DL>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">Debugging a Generic Thunk</FONT></H4>
+<p>Debugging a generic thunk can be difficult, because the 16-bit application runs as a 16-bit process, and the DLL is running as a 32-bit process called by the Windows 2000 VDM. Debugging is made more difficult due to the following factors:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Different tools must be used to debug your application.
+<dd><b>&#149;</B>&nbsp;&nbsp;The debugging tools used to debug a thunk are made for different platforms&#151;additionally, 16-bit tools are rather primitive when compared to recent 32-bit tools.
+<dd><b>&#149;</B>&nbsp;&nbsp;You can&#146;t step directly from a 16-bit client app into a 32-bit DLL.
+<dd><b>&#149;</B>&nbsp;&nbsp;As the process is launched by the VDM, the normal DLL debugging procedures don&#146;t apply.
+</DL>
+<p>The best approach is to debug normally when required in the 16-bit app. You can lay a trap inside the 32-bit DLL by following these steps:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Add a call to <small>DebugBreak</SMALL> inside your DLL. A good place to add this call is inside an initialization function that&#146;s called when the DLL is first launched.
+<dd><b>2.</B>&nbsp;&nbsp;When the <small>DebugBreak</SMALL> statement is executed, the operating system will cause a debugger exception. A dialog box similar to a just-in-time debugging dialog box will be displayed. Elect to launch the debugger.
+<dd><b>3.</B>&nbsp;&nbsp;Once the debugger is launched, continue execution. As the debugger now has control over the VDM, you can debug your 32-bit DLL by setting breakpoints as required, just as you would debug any other DLL.
+</DL>
+<h3><a name="Heading22"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed many of the issues involved with building and using DLLs when programming for Windows 2000. The differences between DLLs written for 16-bit versions of Windows and Windows 2000 were also discussed.
+</P>
+<p>Several projects were provided to illustrate how to export standard C functions, C<small>&#43;&#43;</SMALL> classes, and MFC objects. An example illustrating how to avoid synchronization problems in shared DLL memory was also presented.</P>
+<p>A discussion about generic thunking included two projects&#151;a 16-bit client and a 32-bit DLL. The project demonstrates how a 16-bit application can call a 32-bit DLL in Windows 2000.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch07/07-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

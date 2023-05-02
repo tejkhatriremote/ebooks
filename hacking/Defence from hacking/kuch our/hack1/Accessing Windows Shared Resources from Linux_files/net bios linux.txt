@@ -1,0 +1,96 @@
+Routing NetBIOS with Linux
+Introduction
+
+Matt Clements
+Friday, October 29, 1999 05:59:12 AM
+
+
+The Microsoft Network Neighborhood relies on an underlying technology called "NetBIOS over TCP/IP" to work. This all works fine on a small LAN, as it relies on network broadcasts, but it can fail over a WAN as many routers cannot forward NetBIOS broadcasts, or they may be performing Network Address Translation which may cause the broadcasts to fail as they contain IP addresses--not only in the header, but in the data. 
+
+If you can access a machine on a different, masqueraded network using UNC naming, e.g. \\server, but you cannot see it or any machines in your Network Neighborhood, then chances are the NetBIOS broadcasts necessary for Network Neighborhood to work are not crossing the networks. 
+
+It's possible to configure a Linux machine to do NetBIOS forwarding, which will enable us to get the Network Neighborhood working across masqueraded networks. Here's how... 
+
+
+
+Routing NetBIOS with Linux
+Setting up Samba nbfw
+
+Matt Clements
+Friday, October 29, 1999 05:59:12 AM
+
+
+We will need several things to get this to work. First of all we need a Linux kernel capable of port forwarding, like the 2.2.x kernels which are capable of port forwarding without any patching. The 2.0.3x kernels will need to be patched. To find out how to do this have a look at this page:
+http://www.ox.compsoc.org.uk/~steve/portforwarding.html
+Compile a kernel with the port forwarding feature enabled. 
+
+Next we will need the samba source. Follow a link from the Samba home page to download the source from your nearest mirror. 
+
+And we need the nbfw patch. This can be obtained from
+http://malt-whisky.student.utwente.nl/nbfw/download.html 
+
+Next we need to patch the samba source:
+
+
+cd /usr/src/samba-2.0.x/source
+patch -p0 < /tmp/nbfw-0.28/nbfw.diff
+
+Finally we need to build the nbfw-patched version of samba. Do this in the same way that you would normally build samba...i.e., enter the source directory and enter
+
+
+./configure
+make
+make install
+
+You then edit the makefile, after the ./configure stage, to amend the locations of samba's various support files. All being well, we should now have built samba, and also the nbfw-enabled versions of the samba daemons (nmbdnbfw and smbdnbfw). 
+
+Next, we will need to create our smb.conf file. The default path to this file is /etc/smb.conf. 
+
+Something like this should work fine as a starting point: 
+
+[global]
+   workgroup = DOMAIN
+   server string = Samba Server
+   share modes = yes
+   interfaces = 192.168.2.1/24 192.168.1.1/24
+   nbfw backend hosts = 192.168.1.2 192.168.1.3
+   nbfw deny hosts =
+   nbfw netbios names = "DOMAIN" BACKEND-2 BACKEND-3 USER-2 USER-3
+   encrypt passwords = yes
+   name resolve order = lmhosts bcast
+   socket options = IPTOS_LOWDELAY TCP_NODELAY SO_SNDBUF=4096 SO_RCVBUF=4096
+
+[tmp]
+   comment = Temporary file space
+   path = /tmp
+   read only = no
+   public = yes
+
+Notes: 
+
+the lines specifically required for nbfw are the three that begin with nbfw, and the interfaces line. 
+Add the nbfw netbios names line if popup messages are required. 
+
+
+
+
+
+Routing NetBIOS with Linux
+Alter your startup scripts
+
+Matt Clements
+Friday, October 29, 1999 05:59:12 AM
+
+
+Once our smb.conf file has been created we can consider which daemons we need running.
+nmbdnbfw can be viewed as a drop-in replacement for nmbd, enabling backend-to-outside access, and smbdnbfw can be viewed as a drop-in replacement for smbd, enabling outside-to-backend access. To start the required daemons at boot time, let's create or edit a startup script to start the daemons. Change the lines in your /etc/init.d/samba to say this: 
+
+                start-stop-daemon --start --quiet --exec /usr/sbin/nmbdnbfw -- -D -a
+                start-stop-daemon --start --quiet --exec /usr/sbin/smbdnbfw -- -D
+
+Make sure the required daemons are running, and then try to browse the Network Neighborhood. All being well, you should now be able to do so. 
+
+Conclusion
+For me, this has been yet another situation in which Linux has been able to sort out issues another operating system has been incapable of surmounting. I have also become more familiar with samba, which is useful. 
+
+It has also given me a much better insight into how Microsoft Networking really works, what its limitations are and how Linux can help get around them.

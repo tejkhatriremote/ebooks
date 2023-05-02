@@ -1,0 +1,74 @@
+Vulnerability in Solaris mailtool(1)
+
+Date Published: May 29, 2001
+
+Advisory ID: N/A
+
+Bugtraq ID: N/A
+
+Sun Bug ID: 4458476
+
+CVE CAN: Non currently assigned.
+
+Title: Solaris mailtool(1) Buffer Overflow Vulnerability
+
+Class: Boundary Error Condition
+
+Remotely Exploitable: No
+
+Locally Exploitable: Yes
+
+Vulnerable Packages/Systems:
+
+Solaris 8	x86
+Solaris 8	sparc
+[possibly others]
+
+Discovery: dethy@synnergy.net
+
+Synopsis:
+
+The mailtool program is installed setgid mail by default in Solaris,
+a buffer overrun exists in the OPENWINHOME environment variable. By
+specifying a long environment buffer containing machine executable code,
+it is possible to execute arbitrary command(s) as gid mail.
+
+Analysis:
+
+The vulnerability in mailtool incorrectly handles data from the OPENWINHOME
+environment variable, if this variable exceeds a predefined length a stack 
+overflow can occur.
+
+
+ bash-2.03# export OPENWINHOME=`perl -e 'print "A"x1010'`
+ bash-2.03# mailtool
+ Segmentation Fault
+
+ `truss` output:
+    Incurred fault #6, FLTBOUNDS  %pc = 0xDF8BD448
+    siginfo: SIGSEGV SEGV_MAPERR addr=0x4141414D
+    Received signal #11, SIGSEGV [default]
+    siginfo: SIGSEGV SEGV_MAPERR addr=0x4141414D
+    *** process killed ***
+
+
+Quick Fix:
+
+Clear the sgid bit off /usr/openwin/bin/mailtool program.
+chmod -s `which mailtool`
+
+Solution/Vendor:
+
+Sun Microsystems was notified on May 14, 2001 and verified the vulnerability. 
+Patches/fixes are shortly to be released.
+
+Related Links:
+
+This vulnerability is unrelated to the Solaris 7/8 ximp40 shared library overflow
+discovered earlier in the year: http://www.securityfocus.com/archive/1/159586
+
+Credits :
+
+Vulnerability discovered by dethy (dethy@synnergy.net)
+
+Synnergy Networks http://www.synnergy.net

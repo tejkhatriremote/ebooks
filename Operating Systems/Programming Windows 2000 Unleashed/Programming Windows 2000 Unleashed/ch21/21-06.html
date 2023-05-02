@@ -1,0 +1,273 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:An Introduction to COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=21//-->
+<!--PAGES=699-703//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="21-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b><i>Connecting to the Database</I></B></FONT></P>
+<p>The solution is to write a generic connection class. This class would contain all the operations or information necessary to make a connection the database:
+</P>
+<!-- CODE //-->
+<pre>
+Option Explicit
+
+Public objConnection As adodb.Connection
+
+Public Database As String
+Public SQLTimeOut As Long
+Public IsoLevel As Long
+Public AccessMode As Long
+
+Private Sub Class_Initialize()
+    Set objConnection = New Connection
+End Sub
+
+Private Sub Class_Terminate()
+    If objConnection.State = adStateOpen Then
+        Dim retCode As Boolean
+        retCode = Disconnect()
+    End If
+    Set objConnection = Nothing
+End Sub
+
+Public Property Get isConnected() As Boolean
+    If objConnection.State = adStateOpen Then
+        isConnected = True
+    Else
+        isConnected = False
+    End If
+
+End Property
+
+Public Function Connect() As Boolean
+    Dim tmpDriver As String
+
+    With objConnection
+        If .State = adStateOpen Then
+            Dim returnVal As Long
+            returnVal = Disconnect
+            If returnVal = False Then
+                GoTo ExitConnect
+            End If
+        End If
+
+        .ConnectionTimeout = 10
+        .ConnectionString = &#147;driver={SQL Server};uid=sa;server=cronos;
+        &#8658;database=windows2000&#148;
+        .Provider = &#147;MSDASQL&#148;
+        .CursorLocation = adUseNone
+
+        .Open
+
+        If Err.Number &lt&gt 0 Then
+            GoTo ExitConnect
+        End If
+
+        Database = CStr(.DefaultDatabase)
+        SQLTimeOut = CLng(.CommandTimeout)
+        IsoLevel = CLng(.IsolationLevel)
+        AccessMode = CLng(.Mode)
+    End With
+
+    Connect = True
+    Exit Function
+
+ExitConnect:
+    Connect = False
+End Function
+
+Public Function Disconnect() As Boolean
+    With objConnection
+        .Close
+        Disconnect = True
+    End With
+End Function
+</PRE>
+<!-- END CODE //-->
+<p>In the above helper object, there are two methods, <small>Connect</SMALL> and <small>Disconnect</SMALL>, which connect to the resource and disconnect from the resource, respectively. Connecting to a resource can be either extremely easy or extremely difficult.</P>
+<p>In OLE DB, when a resource exposes itself, it needs a physical component. This can be a native OLE DB driver or an ODBC driver. The ODBC driver is exposed to the OLE DB using an OLE DB[nd]to-ODBC bridge driver. For ODBC, the native OLE DB provider is MSDASQL. SQLOLEDB is used to connect to Microsoft SQL Server. MSDAORA is used to connect to Oracle. When one of these providers is used, a connection string is required.</P>
+<p>Here&#146;s where things can become complicated. When you&#146;re using a native OLE DB driver, you&#146;ll most likely specify the database you want to work with. In the ODBC case, you&#146;ll specify which ODBC DSN you want to work with. For the case where there is no DSN, you&#146;ll need to specify more items. In the preceding example, a &#147;DSN-less&#148; connection is used because the driver and database are specified. For a DSN-based ODBC connection, you would simply specify <small>DSN=<i>ODBC source name</I></SMALL>.</P>
+<p>If you were to use the native OLE DB provider for SQL Server, you would need to use the following string:</P>
+<!-- CODE SNIP //-->
+<pre>
+Provider=SQLOLEDB;Data Source=cronos;Initial Catalog=windows2000;
+&#8658;User Id=sa;Password=
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Once your connection string has been built, before you open the resource, you should specify <small>ConnectionTimeout</SMALL> and where the cursor should be located. The timeout defines how long the client will wait before a connection to the server is established. By default, it&#146;s set to 15 seconds, but in the sample code, it&#146;s set to 10 seconds. <small>cursorLocation</SMALL> is more important because it can determine the performance. In the code, it&#146;s set to <small>none</SMALL>. The other possible value is <small>adUseClient</SMALL>, which is for a client cursor. This type of cursor is more flexible, because the local cursor library manages it. However, there may be a performance and data synchronization hit. The other value is <small>adUseServer</SMALL>, which specifies the use of a resource-specified cursor. This cursor may have less functionality, but it may offer more performance. Which to use depends on the resource and in which context it&#146;s being used. You should experiment and look at the documentation for possible advantages of each.</P>
+<p><font size="+1"><b><i>Generating a View Result</I></B></FONT></P>
+<p>Now you&#146;ll want to access the view. Without adding extra overhead to ADO (it&#146;s already a simplification), you can perform two operations within a view. The first is a criterion selection and then an iteration through the resultset.
+</P>
+<p>The simplest way to query the view is by creating a SQL <small>SELECT</SMALL> statement, but you name the view instead of the table. A helper within the class will build the <small>SELECT</SMALL> statement, and the consumer of the class only needs to pass the name of the view. The criterion will be passed using a <small>PARAM</SMALL> and <small>VALUE</SMALL> combination, which will be converted into a set of SQL statements. Here&#146;s the statement:</P>
+<!-- CODE //-->
+<pre>
+Option Explicit
+
+Public Enum sqlCommandTypeEnum
+    sqlStatement = 1
+    sqlView = 2
+End Enum
+
+Public objConnection As clsDBConnect
+Public objRecordset As Recordset
+Public strSQL As String
+Public sqlCommandType As sqlCommandTypeEnum
+
+Private mvarViewName As String
+Private existCriterion As Boolean
+
+Private Sub Class_Initialize()
+    sqlCommandType = sqlStatement
+    Set objRecordset = New Recordset
+End Sub
+
+Private Sub Class_Terminate()
+    Set objConnection = Nothing
+    Set objRecordset = Nothing
+End Sub
+
+Public Property Let view(inpVal As String)
+    mvarViewName = inpVal
+
+    strSQL = &#147;SELECT * FROM &#148; &amp mvarViewName
+    sqlCommandType = sqlView
+    existCriterion = False
+End Property
+
+Public Property Get view() As String
+    view = sqlStatement
+End Property
+
+Public Sub AddLongCriterion(param As String, value As Long)
+    Dim strValue As String
+
+    strValue = CStr(value)
+    Call AddStringCriterion(param, strValue, False)
+End Sub
+
+Public Sub AddStringCriterion(param As String, value As String,
+&#8658; isString As Boolean)
+    If existCriterion = False Then
+        strSQL = strSQL &amp &#147; WHERE &#148;
+        existCriterion = True
+    Else
+        strSQL = strSQL &amp &#147; and &#148;
+    End If
+    If isString = True Then
+        strSQL = strSQL &amp param &amp &#147; = &#145;&#148; &amp value &amp &#147;&#145;&#148;
+    Else
+        strSQL = strSQL &amp param &amp &#147; = &#148; &amp value
+    End If
+End Sub
+
+Public Function Execute() As Boolean
+    Select Case sqlCommandType
+        Case sqlStatement
+            If objConnection.objConnection.CommandTimeout &lt 20 Then
+                objConnection.objConnection.CommandTimeout = 20
+            End If
+            objConnection.objConnection.Execute sqlStatement
+        Case sqlView
+            objRecordset.Open strSQL, objConnection.objConnection,
+            &#8658; adOpenForwardOnly, adLockReadOnly, adCmdText
+            If objRecordset.EOF And objRecordset.BOF Then
+                Execute = False
+            Else
+                Execute = True
+                objRecordset.MoveFirst
+            End If
+        Case Else
+            &#145; Not supported, raise an error
+    End Select
+
+End Function
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="21-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

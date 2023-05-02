@@ -1,0 +1,248 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=078-082//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Variables passed to these functions must be 32-bit aligned on Intel SMP systems. When running on 64-bit versions of Windows 2000, variables passed to <small>InterlockedExchangePointer</SMALL> and <small>InterlockedCompareExchangePointer</SMALL> must be 64-bit aligned.</P>
+<p>The most commonly used of these functions are <small>InterlockedIncrement</SMALL> and <small>InterlockedDecrement</SMALL>. Listing 3.6 contains GoodCount, a new version of the BadCount example provided in Listing 3.5. GoodCount uses <small>InterlockedIncrement</SMALL> to atomically increment the global variable, and it runs correctly on all Windows 2000 systems.</P>
+<p><b>Listing 3.6</B> The GoodCount Program Shows the Right Way to Share Global Data<hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * GoodCount.c - synchronized access to a global variable through
+ * two threads. Compile with the Multi-threaded runtime library.
+ */
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+/* Global counter */
+long g_nTheCounter = 0;
+void IncCounter();
+
+DWORD WINAPI threadFunc(LPVOID);
+int _tmain()
+{
+    DWORD dwThreadId;
+    /* Create worker thread for half the work */
+    HANDLE hThread = CreateThread(NULL,
+                                  0,
+                                  threadFunc,
+                                  NULL,
+                                  0,
+                                  &ampdwThreadId);
+    if(!hThread) return 0;
+    /*
+     * Increment global variable 25,000 times, then wait for
+     * the worker thread to finish executing.
+     */
+    IncCounter();
+    WaitForSingleObject(hThread, INFINITE);
+    /*
+     * Display the value of the global variable, after it has
+     * been incremented 50,000 times.
+     */
+    _tprintf(_T(&#147;The value of the global counter is %d\n&#148;),
+             g_nTheCounter);
+    return 0;
+}
+
+/*
+ *  Worker thread function - increments the global variable
+ *  25,000 times, and exits.
+ */
+DWORD WINAPI threadFunc(LPVOID lpv)
+{
+    IncCounter();
+    return NO_ERROR;
+}
+
+/*
+ * Common function used by both threads to increment the global
+ * counter variable. This version of IncCounter uses the
+ * InterlockedIncrement function.
+ */
+void IncCounter()
+{
+    int n;
+    for(n = 0; n &lt 25000; &#43;&#43;n)
+    {
+        InterlockedIncrement(&ampg_nTheCounter);
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">Critical Sections</FONT></H4>
+<p>A <i>critical section</I> is a section of code that must be used by only one thread at any given time. If two or more threads attempt to access a critical section at the same time, only one thread will be allowed control of the critical section, and all other threads are <i>blocked</I>, or kept waiting, until the critical section is free, as shown in Figure 3.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-04.jpg',184,214 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-04.jpg',184,214)"><font color="#000077"><b>Figure 3.4</B></FONT></A>&nbsp;&nbsp;A critical section enables only one thread at a time to execute.</P>
+<p>When compared with the other synchronization methods that will be discussed later in this chapter, creating a critical section is very inexpensive in terms of computing resources. However, unlike other Windows 2000 synchronization primitives, a critical section can only be used within a single process.
+</P>
+<p>A critical section is guarded by a <small>CRITICAL_SECTION</SMALL> variable. This variable must be initialized before it is used, and it must be in scope for every thread that uses it. It must not be allowed to go out of scope while in use; for this reason, critical section variables are often given global scope.</P>
+<p>The <small>InitializeCriticalSection</SMALL> function is used to initialize the <small>CRITICAL_SECTION</SMALL> variable:</P>
+<!-- CODE SNIP //-->
+<pre>
+CRITICAL_SECTION cs;
+InitializeCriticalSection(&ampcs);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To take possession of a critical section, a thread must call the <small>EnterCriticalSection</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+EnterCriticalSection(&ampcs);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the critical section is not in use, it&#146;s marked as busy, and the thread immediately continues execution. If the critical section is already in use, the thread is blocked until the section is free.
+</P>
+<p>When a thread has finished working with the protected variable or function, the critical section is released by calling <small>LeaveCriticalSection</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+LeaveCriticalSection(&ampcs);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>One thread blocked on this <small>CRITICAL_SECTION</SMALL> variable is able to take control of the variable.</P>
+<p>A single <small>CRITICAL_SECTION</SMALL> variable can protect many related variables or functions. Later in this chapter, a single <small>CRITICAL_SECTION</SMALL> variable is used to ensure that only one of eight threads is working with the controls in a dialog box.</P>
+<p>Once a thread takes control of a critical section, it will prevent other threads from taking control of the critical section. For best results, it&#146;s important for threads to hold a critical section for as small an interval as possible.</P>
+<p>Every call to <small>EnterCriticalSection</SMALL> must be balanced with a call to <small>LeaveCriticalSection</SMALL>. If you forget to call <small>LeaveCriticalSection</SMALL>, threads waiting to enter the critical section are blocked forever, or until the process ends, whichever comes first. Unless the work performed inside a critical section is very simple, it&#146;s a good idea to use <small>_ _try</SMALL> and <small>_ _finally</SMALL> blocks to make sure your calls to <small>EnterCriticalSection</SMALL> and <small>LeaveCriticalSection</SMALL> are balanced, as shown here:</P>
+<!-- CODE //-->
+<pre>
+void DoSomething()
+{
+    _ _try
+    {
+        EnterCriticalSection(&ampcsOutput);
+        .
+        .
+        // Do some interesting work here
+        .
+    }
+    _ _finally
+    {
+        LeaveCriticalSection(&ampcsOutput);
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this code fragment, the <small>LeaveCriticalSection</SMALL> function is always called, even if an exception is thrown while executing inside the critical section. Another approach is to wrap a critical section inside a C<small>&#43;&#43;</SMALL> class that guarantees that the critical section will be properly initialized and destroyed.</P>
+<p>A single thread is permitted to call <small>EnterCriticalSection</SMALL> multiple times using the same <small>CRITICAL_SECTION</SMALL> variable. This is because it can be difficult to determine all the possible nested critical sections in a large application. For example, the following code calls the <small>EnterCriticalSection</SMALL> function twice with the same <small>CRITICAL_SECTION</SMALL> variable:</P>
+<!-- CODE //-->
+<pre>
+void CIsdnTerminal::HandleKeyPress()
+{
+    EnterCriticalSection(&ampm_csAction);
+    if(ReceivedRelease() == FALSE)
+        TranslateKey();
+    LeaveCriticalSection(&ampm_csAction);
+}
+BOOL CIsdnTerminal::ReceivedRelease()
+{
+    BOOL fResult;
+    EnterCriticalSection(&ampm_csAction);
+    if(m_state == CLEARING)
+        fResult = TRUE;
+    else
+        fResult = m_fReleaseStored;
+    LeaveCriticalSection(&ampm_csAction);
+    return fResult;
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this example, each call to <small>EnterCriticalSection</SMALL> is balanced with a call to <small>LeaveCriticalSection</SMALL>. When a thread that owns a <small>CRITICAL_SECTION</SMALL> variable calls <small>EnterCriticalSection</SMALL> with the same variable, an internal counter is incremented, and the thread is allowed to continue without blocking. When the internal counter decrements to zero, other threads are allowed to take control of the critical section.</P>
+<p>When the critical section is no longer needed, the resources used by the critical section are freed by calling <small>DeleteCriticalSection</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+DeleteCriticalSection(&ampcs);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

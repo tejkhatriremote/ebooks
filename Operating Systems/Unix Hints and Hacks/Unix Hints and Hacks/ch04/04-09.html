@@ -1,0 +1,201 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=146-149//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>One last note on the subject of core files. Time and time again, third-party first-line technical support people ask users to email the core files. Unless you want to have more problems on your hands, don&#146;t let your users do this! Tell them to use the FTP site, because core files are usually too big for email gateways and can get rejected or, worse, they can hang up in an SMTP gateway somewhere. Users often believe the person on the other end of the phone knows what he or she is talking about because they believe technical support knows what&#146;s best. Only UNIX administrators know what&#146;s best for their environment, right?
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+find, strings
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading22"></A><font color="#000077">4.11 Monitoring Crash Files</FONT></H3>
+<h4 align="LEFT"><a name="Heading23"></A><font color="#000077">4.11.1 Description</FONT></H4>
+<p>When a system crashes, crash files are created in crash directories that are already set up on the system to help diagnose problems.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: AT&ampT, some newer BSD versions
+</P>
+<p>Check your man pages for <small>savecore</SMALL> to see whether your flavor is supported. Every flavor that is supported is configured a little differently.</P>
+<p>If a system takes an unexpected crash, it can be configured to write out the contents of memory to the dump device, which is, in most cases, swap. When the system boots back up and processes the <small>S</SMALL><i>#</I><small>savecore</SMALL> script, it performs a check on the raw partition swap device to see whether data was dumped to it. If data is found, a file is created into /usr/adm/crash. This file generally takes on the name core.n, unix.n, or vmcore.n. Here is an example from SGI&#146;s IRIX:</P>
+<!-- CODE SNIP //-->
+<pre>
+# cd /var/adm/crash
+# ls -al
+total 89688
+drwxr-xr-x    2 root   sys      4096 Sep  9 10:18 ./
+drwxr-xr-x    7 adm    adm      4096 Oct 18 01:01 ../
+-rw-r--r--    1 root   sys      1294 Aug 12  11:28 analysis.0
+-rw-------    1 root   sys   3968160 Sep 21  11:28 unix.0
+-rw-------    1 root   sys   41918464 Sep 21  11:38 vmcore.0.comp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Similar to core files, these large crash files (unix.0 and vmcore.0) are in a binary format. When the crash files are created, some flavors are nice enough to run an analysis on the crash files and build a report for you. Here is one such report that helps diagnose what the exact problem might have been:
+</P>
+<!-- CODE //-->
+<pre>
+# cat /var/adm/crash/analysis.0
+
+savecore: Created log Sept 21 11:28:12 1998
+
+                Dump Header Information
+-------------------------------------------------------
+  uname:        IRIX xinu 6.2 03131015 IP22
+  physical mem: 96 megabytes
+  phys start:   0x8000000
+  page size:    4096 bytes
+  dump version: 1
+  dump size:    40936 k
+  crash time:   Mon Sep 21 11:28:12 1998
+  panic string: &lt0&gtPANIC: IRIX Killed due to Bus Error
+  kernel putbuf:
+    pb 0: ounting filesystem: /
+    pb 1: &lt5&gtNOTICE: Starting XFS recovery on filesystem: /
+&#8658; (dev: 128/16)
+    pb 2: &lt5&gtNOTICE: Ending XFS recovery for filesystem: /
+&#8658; (dev: 128/16)
+    pb 3: &lt4&gtWARNING: Process [iexplorer] 10768 generated trap,
+&#8658; but has signal 11 held or ignored
+    pb 4: Process has been killed to prevent infinite loop
+    pb 5: &lt4&gtWARNING: Process [iexplorer] 23645 generated trap,
+&#8658; but has signal 11 held or ignored
+    pb 6: Process has been killed to prevent infinite loop
+    pb 7: Recoverable memory parity error corrected by CPU at
+&#8658; 0x9116190 &lt0x302&gt code:30
+    pb 8: Memory Parity Error in SIMM  S2
+    pb 9: GIO Error/Addr 0x400:&ltTIME &gt 0x7f242c0
+    pb 10:
+    pb 11: &lt0&gtPANIC: IRIX Killed due to Bus Error
+    pb 12:      at PC:0x88082ee8 ep:0xffffca20
+    pb 13:
+    pb 14:
+    pb 15: Dumping to dev 0x2000011 at block 0, space: 0x27fa
+&#8658; pages
+</PRE>
+<!-- END CODE //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>This is a great feature that you should use whenever possible. When a system goes down, <small>syslog</SMALL> might not have time or the capability to log why the system crashed. In this case, you do not see any problems reported in the system log files, unless the problems have been developing over time. Because the contents of memory are dumped, it&#146;s more likely that you&#146;ll know why the system crashed.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Because these are also core-type files written in binary, you might want to use the <small>strings</SMALL> command. In most cases there is useful information in the crash file. Although the vendors often have their own set of tools to extract problems from the crash files, they don&#146;t release these tools to system administrators. Your best chance is to try to <small>grep</SMALL> out any errors that might have been written to the crash file.</P>
+<!-- CODE //-->
+<pre>
+# cd /var/adm/crash
+# ls -al
+-rw-------    1 root     sys      3968160 Sep 21  11:28 unix.0
+
+# strings unix.0 | grep -i errors | more
+
+  panic string: &lt0&gtPANIC: IRIX Killed due to Bus Error
+    pb 7: Recoverable memory parity error corrected by CPU at
+&#8658; 0x9116190 &lt0x302&gt code:30
+    <b>pb 8: Memory Parity Error in SIMM  S2</B>
+    pb 9: GIO Error/Addr 0x400:&ltTIME &gt 0x7f242c0
+    pb 11: &lt0&gtPANIC: IRIX Killed due to Bus Error
+</PRE>
+<!-- END CODE //-->
+<h3><a name="Heading24"></A><font color="#000077">4.12 Remember Daylight Savings Time</FONT></H3>
+<h4 align="LEFT"><a name="Heading25"></A><font color="#000077">4.12.1 Description</FONT></H4>
+<p>Daylight savings time has the potential of wreaking havoc on your system. Everyone always thinks of the time change and checks all the system clocks, but what about the crontab?
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>You always remember during these two important days of the year to verify that all the system clocks are current on all the systems in your environment. But did you remember to check the jobs that were scheduled to run in the crontab? Any job that is set up to run between 1:00 a.m. and 2:59 a.m. is affected by daylight savings time. This isn&#146;t once every 100 years or even once a year.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>In the month of October, all the entries in the crontab that are scheduled to run from 1:00 a.m. to 1:59 a.m. run twice. Many quick and dirty scripted programs that have been written in a hurry cannot handle such a situation. Most commercial programs written take into the account that a user (even us) might execute the program twice.
+</P>
+<p>In most cases you might not have anything too serious scheduled during this time period. If you do have jobs scheduled between these periods ask yourself what happens...</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When the jobs run twice?
+<dd><b>&#149;</B>&nbsp;&nbsp;When the jobs take over an hour to finish and the same job executes and overlaps with the previous job?
+<dd><b>&#149;</B>&nbsp;&nbsp;If there are any open files? Will they get corrupted?
+<dd><b>&#149;</B>&nbsp;&nbsp;When the database performs an update at that time?
+<dd><b>&#149;</B>&nbsp;&nbsp;To any system files that are touched or are affected during that time?
+<dd><b>&#149;</B>&nbsp;&nbsp;To user-scheduled jobs?
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

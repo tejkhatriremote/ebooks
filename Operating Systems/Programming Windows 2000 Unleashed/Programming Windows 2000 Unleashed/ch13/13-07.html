@@ -1,0 +1,451 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=433-441//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 13.11</B> The Class Factory Implementation from <small>CppExt.cpp</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+// -------------------------------------------------------------
+// IClassFactory implementation
+// -------------------------------------------------------------
+// The IClassFactory interface is responsible for creating an
+// instance of the shell extension. The ctor and dtor increment
+// and decrement the DLL&#146;s global reference count.
+CClassFactory::CClassFactory()
+{
+    m_cRef = 0;
+    g_cRef&#43;&#43;;
+}
+
+CClassFactory::~CClassFactory()
+{
+    g_cRef--;
+}
+
+// IUnknown interfaces for CClassFactory
+STDMETHODIMP CClassFactory::QueryInterface(REFIID riid, LPVOID* ppv)
+{
+    *ppv = NULL;
+    if(riid == IID_IUnknown)
+    {
+        *ppv = (LPUNKNOWN)this;
+        m_cRef&#43;&#43;;
+        return NOERROR;
+    }
+    else if(riid == IID_IClassFactory)
+    {
+        *ppv = (LPCLASSFACTORY)this;
+        m_cRef&#43;&#43;;
+        return NOERROR;
+    }
+    else
+    {
+        return E_NOINTERFACE;
+    }
+}
+
+STDMETHODIMP_(ULONG) CClassFactory::AddRef()
+{
+    return &#43;&#43;m_cRef;
+}
+
+STDMETHODIMP_(ULONG) CClassFactory::Release()
+{
+    if(--m_cRef)
+        return m_cRef;
+    delete this;
+    return 0L;
+}
+
+// IClassFactory interfaces - CreateInstance and LockServer.
+//
+// CreateInstance creates a CCppShellExt object, and returns
+// the result of QIF on the requested interface.
+STDMETHODIMP CClassFactory::CreateInstance(LPUNKNOWN punk,
+                                           REFIID riid,
+                                           LPVOID* ppv)
+{
+    *ppv = NULL;
+    if(punk != NULL)
+        return CLASS_E_NOAGGREGATION;
+
+    CCppShellExt* pShellExt = new CCppShellExt;
+    if(pShellExt == NULL)
+        return E_OUTOFMEMORY;
+
+    return pShellExt-&gtQueryInterface(riid, ppv);
+}
+
+// Simple implementation of LockServer, this just increments and
+// decrements the global reference count.
+STDMETHODIMP CClassFactory::LockServer(BOOL f)
+{
+    if(f)
+        g_cRef&#43;&#43;;
+    else
+        g_cRef--;
+    return NOERROR;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The constructor for <small>CClassFactory</SMALL> sets its internal reference count to and increments the module&#146;s global reference count, which represents the number of objects created in the entire module. The destructor decrements this same value.</P>
+<p>Note that there are no Win32 synchronization primitives used in these functions. The CppExt shell extension, like most shell extensions, is created in a <i>single-threaded apartment</I>, or <i>STA</I>. This is a type of COM threading model that guarantees only one thread will access the COM object, even on computers that have multiple CPUs.</P>
+<p>In addition to the <small>IUnknown</SMALL> interfaces, <small>CClassFactory</SMALL> implements the two <small>IClassFactory</SMALL> functions: <small>CreateInstance</SMALL> and <small>LockServer</SMALL>. <small>CreateInstance</SMALL> uses the <small>new</SMALL> operator to create a new instance of <small>CppShellExt</SMALL> and returns the result of <small>QueryInterface</SMALL> to the client&#151;in this case, the Windows 2000 shell.</P>
+<p><small>LockServer</SMALL> is used by the shell to ensure that the DLL stays loaded, even if all its objects are destroyed. For an in-process server, a simple solution is to increment and decrement the global object reference count, depending on the value of the flag passed to <small>LockServer</SMALL>. There&#146;s a great deal of sample code in other books, and even sample programs available from Microsoft, that imply that this function need not be implemented. This is not correct; all class factories must implement <small>LockServer</SMALL>.</P>
+<p>Listing 13.12 contains the last group of functions contained in <small>CppExt.cpp</SMALL>. These are the <small>CCppShellExt</SMALL> functions, which implement the <small>IShellExtInit</SMALL> and <small>IContextMenu</SMALL> interfaces.</P>
+<p><b>Listing 13.12</B> The Shell Extension Implementation from <small>CppExt.cpp</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+// -------------------------------------------------------------
+// Shell extension implementation
+// -------------------------------------------------------------
+// There are three interfaces supported by a context menu extension
+// - ICcontextMenu, IShellExtInit, and IUnknown. Additionally, there
+// is one private member function, DoCppCount.
+//
+// The ctor and dtor for the CppShellExt class increment and decre-
+// ment the global reference count for the DLL. The ctor also
+// handles initialization of member variables.
+CCppShellExt::CCppShellExt()
+{
+    m_cRef = 0L;
+    m_szFile[0] = &#145;\0&#146;;
+    g_cRef&#43;&#43;;
+}
+
+CCppShellExt::~CCppShellExt()
+{
+    g_cRef--;
+}
+
+// IUnknown interfaces for the Shell Interfaces
+STDMETHODIMP CCppShellExt::QueryInterface(REFIID riid, LPVOID* ppv)
+{
+    if(riid == IID_IUnknown)
+    {
+        *ppv = (LPUNKNOWN)(LPCONTEXTMENU)this;
+        m_cRef&#43;&#43;;
+        return NOERROR;
+    }
+    else if(riid == IID_IContextMenu)
+    {
+        *ppv = (LPCONTEXTMENU)this;
+        m_cRef&#43;&#43;;
+        return NOERROR;
+    }
+    else if(riid == IID_IShellExtInit)
+    {
+        *ppv = (LPSHELLEXTINIT)this;
+        m_cRef&#43;&#43;;
+        return NOERROR;
+    }
+    else
+    {
+        *ppv = NULL;
+        return E_NOINTERFACE;
+    }
+}
+
+STDMETHODIMP_(ULONG) CCppShellExt::AddRef()
+{
+    return &#43;&#43;m_cRef;
+}
+
+STDMETHODIMP_(ULONG) CCppShellExt::Release()
+{
+    if (--m_cRef)
+        return m_cRef;
+    delete this;
+    return 0L;
+}
+
+// -------------------------------------------------------------
+// IShellExtInit interface
+// -------------------------------------------------------------
+// IShellExtInit only has one function - Initialize is called to
+// prepare your shell extension for calls that will be made on
+// other interfaces - in this case, through IContextMenu. The main
+// point of interest for a context menu is the name of the file
+// object receiving the mouse-click, which is collected using
+// DragQueryFile.
+STDMETHODIMP CCppShellExt::Initialize(LPCITEMIDLIST pidl,
+                                      LPDATAOBJECT  pObj,
+                                      HKEY          hKeyProgID)
+{
+    STGMEDIUM   stg;
+    FORMATETC   fetc = {CF_HDROP,
+                        NULL,
+                        DVASPECT_CONTENT,
+                        -1,
+                        TYMED_HGLOBAL};
+    if(pObj == NULL)
+        return E_FAIL;
+
+    HRESULT hr = pObj-&gtGetData(&ampfetc, &ampstg);
+    if(FAILED(hr))
+        return E_FAIL;
+
+    UINT cFiles = DragQueryFile((HDROP)stg.hGlobal,
+                                0xFFFFFFFF,
+                                NULL,
+                                0);
+    if(cFiles == 1)
+    {
+        DragQueryFile((HDROP)stg.hGlobal,
+                      0,
+                      m_szFile,
+                      sizeof(m_szFile));
+        hr = NOERROR;
+    }
+    else
+        hr = E_FAIL;
+
+    ReleaseStgMedium(&ampstg);
+    return hr;
+}
+// -------------------------------------------------------------
+// IContextMenu interfaces
+// -------------------------------------------------------------
+//
+// QueryContextMenu is called when the shell requests the extension
+// to add its menu items to the context menu. It&#146;s possible to get
+// a NULL menu handle here. Also note that the current (As of this
+// writing) Win32 SDK documentation is wrong regarding the nFlags
+// parameter. This function should always return the number of new
+// items added to the menu.
+STDMETHODIMP CCppShellExt::QueryContextMenu(HMENU hMenu,
+                                            UINT  nMenuIndex,
+                                            UINT  nFirstID,
+                                            UINT  nLastID,
+                                            UINT  nFlags)
+{
+    wchar_t szMenu[] = L&#148;Count Lines and Statements&#148;;
+    BOOL fAppend = FALSE;
+    if((nFlags &amp 0x000F) == CMF_NORMAL)
+    {
+        fAppend = TRUE;
+    }
+    else if(nFlags &amp CMF_VERBSONLY)
+    {
+        fAppend = TRUE;
+    }
+    else if(nFlags &amp CMF_EXPLORE)
+    {
+        fAppend = TRUE;
+    }
+    if(fAppend &amp&amp hMenu)
+    {
+        BOOL f = InsertMenu(hMenu,
+                            nMenuIndex,
+                            MF_STRING | MF_BYPOSITION,
+                            nFirstID,
+                            szMenu);
+
+        return MAKE_HRESULT(SEVERITY_SUCCESS,
+                            0,
+                            USHORT(1));
+    }
+    return NOERROR;
+
+}
+//
+// InvokeCommand is the &#147;Money Shot&#148;. This is a notification that
+// the user has clicked on one of the selected items in the context
+// menu. The name of the file is not passed to you in this function
+// since it was passed in the IShellExtInit::Initialize  function.
+STDMETHODIMP
+CCppShellExt::InvokeCommand(LPCMINVOKECOMMANDINFO pInfo)
+{
+    if(HIWORD(pInfo-&gtlpVerb) != 0)
+        return E_FAIL;
+
+    if(LOWORD(pInfo-&gtlpVerb) &gt OFFSET_COUNTLINES)
+        return E_INVALIDARG;
+
+    if(LOWORD(pInfo-&gtlpVerb) == OFFSET_COUNTLINES)
+        DoCountCppFile(pInfo);
+    return NOERROR;
+}
+//
+// GetCommandString is called by the shell to retrieve a string
+// associated with a new menu item. Note that pszName is not a
+// wide char.
+STDMETHODIMP CCppShellExt::GetCommandString(UINT  nItemID,
+                                            UINT  nFlags,
+                                            UINT* pReserved,
+                                            LPSTR pszName,
+                                            UINT  cchMax)
+{
+    if(nItemID == OFFSET_COUNTLINES)
+    {
+        switch(nFlags)
+        {
+        case GCS_HELPTEXT:
+            lstrcpyA(pszName,
+                    &#147;Counts lines and semi-colons in a file&#148;);
+            return NOERROR;
+
+        case GCS_VALIDATE:
+            return NOERROR;
+
+        case GCS_VERB:
+            lstrcpyA(pszName, &#147;Count&#148;);
+            break;
+        }
+    }
+    return E_INVALIDARG;
+}
+//
+// DoCountCppFile opens the file which is located under the mouse
+// click. The name of this file was passed to us in the Initialize
+// member function that is part of the IShellExtInit interface. The
+// file name was stored in m_szFile. This function opens the file
+// and counts the number of newlines and semicolons in the file.
+void CCppShellExt::DoCountCppFile( LPCMINVOKECOMMANDINFO pInfo )
+{
+    HANDLE  hFile = CreateFile(m_szFile,
+                               GENERIC_READ,
+                               FILE_SHARE_READ,
+                               NULL,
+                               OPEN_EXISTING,
+                               FILE_ATTRIBUTE_COMPRESSED,
+                               NULL);
+    if(hFile == INVALID_HANDLE_VALUE)
+    {
+        MessageBox(pInfo-&gthwnd,
+                   m_szFile,
+                   L&#148;Can&#146;t open file&#148;,
+                   MB_ICONHAND);
+        return;
+    }
+    BOOL  fRead;
+    DWORD dwRead;
+    DWORD cSemi = 0;
+    DWORD cLines = 0;
+    while(1)
+    {
+        BYTE rgBuffer[1024];
+        fRead = ReadFile(hFile,
+                         rgBuffer,
+                         sizeof(rgBuffer),
+                         &ampdwRead,
+                         NULL);
+        if(fRead == FALSE || dwRead == 0)
+            break;
+
+        for(DWORD dw = 0; dw &lt dwRead; dw&#43;&#43;)
+        {
+            if(rgBuffer[dw] == _mbctombb(&#145;;&#146;))
+                cSemi&#43;&#43;;
+            else if(rgBuffer[dw] == _mbctombb(&#145;\n&#146;))
+                cLines&#43;&#43;;
+        }
+    }
+    wchar_t szMsg[80];
+    wchar_t szSemi[] = L&#147;Total Semicolons = &#148;;
+    wchar_t szLines[] = L&#147;Total Lines = &#148;;
+    wsprintf(szMsg,
+             L&#147;%s%ld\n%s%ld&#148;,
+             (LPCWSTR)szSemi,
+             (DWORD)cSemi,
+             (LPCWSTR)szLines,
+             (DWORD)cLines);
+    MessageBox(pInfo-&gthwnd, szMsg, L&#147;C<small>&#43;&#43;</SMALL> File&#148;, MB_ICONINFORMATION);
+    CloseHandle(hFile);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

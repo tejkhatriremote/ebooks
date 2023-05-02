@@ -1,0 +1,257 @@
+{\rtf1\ansi\ansicpg1252\uc1 \deff0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}
+{\f56\froman\fcharset238\fprq2 Times New Roman CE;}{\f57\froman\fcharset204\fprq2 Times New Roman Cyr;}{\f59\froman\fcharset161\fprq2 Times New Roman Greek;}{\f60\froman\fcharset162\fprq2 Times New Roman Tur;}
+{\f61\froman\fcharset186\fprq2 Times New Roman Baltic;}{\f68\fmodern\fcharset238\fprq1 Courier New CE;}{\f69\fmodern\fcharset204\fprq1 Courier New Cyr;}{\f71\fmodern\fcharset161\fprq1 Courier New Greek;}{\f72\fmodern\fcharset162\fprq1 Courier New Tur;}
+{\f73\fmodern\fcharset186\fprq1 Courier New Baltic;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;
+\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\nowidctlpar\widctlpar\adjustright \fs20\lang3081\cgrid 
+\snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}}{\info{\author Intern}{\operator Intern}{\creatim\yr1999\mo6\dy3\hr17\min32}{\revtim\yr1999\mo6\dy3\hr17\min32}{\version2}{\edmins0}{\nofpages5}{\nofwords1761}{\nofchars10040}{\*\company Intern}
+{\nofcharsws12329}{\vern71}}\widowctrl\ftnbj\aenddoc\hyphcaps0\viewkind4\viewscale100 \fet0\sectd \linex0\headery709\footery709\colsx709\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2
+\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6
+\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang
+{\pntxtb (}{\pntxta )}}\pard\plain \ri-17\nowidctlpar\adjustright \fs20\lang3081\cgrid {\b\f2\fs28\ul\cf2\lang1043\cgrid0 Tutor1:
+\par }{\b\f2\ul\lang1043\cgrid0 
+\par }{\lang1043\cgrid0 The target is a program I coded in c (pure win32 code). When you run it, it tells you that it is
+\par unregistered, and that you should register it. 
+\par 
+\par }{\b\lang1043\cgrid0 STEP 1:
+\par }{\lang1043\cgrid0 Run the target program. And study what it looks like. Look what it does to tell you are not registered.
+\par Look when certain messages pop up. Look what messages you get when you enter fake serials. 
+\par 
+\par Let's run the target program. It just tells you that you should register, nothing more. There is no
+\par option to enter a serial, no option to register.
+\par 
+\par }{\b\lang1043\cgrid0 STEP 2:
+\par }{\lang1043\cgrid0 Disassemble the executable. First look if you can find the messages / nags you saw when you ran the 
+\par program. Then search the program for interesting things like unregistered, thank you for registering....
+\par 
+\par Now let's look at our nice program... how was it written? I made two different dialog boxes. One which
+\par shows extensively that you are registered and thanks you very much. The other one shows you that you
+\par are unregistered and that you should register your program. Here is the source code for it.
+\par 
+\par This is the main function of the program: 
+\par }{\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  }{\b\f2\fs16\lang1043\cgrid0 WINAPI}{\f2\fs16\lang1043\cgrid0  WinMain(HINSTANCE, HINSTANCE, LPSTR, }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0 );
+\par }{\b\f2\fs16\lang1043\cgrid0 BOOL}{\f2\fs16\lang1043\cgrid0  IsProgramRegistered(void);
+\par }{\b\f2\fs16\lang1043\cgrid0 char}{\f2\fs16\lang1043\cgrid0  RegistrationString[30];
+\par 
+\par }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  }{\b\f2\fs16\lang1043\cgrid0 WINAPI}{\f2\fs16\lang1043\cgrid0  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+\par                                    LPSTR lpCmdLine, }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  nCmdShow)
+\par \{
+\par     \tab \tab \tab \tab \tab \tab    }{\f2\fs16\cf11\lang1043\cgrid0 // Application starts here
+\par }{\f2\fs16\lang1043\cgrid0 \tab }{\b\f2\fs16\lang1043\cgrid0 if}{\f2\fs16\lang1043\cgrid0  (IsProgramRegistered())           }{\f2\fs16\cf11\lang1043\cgrid0 // check if program is registered}{\f2\fs16\lang1043\cgrid0 
+\par \tab \{
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 strcpy}{\f2\fs16\lang1043\cgrid0 (RegistrationString, "}{\f2\fs16\cf12\lang1043\cgrid0 REGISTERED}{\f2\fs16\lang1043\cgrid0 " ); }{\f2\fs16\cf11\lang1043\cgrid0 // copy a string registered for later}{
+\f2\fs16\lang1043\cgrid0  
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 DialogBox}{\f2\fs16\lang1043\cgrid0 (hInstance, MAKEINTRESOURCE(IDD_REGDIALOG), 
+\par \tab \tab \tab \tab      NULL, RegDlgProc);  }{\f2\fs16\cf11\lang1043\cgrid0 // show the registered dialog}{\f2\fs16\lang1043\cgrid0 
+\par \tab \}
+\par \tab }{\b\f2\fs16\lang1043\cgrid0 else}{\f2\fs16\lang1043\cgrid0 \tab \tab \tab \tab \tab    }{\f2\fs16\cf11\lang1043\cgrid0 // our program is unregistered }{\f2\fs16\lang1043\cgrid0 
+\par \tab \{
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 strcpy}{\f2\fs16\lang1043\cgrid0 (RegistrationString, "}{\f2\fs16\cf12\lang1043\cgrid0 *UN*REGISTERED}{\f2\fs16\cf1\lang1043\cgrid0  }{\f2\fs16\cf12\lang1043\cgrid0 !!!}{\f2\fs16\cf1\lang1043\cgrid0 ");  }{
+\f2\fs16\cf11\lang1043\cgrid0 // copy a string for later use}{\f2\fs16\lang1043\cgrid0 
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 DialogBox}{\f2\fs16\lang1043\cgrid0 (hInstance, MAKEINTRESOURCE(IDD_BADDIALOG), 
+\par \tab \tab \tab \tab      NULL, RegDlgProc);  }{\f2\fs16\cf11\lang1043\cgrid0 // show the unregistered dialog}{\f2\fs16\lang1043\cgrid0 
+\par \tab \}
+\par     }{\b\f2\fs16\lang1043\cgrid0 return}{\f2\fs16\lang1043\cgrid0  FALSE;  \tab \tab \tab \tab    }{\f2\fs16\cf11\lang1043\cgrid0 // give control back to windows}{\f2\fs16\lang1043\cgrid0 
+\par \}
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\f2\fs16\lang1043\cgrid0 
+\par 
+\par }{\lang1043\cgrid0 Take a look at it and try to understand how it works ...  On the first line, the program calls a function with the name: 
+\par IsProgramRegistered. And depending on the result of this program it shows you the Bad dialog (IDD_BADDIALOG) 
+\par or the registered dialog  (IDD_REGDIALOG). 
+\par 
+\par From the function definition above we see that the IsProgramRegistered function returns a Boolean value. That is a 
+\par true or a false. So the above code is pretty much like normal speaking language.... If program is registered then show 
+\par registered dialog, else show unregistered dialog... 
+\par 
+\par Now, take the case that we coded this source code, and that we wanted to make sure that the registered dialog showed 
+\par up for us ... Then we would make sure that the first piece of the code would be executed. We could do this by for 
+\par example removing the if ... else  construction with the checking call to IsProgramRegistered....
+\par 
+\par then our code would look like this 
+\par }{\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  }{\b\f2\fs16\lang1043\cgrid0 WINAPI}{\f2\fs16\lang1043\cgrid0  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+\par                                    LPSTR lpCmdLine, }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  nCmdShow)
+\par \{
+\par     \tab \tab \tab \tab \tab \tab \tab  }{\f2\fs16\cf11\lang1043\cgrid0 // Application starts here
+\par }{\f2\fs16\lang1043\cgrid0 \tab   }{\b\f2\fs16\lang1043\cgrid0 strcpy}{\f2\fs16\lang1043\cgrid0 (RegistrationString, "}{\f2\fs16\cf12\lang1043\cgrid0 REGISTERED}{\f2\fs16\lang1043\cgrid0 "); }{\f2\fs16\cf11\lang1043\cgrid0 
+// copy a string registered for later}{\f2\fs16\lang1043\cgrid0 
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 DialogBox}{\f2\fs16\lang1043\cgrid0 (hInstance, MAKEINTRESOURCE(IDD_REGDIALOG),
+\par \tab \tab \tab \tab      NULL, RegDlgProc);  }{\f2\fs16\cf11\lang1043\cgrid0 // show the registered dialog}{\f2\fs16\lang1043\cgrid0 
+\par 
+\par     }{\b\f2\fs16\lang1043\cgrid0 return}{\f2\fs16\lang1043\cgrid0  FALSE;  \tab \tab \tab \tab \tab  }{\f2\fs16\cf11\lang1043\cgrid0 // give control back to windows
+\par }{\f2\fs16\lang1043\cgrid0 \}
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// code snip ///////////////////////////
+\par }{\f2\fs16\lang1043\cgrid0 
+\par 
+\par }{\lang1043\cgrid0 If we would want to keep the if .. else intact then we could do the following..
+\par }{\f2\fs16\lang1043\cgrid0 
+\par 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// code snip ///////////////////////////
+\par }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  }{\b\f2\fs16\lang1043\cgrid0 WINAPI}{\f2\fs16\lang1043\cgrid0  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+\par                                    LPSTR lpCmdLine, }{\b\f2\fs16\lang1043\cgrid0 int}{\f2\fs16\lang1043\cgrid0  nCmdShow)
+\par \{
+\par    \tab \tab \tab \tab \tab \tab \tab  }{\f2\fs16\cf11\lang1043\cgrid0 // Application starts here}{\f2\fs16\lang1043\cgrid0 
+\par \tab }{\b\f2\fs16\lang1043\cgrid0 if}{\f2\fs16\lang1043\cgrid0  (IsProgramRegistered())           }{\f2\fs16\cf11\lang1043\cgrid0 // check if program is registered
+\par }{\f2\fs16\lang1043\cgrid0 \tab \{
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 strcpy}{\f2\fs16\lang1043\cgrid0 (RegistrationString, "}{\f2\fs16\cf12\lang1043\cgrid0 REGISTERED}{\f2\fs16\lang1043\cgrid0 "); }{\f2\fs16\cf11\lang1043\cgrid0 // copy a string registered for later
+\par }{\f2\fs16\lang1043\cgrid0 \tab   }{\b\f2\fs16\lang1043\cgrid0 DialogBox}{\f2\fs16\lang1043\cgrid0 (hInstance, MAKEINTRESOURCE(IDD_REGDIALOG), 
+\par \tab \tab \tab \tab      NULL, RegDlgProc);  }{\f2\fs16\cf11\lang1043\cgrid0 // show the registered dialog}{\f2\fs16\lang1043\cgrid0 
+\par \tab \}
+\par \tab }{\b\f2\fs16\lang1043\cgrid0 else}{\f2\fs16\lang1043\cgrid0 \tab \tab \tab \tab \tab \tab  }{\f2\fs16\cf11\lang1043\cgrid0 // our program is unregistered }{\f2\fs16\lang1043\cgrid0 
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 strcpy}{\f2\fs16\lang1043\cgrid0 (RegistrationString, "}{\f2\fs16\cf12\lang1043\cgrid0 REGISTERED}{\f2\fs16\lang1043\cgrid0 "); }{\f2\fs16\cf11\lang1043\cgrid0 // copy a string registered for later}{
+\f2\fs16\lang1043\cgrid0 
+\par \tab   }{\b\f2\fs16\lang1043\cgrid0 DialogBox}{\f2\fs16\lang1043\cgrid0 (hInstance, MAKEINTRESOURCE(IDD_REGDIALOG), 
+\par \tab \tab \tab \tab     NULL, RegDlgProc);  }{\f2\fs16\cf11\lang1043\cgrid0 // show the registered dialog
+\par }{\f2\fs16\lang1043\cgrid0 \tab \}
+\par     }{\b\f2\fs16\lang1043\cgrid0 return}{\f2\fs16\lang1043\cgrid0  FALSE;  \tab \tab \tab \tab \tab  }{\f2\fs16\cf11\lang1043\cgrid0 // give control back to windows}{\f2\fs16\lang1043\cgrid0 
+\par \}
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\f2\fs16\lang1043\cgrid0 
+\par 
+\par }{\lang1043\cgrid0 Now let's look at the disassembly. Open the executable program up in w32dasm.  After you disassembled it, open up 
+\par the string references by choosing: Refs->String Data Reference from the Menu. When the String References Dialog 
+\par opens, you will see all the strings that were used in this program. And of course you will find our two little strings: 
+\par "REGISTERED" and "*UN*REGISTERED !!!" back in the  disassembly. Now double click on "REGISTERED" and 
+\par close the string references dialog box. You will land here in the disassembly: 
+\par }{\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\f2\fs16\lang1043\cgrid0 
+\par  }{\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0  }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE \tab        }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }{\f2\fs16\lang1043\cgrid0 
+\par :0040106E E88DFFFFFF              call 00401000
+\par :00401073 85C0                    test eax, eax
+\par :00401075 741F                    je 00401096
+\par 
+\par }{\f2\fs16\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"REGISTERED"
+\par                                   |
+\par }{\f2\fs16\lang1043\cgrid0 :00401077 6844504000              push 00405044
+\par :0040107C 68E05E4000              push 00405EE0
+\par :00401081 E84A000000              call 004010D0
+\par :00401086 83C408                  add esp, 00000008
+\par :00401089 6A00                    push 00000000
+\par :0040108B 6803104000              push 00401003
+\par :00401090 6A00                    push 00000000
+\par 
+\par }{\f2\fs16\cf9\lang1043\cgrid0 * Possible Reference to Dialog: DialogID_0065 
+\par                                   |
+\par }{\f2\fs16\lang1043\cgrid0 :00401092 6A65                    push 00000065
+\par :00401094 EB1D                    jmp 004010B3
+\par 
+\par }{\f2\fs16\cf9\lang1043\cgrid0 * Referenced by a (U)nconditional or (C)onditional Jump at Address:
+\par |:00401075(C)
+\par |
+\par 
+\par * Possible StringData Ref from Data Obj ->"*UN*REGISTERED !!!"
+\par                                   |
+\par }{\f2\fs16\lang1043\cgrid0 :00401096 6830504000              push 00405030
+\par :0040109B 68E05E4000              push 00405EE0
+\par :004010A0 E82B000000              call 004010D0
+\par :004010A5 83C408                  add esp, 00000008
+\par :004010A8 6A00                    push 00000000
+\par :004010AA 6803104000              push 00401003
+\par :004010AF 6A00                    push 00000000
+\par 
+\par }{\f2\fs16\cf9\lang1043\cgrid0 * Possible Reference to Dialog: DialogID_007B 
+\par                                   |
+\par }{\f2\fs16\lang1043\cgrid0 :004010B1 6A7B                    push 0000007B
+\par }{\f2\fs16\cf11\lang1043\cgrid0 
+\par ////////////////////// Code snip ///////////////////////////
+\par }{\f2\fs16\lang1043\cgrid0 
+\par 
+\par 
+\par }{\lang1043\cgrid0 What do we see here? 
+\par }{\f2\fs16\lang1043\cgrid0 
+\par :0040106E E88DFFFFFF              call 00401000  }{\f2\fs16\cf11\lang1043\cgrid0 ; call IsProgramRegistered}{\f2\fs16\lang1043\cgrid0 
+\par :00401073 85C0                    test eax, eax }{\f2\fs16\cf11\lang1043\cgrid0  ; eax equal to zero  ?
+\par }{\f2\fs16\lang1043\cgrid0 :00401075 741F                    je 00401096   }{\f2\fs16\cf11\lang1043\cgrid0 ;if eax is equal to zero jump, else dont}{\f2\fs16\lang1043\cgrid0 
+\par 
+\par 
+\par }{\lang1043\cgrid0 There is a call made to address 401000. After this call the program checks if the value of eax is equal to zero. 
+\par Depending on this test, it decides to jump or decides not to jump to address 401096. Well if we look good, we
+\par can recognize the if.. else construction in these three lines :-)  
+\par 
+\par If we follow the jump to 401096 (you can do this in wdasm by double clicking on the line :00401075 and by choosing 
+\par Execute Text -> Execute Jump from the menu. ) We will see that we end up at the place where the "*UN*REGISTERED!!!" string shows. The thing is, we never want to get there! So what would be the most logical 
+\par thing to do? To make sure this jump was never executed. So if we removed this jump, our program would always 
+\par display the Registered dialog. That would be cool.  Our program would look like the second version of the code we 
+\par wrote. If IsProgramRegistered Then ShowRegisteredDialog Else ShowRegisteredDialog :-)  
+\par 
+\par So, we are going to remove the jump. It is not possible to just remove it. Instead in cracking we use some other tricks 
+\par to reach the same effect. The nicest to do in this case is replacing the JE instruction with NOPs. NOP stands for no 
+\par operation, so if this code is executed there will nothing happen (for +/-2 milliseconds) and the program will go on with 
+\par showing the Registered dialogbox :-)
+\par }{\f2\fs16\lang1043\cgrid0 
+\par }{\lang1043\cgrid0 STEP 3: 
+\par Open up a copy of the program in HIEW and patch the needed bytes. Drag a copy of the program you want to 
+\par crack on top of hiew and drop it. This will open the program in hiew. This can be done fastest if you have 
+\par a shortcut on your desktop. Every time you want to open a program in hiew, you drag it and drop it on top of the 
+\par shortcut to hiew, and the program to crack will open in hiew. Now switch back to wdasm. Go and stand on the line
+\par you want to patch. Now look in the bottom (Status Bar) of w32dasm. 
+\par 
+\par It should say: Line 169 Pg. 3 of 66 Code Data @:00401075 @Offset 00000475h in File Tutor1.exe. 
+\par 
+\par The important number here to remember is 475, the Offset number.
+\par Now switch back to Hiew. Press Enter twice. This will get you into Decode mode of Hiew. (This mode can also be 
+\par accessed through choosing F4). Now you are in decode mode, you can type in the offset you want to go to. Push F5 and
+\par type in 475. When you press enter you will land straight at the place you also saw in wdasm. 
+\par 
+\par }{\f2\fs16\lang1043\cgrid0 \tab  
+\par }{\lang1043\cgrid0 You should now stand right on this line in hiew: 
+\par }{\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0     }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE}{\f2\fs16\lang1043\cgrid0 \tab \tab       }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS}{\f2\fs16\lang1043\cgrid0 
+\par 
+\par .00001075: 741F                         je       .000001096   -------- (1)
+\par .00001077: 6844504000                   push      000405044
+\par .0000107C: 68E05E4000                   push      000405EE0
+\par .00001081: E84A000000                   call     .0000010D0   -------- (2)
+\par .00001086: 83C408                       add       esp,008
+\par .00001089: 6A00                         push      000
+\par .0000108B: 6803104000                   push      000401003
+\par 
+\par 
+\par }{\lang1043\cgrid0 If you scroll up you will also see the call and the test. Now push F3 (Edit) and then F2 (Assemble). Now we are going 
+\par to assemble a new instruction instead of the JE instruction. Now type in NOP and press enter.
+\par }{\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ADDRESS }{\f2\fs16\lang1043\cgrid0    }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab       }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS}{\f2\fs16\lang1043\cgrid0 
+\par 
+\par  00000475: 90                           nop
+\par  00000476: 1F                           pop       ds
+\par  00000477: 6844504000                   push      000405044
+\par  0000047C: 68E05E4000                   push      000405EE0
+\par  00000481: E84A000000                   call      0000004D0
+\par  00000486: 83C408                       add       esp,008
+\par  00000489: 6A00                         push      000
+\par  0000048B: 6803104000                   push      000401003
+\par  00000490: 6A00                         push      000
+\par  000
+\par  000  }{\f2\fs16\cf2\lang1043\cgrid0 +- Pentium(R) Pro Assembler -------------------------------------+}{\f2\fs16\lang1043\cgrid0 
+\par  000  }{\f2\fs16\cf2\lang1043\cgrid0 \'a6 pop       ds__________________________________________________ \'a6
+\par }{\f2\fs16\lang1043\cgrid0  000 }{\f2\fs16\cf2\lang1043\cgrid0  +----------------------------------------------------------------+
+\par }{\f2\fs16\lang1043\cgrid0  000
+\par 
+\par 
+\par }{\lang1043\cgrid0 Hiew now assembled a nop instruction. But you see that not everything went the same as we wanted it to... The je      
+\par .000001096 went away ... but the side effect of this is that we got another instruction which wasn't meant to be there 
+\par and which unlike our nop instruction does something with the program memory.... If we look good, we can see that
+\par the machine code of je is 741F .... However the machine code of nop is 90 ....... What happened when we assembled 
+\par the nop instruction instead of the je instruction ? The nop instruction replaced the 74 of the je instruction, but the rest 
+\par of the je (1F) remained intact and was reassembled into a pop ds instruction by hiew. To fix this unwanted side
+\par effect, we assemble another nop instruction which overwrites the pop ds instruction. and we have the effect we want :-)
+\par 
+\par Now your code should look like this: 
+\par }{\f2\fs16\lang1043\cgrid0 
+\par .00001075: 90                           nop
+\par .00001076: 90                           nop
+\par .00001077: 6844504000                   push      000405044
+\par .0000107C: 68E05E4000                   push      000405EE0
+\par .00001081: E84A000000                   call     .0000010D0   -------- (1)
+\par 
+\par 
+\par }{\lang1043\cgrid0 Now, to get out of the assemble mode we push escape once. And to save the modification we press F9. Press F10 to 
+\par close hiew. 
+\par 
+\par Now run the program and enjoy the power of letting your programs behave the way you want them to behave!
+\par }}

@@ -1,0 +1,201 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=571-574//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch17/17-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 18<br>Developing ActiveX Controls
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>What Is an ActiveX Control? <i>3572</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>ActiveX Control Interfaces <i>573</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>ActiveX Control Properties, Events, and Methods <i>574</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>An ActiveX Control Example <i>575</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Testing an ActiveX Control <i>582</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Creating ActiveX Controls with ATL <i>585</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>An ActiveX Control Built with ATL <i>594</I></B>
+</DL>
+<p>An <i>ActiveX control</I> is a functional piece of code that&#146;s packaged into a reusable component, and it offers some guarantees about how it interacts with its clients. Although many ActiveX controls are user interface components, just like the built-in Windows 2000 controls, it&#146;s not required that an ActiveX control be visible at runtime.</P>
+<p>This chapter discusses ActiveX controls and how they&#146;re implemented using MFC and ATL. ActiveX controls are built and then tested inside the ActiveX control test container that&#146;s shipped with Visual C<small>&#43;&#43;</SMALL> and the Win32 Platform SDK. The chapter also includes a Visual Basic project that tests the control built using ATL.</P>
+<h3><a name="Heading2"></A><font color="#000077">What Is an ActiveX Control?</FONT></H3>
+<p>At a minimum, an ActiveX control must be a COM object that supports programming in a visual environment such as Visual Basic, FrontPage, and Visual C<small>&#43;&#43;</SMALL>. This means that an ActiveX control must support the <small>IUnknown</SMALL> interface, as well as a few additional interfaces, such as <small>IOleControl</SMALL> and <small>IViewObject2</SMALL>, that allow a visually oriented development environment to interact with the control. This allows for a great deal of latitude when you&#146;re deciding how a control is to be implemented&#151;previously, the OLE custom control architecture required support of at least fourteen interfaces, as will be discussed later.</P>
+<p>Reducing the number of interfaces required for ActiveX controls makes it possible to create much smaller controls as well as makes it feasible to use ActiveX controls to implement functionality where the size of the control is an important factor. Web pages can be more intelligent when a control is downloaded and activated to your browser. For example, Internet Explorer has support for downloading ActiveX controls from a Web page. Although this opens up a lot of exciting functionality, the size of the control to be downloaded must be kept as small as possible.</P>
+<p>ActiveX controls are almost always in-process servers. This is due to several factors:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;ActiveX controls present a user interface through the <small>IViewObject2</SMALL> interface, and this interface is not marshaled across a process boundary.
+<dd><b>&#149;</B>&nbsp;&nbsp;A control loaded &#147;in process&#148; has much faster response time than a local EXE server.
+<dd><b>&#149;</B>&nbsp;&nbsp;Historical reasons. Although you could probably whip up some sort of EXE server that supported another in-process COM object that served as the actual control, you wouldn&#146;t really have an ActiveX control.
+</DL>
+<h3><a name="Heading3"></A><font color="#000077">ActiveX Control Interfaces</FONT></H3>
+<p>An ActiveX control typically implements a large number of interfaces. Although the number of mandatory interfaces has been greatly reduced from the number required by the original OLE controls specification, there&#146;s still a great deal of work required to implement a control or container from scratch. In the original OLE control specification, an OLE control was expected to support the interfaces listed in Table 18.1. For comparison, the requirements for ActiveX controls are also listed.
+</P>
+<table width="100%"><td caption align="LEFT" colspan="3"><b>Table 18.1</B> Interfaces Required for ActiveX and OLE Custom Controls
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="40%" valign="TOP" align="LEFT"><i>Interface</I>
+<th width="30%" valign="TOP" align="LEFT"><i>OLE Control</I>
+<th width="30%" valign="TOP" align="LEFT"><i>ActiveX Control</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>IUnknown</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Yes
+<tr>
+<td valign="TOP" align="LEFT"><small>IClassFactory</SMALL> or <small>IClassFactory2</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IConnectionPointContainer</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IDataObject</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IDispatch</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Optional
+<tr>
+<td valign="TOP" align="LEFT"><small>IOleCache2</SMALL>
+<td valign="TOP" align="LEFT">Optional
+<td valign="TOP" align="LEFT">Optional
+<tr>
+<td valign="TOP" align="LEFT"><small>IOleControl</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Yes
+<tr>
+<td valign="TOP" align="LEFT"><small>IOleInPlaceActiveObject</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IOleInPlaceObject</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IOleObject</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IPersistStorage</SMALL>
+<td valign="TOP" align="LEFT">See note
+<td valign="TOP" align="LEFT">See note
+<tr>
+<td valign="TOP" align="LEFT"><small>IPersistStream</SMALL>
+<td valign="TOP" align="LEFT">See note
+<td valign="TOP" align="LEFT">See note
+<tr>
+<td valign="TOP" align="LEFT"><small>IPersistStreamInit</SMALL>
+<td valign="TOP" align="LEFT">See note
+<td valign="TOP" align="LEFT">See note
+<tr>
+<td valign="TOP" align="LEFT"><small>IProvideClassInfo</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IRunnableObject</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>ISpecifyPropertyPages</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Usually
+<tr>
+<td valign="TOP" align="LEFT"><small>IViewObject2</SMALL>
+<td valign="TOP" align="LEFT">Yes
+<td valign="TOP" align="LEFT">Yes
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>An OLE control or ActiveX control is required to implement one of the <small>IPersist</SMALL><i>XXX</I> interfaces&#151;<small>IPersistStorage, IPersistStream</SMALL>, or <small>IPersistStreamInit</SMALL>. An ActiveX control is not required to support any of these interfaces unless the control is persistent. Because a control usually saves only its internal properties, the control usually implements the simplest of these interfaces&#151;<small>IPersistStream</SMALL>.</P>
+<p>Although an ActiveX control need not support all the interfaces supported by an OLE control, most ActiveX controls will continue to be very &#147;control-like.&#148; That is, they will still appear to be connectable objects, will be embeddable, and will draw themselves through <small>IViewObject2</SMALL>. Connection points and connectable objects are discussed in Chapter 17, &#147;Custom COM Objects.&#148;</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch17/17-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

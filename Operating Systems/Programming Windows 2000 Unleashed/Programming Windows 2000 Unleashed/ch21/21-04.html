@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:An Introduction to COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=21//-->
+<!--PAGES=691-695//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="21-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Resource Manager</B></P>
+<p>Consider a situation in which the waiter serves all the meals. When the client who&#146;s eating the meal is finished, he must pay for it. At this point, the waiter comes back with a tab of all the food items eaten. Now comes an important point: When the original order was submitted, where was that state information kept? It&#146;s typically kept on a piece of paper or in a computer, but not the waiter&#146;s mind, because the waiter has other things to consider. This separation of who keeps the state is what the resource manager does. A resource manager manages the state of the data. It&#146;s not involved in dispensing its own state, because the resource dispenser does that. A typical resource manager is SQL Server. Writing a resource manager is much more complicated than writing a resource dispenser because of the state issue. Managing state efficiently is not a simple task.</P>
+<p>A quick side note on the management of state needs to be made: The Shared Memory Manager resource dispenser seems to take on the job of a resource manager. However, this is not the case, because the Shared Memory Manager, when it crashes, will not retain the state. The resource manager, however, will retain memory. Going back to the waiter example, the waiter might remember things such as how many people are at the table and the number of soupspoons needed. However, the waiter will not remember how many potatoes have been consumed from the storage area. The resource manager does that.</P>
+<h3><a name="Heading8"></A><font color="#000077">Building a Transactionable COM&#43; Component</FONT></H3>
+<p>A plain-vanilla COM object that wants to participate in a transaction must do the following things:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It must be COM compatible. This is an absolute must because it&#146;s the only way to build reusable components on the Windows platform.
+<dd><b>&#149;</B>&nbsp;&nbsp;The COM component must be &#147;in process&#148; and implement items such as <small>IClassFactory</SMALL>, <small>DllGetClassObject</SMALL>, and so on.
+<dd><b>&#149;</B>&nbsp;&nbsp;It must use standard COM marshaling. A rule of thumb is that if something can be expressed in MIDL, then most likely, it can be marshaled. Under no circumstance can <small>IMarshal</SMALL> be used, because it will be called by MTS.
+<dd><b>&#149;</B>&nbsp;&nbsp;The component must support self-registration through its CLSID using the <small>DLLRegisterRoutine</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;It must follow the ACID commandments. This means that no shortcuts can be taken, even though they may result in a slightly smaller or faster object.
+</DL>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Building a COM Object Using Visual Basic</FONT></H4>
+<p>In this section, we&#146;ll write a simple COM component that supports transactions. This COM object represents some client. It will contain the following properties:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Name of company
+<dd><b>&#149;</B>&nbsp;&nbsp;Street address
+<dd><b>&#149;</B>&nbsp;&nbsp;City
+</DL>
+<p>This COM object will have only one method: <small>add</SMALL>. For this example, you&#146;ll need to create a VB ActiveX DLL project called VBBookstore and then add a class called <small>clsClient</SMALL>, like this:</P>
+<!-- CODE //-->
+<pre>
+Option Explicit
+
+&#145;local variable(s) to hold property value(s)
+Private mvarcompanyName As String &#145;local copy
+Private mvarstreet As String &#145;local copy
+Private mvarcity As String &#145;local copy
+
+Public Property Let city(ByVal vData As String)
+&#145;used when assigning a value to the property, on the left side of
+&#8658; an assignment.
+&#145;Syntax: X.city = 5
+    mvarcity = vData
+End Property
+
+Public Property Get city() As String
+&#145;used when retrieving value of a property, on the right side of
+&#8658; an assignment.
+&#145;Syntax: Debug.Print X.city
+    city = mvarcity
+End Property
+
+Public Property Let street(ByVal vData As String)
+&#145;Syntax: X.street = 5
+    mvarstreet = vData
+End Property
+
+Public Property Get street() As String
+&#145;Syntax: Debug.Print X.street
+    street = mvarstreet
+End Property
+
+Public Property Let companyName(ByVal vData As String)
+&#145;Syntax: X.companyName = 5
+    mvarcompanyName = vData
+End Property
+
+Public Property Get companyName() As String
+&#145;Syntax: Debug.Print X.companyName
+    companyName = mvarcompanyName
+End Property
+
+Public Function add() As Boolean
+    On Error GoTo addError
+
+    Dim objCtxt As ObjectContext
+    Dim objCon As New Connection
+    Dim strSQL As String
+
+    Set objCtxt = GetObjectContext()
+
+    objCon.Provider = &#147;MSDASQL&#148;
+    objCon.ConnectionString = _
+       &#147;driver={SQL Server};uid=sa;server=cronos;database=windows2000&#148;
+    objCon.ConnectionTimeout = 10
+    objCon.CursorLocation = adUseNone
+    objCon.Open
+
+    strSQL = &#147;INSERT INTO clients (company_name, street, city) &#148;  _
+        &amp &#147; VALUES (&#148; _
+        &amp &#147;&#145;&#148; &amp mvarcompanyName &amp &#147;&#145;,&#148; _
+        &amp &#147;&#145;&#148; &amp mvarstreet &amp &#147;&#145;,&#148; _
+        &amp &#147;&#145;&#148; &amp mvarcity &amp &#147;&#145;)&#148;
+    objCon.Execute strSQL
+    objCtxt.SetComplete
+    add = True
+    Exit Function
+
+addError:
+    objCtxt.SetAbort
+    add = False
+End Function
+</PRE>
+<!-- END CODE //-->
+<p>In this class, notice that properties (<small>companyName</SMALL>, <small>street</SMALL>, and <small>city</SMALL>) were used to define the object. The properties were built using the VB Class Builder utility. In the past, for performance reasons, properties were not used. The problem was that DCOM and properties caused network bottlenecks. With COM&#43;, this has changed, because the COM object can be queued. This makes it possible to set some properties and send the object on its way.</P>
+<p>The <small>add</SMALL> method combines all the properties into a SQL statement that inserts the data into the resource. In the <small>add</SMALL> method, the first step is to set the error handler. You&#146;ll want to set it so that whenever anything goes wrong, it will automatically undo the work. The next step is to retrieve the transaction context using the method call <small>GetObjectContext()</SMALL>. A connection using ADO is established to the resource. ADO (or Active Data Objects) is the data access technology promoted by Microsoft. The variable <small>strSQL</SMALL> contains the SQL <small>INSERT</SMALL> statement, which is executed using <small>objCon.Execute</SMALL>. If everything works correctly, the call <small>objCtxt.SetComplete</SMALL> tells the context that all is OK and that the work can be made durable. In the error handler, if anything goes wrong, the method <small>objCtxt.SetAbort</SMALL> is called to erase any work done on the resource.</P>
+<p><font size="+1"><b>Adding Transaction Support</B></FONT></P>
+<p>The second step in adding transaction support is to indicate it using the Visual Basic property sheet. Note though, because I&#146;m using Visual Basic 6.0, old terminology will be used. This means the term MTS and not COM&#43; will be used. Open the class and view the property sheet, as shown in Figure 21.7.
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch21/images/21-07.jpg',93,127 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch21/images/21-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch21/images/21-07.jpg',93,127)"><font color="#000077"><b>Figure 21.7</B></FONT></A>&nbsp;&nbsp;An attribute used to set COM&#43; transaction capabilities.</P>
+<p>This attribute needs to be set so that it&#146;s &#147;transaction capable.&#148; The value you&#146;ll want is <small>RequiresTransaction</SMALL>. This means that for the component to execute properly, it requires an active transaction in the context. If there is no active transaction, one will be created.</P>
+<p>If, at this point, you attempt to run the component by pressing F5, you&#146;ll get the error message shown in Figure 21.8.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="21-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

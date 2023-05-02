@@ -1,0 +1,263 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=221-224//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 6.21 shows <small>Thunk.c</SMALL>, the file that contains the guts of the generic thunk code in the Client16 project. There are four functions&#151;one function for each menu item command. Each function determines the address of the targeted function by calling <small>GetProcAddress32W</SMALL>. If necessary, a local pointer is converted using <small>GetVDMPointer32W</SMALL>. Finally, the 32-bit function is called using <small>CallProc32W</SMALL>.</P>
+<p><b>Listing 6.21</B> Thunk-handling Routines in Client16</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Thunk.c - Client16 project.
+ *
+ * Function-handling routines used by the 16-bit
+ * client. This example program is part of &#147;Programming
+ * Windows 2000 Unleashed&#148;, by Mickey Williams.
+ *
+ */
+
+#include &#147;stdinc.h&#148;
+
+extern DWORD g_hDll;
+long nLastDllVal = 0;
+
+int CallDllGetVal(HWND hWnd, LPSTR pszCaption)
+{
+    long  nRet = 0;
+    if(!g_hDll)
+    {
+        MessageBox(hWnd,
+                   &#147;Can&#146;t load 32-bit DLL&#148;,
+                   pszCaption,
+                   MB_OK|MB_ICONHAND);
+    }
+    else
+    {
+        PFUNC3 pFunc  = (PFUNC3)GetProcAddress32W(g_hDll,
+                                                     &#147;GetPascalVar&#148;);
+        if(pFunc)
+        {
+            //* convert 16:16 to 0:32 *
+            DWORD dwPtrToRet = GetVDMPointer32W(&ampnRet, 1);
+            CallProc32W(dwPtrToRet, pFunc, 0, 1);
+            nLastDllVal = nRet;
+        }
+    }
+    return (int)nRet;
+}
+
+int CallDllSetVal(HWND hWnd, LPSTR pszCaption)
+{
+    long nSetVal = nLastDllVal &#43; 1;
+    long nRet = 0;
+
+    if(!g_hDll)
+    {
+        MessageBox(hWnd,
+                   &#147;Can&#146;t load 32-bit DLL&#148;,
+                   pszCaption,
+                   MB_OK|MB_ICONHAND);
+    }
+    else
+    {
+        PFUNC4 pFunc = (PFUNC4)GetProcAddress32W(g_hDll,
+                                                 &#147;SetPascalVar&#148;);
+        if(pFunc)
+        {
+            CallProc32W(nSetVal, pFunc, 0, 1);
+            nRet = 1;
+        }
+    }
+    return (int)nRet;
+}
+
+int CallDllGetValRet(HWND hWnd, LPSTR pszCaption)
+{
+    long nRet = 0;
+    long nFuncRet = 0;
+
+    if(!g_hDll)
+    {
+        MessageBox(hWnd,
+                   &#147;Can&#146;t load 32-bit DLL&#148;,
+                   pszCaption,
+                   MB_OK|MB_ICONHAND);
+    }
+    else
+    {
+        PFUNC1 pFunc = (PFUNC1)GetProcAddress32W(g_hDll,
+                                               &#147;GetPascalVarRet&#148;);
+        if(pFunc)
+        {
+            //* convert 16:16 to 0:32 *
+            DWORD dwPtrToRet = GetVDMPointer32W(&ampnRet, 1);
+            nFuncRet = CallProc32W(dwPtrToRet, pFunc, 0, 1);
+            nLastDllVal = nRet;
+        }
+    }
+    return (int)nFuncRet;
+}
+
+int CallDllSetValRet(HWND hWnd, LPSTR pszCaption)
+{
+    long nRet = nLastDllVal &#43; 1;
+
+    if(!g_hDll)
+    {
+        MessageBox(hWnd,
+                   &#147;Can&#146;t load 32-bit DLL&#148;,
+                   pszCaption,
+                   MB_OK|MB_ICONHAND);
+    }
+    else
+    {
+        PFUNC2 pFunc = (PFUNC2)GetProcAddress32W(g_hDll,
+                                               &#147;SetPascalVarRet&#148;);
+         if(pFunc)
+        {
+            nRet = CallProc32W(nRet, pFunc, 0, 1);
+            nLastDllVal = nRet;
+        }
+    }
+    return (int)nRet;
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>You can build and run the Client16 project &#147;as is.&#148; However, you cannot execute any of the menu commands found under the Test menu until you&#146;ve built the Dll32 project. The Dll32 project is discussed in the next section.</P>
+<p><font size="+1"><b>The Dll32 Project</B></FONT></P>
+<p>The Dll32 project creates a simple 32-bit DLL that exposes four functions:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetPascalVar</SMALL>. A function that accepts an integer as a parameter; the value is stored inside the DLL for later use. The function returns <small>void</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetPascalVar</SMALL>. A function that accepts a pointer to <small>int</SMALL> as a parameter, filling the <small>int</SMALL> with a value passed into the DLL previously with <small>SetPascalVar</SMALL> or <small>SetPascalVarRet</SMALL>. The function returns <small>void</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetPascalVarRet</SMALL>. Identical to <small>SetPascalVar</SMALL>, except it has a return value of <small>int</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetPascalVarRet</SMALL>. Identical to <small>GetPascalVar</SMALL>, except it has a return value of <small>int</SMALL>.
+</DL>
+<p>The DEF file for the Dll32 project, <small>Dll32.def</SMALL>, is shown in Listing 6.22.</P>
+<p><b>Listing 6.22</B> The DEF File Used by Dll32</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+LIBRARY      &#147;DLL32&#148;
+DESCRIPTION  &#145;Generic Thunk Example DLL&#146;
+
+EXPORTS
+  GetPascalVar
+  SetPascalVar
+  GetPascalVarRet
+
+  SetPascalVarRet
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The header file for the Dll32 project, <small>Dll32.h</SMALL>, is provided in Listing 6.23.</P>
+<p><b>Listing 6.23</B> The <small>Dll32.h</SMALL> Header File</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Dll32.h
+ *
+ * Declarations for functions in the Dll32 project.
+ * This example program is part of &#147;Programming
+ * Windows 2000 Unleashed&#148;, by Mickey Williams.
+ *
+ */
+#pragma once
+
+void __stdcall GetPascalVar(int* pn);
+void __stdcall SetPascalVar(int n);
+int  __stdcall GetPascalVarRet(int* pn);
+int  __stdcall SetPascalVarRet(int n);
+</PRE>
+<!-- END CODE //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

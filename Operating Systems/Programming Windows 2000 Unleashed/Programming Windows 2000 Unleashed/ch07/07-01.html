@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=229-233//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch06/06-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 7<br>Distributed Security
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Windows 2000 Security Overview <i>230</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Fundamental Security Data Structures <i>231</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Trustee-based Access Control <i>249</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Impersonating a Client <i>261</I></B>
+</DL>
+<p>This chapter discusses distributed security in Windows 2000. Security has been a key part of Windows NT programming since the operating system was introduced to developers in 1992. Although the original security manipulation functions were very low-level and difficult to use, security programming became much easier with the release of Windows NT 4.0, which included high-level functions for access control. Windows 2000 extends these functions to offer support for security when interacting with non-Windows operating systems.
+</P>
+<p>This chapter includes a number of sample functions you can use to simplify your security programming. It also includes an example that illustrates how a server can use impersonation to properly handle the access of securable objects on behalf of a client.</P>
+<h3><a name="Heading2"></A><font color="#000077">Windows 2000 Security Overview</FONT></H3>
+<p>Windows 2000 security has two aspects: authorization and authentication. <i>Authentication</I> is the process used by the operating system to ensure that you are who you say you are. <i>Authorization</I> is the process used by the operating system to allow access to objects or tasks based on the security credentials of a user.</P>
+<p>Although authentication and authorization are two sides of the same coin (and work closely together), they are not two names for the same topic. Authentication is involved only with guaranteeing the identity of a user and does not concern itself with access control. Similarly, authorization is concerned only with granting or denying access to an authenticated user.</P>
+<p>Prior to Windows 2000, Windows NT used the Windows NT LAN Manager (NTLM) protocol as its sole network authentication protocol. Windows 2000 has expanded its horizons somewhat and uses the industry-standard Kerberos version 5 protocol as its default authentication protocol. Kerberos has many advantages over NTLM, such as the ability to authenticate both client and server. Authentication via NTLM is still available when interacting with NT 4.0 and earlier machines. Windows 2000 also supports the Crypto API, Secure Sockets Layer (SSL), and public key encryption as additional authentication tools.</P>
+<p>Before a user is allowed access to any resources, the Windows 2000 logon process must authenticate the user. As will be discussed later, access tokens that describe the user&#146;s security information are associated with the user and can be used to identify the user on the computer and network.</P>
+<p>After a user has been authenticated, Windows 2000 will allow or deny access to securable objects, based on comparisons between the access rights granted to the user and the access control lists attached to the securable objects. Windows 2000 performs these checks automatically; there&#146;s usually no need for you to test access permissions programmatically in your code.</P>
+<p>Server applications that perform work on behalf of clients use an operating system feature known as <i>impersonation</I>. Impersonation enables the server thread to assume the security identity of the client in order to access securable objects. Later in the chapter, you&#146;ll see an example of a named pipe server that uses impersonation to provide the proper security access to clients.</P>
+<h3><a name="Heading3"></A><font color="#000077">Fundamental Security Data Structures</FONT></H3>
+<p>Several data structures are used constantly in Windows 2000 security programming. Many of the data structures are often referred to by abbreviated names&#151;which doesn&#146;t simplify your life if you&#146;re a newcomer to security programming. Here are a few of the most commonly used security structures:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SID</SMALL>. Short for <i>security identifier</I>. This is a structure that uniquely identifies a user or group.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACE</SMALL>. Short for <i>access control entry</I>. This is a structure that defines how a <small>SID</SMALL> can interact with securable objects. An <small>ACE</SMALL> may allow or deny access to a particular <small>SID</SMALL>. It may also define security-auditing parameters for a <small>SID</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACL</SMALL>. Short for <i>access control list</I>. This is an array of zero or more <small>ACE</SMALL>s. An <small>ACL</SMALL> may contain both access-allowed and access-denied <small>ACE</SMALL>s.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DACL</SMALL>. Short for <i>discretionary access control list</I>. This is an <small>ACL</SMALL> that&#146;s used to allow or deny access to a securable object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SACL</SMALL>. Short for <i>system access control list</I>. This is an <small>ACL</SMALL> that&#146;s used to audit access to a securable object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SECURITY_DESCRIPTOR</SMALL>. A structure that contains security information for an object. This information includes the <small>DACL</SMALL> and <small>SACL</SMALL> associated with the object, as well as information about its owner and group membership.
+</DL>
+<p>These structures interact with each other as shown in Figure 7.1.
+</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-01.jpg',241,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-01.jpg',241,420)"><font color="#000077"><b>Figure 7.1</B></FONT></A>&nbsp;&nbsp;The relationships between basic low-level security structures.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Understanding Process and Thread Security Tokens</FONT></H4>
+<p>When a thread or process is created, it&#146;s provided with an <i>access token</I>. The access token describes the security attributes associated with the process or thread. The access token is normally obtained from the owner of the process. Later in the chapter, you&#146;ll see how the access token can be adjusted programmatically.</P>
+<p>An access token caries information that can be used to determine the privileges and rights for a process or thread. In Windows 2000, privileges and rights refer to the capabilities of a user to perform certain actions, but they are different concepts. Here&#146;s an explanation of each:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>privilege</I> is the ability to perform a system-level action, such as the ability to modify the system time, and is granted by a system administrator.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>right</I> is the ability to access a securable object and is allowed or denied by the <small>DACL</SMALL> associated with the object.
+</DL>
+<p>Access tokens carry a great deal of information about the user. Here&#146;s a list of the most commonly used information:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>SID</SMALL> for the user&#146;s account
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>SID</SMALL> for the user&#146;s primary group
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SID</SMALL>s for groups that the user belongs to
+<dd><b>&#149;</B>&nbsp;&nbsp;A logon <small>SID</SMALL> that identifies the logon session
+<dd><b>&#149;</B>&nbsp;&nbsp;A list of privileges held by the user and the user&#146;s groups
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>DACL</SMALL>, known as the <i>default DACL</I>, that&#146;s assigned to objects created without a security descriptor
+</DL>
+<p>Every process has a primary access token. In addition, each thread has an impersonation token that&#146;s used when a server impersonates a client in order to assume the security context of the calling process. During impersonation, Windows 2000 uses the impersonation token when authorizing access to resources.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch06/06-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

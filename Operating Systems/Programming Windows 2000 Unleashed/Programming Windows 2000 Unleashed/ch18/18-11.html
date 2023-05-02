@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=608-611//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-12.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Handling Focus Events for the Control</B></FONT></P>
+<p>When a focus event is received by the control, the focus member variable is set with the new input focus state, and the control&#146;s window is invalidated. The control&#146;s container is also notified that the control is changing its view.
+</P>
+<p>Listing 18.18 contains the <small>OnSetFocus</SMALL> and <small>OnKillFocus</SMALL> member functions, which handle the <small>WM_SETFOCUS</SMALL> and <small>WM_KILLFOCUS</SMALL> events, respectively. Add the lines shown in bold.</P>
+<p><b>Listing 18.18</B> The <small>OnSetFocus</SMALL> Member Function for the <small>CPopButton</SMALL> Class, with Changes in Bold<hr></P>
+<!-- CODE //-->
+<pre>
+LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                             BOOL&amp bHandled)
+{
+    LRESULT lRes = CComControl&ltCPopButton&gt::OnSetFocus(uMsg,
+                                                       wParam,
+                                                       lParam,
+                                                       bHandled);
+    if (m_bInPlaceActive)
+    {
+        DoVerbUIActivate(&ampm_rcPos,  NULL);
+        if(!IsChild(::GetFocus()))
+            m_ctlButton.SetFocus();
+    }
+    <b>m_fHasFocus = true;
+    Invalidate();
+    FireViewChange();</B>
+    return lRes;
+}
+LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                              BOOL&amp bHandled)
+{
+    <b>m_fHasFocus = false;
+    Invalidate();
+    FireViewChange();</B>
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p><font size="+1"><b>Handling Mouse Events for the Control</B></FONT></P>
+<p>The following four message handlers control mouse and click events for the <small>CPopButton</SMALL> class:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnLButtonDown</SMALL> updates the button state variable and invalidates the control&#146;s rectangle so that it will be redrawn.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnLButtonUp</SMALL> updates the button state variable and invalidates the control&#146;s rectangle so that it will be redrawn. If the mouse is currently over the control, the new button state is <small>bsHover</SMALL>; if the mouse is not over the control, the new button state is <small>bsFlat</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnMouseMove</SMALL> updates the button state if the current button state is <small>bsFlat</SMALL>. If the button is moving from <small>bsFlat</SMALL> to <small>bsHover</SMALL>, the control&#146;s rectangle is updated so that it will be redrawn. In addition, the <small>OnHover</SMALL> event is fired to the control&#146;s container. A timer is started that will be used to redraw the button as flat if the mouse moves away from the control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnClick</SMALL> is sent to the <small>CPopButton</SMALL> class when the underlying button control generates a click event. In response, the <small>OnClick</SMALL> member function will fire an <small>OnClick</SMALL> event to the container.
+</DL>
+<p>Add the lines shown in bold in Listing 18.19 to the mouse-handling functions in the <small>CPopButton</SMALL> class.</P>
+<p><b>Listing 18.19</B> Mouse-handling Events for the <small>CPopButton</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                                BOOL&amp bHandled)
+{
+   <b>// Change the state to bsDown, and redraw the control
+    m_btnState = bsDown;
+    Invalidate();
+    FireViewChange();
+    m_ctlButton.DefWindowProc(uMsg, wParam, lParam);</B>
+    return 0;
+}
+LRESULT OnLButtonUP(UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                              BOOL&amp bHandled)
+	{
+    <b>if(MouseOverCtl())
+        m_btnState = bsHover;
+    else
+        m_btnState = bsFlat;
+    Invalidate();
+    FireViewChange();
+    m_ctlButton.DefWindowProc(uMsg, wParam, lParam);</B>
+    return 0;
+}
+LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                              BOOL&amp bHandled)
+{
+    <b>if(m_btnState == bsFlat)
+    {
+        // Moving from flat to hover...
+        Fire_OnHover();
+        m_btnState = bsHover;
+        Invalidate();
+        FireViewChange();
+        TRACKMOUSEEVENT tme;
+        ZeroMemory(&amptme,  sizeof(tme));
+        tme.cbSize = sizeof(tme);
+        tme.dwFlags = TME_LEAVE;
+        tme.hwndTrack = m_hWnd;
+        TrackMouseEvent(&amptme);
+    }
+    m_ctlButton.DefWindowProc(uMsg, wParam, lParam);</B>
+    return 0;
+}
+<b>// BN_CLICKED
+LRESULT OnClicked(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL&amp
+bHandled)
+{
+    Fire_OnClick();
+    m_btnState = bsFlat;
+    Invalidate();
+    FireViewChange();
+    bHandled = TRUE;
+    return 0;</B>
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>When the mouse leaves the control window, the operating system will send the control a <small>WM_MOUSELEAVE</SMALL> message. When this message is received, the button state is updated, and the control&#146;s rectangle is invalidated. Add the source code in Listing 18.20 to the PopButton.h header file.</P>
+<p><b>Listing 18.20</B> The <small>WM_MOUSELEAVE</SMALL> Message Handler for the <small>CPopButton</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam,
+                                          BOOL&amp bHandled)
+{
+    m_btnState = bsFlat;
+    Invalidate();
+    FireViewChange();
+    bHandled = TRUE;
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Several functions in <small>CPopButton</SMALL> need to determine if the mouse cursor is over the control. The function provided in Listing 18.21 returns <small>TRUE</SMALL> if the mouse is over the control; otherwise, it returns <small>FALSE</SMALL>. Add this function to the <small>CPopButton</SMALL> class.</P>
+<p><b>Listing 18.21</B> The <small>MouseOverCtl</SMALL> Member Function<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL MouseOverCtl()
+{
+    RECT  rc;
+    POINT pt;
+    GetWindowRect(&amprc);
+    GetCursorPos(&amppt);
+    return PtInRect(&amprc, pt);
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p><font size="+1"><b>Drawing the Control</B></FONT></P>
+<p>The most complex part of the PopButton control involves drawing the control. Before getting into the actual drawing code, there are two helper functions that make it easy to determine which state the button is in. Listing 18.22 contains the <small>IsSelected</SMALL> and <small>IsRaised</SMALL> member functions, which are used by the <small>CPopButton</SMALL> class when drawing the control.</P>
+<p><b>Listing 18.22</B> The <small>IsSelected</SMALL> and <small>IsRaised</SMALL> Member Functions<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL IsSelected()
+{
+    return m_btnState == bsDown;
+}
+BOOL IsRaised()
+{
+    return m_btnState == bsHover;
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-12.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

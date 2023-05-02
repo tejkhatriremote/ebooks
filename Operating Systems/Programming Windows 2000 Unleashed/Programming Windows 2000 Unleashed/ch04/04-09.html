@@ -1,0 +1,249 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-09//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>To take advantage of completion routines, you must use <small>ReadFileEx</SMALL> and <small>WriteFileEx</SMALL> in place of the <small>ReadFile</SMALL> and <small>WriteFile</SMALL> functions. These functions accept an extra parameter that&#146;s used for the address of the completion routine:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fWrite = ReadFileEx(hWriteFile,
+                         szBuffer,
+                         dwWrite,
+                         pOverlapped,
+                         ReadCompletion);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Except for the extra parameter, the behavior of <small>ReadFileEx</SMALL> and <small>WriteFileEx</SMALL> is exactly like that for overlapped I/O using <small>ReadFile</SMALL> and <small>WriteFile</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading22"></A><font color="#000077">Looking at an Example Using File-Completion Routines</FONT></H4>
+<p>As an example of using file-completion routines, this book&#146;s CD-ROM includes a sample program named AsynchCopy that copies a file using <small>ReadFileEx</SMALL> and <small>WriteFileEx</SMALL>. This program works exactly like the <small>CopyFile</SMALL> function, but it shows how you can use file-completion routines and asynchronous I/O in a Windows 2000 application.</P>
+<p>You can open this project as is, or you can create the project yourself using the steps presented in the next few sections.</P>
+<p><font size="+1"><b>Modifying the Main Dialog Box</B></FONT></P>
+<p>AsynchCopy is a dialog box&#150;based project with a progress control and three pushbutton controls added to the main dialog box, as shown in Figure 4.4.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-04.jpg',330,145 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-04.jpg',330,145)"><font color="#000077"><b>Figure 4.4</B></FONT></A>&nbsp;&nbsp;The main dialog box for the AsynchCopy application.</P>
+<p>Table 4.3 lists the resource IDs used by the main dialog box controls. The <small>Visible</SMALL> property is cleared for the progress control; all other control attributes are set to their default values.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 4.3</B> Controls Used by the Main Dialog Box
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP" width="40%"><i>Control</I>
+<th valign="TOP" align="LEFT"><i>Resource ID</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Source button
+<td valign="TOP" align="LEFT"><small>IDC_SOURCE</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Destination button
+<td valign="TOP" align="LEFT"><small>IDC_DEST</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Copy button
+<td valign="TOP" align="LEFT"><small>IDC_COPY</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Source label
+<td valign="TOP" align="LEFT"><small>IDC_LABEL_SRC</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Destination label
+<td valign="TOP" align="LEFT"><small>IDC_LABEL_DEST</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Progress control
+<td valign="TOP" align="LEFT"><small>IDC_PROGRESS</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The <small>CAsynchCopyDlg</SMALL> class has one new member variable that&#146;s associated with the progress control, as shown in Table 4.4.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="4"><b>Table 4.4</B> Values for the <small>CAsynchCopyDlg</SMALL> Member Variable
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th align="LEFT" valign="TOP" width="25%"><i>Resource ID</I>
+<th align="LEFT" valign="TOP" width="25%"><i>Category</I>
+<th align="LEFT" valign="TOP" width="25%"><i>Type</I>
+<th align="LEFT" valign="TOP" width="25%"><i>Name</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_PROGRESS</SMALL>
+<td valign="TOP" align="LEFT"><small>Control</SMALL>
+<td valign="TOP" align="LEFT"><small>CProgressCtrl</SMALL>
+<td valign="TOP" align="LEFT"><small>m_progressCtrl</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p><font size="+1"><b>Adding Message-handling Functions</B></FONT></P>
+<p>There are three message-handling functions for the <small>CAsynchCopyDlg</SMALL> class&#151;one for each of the three button controls added to the dialog box. The values in Table 4.5 describe these message-handling functions.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="4"><b>Table 4.5</B> Values for New Member Functions in <small>CAsynchCopyDlg</SMALL>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th align="LEFT" valign="TOP" width="25%"><i>Object ID</I>
+<th align="LEFT" valign="TOP" width="25%"><i>Class Name</I>
+<th align="LEFT" valign="TOP" width="25%"><i>Message</I>
+<th align="LEFT" valign="TOP" width="25%"><i>Function</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_SOURCE</SMALL>
+<td valign="TOP" align="LEFT"><small>CAsynchCopyDlg</SMALL>
+<td valign="TOP" align="LEFT"><small>BN_CLICKED</SMALL>
+<td valign="TOP" align="LEFT"><small>OnSource</SMALL>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_DEST</SMALL>
+<td valign="TOP" align="LEFT"><small>CAsynchCopyDlg</SMALL>
+<td valign="TOP" align="LEFT"><small>BN_CLICKED</SMALL>
+<td valign="TOP" align="LEFT"><small>OnDest</SMALL>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_COPY</SMALL>
+<td valign="TOP" align="LEFT"><small>CAsynchCopyDlg</SMALL>
+<td valign="TOP" align="LEFT"><small>BN_CLICKED</SMALL>
+<td valign="TOP" align="LEFT"><small>OnCopy</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p><font size="+1"><b>Modifying the AsynchCopyDlg Class</B></FONT></P>
+<p>The <small>CAsynchCopyDlg</SMALL> has several new member variables and member functions that are used to implement the actual copying operations. These new members are shown in bold in Listing 4.12. Unchanged parts of the class declaration have been removed to save space.</P>
+<p><b>Listing 4.12</B> New <small>CAsynchCopyDlg</SMALL> Member Variables</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+class CAsynchCopyDlg : public CDialog
+{
+    .
+    .
+    .
+// Implementation
+<b>private:
+    CString       m_szSourcePath;
+    CString       m_szDestPath;
+    HANDLE        m_hReadFile;
+    HANDLE        m_hWriteFile;
+    BOOL          m_fDone;
+    DWORD         m_dwReadChunk;
+    BYTE          m_buffer[4096];
+    MY_OVERLAPPED m_overlapped;
+    void WriteBuffer(DWORD dwWrite, OVERLAPPED* pOverlapped);
+    void ReadBuffer(OVERLAPPED* pOverlapped);
+    static void WINAPI ReadCompletion(DWORD dwErr,
+                                      DWORD dwBytes,
+                                      OVERLAPPED* pOv);
+    static void WINAPI WriteCompletion(DWORD dwErr,
+                                       DWORD dwBytes,
+                                       OVERLAPPED* pOv);</B>
+protected:
+    .
+    .
+    .
+};
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>One of the variables in Listing 4.12, <small>m_overlapped</SMALL>, is a <small>MY_OVERLAPPED</SMALL> variable. <small>MY_OVERLAPPED</SMALL> is a structure that has an <small>OVERLAPPED</SMALL> structure as its first member. The second member of <small>MY_OVERLAPPED</SMALL> is a pointer to the <small>CAsynchCopyDlg</SMALL> object that &#147;owns&#148; the structure. This is necessary because you&#146;ll use static member functions as file-completion routines. By passing a pointer to <small>MY_OVERLAPPED</SMALL> instead of <small>OVERLAPPED</SMALL> to Windows 2000, you&#146;ll be able to find your way back to the instance of <small>CAsynchCopyDlg</SMALL> performing the I/O.</P>
+<p>Listing 4.13 provides the definition of <small>MY_OVERLAPPED</SMALL>. This declaration is part of the project&#146;s <small>AsynchCopyDlg.h</SMALL> file, located just before the class declaration.</P>
+<p><b>Listing 4.13</B> The <small>MY_OVERLAPPED</SMALL> Structure Definition</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+struct MY_OVERLAPPED
+{
+    OVERLAPPED ov;
+    CWnd* pWnd;
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>Three pushbuttons must handle user clicks in the main dialog box, and each of these buttons has a member function associated with it:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnSource</SMALL>. Creates a File Open common dialog box and collects a filename to be used as a source file for the copy operation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnDest</SMALL>. Creates a File Open common dialog box and collects a file name to be used as a destination file in the copy operation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnCopy</SMALL>. Opens the source and destination files and starts the copy process.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

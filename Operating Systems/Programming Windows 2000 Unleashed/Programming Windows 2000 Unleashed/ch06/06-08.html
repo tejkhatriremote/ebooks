@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=213-217//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Before compiling the Hello project, copy <small>DlgInDll.lib</SMALL>, the import library, from the DlgInDll project into the Hello project directory. Also copy the <small>NameDlg.h</SMALL> header file into the Hello project directory.</P>
+<p>Add the import library from the DlgInDll DLL to the Hello project by following these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Choose Build and then Settings from the main menu.
+<dd><b>2.</B>&nbsp;&nbsp;Click the Link tab.
+<dd><b>3.</B>&nbsp;&nbsp;Select Input from the Category drop-down list control.
+<dd><b>4.</B>&nbsp;&nbsp;Enter <small>DlgInDll.lib</SMALL> in the Object/Library module&#146;s Edit control.
+<dd><b>5.</B>&nbsp;&nbsp;Close the Settings dialog box.
+</DL>
+<p>Build the Hello project. As is the case with the earlier examples, you must copy the DlgInDll DLL into the Hello project&#146;s <small>Debug</SMALL> subdirectory before running the application. This ensures that the DLL is found when the application is started.</P>
+<p>Start the Hello application. If you click the Name button, the dialog box from the DlgInDll DLL is displayed, as shown in Figure 6.13. After entering a name in the dialog box, the static label in the main dialog box is updated.</P>
+<p><a name="Fig13"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-13.jpg',394,231 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-13t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-13.jpg',394,231)"><font color="#000077"><b>Figure 6.13</B></FONT></A>&nbsp;&nbsp;The Hello application after the Name dialog box has been created.</P>
+<h3><a name="Heading17"></A><font color="#000077">Using Generic Thunks</FONT></H3>
+<p>Over the years, many complex applications have been written for the 16-bit versions of Windows. Microsoft recognizes that complex systems may need to be migrated to Windows 2000 in multiple steps. For this reason, a facility has been added to Windows 2000 that allows a 16-bit application to access and use components such as DLLs that are written for Windows 2000. This facility is known as <i>thunking</I>.</P>
+<p><i>Thunking</I> is a term that was originally used to describe how a specific type of function call was made using the ALGOL programming language. There aren&#146;t many ALGOL programs still in use today, but the word <i>thunk</I> lives on.</P>
+<p>There are three types of thunks used in Win32:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>generic thunk</I> allows 16-bit code to call 32-bit DLLs. This is useful in the case where a 16-bit EXE or DLL needs to call a 32-bit DLL that has been written to take advantage of Windows 2000. It can also be used to allow 16-bit binaries to call Windows 2000 API functions directly. Generic thunks are available on Windows 2000 and Windows 9<i>x</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>universal thunk</I>, contrary to what you might expect from its name, is used only for Win32s. A universal thunk allows a Win32 application running on Win32s to load a 16-bit DLL when running on Windows 3.1.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>flat thunk</I> is used in Windows 9<i>x</I> to allow 32-bit applications to call 16-bit DLLs and to allow 16-bit applications to call 32-bit DLLs.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>The availability and performance of thunking depend on the platform and operating system.
+</P>
+<p>Windows 2000 does not provide any way for a 32-bit executable to thunk to a 16-bit DLL. This facility is provided in Windows 95 and Windows 98 with the <i>flat thunk</I> mechanism, but it&#146;s not provided in Windows 2000.</P>
+<p>Also, unlike Windows 2000, Windows 95 and Windows 98 do not allow a DLL that&#146;s called via a thunk from a 16-bit client to create threads. If you require compatibility with Windows 95 or Windows 98, beware of this restriction.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">Generic Thunking Architecture</FONT></H4>
+<p>Using a Windows 2000 generic thunk to load a 32-bit DLL from a 16-bit application is similar to the runtime loading of DLLs discussed earlier in the chapter. The generic thunking mechanism allows the 16-bit process to use the Windows 2000 <i>Virtual DOS Machine</I> (or VDM) as a proxy that actually loads the DLL, as shown in Figure 6.14.</P>
+<p><a name="Fig14"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-14.jpg',87,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-14t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-14.jpg',87,420)"><font color="#000077"><b>Figure 6.14</B></FONT></A>&nbsp;&nbsp;Generic Thunking uses the Windows 2000 VDM to load the 16-bit DLL.</P>
+<p>As you might expect, this arrangement brings up some interesting debugging issues. After all, half your application is running in the 16-bit space, and half is running in the 32-bit space. Debugging strategies for generic thunks are discussed later in the chapter.
+</P>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Generic Thunking Functions</FONT></H4>
+<p>Nearly two dozen functions are used for generic thunks. Here are the most commonly used:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LoadLibraryEx32W</SMALL> is used to load a 32-bit DLL so that a 16-bit binary can call functions located in the library.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FreeLibrary32W</SMALL> releases a DLL previously loaded with <small>LoadLibraryEx32W</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetVDMPointer32W</SMALL> converts a pointer used in the 16-bit address space so that it can be used by a 32-bit DLL.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CallProc32W</SMALL> is used to call a function in a 32-bit DLL from a 16-bit binary.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CallProcEx32W</SMALL> is used to call a function in a 32-bit DLL from a 16-bit binary; unlike <small>CallProc32W</SMALL>, it uses the <small>cdecl</SMALL> calling convention.
+</DL>
+<p>Each of these functions is discussed in more detail in the following sections. The 16-bit compiler does not document these functions; they are actually part of Windows 2000 and are (partially) documented in the Win32 SDK. The best SDK documentation is actually found in two header files:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>wownt16.h</SMALL> is the header file for 16-bit generic thunk functions.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>wownt32.h</SMALL> is the header file for 32-bit generic thunk functions.
+</DL>
+<p>Your 16-bit application must explicitly import any generic thunking functions imported from the kernel&#151;there is no import library. The Client16 example provided later in this chapter includes a DEF file that imports the necessary functions from the kernel.
+</P>
+<p><font size="+1"><b>Loading and Freeing 32-bit Libraries</B></FONT></P>
+<p>A 16-bit binary cannot directly load a 32-bit DLL using the standard <small>LoadLibrary</SMALL> or <small>LoadLibraryEx</SMALL> API call. The <small>LoadLibraryEx32W</SMALL> function is exposed by the kernel so that a 16-bit application can load a 32-bit DLL for thunking:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD hDll = LoadLibraryEx32W(&#147;dll32.dll&#148;, 0L, 0L);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>LoadLibraryEx32W</SMALL> function takes three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the DLL.
+<dd><b>&#149;</B>&nbsp;&nbsp;A reserved parameter that&#146;s set to zero or <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>DWORD</SMALL> that can contain multiple flags; this value is usually zero. Check the SDK documentation for some special cases where the flags may be useful.
+</DL>
+<p>The library must be released by calling the <small>FreeLibrary32W</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fFreed = FreeLibrary32W(hDll);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>FreeLibrary32W</SMALL> function has one parameterthe <small>DWORD</SMALL> handle returned from <small>LoadLibraryEx32W</SMALL>.</P>
+<p><font size="+1"><b>Adjusting 16-bit Segmented Pointers</B></FONT></P>
+<p>Pointers and other addresses that are passed to the 32-bit DLL must be converted from their native segmented format into a flat 32-bit address format. As discussed in the next section, pointers passed as parameters can be converted during the <small>CallProc32W</SMALL> and <small>CallProcEx32W</SMALL> function calls.</P>
+<p>If you prefer to convert the address before performing the function call, or if an address is passed as an embedded pointers inside a structure, you can use the <small>GetVDMPointer32W</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+int n16 = 0;
+DWORD dw32BitPtrToInt = GetVDMPointer32W(&ampn16, 1);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>GetVDMPointer32W</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The 16:16 address that&#146;s to be converted to a flat address
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that&#146;s set if the 16:16 address is a protected-mode address or cleared if it&#146;s a real-mode address
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

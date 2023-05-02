@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=03//-->
+<!--PAGES=098-103//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>World Wide Web:
+</P>
+<p>BIND (ISC)&#151;<a href="http://www.isc.org/new-bind.html">http://www.isc.org/new-bind.html</A></P>
+<p>CERT Coordination Center&#151;<a href="http://www.cert.org">http://www.cert.org</A></P>
+<p>Sendmail Consortium&#151;<a href="http://www.sendmail.org">http://www.sendmail.org</A></P>
+<p>WU-FTP (Academ Consulting Services)&#151;<a href="http://www.academ.com/academ/wu-ftpd">http://www.academ.com/academ/wu-ftpd</A></P>
+<h3><a name="Heading10"></A><font color="#000077">3.5 Permissions Levels</FONT></H3>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">3.5.1 Description</FONT></H4>
+<p>Various levels or types of permissions can be set on files and directories.
+</P>
+<p><font size="+1"><b>Example One: Go but Don&#146;t Look</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>chown</B> <i>mode file</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If a directory is set up with execute permissions only, everyone can go in the directory but only the owner of the directory and superuser can see the files inside the directory.
+</P>
+<!-- CODE //-->
+<pre>
+rocket 1% mkdir private
+rocket 2% chmod 711 private
+rocket 3% touch private/foo
+rocket 4% ls -ald private
+drwx--x--x    2 paul user          21 Sep 29 00:32 private/
+
+rocket 7% su - steve
+Password:
+
+rocket 5% cd private
+rocket 6% ls -al
+Cannot access directory .: Permission denied
+total 0
+
+$ exit
+rocket 1# ls -al
+total 8
+drwx--x--x    2 paul user              21 Sep 29 00:32 ./
+drwxrwxrwt    6 sys  sys             4096 Sep 29 00:33 ../
+-rw-r--r--    1 paul user             234 Sep 29 00:32 foo
+</PRE>
+<!-- END CODE //-->
+<p>In this example, users are allowed to access only what the owner of the directory wants them to access. They don&#146;t get to see what it is they are accessing but they can get it and write it out somewhere else. It is a blind directory; what the user doesn&#146;t know, he can&#146;t harm.
+</P>
+<p>Paul set the permissions on the directory to private, so only he can see the directory. When Steve comes along, he too can go in the directory, but has to know the name of the file, foo, in order to get it.</P>
+<p><font size="+1"><b>Example Two: Look but Don&#146;t Write, but You Can Write</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+chmod mode file
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you think your read-only files, which are set with permissions of 444, are safe from being written to, think again. There is a way to still write to the file and even change the permissions.
+</P>
+<!-- CODE //-->
+<pre>
+rocket 1% touch foo
+rocket 2% chmod 444 foo
+rocket 3% ls -al foo*
+-r--r--r--    1 paul user           0 Sep 29 01:25 foo
+-rw-rw-rw-    1 paul user         427 Sep 29 01:23 foo.old
+
+rocket 5% cp foo.old foo
+Cannot create foo - Permission denied
+
+rocket 6% mv foo.old foo
+foo: 444 mode? (yes/no)[no] : yes
+
+rocket 7% ls -al foo*
+-rw-rw-rw-    1 paul user         427 Sep 29 01:23 foo
+</PRE>
+<!-- END CODE //-->
+<p>If there is an attempt to edit, remove, or copy the file while it is in a read-only state, UNIX prompts you to make sure you really want to perform one of these functions to the read-only file.
+</P>
+<p>Then how come the <small>move</SMALL> command worked? In UNIX editors, the <small>remove</SMALL> and <small>copy</SMALL> commands look at the permissions of the files themselves to determine whether they have the ability to access the file. The <small>move</SMALL> command is a renaming function within UNIX and uses the permission of the directory, not the file, to determine whether there is enough access to rename or move the file. It then inherits the permissions of the file that was moved onto it.</P>
+<p><font size="+1"><b>Example Three: Deny Group Access</B></FONT></P>
+<p>Flavor: BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+chmod mode file
+chgrp mode file
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You know from experience that you can generate a list of users into a group and provide that group with access to certain directories and files, which might not have been possible otherwise. Did you know that this works in reverse also? You can use the same list to deny access into certain areas of the system and files with the same group access list.
+</P>
+<p>Edit the /etc/group file and add a new group called <small>refuse</SMALL> with a list of users that you want kept out of the private area.</P>
+<!-- CODE SNIP //-->
+<pre>
+refuse:*:6666:gary,arthur,damiel,guest
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Set the permissions on the file so that there is no read, write, or executable access for the group called <small>refuse</SMALL>.</P>
+<!-- CODE //-->
+<pre>
+rocket 1# mkdir private
+rocket 2# chmod 705 private
+rocket 3# chgrp refuse private
+rocket 4# ls -ald private
+
+drwx---r-x    2 root  refuse       9 Sep 29 03:34 private/
+
+rocket 10% cd private
+private - No such file or directory
+</PRE>
+<!-- END CODE //-->
+<p>When someone tries to access the private directory, UNIX always verifies that the account has permissions by the following order: <i>owner-group-other</I>. When it gets to the group access field, everyone in the <small>refuse</SMALL> group is denied access; they cannot see the directory as long as none of the accounts in the <small>refuse</SMALL> group access list has a root&#146;s UID of 0. Only those with root access and those that are considered others and not in the <small>refuse</SMALL> group listing have access to the private area.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>It is not advisable to perform this little hack on any of the UNIX system files. Although it can be done, try to avoid it whenever possible.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Because UNIX is a multiuser environment, there is a need for protecting files and users from one another. Having control of setting permissions helps to keep people from removing the wrong system files by mistake, snooping into other users&#146; private areas, or compromising important data files.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>One of the first things an administrator does is lock down access to her files and system files that are backed up to disk. Users and hackers like to think that something good is somewhere and the system administrator usually has it. Think about what you collect and have stored in your home directory. If you store and use administrative tools and files somewhere, lock that down too. I always keep a separate 2&#150;3GB off on another disk with the permissions locked down to the root level only on some of my machines.
+</P>
+<p>Think about what you&#146;re setting the permissions to before you change them. This is another area where changing something could turn into a bigger issue.</P>
+<p>Dealing with permissions is also seriously dependent on the environment that you are working in. There are those who require a tight and secure environment, whereas others feel they require the freedom to have no permission, and they can expand their creative juices.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>chmod</SMALL>, <small>chgrp</SMALL>, <small>group</SMALL></P>
+<h3><a name="Heading12"></A><font color="#000077">3.6 Protect root at All Costs</FONT></H3>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">3.6.1 Description</FONT></H4>
+<p>Safeguard against removing the root level files.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+touch file
+chmod mode file
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This uses the <small>-i</SMALL> argument in the <small>rm</SMALL> command to remove files. The <small>-i</SMALL> argument seeks confirmation before any removal of the file or directory takes place. It also known as an interactive removal process.</P>
+<p>You place a <small>-i</SMALL> at the top of the root directory; when the <small>rm</SMALL> command progresses through the list of files, it picks up the <small>-i</SMALL> as an argument, not as a file, and proceeds interactively requesting confirmation before it removes any files and your kernel.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>Test this first in a nondestructive test area first. If you don&#146;t, you risk removing the files under the root directory.</FONT><hr>
+</BLOCKQUOTE>
+<!-- CODE SNIP //-->
+<pre>
+rocket 13% cd /usr/tmp
+rocket 14% mkdir foo
+rocket 15% touch /usr/tmp/foo/\-i
+rocket 16% chmod 000 /usr/tmp/foo/\-i
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

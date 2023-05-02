@@ -1,0 +1,899 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Libraries
+Date: Fri, 13 May 2005 09:58:05 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_005D_01C557A2.41E67D30"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_005D_01C557A2.41E67D30
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker06.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Libraries</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Libraries</H1>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Every modern linker handles libraries, collections of object =
+files=20
+      that are included as needed in a linked program. In this chapter =
+we cover=20
+      traditional statically linked libraries, leaving the more complex =
+shared=20
+      libraries to Chapters 9 and 10.=20
+      <P>
+      <H2>Purpose of libraries</H2>In the 1940s and early 1950s, =
+programming=20
+      shops had actual code libraries containing reels of tape or later =
+decks of=20
+      cards that a programmer would visit and select routines to load =
+with his=20
+      program. Once loaders and linkers started to resolve symbolic =
+references,=20
+      it became possible to automate the process by selecting routines =
+from the=20
+      library that resolve otherwise undefined symbols.=20
+      <P>
+      <P>A library file is fundamentally no more than a collection of =
+object=20
+      files, usually with some added directory information to make it =
+faster to=20
+      search. As always, the details are more complicated than the basic =
+idea,=20
+      so we work them out in this chapter. We use the term file to refer =
+to a=20
+      separate object file, and module to refer to an object file =
+included in a=20
+      library. </P></TD></TR></TBODY></TABLE>
+<P>
+<H2>Library formats</H2>The simplest library formats are just sequences =
+of=20
+object modules. On sequential media like magnetic or paper tape, there's =
+little=20
+point in adding a directory since the linker has to read through the =
+whole=20
+library anyway, and skipping over library members is no slower than =
+reading them=20
+in. On disks, though, a directory can speed up library searching =
+considerably=20
+and is now a standard facility.=20
+<P>
+<H3>Using the operating system</H3>OS/360 and its descendants including =
+MVS=20
+provide <I>partitioned data sets</I>(PDS), that contain named members, =
+each of=20
+which can be treated as a sequential file. The system provides features =
+for=20
+giving multiple aliases to a single member, for treating multiple PDS as =
+a=20
+single logical PDS for the duration of a program, for enumerating the =
+names in a=20
+logical PDS, and of course for reading or writing the members. Member =
+names are=20
+eight characters which probably not coincidentally is the length of an =
+external=20
+symbol in a linker. (MVS introduces an extended PDS or PDSE which has =
+some=20
+support for names up to 1024 characters, for the benefit of C, C++, and =
+Cobol=20
+programmers.)=20
+<P>
+<P>A linker library is merely a PDS where each member is an object file =
+named by=20
+its entry point. Object files that define multiple global symbols have =
+an alias=20
+for each global symbol manually created when the library is built. The =
+linker=20
+searches the logical PDS specified as the library for members whose =
+names match=20
+undefined symbols. An advantage of this scheme is that there's no object =
+library=20
+update program needed, since the standard file maintenance utilities for =
+PDS=20
+suffice.=20
+<P>
+<P>Although I've never seen a linker do so, a linker on a Unix-like =
+system could=20
+handle libraries the same way; the library would be a directory, the =
+members=20
+object files within the directory, with each file name being a global =
+symbol=20
+defined in the file. (UNIX permits multiple names for a single file.)=20
+<P>
+<H3>Unix and Windows Archive files</H3>UNIX linker libraries use an =
+``archive''=20
+format which can actually be used for collections of any types of files, =
+
+although in practice it's rarely used for anything else. Libraries =
+consist of an=20
+archive header, followed by alternating file headers and object files. =
+The=20
+earliest archives had no symbol directories, just a set of object files, =
+but=20
+later versions had various sorts of directories, settling down to one =
+used for=20
+about a decade in BSD versions (text archive headers and a directory =
+called=20
+<TT>__.SYMDEF</TT>) and the current version used with COFF or ELF =
+libraries=20
+(text archive headers with an extension for long file names, directory =
+called=20
+<TT>/</TT>) in System V.4, later versions of BSD, and Linux. Windows =
+ECOFF=20
+libraries use the same archive format as COFF libraries, but the =
+directory,=20
+although also called <TT>/</TT>, has a different format.=20
+<P>
+<H4>Unix archives</H4>All modern Unix systems use minor variations of =
+the same=20
+archive format, Figure 1. The format uses only text characters in the =
+archive=20
+headers, which means that an archive of text files is itself a text file =
+(a=20
+quality that has turned out in practice to be useless.) Each archive =
+starts with=20
+the ``magic'' eight character string <TT>!&lt;arch&gt;\n</TT>, where =
+<TT>\n</TT>=20
+is a new line. Each archive member is preceded by a 60 byte header =
+containing:=20
+<UL>
+  <LI>The name of the member, padded to 16 characters as described =
+below.=20
+  <LI>The modification date, as a decimal number of seconds since the =
+beginning=20
+  of 1970.=20
+  <LI>The user and group IDs as decimal numbers.=20
+  <LI>The UNIX file mode as an octal number.=20
+  <LI>The size of the file in bytes as a decimal number. If the file =
+size is=20
+  odd, the file's contents are padded with a newline character to make =
+the total=20
+  length even, although the pad character isn't counted in the size =
+field.=20
+  <LI>The two characters reverse quote and newline, to make the header a =
+line of=20
+  text and provide a simple check that the header is indeed a header.=20
+</LI></UL>Each member header contains the modification time, user and =
+group IDs=20
+and file mode, although linkers ignore them.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 1 --></TD>
+    <TD><I>Figure 1:</I> Unix archive format <BR>File header:=20
+      <BR><TT>!&lt;arch&gt;\n</TT> <BR>Member header:=20
+      <P><TT><BR>char name[16]; /* member name */ <BR>char modtime[12]; =
+/*=20
+      modification time */ <BR>char uid[6]; /* user ID */ <BR>char =
+gid[6]; /*=20
+      group ID */ <BR>char mode[8]; /* octal file mode */ <BR>char =
+size[10]; /*=20
+      member size */ <BR>char eol[2]; /* reverese quote, newline */=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>Member names that are 15 characters or less are followed by enough =
+spaces to=20
+pad the name to 16 characters, or in COFF or ELF archives, a slash =
+followed by=20
+enough spaces to pad the total to 16 characters. (Unix and Windows both =
+use=20
+slashes to separate components in filenames.) The version of this =
+archive format=20
+used with a.out files didn't support member names longer than 16 =
+characters,=20
+reflecting pre-BSD Unix file system that limited file names to 14 =
+characters per=20
+component. (Some BSD archives actually did have a provision for longer =
+file=20
+names, but since linkers didn't handle the longer names correctly, =
+nobody used=20
+them.) COFF, ELF and Windows archives store names longer than 16 =
+characters in=20
+an archive member called <TT>//</TT>. This member contains the long =
+names=20
+separated by a slash, newline pair on Unix or a null character on =
+Windows. The=20
+name field of the header for member with a long name contains a slash =
+followed=20
+by the decimal offset in the <TT>//</TT> member of the name string. In =
+Windows=20
+archives, the <TT>//</TT> member must be the third member of the =
+archive. In=20
+Unix archives the member need not exist if there are no long names, but =
+follows=20
+the symbol directory if it does.=20
+<P>
+<P>Although the symbol directory formats have varied somewhat, they are =
+all=20
+functionally the same, mapping names to member positions so linkers can =
+directly=20
+move to and read the members they need to use.=20
+<P>
+<P>The a.out archives store the directory in a member called =
+<TT>__.SYMDEF</TT>=20
+which has to be the first member in the archive, Figure 2. The member =
+starts=20
+with a word containing the size in bytes of the symbol table that =
+follows it, so=20
+the number of entries in the table is 1/8 of the value in that word. =
+Following=20
+the symbol table is a word containing the size of the string table, and =
+the=20
+string table, each string followed by a null byte. Each symbol table =
+entry=20
+contains a zero-based offset into the string table of the symbol's name, =
+and the=20
+file position of the header of the member that defines the symbol. The =
+symbols=20
+table entries are conventionally in the order of the members in the =
+file.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 2 --></TD>
+    <TD><I>Figure 2:</I> SYMDEF directory format <BR>
+      <P><TT><BR>int tablesize; /* size in bytes of following table */=20
+      <BR>struct symtable { <BR>int symbol; /* offset in string table */ =
+<BR>int=20
+      member; /* member pointer */ <BR>} symtable []; <BR>int =
+stringsize; /*=20
+      size of string table */ <BR>char strings[]; /* null terminated =
+strings */=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>COFF and ELF archives use the otherwise impossible name <TT>/</TT> =
+for the=20
+symbol directory rather than <TT>__.SYMDEF</TT> and use a somewhat =
+simpler=20
+format, Figure 3. The first four byte value is the number of symbols. =
+Following=20
+that is an array of file offsets of archive members, and a set of null=20
+terminated strings. The first offset points to the member that defines =
+the=20
+symbol named by the first string, and so forth. COFF archives usually =
+use a=20
+big-endian byte order for the symbol table regardless of the native byte =
+order=20
+of the architecture.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 3 --></TD>
+    <TD><I>Figure 3:</I> COFF / ELF directory format <BR>
+      <P><TT><BR>int nsymbols; /* number of symbols */ <BR>int member[]; =
+/*=20
+      member offsets */ <BR>char strings[]; /* null terminated strings =
+*/=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>Microsoft ECOFF archives add a second symbol directory member, Figure =
+4,=20
+confusingly also called <TT>/</TT> that follows the first one.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 4 --></TD>
+    <TD><I>Figure 4:</I> ECOFF second symbol directory <BR>
+      <P><TT><BR>int nmembers; /* count of member offsets */ <BR>int =
+members[];=20
+      /* member offsets */ <BR>int nsymbols; /* number of symbols */ =
+<BR>ushort=20
+      symndx[]; /* pointers to member offsets */ <BR>char strings[]; /* =
+symbol=20
+      names, in alphabetical order */=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>The ECOFF directory consists of a count of member entries followed by =
+an=20
+array of member offsets, one per archive member. Following that is a =
+count of=20
+symbols, an array of two-byte member offset pointers, followed by the =
+null=20
+terminated symbols in alphabetical order. The member offset pointers =
+contain the=20
+one-based index in the member offset table of the member that defines =
+the=20
+corresponding symbol. For example, to locate the member corresponding to =
+the=20
+fifth symbol, consult the fifth entry in the pointer array which =
+contains the=20
+index in the members array of the offset of the defining member. In =
+theory the=20
+sorted symbols allow faster searching, but in practice the speedup is =
+not likely=20
+to be large, since linkers typically scan the entire table looking for =
+symbols=20
+to load, anyway.=20
+<P>
+<H3>Extension to 64 bits</H3>Even if an archive contains objects for a =
+64 bit=20
+architecture, there's no need to change the archive format for ELF or =
+ECOFF=20
+unless the archive grows greater than 4GB. Nonetheless some 64 bit =
+architectures=20
+have a different symbol directory format with a different member name =
+such as=20
+<TT>/SYM64/</TT>.=20
+<P>
+<H3>Intel OMF libraries</H3>The final library format we look at is that =
+used for=20
+Intel OMF libraries. Again, a library is a set of object files with a =
+directory=20
+of symbols. Unlike the Unix libraries, the directory is at the end of =
+the file,=20
+Figure 5.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig06-05.html"><IMG=20
+      height=3D204 =
+src=3D"http://www.iecc.com/linker/thumb-linker06-05.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 5:</I> OMF libraries <BR>LIBHED record <BR>first =
+object=20
+      module (file) <BR>second object module (file) ... <BR>LIBNAM =
+module names=20
+      record <BR>LIBLOC module locations record <BR>LIBDIC symbol =
+directory=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>The library starts with a LIBDIC record that contains the file offset =
+of the=20
+LIBNAM record in a (block,offset) format used by Intel's ISIS operating =
+system.=20
+The LIBNAM simply contains a list of module names, each name preceded by =
+a count=20
+byte indicating the length of the name. The LIBLOC record contains a =
+parallel=20
+list of (block,offset) file locations where each module starts. The =
+LIBDIC=20
+contains a list of groups of counted strings with the names defined in =
+each=20
+module, each group followed by a null byte to separate it from the =
+subsequent=20
+group.=20
+<P>
+<P>Although this format is a little clunky, it contains the necessary=20
+information and does the job.=20
+<P>
+<H2>Creating libraries</H2>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Each archive format has its own technique for creating =
+libraries.=20
+      Depending on how much support the operating system provides for =
+the=20
+      archive format, library creation can involve anything from =
+standard system=20
+      file management programs to library-specific tools.=20
+      <P>
+      <P>At one end of the spectrum, IBM MVS libraries are created by =
+the=20
+      standard IEBCOPY utility that creates partitioned data sets. In =
+the=20
+      middle, Unix libraries are created by the ``ar'' command that =
+combines=20
+      files into archives. For a.out archives, a separate program called =
+ranlib=20
+      added the symbol directory, reading the symbols from each member, =
+creating=20
+      the <TT>__.SYMDEF</TT> member and splicing it into the file. In =
+principle=20
+      ranlib could have created the symbol directory as a real file, =
+then called=20
+      ar to insert it in the archive, but in practice ranlib manipulated =
+the=20
+      archive directly. For COFF and ELF archives, the function of =
+ranlib has=20
+      moved into ar, which creates the sybol directory if any of the =
+members=20
+      appear to be object modules, although ar still can create archives =
+of=20
+      non-objects.=20
+      <P>
+      <P>At the other end of the spectrum, OMF archives and Windows =
+ECOFF=20
+      archives are created by specialized librarian programs, since =
+those=20
+      formats have never been used for anything other than object code=20
+      libraries. </P></TD></TR></TBODY></TABLE>
+<P>
+<P>One minor issue for library creation is the order of object files,=20
+particularly for the ancient formats that didn't have a symbol =
+directory.=20
+Pre-ranlib Unix systems contained a pair of programs called lorder and =
+tsort to=20
+help create archives. Lorder took as its input a set of object files =
+(not=20
+libraries), and produced a dependency list of what files refered to =
+symbols in=20
+what other files. (This is not hard to do; lorder was and still is =
+typically=20
+implemented as a shell script that extracts the symbols using a symbol =
+listing=20
+utility, does a little text processing on the symbols, then uses =
+standard sort=20
+and join utilities to create its output.) Tsort did a topological sort =
+on the=20
+output of lorder, producing a sorted list of files so each symbol is =
+defined=20
+after all the references to it, allowing a single sequential pass over =
+the files=20
+to resolve all undefined references. The output of lorder was used to =
+control=20
+ar.=20
+<P>
+<P>Although the symbol directories in modern libraries allow the linking =
+process=20
+to work regardless of the order of the objects within a library, most =
+libraries=20
+are still created with lorder and tsort to speed up the linking process. =
+
+<P>
+<H2>Searching libraries</H2>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>After a library is created, the linker has to be able to search =
+it.=20
+      Library search generally happens during the first linker pass, =
+after all=20
+      of the individual input files have been read. If the library or =
+libraries=20
+      have symbol directories, the linker reads in the directory, and =
+checks=20
+      each symbol in turn against the linker's symbol table. If the =
+symbol is=20
+      used but undefined, the linker includes that symbol's file from =
+the=20
+      library. It's not enough to mark the file for later loading; the =
+linker=20
+      has to process the symbols in the segments in the library file =
+just like=20
+      those in an explicitly linked file. The segments go in the segment =
+table,=20
+      and the symbols, both defined and undefined are entered into the =
+global=20
+      symbol table. It's quite common for one library routine to refer =
+to=20
+      symbols in another library routine, for example, a higher level =
+I/O=20
+      routine like <TT>printf</TT> might refer to a lower level =
+<TT>putc</TT> or=20
+      <TT>write</TT> routine.=20
+      <P>
+      <P>Library symbol resolution is an interative process. After the =
+linker=20
+      has made a pass over the symbols in the directory, if it included =
+any=20
+      files from the library during that pass, it should make another =
+pass to=20
+      resolve any symbols required by the included files, until it makes =
+a=20
+      complete pass over the directory and finds nothing else to =
+include. Not=20
+      all linkers do this; many just make a single sequential pass over =
+the=20
+      directory and miss any backwards dependencies from a file to =
+another file=20
+      earlier in the library. Tools like tsort and lorder can minimize =
+the=20
+      difficulty due to single-pass linkers, but it's not uncommon for=20
+      programmers to explcitly list the same library several times on =
+the linker=20
+      command line to force multiple passes and resolve all the symbols. =
+
+      <P>
+      <P>Unix linkers and many Windows linkers take an intermixed list =
+of object=20
+      files and libraries on the command line or in a control file, and =
+process=20
+      each in order, so that the programmer can control the order in =
+which=20
+      objects are loaded and libraries are searched. Although in =
+principle this=20
+      offers a great deal of flexibility and the ability to interpose =
+private=20
+      versions of library routines by listing the private versions =
+before the=20
+      library versions, in practice the ordered search provides little =
+extra=20
+      utility. Programmers invariably list all of their object files, =
+then any=20
+      application-specific libraries, then system libraries for math =
+functions,=20
+      network facilities and the like, and finally the standard system=20
+      libraries.=20
+      <P>
+      <P>When programmers use multiple libraries, it's often necessary =
+to list=20
+      libraries more than once when there are circular dependencies =
+among=20
+      libraries. That is, if a routine in library A depends on a routine =
+in=20
+      library B, but another routine in library B depends on a routine =
+in=20
+      library A, neither searching A followed by B or B followed by A =
+will find=20
+      all of the required routines. The problem becomes even worse when =
+the=20
+      dependencies involve three or more libraries. Telling the linker =
+to search=20
+      A B A or B A B, or sometimes even A B C D A B C D is inelegant but =
+solves=20
+      the problem. Since there are rarely any duplicated symbols among =
+the=20
+      libraries, if the linker simply searched them all as a group as =
+IBM's=20
+      mainframe linkers and AIX linker do, programmers would be well =
+served.=20
+      <P>
+      <P>The primary exception to this rule is that applications =
+sometimes=20
+      define private versions of a few routines, notably <TT>malloc</TT> =
+and=20
+      <TT>free</TT>, for heap storage management, and want to use them =
+rather=20
+      than the standard system versions. For that case, a linker flag=20
+      specifically saying ``don't look for these symbols in the =
+library'' would=20
+      in most cases be preferable to getting the effect by putting the =
+private=20
+      malloc in the search order in front of the public one.=20
+</P></TD></TR></TBODY></TABLE>
+<P>
+<H2>Performance issues</H2>The primary performance issue related to =
+libraries=20
+used to be the time spent scanning libraries sequentially. Once symbol=20
+directories became standard, reading an input file from a library became =
+
+insignificantly slower than reading a separate input file, and so long =
+as=20
+libraries are topologically sorted, the linker rarely needs to make more =
+than=20
+one pass over the symbol directory.=20
+<P>
+<P>Library searches can still be slow if a library has a lot of tiny =
+members. A=20
+typical Unix system library has over 600 members. Particularly in the =
+now-common=20
+case that all of the library members are combined at runtime into a =
+single=20
+shared library anyway, it'd probably be faster to create a single object =
+file=20
+that defines all of the symbols in the library and link using that =
+rather than=20
+searching a library. We examine this in more detail in Chapter 9.=20
+<P>
+<H2>Weak external symbols</H2>The simple definition-reference model used =
+for=20
+symbol resolution and library member selection turns out to be =
+insufficiently=20
+flexible for many applications. For example, most C programs call =
+routines in=20
+the <TT>printf</TT> family to format data for output. Printf can format =
+all=20
+sorts of data, including floating point, which means that any program =
+that uses=20
+printf will get the floating point libraries linked in even if the =
+program=20
+doesn't actually use floating point.=20
+<P>
+<P>For many years, PDP-11 Unix programs had to trick the linker to avoid =
+linking=20
+the floating libraries in integer-only programs. The C compiler emitted =
+a=20
+reference to the special symbol <TT>fltused</TT> in any routine that =
+used=20
+floating point code. The C library was arranged as in Figure 6, taking =
+advantage=20
+of the fact that the linker searched the library sequentially. If the =
+program=20
+used floating point, the reference to fltused would cause the real =
+floating=20
+point routines to be linked, including the real version of fcvt, the =
+floating=20
+output routine. Then when the I/O module was linked to define printf, =
+there was=20
+already a version of fcvt that satisfyed the reference in the I/O =
+module. In=20
+programs that didn't use floating point, the real floating point =
+routines=20
+wouldn't be loaded, since there wouldn't be any undefined symbols they =
+resolved,=20
+and the reference to fcvt in the I/O module would be resolved by the =
+stub=20
+floating routines that follow the I/O routines in the library.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 6 --></TD>
+    <TD><I>Figure 6:</I> Unix classic C library <BR>... <BR>Real =
+floating=20
+      point module, define fltused and fcvt <BR>I/O module, defines =
+printf,=20
+      refers to fcvt <BR>Stub floating routines, define stub fcvt =
+<BR>...=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>While this trick works, using it for more than one or two symbols =
+would=20
+rapidly become unwieldy, and its correct operation critically depends on =
+the=20
+order of the modules in the library, something that's easy to get wrong =
+when the=20
+library's rebuilt.=20
+<P>
+<P>The solution to this dilemma is weak external symbols, external =
+symbols that=20
+do not cause library members to be loaded. If a definition for the =
+symbol is=20
+available, either in an explicitly linked file or due to a normal =
+external=20
+causing a library member to be linked, a weak external is resolved like =
+a normal=20
+external reference. But if no definition is available, the weak external =
+is left=20
+undefined and in effect resolved to zero, which is not considered to be =
+an=20
+error. In the case above, the I/O module would make a weak reference to =
+fcvt,=20
+the real floating point module would follow the I/O module in the =
+library, and=20
+no stub routines would be necessary. Now if there's a reference to =
+fltused, the=20
+floating point routines are linked and define fcvt. If not, the =
+reference to=20
+fcvt remains unresolved. This no longer is dependent on library order, =
+and will=20
+work even if the library makes multiple resolution passes over the =
+library.=20
+<P>
+<P>ELF adds yet another kind of weak symbol, a weak definition as well =
+as a weak=20
+reference. A weak definition defines a global symbol if no normal =
+definition is=20
+available. If a normal definition is available, the weak definition is =
+ignored.=20
+Weak definitions are infrequently used but can be useful to define error =
+stubs=20
+without putting the stubs in separate modules.=20
+<P>
+<H2>Exercises</H2>What should a linker do if two modules in different =
+libraries=20
+define the same symbol? Is it an error?=20
+<P>
+<P>Library symbol directories generally include only defined global =
+symbols.=20
+Would it be useful to include undefined global symbols as well?=20
+<P>
+<P>When sorting object files using lorder and tsort, it's possible that =
+tsort=20
+won't be able to come up with a total order for the files. When will =
+this=20
+happen, and is it a problem?=20
+<P>
+<P>Some library formats put the directory at the front of the library =
+while=20
+others put it at the end. What practical difference does it make?=20
+<P>
+<P>Describe some other situations where weak externals and weak =
+definitions are=20
+useful.=20
+<P>
+<H2>Project</H2>
+<P>
+<P>This part of the project adds library searching to the linker. We'll=20
+experiment with two different library formats. The first is the IBM-like =
+
+directory format suggested early in the chapter. A library is a =
+directory, each=20
+member is a file in the directory, each file having names for each of =
+the=20
+exported files in the directory. If you're using a system that doesn't =
+support=20
+Unix-style multiple names, fake it. Give each file a single name (choose =
+one of=20
+the exported symbols). Then make a file named MAP that contains lines of =
+the=20
+form:=20
+<P><TT><BR>name sym sym sym ...=20
+<P></TT>
+<P>where name is the file's name and sym are the rest of the exported =
+symbols.=20
+<P>
+<P>The second library format is a single file. The library starts with a =
+single=20
+line:=20
+<P><TT><BR>LIBRARY nnnn pppppp=20
+<P></TT>
+<P>where nnnn is the number of modules in the library and pppppp is the =
+offset=20
+in the file where the library directory starts. Following that line are =
+the=20
+library members, one after another. At the end of the file, starting at =
+offset=20
+pppppp is the library directory, which consists of lines, one per =
+module, in the=20
+format:=20
+<P><TT><BR>pppppp llllll sym1 sym2 sym3 ...=20
+<P></TT>
+<P>where pppppp is the position in the file where the module starts, =
+llllll is=20
+the length of the module, and the symi are the symbols defined in this =
+module.=20
+<P>
+<P><I>Project 6-1:</I> Write a librarian that creates a directory-format =
+library=20
+from a set of object files. Be sure to do something reasonable with =
+duplicate=20
+symbols. Optionally, extend the librarian so it can take an existing =
+library and=20
+add, replace, or delete modules in place.=20
+<P>
+<P><I>Project 6-2:</I> Extend the linker to handle directory-format =
+libraries.=20
+When the linker encounters a library in its list of input files, search =
+the=20
+library and include each module in the library that defines an undefined =
+symbol.=20
+Be sure you correctly handle library modules that depend on symbols =
+defined in=20
+other library members.=20
+<P>
+<P><I>Project 6-3:</I> Write a librarian that creates a directory-format =
+library=20
+from a set of object files. Note that you can't correctly write the =
+LIBRARY line=20
+at the front of the file until you know the sizes of all of the modules. =
+
+Reasonable approaches include writing a dummy library line, then seeking =
+back=20
+and rewriting line in place with the correct values, collecting the =
+sizes of the=20
+input files and computing the sizes, or buffering the entire file in =
+main=20
+memory. Optionally, extend the librarian to update an existing library, =
+and note=20
+that it's a lot harder than updating a directory format library.=20
+<P>
+<P><I>Project 6-4:</I> Extend the linker to handle file-format =
+libraries. When=20
+the linker encounters a library in its list of input files, search the =
+library=20
+and include each module in the library that defines an undefined symbol. =
+You'll=20
+have to modify your routines that read object files so that they can =
+read an=20
+object modules from the middle of a library. </P></BODY></HTML>
+
+------=_NextPart_000_005D_01C557A2.41E67D30
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker06-05.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADMAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2lg2z
+Jb9Kbhn25OBn0qSSNSACzdR3phCjaMt19alEi4IIBbse1IqsZW+f9KcI8uCWYcHvUZkjW5ERdtxG
+QM0ASEMd3zcZ9KRVKxk5HftSjOWOT19fahBlDktjnvQIawbaPm4OO1LLGwK4bv6Usg2xj7xA96G5
+ZMlhz60AJ8wcDOTj0pNjGQnP6fWnGMCQEluAec/SnHiQ8tyB3oGQiMqW+Y4z6UsakrkNjk9PrTxE
+H3fM3Xrmo40wpUFjye/vTEAB2j94Bx6UU5EAQcnp60UhjpPJVf8AlnkkelRMIS68p1/pUrbcZwc5
+HY0p2Da3zdf7p9KaEV7l4YwG+TgcDjk8YFMgSNWYv5ZcgFiMdf8ACpZMG6g67QGbGD14H9abaEZm
+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
+
+------=_NextPart_000_005D_01C557A2.41E67D30--

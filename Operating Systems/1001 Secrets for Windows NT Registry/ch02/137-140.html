@@ -1,0 +1,279 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:Hardware</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=2//-->
+<!--PAGES=137-140//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="135-137.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch03/141-144.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>You&#146;ll need the value from the new SCSI controller and from the original controller. If you swap these values, your system should boot from the original controller.
+</P>
+<p><b>II-41</B> <big>I</BIG>f you use the Sparrow.sys driver for your SCSI adapter, you may have noticed that by default it is assigned IRQ 11 and this assignment seems to be hardcoded. Do not despair. This registry entry lets you override the hardcoded IRQ 11 and change it to anything you want.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Sparrow
+</TABLE>
+<p>Add the following key under the Sparrow key.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Key:</B>
+<td width="70%" align="LEFT">Parameters
+</TABLE>
+<p>Now that you have the Parameters key, you need to add another subkey: Device(n). The n is the device number you are changing the IRQ for. If you only have one adapter, it is Device0.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Key:</B>
+<td width="70%" align="LEFT">Device0
+</TABLE>
+<p>Next, you need to add the actual value that lets you change the IRQ settings:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT" valign="TOP"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Sparrow\Parameters\ Device0
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>DriverParameter
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>IRQ=12 (or any other valid IRQ setting)
+</TABLE>
+<p>You must reboot the machine for this change to take effect.
+</P>
+<p><b>II-42</B> <big>T</BIG>o increase the throughput of your SCSI adapter, try changing this registry entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>CurrentControlSet\Services\aic78xx
+</TABLE>
+<p>Add the following key under the aic78xx key:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Key:</B>
+<td width="70%" align="LEFT">Parameters
+</TABLE>
+<p>Now add an additional subkey:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Key:</B>
+<td width="70%" align="LEFT">Device
+</TABLE>
+<p>Now we are ready to change the value that improves throughput.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>CurrentControlSet\Services\aic78xx\Parameters\Device
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>MaximumSGList
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0xFF
+</TABLE>
+<p>This change works with Adaptec cards and may work with other SCSI adapters, too. As always, make sure you&#146;ve backed up your registry before proceeding.
+</P>
+<h3><a name="Heading17"></A><font color="#000077">Sound</FONT></H3>
+<p><b>II-43</B> <big>Y</BIG>ou just applied the Windows NT 4.0 upgrade and now your audio doesn&#146;t work. Try this registry modification to fix it.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_CURRENT_USER
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>Control Panel\Sound
+</TABLE>
+<p>Make sure the following value exists.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%" align="LEFT">Beep
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>yes
+</TABLE>
+<p>Reboot the system for these changes to take effect
+</P>
+<p><b>II-44</B> <big>Y</BIG>our sound card locks up any time you play a .wav file. The only solution is to restart the computer. Try this registry parameter to help solve the problem.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\GraphicsDrivers
+</TABLE>
+<p>Add the following key under the GraphicsDrivers Key:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Key:</B>
+<td width="70%" align="LEFT">DisableUSWC
+</TABLE>
+<p>You don&#146;t need to specify anything else. By adding this key, you tell Windows NT not to use Uncache Speculative Write Combining on the video cards. Reboot the machine for this change to take effect.
+</P>
+<h3><a name="Heading18"></A><font color="#000077">HP DeskScan II 2.3</FONT></H3>
+<p><b>II-45</B> <big>Y</BIG>ou upgraded to HP DeskScan II 2.3 from version 2.1 or older, and the program doesn&#146;t run. Changing the following registry entries should solve your problem.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services
+</TABLE>
+<p>Add the following Key and the next two values:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Key:</B>
+<td width="70%" align="LEFT">Aspi32
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>ErrorControl
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+<tr>
+</TABLE>
+<p>
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%" align="LEFT">Start
+<tr>
+<td align="RIGHT"><b>Data Type</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>2
+<tr>
+</TABLE>
+<p>
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%" align="LEFT">Type
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p><b>II-46</B> <big>T</BIG>his entry is the second part of installing the new DeskScan II 2.3 software.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%" align="LEFT">HKEY_CURRENT_USER
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>Control Panel\Mmcpl
+</TABLE>
+<p>Add the following value under the Mmcpl key:
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%" align="LEFT">HP_Scanjet
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>%systemroot%\system\hpscnmgr.dll
+</TABLE>
+<p>Reboot your system for these changes to take effect. Windows NT now runs the correct driver.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="135-137.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch03/141-144.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

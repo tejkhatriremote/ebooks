@@ -1,0 +1,978 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Relocation
+Date: Fri, 13 May 2005 09:58:38 +0530
+MIME-Version: 1.0
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker07.html
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Relocation</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Relocation</H1><I>$Revision: 2.2 $</I> <BR><I>$Date: 1999/06/30 =
+01:02:35=20
+$</I>=20
+<P>
+<P>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Once a linker has scanned all of the input files to determine =
+segment=20
+      sizes, symbol definitions and symbol references, figured out which =
+library=20
+      modules to include, and decided where in the output address space =
+all of=20
+      the segments will go, the next stage is the heart of the linking =
+process,=20
+      relocation. We use relocation to refer both to the process of =
+adjusting=20
+      program addresses to account for non-zero segment origins, and the =
+process=20
+      of resolving references to external symbols, since the two are =
+frequently=20
+      handled together.=20
+      <P>
+      <P>The linker's first pass lays out the positions of the various =
+segments=20
+      and collects the segment-relative values of all global symbols in =
+the=20
+      program. Once the linker determines the position of each segment, =
+it=20
+      potentially needs to fix up all storage addresses to reflect the =
+new=20
+      locations of the segments. On most architectures, addresses in =
+data are=20
+      absolute, while those embedded in instructions may be absolute or=20
+      relative. The linker needs to fixup accordingly, as we'll discuss =
+later.=20
+      <P>
+      <P>The first pass also creates the global symbol table as =
+described in=20
+      Chapter 5. The linker also resolves stored references to global =
+symbols to=20
+      the symbols' addresses. </P></TD></TR></TBODY></TABLE>
+<P>
+<H2>Hardware and software relocation</H2>Since nearly all modern =
+computers have=20
+hardware relocation, one might wonder why a linker or loader still does =
+software=20
+relocation. (This question confused me when programming a PDP-6 in the =
+late=20
+1960s, and the situation has only gotten more complicated since then.) =
+The=20
+answer has partly to do with performance, and partly with binding time.=20
+<P>
+<P>Hardware relocation allows an operating system to give each process a =
+
+separate address space that starts at a fixed known address, which makes =
+program=20
+loading easier and prevents buggy programs in one address space from =
+damaging=20
+programs in other address spaces. Software linker or loader relocation =
+combines=20
+input files into one large file that's ready to be loaded into the =
+address space=20
+provided by hardware relocation, frequently with no load-time fixing up =
+at all.=20
+<P>
+<P>On a machine like a 286 or 286 with several thousand segments, it =
+would=20
+indeed be possible to load one routine or global datum per segment, =
+completely=20
+doing away with software relocation. Each routine or datum would start =
+at=20
+location zero in its segment, and all global references would be handled =
+as=20
+inter-segment references looked up in the system's segment tables and =
+bound at=20
+runtime. Unfortunately, x86 segment lookups are very slow, and a program =
+that=20
+did a segment lookup for every inter-module call or global data refrence =
+would=20
+be far slower than one linked conventionally.=20
+<P>
+<P>Equally importantly, although runtime binding can be useful (a topic =
+we cover=20
+in Chapter 10), most programs are better off avoiding it. For =
+reliability=20
+reasons, program files are best bound together and addresses fixed at =
+link time,=20
+so they hold still during debugging and remain consistent after =
+shipping.=20
+Library "bit creep" is a chronic and very hard to debug source of =
+program errors=20
+when a program runs using different versions of libraries than its =
+authors=20
+anticipated. (MS Windows applications are prone to this problem due to =
+the large=20
+number of shared libraries they use, with different versions of =
+libraries often=20
+shipped with various applications all loaded on the same computer.) Even =
+without=20
+the overhead of 286 style segments, dynamic linking tends to be far =
+slower than=20
+static linking, and there's no point in paying for it where it's not =
+needed.=20
+<P>
+<H2>Link time and load time relocation</H2>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Many systems perform both link time and load time relocation. A =
+linker=20
+      combines a set of input file into a single output file ready to be =
+loaded=20
+      at specific address. If when the program is loaded, storage at =
+that=20
+      address isn't available, the loader has to relocate the loaded =
+program to=20
+      reflect the actual load address. On some systems including MS-DOS =
+and MVS,=20
+      every program is linked as though it will be loaded at location =
+zero. The=20
+      actual address is chosen from available storage and the program is =
+always=20
+      relocated as it's loaded. On others, notably MS Windows, programs =
+are=20
+      linked to be loaded at a fixed address which is generally =
+available, and=20
+      no load-time relocation is needed except in the unusual case that =
+the=20
+      standard address is already in use by something else. (Current =
+versions of=20
+      Windows in practice never do load-time relocation of executable =
+programs,=20
+      although they do relocate DLL shared libraries. Similarly, Unix =
+systems=20
+      never relocate ELF programs although they do relocate ELF shared=20
+      libraries.)=20
+      <P>
+      <P>Load-time relocation is quite simple compared to link-time =
+relocation.=20
+      At link time, different addresses need to be relocated different =
+amounts=20
+      depending on the size and locations of the segments. At load time, =
+on the=20
+      other hand, the entire program is invariably treated as a single =
+big=20
+      segment for relocation purposes, and the loader needs only to =
+adjust=20
+      program addresses by the difference between the nominal and actual =
+load=20
+      addresses. </P></TD></TR></TBODY></TABLE>
+<P>
+<H2>Symbol and segment relocation</H2>The linker's first pass lays out =
+the=20
+positions of the various segments and collects the segment-relative =
+values of=20
+all global symbols in the program. Once the linker determines the =
+position of=20
+each segment, it needs to adjust the stored addresses.=20
+<UL>
+  <LI>Data addresses and absolute program address references within a =
+segment=20
+  need to be adjusted. For example, if a pointer refers to location 100, =
+but the=20
+  segment base is relocated to 1000, the pointer needs to be adjusted to =
+
+  location 1100.=20
+  <LI>Inter-segment program references need to be adjusted as well. =
+Absolute=20
+  address references need to be adjusted to reflect the new position of =
+the=20
+  target address' segment, while relative addresses need to reflect the=20
+  positions of both the target segment and the segment in which the =
+reference=20
+  lies.=20
+  <LI>References to global symbols have to be resolved. If an =
+instruction calls=20
+  a routine <TT>detonate</TT>, and <TT>detonate</TT> is at offset 500 in =
+a=20
+  segment that starts at 1000, the address in that instruction has to be =
+
+  adjusted to refer to location 1500. </LI></UL>The requirements of =
+relocation and=20
+symbol resolution are slightly different. For relocation, the number of =
+base=20
+values is fairly small, the number of segments in an input file, but the =
+object=20
+format has to permit relocation of references to any address in any =
+segment. For=20
+symbol resolution, the number of symbols is far greater, but in most =
+cases the=20
+only action the linker needs to take with the symbol is to plug the =
+symbol's=20
+value into a word in the program.=20
+<P>
+<P>Many linkers unify segment and symbol relocation by treating each =
+segment as=20
+a pseudo-symbol whose value is the base of the segment. This makes=20
+segment-relative relocations a special case of symbol-relative ones.=20
+<P>
+<P>Even in linkers that unify the two kinds of relocation, there is =
+still one=20
+important difference between the two kinds: a symbol reference involves =
+two=20
+addends, the base address of the segment in which the symbol resides and =
+the=20
+offset of the symbol within that segment. Some linkers precompute all =
+the symbol=20
+addresses before starting the relocation phase, adding the segment base =
+to the=20
+symbol value in the symbol table. Others look up the segment base do the =
+
+addition as each item is relocated. In most cases, there's no compelling =
+reason=20
+to do it one way or the other. In a few linkers, notably those for =
+real-mode x86=20
+code, a single location can be addressed relative to several different =
+segments,=20
+so the linker can only determine the address to use for a symbol in the =
+context=20
+of an individual reference using a specified segment.=20
+<P>
+<H3>Symbol lookups</H3>Object formats invariably treat each file's set =
+of=20
+symbols as an array, and internally refer to the symbols using a small =
+integer,=20
+the index in that array. This causes minor complications for the linker, =
+as=20
+mentioned in Chapter 5, since each input file will have different =
+indexes, as=20
+will the output if the output is relinkable. The most straightforward =
+way to=20
+handle this is to keep an array of pointers for each input file, =
+pointing to=20
+entries in the global symbol table.=20
+<P>
+<H2>Basic relocation techniques</H2>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Each relocatable object file contains a relocation table, a list =
+of=20
+      places in each segment in the file that need to be relocated. The =
+linker=20
+      reads in the contents of the segment, applies the relocation =
+items, then=20
+      disposes of the segment, usually by writing it to the output file. =
+Usually=20
+      but not always, relocation is a one-time operation and the =
+resulting file=20
+      can't be relocated again. Some object formats, notably the IBM =
+360, are=20
+      relinkable and keep all the relocation data in the output file. =
+(In the=20
+      case of the 360, the output file needs to be relocated when =
+loaded, so it=20
+      has to keep all the relocation information anyway.) With Unix =
+linkers, a=20
+      linker option makes the output relinkable, and in some cases, =
+notably=20
+      shared libraries, the output always has relocation information =
+since=20
+      libraries need to be relocated when loaded as well. =
+</TD></TR></TBODY></TABLE>
+<P>
+<P>In the simplest case, Figure 1, the relocation information for a =
+segment is=20
+just a list of places in the segment that need to be relocated. As the =
+linker=20
+processes the segment, it adds the base position of the segment to the =
+value at=20
+each location identified by a relocation entry. This handles direct =
+addressing=20
+and pointer values in memory for a single segment.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 1 --></TD>
+    <TD><I>Figure 1:</I> Simple relocation entry <BR>address | address | =
+
+      address | ... </TD></TR></TBODY></TABLE></CENTER>
+<P>Real programs on modern computers are somewhat more complicated, due =
+to=20
+multiple segments and addressing modes. The classic Unix a.out format, =
+Figure 2,=20
+is about the simplest that handles these issues.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 2 --></TD>
+    <TD><I>Figure 2:</I> a.out relocation entry <BR>
+      <P><TT><BR>int address /* offset in text or data segment */ =
+<BR>unsigned=20
+      int r_symbolnum : 24, /* ordinal number of add symbol */ =
+<BR>r_pcrel : 1,=20
+      /* 1 if value should be pc-relative */ <BR>r_length : 2, /* log =
+base 2 of=20
+      value's width */ <BR>r_extern : 1, /* 1 if need to add symbol to =
+value */=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>Each object file has two sets of relocation entries, one for the text =
+segment=20
+and one for the data segment. (The bss segment is defined to be all =
+zero, so=20
+there's nothing to relocate there.) Each relocation entry contains a bit =
+
+<TT>r_extern</TT> to specify whether this is a segment-relative or=20
+symbol-relative entry. If the bit is clear, it's segment relative and=20
+<TT>r_symbolnum</TT> is actually a code for the segment, <TT>N_TEXT</TT> =
+(4),=20
+<TT>N_DATA</TT> (6), or <TT>N_BSS</TT> (8). The <TT>pc_relative</TT> bit =
+
+specifies whether the reference is absolute or relative to the current =
+location=20
+(``program counter''.)=20
+<P>
+<P>The exact details of each relocation depend on the type and segments=20
+involved. In the discussion below, TR, DR, and BR are the relocated =
+bases of the=20
+text, data, and bss segments, respectively.=20
+<P>
+<P>For a pointer or direct address within the same segment, the linker =
+adds TR=20
+or DR to the stored value already in the segment.=20
+<P>
+<P>For a pointer or direct address from one segment to another, the =
+linker adds=20
+the relocated base of the target segment, TR, DR, or BR to the stored =
+value.=20
+Since a.out input files already have the target addresses in each =
+segment=20
+relocated to the tentative segment positions in the new file, this is =
+all that's=20
+necessary. For example, assume that in the input file, the text starts =
+at 0 and=20
+data at 2000, and a pointer in the text segment points to offset 100 in =
+the data=20
+segment. In the input file, the stored pointer will have the value 2200. =
+If the=20
+final relocated address of the data segment in the output turns out to =
+be 15000,=20
+then DR will be 13000, and the linker will add 13000 to the existing =
+2200=20
+producing a final stored value of 15200.=20
+<P>
+<P>Some architectures have different sizes of addresses. Both the IBM =
+360 and=20
+Intel 386 have both 16 and 32 bit addresses, and the linkers have =
+generally=20
+supported relocation items of both sizes. In both cases, it's up to the=20
+programmer who uses 16 bit addresses to make sure that the addresses =
+will fit in=20
+the 16 bit fields; the linker doesn't do any more than verify that the =
+address=20
+fits.=20
+<P>
+<H3>Instruction relocation</H3>Relocating addresses in instructions is =
+somewhat=20
+trickier that relocating pointers in data due to the profusion of often =
+quirky=20
+instruction formats. The a.out format described above has only two =
+relocation=20
+formats, absolute and pc-relative, but most computer architectures =
+require a=20
+longer list of relocation formats to handle all the instruction formats. =
+
+<P>
+<H4>X86 instruction relocation</H4>Despite the complex instruction =
+encodings on=20
+the x86, from the linker's point of view the architecture is easy to =
+handle=20
+because there are only two kinds of addresses the linker has to handle, =
+direct=20
+and pc-relative. (We ignore segmentation here, as do most 32 bit =
+linkers.) Data=20
+reference instructions can contain the 32 bit address of the target, =
+which the=20
+linker can relocate the same as any other 32 bit data address, adding =
+the=20
+relocated base of the segment in which the target resides.=20
+<P>
+<P>Call and jump instructions use relative addressing, so the value in =
+the=20
+instruction is the difference between the target address and the address =
+of the=20
+instruction itself. For calls and jumps within the same segment, no =
+relocation=20
+is required since the relative positions of addreses within a single =
+segment=20
+never changes. For intersegment jumps the linker needs to add the =
+relocation for=20
+the target segment and subtract that of the instruction's segment. For a =
+jump=20
+from the text to the data segment, for example, the relocation value to =
+apply=20
+would be DR-TR.=20
+<P>
+<H4>SPARC instruction relocation</H4>Few architectures have instruction=20
+encodings as linker-friendly as the x86. The SPARC, for example, has no =
+direct=20
+addressing, four different branch formats, and some specialized =
+instructions=20
+used to synthesize a 32 bit address, with individual instructions only=20
+containing part of an address. The linker needs to handle all of this.=20
+<P>
+<P>Unlike the x86, none of the SPARC instruction formats have room for a =
+32 bit=20
+address in the instruction itself. This means that in the input files, =
+the=20
+target address of an instruction with a relocatable memory reference =
+can't be=20
+stored in the instruction itself. Instead, SPARC relocation entries, =
+Figure 3,=20
+have an extra field <TT>r_addend</TT> which contains the 32 bit value to =
+which=20
+the reference is made. Since SPARC relocation can't be described as =
+simply as=20
+x86, the various type bits are replaced by a <TT>r_type</TT> field that =
+contains=20
+a code that describes the format of the relocation. Also, rather than =
+dedicate a=20
+bit to distinguish between segment and symbol relocations, each input =
+file=20
+defines symbols <TT>.text</TT>, <TT>.data</TT>, and <TT>.bss</TT>, that =
+are=20
+defined as the beginnings of their respective segments, and segment =
+relocations=20
+refer to those symbols.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 3 --></TD>
+    <TD><I>Figure 3:</I> SPARC relocation entry <BR>
+      <P><TT><BR>int r_address; /* offset of of data to relocate */ =
+<BR>int=20
+      r_index:24, /* symbol table index of symbol */ <BR>r_type:8; /* =
+relocation=20
+      type */ <BR>int r_addend; /* datum addend */=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>The SPARC relocations fall into three categories: absolute addresses =
+for=20
+pointers in data, relative addresses of various sizes for branches and =
+calls,=20
+and the special SETHI absolute address hack. Absolute addresses are =
+relocated=20
+almost the same as on the x86, the linker adds TR, DR, or BR to the =
+stored=20
+value. In this case the addend in the relocation entry isn't really =
+needed,=20
+since there's room for a full address in the stored value, but the =
+linker adds=20
+the addend to the stored value anyway for consistency.=20
+<P>
+<P>For branches, the stored offset value is generally zero, with the =
+addend=20
+being the offset to the target, the difference between the target =
+address and=20
+the address of the stored value. The linker adds the appropriate =
+relocation=20
+value to the addend to get the relocated relative address. Then it =
+shifts the=20
+relative address right two bits, since SPARC relative addresses are =
+stored=20
+without the low bits, checks to make sure that the shifted value will =
+fit in the=20
+number of bits available (16, 19, 22, or 30 depending on format), masks =
+the=20
+shifted address to that number of bits and adds it into the instruction. =
+The 16=20
+bit format stores 14 low bits in the low bits of the word, but the 15th =
+and 16th=20
+bits are in bit positions 20 and 21. The linker does the appropriate =
+shifting=20
+and masking to store those bits without modifying the intervening bits.=20
+<P>
+<P>The special SETHI hack synthesizes a 32 bit address with a SETHI =
+instruction,=20
+which takes a 22 bit value from the instruction and places it in the 22 =
+high=20
+bits of a register, followed by an OR immediate to the same register =
+which=20
+provides the low 10 bits of the address. The linker handles this with =
+two=20
+specialized relocation modes, one of which puts the 22 high bits of the=20
+relocated address (the addend plus the appropriate relocated segment =
+base) in=20
+the low 22 bits of the stored value, and a second mode which puts the =
+low 10=20
+bits of the relocated address in the low 10 bits of the stored value. =
+Unlike the=20
+branch modes above, these relocation modes do <I>not</I> check that each =
+value=20
+fits in the stored bits, since in both cases the stored bits don't =
+represent the=20
+entire value.=20
+<P>
+<P>Relocation on other architectures uses variations on the SPARC =
+techniques,=20
+with a different relocation type for each instruction format that can =
+address=20
+memory.=20
+<P>
+<H3>ECOFF segment relocation</H3>Microsoft's COFF object format is an =
+extended=20
+version of COFF which is descended from a.out, so it's not surprising =
+that Win32=20
+relocation bears a lot of similarities to a.out relocation. Each section =
+in a=20
+COFF object file can have a list of relocation entries similar to a.out =
+entries,=20
+Figure 4. A peculiarity of COFF relocation entries is that even on 32 =
+bit=20
+machines, they're 10 bytes long, which means that on machines that =
+require=20
+aligned data, the linker can't just load the entire relocation table =
+into a=20
+memory array with a single read, but rather has to read and unpack =
+entries one=20
+at a time. (COFF is old enough that saving two bytes per entry probably =
+appeared=20
+worthwhile.) In each entry, the address is the RVA (relative virtual =
+address) of=20
+the stored data, the index is the segment or symbol index, and the type =
+is a=20
+machine specific relocation type. For each section of the input file, =
+the symbol=20
+table contains an entry with a name like <TT>.text</TT>, so segment =
+relocations=20
+use the index of the symbol corresponding to the target section.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 4 --></TD>
+    <TD><I>Figure 4:</I> MS COFF relocation entry <BR>
+      <P><TT><BR>int address; /* offset of of data to relocate */ =
+<BR>int index;=20
+      /* symbol index */ <BR>short type; /* relocation type */=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>On the x86, ECOFF relocations work much like they do in a.out. An=20
+IMAGE_REL_I386_DIR32 is a 32 bit direct address or stored pointer, an=20
+IMAGE_REL_I386_DIR32NB is 32 bit direct address or stored pointer =
+relative to=20
+the base of the progam, and an IMAGE_REL_I386_REL32 is a pc-relative 32 =
+bit=20
+address. A few other relocation types support special Windows features,=20
+mentioned later.=20
+<P>
+<P>ECOFF supports several RISC processors including the MIPS, Alpha, and =
+Power=20
+PC. These processors all present the same relocation issues the SPARC =
+does,=20
+branches with limited addressing and multi-instruction sequences to =
+synthesize a=20
+direct address. ECOFF has relocation types to handle each of those =
+situations,=20
+along with the conventional full-word relocations.=20
+<P>
+<P>MIPS, for example, has a jump instruction that contains a 26 bit =
+address=20
+which is shifted two bits to the left and placed in the 28 low bits of =
+the=20
+program counter, leaving the high four bits unchanged. The relocation =
+type=20
+IMAGE_REL_MIPS_JMPADDR relocates a branch target address. Since there's =
+no place=20
+in the relocation item for the target address, the stored instruction =
+already=20
+contains the unrelocated target address. To do the relocation, the =
+linker has to=20
+reconstruct the unrelocated target address by extracting the low 26 bits =
+of the=20
+stored instruction, shifting and masking, then add the relocated segment =
+base=20
+for the target segment, then undo the shifting and masking to =
+reconstruct the=20
+instruction. In the process, the linker also has to check that the =
+target=20
+address is reachable from the instruction.=20
+<P>
+<P>MIPS also has an equivalent of the SETHI trick. MIPS instructions can =
+contain=20
+16 bit literal values. To load an arbitrary 32 bit value one uses a LUI =
+(load=20
+upper immediate) instruction to place the high half of an immediate =
+value in the=20
+high 16 bits of a register, followed by an ORI (OR immediate) to place =
+the low=20
+16 bits in the register. The relocation types IMAGE_REL_MIPS_REFHI and=20
+IMAGE_REL_MIPS_REFLO support this trick, telling the linker to relocate =
+the high=20
+or low half, respectively, of the target value in the relocated =
+instruction.=20
+REFHI presents a problem though. Imagine that the target address before=20
+relocation is hex 00123456, so the stored instruction would contain =
+0012, the=20
+high half of the unrelocated value. Now imagine that the relocation =
+value is=20
+1E000. The final value will be 123456 plus 1E000 which is 141456, so the =
+stored=20
+value will be 0014. But wait -- to do this calculation, the linker needs =
+the=20
+full value 00123456, but only the 0012 is stored in the instruction. =
+Where does=20
+it find the low half with 3456? ECOFF's answer is that the next =
+relocation item=20
+after the REFHI is IMAGE_REL_MIPS_PAIR, in which the index contains the =
+low half=20
+of the target for a preceding REFHI. This is arguably a better approach =
+than=20
+using an extra addend field in each relocation item, since the PAIR item =
+only=20
+occurs after REFHI, rather than wasting space in every item. The =
+disadvantage is=20
+that the order of relocation items now becomes important, while it =
+wasn't=20
+before.=20
+<P>
+<H3>ELF relocation</H3>ELF relocation is similar to a.out and COFF =
+relocation.=20
+ELF does rationalize the issue of relocation items with addends and =
+those=20
+without, having two kinds of relocation sections, SHT_REL without and =
+SHT_RELA=20
+with. In practice, all of the relocation sections in a single file are =
+of the=20
+same type, depending on the target architecture. If the architecture has =
+room=20
+for all the addends in the object code like the x86 does, it uses REL, =
+if not it=20
+uses RELA. But in principle a compiler could save some space on =
+architectures=20
+that need addends by putting all the relocations with zero addends, =
+e.g.,=20
+procedure references, in a SHT_REL section and the rest in a SHT_RELA.=20
+<P>
+<P>ELF also adds some extra relocation types to handle dynamic linking =
+and=20
+position independent code, that we discuss in Chapter 8.=20
+<P>
+<H3>OMF relocation</H3>OMF relocation is conceptually the same as the =
+schemes=20
+we've already looked at, although the details are quite complex. Since =
+OMF was=20
+originally designed for use on microcomputers with limited memory and =
+storage,=20
+the format permits relocation to take place without having to load an =
+entire=20
+segment into memory. OMF intermixes LIDATA or LEDATA data records with =
+FIXUPP=20
+relocation records, with each FIXUPP referring to the preceding data. =
+Hence, the=20
+linker can read and buffer a data record, then read a following FIXUPP, =
+apply=20
+the relocations, and write out the relocated data. FIXUPPs refer to =
+relocation=20
+``threads'', two-bit codes that indirectly refer to a frame, an OMF =
+reloctation=20
+base. The linker has to track the four active frames, updating them as =
+FIXUPP=20
+records redefine them, and using them as FIXUPP records refer to them.=20
+<P>
+<H2>Relinkable and relocatable output formats</H2>A few formats are =
+relinkable,=20
+which means that the output file has a symbol table and relocation =
+information=20
+so it can be used as an input file in a subsequent link. Many formats =
+are=20
+relocatable, which means that the output file has relocation information =
+for=20
+load-time relocation.=20
+<P>
+<P>For relinkable files, the linker needs to create a table of output =
+relocation=20
+entries from the input relocation entries. Some entries can be passed =
+through=20
+verbatim, some modified, and some discarded. Entries for =
+segment-relative fixups=20
+in formats that don't combine segments can generally be passed through=20
+unmodified other than adjusting the segment index, since the final link =
+will=20
+handle the relocation. In formats that do combine segments, the item's =
+offset=20
+needs to be adjusted. For example, in a linked a.out file, an incoming =
+text=20
+segment has a segment-relative relocation at offset 400, but that =
+segment is=20
+combined with other text segments so the code from that segment is at =
+location=20
+3500. Then the relocation item is modified to refer to location 3900 =
+rather than=20
+400.=20
+<P>
+<P>Entries for symbol resolution can be passed through unmodified, =
+changed to=20
+segment relocations, or discarded. If an external symbol remains =
+undefined, the=20
+linker passes through the relocation item, possibly adjusting the offset =
+and=20
+symbol index to reflect combined segments and the order of symbols in =
+the output=20
+file's symbol table. If the symbol is resolved, what the linker does =
+depends on=20
+the details of the symbol reference. If the reference is a pc-relative =
+one=20
+within the same segment, the linker can discard the relocation entry, =
+since the=20
+relative positions of the reference and the target won't move. If the =
+reference=20
+is absolute or inter-segment, the relocation item turns into a =
+segment-relative=20
+one.=20
+<P>
+<P>For output formats that are relocatable but not relinkable, the =
+linker=20
+discards all relocation items other than segment-relative fixups.=20
+<P>
+<H2>Other relocation formats</H2>Although the most common format for =
+relocation=20
+items is an array of fixups, there are a few other possibilities, =
+including=20
+chained references and bitmaps. Most formats also have segments that =
+need to be=20
+treated specially by the linker.=20
+<P>
+<H3>Chained references</H3>For external symbol references, one =
+surprisingly=20
+effective format is a linked list of references, with the links in the =
+object=20
+code itself. The symbol table entry points to one reference, the word at =
+that=20
+location points to a subsequent reference, and so forth to the final =
+reference=20
+which has a stop value such as zero or -1. This works on architectures =
+where=20
+address references are a full word, or at least enough bits to cover the =
+maximum=20
+size of an object file segment. (SPARC branches, for example, have a 22 =
+bit=20
+offset which, since instructions are aligned on four-byte boundaries, is =
+enough=20
+to cover a 2<SUP>24</SUP> byte section, which is a reasonable limit on a =
+single=20
+file segment.)=20
+<P>
+<P>This trick does not handle symbol references with offsets, which is =
+usually=20
+an acceptable limitation for code references but a problem for data. In =
+C, for=20
+example, one can write static initializers which point into the middle =
+of=20
+arrays:=20
+<P><TT><BR>extern int a[]; <BR>static int *ap =3D &amp;a[3];=20
+<P></TT>
+<P>
+<P>On a 32 bit machine, the contents of <TT>ap</TT> are <TT>a</TT> plus =
+12. A=20
+way around this problem is either to use this technique just for code =
+pointers,=20
+or else to use the link list for the common case of references with no =
+offset,=20
+and something else for references with offsets.=20
+<P>
+<H3>Bit maps</H3>On architectures like the PDP-11, Z8000, and some DSPs =
+that use=20
+absolute addressing, code segments can end up with a lot of segment =
+relocations=20
+since most memory reference instructions contain an address that needs =
+to be=20
+relocated. Rather than making a list of locations to fix up, it can be =
+more=20
+efficient to store fixups as a bit map, with one bit for every word in a =
+
+segment, the bit being set if the location needs to be fixed up. On 16 =
+bit=20
+architectures, a bit map saves space if more than 1/16 of the words in a =
+segment=20
+need relocation; on a 32 bit architecture if more than 1/32 of the words =
+need=20
+relocation.=20
+<P>
+<H3>Special segments</H3>Many object formats define special segment =
+formats that=20
+require special relocation processing.=20
+<UL>
+  <LI>Windows objects have thread local storage (TLS), a special segment =
+
+  containing global variables that is replicated for each thread started =
+within=20
+  a process.=20
+  <LI>IBM 360 objects have "pseudoregisters", similar to thread local =
+storage,=20
+  an area with named subchunks referred to from different input files.=20
+  <LI>Many RISC architectures define "small" segments that are collected =
+
+  together into one area, with a register set at program startup to =
+point to=20
+  that area allowing direct addressing from anywhere in the program. =
+</LI></UL>In=20
+each of these cases, the linker needs a special relocation type or two =
+to handle=20
+special segments.=20
+<P>
+<P>For Windows thread local storage, the details of the relocation =
+type(s) vary=20
+by architecture. For the x86, IMAGE_REL_I386_SECREL fixups store the =
+target=20
+symbol's offset from the beginning of its segment. This fixup is =
+generally an=20
+instruction with an index register that is set at runtime to point to =
+the=20
+current thread's TLS, so the SECREL provides the offset within the TLS. =
+For the=20
+MIPS and other RISC processors, there are both SECREL fixups to store a =
+32 bit=20
+value as well as SECRELLO and SECRELHI (the latter followed by a PAIR, =
+as with=20
+REFHI) to generate section-relative addresses.=20
+<P>
+<P>For IBM pseudoregisters, the object format adds two relocation types. =
+One is=20
+a PR pseudoregister reference, which stores the offset of the =
+pseudoregister,=20
+typically into two bytes in a load or store instruction. The other is =
+CXD, the=20
+total size of the pseudoregisters used in a program. This value is used =
+by=20
+runtime startup code to determine how much storage to allocate for a set =
+of=20
+pseudoregisters.=20
+<P>
+<P>For small data segments, object formats define a relocation type such =
+as=20
+GPREL (global pointer relocation) for MIPS or LITERAL for Alpha which =
+stores the=20
+offset of the target date in the small data area. The linker defines a =
+symbol=20
+like <TT>_GP</TT> as the base of the small data area, so that runtime =
+startup=20
+code can load a pointer to the area into a fixed register.=20
+<P>
+<H2>Relocation special cases</H2>Many object formats have "weak" =
+external=20
+symbols which are treated as normal global symbols if some input file =
+happens to=20
+define them, or zero otherwise. (See Chapter 5 for details.) These =
+usually=20
+require no special effort in the relocation process, since the symbol is =
+either=20
+a normal defined global, or else it's zero. Either way, references are =
+resolved=20
+like any other symbol.=20
+<P>
+<P>Some older object formats permitted much more complex relocation than =
+the=20
+formats we've discussed here. In the IBM 360 format, for example, each=20
+relocation item can either add or subtract the address to which it =
+refers, and=20
+multiple relocation items can modify the same location, permitting =
+references=20
+like <TT>A-B</TT> where either or both of A and B are external symbols.=20
+<P>
+<P>Some older linkers permitted arbitrarily complex relocations, with =
+elaborate=20
+reverse polish strings representing link-time expressions to be resolved =
+and=20
+stored into program memory. Although these schemes had great expressive =
+power,=20
+it turned out to be power that wasn't very useful, and modern linkers =
+have=20
+retreated to references with optional offsets.=20
+<P>
+<H2>Exercises</H2>
+<P>
+<P>Why does a SPARC linker check for address overflow when relocating =
+branch=20
+addresses, but not when doing the high and low parts of the addresses in =
+a SETHI=20
+sequence?=20
+<P>
+<P>In the MIPS example, a REFHI relocation item needs a following PAIR =
+item, but=20
+a REFLO doesn't. Why not?=20
+<P>
+<P>References to symbols that are pseudo-registers and thread local =
+storage are=20
+resolved as offsets from the start of the segment, while normal symbol=20
+references are resolved as absolute addresses. Why?=20
+<P>
+<P>We said that a.out and COFF relocation doesn't handle references like =
+A-B=20
+where A and B are both global symbols. Can you come up with a way to =
+fake it?=20
+<P>
+<H2>Project</H2>Recall that relocations are in this format:=20
+<P><TT><BR>loc seg ref type ...=20
+<P></TT>
+<P>where loc is the location to be relocated, seg is the segment it's =
+in, ref is=20
+the segment or symbol to which the relocation refers, and type is the =
+relocation=20
+type. For concreteness, we define these relocation types:=20
+<UL>
+  <LI><TT>A4</TT> Absolute reference. The four bytes at loc are an =
+absolute=20
+  reference to segment ref.=20
+  <LI><TT>R4</TT> Relative reference. The four bytes at loc are a =
+relative=20
+  reference to segment ref. That is, the bytes at loc contain the =
+difference=20
+  between the address after loc (loc+4) and the target address. (This is =
+the x86=20
+  relative jump instruction format.)=20
+  <LI><TT>AS4</TT> Absolute symbol reference. The four bytes at loc are =
+an=20
+  absolute reference to symbol ref, with the addend being the value =
+already=20
+  stored at loc. (The addend is usually zero.)=20
+  <LI><TT>RS4</TT> Relative symbol reference. The four bytes at loc are =
+a=20
+  relative reference to symbol ref, with the addend being the value =
+already=20
+  stored at loc. (The addend is usually zero.)=20
+  <LI><TT>U2</TT> Upper half reference. The two bytes at loc are the =
+most=20
+  significant two bytes of a reference to symbol ref.=20
+  <LI><TT>L2</TT> Lower half reference. The two bytes at loc are the =
+least=20
+  significant two bytes of a reference to symbol ref. </LI></UL>
+<P>
+<P><I>Project 7-1:</I> Make the linker handle these relocation types. =
+After the=20
+linker has created its symbol table and assigned the addresses of all of =
+the=20
+segments and symbols, process the relocation items in each input file. =
+Keep in=20
+mind that the relocations are defined to affect the actual byte values =
+of the=20
+object data, not the hex representation. If you're writing your linker =
+in perl,=20
+it's probably easiest to convert each segment of object data to a binary =
+string=20
+using the perl pack function, do the relocations then convert back to =
+hex using=20
+unpack.=20
+<P>
+<P><I>Project 7-2:</I> Which endian-ness did you assume when you handled =
+your=20
+relocations in project 7-1? Modify your linker to assume the other =
+enndian-ness=20
+instead. </P></BODY></HTML>

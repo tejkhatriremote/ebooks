@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=671-674//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Disabling Security with CoInitializeSecurity</B></FONT></P>
+<p>Finally, you can use <small>CoInitializeSecurity</SMALL> to completely turn off security for a process. This is useful if you&#146;re debugging a problem and you want to make sure that it isn&#146;t security related, or if you&#146;re working in a controlled environment and you don&#146;t really need security checking.</P>
+<p>To turn off server-side security checking, pass <small>NULL</SMALL> as the security descriptor and <small>RPC_C_AUTHN_LEVEL_NONE</SMALL> as the authentication level, as shown in Listing 20.10.</P>
+<p><b>Listing 20.10</B> Turning Off Security for a Server Process Using <small>CoInitializeSecurity</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+HRESULT hrSec = CoInitializeSecurity(NULL,
+                                     -1,
+                                     0,
+                                     NULL,  // Reserved, must be NULL
+                                     RPC_C_AUTHN_LEVEL_NONE,
+                                     RPC_C_IMP_LEVEL_IDENTIFY,
+                                     NULL,
+                                     0,
+
+                                     0);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Understanding Security Blankets</FONT></H4>
+<p>A <i>security blanket</I> is a collection of security attributes that represents the settings used for interface proxies within a process. Normally, all interface proxies within a client process will use the same security attributes, but COM provides interfaces and functions that enable a client to assign different security settings for each interface. The server security blanket cannot be changed once it has been defined.</P>
+<p>After client and server processes specify their security settings with <small>CoInitializeSecurity</SMALL> (you&#146;ll recall that this function is called by COM automatically for processes that do not call it explicitly), COM negotiates the proper default security blanket for the two processes. Some parameters passed to <small>CoInitializeSecurity</SMALL> are useful only on the server side; the following attributes are copied to the security blanket:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An ACL
+<dd><b>&#149;</B>&nbsp;&nbsp;Server-side <small>EOAC</SMALL> capability flags
+</DL>
+<p>Likewise, some parameters passed to <small>CoInitializeSecurity</SMALL> are useful only on the client side; the following attributes are copied to the security blanket:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The impersonation level
+<dd><b>&#149;</B>&nbsp;&nbsp;The client side <small>EOAC</SMALL> capability flags, such as secure references and auto-impersonate
+<dd><b>&#149;</B>&nbsp;&nbsp;The authentication identity
+</DL>
+<p>Here are the negotiated parts of the security blanket:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The authentication service is selected based on the services passed by client and server. If both client and server elect to use the default authentication service, COM will select Kerberos for Windows 2000 machines, followed by NTLMSSP if Kerberos is inappropriate. It will select SSL as a third choice.
+<dd><b>&#149;</B>&nbsp;&nbsp;The authorization service is selected based on the negotiated authentication service.
+<dd><b>&#149;</B>&nbsp;&nbsp;The principal name is selected based on the negotiated authentication service.
+<dd><b>&#149;</B>&nbsp;&nbsp;The authentication level is set to the highest level selected by client or server.
+</DL>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Setting Client-side Security Attributes for an Interface</FONT></H4>
+<p>The client can manipulate its security blanket through the <small>IClientSecurity</SMALL> interface. The standard Windows 2000 COM proxy manager implements <small>IClientSecurity</SMALL>&#151;it&#146;s rarely implemented directly by a COM object. This means that any time you, as a client, have a standard proxy, you can manage your security blanket for this proxy through <small>IClientSecurity</SMALL>. If your proxy uses custom marshaling, it&#146;s possible that the custom proxy will not support the <small>IClientSecurity</SMALL> interface. Also, COM objects that live in the same apartment as the client will not support manipulating the client-side security blanket unless the object provides direct support for the <small>IClientSecurity</SMALL> interface.</P>
+<p>A simplified version of the <small>IClientSecurity</SMALL> interface is provided in Listing 20.11.</P>
+<p><b>Listing 20.11</B> The <small>IClientSecurity</SMALL> Interface</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+interface IClientSecurity : public IUnknown
+{
+public:
+    HRESULT QueryBlanket(IUnknown* pProxy,
+                         DWORD* pAuthnSvc,
+                         DWORD* pAuthzSvc,
+                         OLECHAR** pServerPrincName,
+                         DWORD* pAuthnLevel,
+                         DWORD* pImpLevel,
+                         void** pAuthInfo,
+                         DWORD* pCapabilites);
+
+    HRESULT SetBlanket(IUnknown* pProxy,
+                       DWORD dwAuthnSvc,
+                       DWORD dwAuthzSvc,
+                       OLECHAR* pServerPrincName,
+                       DWORD dwAuthnLevel,
+                       DWORD dwImpLevel,
+                       void* pAuthInfo,
+                       DWORD dwCapabilities);
+
+    HRESULT CopyProxy(IUnknown* pProxy,
+                      IUnknown** ppCopy);
+
+};
+
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>IClientSecurity</SMALL> interface has three member functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>QueryBlanket</SMALL>. Returns the current security blanket settings for a proxy.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetBlanket</SMALL>. Defines attributes used for the proxy&#146;s security blanket. This method is typically used to raise the authentication level for an interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CopyProxy</SMALL>. Creates a copy of an interface pointer on the proxy.
+</DL>
+<p>Listing 20.12 shows how <small>IClientSecurity</SMALL> can be used to change the security blanket for a proxy. In this case, the authentication level is set to its highest level, <small>RPC_C_AUTHN_LEVEL_PKT_PRIVACY</SMALL>.</P>
+<p><b>Listing 20.12</B> Using <small>IClientSecurity</SMALL> to Change a Proxy&#146;s Authentication Level</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+HRESULT SwitchInterfaceToEncryptedPackets(IUnknown* punk)
+{
+    IClientSecurity* pClientSecurity = NULL;
+    HRESULT hr = punk-&gtQueryInterface(IID_IClientSecurity,
+                                      (void**)&amppClientSecurity);
+    if(FAILED(hr))
+        return hr;
+
+    DWORD    dwAuthentication;
+    DWORD    dwAuthorization;
+    OLECHAR* pszPrincipal;
+    DWORD    dwImpersonation;
+    DWORD    dwCapabilities;
+
+    // Call QueryBlanket to determine current settings.
+    hr = pClientSecurity-&gtQueryBlanket(punk,
+                                       &ampdwAuthentication,
+                                       &ampdwAuthorization,
+                                       &amppszPrincipal,
+                                       0,
+
+                                       &ampdwImpersonation,
+                                       0,
+                                       &ampdwCapabilities);
+
+    if(SUCCEEDED(hr))
+    {
+        // Set proxy blanket to identical values, except for the
+        // authentication level.
+        hr = pClientSecurity-&gtSetBlanket(punk,
+                                         dwAuthentication,
+                                         dwAuthorization,
+                                         pszPrincipal,
+                                         RPC_C_AUTHN_LEVEL_PKT_PRIVACY,
+                                         dwImpersonation,
+                                         0,
+                                         dwCapabilities);
+    }
+    pClientSecurity-&gtRelease();
+    CoTaskMemFree(pszPrincipal);
+    return hr;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

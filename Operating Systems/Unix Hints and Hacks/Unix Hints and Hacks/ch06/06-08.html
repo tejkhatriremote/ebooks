@@ -1,0 +1,222 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=220-224//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Even fast high-end servers can take a while to process through hundreds of thousands of files. Over 500,000 files on a server with a dual CPU system and an attached raid array can take anywhere from 3 to 8 minutes to scan and search files for the files that match the pattern you <small>grep</SMALL> for.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>find, grep, cron, crontab</SMALL></P>
+<h3><a name="Heading12"></A><font color="#000077">6.6 Multiple grep</FONT></H3>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">6.6.1 Description</FONT></H4>
+<p>There are various ways that searching for multiple patterns can be executed on a file or piped from a process.
+</P>
+<p><font size="+1"><b>Example One: Using grep Again and Again</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>grep</B> [<i>pattern</I>] file | grep [pattern]
+command | <b>grep</B> [<i>pattern</I>] file | grep [pattern]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A series of grep commands can be joined together to create multiple searches through a file. The multiple searches are treated as a Boolean <small>AND</SMALL> function when properly executed. If you have to search for a set of users in a specific group that has home directories crossing and automounting to a remote system, you can use a multiple <small>grep</SMALL> one-line command:</P>
+<!-- CODE //-->
+<pre>
+rocket 41% cat /etc/passwd
+garyd:.u0Iwe7OAFzcE:1111:20:Gary Daniels:/hosts/planet/usr/
+<b>&#8658;</B>people/garyd:/bin/csh
+<b>swats:mEbqrshw206eU:1112:10:Scott Watsen:/hosts/planet/usr/
+&#8658;people/swats:/bin/csh</B>
+jeffm:dunFf/jigfkH.:1113:20:Jeff Mirch:/usr/people/jeffm:/bin/csh
+kricer:q/oSdx1Qkeqm.:1114:10:Kevin Ricer:/usr/people/kricer:
+<b>&#8658;</B>/bin/csh
+
+rocket 42% grep &#147;:10:&#148; /etc/passwd | grep &#147;/hosts/planet&#148;
+swats:mEbqrshw206eU:1112:10:Scott Watsen:/hosts/planet/usr/
+<b>&#8658;</B>people/swats:/bin/csh
+</PRE>
+<!-- END CODE //-->
+<p>In this command, the only records displayed in the password file are those users who are in group 10 and whose home directories go through an automount point to the remote system planet.
+</P>
+<p>You can also search with multiple <small>grep</SMALL> commands on the output of a command. If you want to display all the NFS-mounted filesystems that point to a specific system, you can <small>grep</SMALL> out the NFS hard-mounted filesystems and the name of a specific system from the <small>df</SMALL> command.</P>
+<!-- CODE //-->
+<pre>
+rocket 43% df -k
+Filesystem         Type  kbytes     use    avail  %use Mounted on
+/dev/root           xfs  2051936  1752436  299500  86  /
+/dev/dsk/dks023s7   xfs  1627996  1571004   56992  97  /saturn2
+saturn:/usr         nfs  8360424  5198859  3170565 62 /tmp_mnt/
+<b>&#8658;</B>hosts/saturn/usr
+<b>saturn:/patches     nfs  8360424  5099960  3260464  62  /patches</B>
+pluto:/var          nfs   966304   928110    38194  97  /tmp_mnt/
+<b>&#8658;</B>hosts/pluto/var
+pluto:/disk2        nfs  2042528  1992506    50022  98  /tmp_mnt/
+<b>&#8658;</B>hosts/pluto/disk2
+
+rocket 44% df -k | grep saturn | grep nfs | grep -v hosts
+saturn:/patches     nfs  8360424  5099960  3260464  62  /patches
+</PRE>
+<!-- END CODE //-->
+<p>In this command, running <small>df</SMALL> displays the current mounted filesystems on the system. When the three <small>grep</SMALL> commands are put together, you request all lines that have the words <i>saturn</I> and <i>nfs</I>, and not <i>hosts</I>, be displayed. This yields all the NFS hard-mounted filesystems.</P>
+<p><font size="+1"><b>Example Two: Searching with egrep</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>egrep</B> &#145;([<i>pattern1</I>]|[<i>pattern2</I>]|[...])&#146; file
+command | <b>egrep</B> &#145;[<i>pattern1</I>]|[<i>pattern2</I>]|[...]&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you need to search for multiple patterns from the output of an executed command or from a file, using <small>egrep</SMALL> is the best way to accomplish this task. Unlike using multiple <small>grep</SMALL> commands, multiple patterns can be passed into <small>egrep</SMALL> and are treated as a Boolean <small>OR</SMALL> function.</P>
+<p>If a search is made for all those in group 10 who have home directories that cross an automount that is NFS-mounted to planet, this typically must be done in two commands.</P>
+<!-- CODE //-->
+<pre>
+rocket 45% cat /etc/passwd
+<b>garyd:.u0Iwe7OAFzcE:1111:20:Gary Daniels:/hosts/planet/usr/
+&#8658;people/garyd:/bin/csh</B>
+<b>swats:mEbqrshw206eU:1112:10:Scott Watsen:/hosts/planet/usr/
+&#8658;people/swats:/bin/csh</B>
+jeffm:dunFf/jigfkH.:1113:20:Jeff Mirch:/usr/people/jeffm:/bin/csh
+kricer:q/oSdx1Qkeqm.:1114:10:Kevin Ricer:/usr/people/kricer:
+<b>&#8658;/bin/csh</B>
+
+rocket 46% cat /etc/passwd | grep &#147;:10:&#148;; cat /etc/passwd |
+<b>&#8658;</B>grep &#147;/hosts/planet&#148;
+garyd:.u0Iwe7OAFzcE:1111:20:Gary Daniels:/hosts/planet/usr/
+<b>&#8658;</B>people/garyd:/bin/csh
+swats:mEb kricer:q/oSdx1Qkeqm.:1113:10:Kevin Ricer:/usr/people/
+<b>&#8658;</B>kricer:/bin/csh
+kricer:q/oSdx1Qkeqm.:1114:10:Kevin Ricer:/usr/people/kricer:
+<b>&#8658;</B>/bin/csh
+</PRE>
+<!-- END CODE //-->
+<p>Perform a <small>cat, grep</SMALL> for the group number 10, then perform another <small>cat</SMALL> of the password file, and <small>grep</SMALL> from the remote home directory. You can combine these two commands into one with the use of <small>egrep.</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 47% egrep &#145;(:10:|/hosts/planet)&#146; /etc/passwd
+garyd:.u0Iwe7OAFzcE:1111:20:Gary Daniels:/hosts/planet/usr/
+<b>&#8658;</B>people/garyd:/bin/csh
+swats:mEbqrshw206eU:1112:10:Scott Watsen:/hosts/planet/usr/
+<b>&#8658;</B>people/swats:/bin/csh
+kricer:q/oSdx1Qkeqm.:1114:10:Kevin Ricer:/usr/people/kricer:
+<b>&#8658;</B>/bin/csh
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>egrep</SMALL> searches for all occurrences of the patterns within the parentheses, with a vertical bar (<small>|</SMALL>) separating each pattern listed. The output then reflects all those in the password file that are part of group 10 or have /hosts/planet in the record line. All others are discarded.</P>
+<p>A command can be executed and the output piped to <small>egrep</SMALL> that can search for several patterns. If you want to display all the NFS mounted filesystems that point to a specific system, you can <small>grep</SMALL> out the NFS hard-mounted filesystems and the name of a specific system from the <small>df</SMALL> command.</P>
+<!-- CODE //-->
+<pre>
+rocket 48% df -k
+Filesystem         Type  kbytes     use     avail %use Mounted on
+<b>/dev/root           xfs  2051936  1752436   299500  86 /
+/dev/dsk/dks023s7   xfs  1627996  1571004    56992  97 /saturn2
+saturn:/usr         nfs  8360424  5198859  3170565  62 /tmp_mnt/
+<b>&#8658;</B>hosts/saturn/usr
+saturn:/patches     nfs  8360424  5099960  3260464  62 /patches</B>
+pluto:/var          nfs   966304   928110    38194  97 /tmp_mnt/
+<b>&#8658;</B>hosts/pluto/var
+pluto:/disk2        nfs  2042528  1992506    50022  98 /tmp_mnt/
+<b>&#8658;</B>hosts/pluto/disk2
+
+rocket 49% df -k | egrep &#145;xfs|saturn&#146;
+/dev/root           xfs  2051936  1752436   299500  86 /
+/dev/dsk/dks023s7   xfs  1627996  1571004    56992  97 /saturn2
+saturn:/usr         nfs  8360424  5099960  3260464  62 /tmp_mnt/
+<b>&#8658;</B>hosts/saturn/usr
+saturn:/disk2       nfs 71077760 33350188 37727572  47 /disk2
+</PRE>
+<!-- END CODE //-->
+<p>When the <small>df</SMALL> command is executed, it displays the current mounted filesystems on the system. When <small>df</SMALL> pipes the two patterns to <small>egrep</SMALL>, the result displays every line that has <i>xfs</I> and <i>saturn</I> in it.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The use of a single <small>egrep</SMALL> command provides an administrator with a tool for extracting the all the necessary data that otherwise would have to be done in multiple commands.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>cat, df, egrep, grep</SMALL></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

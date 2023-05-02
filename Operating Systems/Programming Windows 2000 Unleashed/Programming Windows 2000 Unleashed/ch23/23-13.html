@@ -1,0 +1,253 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=806-810//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-14.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The format is similar to the format found in an <small>INI</SMALL> file. There is a series of headers that are cross-referenced with the <small>HTTP_USER_AGENT</SMALL> value string. After it has been found, the properties that are part of that heading identify what the browser is capable of. This means that you can build a database of features and associate it with a browser. The component is a bit more sophisticated, because it can combine certain features using an inheritance scheme. Consider the example of IE 4.0 and IE 4.01. They have some minor differences but share the same major feature set. Therefore, instead of adding all of the feature database twice in the <small>browscap.ini</SMALL> file, you can define a parent. Now, take a look at the preceding <small>browscap.ini</SMALL> file. You won&#146;t see IE 4.01 listed; instead, you&#146;ll see the <small>IE 4.*</SMALL> wildcard. This version has the parent IE 4.0, which contains the following feature set:</P>
+<!-- CODE //-->
+<pre>
+[IE 4.0]
+browser=IE
+Version=4.0
+majorver=4
+minorver=0
+frames=TRUE
+myprop=something else
+tables=TRUE
+cookies=TRUE
+backgroundsounds=TRUE
+vbscript=TRUE
+javascript=TRUE
+javaapplets=TRUE
+ActiveXControls=TRUE
+Win16=False
+beta=False
+AK=False
+SK=False
+AOL=False
+crawler=False
+cdf=True
+DHTML=TRUE
+</PRE>
+<!-- END CODE //-->
+<p>This feature set is much more complete. It states the version number type, the browser type, whether or not frames are supported, whether or not VBScript is supported, and much more. These features are properties that are directly accessible as COM properties. Now, going back to the first browser cap source code, you see various properties referenced. These properties match values in the above source code. The browser cap object has the ability to cross-reference the various values.
+</P>
+<p>This makes the component very powerful because it can take on any properties as defined in the <small>browscap.ini</SMALL> file. However, it also opens up errors&#151;if this file is improperly defined, the programs that rely on its information may potentially fail.</P>
+<p>It is possible now to build content that adjusts itself depending on the browser making the request. To do this properly, you would selectively generate content as shown in the following example:</P>
+<!-- CODE SNIP //-->
+<pre>
+&ltINPUT id=txtSample name=txtSample
+&lt%if( bc.DHTML == true) { %&gt
+style=&#148;BACKGROUND-COLOR: yellow&#148;
+&lt% }%&gt&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This example includes an input field. In the case, when the browser supports Dynamic HTML (<small>DHTML == TRUE</SMALL>), the background color is changed to yellow. For any other browser, this feature is not included. The advantage of this component is readily apparent&#151;it does not require the developer to know which browser is used but rather which features are supported. Here&#146;s the other example:</P>
+<!-- CODE //-->
+<pre>
+&lt%@  Language=javascript %&gt
+&lt%
+var bc;
+bc = Server.CreateObject(&#147;MSWC.BrowserType&#148;);
+if( bc.DHTML == true) {
+Response.Redirect( &#147;/DHTMLVersion.asp&#148;);
+}
+%&gt
+&ltHTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>In this example, when the document is loaded, it checks to see whether the browser supports Dynamic HTML (<small>DHTML == TRUE)</SMALL>. If so, the user is redirected to another page that supports Dynamic HTML.</P>
+<p><font size="+1"><b>Languages Supported</B></FONT></P>
+<p>The other case is to add elements that are language dependent. As the popularity of the Web increases, the number of Web users who do not speak English will increase. Therefore, the Web site must be localized. The traditional approach to multiple-language Web sites is to add flags for the individual languages and then let the user choose which language to use. This is okay, but it&#146;s not an optimal solution.
+</P>
+<p>Instead, an optimal solution would be for the language to be chosen based on what the browser tells the server. Here&#146;s a way you can do this:</P>
+<!-- CODE SNIP //-->
+<pre>
+Request.ServerVariables(&#147;HTTP_ACCEPT_LANGUAGE&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The following setting is returned for American English:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+en-us
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This setting is returned for standard German:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+de
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Both Internet Explorer and Netscape Navigator support this feature. The language setting is not dependent on which browser is installed but rather on the settings for the computer. Therefore, if the regional settings (located in the Control Panel) are German, then <small>de</SMALL> is returned. Content based on each language would be created in the same way as that shown for the browser, using either a piece-by-piece or a page redirection approach.</P>
+<p>Building Web sites that support multiple languages, browsers, and/or technologies is not easy. However, it&#146;s worth the effort because it gives the Web site a much nicer look and feel. As a side note, when you&#146;re developing a site that contains a localized site, make sure you have someone helping who really understands the specific language. Using a translation service will not cut it, because each country uses modern lingo that&#146;s often overlooked.</P>
+<h3><a name="Heading26"></A><font color="#000077">Component Development</FONT></H3>
+<p>It&#146;s possible to write almost all your application code in script or to use JavaScript objects. However, sometimes it&#146;s more efficient to write using components. Components make it possible to encapsulate logic and simplify the development of ASP pages. Components also make it possible for the Web developers to focus on the user interface and for component developers to focus on business logic. Consider the following source code:
+</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=Javascript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+
+&lttable border=1&gt
+&lt%
+var counter;
+var c1;
+counter = 0;
+for( c1 = 0; c1 &lt 10; c1 &#43;&#43;) {
+    counter = (counter * 2) &#43; 2;
+%&gt
+    &lttr&gt&lttd&gt&lt%=c1%&gt&lt/td&gt&lttd&gt&lt%=counter%&gt&lt/td&gt&lt/tr&gt
+&lt%
+}
+%&gt
+&lt/table&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>This source code generates a table that contains a sequence of numbers. What we&#146;ll do in the next section is convert this code into a component that can be used from within ASP.
+</P>
+<h4 align="LEFT"><a name="Heading27"></A><font color="#000077">A Simple ASP Component</FONT></H4>
+<p>A simple ASP component does not need anything other than a COM interface. The implementation code would look like this:
+</P>
+<!-- CODE //-->
+<pre>
+class ATL_NO_VTABLE CCounter :
+    public CComObjectRootEx&ltCComSingleThreadModel&gt,
+    public CComCoClass&ltCCounter, &ampCLSID_Counter&gt,
+    public IDispatchImpl&ltICounter, &ampIID_ICounter,
+           &ampLIBID_ASPCOMPONENTLib&gt
+{
+public:
+    CCounter()
+    {
+    }
+
+DECLARE_REGISTRY_RESOURCEID(IDR_COUNTER)
+DECLARE_NOT_AGGREGATABLE(CCounter)
+
+DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+BEGIN_COM_MAP(CCounter)
+    COM_INTERFACE_ENTRY(ICounter)
+    COM_INTERFACE_ENTRY(IDispatch)
+END_COM_MAP()
+
+// ICounter
+public:
+    STDMETHOD(getValue)(long *retvalue);
+    STDMETHOD(reset)();
+
+private:
+    long m_counter;
+};
+
+STDMETHODIMP CCounter::reset()
+{
+    m_counter = 0;
+    return S_OK;
+}
+
+STDMETHODIMP CCounter::getValue(long *retvalue)
+{
+    m_counter = (m_counter * 2) &#43; 2;
+    *retvalue = m_counter;
+    return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-14.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,248 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=578-580//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Use ClassWizard to add a custom property named <small>fNumbersAllowed</SMALL> to the AxEdit project. Click the Add Property button and use the values provided in Table 18.3.</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 18.3</B> The <small>fNumbersAllowed</SMALL> Custom Property for the AxEdit Control
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="50%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="50%" valign="TOP" align="LEFT"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">External name
+<td valign="TOP" align="LEFT"><small>fNumbersAllowed</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Type
+<td valign="TOP" align="LEFT"><small>BOOL</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Variable name
+<td valign="TOP" align="LEFT"><small>m_fNumbersAllowed</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Notification function
+<td valign="TOP" align="LEFT"><small>OnFNumbersAllowedChanged</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Implementation
+<td valign="TOP" align="LEFT">Member variable
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>Use ClassWizard to add the <small>fTextAllowed</SMALL> property by following the steps used to add the previous properties. Use the values provided in Table 18.4.</P>
+<table width="100%"><td align="LEFT" colspan="2"><b>Table 18.4</B> The <small>fTextAllowed</SMALL> Custom Property for the AxEdit Control
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="50%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="50%" valign="TOP" align="LEFT"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">External name
+<td valign="TOP" align="LEFT"><small>fTextAllowed</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Type
+<td valign="TOP" align="LEFT"><small>BOOL</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Variable name
+<td valign="TOP" align="LEFT"><small>m_fTextAllowed</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Notification function
+<td valign="TOP" align="LEFT"><small>OnFTextAllowedChanged</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Implementation
+<td valign="TOP" align="LEFT"> Member variable
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>Modify the <small>CAxEditCtrl</SMALL> class constructor to contain code that initializes the custom properties added in the previous steps. The modified constructor is shown in Listing 18.2 with changed lines shown in bold type.</P>
+<p><b>Listing 18.2</B> Modifications (in Bold) to the <small>CAxEditCtrl</SMALL> Constructor<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+CAxEditCtrl::CAxEditCtrl()
+{
+ InitializeIIDs(&ampIID_DOleEdit, &ampIID_DOleEditEvents);
+  <b>m_fTextAllowed = TRUE;
+  m_fNumbersAllowed = TRUE;</B>
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>Every control created using AppWizard includes a default property page. The AxEdit property page is modified by adding two checkboxes that control the states of the <small>m_fTextAllowed</SMALL> and <small>m_fNumbersAllowed</SMALL> flags. Open the <small>IDD_PROPAGE_AXEDIT</SMALL> dialog box resource and add two checkbox controls, as shown in Figure 18.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-04.jpg',375,102 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-04.jpg',375,102)"><font color="#000077"><b>Figure 18.4</B></FONT></A>&nbsp;&nbsp;The property page used by AxEdit.</P>
+<p>Table 18.5 lists the properties for the checkbox controls. All properties that aren&#146;t listed should be set to the default values.
+</P>
+<table width="100%"><td caption align="LEFT" colspan="3"><b>Table 18.5</B> Property Values for Checkbox Controls in the AxEdit Property Page
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="30%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="30%" valign="TOP" align="LEFT"><i>Resource ID</I>
+<th width="40%" valign="TOP" align="LEFT"><i>Caption</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Numbers checkbox
+<td valign="TOP" align="LEFT"><small>IDC_CHECK_NUMBERS</SMALL>
+<td valign="TOP" align="LEFT"><small>&ampNumbers Allowed</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Text checkbox
+<td valign="TOP" align="LEFT"><small>IDC_CHECK_TEXT</SMALL>
+<td valign="TOP" align="LEFT"><small>&ampText Allowed</SMALL>
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>Use ClassWizard to associate <small>CAxEditPropPage</SMALL> member variables with the controls, using the values shown in Table 18.6.</P>
+<table width="100%"><td caption align="LEFT" colspan="4"><b>Table 18.6</B> Values for New Member Variables in <small>CAxEditPropPage</SMALL>
+<tr>
+<td colspan="5"><hr>
+<tr>
+<th width="25%" align="LEFT" valign="TOP"><i>Control ID</I>
+<th width="25%" valign="TOP" align="LEFT"><i>Variable Name</I>
+<th width="15%" valign="TOP" align="LEFT"><i>Category</I>
+<th width="15%" valign="TOP" align="LEFT"><i>Type</I>
+<th width="20%" valign="TOP" align="LEFT"><i>Property Name</I>
+<tr>
+<td colspan="5"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_CHECK_NUMBERS</SMALL>
+<td valign="TOP" align="LEFT"> <small>m_fNumbersAllowed</SMALL>
+<td valign="TOP" align="LEFT">Value
+<td valign="TOP" align="LEFT"><small>BOOL</SMALL>
+<td valign="TOP" align="LEFT"><small>fNumbersAllowed</SMALL>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_CHECK_TEXT</SMALL>
+<td valign="TOP" align="LEFT"><small>m_fTextAllowed</SMALL>
+<td valign="TOP" align="LEFT">Value
+<td valign="TOP" align="LEFT"><small>BOOL</SMALL>
+<td valign="TOP" align="LEFT"><small>fTextAllowed</SMALL>
+<tr>
+<td colspan="5"><hr>
+</TABLE>
+<p>The optional property name field is used by ClassWizard to generate source code that exchanges the values from the property sheet to the control class. The <small>DDP_</SMALL> and <small>DDX_</SMALL> macros are used to transfer and validate property page data. The code used to transfer the value of the <small>IDC_CHECK_TEXT</SMALL> control looks like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+//{{AFX_DATA_MAP(CAxEditPropPage)
+DDP_Check(pDX,IDC_CHECK_TEXT, m_fTextAllowed, _T(&#147;fTextAllowed&#148;));
+DDX_Check(pDX, IDC_CHECK_TEXT, m_fTextAllowed);
+//}}AFX_DATA_MAP
+DDP_PostProcessing(pDX);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Inside the control class, you must collect the values from the property page during <small>DoPropExchange</SMALL>, as shown in Listing 18.3.</P>
+<p><b>Listing 18.3</B> Collecting Properties from the Property Page<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+void CAxEditCtrl::DoPropExchange(CPropExchange* pPX)
+{
+    ExchangeVersion(pPX, MAKELONG(_wVerMinor, _wVerMajor));
+    COleControl::DoPropExchange(pPX);
+
+    <b>PX_Bool(pPX, _T(&#147;fNumbersAllowed&#148;), m_fNumbersAllowed);
+    PX_Bool(pPX, _T(&#147;fTextAllowed&#148;), m_fTextAllowed);</B>
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>The AxEdit control supports the stock font property. An easy way to give the control access to all the available fonts is to add the standard font property page to the control. The property pages associated with an ActiveX control are grouped together between the <small>BEGIN_PROPPAGEIDS</SMALL> and <small>END_PROPPAGEIDS</SMALL> macros. Listing 18.4 shows how the standard font property page is added to the control using the <small>PROPPAGEID</SMALL> macro. Remember to change the second parameter passed to the <small>BEGIN_PROPPAGEIDS</SMALL> macro, which is the number of property pages used by the control object.</P>
+<p><b>Listing 18.4</B> Adding the Standard Font Property Page to AxEdit<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+<b>BEGIN_PROPPAGEIDS(COleEditCtrl, 2)</B>
+   PROPPAGEID(COleEditPropPage::guid)
+   <b>PROPPAGEID(CLSID_CFontPropPage)</B>
+END_PROPPAGEIDS(COleEditCtrl)
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

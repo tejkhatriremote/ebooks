@@ -1,0 +1,253 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=149-153//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch05/05-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>When daylight savings time ends in the month of April, anything scheduled between 2:00 a.m. and 2:59 a.m. in the crontab do not get executed at all. How can this affect your environment? Many scheduled jobs are required to run for your users to be able to function during their next working day. What happens when their jobs don&#146;t run? Will you be ready?
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Do files need to be uploaded or downloaded that night?
+<dd><b>&#149;</B>&nbsp;&nbsp;What occurs when databases aren&#146;t updated?
+<dd><b>&#149;</B>&nbsp;&nbsp;If backups never get started, will that be a problem in your environment?
+</DL>
+<p>You need to look at your crontab entries on all your systems. Make your users aware of what can happen during these time periods. Depending on the trust and danger factor of your users and their levels of UNIX experience, you might want to examine their crontab entries to see what jobs they are running. The key word here is <i>examine</I> . You have the ability and just cause to make sure your systems are not threatened or abused by any user. Management should back you up on this. If you feel in your environment that you need management approval, discuss your concerns with them.</P>
+<p>Some sites don&#146;t use cron that much. If your site is one of these, you might want to schedule jobs outside this area of time so you are not affected.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+at, cron, crontab
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading26"></A><font color="#000077">4.13 Checking the Time</FONT></H3>
+<h4 align="LEFT"><a name="Heading27"></A><font color="#000077">4.13.1 Description</FONT></H4>
+<p>A quick way to check and verify the time on remote machines over the network.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>telnet host</B> [<i>port</I>]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The time of any machine can be checked simply by issuing a Telnet session to the port <small>13</SMALL>. This port is known as the daytime port. It works like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+% telnet rocket 13
+Trying 209.10.11.102
+Connected to rocket.
+Escape character is &#145;^]&#146;.
+Sun Oct 18 11:45:02 1998
+Connection closed by foreign host.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>For this to work, a couple of things need to be set up on the remote machine you are monitoring the time on. The /etc/services file needs to have a TCP and UDP entry made for daytime at port <small>13</SMALL>.</P>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/services
+
+daytime            13/tcp
+daytime         13/udp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The /etc/inetd.conf file needs to be edited so that the daemon wakes up and a connection can be established to port <small>13</SMALL>.</P>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/inetd.conf
+
+daytime stream   tcp    nowait   root   internal
+daytime dgram    udp    wait     root   internal
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When /etc/inetd.conf is edited, don&#146;t forget to get the process ID of inetd and restart the daemon.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# ps -e | grep inetd
+   199 ?     0:00 inetd
+
+# kill -HUP 199
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Now when Telnet is initiated from a remote system you should see something similar to
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% telnet xinu 13
+Trying 209.10.11.104
+Connected to xinu.
+Escape character is &#145;^]&#146;.
+Sun Oct 18 11:52:13 1998
+Connection closed by foreign host.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There are a couple of ways to expand this to a script and check the time of multiple machines in your environment. The quick and dirty way is to write a script called <small>timecheck</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+% vi timecheck
+
+telnet rocket 13
+telnet xinu 13
+telnet ugu 13
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Telnet to the first machine and get the time.
+</P>
+<p>Line 2: Telnet to the second machine and get the time.</P>
+<p>Line 3: Telnet to the third machine and get the time.</P>
+<p>And so on...</P>
+<p>The result is a bit messy looking with the output having the following appearance:</P>
+<!-- CODE //-->
+<pre>
+% ./timecheck
+Trying 209.10.11.102...
+Connected to rocket.
+Escape character is &#145;^]&#146;.
+Sun Oct 18 14:07:08 1998
+Connection closed by foreign host.
+Trying 209.10.11.104...
+Connected to xinu.
+Escape character is &#145;^]&#146;.
+Sun Oct 18 14:07:08 1998
+Connection closed by foreign host.
+Trying 209.10.11.105...
+Connected to ugu.
+Escape character is &#145;^]&#146;.
+Sun Oct 18 14:07:10 1998
+Connection closed by foreign host.
+</PRE>
+<!-- END CODE //-->
+<p>To clean up the output, the script could be rewritten to get rid of the extra output and print the time information that you are interested in.
+</P>
+<!-- CODE //-->
+<pre>
+% vi timecheck2
+
+rocket=`telnet rocket 13 | tail -1`
+xinu=`telnet xinu 13 | tail -1`
+ugu=`telnet ugu 13 | tail -1`
+echo
+echo &#147;rocket: $rocket&#148;
+echo &#147;xinu: $xinu&#148;
+echo &#147;ugu: $ugu&#148;
+</PRE>
+<!-- END CODE //-->
+<p>Lines 1&#150;3: Get the time for the remote host and store it into special variables.
+</P>
+<p>Lines 4&#150;6: Display the hostname and the current time of the system from the variables that the times were put into.</P>
+<!-- CODE //-->
+<pre>
+% ./timecheck2
+Connection closed by foreign host.
+Connection closed by foreign host.
+Connection closed by foreign host.
+Connection closed by foreign host.
+
+rocket: Sun Oct 18 14:20:11 1998
+xinu: Sun Oct 18 14:20:11 1998
+ugu: Sun Oct 18 14:20:12 1998
+</PRE>
+<!-- END CODE //-->
+<p>Due to the way that Telnet and the telnetd daemon handle closing a connection to a foreign host, the message &#147;Connection closed by foreign host&#148; cannot be extracted from the tail. This is why the Telnet commands were executed, passed into a variable, and echoed out later.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>There is more than one reason why a system clock can be set incorrectly. These range from a system staying up for long periods of time without rebooting to replacing hardware in a system. The time should be checked regularly.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Programmers and developers are strictly dependent on the system&#146;s internal clock being correct for developing applications. It has been shown that even if systems are locked to one designated time server, the systems that are slaves to the time server can eventually provide false dates. When it is so critical to have the system clock be right, the extra step should be well worth it.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+inetd, services, telnet
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch05/05-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

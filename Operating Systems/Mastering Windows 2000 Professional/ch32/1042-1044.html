@@ -1,0 +1,137 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Advanced Troubleshooting Methodology</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=32//-->
+<!--PAGES=10421044//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="1039-1042.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="1044-1046.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>What we know and don&#146;t know at this point:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The computer has never worked before in this configuration.
+<dd><b>2.</B>&nbsp;&nbsp;The drives are SCSI, which require electronic termination and unique ID numbers on each bus.
+<dd><b>3.</B>&nbsp;&nbsp;We do not know the state of the termination.
+<dd><b>4.</B>&nbsp;&nbsp;We do not know the SCSI ID numbers for each drive.
+</DL>
+<p>Based on this information, you should already be suspecting that something is wrong with the hardware configuration. You reach into the case to ensure that the cables are tightly attached and find that they are. On these hard drives the SCSI IDs are set by jumpers on the rear of the drive (you will probably have to remove the drives to get at them).
+</P>
+<p>Your plan of attack:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Verify the SCSI ID numbers of the drives and controller.
+<dd><b>2.</B>&nbsp;&nbsp;Verify the termination of the drive chain.
+<dd><b>3.</B>&nbsp;&nbsp;Check the BIOS settings of the controller.
+</DL>
+<p>Before you go through the work to remove the hard drives to check their ID numbers, you boot the computer to run the SCSI BIOS program. This program enables you to view and modify the configuration of the devices, as well as run diagnostics and other utilities. This utility tells you that it sees both hard drives, one as SCSI ID #0, the other as SCSI ID #1. This means the ID numbers are not the issue.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>SCSI ID numbers are important. Having a conflict between two or more devices on the same SCSI bus can cause Setup to fail to recognize installed hard drives. It can also cause the system to fail when booting or to hang after booting.<hr></FONT>
+</BLOCKQUOTE>
+<p>The BIOS utility on the Adaptec controller also provides the capability to enable or disable termination on the controller card itself. You check and find that it is enabled correctly. Now you have verified the SCSI ID numbers, the controller settings, and half of the termination. The only thing left on your list is termination. To do this, you have to pull out the last hard drive on the ribbon cable and check its termination.
+</P>
+<p>Checking the last drive on the chain, you find that its terminator packs (resistors) are not set. This means that the SCSI bus is not terminated at one end. This may or may not be the problem, but it certainly needs to be fixed. You correct the termination and are ready to test the setup again. You start Setup, and this time everything runs fine.</P>
+<p>When you are troubleshooting problems on a SCSI-based system, always remember to check the termination. With SCSI, both ends of each drive chain must be terminated. Windows 2000 is so sensitive about the stability of the hardware components that improper termination can be fatal to Setup. Even if you succeed with Setup, termination issues can result in hanging or even a blue-screen error. Even mismatched termination levels can cause this situation. If your controller has active termination and your hard drive has passive termination, you may have problems. Upgrading your SCSI chain to active termination or even forced-perfect termination at both ends can relieve the problem.</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">SCSI Troubleshooting</FONT></H4>
+<p>In the previous scenario, we looked at the possible importance of SCSI termination. In our experience, nearly 90 percent of the troubleshooting issues of Windows 2000 Setup on SCSI-based computers involve termination problems. But there are other issues to be aware of as well. For instance, is the BIOS of the SCSI controller activated? This is another problem that would cause the preceding scenario.
+</P>
+<p>A low-level format that is incorrect for the current drive geometry could cause file corruption, drives not being recognized by Setup, and system crashes. If you are installing a new SCSI drive or changing to a new make or model of SCSI controller, you should perform a low-level format of the drive to assure that the drive geometry will line up correctly.</P>
+<p>In simpler terms, the drive controller performs a format of the disks within the drive so that the operating system will be able to write data to the individual sectors on the drive. In a way, sectors are like tiny boxes that are meant to contain information. Imagine trying to drop golf balls into small boxes. If you are lining them up correctly, it&#146;s easy. The balls simply drop right into place every time. But imagine now that you&#146;re slightly off your aim. The balls usually go in the boxes, but sometimes they bounce off the edges and roll away. That&#146;s what&#146;s happening when your drive isn&#146;t low-level formatted correctly for the specific controller. Each SCSI controller has its own geometry&#151;its way of laying out those little boxes.</P>
+<p>If multiple SCSI controllers are in the computer, does more than one of them have an active BIOS? If so, they may be competing for Int13 calls. This means that the &#147;wrong&#148; controller may be trying to boot the computer and therefore prevents the &#147;right&#148; controller from doing its job.</P>
+<p>It&#146;s common today for people to try to mix SCSI device types&#151;that is, to add 50-pin SCSI-2 devices to the same chain as SCSI-3 devices with 68 pins. That means that the cable has to change sizes from 68 wires to 50 wires. If you mix these devices, be certain that you buy the proper cable to make the conversion. If you don&#146;t, or if you try to convert from 68 to 50 wires and then back to 68, you will have wires that are not being terminated correctly. It is better by far to have only &#147;wide&#148; devices with 68 pins on one chain and &#147;narrow&#148; devices with 50 pins on a separate chain.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="1039-1042.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="1044-1046.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,250 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-06//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><small>FindFirstFileEx</SMALL> has six parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The search pattern used in the search.
+<dd><b>&#149;</B>&nbsp;&nbsp;A value that specifies the information level for the result returned in the search. The value must be taken from the <small>FINDEX_INFO_LEVELS</SMALL> enumeration. The only value currently in the enumeration is <small>FindExInfoStandard</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a buffer that will hold the search result. The function defines this parameter as a <small>PVOID</SMALL>, with the actual type determined by the type of information requested in the second parameter. For <small>FindExInfoStandard</SMALL>, this parameter is a pointer to a <small>WIN32_FIND_DATA</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;The type of filtering to perform on the search, taken from the <small>FIND_SEARCH_OPS</SMALL> enumeration. Possible values for this parameter are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to information that may be used in the future to pass detailed information about the type of filtering that must be performed on the search result. At the present time, this parameter must be <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;Additional flags that can be applied to the search. Currently, the only defined flag is <small>FIND_FIRST_EX_CASE_SENSITIVE</SMALL>, which is used to perform a case-sensitive search. If you want the default case-insensitive search, pass 0 here.
+</DL>
+<p>At the present time, only three possible <small>FIND_SEARCH_OPS</SMALL> values can be passed as the fourth parameter:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindExSearchNameMatch</SMALL> performs the default search based solely on the search pattern passed as the first parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindExSearchLimitToDirectories</SMALL> returns only directories that match the pattern passed as the first parameter. If the file system doesn&#146;t support directory filtering, you&#146;ll receive search results for all matching files; therefore, it&#146;s a good idea to check the attributes of returned filenames if you&#146;re not certain that the file system supports this operation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindExSearchLimitToDevices</SMALL> is not currently supported.
+</DL>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Using the FILETIME Structure</FONT></H4>
+<p>As discussed earlier, the <small>WIN32_FIND_DATA</SMALL> structure uses the <small>FILETIME</SMALL> structure to hold times used in the file system. The <small>FILETIME</SMALL> structure is used to track time in the file systems used by Windows 2000. A <small>FILETIME</SMALL> instance tracks time according to Coordinated Universal Time (or UTC). Internally, <small>FILETIME</SMALL> uses two <small>DWORD</SMALL> variables to track the time in 100-nansecond intervals since January 1, 1601:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _FILETIME {
+    DWORD dwLowDateTime;
+    DWORD dwHighDateTime;
+} FILETIME;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To convert the UTC time returned from <small>FindFirstFile</SMALL> or <small>FindFirstFileEx</SMALL> into a <small>FILETIME</SMALL> structure that&#146;s normalized with your local machine time, call the <small>FileTimeToLocalFileTime</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+FileTimeToLocalFileTime(&ampwfd.ftCreationTime, &ampftLocal);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To reverse the conversion process and move from local time to UTC time, call the <small>LocalFileTimeToFileTime</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+LocalFileTimeToFileTime(&ampftLocal, &ampftUtc);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To convert a <small>FILETIME</SMALL> structure into easy-to-use date and time formats, use the <small>FileTimeToSystemTime</SMALL> function, which moves the date and time information into a <small>SYSTEMTIME</SMALL> structure:</P>
+<!-- CODE SNIP //-->
+<pre>
+SYSTEMTIME st;
+FileTimeToSystemTime(&ampftLocal, &ampst);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Listing 4.6 extends the example presented earlier in Listing 4.5 by using the <small>FILETIME</SMALL> and <small>SYSTEMTIME</SMALL> structures to display the creation date for each filename returned in the search.</P>
+<p><b>Listing 4.6</B> Using the <small>FILETIME</SMALL> Structure to Retrieve the File Creation Time and Date</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0400
+#define WINVER       0x0400
+
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+void DisplayError(LPCTSTR pszTitle);
+void DisplayFileWithTimeAndDate(WIN32_FIND_DATA* pwfd);
+
+int _tmain(int argc, TCHAR* argv[])
+{
+    WIN32_FIND_DATA wfd;
+    HANDLE hSearch = FindFirstFileEx(_T(&#147;C:\\*.*&#148;),
+                                     FindExInfoStandard,
+                                     &ampwfd,
+                                     FindExSearchLimitToDirectories,
+                                     NULL,
+                                     FIND_FIRST_EX_CASE_SENSITIVE);
+    if(hSearch != INVALID_HANDLE_VALUE)
+    {
+        DisplayFileWithTimeAndDate(&ampwfd);
+        while(FindNextFile(hSearch, &ampwfd))
+        {
+            DisplayFileWithTimeAndDate(&ampwfd);
+        }
+        FindClose(hSearch);
+    }
+    else
+    {
+        //File not found or other error
+        DisplayError(argv[0]);
+    }
+    return 0;
+}
+/*
+ * Display file name and time information in a variety of
+ * formats.
+ */
+void DisplayFileWithTimeAndDate(WIN32_FIND_DATA* pwfd)
+{
+    FILETIME   ftLocal;
+    SYSTEMTIME st;
+
+    if(!pwfd) return;
+    FileTimeToLocalFileTime(&amppwfd-&gtftCreationTime, &ampftLocal);
+    FileTimeToSystemTime(&ampftLocal, &ampst);
+
+    _tprintf(_T(&#147;%s\n&#148;), pwfd-&gtcFileName);
+    _tprintf(_T(&#147;\tUTC time = %I64X\n&#148;), pwfd-&gtftCreationTime);
+    _tprintf(_T(&#147;\tLocal time = %I64X\n&#148;),ftLocal);
+    _tprintf(_T(&#147;\tSystem date = %2.2hd/%2.2hd/%4.4hd\n&#148;),
+                (WORD)st.wMonth,
+                (WORD)st.wDay,
+                (WORD)st.wYear);
+    _tprintf(_T(&#147;\tSystem time = %2.2hd:%2.2hd:%2.2hd\n&#148;),
+                (WORD)st.wHour,
+                (WORD)st.wMinute,
+                (WORD)st.wSecond);
+}
+void DisplayError(LPCTSTR pszTitle)
+{
+    LPVOID pv;
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  GetLastError(),
+                  MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),
+                  (LPTSTR)&amppv,
+                  0,
+                  NULL);
+    MessageBox(NULL, pv, pszTitle, MB_ICONHAND);
+    LocalFree(pv);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h3><a name="Heading14"></A><font color="#000077">Performing Other File Operations</FONT></H3>
+<p>Windows 2000 offers other file operations; the most commonly used are covered in this section. These include functions that copy files, set the current position of the file pointer, and get file size information.
+</P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Using CopyFile</FONT></H4>
+<p>You use the <small>CopyFile</SMALL> function to copy the contents of a file from one location to another:</P>
+<!-- CODE SNIP //-->
+<pre>
+CopyFile(szSourcePath, szDestPath, TRUE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>CopyFile</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The pathname of the existing file.
+<dd><b>&#149;</B>&nbsp;&nbsp;The pathname of the new file.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that indicates whether the function should fail if the destination already exists. If this flag is <small>FALSE</SMALL>, the destination is overwritten. If this flag is <small>TRUE</SMALL>, the function fails.
+</DL>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Using MoveFile</FONT></H4>
+<p>You use the <small>MoveFile</SMALL> function to move a file from one location to another. You can rename a file using this function by specifying a new filename while keeping the same directory path:</P>
+<!-- CODE SNIP //-->
+<pre>
+MoveFile(szOldPath, szNewPath);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>MoveFile</SMALL> takes two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The current pathname for the file to be moved
+<dd><b>&#149;</B>&nbsp;&nbsp;The pathname to the location the file is to be moved to
+</DL>
+<p>The <small>MoveFile</SMALL> function fails if you attempt to move a file to a different volume.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

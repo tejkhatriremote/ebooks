@@ -1,0 +1,262 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=208-213//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Creating an Extension DLL</B></FONT></P>
+<p>In this section, an MFC extension DLL project named DlgInDll that exports a dialog box resource and an associated <small>CDialog</SMALL>-based class used to manage it are created. Like the earlier projects in this chapter, the complete project can be found on the accompanying CD-ROM. You can use that project, or you can follow along with the steps presented here to create the project from scratch.</P>
+<p>To get started on the DlgInDll project, use AppWizard to create an MFC extension DLL. First, select MFC AppWizard (dll) as the project type, as shown in Figure 6.9.</P>
+<p>After clicking OK, a Wizard page appears, as shown in Figure 6.10. Select MFC Extension DLL (using shared MFC DLL).</P>
+<p>Using Developer Studio, add a dialog resource type to the project. Give this dialog box a resource ID of <small>IDD_EXT_NAME</SMALL>. Add an Edit control to the dialog box, as shown in Figure 6.11.</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-09.jpg',560,399 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-09.jpg',560,399)"><font color="#000077"><b>Figure 6.9</B></FONT></A>&nbsp;&nbsp;Using AppWizard to create a DLL that uses MFC.</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-10.jpg',477,384 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-10.jpg',477,384)"><font color="#000077"><b>Figure 6.10</B></FONT></A>&nbsp;&nbsp;Selecting MFC Extension DLL as the project type.</P>
+<p><a name="Fig11"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-11.jpg',800,572 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-11t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-11.jpg',800,572)"><font color="#000077"><b>Figure 6.11</B></FONT></A>&nbsp;&nbsp;Adding an Edit control to the DlgInDll dialog box.</P>
+<p>Table 6.1 provides the resource ID used by the Edit control. Use ClassWizard to associate a member variable with the Edit control, using the values from the same table.
+</P>
+<table width="100%"><caption align="LEFT" colspan="5"><b>Table 6.1</B> Edit Control Resource Information
+<tr>
+<td colspan="5"><hr>
+<tr>
+<th valign="TOP" align="LEFT"><i>Control Name</I>
+<th valign="TOP" align="LEFT"><i>Resource ID</I>
+<th valign="TOP" align="LEFT"><i>Category</I>
+<th valign="TOP" align="LEFT"><i>Type</I>
+<th valign="TOP" align="LEFT"><i>Variable</I>
+<tr>
+<td colspan="5"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Name edit
+<td valign="TOP" align="LEFT"><small>IDC_NAME</SMALL>
+<td valign="TOP" align="LEFT">Value 
+<td valign="TOP" align="LEFT"><small>CString</SMALL>
+<td valign="TOP" align="LEFT"><small>m_strName</SMALL>
+<tr>
+<td colspan="5"><hr>
+</TABLE>
+<p>Using ClassWizard, create a class derived from <small>CDialog</SMALL> named <small>CNameDlg</SMALL> to manage the new dialog resource. Use the values in Table 6.2 to create the new class.</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 6.2</B> Values Used for the Dialog Box
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th valign="TOP" align="LEFT"><i>Control</I>
+<th valign="TOP" align="LEFT"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Name
+<td valign="TOP" align="LEFT"><small>CNameDlg</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Base class
+<td valign="TOP" align="LEFT"><small>CDialog</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">File
+<td valign="TOP" align="LEFT"><small>NameDlg.cpp</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Dialog ID
+<td valign="TOP" align="LEFT"><small>IDD_EXT_NAME</SMALL>
+<tr>
+<td valign="TOP" align="LEFT">Automation
+<td valign="TOP" align="LEFT">None
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>In order to export the <small>CNameDlg</SMALL> class from the library, you must edit the <small>CNameDlg</SMALL> class declaration. Listing 6.16 shows the changes made to the <small>NameDlg.h</SMALL> header file in bold.</P>
+<p><b>Listing 6.16</B> The <small>CNameDlg</SMALL> Class Declaration</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+<b>#ifndef _AFXEXT
+#define IDD_EXT_NAME 129
+#else
+#include &#147;resource.h&#148;
+#endif
+
+class AFX_EXT_CLASS CNameDlg : public CDialog</B>
+{
+// Construction
+public:
+    CNameDlg(CWnd* pParent = NULL);
+
+// Dialog Data
+    //{{AFX_DATA(CNameDlg)
+    enum { IDD = IDD_EXT_NAME };
+    .
+    .
+    .
+
+};
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Two changes are made in the <small>NameDlg.h</SMALL> header file:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The symbol used to define the dialog box is hard-coded in the header. This resource symbol is hard-coded because there&#146;s a dependency between the class declaration and the <small>IDD_EXT_NAME</SMALL> symbol. If you use Visual C<small>&#43;&#43;</SMALL> and follow the steps described, this value should be correct. You can always determine the actual value by selecting Resource Symbols from the Developer Studio View menu.
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>AFX_EXT_CLASS</SMALL> symbol is used in the <small>CNameDlg</SMALL> class declaration. This symbol is used exactly as other placeholders used in previous examples. When an MFC extension DLL is built, the <small>AFX_EXT_CLASS</SMALL> symbol expands to <small>__declspec(dllexport)</SMALL>. For all other builds, it expands to <small>__declspec(dllimport)</SMALL>.
+</DL>
+<p>Compile the DlgInDll project. Visual C<small>&#43;&#43;</SMALL> creates a DLL and an import LIB file for DlgInDll.</P>
+<p><font size="+1"><b>Looking at an Example Using an Extension DLL</B></FONT></P>
+<p>As an example of using an MFC extension DLL, the CD-ROM includes the Hello project, which uses the DlgInDll DLL project created in the preceding section.
+</P>
+<p>Once again, you can open this project and follow along as the project is described, or you can create the project yourself using the steps presented in the next few sections. To begin, create a dialog-based project named Hello using ClassWizard.</P>
+<p><font size="+1"><b>Modifying the Main Dialog Box</B></FONT></P>
+<p>Using Developer Studio, add a new pushbutton control to the main dialog box, as shown in Figure 6.12.
+</P>
+<p><a name="Fig12"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-12.jpg',800,572 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-12t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-12.jpg',800,572)"><font color="#000077"><b>Figure 6.12</B></FONT></A>&nbsp;&nbsp;Adding controls to the main dialog box for the Hello application.</P>
+<p>Table 6.3 shows the resource IDs used by the main dialog box controls. Note that the static control has a new resource ID and caption.
+</P>
+<table width="100%"><caption align="LEFT" colspan="3"><b>Table 6.3</B> Controls Used by the Main Dialog Box
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th valign="TOP" align="LEFT"><i>Control</I>
+<th valign="TOP" align="LEFT"><i>Resource ID</I>
+<th valign="TOP" align="LEFT"><i>Caption</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Name button
+<td valign="TOP" align="LEFT"><small>IDC_NAME</SMALL>
+<td valign="TOP" align="LEFT"><small>&ampName</SMALL>...
+<tr>
+<td valign="TOP" align="LEFT">Static control
+<td valign="TOP" align="LEFT"><small>IDC_NAME_LABEL</SMALL>
+<td valign="TOP" align="LEFT"><small>Hello! Click Name</SMALL>...
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>Using ClassWizard, add a message-handling function for the <small>CHelloDlg</SMALL> class. Use the values from Table 6.4 when adding this message-handling function.</P>
+<table width="100%"><caption align="LEFT" colspan="4"><b>Table 6.4</B> Values for New Member Functions in <small>CHelloDlg</SMALL>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th valign="TOP" align="LEFT"><i>Object ID</I>
+<th valign="TOP" align="LEFT"><i>Class Name</I>
+<th valign="TOP" align="LEFT"><i>Message</I>
+<th valign="TOP" align="LEFT"><i>Function</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>IDC_NAME</SMALL>
+<td valign="TOP" align="LEFT"><small>CHelloDlg</SMALL> <td valign="TOP" align="LEFT"><small>BN_CLICKED</SMALL>
+<td valign="TOP" align="LEFT"><small>OnBtnName</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>Using ClassWizard, associate a <small>CStatic</SMALL> member variable named <small>m_wndNameLabel</SMALL> with the <small>IDC_NAME_LABEL</SMALL> static control.</P>
+<p>Listing 6.17 provides the source code for the <small>CHelloDlg::OnBtnName</SMALL> function.</P>
+<p><b>Listing 6.17</B> Calling a Dialog Box Class Located in an Extension DLL</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CHelloDlg::OnBtnName()
+{
+    CNameDlg    dlg;
+    if(dlg.DoModal() == IDOK)
+    {
+        CString strHello = _T(&#147;Hello &#147;);
+        m_wndNameLabel.SetWindowText(strHello &#43; dlg.m_strName);
+    }
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Remember to add the following code to the top of the <small>HelloDlg.cpp</SMALL> source file, just after the standard <small>#include</SMALL> files:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &#147;NameDlg.h&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

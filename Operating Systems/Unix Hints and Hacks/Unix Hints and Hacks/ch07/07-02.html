@@ -1,0 +1,215 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Displays and Emulations</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=07//-->
+<!--PAGES=250-254//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This is a short entry by some standards. Most can be as many as 20 lines of settings, depending on the complexity of the terminal. This one is pretty basic by comparison. What follows is a short list of variables that are used within the terminfo file. You should see some similarities with the termcap file entries:
+</P>
+<table width="100%"><tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td width="10%" valign="TOP" align="LEFT"><small>am</SMALL>
+<td valign="TOP" align="LEFT">terminal has automatic margins
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>cols</SMALL>
+<td valign="TOP" align="LEFT">number of columns in a line
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>it</SMALL>
+<td valign="TOP" align="LEFT">number of spaces for the tab setting
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>lines</SMALL>
+<td valign="TOP" align="LEFT">number of lines on a screen
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>clear</SMALL>
+<td valign="TOP" align="LEFT">clear the screen and home the cursor
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>cup</SMALL>
+<td valign="TOP" align="LEFT">move to row #1 column #2
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>home</SMALL>
+<td valign="TOP" align="LEFT">home the cursor
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>ht</SMALL>
+<td valign="TOP" align="LEFT">hardware tab stop
+</TABLE>
+<p>Many more variables are available and definable. Check your <small>terminfo</SMALL> man pages for a list of all the settings that are available on your system.</P>
+<p>Now you have an entry called <small>newansi</SMALL> that can be compiled into the terminfo database. Before doing so, run an integrity check on the entry to verify that everything is valid and in the proper format. To do this, use the terminfo compiler (<small>tic</SMALL>) with the <small>-c</SMALL> option.</P>
+<!-- CODE SNIP //-->
+<pre>
+# tic -c newansi
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If there are errors in the entry, <small>tic</SMALL> attempts to figure out what the error is and where it is located. If everything runs successfully, nothing is displayed to STDOUT. When the file checks out clean, run <small>tic</SMALL> with no options to compile it into place.</P>
+<!-- CODE SNIP //-->
+<pre>
+# tic newansi
+</PRE>
+<!-- END CODE SNIP //-->
+<p>It almost appears as if nothing happened, but if you look into the terminfo directory, you should see new entries for the file you just compiled.
+</P>
+<p>The terminfo directory is made up of subdirectories that are named after the first letter of the terminfo files in the database. Therefore, the compiled newansi file can be found in the directory /usr/lib/terminfo/n:</P>
+<!-- CODE SNIP //-->
+<pre>
+# ls -l /usr/lib/terminfo/n*
+
+-rw-r&#151;r&#151;    1 root     sys           12 Jun 13  1997 net
+-rw-r&#151;r&#151;    1 root     sys           12 Jun 13  1997 network
+<b>-rw-r&#151;r&#151;    1 root     daemon       982 Nov 29 12:11 newansi</B>
+
+# file /usr/lib/terminfo/n/newansi
+/usr/lib/terminfo/n/newansi:    Compiled Terminfo Entry
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>If you want to use advanced features to manipulate the screen, terminals function properly only when they have an entry in the database.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>The newer terminals on the market today can emulate multiple types of terminals. The Wyse60 ASCII terminal supports vt100, vt220, wyse60, and other types. If this is the case with your terminal, set up the terminal to support one of the entries already available in termcap or terminfo.
+</P>
+<p>If you receive a new terminal from a manufacturer that is not listed in the termcap file, check the documentation. If it is not documented anywhere, you can do several things:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Email the manufacturer. In many cases the vendor can email the entries back to you. (In many instances, manufacturers use the address <small>support@[manufacturer&#146;s name].com</SMALL> or have an alias set up to get to technical support.)
+<dd><b>&#149;</B>&nbsp;&nbsp;Call the manufacturer. You might be able to get the entry faxed to you. However, finding someone at the manufacturer who knows what a terminal entry is can be a problem from time to time. Tell them you need to speak to someone familiar with UNIX. They don&#146;t even have to be in technical support. If you can reach someone with some UNIX knowledge, often they can relay what you are looking for more quickly and easily than you can by trying to describe it to someone who is UNIX illiterate.
+<dd><b>&#149;</B>&nbsp;&nbsp;Check the Web. If you have acquired a terminal by some other means, and it has no documentation or the vendor is out of business, your last resort is to check for Web sites that mention either the terminal or termcap/terminfo entries. You can also check the Terminfo/Termcap Resource Web page at <a href="http://tuxedo.org/~esr/terminfo">http://tuxedo.org/~esr/terminfo</A>.
+<dd><b>&#149;</B>&nbsp;&nbsp;Posting to the Internet. If the entry still cannot be found, try to post a message into the <small>comp.sys.unix</SMALL> Usenet newsgroup or one of the other related newsgroups. Someone might have the entry on his or her system or know how to build one from scratch.
+<dd><b>&#149;</B>&nbsp;&nbsp;Try a standard entry. You can see whether one of the standard entries works with your terminal. Your best chances are probably with ANSI, vt100, vt220, wyse, or xterm.
+</DL>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>termcap, terminfo</SMALL></P>
+<p>World Wide Web:</P>
+<p>Terminfo/Termcap Resource&#151;<a href="http://tuxedo.org/~esr/terminfo">http://tuxedo.org/~esr/terminfo</A></P>
+<h3><a name="Heading4"></A><font color="#000077">7.2 Setting Terminal Types</FONT></H3>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">7.2.1 Description</FONT></H4>
+<p>In order to get the proper terminal setting, you need to set your terminal type. The terminal type is set from the environment variable called <small>TERM</SMALL>. The shell is irrelevant as long as it can set the environment variable <small>TERM</SMALL>. The variable can be set in different ways, depending on the shell you use.</P>
+<p><font size="+1"><b>Example One: Setting TERM in csh</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shell: csh</P>
+<p>In csh, the variable is set from the shell prompt or from the .cshrc startup file in the user&#146;s home directory.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 2% setenv TERM vt100
+</PRE>
+<!-- END CODE SNIP //-->
+<p>An alias entry can be set up for all the terminals that might be used to access the system in the .cshrc file.
+</P>
+<!-- CODE //-->
+<pre>
+rocket 3% vi .cshrc
+
+alias setvt      &#145;set term=vt100&#146;
+alias setvt2     &#145;set term=vt220&#146;
+alias setansi    &#145;set term=ansi&#146;
+alias setxterm   &#145;set term=xterm&#146;
+
+rocket 4% source .cshrc
+rocket 5% setvt
+
+rocket 6% echo $TERM
+vt100
+</PRE>
+<!-- END CODE //-->
+<p>After the .cshrc has been modified with the terminal type aliases, you can source the .cshrc to make the aliases active. After selecting the appropriate terminal, echo the variable to verify that the new value has been set.
+</P>
+<p><font size="+1"><b>Example Two: Setting TERM in sh or ksh</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: sh, ksh</P>
+<p>The environment variable <small>TERM</SMALL> can be set from the shell prompt or from the .profile startup file.</P>
+<!-- CODE SNIP //-->
+<pre>
+$ TERM=vt100; export TERM
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Aliases are not available, but there is another workaround you can use that will simulate an alias-like feature without using a shell script. Functions are often used in shell scripts to organize and replicate particular steps, but they are not limited to scripts. One nice thing about functions is that they are portable between Bourne shell and Korn shell, as well as their derivatives. The following describes one way that a function can be used.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

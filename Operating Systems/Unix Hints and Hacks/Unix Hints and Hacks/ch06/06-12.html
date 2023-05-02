@@ -1,0 +1,251 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=236-240//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Some databases and applications require data from outside the UNIX world. These files can be imported from DOS and need to be straight, clean, plain text with no special control characters embedded in them.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Some new flavors of UNIX provide tools for handling cases such as these. These tools are called <small>to_dos, to_unix, unix2dos</SMALL> and <small>dos2unix</SMALL> and provide extended options. Check with your flavor to see whether it supports these commands.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>sed, tr, to_dos, dos2unix</SMALL></P>
+<h3><a name="Heading22"></A><font color="#000077">6.11 Splitting Files</FONT></H3>
+<h4 align="LEFT"><a name="Heading23"></A><font color="#000077">6.11.1 Description</FONT></H4>
+<p>Here is what to do when you need to split files across floppy disks.
+</P>
+<p><font size="+1"><b>Example One: Splitting Files for Floppies</B></FONT></P>
+<p>Flavor: AT&ampT
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+split -b<i>n</I>[k|m] [size] file [outfile]
+split -line_count [file] [outfile]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>split</SMALL> command can be used to split a file into a predefined size that can be a number of bytes, kilobytes, or megabytes. Depending on the value you pass to the <small>split</SMALL> program, it breaks the file up into multiple files. Each of the multiple files is then the exact size of the value passed to the <small>split</SMALL> program.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 64% ls -al samba.tar
+-rw-r--r--    1 cvalenz user     4945920 Nov 27 15:40 samba.tar
+rocket 68% file samba.T
+samba.T:        tar
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To split a 4.9MB <small>tar</SMALL>-formatted file so it fits on four 3.5-inch floppy disks, use the <small>split</SMALL> command with <small>1400000</SMALL> as the split size of the file:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 65% split -b 1400000 samba.tar
+
+rocket 66% ls -al xa*
+-rw-r--r--    1 cvalenz user     1400000 Nov 27 15:41 xaa
+-rw-r--r--    1 cvalenz user     1400000 Nov 27 15:41 xab
+-rw-r--r--    1 cvalenz user     1400000 Nov 27 15:41 xac
+-rw-r--r--    1 cvalenz user      745920 Nov 27 15:41 xad
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The file is split into four pieces. The names of the files always begin with xaa, xab, xac, and xad. Each file can now be copied to floppy disks and fill the disk to capacity. Now that the file is split, how does it get put back together?
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 67% cat xa* &gt samba.T
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The file can be put back together by appending the pieces together with the <small>cat</SMALL> command. Because all the split files are in alphabetical order, masking the files with <small>xa</SMALL>* appends the files back into the order they were split from.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 64% ls -al samba.T
+-rw-r--r--    1 cvalenz user     4945920 Nov 27 15:47 samba.T
+rocket 68% file samba.T
+samba.T:        tar
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>split</SMALL> can be used on ASCII, binary, tar, dump, and even compressed files. The sequential order of the multiple files are important to the success of joining the files back. It is the only thing that keeps the split file from working when they are put back together.</P>
+<p><font size="+1"><b>Example Two: Splitting Log Files</B></FONT></P>
+<p>There are various ways to split log files, as seen in section 4.4, &#147;Cut the Log in Half.&#148; Here is a way to split the log files in half using the <small>split</SMALL> command.</P>
+<!-- CODE SNIP //-->
+<pre>
+# ls -al SYSLOG
+-rw-r--r--    1 cvalenz user    6945302 Nov 28 11:04 SYSLOG
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you have a log file that is almost 7MB in size and you want to cut it in half using <small>split</SMALL>, take half the number of lines in the file and pass it through <small>split.</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+# wc -l SYSLOG
+        614768 SYSLOG
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Find the total number of lines in the log file.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# expr 614769 / 2
+307384
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Take half the value of the total line in the log file.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# split -307384 SYSLOG syslog.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Pass the value of half the number of lines in the log file to split the log file in half. If you add the name of an output file, place a period (.) at the end. <small>split</SMALL> appends its standard naming scheme&#151;aa, ab, ac, and so on&#151;to the end. Placing the period at the end makes it more recognizable in reading the filenames and for parsing when used within a script.</P>
+<!-- CODE SNIP //-->
+<pre>
+# ls -al xa*
+-rw-r--r--    1 cvalenz user    3338254 Nov 28 11:05 syslog.aa
+-rw-r--r--    1 cvalenz user    3607046 Nov 28 11:05 syslog.ab
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Even though the file sizes are different, the number of lines, as you see, is the same. This is because the number of bytes on a line can be different, so the file sizes are different.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# wc -l xa*
+        307384 syslog.aa
+        307384 syslog.ab
+        614768 total
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>When files need splitting, whether because of lack of disk space or the need for more disk space, <small>split</SMALL> is a useful tool that easily accomplishes splitting files in half or by a specific size.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>When tape devices are not available, you are stuck on an isolated network, and the only form of removable media is a floppy disk, the <small>split</SMALL> command is a useful tool to have around. A file can be split onto multiple floppy disks and taken to another system and joined back together. Although it is possible to execute this on any file that has any size to it, it is not recommended to perform this command on files larger than 10MB. Not only will you be carrying a lot of disks, but the more disks, the greater the chance of that one of the disks will be corrupt.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<small>cat, file, split, wc</SMALL>
+<h3><a name="Heading24"></A><font color="#000077">6.12 Limit the Size of the Core</FONT></H3>
+<h4 align="LEFT"><a name="Heading25"></A><font color="#000077">6.12.1 Description</FONT></H4>
+<p>The size of core files can be controlled with the use of the <small>limit</SMALL> command.</P>
+<p>Flavors: AT&ampT, some BSD</P>
+<p>Shells: <small>csh, tcsh</SMALL></P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>limit coredumpsize</B> <i>blocks</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>limit</SMALL> command allows you to set certain restrictions on the system resources available to the current shell. Here is a set of system resources that can be modified for the shell:</P>
+<!-- CODE //-->
+<pre>
+rocket 69% limit
+cputime         unlimited
+filesize        unlimited
+datasize        524288 kbytes
+stacksize       65536 kbytes
+<b>coredumpsize    unlimited</B>
+memoryuse       57880 kbytes
+descriptors     200
+vmemoryuse      524288 kbytes
+</PRE>
+<!-- END CODE //-->
+<p>In looking at the value set for the <small>coredumpsize</SMALL>, if the system were to dump a core file right now for an application running under the current shell, it could potentially be a file as large as the amount of memory in the system. It would be an unlimited amount. If you want to limit the size of future core files that might get dumped by the system under the current running shell, use the <small>limit</SMALL> command.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 70% limit coredumpsize 1000
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This can be placed at the beginning of any script or in the startup script of a shell. You can test to make sure this works on your system by setting the <small>coredumpsize</SMALL>, starting a process, forcing a core dump on the process, and checking the size of the core file.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 71% limit coredumpsize 1000
+rocket 72% limit coredumpsize
+coredumpsize    1000 kbytes
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Set the limit of <small>coredumpsize</SMALL> to 1000KB. This ensures that the core file is never any larger than 1000KB.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 73% sleep 100 &amp
+[1] 16965
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

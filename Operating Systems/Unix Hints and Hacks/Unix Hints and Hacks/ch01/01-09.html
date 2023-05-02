@@ -1,0 +1,276 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Topics in Administration</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=01//-->
+<!--PAGES=041-045//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>This script is very useful. The output from the script can be passed to other scripts to enhance their functionality. Shell scripts do not have the capability to count within a range of numbers. This little function script provides this capability.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>As administrators, you are often faced with writing shell scripts that require some kind of loop within them. Performing a loop around a range of numbers can get messy if there is a large range involved. By using the counting script described previously, a lengthy <small>for</SMALL> loop can be shortened to a call to the counting script.</P>
+<p>Here is what you have to do when there is no counting script to call:</P>
+<!-- CODE SNIP //-->
+<pre>
+#! /bin/sh
+
+STRING=&#147;The quick brown fox jumped really high&#148;
+
+for i in &#145;echo &#147;5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20&#148;&#145;
+do
+  echo $STRING | cut -c$i
+done
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Compare that to this, when the counting script is available:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+#! /bin/sh
+
+STRING=&#147;The quick brown fox jumped really high&#148;
+
+for i in &#145;count 5 20&#145;
+do
+  echo $STRING | cut -c$i
+done
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This script simply prints out each letter between the fifth and twentieth characters in the string on a line by itself. If the script is needed to process a large range of numbers, the first method of counting with an <small>echo</SMALL> command isn&#146;t too efficient. This little function script is great for processing strings, characters, files, and directories&#151;there are many possible uses for this script.</P>
+<h3><a name="Heading26"></A><font color="#000077">1.13 Remove the ---- Dashes ----</FONT></H3>
+<h4 align="LEFT"><a name="Heading27"></A><font color="#000077">1.13.1 Description</FONT></H4>
+<p>A method of removing files that begin with dashes &#147;-&#148;.
+</P>
+<p>There will be times when you stumble on a file at the top of the directory that contains dashes. Many users sometimes &#147;fat finger&#148; the keys and accidentally create a file with dashes.</P>
+<!-- CODE SNIP //-->
+<pre>
+-rwxrwxrwx  4 root          512 Aug 24 21:01 -F
+-rwxrwxrwx  4 root          512 Aug 24 21:01 ---wow
+drwxrwxrwx  4 root          512 Aug 24 21:01 .
+drwxr-xr-x 19 root         7680 Jul  2 10:41 ..
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you attempt to remove them through normal methods, UNIX will attempt to use them as command-line options and the command will break out with an error:
+</P>
+<!-- CODE //-->
+<pre>
+# rm -F
+Illegal option &#150; F
+Usage: rm [-fir] file...
+
+# rm ---wow
+Illegal option -- -
+Illegal option -- -
+Illegal option -- w
+Illegal option -- o
+Illegal option -- w
+Usage: rm [-fir] file...
+</PRE>
+<!-- END CODE //-->
+<p>So how do you get rid of these files? There are a few ways to perform this task. The files can be removed by a file manager, by hiding the dashes, by fighting a dash with a dash, or by deleting the directory.
+</P>
+<p><font size="+1"><b>Example One: Using File Manager</B></FONT></P>
+<p>Flavors: Those with a GUI-based file manager.
+</P>
+<p>Most GUI-based UNIX interfaces today are packaged with a file manager. The theory behind this interface is to simplify the life of a system administrator. Again, I said in theory&#151;this isn&#146;t always the case.</P>
+<p>File manager programs are pretty intelligent. They recognize file types and remove this misnamed file without any problems. If you feel that critical files are in danger from removing this file manually then use the file manager to remove the file.</P>
+<p><font size="+1"><b>Example Two: Hiding in the Directory</B></FONT></P>
+<p>Flavors: AT&T and BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>rm</B> &#147;./<i>file</I>&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This example uses a method of hiding the dash from the <small>rm</SMALL> command.</P>
+<!-- CODE SNIP //-->
+<pre>
+$ rm ./-F
+$ rm &#147;./---wow&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>By placing the <small>./</SMALL> (dot, slash) in front of the filename, you hide the option and treat it as part of the file. The lines remove the file (not the option) from the current directory. Whenever in doubt, quotation marks (<small>&#147;</SMALL> <small>&#148;</SMALL>) help define the file and should be used.</P>
+<p><font size="+1"><b>Example Three: Fighting a Dash with a Dash</B></FONT></P>
+<p>Flavors: AT&T and BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>rm</B> &#150;- <i>file</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this method you fight a dash with a dash.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+$ rm -- -F
+$ rm -- ---wow
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The double dash before the file will treat it as a file and not as an option. It is similar to example two. It treats what UNIX thinks is an option as a file.
+</P>
+<p><font size="+1"><b>Example Four: Brute Force&#151; rm -r</B></FONT></P>
+<p>Flavors: AT&T and BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>rm</B> -r directory
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is the brute-force approach to solving this problem and should be used only as a last resort. If the file in question is in a nonsystem partition or directory, you may be safe to use this.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+$ mv /usr/people/jdoe /usr/people/tmp/jdoe
+$ rm -r /usr/people/jdoe
+# mkdir /usr/people/jdoe
+$ cp -pr /usr/people/jdoe/[A-Za-z]* /usr/people/jdoe
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Move all the contents of the directory, with the exception of the file in question, to another area.
+</P>
+<p>Line 2: Go up one level and remove all the contents of that directory.</P>
+<p>Line 3: Remake the directory.</P>
+<p>Line 4: Copy the original data back.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>You will destroy your system if you attempt to execute this procedure on a directory that the system uses, such as: /, /etc, /usr, /bin, /sbin.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The potential for deleting the wrong files exists for even the most experienced administrator. Use these methods and you shouldn&#146;t have to rely on your backups to restore any unnecessarily deleted files. You will also not have to stay at work any later than you have to.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>There is nothing worse for an administrator than to be tested by your users. Every once in a while a user will attempt to play a practical joke and see whether you fall into the trap. Here is how it works.
+</P>
+<p>While cruising around in systems and viewing the long listing of various directories with <small>ls</SMALL>, I sometimes notice something very odd at the root level of the directory tree, a file called -r *.</P>
+<!-- CODE SNIP //-->
+<pre>
+-rw-------  1 root          147 Jan 19  1996 -r *
+drwxr-xr-x 22 root         1024 Aug 21 21:16 .
+drwxr-xr-x 22 root         1024 Aug 21 21:16 ..
+-rw-------  1 root          147 Jan 19  1996 .Xauthority
+-rw-r--r--  1 root          366 Sep 30  1994 .Xdefaults
+-rw-r--r--  1 root          260 Jul 24  1997 .cshrc
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Some admins get sucked into this prank and do a <small>rm -r *</SMALL> and wipe out their system. Examples one and two will remove this file, but remember to put quotes around the entire file.</P>
+<!-- CODE SNIP //-->
+<pre>
+# echo &#147;&#148; &gt; &#147;-r *&#148;
+
+# rm ./&#147;-r *&#148;
+# rm &#150; &#147;-r *&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rm
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading28"></A><font color="#000077">1.14 echo Does ls</FONT></H3>
+<h4 align="LEFT"><a name="Heading29"></A><font color="#000077">1.14.1 Description</FONT></H4>
+<p>Why not use <small>echo</SMALL> instead of <small>ls</SMALL>?</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>Shells: Those that understand globbing.</P>
+<p>Did you know that <small>echo</SMALL> can list out a directory much like the <small>ls</SMALL> command? The shell you use must understand globbing in order for this to work. The formatting of the information that results is really the only difference between the two. An output of <small>ls</SMALL> yields a single or multiple column listing. When <small>echo</SMALL> is used, the files are all spaced one right after the other.</P>
+<!-- CODE //-->
+<pre>
+% cd /var
+% ls *
+adm/       log/       named/     opt/       saf/       tmp/
+audit/     lp/        news/      preserve/  spool@     uucp/
+cron/      mail@      nis/       sadm/      statmon/   yp/
+
+% echo *
+adm audit cron log lp mail named news nis opt preserve sadm saf
+&#8658; spool statmon tmp uucp yp
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Controlling Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=10//-->
+<!--PAGES=320-324//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="10-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The fifth parameter is the service&#146;s process type. This parameter is set to <small>SERVICE_WIN32_OWN_PROCESS</SMALL> for services that run in their own address space, or it&#146;s set to <small>SERVICE_WIN32_SHARE_PROCESS</SMALL> if the service shares a process with other services. If the service can interact with the desktop, the process type is combined with <small>SERVICE_INTERACTIVE_PROCESS</SMALL>.</P>
+<p>The sixth parameter in <small>CreateService</SMALL> indicates how the service is to be started. Here are the possible values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_AUTO_START</SMALL> specifies that the service is started automatically when Windows 2000 is started.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_DEMAND_START</SMALL> specifies that the service will be started when requested by another application or via the MMC.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_DISABLED</SMALL> indicates that the service is not available for use.
+</DL>
+<p>The seventh parameter in <small>CreateService</SMALL> indicates how the Service Control Manager should handle errors that occur when the service can&#146;t be launched. Here are the possible values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ERROR_IGNORE</SMALL> specifies that the SCM should log the error and continue trying to start the service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ERROR_NORMAL</SMALL> specifies that the SCM should log the error, display a message box to the user, and continue trying to start the service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ERROR_SEVERE</SMALL> specifies that the service performs an important operation. If the last-known good configuration is being started, the SCM will log the error and continue trying to start the service. In other cases, the SCM will log the error and restart the system with the last-known good configuration.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ERROR_CRITICAL</SMALL> specifies that the service performs an operation that&#146;s absolutely critical. If the last-known good configuration is being started, the SCM will log the error if possible, and the startup will fail. In other cases, the SCM will log the error and restart the system with the last-known good configuration.
+</DL>
+<p>As discussed in the preceding chapter, the FileSpy service registers itself with the Service Control Manager when launched from the command line with the <small>/register</SMALL> argument. The function that handles this task, <small>RegisterService</SMALL>, is provided in Listing 10.1.</P>
+<p><b>Listing 10.1</B> The <small>RegisterService</SMALL> Function from the FileSpy Service<hr></P>
+<!-- CODE //-->
+<pre>
+VOID RegisterService()
+{
+    TCHAR szServicePath[MAX_PATH];
+    SC_HANDLE schScm = NULL;
+    SC_HANDLE schSvc = NULL;
+
+    GetModuleFileName(NULL, szServicePath, MAX_PATH);
+    __try
+    {
+        schScm = OpenSCManager(NULL,
+                               NULL,
+                               SC_MANAGER_CREATE_SERVICE);
+        if(schScm == NULL)
+        {
+            DisplayError(_T(&#147;Can&#146;t open SCM&#148;));
+            __leave;
+        }
+        schSvc = CreateService(schScm,
+                               _T(&#147;FileSpyService&#148;),
+                               _T(&#147;FileSpy Service&#148;),
+                               SERVICE_ALL_ACCESS,
+                               SERVICE_WIN32_OWN_PROCESS,
+                               SERVICE_AUTO_START,
+                               SERVICE_ERROR_NORMAL,
+                               szServicePath,
+                               NULL,    // load-order group
+                               NULL,    // group member tag
+                               NULL,    // dependencies
+                               NULL,    // account
+                               NULL);   // password
+        if(schSvc == NULL)
+        {
+            DisplayError(_T(&#147;Can&#146;t open service&#148;));
+            __leave;
+        }
+        MessageBox(NULL,
+                   _T(&#147;Service installed&#148;),
+                   _T(&#147;FileSpy Service&#148;),
+                   MB_ICONINFORMATION);
+   }
+    __finally
+    {
+        if(schScm) CloseServiceHandle(schScm);
+        if(schSvc) CloseServiceHandle(schSvc);
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>RegisterService</SMALL> function opens a handle to the Service Control Manager and then uses the <small>CreateService</SMALL> function to add the FileSpy service to the SCM database. A message box is displayed with the status of the registration attempt.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Unregistering a Service</FONT></H4>
+<p>To unregister a service from the Service Control Manager&#146;s database, call the <small>DeleteService</SMALL> function. You must open a handle to the service before deleting it, as shown in Listing 10.2.</P>
+<p><b>Listing 10.2</B> Deleting a Service from the SCM Database<hr></P>
+<!-- CODE //-->
+<pre>
+SC_HANDLE schScm = OpenSCManager(NULL,
+                                 NULL,
+                                 SC_MANAGER_CREATE_SERVICE);
+if(schScm != NULL)
+{
+    SC_HANDLE schSvc = OpenService(schScm,
+                                   _T(&#147;MyService&#148;),
+                                   SERVICE_ALL_ACCESS);
+    if(schSvc != NULL)
+    {
+        if(DeleteService(schSvc))
+        {
+            // service deleted
+        }
+        CloseServiceHandle(schSvc);
+    }
+    CloseServiceHandle(schScm);
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 10.2 starts by opening a handle to the Service Control Manager. If the handle can be retrieved, calling the <small>OpenService</SMALL> function opens a handle to the service. Finally, the service&#146;s handle is passed as a parameter to <small>DeleteService</SMALL>, which removes the service from the Service Control Manager&#146;s database.</P>
+<p>As discussed in the preceding chapter, the FileSpy service removes itself from the Service Control Manager&#146;s database when launched from the command line with the <small>/unregister</SMALL> argument, much like the registration process described in the preceding section. The function that handles this task in FileSpy, <small>UnregisterService</SMALL>, is provided in Listing 10.3.</P>
+<p><b>Listing 10.3</B> The <small>UnregisterService</SMALL> Function from the FileSpy Service<hr></P>
+<!-- CODE //-->
+<pre>
+VOID UnregisterService()
+{
+    SC_HANDLE schScm = NULL;
+    SC_HANDLE schSvc = NULL;
+    __try
+    {
+        schScm = OpenSCManager(NULL,
+                               NULL,
+                               SC_MANAGER_CREATE_SERVICE);
+        if(schScm == NULL)
+        {
+            MessageBox(NULL,
+                       _T(&#147;Can&#146;t open SCM&#148;),
+                       _T(&#147;FileSpy Service&#148;),
+                       MB_ICONHAND);
+            __leave;
+        }
+        schSvc = OpenService(schScm,
+                             _T(&#147;FileSpyService&#148;),
+                             SERVICE_ALL_ACCESS);
+        if(schSvc == NULL)
+        {
+            MessageBox(NULL,
+                       _T(&#147;Can&#146;t open service&#148;),
+                       _T(&#147;FileSpy Service&#148;),
+                       MB_ICONHAND);
+            __leave;
+        }
+
+        if(DeleteService(schSvc) == FALSE)
+        {
+            MessageBox(NULL,
+                       _T(&#147;Can&#146;t delete service&#148;),
+                       _T(&#147;FileSpy Service&#148;),
+                       MB_ICONHAND);
+            __leave;
+        }
+        MessageBox(NULL,
+                   _T(&#147;Service deleted&#148;),
+                   _T(&#147;FileSpy Service&#148;),
+                   MB_ICONINFORMATION);
+    }
+    __finally
+    {
+        if(schScm) CloseServiceHandle(schScm);
+        if(schSvc) CloseServiceHandle(schSvc);
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="10-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

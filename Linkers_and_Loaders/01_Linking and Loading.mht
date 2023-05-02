@@ -1,0 +1,1019 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Linking and Loading
+Date: Wed, 11 May 2005 20:21:24 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0000_01C55667.00DB7610"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0000_01C55667.00DB7610
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker01.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Linking and Loading</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Linking and Loading</H1><I>$Revision: 2.3 $</I> <BR><I>$Date: =
+1999/06/30=20
+01:02:35 $</I>=20
+<P>
+<P>
+<H2>What do linkers and loaders do?</H2>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>The basic job of any linker or loader is simple: it binds more=20
+      abstract names to more concrete names, which permits programmers =
+to write=20
+      code using the more abstract names. That is, it takes a name =
+written by a=20
+      programmer such as <TT>getline</TT> and binds it to ``the location =
+612=20
+      bytes from the beginning of the executable code in module=20
+      <TT>iosys</TT>.'' Or it may take a more abstract numeric address =
+such as=20
+      ``the location 450 bytes beyond the beginning of the static data =
+for this=20
+      module'' and bind it to a numeric address. =
+</TD></TR></TBODY></TABLE>
+<P>
+<H2>Address binding: a historical perspective</H2>A useful way to get =
+some=20
+insight into what linkers and loaders do is to look at their part in the =
+
+development of computer programming systems.=20
+<P>
+<P>The earliest computers were programmed entirely in machine language.=20
+Programmers would write out the symbolic programs on sheets of paper, =
+hand=20
+assemble them into machine code and then toggle the machine code into =
+the=20
+computer, or perhaps punch it on paper tape or cards. (Real hot-shots =
+could=20
+compose code directly at the switches.) If the programmer used symbolic=20
+addresses at all, the symbols were bound to addresses as the programmer =
+did his=20
+or her hand translation. If it turned out that an instruction had to be =
+added or=20
+deleted, the entire program had to be hand-inspected and any addresses =
+affected=20
+by the added or deleted instruction adjusted.=20
+<P>
+<P>The problem was that the names were bound to addresses too early. =
+Assemblers=20
+solved that problem by letting programmers write programs in terms of =
+symbolic=20
+names, with the assembler binding the names to machine addresses. If the =
+program=20
+changed, the programmer had to reassemble it, but the work of assigning =
+the=20
+addresses is pushed off from the programmer to the computer.=20
+<P>
+<P>Libraries of code compound the address assignment problem. Since the =
+basic=20
+operations that computers can perform are so simple, useful programs are =
+
+composed of subprograms that perform higher level and more complex =
+operations.=20
+computer installations keep a library of pre-written and debugged =
+subprograms=20
+that programmers can draw upon to use in new programs they write, rather =
+than=20
+requiring programmers to write all their own subprograms. The programmer =
+then=20
+loads the subprograms in with the main program to form a complete =
+working=20
+program.=20
+<P>
+<P>Programmers were using libraries of subprograms even before they used =
+
+assemblers. By 1947, John Mauchly, who led the ENIAC project, wrote =
+about=20
+loading programs along with subprograms selected from a catalog of =
+programs=20
+stored on tapes, and of the need to relocate the subprograms' code to =
+reflect=20
+the addresses at which they were loaded. Perhaps surprisingly, these two =
+basic=20
+linker functions, relocation and library search, appear to predate even=20
+assemblers, as Mauchly expected both the program and subprograms to be =
+written=20
+in machine language. The relocating loader allowed the authors and users =
+of the=20
+subprograms to write each subprogram as though it would start at =
+location zero,=20
+and to defer the actual address binding until the subprograms were =
+linked with a=20
+particular main program.=20
+<P>
+<P>With the advent of operating systems, relocating loaders separate =
+from=20
+linkers and libraries became necessary. Before operating systems, each =
+program=20
+had the machine's entire memory at its disposal, so the program could be =
+
+assembled and linked for fixed memory addresses, knowing that all =
+addresses in=20
+the computer would be available. But with operating systems, the program =
+had to=20
+share the computer's memory with the operating system and perhaps even =
+with=20
+other programs, This means that the actual addresses at which the =
+program would=20
+be running weren't known until the operating system loaded the program =
+into=20
+memory, deferring final address binding past link time to load time. =
+Linkers and=20
+loaders now divided up the work, with linkers doing part of the address =
+binding,=20
+assigning relative addresses within each program, and the loader doing a =
+final=20
+relocation step to assign actual addresses.=20
+<P>
+<P>As systems became more complex, they called upon linkers to do more =
+and more=20
+complex name management and address binding. Fortran programs used =
+multiple=20
+subprograms and common blocks, areas of data shared by multiple =
+subprograms, and=20
+it was up to the linker to lay out storage and assign the addresses both =
+for the=20
+subprograms and the common blocks. Linkers increasingly had to deal with =
+object=20
+code libraries. including both application libraries written in Fortran =
+and=20
+other languages, and compiler support libraries called implcitly from =
+compiled=20
+code to handle I/O and other high-level operations.=20
+<P>
+<P>Programs quickly became larger than available memory, so linkers =
+provided=20
+overlays, a technique that let programmers arrange for different parts =
+of a=20
+program to share the same memory, with each overlay loaded on demand =
+when=20
+another part of the program called into it. Overlays were widely used on =
+
+mainframes from the advent of disks around 1960 until the spread of =
+virtual=20
+memory in the mid-1970s, then reappeared on microcomputers in the early =
+1980s in=20
+exactly the same form, and faded as virtual memory appeared on PCs in =
+the 1990s.=20
+They're still used in memory limited embedded environments, and may yet =
+reappear=20
+in other places where precise programmer or compiler control of memory =
+usage=20
+improves performance.=20
+<P>
+<P>With the advent of hardware relocation and virtual memory, linkers =
+and=20
+loaders actually got less complex, since each program could again have =
+an entire=20
+address space. Programs could be linked to be loaded at fixed addresses, =
+with=20
+hardware rather than software relocation taking care of any load-time=20
+relocation. But computers with hardware relocation invariably run more =
+than one=20
+program, frequently multiple copies of the same program. When a computer =
+runs=20
+multiple instances of one program, some parts of the program are the =
+same among=20
+all running instance (the executable code, in particular), while other =
+parts are=20
+unique to each instance. If the parts that don't change can be separated =
+out=20
+from the parts that do change, the operating system can use a single =
+copy of the=20
+unchanging part, saving considerable storage. Compilers and assemblers =
+were=20
+modified to create object code in multiple sections, with one section =
+for read=20
+only code and another section for writable data, the linker had to be =
+able to=20
+combine all of sections of each type so that the linked program would =
+have all=20
+the code in one place and all of the data in another. This didn't delay =
+address=20
+binding any more than it already was, since addresses were still =
+assigned at=20
+link time, but more work was deferred to the linker to assign addresses =
+for all=20
+the sections.=20
+<P>
+<P>Even when different programs are running on a computer, those =
+different=20
+programs usually turn out to share a lot of common code. For example, =
+nearly=20
+every program written in C uses routines such as <TT>fopen</TT> and=20
+<TT>printf</TT>, database applications all use a large access library to =
+connect=20
+to the database, and programs running under a GUI such as X Window, MS =
+Windows,=20
+or the Macintosh all use pieces of the GUI library. Most systems now =
+provide=20
+<I>shared libraries</I> for programs to use, so that all the programs =
+that use a=20
+library can share a single copy of it. This both improves runtime =
+performance=20
+and saves a lot of disk space; in small programs the common library =
+routines=20
+often take up more space than the program itself.=20
+<P>
+<P>In the simpler static shared libraries, each library is bound to =
+specific=20
+addresses at the time the library is built, and the linker binds program =
+
+references to library routines to those specific addresses at link time. =
+Static=20
+libraries turn out to be inconveniently inflexible, since programs =
+potentially=20
+have to be relinked every time any part of the library changes, and the =
+details=20
+of creating static shared libraries turn out to be very tedious. Systems =
+added=20
+dynamically linked libraries in which library sections and symbols =
+aren't bound=20
+to actual addresses until the program that uses the library starts =
+running.=20
+Sometimes the binding is delayed even farther than that; with =
+full-fledged=20
+dynamic linking, the addresses of called procedures aren't bound until =
+the first=20
+call. Furthermore, programs can bind to libraries as the programs are =
+running,=20
+loading libraries in the middle of program execution. This provides a =
+powerful=20
+and high-performance way to extend the function of programs. Microsoft =
+Windows=20
+in particular makes extensive use of runtime loading of shared libraries =
+(known=20
+as DLLs, Dynamically Linked Libraries) to construct and extend programs. =
+
+<P>
+<H2>Linking vs. loading</H2>Linkers and loaders perform several related =
+but=20
+conceptually separate actions.=20
+<UL>
+  <LI><I>Program loading:</I> Copy a program from secondary storage =
+(which since=20
+  about 1968 invariably means a disk) into main memory so it's ready to =
+run. In=20
+  some cases loading just involves copying the data from disk to memory, =
+in=20
+  others it involves allocating storage, setting protection bits, or =
+arranging=20
+  for virtual memory to map virtual addresses to disk pages.=20
+  <LI><I>Relocation:</I> Compilers and assemblers generally create each =
+file of=20
+  object code with the program addresses starting at zero, but few =
+computers let=20
+  you load your program at location zero. If a program is created from =
+multiple=20
+  subprograms, all the subprograms have to be loaded at non-overlapping=20
+  addresses. Relocation is the process of assigning load addresses to =
+the=20
+  various parts of the program, adjusting the code and data in the =
+program to=20
+  reflect the assigned addresses. In many systems, relocation happens =
+more than=20
+  once. It's quite common for a linker to create a program from multiple =
+
+  subprograms, and create one linked output program that starts at zero, =
+with=20
+  the various subprograms relocated to locations within the big program. =
+Then=20
+  when the program is loaded, the system picks the actual load address =
+and the=20
+  linked program is relocated as a whole to the load address.=20
+  <LI><I>Symbol resolution:</I> When a program is built from multiple=20
+  subprograms, the references from one subprogram to another are made =
+using=20
+  symbols; a main program might use a square root routine called =
+<TT>sqrt</TT>,=20
+  and the math library defines <TT>sqrt</TT>. A linker resolves the =
+symbol by=20
+  noting the location assigned to <TT>sqrt</TT> in the library, and =
+patching the=20
+  caller's object code to so the call instruction refers to that =
+location.=20
+  <P>
+  <P>Although there's considerable overlap between linking and loading, =
+it's=20
+  reasonable to define a program that does program loading as a loader, =
+and one=20
+  that does symbol resolution as a linker. Either can do relocation, and =
+there=20
+  have been all-in-one linking loaders that do all three functions.=20
+  <P>
+  <P>The line between relocation and symbol resolution can be fuzzy. =
+Since=20
+  linkers already can resolve references to symbols, one way to handle =
+code=20
+  relocation is to assign a symbol to the base address of each part of =
+the=20
+  program, and treat relocatable addresses as references to the base =
+address=20
+  symbols.=20
+  <P>
+  <P>One important feature that linkers and loaders share is that they =
+both=20
+  patch object code, the only widely used programs to do so other than =
+perhaps=20
+  debuggers. This is a uniquely powerful feature, albeit one that is =
+extremely=20
+  machine specific in the details, and can lead to baffling bugs if done =
+wrong.=20
+  </P></LI></UL>
+<P>
+<H3>Two-pass linking</H3>Now we turn to the general structure of =
+linkers.=20
+Linking, like compiling or assembling, is fundamentally a two pass =
+process. A=20
+linker takes as its input a set of input object files, libraries, and =
+perhaps=20
+command files, and produces as its result an output object file, and =
+perhaps=20
+ancillary information such as a load map or a file containing debugger =
+symbols,=20
+Figure 1.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig01-01.html"><IMG=20
+      height=3D81 =
+src=3D"http://www.iecc.com/linker/thumb-linker01-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> The linker process <BR>picture of linker taking =
+input=20
+      files, producing output file, maybe also other junk=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>Each input file contains a set of <I>segments</I>, contiguous chunks =
+of code=20
+or data to be placed in the output file. Each input file also contains =
+at least=20
+one <I>symbol table</I>. Some symbols are exported, defined within the =
+file for=20
+use in other files, generally the names of routines within the file that =
+can be=20
+called from elsewhere. Other symbols are imported, used in the file but =
+not=20
+defined, generally the names of routines called from but not present in =
+the=20
+file.=20
+<P>
+<P>When a linker runs, it first has to scan the input files to find the =
+sizes of=20
+the segments and to collect the definitions and references of all of the =
+symbols=20
+It creates a segment table listing all of the segments defined in the =
+input=20
+files, and a symbol table with all of the symbols imported or exported.=20
+<P>
+<P>Using the data from the first pass, the linker assigns numeric =
+locations to=20
+symbols, determines the sizes and location of the segments in the output =
+address=20
+space, and figures out where everything goes in the output file.=20
+<P>
+<P>The second pass uses the information collected in the first pass to =
+control=20
+the actual linking process. It reads and relocates the object code, =
+substituting=20
+numeric addresses for symbol references, and adjusting memory addresses =
+in code=20
+and data to reflect relocated segment addresses, and writes the =
+relocated code=20
+to the output file. It then writes the output file, generally with =
+header=20
+information, the relocated segments, and symbol table information. If =
+the=20
+program uses dynamic linking, the symbol table contains the info the =
+runtime=20
+linker will need to resolve dynamic symbols. In many cases, the linker =
+itself=20
+will generate small amounts of code or data in the output file, such as =
+"glue=20
+code" used to call routines in overlays or dynamically linked libraries, =
+or an=20
+array of pointers to initialization routines that need to be called at =
+program=20
+startup time.=20
+<P>
+<P>Whether or not the program uses dynamic linking, the file may also =
+contain a=20
+symbol table for relinking or debugging that isn't used by the program =
+itself,=20
+but may be used by other programs that deal with the output file.=20
+<P>
+<P>Some object formats are relinkable, that is, the output file from one =
+linker=20
+run can be used as the input to a subsequent linker run. This requires =
+that the=20
+output file contain a symbol table like one in an input file, as well as =
+all of=20
+the other auxiliary information present in an input file.=20
+<P>
+<P>Nearly all object formats have provision for debugging symbols, so =
+that when=20
+the program is run under the control of a debugger, the debugger can use =
+those=20
+symbols to let the programmer control the program in terms of the line =
+numbers=20
+and names used in the source program. Depending on the details of the =
+object=20
+format, the debugging symbols may be intermixed in a single symbol table =
+with=20
+symbols needed by the linker, or there may be one table for the linker =
+and a=20
+separate, somewhat redundant table for the debugger.=20
+<P>
+<P>A few linkers appear to work in one pass. They do that by buffering =
+some or=20
+all of the contents of the input file in memory or disk during the =
+linking=20
+process, then reading the buffered material later. Since this is an=20
+implementation trick that doesn't fundamentally affect the two-pass =
+nature of=20
+linking, we don't address it further here.=20
+<P>
+<H3>Object code libraries</H3>All linkers support object code libraries =
+in one=20
+form or another, with most also providing support for various kinds of =
+shared=20
+libraries.=20
+<P>
+<P>The basic principle of object code libraries is simple enough, Figure =
+2. A=20
+library is little more than a set of object code files. (Indeed, on some =
+systems=20
+you can literally catenate a bunch of object files together and use the =
+result=20
+as a link library.) After the linker processes all of the regular input =
+files,=20
+if any imported names remain undefined, it runs through the library or =
+libraries=20
+and links in any of the files in the library that export one or more =
+undefined=20
+names.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig01-02.html"><IMG=20
+      height=3D81 =
+src=3D"http://www.iecc.com/linker/thumb-linker01-02.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 2:</I> Object code libraries <BR>Object files fed into =
+the=20
+      linker, with libraries containing lots of files following along.=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>Shared libraries complicate this task a little by moving some of the =
+work=20
+from link time to load time. The linker identifies the shared libraries =
+that=20
+resolve the undefined names in a linker run, but rather than linking =
+anything=20
+into the program, the linker notes in the output file the names of the =
+libraries=20
+in which the symbols were found, so that the shared library can be bound =
+in when=20
+the program is loaded. See Chapters 9 and 10 for the details.=20
+<P>
+<H3>Relocation and code modification</H3>The heart of a linker or =
+loader's=20
+actions is relocation and code modification. When a compiler or =
+assembler=20
+generates and object file, it generates the code using the unrelocated =
+addresses=20
+of code and data defined within the file, and usually zeros for code and =
+data=20
+defined elsewhere. As part of the linking process, the linker modifies =
+the=20
+object code to reflect the actual addresses assigned. For example, =
+consider this=20
+snippet of x86 code that moves the contents of variable <TT>a</TT> to =
+variable=20
+<TT>b</TT> using the eax register.=20
+<P><TT><BR>mov a,%eax <BR>mov %eax,b=20
+<P></TT>
+<P>If <TT>a</TT> is defined in the same file at location 1234 hex and b =
+is=20
+imported from somewhere else, the generated object code will be:=20
+<P><TT><BR>A1 34 12 00 00 mov a,%eax <BR>A3 00 00 00 00 mov %eax,b=20
+<P></TT>
+<P>Each instruction contains a one-byte operation code followed by a =
+four-byte=20
+address. The first instruction has a reference to 1234 (byte reversed, =
+since the=20
+x86 uses a right to left byte order) and the second a reference to zero =
+since=20
+the location of <TT>b</TT> is unknown.=20
+<P>
+<P>Now assume that the linker links this code so that the section in =
+which=20
+<TT>a</TT> is located is relocated by hex 10000 bytes, and <TT>b</TT> =
+turns out=20
+to be at hex 9A12. The linker modifies the code to be:=20
+<P><TT><BR>A1 34 12 01 00 mov a,%eax <BR>A3 12 9A 00 00 mov %eax,b=20
+<P></TT>
+<P>That is, it adds 10000 to the address in the first instruction so now =
+it=20
+refers to <TT>a</TT>'s relocated address which is 11234, and it patches =
+in the=20
+address for <TT>b</TT>. These adjustments affect instructions, but any =
+pointers=20
+in the data part of an object file have to be adjusted as well.=20
+<P>
+<P>On older computers with small address spaces and direct addressing, =
+the=20
+modification process is fairly simple, since there are only only one or =
+two=20
+address formats that a linker has to handle. Modern computers, including =
+all=20
+RISCs, require considerably more complex code modification. No single=20
+instruction contains enough bits to hold a direct address, so the =
+compiler and=20
+linker have to use complicated addressing tricks to handle data at =
+arbitrary=20
+addresses. In some cases, it's possible to concoct an address using two =
+or three=20
+instructions, each of which contains part of the address, and use bit=20
+manipulation to combine the parts into a full address. In this case, the =
+linker=20
+has to be prepared to modify each of the instructions appropriately, =
+inserting=20
+some of the bits of the address into each instruction. In other cases, =
+all of=20
+the addresses used by a routine or group of routines are placed in an =
+array used=20
+as an ``address pool'', initialization code sets one of the machine =
+registers to=20
+point to that array, and code loads pointers out of the address pool as =
+needed=20
+using that register as a base register. The linker may have to create =
+the array=20
+from all of the addresses used in a program, then modify instructions =
+that so=20
+that they refer to the approprate address pool entry. We address this in =
+Chapter=20
+7.=20
+<P>
+<P>Some systems require position independent code that will work =
+correctly=20
+regardless of where in the address space it is loaded. Linkers generally =
+have to=20
+provide extra tricks to support that, separating out the parts of the =
+program=20
+that can't be made position independent, and arranging for the two parts =
+to=20
+communicate. (See Chapter 8.)=20
+<P>
+<H2>Compiler Drivers</H2>In most cases, the operation of the linker is =
+invisible=20
+to the programmer or nearly so, because it's run automatically as part =
+of the=20
+compilation process. Most compilation systems have a <I>compiler =
+driver</I> that=20
+automatically invokes the phases of the compiler as needed. For example, =
+if the=20
+programmer has two C language source files, the compiler driver will run =
+a=20
+sequence of programs like this on a Unix system:=20
+<UL>
+  <LI>C preprocessor on file A, creating preprocessed A=20
+  <LI>C compiler on preprocessed A, creating assembler file A=20
+  <LI>Assembler on assembler file A, creating object file A=20
+  <LI>C preprocceor on file B, creating preprocessed B=20
+  <LI>C compiler on preprocessed B, creating assembler file B=20
+  <LI>Assembler on assembler file B, creating object file B=20
+  <LI>Linker on object files A and B, and system C library </LI></UL>
+<P>
+<P>That is, it compiles each source file to assembler and then object =
+code, and=20
+links the object code together, including any needed routines from the =
+system C=20
+library.=20
+<P>
+<P>Compiler drivers are often much cleverer than this. They often =
+compare the=20
+creation dates of source and object files, and only recompile source =
+files that=20
+have changed. (The Unix <I>make</I> program is the classic example.)=20
+Particularly when compiling C++ and other object oriented languages, =
+compiler=20
+drivers can play all sorts of tricks to work around limitations in =
+linkers or=20
+object formats. For example, C++ templates define a potentially infinite =
+set of=20
+related routines, so to find the finite set of template routines that a =
+program=20
+actually uses, a compiler driver can link the programs' object files =
+together=20
+with no template code, read the error messages from the linker to see =
+what's=20
+undefined, call the C++ compiler to generate object code for the =
+necessary=20
+template routines and re-link. We cover some of these tricks in Chapter =
+11.=20
+<P>
+<H3>Linker command languages</H3>Every linker has some sort of command =
+language=20
+to control the linking process. At the very least the linker needs the =
+list of=20
+object files and libraries to link. Generally there is a long list of =
+possible=20
+options: whether to keep debugging symbols, whether to use shared or =
+unshared=20
+libraries, which of several possible output formats to use. Most linkers =
+permit=20
+some way to specify the address at which the linked code is to be bound, =
+which=20
+comes in handy when using a linker to link a system kernel or other =
+program that=20
+doesn't run under control of an operating system. In linkers that =
+support=20
+multiple code and data segments, a linker command language can specify =
+the order=20
+in which segments are to be linked, special treatment for certain kinds =
+of=20
+segments, and other application-specific options.=20
+<P>
+<P>There are four common techniques to pass commands to a linker:=20
+<UL>
+  <LI><I>Command line:</I> Most systems have a command line or the =
+equivalent,=20
+  via which one can pass a mixture of file names and switches. This is =
+the usual=20
+  approach for Unix and Windows linkers. On systems with limited length =
+command=20
+  lines, there's usually a way to direct the linker to read commands =
+from a file=20
+  and treat them as though they were on the command line.=20
+  <LI><I>Intermixed with object files:</I> Some linkers, such as IBM =
+mainframe=20
+  linkers, accept alternating object files and linker commands in a =
+single input=20
+  file. This dates from the era of card decks, when one would pile up =
+object=20
+  decks and hand-punched command cards in a card reader.=20
+  <LI><I>Embedded in object files:</I> Some object formats, notably =
+Microsoft's,=20
+  permit linker commands to be embedded inside object files. This =
+permits a=20
+  compiler to pass any options needed to link an object file in the file =
+itself.=20
+  For example, the C compiler passes commands to search the standard C =
+library.=20
+  <LI><I>Separate configuration language:</I> A few linkers have a full =
+fledged=20
+  configuration language to control linking. The GNU linker, which can =
+handle an=20
+  enormous range of object file formats, machine architectures, and =
+address=20
+  space conventions, has a complex control language that lets a =
+programmer=20
+  specify the order in which segments should be linked, rules for =
+combining=20
+  similar segments, segment addresses, and a wide range of other =
+options. Other=20
+  linkers have less complex languages to handle specific features such =
+as=20
+  programmer-defined overlays. </LI></UL>
+<P>
+<H2>Linking: a true-life example</H2>We complete our introduction to =
+linking=20
+with a small but real linking example. Figure 3 shows a pair of C =
+language=20
+source files, m.c with a main program that calls a routine named =
+<TT>a</TT>, and=20
+a.c that contains the routine with a call to the library routines=20
+<TT>strlen</TT> and <TT>printf</TT>.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 3 --></TD>
+    <TD><I>Figure 3:</I> Source files <BR>Source file m.c=20
+      <P><TT><BR>extern void a(char *); int main(int ac, char **av) =
+<BR>{=20
+      <BR>static char string[] =3D "Hello, world!\n"; a(string); <BR>}=20
+      <P></TT>
+      <P>Source file a.c=20
+      <P><TT><BR>#include &lt;unistd.h&gt; <BR>#include &lt;string.h&gt; =
+void=20
+      a(char *s) <BR>{ <BR>write(1, s, strlen(s)); <BR>}=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>The main program m.c compiles, on my Pentium with GCC, into a 165 =
+byte object=20
+file in the classic a.out object format, Figure 4. That object file =
+includes a=20
+fixed length header, 16 bytes of "text" segment, containing the read =
+only=20
+program code, and 16 bytes of "data" segment, containing the string. =
+Following=20
+that are two relocation entries, one that marks the pushl instruction =
+that puts=20
+the address of the string on the stack in preparation for the call to=20
+<TT>a</TT>, and one that marks the call instruction that transfers =
+control to=20
+<TT>a</TT>. The symbol table exports the definition of <TT>_main</TT>, =
+imports=20
+<TT>_a</TT>, and contains a couple of other symbols for the debugger. =
+(Each=20
+global symbol is prefixed with an underscore, for reasons described in =
+Chapter=20
+5.) Note that the pushl instruction refers to location 10 hex, the =
+tentative=20
+address for the string, since it's in the same object file, while the =
+call=20
+refers to location 0 since the address of <TT>_a</TT> is unknown.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 4 --></TD>
+    <TD><I>Figure 4:</I> Object code for m.o <BR>
+      <P><TT><BR>Sections: <BR>Idx Name Size VMA LMA File off Algn <BR>0 =
+.text=20
+      00000010 00000000 00000000 00000020 2**3 <BR>1 .data 00000010 =
+00000010=20
+      00000010 00000030 2**3 <BR>Disassembly of section .text: 00000000=20
+      &lt;_main&gt;: <BR>0: 55 pushl %ebp <BR>1: 89 e5 movl %esp,%ebp =
+<BR>3: 68=20
+      10 00 00 00 pushl $0x10 <BR>4: 32 .data <BR>8: e8 f3 ff ff ff call =
+0=20
+      <BR>9: DISP32 _a <BR>d: c9 leave <BR>e: c3 ret <BR>... </TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>The subprogram file a.c compiles into a 160 byte object file, Figure =
+5, with=20
+the header, a 28 byte text segment, and no data. Two relocation entries =
+mark the=20
+calls to <TT>strlen</TT> and <TT>write</TT>, and the symbol table =
+exports=20
+<TT>_a</TT> and imports <TT>_strlen</TT> and <TT>_write</TT>.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 5 --></TD>
+    <TD><I>Figure 5:</I> Object code for m.o <BR>
+      <P><TT><BR>Sections: <BR>Idx Name Size VMA LMA File off Algn <BR>0 =
+.text=20
+      0000001c 00000000 00000000 00000020 2**2 <BR>CONTENTS, ALLOC, =
+LOAD, RELOC,=20
+      CODE <BR>1 .data 00000000 0000001c 0000001c 0000003c 2**2 =
+<BR>CONTENTS,=20
+      ALLOC, LOAD, DATA <BR>Disassembly of section .text: 00000000 =
+&lt;_a&gt;:=20
+      <BR>0: 55 pushl %ebp <BR>1: 89 e5 movl %esp,%ebp <BR>3: 53 pushl =
+%ebx=20
+      <BR>4: 8b 5d 08 movl 0x8(%ebp),%ebx <BR>7: 53 pushl %ebx <BR>8: e8 =
+f3 ff=20
+      ff ff call 0 <BR>9: DISP32 _strlen <BR>d: 50 pushl %eax <BR>e: 53 =
+pushl=20
+      %ebx <BR>f: 6a 01 pushl $0x1 <BR>11: e8 ea ff ff ff call 0 <BR>12: =
+DISP32=20
+      _write <BR>16: 8d 65 fc leal -4(%ebp),%esp <BR>19: 5b popl %ebx =
+<BR>1a: c9=20
+      leave <BR>1b: c3 ret </TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>To produce an executable program, the linker combines these two =
+object files=20
+with a standard startup initialization routine for C programs, and =
+necessary=20
+routines from the C library, producing an executable file displayed in =
+part in=20
+Figure 6.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 6 --></TD>
+    <TD><I>Figure 6:</I> Selected parts of executable <BR>
+      <P><TT><BR>Sections: <BR>Idx Name Size VMA LMA File off Algn <BR>0 =
+.text=20
+      00000fe0 00001020 00001020 00000020 2**3 <BR>1 .data 00001000 =
+00002000=20
+      00002000 00001000 2**3 <BR>2 .bss 00000000 00003000 00003000 =
+00000000 2**3=20
+      Disassembly of section .text: 00001020 &lt;start-c&gt;: <BR>... =
+<BR>1092:=20
+      e8 0d 00 00 00 call 10a4 &lt;_main&gt; <BR>... <BR>000010a4 =
+&lt;_main&gt;:=20
+      <BR>10a4: 55 pushl %ebp <BR>10a5: 89 e5 movl %esp,%ebp <BR>10a7: =
+68 24 20=20
+      00 00 pushl $0x2024 <BR>10ac: e8 03 00 00 00 call 10b4 &lt;_a&gt;=20
+      <BR>10b1: c9 leave <BR>10b2: c3 ret <BR>... 000010b4 &lt;_a&gt;: =
+<BR>10b4:=20
+      55 pushl %ebp <BR>10b5: 89 e5 movl %esp,%ebp <BR>10b7: 53 pushl =
+%ebx=20
+      <BR>10b8: 8b 5d 08 movl 0x8(%ebp),%ebx <BR>10bb: 53 pushl %ebx =
+<BR>10bc:=20
+      e8 37 00 00 00 call 10f8 &lt;_strlen&gt; <BR>10c1: 50 pushl %eax =
+<BR>10c2:=20
+      53 pushl %ebx <BR>10c3: 6a 01 pushl $0x1 <BR>10c5: e8 a2 00 00 00 =
+call=20
+      116c &lt;_write&gt; <BR>10ca: 8d 65 fc leal -4(%ebp),%esp =
+<BR>10cd: 5b=20
+      popl %ebx <BR>10ce: c9 leave <BR>10cf: c3 ret <BR>... <BR>000010f8 =
+
+      &lt;_strlen&gt;: <BR>... <BR>0000116c &lt;_write&gt;: <BR>...=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>The linker combined corresponding segments from each input file, so =
+there is=20
+one combined text segment, one combined data segment and one bss segment =
+
+(zero-initialized data, which the two input files didn't use). Each =
+segment is=20
+padded out to a 4K boundary to match the x86 page size, so the text =
+segment is=20
+4K (minus a 20 byte a.out header present in the file but not logically =
+part of=20
+the segment), the data and bss segments are also each 4K.=20
+<P>
+<P>The combined text segment contains the text of library startup code =
+called=20
+<TT>start-c</TT>, then text from m.o relocated to 10a4, a.o relocated to =
+10b4,=20
+and routines linked from the C library, relocated to higher addresses in =
+the=20
+text segment. The data segment, not displayed here, contains the =
+combined data=20
+segments in the same order as the text segments. Since the code for=20
+<TT>_main</TT> has been relocated to address 10a4 hex, that address is =
+patched=20
+into the call instruction in start-c. Within the main routine, the =
+reference to=20
+the string is relocated to 2024 hex, the string's final location in the =
+data=20
+segment, and the call is patched to 10b4, the final address of =
+<TT>_a</TT>.=20
+Within <TT>_a</TT>, the calls to <TT>_strlen</TT> and <TT>_write</TT> =
+are=20
+patched to the final addresses for those two routines.=20
+<P>
+<P>The executable also contains about a dozen other routines from the C =
+library,=20
+not displayed here, that are called directly or indirectly from the =
+startup code=20
+or from <TT>_write</TT> (error routines, in the latter case.) The =
+executable=20
+contains no relocation data, since this file format is not relinkable =
+and the=20
+operating system loads it at a known fixed address. It contains a symbol =
+table=20
+for the benefit of a debugger, although the executable doesn't use the =
+symbols=20
+and the symbol table can be stripped off to save space.=20
+<P>
+<P>In this example, the code linked from the library is considerably =
+larger than=20
+the code for the program itself. That's quite common, particularly when =
+programs=20
+use large graphics or windowing libraries, which provided the impetus =
+for shared=20
+libraries, Chapters 9 and 10. The linked program is 8K, but the =
+identical=20
+program linked using shared libraries is only 264 bytes. This is a toy =
+example,=20
+of course, but real programs often have equally dramatic space savings.=20
+<P>
+<H2>Exercises</H2>What is the advantage of separating a linker and =
+loader into=20
+separate programs? Under what circumstances would a combined linking =
+loader be=20
+useful?=20
+<P>
+<P>Nearly every programming system produced in the past 50 years =
+includes a=20
+linker. Why?=20
+<P>
+<P>In this chapter we've discussed linking and loading assembled or =
+compiled=20
+machine code. Would a linker or loader be useful in a purely =
+interpretive system=20
+that directly interprets source language code? How about in a =
+interpretive=20
+system that turns the source into an intermediate representation like =
+P-code or=20
+the Java Virtual Machine? </P></BODY></HTML>
+
+------=_NextPart_000_0000_01C55667.00DB7610
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker01-01.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABRAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3IlF6
+DJpoXfwx49KU4znP6U0zLnAYUhDisYH3xTTg8DB980BVYH5jn0FLhFHQ5pgGQpGcUblJBxk+9BOe
+qn8qMqf4D+VAASp+8AOKDtxgHvTRsJ5Bp4wpyFJ/CgQwIc4ZhjNYGtXdzZ2kIsZLCOaTABuZdgIx
+yR6nJX866F85zt61jX+h22oxQ/aLZZxGSVD5BAJycYI9B+VAzHbUfEKEE/2Ki7sfNdvyAuSevBzn
+j078c7dnPK1ik0s0byrGglMR3KWz82Mms4+GNFkkcS6XHG20JnaF4AAGOTjgDp6VoWum21haG1sk
+EcZZmAXJ5Ix6epzQBrBnIzwKKVQeeCMHpRQBV1We6tbQNZ2Ru5C2NgcLgYJzz9APxrBfXNYRWY+H
+WyOdpu0BA9+P8+1dO88aMwMigqNxG4cD1Nc0/hG0d4guoagqguzN52XcnGBu7AemKAFXXtbkVW/4
+R2SIbwDvuEJ255PoPbJ9fbM+naxrNw9st5ojxCRtryLMpVBjOfp/9fpxmCTwbpo2nN6SBjAnPOSD
+n68VqaNptvpNs9vayTPGWB2yvkr8oAA4GBgDikBNfyTxwytBG8kiLuEaHlzzxnHtj8a5238SamG8
+uXw5fs6jLEScL1xnj27A/ieK6aVZlM0kYDErwu4g8Z46Vysvg20jmkn+16nb+cxL+TdMgLEk5+5z
+ySefU0wN+3ubmS2jmngNvJukLRM+fkUkA9O/yn8a0UlLIMjtyPSqXl+cTIeQwVcYOAM5Oc+oqzaq
+i2wGzbkbio7E80CJJjlCA3J4H1NYOq3N7b3cMNi9kzMW3x3FyUfqdu0Z56H8uo6jcY7pVXBwPmP9
+P8+1Y+paBY3lw11dWiTPlQCd2QvAIwCPegDLN34j8zYsel5bG3F0xPUZ6nnGcdOuPpXRafO7wKkj
+qzgZLK2QeT0/Ksc+HtAZ5N1jaFnYO26RgSc//r4rQsbO1s4IYbZAqR7Il8tyQoUbse/f86BmvuNF
+M388ZopCscPrVtaX2o3fn6DfyuGMZeMlQ2B1HQdMn/gQ98HhiMWdynk6ReQG7ZTJJO+4RAZOM9eS
+AMcds44rodX8OQa1cQzS3d1C0JJQwMFOSFz1B/uiptN0OPSbcxLeXtyC4cG4kDEYAGM4zjjOPUmm
+MumdV++4A7bhj+dOfbIB821uzDrUmHwccCojbxY6BGz1T5f5daBEIufLuUglwXcnYR34J/DoaS8u
+mh8pdsmGkA3IM9xx+NOhikhHkidpNxLb2HQegrnn8Qagiqx8M6hK4JD7fm4AJyM+pAH4+1IDp9kb
+5LqhPuAagN1EtzJbwDdKAGZRwBnvn/PWqllcSXenrdSWUti5zthc4fg4+YDjn8atQ2EaGTDPKXbe
+fNbdg+woAljkRcqCZZD94qP09BTjHNKRlhGvoDk//Wp+xlwAwH07U7bI3cY9qYEDW6tIXAYSEYyr
+Efp0pDFMjiQsXCj+IAdSOcj0FWCdo6nNIWJBG0mgAA46CigE88EUUgDJAFNL8fKSDTicng00bQeV
+AoAQMxB64xS7yAeeOuaRrqKNtpYbiOF7n8KbsL/NKvHZM8fj60AN3+e3CNsHRhwSfUe1NZWQFjPN
+jOMYX1+lWSd3sfrUU7RrC25l5GBn17UAAiVBkAs+OCxzSCVWIVlKP6HvUoKsMggjHBpDsdcMM0AK
+CM8Hj6UAknhiKiZJEB8ttwPY9R9PX/PNNV40P7x1Vs4w3GaAJ+RyM0obHUGkBGO1Bccj1oAdv/2S
+aKaGj55NFADZXKRuwHQE/pXNapfeJ49TeGy0yOe1wNkocLk4yeCfw7fXnjppI2kjZeOQRXC6/o9n
+FOb620i4vZppd0sHnMoywJLAY6ggcdPmP4gzS0/UNTn1dReaV9nBTC3BlVw3zY25A6/e468V05XH
+Q5rlNC0DTg0Wox6Ve2d0JWYJcO5288nk456/jXWYLcBjmmBBeXUNnaS3M8qxxRjc7sMgDucVzs/i
+vRJ8xNfRuQT8v2d+gJBPHb5T+VdLcoDGVdd4JAIxnjNZWq2NxcW0y2E4tp22eXIbfIGGyc5BzkZH
+SkBnyeO9GhwovVdzwoWFhng/p8p/StzTdTg1S1S5tnSWF1JEi5xwSO49QfyqnpdtdW9tt1QQTTA/
+LJDbFcqAAMjHXrWjblHMpR/lztAAxjv/ADJoEWcdhWTrGpQWEam6haWIvjakW/BAB5Ga1QGzyxqJ
+kkWRmjcHP8LDH60Ac4njSylf/VXSR5I3tbMBwQPXPOcj8uvFaOk6/a6y7/ZfOAj2FjJEUB3BjjB5
+42/qOtZc2jeK8A2/iQD+8GtUbuMkdOwOB79fTpUy0quyEAKepHXigCyMY+6tFM3L2ooAkHSnD+lF
+FACP/q2+lRr0P0oooAD/AFpXoooAQfepP4z9KKKAJJen4Un8Q/GiigBE6fhUTfcFFFAEq9D9aKKK
+QH//2Q==
+
+------=_NextPart_000_0000_01C55667.00DB7610
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker01-02.jpg
+
+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
+6lX/AFn4UUUANl+8PpRRRQB//9k=
+
+------=_NextPart_000_0000_01C55667.00DB7610--

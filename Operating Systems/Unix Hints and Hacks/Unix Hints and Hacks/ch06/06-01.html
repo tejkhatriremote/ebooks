@@ -1,0 +1,243 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=195-199//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch05/05-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 6<br>File Management
+</FONT></H2>
+<dl>
+<dd><b>6.1 Copy Files with Permissions and Time Stamps</B>
+<dd><b>6.2 Copy Files Remotely</B>
+<dd><b>6.3 Which tmp Is a Good Temp?</B>
+<dd><b>6.4 Dealing with Symbolic Links</B>
+<dd><b>6.5 Finding Files with</B> <small>grep</SMALL>
+<dd><b>6.6 Multiple</B> <small>grep</SMALL>
+<dd><b>6.7 Executing Commands Recursively with</B> <small>find</SMALL>
+<dd><b>6.8 Moving and Renaming Groups of Files</B>
+<dd><b>6.9 Stripping the Man Pages</B>
+<dd><b>6.10 Clean Up DOS Files</B>
+<dd><b>6.11 Splitting Files</B>
+<dd><b>6.12 Limit the Size of the Core</B>
+<dd><b>6.13</B> <small>uuencode</SMALL> <b>and</B> <small>uudecode</SMALL>
+</DL>
+<p>Newer versions of UNIX are adding more and more files to their flavors. A basic system can have as many as 10,000 files built in to the UNIX operating system. These files live in as many as 30 standard directories. Although you can use only 10 directories on a regular basis, you should try to gain an understanding of all the directories that commonly appear within UNIX.
+</P>
+<p>Almost all manufacturers now bundle an extensive amount of third-party software with their flavor of UNIX. True, it doesn&#146;t all have to be installed, but straight from the factory, UNIX is typically fully loaded with about every piece of software available, including demos, games, and all the third-party products from companies that the manufacturer has agreements with. With this in mind, it is usually best to wipe the disk clean and rebuild the system with the various software packages that make up UNIX so that it will fit the needs of your environment.</P>
+<p>Managing and working with the thousands of files that make up UNIX becomes a greater challenge with each vendor&#146;s new release of the operating system. In this chapter I will deal with how you can manage, move, migrate, search, and work with files in various ways.</P>
+<h3><a name="Heading2"></A><font color="#000077">6.1 Copy Files with Permissions and Time Stamps</FONT></H3>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">6.1.1 Description</FONT></H4>
+<p>A straight copy command (<small>cp</SMALL>) duplicates the file but leaves it with new permissions and a new ownership. However, there are ways to skirt around this issue and have the <small>cp</SMALL> command maintain the permissions and ownership of a file.</P>
+<p><font size="+1"><b>Example One: Copy with Permissions</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>cp -[pr]</B> files [file|dir]
+<b>cp -[pr]</B> dirs [dir]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can copy files while attempting to preserve the permissions, ownership, groups, and time stamp by using the <small>-p</SMALL> argument with your <small>cp</SMALL> command:</P>
+<!-- CODE //-->
+<pre>
+# whoami
+root
+# cd /home/steve
+# ls -al .cshrc
+-rw-rw-r--   1 steve  staff     2426 May  5  1998 .cshrc
+
+# cp  /.cshrc /tmp
+# ls -al /tmp/.cshrc
+-rw-rw-r--   1 root   sys       2426 Nov  3  13:22 .cshrc
+
+# cp -p /.cshrc /tmp
+# ls -al /tmp/.cshrc
+-rw-rw-r--   1 steve  staff     2426 May  5   1998 .cshrc
+</PRE>
+<!-- END CODE //-->
+<p>If the <small>-p</SMALL> argument is not provided, some flavors always attempt to set the destination file or files to the owner of the source file if it is possible by default. There are instances where even providing the <small>-p</SMALL> argument does not change the permission of the destination file. This occurs when the account attempting to make the copy doesn&#146;t have permission to make such a permission change.</P>
+<p>Using the <small>-r</SMALL> option recursively copies files down the subdirectories to the destination. When the command comes across a symbolic link it turns that link into a directory at the destination point. The command then proceeds through the symbolic link and continues to copy the data that the link points at. Because the symbolic link is turned into a directory with the <small>cp</SMALL> command, you now might have to keep the new directory in synch with the directory that the symbolic link was pointing to, depending on your needs.</P>
+<p>Suppose there were three directories called production, project, and prototype:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 4% ls -l
+drwxr-xr-x    2 dan user           9 Nov  9 19:52 production/
+drwxr-xr-x    2 dan user          76 Nov  9 19:50 project/
+drwxr-xr-x    2 dan user          40 Nov  9 19:49 prototype/
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The most-current project data needs to be put into the production directory while maintaining permissions and recursively copying all the files down the tree.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 5% cp -pr project production
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A symbolic link in the project directory points to the data in the prototype directory. In a case such as this, you want to copy all the physical data files that can be copied into the production directory. The copy with the recursive permissions command works best for this scenario when there are embedded symbolic links that it can follow.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 6% ls -l project
+-rw-r--r--    1 dan user          66 Nov  9 19:49 file01
+lrwxr-xr-x    1 dan user          10 Nov  9 19:49 prototype -&gt ..
+<b>&#8658;</B>/prototype
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Inside the project directory are a file and a symbolic link that point to more files in the prototype directory.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 7% ls -l prototype
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh10180
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh120100
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh140960
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh193920
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When all the data files in the project directory are copied, the command treats the symbolic link as a directory and creates a subdirectory in the production directory.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 8% ls -l production
+drwxr-xr-x    3 dan user          40 Nov  9 19:49 project/
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Under the project directory is the transposed symbolic link that is now a subdirectory called prototype.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 9% ls -l production/project
+-rw-r--r--    1 dan user          66 Nov  9 19:49 file01
+drwxr-xr-x    2 dan user          76 Nov  9 19:50 prototype/
+</PRE>
+<!-- END CODE SNIP //-->
+<p>All the files that were in the subdirectory that the link was pointing to were copied into the new destination subdirectory.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 10% ls -l production/prototype/project
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh10180
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh120100
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh140960
+-rw-r--r--    1 dan user          99 Nov  9 19:50 sh193920
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Two: Copy with tar</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+tar -[cfx] - [file|dir]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The main uses for <small>tar</SMALL> have always been to archive data off to tape or archive a large number of files into one file. It can also be used to copy data from one location to another. Most users would use <small>tar</SMALL> to archive the data into one file, move the archived file to the destination, and then extract it back to its normal state.</P>
+<!-- CODE //-->
+<pre>
+
+rocket 11% tar -cvf project.tar project
+a project/ 0K
+a project/file01 61K
+a project/file02 3K
+a project/file03 19K
+
+rocket 12% ls -al project.tar
+-rw-r--r--  1 jim         87552 Nov  8 19:47 project.tar
+
+rocket 13% mv project.tar /disk2
+rocket 14% cd /disk2
+
+rocket 15% tar -xvf project.tar
+x projects/, 0 bytes, 0 tape blocks
+x projects/file01, 62038 bytes, 122 tape blocks
+x projects/file02, 2448 bytes, 5 tape blocks
+x projects/file03, 19167 bytes, 38 tape blocks
+
+rocket 16% rm project.tar
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch05/05-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

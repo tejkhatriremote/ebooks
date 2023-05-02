@@ -1,0 +1,316 @@
+<HTML>
+<HEAD>
+   <TITLE>More How to Break into Windows</TITLE>
+</HEAD>
+<BODY>
+<br>
+____________________________________________________________
+
+<P>GUIDE TO (mostly) HARMLESS HACKING
+
+<P>Microsoft-only version Number 4
+
+<P>How to Break into Windows 95 from the Internet, continued.
+<BR>____________________________________________________________
+
+<P>by keydet89@yahoo.com
+
+<P>Hacking from Win95
+<BR>Accessing shares via the Internet
+<BR>Alpha Edition:&nbsp; Oct, 1998
+
+<P>[Protecting Yourself]
+<BR>[What can they do]
+<BR>[Getting set up]
+<BR>[Connecting to shares]
+<BR>[Final Words]
+
+<P>The purpose of this Guide is to show the reader how to set up
+<BR>their Win95 computer to use sharing via the Internet.
+
+<P>Readers are encouraged to explore the information provided here,
+<BR>but only after obtaining permission to do so on the remote
+<BR>computer.&nbsp; Get with your friends and try these techniques!
+
+<P>The information in this Guide is meant for use by Win95 users,
+<BR>as the steps that are outlined are specifically for Win95.&nbsp; This
+<BR>same subject for NT has been dealt with in a previous Guide.
+
+<P>Before we start, I should point out that I made extensive use of
+<BR>a free source of information...the Microsoft KnowledgeBase.&nbsp; I
+<BR>searched for a lot of information, and found a lot of good
+<BR>references, by going to http://support.microsoft.com and
+<BR>registering my email address.&nbsp; I will be referencing several
+<BR>KnowledgeBase throughout this Guide, and you can easily go to
+<BR>the Support site and print out copies of the articles...just
+<BR>choose to search for a particular article, rather than by
+<BR>keyword.
+
+<P>[Protecting yourself]
+
+<P>First, the method of protecting yourself needs to be made
+<BR>perfectly clear.&nbsp; DON'T SHARE!!&nbsp; I can't stress that enough.
+<BR>If you are a home user, and you are connecting a Win95 computer
+<BR>to the Internet via some dial-up method, DISABLE SHARING!
+
+<P>If you must share, use a strong password...8 characters minimum,
+<BR>a mix of upper and lower case letters and numbers, change the
+<BR>password every now and again.&nbsp; If you need to transmit the
+<BR>password to someone, do so over the phone or by written letter.
+<BR>Another method for exchanging the information is to use PGP, or
+<BR>'Pretty Good Privacy' (obtaining and installing PGP was covered
+<BR>in a previous Guide).&nbsp; Using PGP will not only allow you to
+<BR>encrypt the information so that only your friend(s) can
+<BR>decrypt it, but you can also digitally sign the file so that
+<BR>your friends know that only you could have sent it.
+
+<P>To disable sharing, click on My Computer -> Control Panel ->
+<BR>Network -> File and Print Sharing.&nbsp; In the dialogue box that
+<BR>appears, uncheck both boxes.&nbsp; It's that easy.&nbsp; If you are
+using
+<BR>NT, disable the Server service to disable sharing...click on
+<BR>My Computer -> Control Panel -> Services, and disable the
+<BR>Server service.
+
+<P>[What can they do]
+
+<P>If someone can access you hard drive via the Internet, there are
+<BR>many things they can do...it all depends upon their knowledge and
+<BR>their intent.&nbsp; Given correct access permissions, they could
+<BR>erase your hard drive...or leave a 'hidden bomb' behind so that
+<BR>your hard drive is erased the next time you boot up.&nbsp; Or they
+<BR>could simply modify your system.ini file so that the next time
+<BR>your computer boots up, it opens into the old Program Manager
+<BR>shell from Windows 3.1, instead of the nice friendly Explorer
+<BR>shell that you are used to.&nbsp; Or they could just copy your
+<BR>email mailboxes, some data, and be merrily on their way.
+
+<P>Of course, there are all sorts of pathological uses for DOS
+<BR>commands like deltree and ctty, and toys like BO...
+
+<P>[Getting set up]
+
+<P>First of all, you need to make sure that your system is set up
+<BR>correctly to access another win95 machine via the Internet.&nbsp; The
+<BR>assumptions made in the following steps are that:
+
+<P>(a) you have your win95 disks or CD, and
+<BR>(b) you have a modem in your computer.
+
+<P>By assuming that the reader has a modem, we can keep the
+<BR>Guide simple, but users who are on a LAN should have no trouble
+<BR>following the Guide.
+
+<P>1.&nbsp; The first thing you need to do is make sure that you have
+<BR>the latest version of DUN (Dial-Up Networking) for Win95.&nbsp; The
+<BR>current version is DUN v1.3, and can be obtained by going to:
+
+<P>http://www.microsoft.com/msdownload
+
+<P>Choose "Windows95 Shareware and Utilities" from the "Support
+<BR>Drivers, Patches and Service Packs" section, and then choose
+<BR>the update from the "Networking &amp; Communications" section.
+
+<P>NOTE:&nbsp; Feel free to gather any other updates that you may be
+<BR>interested in, such as TweakUI.&nbsp; Another useful tool that you
+<BR>will find here under "Resource Kits" is the Windows95 Resource
+<BR>Kit Help File and Utilities.
+
+<P>Once you have obtained and installed the DUN update, you should
+<BR>be ready to begin.
+
+<P>************************************************************
+<BR>NEWBIE NOTE:&nbsp; Before you go on, you might want to look at
+<BR>or print out the following Microsoft KnowledgeBase articles:
+
+<P>Q178729:&nbsp; How to configure Win95 to dial into a RAS/RRAS
+<BR>server
+<BR>http://support.microsoft.com/support/kb/articles/q178/7/29.asp
+
+<P>Q145843:&nbsp; How to connect to a remote server
+<BR>http://support.microsoft.com/support/kb/articles/q145/8/43.asp
+
+<P>Q183368:&nbsp; Requirements to browse network with dial-up
+<BR>networking
+<BR>http://support.microsoft.com/support/kb/articles/q183/3/68.asp
+<BR>************************************************************
+
+<P>Let's get started...
+
+<P>2.&nbsp; Click on Control Panel -> Network, and open the applet
+<BR>to the Configuration tab.&nbsp; You should see the following entries
+<BR>at a minimum:&nbsp; Client for Microsoft Networks, DialUp Adapter,
+<BR>and TCP/IP.
+
+<P>If one or more of these entries aren't there, choose Add, and
+<BR>select the appropriate choice.&nbsp; Make sure that you have your
+<BR>disks or CD-ROM available...just in case.
+
+<P>**If you don't already have it, add NetBEUI to your system by
+<BR>choosing Control Panel -> Network -> Add, and choose Protocol.
+<BR>Select the NetBEUI protocol and install it.
+
+<P>3.&nbsp; Select TCP/IP, and open the Properties for it.&nbsp; In the
+IP
+<BR>Address tab, you will most likely have the 'Obtain an IP address
+<BR>automatically' choice selected.
+
+<P>4.&nbsp; Now double click on My Computer, choose DialUp Networking,
+<BR>and&nbsp; double click on icon for the connection to your ISP.&nbsp;
+Under
+<BR>the Server Type tab, you should have the following selections:
+
+<P>Type of Dial-Up Server:&nbsp; PPP: Windows 95, Windows NT 3.5, Internet
+
+<P>Advanced Options:&nbsp; 'Log on to network' and 'Enable software
+<BR>compression'
+
+<P>Allowed network protocols:&nbsp; TCP/IP
+
+<P>5.&nbsp; Now, click the 'TCP/IP Settings...' button, and you should
+see
+<BR>the 'Server assigned IP address' and 'Server assigned name server
+<BR>addresses' radio buttons selected.&nbsp; Both 'Use IP header
+<BR>compression' and 'Use default gateway on remote network' should
+<BR>be checked.
+
+<P>[Connecting to shares]
+
+<P>6.&nbsp; Before connecting to shares via the Internet, you need to
+<BR>make sure that you machine is configured to use the 'lmhosts'
+<BR>file on your computer to resolve NetBIOS names to IP addresses.
+<BR>To do this, click Start -> Settings -> Control Panel ->
+<BR>Network.
+
+<P>On the Configuration tab, click 'TCP/IP', and click 'Properties'.
+
+<P>On the WINS Configuration tab, click 'Disable WINS Resolution'.
+
+<P>Click Ok, then Ok, again.
+
+<P>Reboot your machine.
+
+<P>7.&nbsp; Now we need to configure lmhosts file entries.&nbsp; You might
+<BR>want to start by opening the lmhosts.sam file:
+
+<P>***********************************************************
+<BR>NEWBIE NOTE:&nbsp; The lmhosts file is similar to the hosts file
+<BR>in that it is used to resolve names to IP addresses.&nbsp; WINS
+<BR>and lmhosts files are the Microsoft versions of the DNS and
+<BR>hosts files systems.&nbsp; DNS/hosts files are used to resolve
+<BR>Internet names like "www.example.com" to IP addresses.
+<BR>WINS/lmhosts files are used to resolve NetBIOS names of
+<BR>machines to their IP addresses.
+<BR>***********************************************************
+
+<P>c:\windows\lmhosts.sam
+
+<P>..in Notepad and reading through it.&nbsp; Then from the command
+<BR>prompt, type:
+
+<P>c:\windows>edit lmhosts
+
+<P>or
+
+<P>c:\windows>notepad lmhosts
+
+<P>The entries in the file should look like:
+
+<P>[IP address] [NetBIOS name]&nbsp; #PRE
+
+<P>Each entry in the lmhosts file needs to look like this
+<BR>if you are going to access shares on the machines.
+
+<P>***********************************************************
+<BR>NEWBIE NOTE:&nbsp; If you don't have the NetBIOS name of your
+<BR>friend's computer, you can get it using the nbtstat command.
+<BR>You have to have the IP address...type:
+
+<P>c:\>nbtstat -A [ip_addr]
+<BR>**NOTE:&nbsp; The letter "A" MUST be capitalized!
+
+<P>You should see something similar to:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NetBIOS Remote Machine Name Table
+<BR>&nbsp;
+<BR>&nbsp;
+
+<P>&nbsp;&nbsp; Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Status
+
+<P>---------------------------------------------
+
+<P>Registered Registered Registered Registered Registered
+
+<P>MAC Address = 00-00-00-00-00-00
+<BR>&nbsp;
+
+<P>95_Box&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;00>&nbsp; UNIQUE
+<BR>95_Box&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;20>&nbsp; UNIQUE
+<BR>domain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;00>&nbsp; GROUP
+<BR>domain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;1C>&nbsp; GROUP
+<BR>domain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;1E>&nbsp; GROUP
+<BR>95_Box&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;03>&nbsp; UNIQUE
+
+<P>What you are looking for is the line with "&lt;00>
+<BR>UNIQUE"...the name at the beginning of the line is
+<BR>the NetBIOS name of the computer.&nbsp; This is what gets
+<BR>entered in the lmhosts file.
+
+<P>If you get the error message "Host not found", it may
+<BR>mean one of several things...your friend is not logged
+<BR>on, there is a firewall between the two of you, etc.
+<BR>***********************************************************
+
+<P>8.&nbsp; Now we need to refresh the NetBIOS cache for your
+<BR>machine...
+
+<P>In the DOS command window, type:
+
+<P>c:\>nbtstat -R
+
+<P>This command reloads the cache from the lmhosts file you just
+<BR>created.
+
+<P>Now, click on Start -> Find -> Computer, and type in the NetBIOS
+<BR>name of the computer...the same one you added to the lmhosts file.
+<BR>If your attempt to connect to the machine is successful, you should
+<BR>be presented with a window containing an icon representing your
+<BR>friend's machine.
+
+<P>You may be presented with a password prompt window; your friend
+<BR>should have given you the password, but if he didn't just try
+<BR>guessing it.
+
+<P>[Final words]
+
+<P>Please remember that this file is for instructional purposes only
+<BR>and is meant to educate the sysadmin and user alike.&nbsp; Accessing
+<BR>computers via the Internet that you do not have permission to access
+<BR>is a violation of federal law in the US.&nbsp; It is best to use the
+<BR>information in this Guide and others to pursue the one and only
+<BR>guaranteed method of gaining root on a system...become the sysadmin!!
+<BR>________________________________________________________
+<BR>Where are those back issues of GTMHHs and Happy Hacker Digests? Check
+out
+<BR>the official Happy Hacker Web page at http://www.happyhacker.org.
+<BR>We are against computer crime. We support good, old-fashioned hacking
+of the
+<BR>kind that led to the creation of the Internet and a new era of freedom
+of
+<BR>information. But we hate computer crime.&nbsp; So don't email us about
+any crimes
+<BR>you have committed!
+<BR>To subscribe to Happy Hacker and receive the Guides to (mostly) Harmless
+<BR>Hacking, please email hacker@techbroker.com with message "subscribe
+<BR>happy-hacker" in the body of your message.
+<BR>Copyright 1998 keydet89.&nbsp; You may forward, print out or post this
+<BR>GUIDE TO (mostly) HARMLESS HACKING on your Web site as long as you
+leave
+<BR>this notice at the end.
+<BR>_________________________________________________________
+<BR>&nbsp;
+<BR>&nbsp;
+<BR>&nbsp;
+</BODY>
+</HTML>

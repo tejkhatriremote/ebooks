@@ -1,0 +1,712 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch19.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch21.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 20</A>
+	<UL>
+		<LI><A HREF="#Heading2">Writing Correct Applications</A>
+		<UL>
+			<LI><A HREF="#Heading3">Kinds of Errors</A>
+			<UL>
+				<LI><A HREF="#Heading4">Figure 20.1.</A>
+				<LI><A HREF="#Heading5">Figure 20.2.</A>
+				<LI><A HREF="#Heading6">Figure 20.3.</A>
+				<LI><A HREF="#Heading7">Figure 20.4.</A>
+			</UL>
+			<LI><A HREF="#Heading8">The Debugger</A>
+			<UL>
+				<LI><A HREF="#Heading9">Figure 20.5.</A>
+			</UL>
+			<LI><A HREF="#Heading10">Setting Breakpoints</A>
+			<UL>
+				<LI><A HREF="#Heading11">Figure 20.6.</A>
+				<LI><A HREF="#Heading12">Figure 20.7.</A>
+				<LI><A HREF="#Heading13">Figure 20.8.</A>
+			</UL>
+			<LI><A HREF="#Heading14">Stepping Through Code</A>
+			<LI><A HREF="#Heading15">The Call Stack Shows Where Youve Been</A>
+			<UL>
+				<LI><A HREF="#Heading16">Figure 20.9.</A>
+				<LI><A HREF="#Heading17">Figure 20.10.</A>
+			</UL>
+			<LI><A HREF="#Heading18">The Immediate Window</A>
+			<UL>
+				<LI><A HREF="#Heading19">Figure 20.11.</A>
+			</UL>
+			<LI><A HREF="#Heading20">Summary</A>
+			<LI><A HREF="#Heading21">Q&amp;A</A>
+			<LI><A HREF="#Heading22">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading23">Quiz</A>
+				<LI><A HREF="#Heading24">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 20</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Writing Correct Applications</FONT></H2>
+<P>What is a correct application? It is an application that compiles cleanly and
+that runs without errors. Rarely is an application truly correct because some bugs
+don't appear until late in the life of an application. Other bugs raise their ugly
+heads as soon as you press Enter after entering a program statement.</P>
+<P>This lesson takes you on a tour of Visual Basic's debugging tools. With Visual
+Basic's integrated debugger as part of the development environment, you can test
+your applications and locate bugs. Your goal should always be to eliminate as many
+bugs as possible. Although you cannot always ensure that every bug is gone, you can
+test your application to eliminate as many bugs as you can.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>What kinds of errors to watch for
+	<P>
+	<LI>How to spot mistakes
+	<P>
+	<LI>When to set a breakpoint
+	<P>
+	<LI>How to examine variables at runtime
+	<P>
+	<LI>When to enter single-step mode
+	<P>
+	<LI>How to use the Immediate window to change program values
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">Kinds of Errors</FONT></H3>
+<P>You already know that a bug is a program error. Several kinds of bugs exist, however.
+The kind of error that appears determines how you will fix the bug.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A syntax error is a bug that
+appears because you misspelled a command or used improper grammar.</P>
+<P>Syntax errors are the easiest errors to remove from your program because Visual
+Basic finds them for you. Take a moment to display the Options dialog box shown in
+Figure 20.1. (Select Tools | Options to see this dialog box.)<BR>
+<BR>
+<A NAME="Heading4"></A><A HREF="../art/ch20/20cce01.jpg"><FONT COLOR="#000077">Figure
+20.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>Letting Visual Basic find syntax
+errors for you. </I><BR>
+<BR>
+The option labeled Auto Syntax Check turns on and off Visual Basic's automatic detection
+of syntax errors as you type them. In other words, if the option is set, and you
+type a statement but type a syntax error, the Code window will look over your shoulder
+and inform you immediately of the error.</P>
+<P>Notice what happens in Figure 20.2. The programmer was trying to enter this statement:</P>
+<PRE><FONT COLOR="#0066FF">Private Functiion CalcTotals(x As Integer) As Double
+</FONT></PRE>
+<P>Although it's fairly obvious that the programmer misspelled <TT>Function</TT>,
+and it's obvious that the Code window noticed something wrong, here are two things
+to notice about this automatic syntax check:
+
+<UL>
+	<LI>The error message box reads <TT>Compile error</TT>, not <TT>Syntax error</TT>.
+	<P>
+	<LI>Visual Basic highlighted the wrong word! Instead of highlighting the problem
+	word <TT>Functiion</TT>, Visual Basic highlighted <TT>CalcTotals</TT>, the name of
+	the function that has no problems.
+</UL>
+
+<P><A NAME="Heading5"></A><A HREF="../art/ch20/20cce02.jpg"><FONT COLOR="#000077">Figure
+20.2.</FONT></A><FONT COLOR="#000077"><I> </I></FONT><I>Visual Basic detected the
+syntax error. </I><BR>
+<BR>
+The error message that appears rarely reads <TT>Syntax error</TT> because several
+kinds of syntax errors can occur. The error message <TT>Compiler error</TT> is less
+informative than some of the others, but the actual error is secondary to the fact
+that you typed something incorrectly. Perhaps you misspelled a word (true in this
+case), left off a quotation mark or a right parenthesis, forgot a built-in function
+argument list, or failed to end the statement with an underscore when you meant to
+continue the statement on the next line. Therefore, when typing code and such an
+error message box appears, look back at the statement to find the error.</P>
+<P>Often, but not always, Visual Basic will highlight the offending part of the statement.
+In this case, however, Visual Basic failed to locate the exact error. Instead, Visual
+Basic highlighted the first word found after the error. Visual Basic cannot always
+detect the exact location of the syntax error because Visual Basic often has to interpret
+more of the statement before a problem becomes obvious. Therefore, if you don't see
+a problem with the current highlighted word, look back a word or two, and you'll
+find the mistake.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you don't understand
+	the error message itself, press F1 or click Help at the error message box to read
+	what the online help has to say about the error message. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A runtime error shows up
+during the program's execution.</P>
+<P>As you can see, syntax errors are the easiest kinds of errors to find. They either
+show up as you type the program code; or if you've turned off the automatic syntax
+error check, the syntax errors show up when you try to run or compile the program.
+Another kind of error, a runtime error, will not show up until you execute the program.</P>
+<P>For example, suppose you were calculating an average salary figure, but you made
+a mistake in the calculation and attempted to divide the total by a variable with
+zero in it. Division by zero is undefined in mathematics (undefined for the real
+number system, to be exact), but Visual Basic cannot, when you write the code, know
+what value the variable will hold. Therefore, only at the time of execution when
+the division is about to take place can Visual Basic recognize that the division
+is impossible. Visual Basic will display a runtime error message box such as the
+one shown in Figure 20.3.<BR>
+<BR>
+<A NAME="Heading6"></A><A HREF="../art/ch20/20cce03.jpg"><FONT COLOR="#000077">Figure
+20.3.</FONT></A><FONT COLOR="#000077"> </FONT><I>A runtime error occurred. <BR>
+<BR>
+</I>When you're faced with a runtime error, the dialog box gives you these choices:
+
+<UL>
+	<LI>Continue
+	<P>
+	<LI>End
+	<P>
+	<LI>Debug
+	<P>
+	<LI>Help
+</UL>
+
+<P>The Continue command button is rarely available because of the severity of most
+runtime errors. However, with the built-in debugging tools that Visual Basic makes
+available when you click Debug, you may possibly fix the problem and then continue
+with the program by clicking Continue. You'll learn all about the debugger in the
+next section.</P>
+<P>If you click End, the program will stop and you'll return to the Code window,
+where you can locate and fix the problem if you don't need help from the debugging
+tools. If you want to read more information on the error message itself, click Help
+to display online help. Figure 20.4 shows the online help that appears when you click
+Help on the divide-by-zero error.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A logic error produces bad
+program results, but no error messages appear.</P>
+<P>Sometimes you tell the computer to do something that is wrong. The computer understands
+your instructions because no syntax or runtime errors appear, but the computer simply
+does not do what you want it to do. In those cases, you've programmed a logic error.<BR>
+<BR>
+<A NAME="Heading7"></A><A HREF="../art/ch20/20cce04.jpg"><FONT COLOR="#000077">Figure
+20.4.</FONT></A><FONT COLOR="#000077"> </FONT><I>Visual Basic explains the error
+message.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If you've heard
+	people say, &quot;The computer made a mistake,&quot; that mistake was most certainly
+	a programmer's or data-entry person's error. In most situations the computer simply
+	does what it was told to do. When the computer zeros out a balance incorrectly, that
+	error is almost always a programmer's logic mistake. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Logic errors are the most difficult to locate. Whereas the Code window tells you
+where a syntax error appeared, and whereas the runtime system tells you when a runtime
+error appears, you must spot logic errors yourself (hopefully before your application's
+users spot them) and trace the problem source. The development environment's integrated
+debugger is the most useful tool for finding logic errors.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>One of the quickest
+	ways to locate logic errors early is to test your program. When asked for an input
+	value, enter extremely large and extremely small values. Run the application several
+	times, using a series of test data values. If logic errors exist, such testing will
+	almost always make the logic errors surface. Once you find all the logic errors,
+	let other people run the program! They can also find problems that you failed to
+	uncover because they will try things you never thought to try. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading8"></A><FONT COLOR="#000077">The Debugger</FONT></H3>
+<P>The debugger gives you a way to search your program's runtime details, interactively,
+looking at variables and trying new values all along the way. The debugger is the
+integrated tool that helps you find program bugs.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A breakpoint is a halting
+point in a program; when you run the program, the program executes as normal until
+a breakpoint is reached, at which time Visual Basic places you in the debugger.</P>
+<P>Visual Basic's Debug menu, shown in Figure 20.5, gives you a good introduction
+to the debugger's capabilities. Look through the menu and find the Toggle Breakpoint
+option. Breakpoints provide you the time needed to hunt bugs during the application's
+execution.<BR>
+<BR>
+<A NAME="Heading9"></A><A HREF="../art/ch20/20cce05.jpg"><FONT COLOR="#000077">Figure
+20.5.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Debug menu is ready to help
+locate bugs.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Perform
+	all your testing and debugging from within the development environment. Don't compile
+	a program until you remove all the bugs (or until you believe you've removed all
+	of them...your users will let you know soon enough if any still exist!). The debugger's
+	facilities are available only from within the development environment. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Visual Basic enters the breakpoint mode (sometimes called the break mode) when
+you halt a program during execution or when execution reaches a breakpoint that you
+added to the program before you ran it. The Debug menu options are available during
+the application's breakpoint mode. These are the three modes that a Visual Basic
+program can be in:
+
+<UL>
+	<LI>Design mode
+	<P>
+	<LI>Runtime mode
+	<P>
+	<LI>Break mode
+</UL>
+
+<P>Visual Basic tells you which mode is current by displaying the words <TT>design</TT>,
+<TT>run</TT>, or <TT>break</TT> in the title bar at the top of your Visual Basic
+screen. When you develop the program, the program is in design mode, as indicated
+by your title bar; when you or the user runs a program, the program is in the run
+mode; when you halt a program to use the debugger, the program enters the break mode.</P>
+<P>The rest of this lesson is about the break mode. While in break mode your program
+retains all variable and control values. Therefore, you can halt the program at any
+time and look at data values from any line of the code. By comparing the values with
+what you expect the values to contain, you can find where problems are taking place.
+<H3 ALIGN="CENTER"><A NAME="Heading10"></A><FONT COLOR="#000077">Setting Breakpoints</FONT></H3>
+<P>You'll always enter break mode from the runtime mode. Only after you begin a program's
+execution will the break mode be available, because only at runtime are the variables
+and controls initialized with values. Here are the ways that you can move from runtime
+mode to break mode:
+
+<UL>
+	<LI>Press Ctrl+Break during the program's execution at the place where you want to
+	enter break mode. Stopping on one exact line of code is virtually impossible when
+	using Ctrl+Break.
+	<P>
+	<LI>Select Run | Break from the Visual Basic menu bar during the program's execution.
+	<P>
+	<LI>Click the Break toolbar button (the toolbar button with two small vertical bars
+	next to the Run button).
+	<P>
+	<LI>In design mode or during a break mode, set a breakpoint on a particular line
+	at which you want the execution to halt. By setting a breakpoint, you can specify
+	the exact line of code where Visual Basic is to enter break mode.
+	<P>
+	<LI>The menu's Debug | Add Watch dialog box lets you specify a break expression that
+	Visual Basic monitors and uses to halt the program's execution when the expression
+	becomes true.
+	<P>
+	<LI>If a runtime error occurs, such as the undefined divide-by-zero math operation
+	you saw earlier, Visual Basic enters the break mode at the offending line.
+</UL>
+
+<P>The most accurate and common way to enter break mode is by setting a breakpoint.
+To set a breakpoint, find the line where you want execution to halt at a breakpoint
+and set a breakpoint at that particular line of code. The following steps walk you
+through setting a breakpoint:
+
+<DL>
+	<DD><B>1.</B> Load the <TT>Atm.vbp</TT> project that comes with this book. You'll
+	find the project in the <TT>Samples\PGuide\Controls</TT> folder.<BR>
+	<B><BR>
+	2.</B> Press F7 to open the Code window.<BR>
+	<B><BR>
+	3.</B> Locate the <TT>opt486_Click()</TT> event procedure.<BR>
+	<B><BR>
+	4.</B> Find the following line of code in <TT>opt486_Click()</TT>:
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">strComputer = &quot;486&quot;</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD><B>5.</B> Move the mouse cursor to the line and click the mouse button. The text
+	cursor appears at the mouse click's location.<BR>
+	<B><BR>
+	6.</B> Select Debug | Toggle Breakpoint to set a breakpoint. (You'll see from this
+	menu bar command that F9 is the shortcut key for this command. Also, clicking the
+	toolbar's hand icon would place a breakpoint on this line of code as would clicking
+	to the left of the line.) Figure 20.6 shows how your Code window should appear. Visual
+	Basic changes the color of the line to let you know that a breakpoint will take place
+	on that line during the program's execution.<BR>
+	<BR>
+	You can turn off a breakpoint by selecting Debug | Toggle Breakpoint (or by pressing
+	F9) once again. You can set as many breakpoints as you need throughout a program.
+	Leave this breakpoint in place for now. By setting the breakpoint, you're requesting
+	that Visual Basic halt the program and enter break mode when execution reaches this
+	line of code. Close the Code window and run the program by pressing F5.
+</DL>
+
+<P><A NAME="Heading11"></A><A HREF="../art/ch20/20cce06.jpg"><FONT COLOR="#000077">Figure
+20.6.</FONT></A><FONT COLOR="#000077"> </FONT><I>The breakpoint line is highlighted.</I><BR>
+<BR>
+The program appears to run as usual. The opening dialog box appears. Click the command
+button labeled Option Buttons to see what happens when execution reaches the breakpoint.
+The execution continues, as usual, as long as the breakpoint is not reached, but
+when the breakpoint line is reached, execution halts.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Notice the title
+	bar that now reads <TT>break</TT> before the form name. The title bar shows you that
+	the debug's break mode is in effect. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>As soon as Visual Basic reaches a breakpoint's line, Visual Basic enters break
+mode before executing the breakpoint line. The option button practice form is now
+in effect after you click the Option Buttons command button label's caption. The
+<TT>opt486_Click()</TT> event procedure assigns a string literal to a string variable
+and then calls another procedure to load that variable into a label. The breakpoint
+that you set occurs in the middle of the assignment code.</P>
+<P>Follow these steps to see what kinds of things you can do at a breakpoint:
+
+<DL>
+	<DD><B>1.</B> Move your mouse to the string variable. After a brief pause, a tooltip-like
+	message pops up to tell you that the variable contains a null string value (nothing
+	is yet assigned to the string). Drag the mouse to highlight the <TT>strComputer</TT>
+	variable on the breakpoint's line.<BR>
+	<BR>
+	<B>2.</B> Select Debug | Quick Watch. The menu option produces the Quick Watch dialog
+	box. Visual Basic displays the breakpoint line, the variable name, and the current
+	value that's a null string, as shown in Figure 20.7.
+</DL>
+
+<P><A NAME="Heading12"></A><A HREF="../art/ch20/20cce07.jpg"><FONT COLOR="#000077">Figure
+20.7.</FONT></A><FONT COLOR="#000077"> </FONT><I>Looking at the variable's null value.</I>
+
+<DL>
+	<DD><BR>
+	<B>3.</B> Click the dialog box's Add button to add the value to the Watch dialog
+	box. Whereas the Quick Watch dialog box is useful for looking at a variable at its
+	current location, the Watch dialog box keeps track of multiple variables that update
+	as the program executes.<BR>
+	<B><BR>
+	4.</B> Select View | Toolbars | Debug to display the special floating Debug toolbar.
+	Most of the tools you need for interactive debugging appear on this toolbar. As Figure
+	20.8 shows, the Debug toolbar includes its own Quick Watch button. In addition, Figure
+	20.8 shows you the Watches window, where the variables and controls you want to watch
+	reside.
+</DL>
+
+<P><A NAME="Heading13"></A><A HREF="../art/ch20/20cce08.jpg"><FONT COLOR="#000077">Figure
+20.8.</FONT></A><FONT COLOR="#000077"> </FONT><I>Looking at the variable's null value.</I>
+
+<DL>
+	<DD>The difference between the Quick Watch and the Watches windows is that you can,
+	at any breakpoint, highlight a variable and display its value and surrounding code
+	and data type by clicking the Debug toolbar's Quick Watch button. If you want to
+	keep a running list of watch variables, however, you must add the variables and controls
+	to the Watches window. If you start the program again and hit another breakpoint
+	later (you can set multiple breakpoints), the Watches window still shows the variables
+	and controls you placed there, but the Quick Watch window will no longer appear until
+	you request it again with another highlighted value.
+</DL>
+
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>When you single-step through
+code, you execute subsequent program instructions, one statement at a time, looking
+at values and testing the logic as you go.
+
+<DL>
+	<DD><B>5.</B> Usually, the programmer will single-step through a few lines of code
+	after reaching a breakpoint. To step through the code one line at a time, you can
+	choose the Debug | Step Into option (or press F8). As you single-step though the
+	code, Visual Basic highlights the next line of execution. At any point during the
+	single-step process, you can examine variables and controls with the Quick Watch
+	dialog box and add them to the Watches window.
+</DL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading14"></A><FONT COLOR="#000077">Stepping Through
+Code</FONT></H3>
+<P>One of the most powerful debugging features is the single-step feature mentioned
+at the end of the previous section. At the breakpoint you set, only one additional
+statement (other than remarks, which do not execute) resides in the procedure, and
+that statement is a procedure call to another procedure named <TT>DisplayCaption()</TT>.</P>
+<P>The Debug menu's Step Into option (also available on the Debug toolbar) executes
+each statement in the program, including all the statements in procedures called
+. Therefore, if you single-step through the code from the breakpoint, the <TT>DisplayCaption()</TT>
+procedure executes (you can follow the yellow highlight to see the execution). After
+you step through the <TT>DisplayCaption()</TT> procedure, control returns to the
+<TT>opt486_Click()</TT> procedure that called <TT>DisplayCaption()</TT>, and then
+you can single-step back to the procedure that called <TT>opt486_Click()</TT>.</P>
+<P>If you want the effects of the single-step without going through every line of
+code, you can select the Debug menu's Step Over option. The Step Over option will
+not single-step through subsequent procedures called but will run each call individually
+without single-stepping through the lines in the procedures. In other words, you
+can single-step through the next subroutine procedure's <TT>Call</TT> statement (or
+function call), but when you then single-step, control does not go into that procedure;
+the procedure executes like normal and then you get the single-step control back
+again. The Step Over option is useful when you've debugged procedures called by the
+current procedure and you don't want to waste additional time single-stepping through
+a procedure you've already debugged.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>The Step Over
+	option is very useful when a procedure calls, in a loop, another procedure several
+	times. The first time through the loop, you may want to single-step through the called
+	code. In subsequent loop iterations you may want to select Step Over; the code inside
+	the procedures executes but you won't wade through it line by line. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The Debug menu's Step Out option executes the rest of the current procedure without
+executing the procedure in single-step mode. Once the current procedure finishes
+and control returns to the procedure that called the current procedure, execution
+begins once again in single-step mode.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>During the line-by-line
+	execution, you can place additional breakpoints. Every time you click on a line and
+	press F8 (to toggle the breakpoint), Visual Basic adds a new breakpoint to the line.
+	Therefore, a program may contain multiple breakpoints. In subsequent executions,
+	you can run the program until it gets to a breakpoint, analyze values, click Start
+	to run the program to the next breakpoint, analyze values, and so on. The breakpoints,
+	therefore, help you get to the problem areas quickly without stepping through the
+	rest of the code. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading15"></A><FONT COLOR="#000077">The Call Stack Shows
+Where Youve Been</FONT></H3>
+<P>At any point during the debugging session, you can click the Debug toolbar button's
+Call Stack button to display Figure 20.9's Call Stack window.<BR>
+<BR>
+<A NAME="Heading16"></A><A HREF="../art/ch20/20cce09.jpg"><FONT COLOR="#000077">Figure
+20.9.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Call Stack window lists all
+called procedures.</I></P>
+<P>The Call Stack window shows where your program execution has traveled. In addition,
+any non-Visual Basic routines, such as Windows routines that sometimes take over,
+appear in the Call Stack window. The call stack keeps a running list of all procedures
+executed, even if the same procedure executes multiple times.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Inside the debugger's
+	break mode you'll only see the Code window and its related Debug windows that you
+	display. If you want to see the program's actual output, press Alt+Tab to switch
+	to the application's running window. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Suppose that a variable contains an incorrect value but you're not exactly sure
+where the error is occurring. You could set a breakpoint at every line of code that
+changes the variable. When you run the program, you'll look at the contents of that
+variable before and after each breakpoint's line of execution. If the first breakpoint
+seems to initialize the variable properly, you don't have to single-step through
+the code until the next breakpoint is reached. Instead of single-stepping, you can
+select Run Continue or press F5 to return the execution to its normal runtime (and
+real-time) mode. When Visual Basic reaches the next breakpoint, the code halts at
+that next breakpoint and you can continue to examine the variable.</P>
+<P>At a breakpoint, you can add not only variables but Watches window expressions
+as well. Suppose that a variable is to maintain a count of customers but somewhere
+in your code a negative value appears in the variable. If you added a watch expression
+such as <TT>intCustCnt &lt; 0</TT> to the Watches window (right-click the window
+and select Add Watch to display Figure 20.10's Add Watch dialog box) and clicked
+the window's Break when Value is True option button, you could then run the program
+and Visual Basic would enter break mode at any line that caused the variable to become
+negative.<BR>
+<A HREF="../art/ch20/20cce10.jpg"><BR>
+</A><A NAME="Heading17"></A><A HREF="../art/ch20/20cce10.jpg"><FONT COLOR="#000077">Figure
+20.10.</FONT></A><FONT COLOR="#000077"> </FONT><I>Watching for expressions as well
+as variables and controls.</I></P>
+<P>The breakpoints and watch dialog boxes that you can request while debugging your
+code give you tremendous power in analyzing variables and watching for specific results.
+You can look at the contents of variables and controls to make sure that data is
+being initialized the way you expect. Also, the Add Watch dialog box lets you set
+up expressions that Visual Basic watches for during the program's execution. If the
+values of those expressions ever become true or change, Visual Basic halts the code
+at that line and lets you analyze values using the Watch window.
+<H3 ALIGN="CENTER"><A NAME="Heading18"></A><FONT COLOR="#000077">The Immediate Window</FONT></H3>
+<P>At any breakpoint you can select View | Immediate Window (Ctrl+G) to request the
+Immediate window (sometimes called the Debug window). The Immediate window is a special
+window in which you can directly type Visual Basic commands and view and change variables
+and control values during a program's execution.</P>
+<P>For displaying variables and controls, apply the <TT>Print</TT> method (see Hour
+16, &quot;Printing with Visual Basic&quot;) to view variables and controls. When
+you use <TT>Print</TT> in the Immediate window, Visual Basic sends the output to
+the Immediate window and not to the <TT>Printer</TT> object, as you saw in Hour 16.
+For example, suppose that you set a breakpoint during a variable's assign- ment,
+as described in the previous sections, and you pressed Ctrl+G to open the Immediate
+window. The Immediate window recognizes simple Visual Basic commands and methods
+such as <TT>Print</TT> and assignment statements.</P>
+<P>Figure 20.11 shows what happens if you print the value of <TT>strComputer</TT>
+after the variable is assigned the string value. Unlike the Quick Watch dialog box,
+the Immediate window has room to display multiple lines if you display a multiline
+control such as a text box. You can resize and move the Immediate window. Although
+they must use the <TT>Print</TT> command instead of simply clicking a variable or
+control, many programmers prefer to display values from the Immediate window instead
+of from the Quick Watch dialog box. The Immediate window displays the entire value
+and contains a vertical scrollbar so you can scroll through the values printed in
+the window.<BR>
+<A HREF="../art/ch20/20cce11.jpg"><BR>
+</A><A NAME="Heading19"></A><A HREF="../art/ch20/20cce11.jpg"><FONT COLOR="#000077">Figure
+20.11.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Immediate window displays printed
+values.</I></P>
+<P>The Immediate window's scrolling and resizing features are so handy that some
+Visual Basic programmers prefer to send messages to the Immediate window at runtime
+rather than use the Quick Watch dialog box. For example, if you want to see the value
+of certain arguments when called procedures execute, you can add the <TT>Print</TT>
+methods at the top of those procedures that send the argument values to the Immediate
+window automatically as the program executes. Once you get the bugs out of the program,
+you can remove the <TT>Print</TT> commands so that the Immediate window stays closed.</P>
+<P>To print to the Immediate window, preface the <TT>Print</TT> method with the special
+<TT>Debug</TT> object. The following command, executed anywhere from an application's
+code, prints the values of two variables with appropriate titles in the Immediate
+window:</P>
+<PRE><FONT COLOR="#0066FF">Debug.Print &quot;Age:&quot;; intAgeVal, &quot;Weight:&quot;; intWeightVal
+</FONT></PRE>
+<P>All the <TT>Print</TT> method's options, including semicolons, commas, and <TT>Tab()</TT>
+and <TT>Spc()</TT> functions, work inside the Immediate window just as they do for
+the <TT>Printer</TT> object described in Hour 16. Be careful to specify the <TT>Debug</TT>
+object before the <TT>Print</TT> method, however. If you omit <TT>Debug</TT>, Visual
+Basic prints the output directly on the form itself!</P>
+<P>The Immediate window recognizes assignments that you make to variables and controls.
+For example, suppose that you know that a certain variable wasn't initialized properly
+earlier in the execution but you still want to finish the program's execution as
+if the variable had its proper value. If you need to, you can assign that variable
+a new value directly within the Immediate window using the assignment statement.
+When you resume the program's execution, either in single-step or in runtime mode,
+the variable, from that point in the program, will contain the value that you assigned
+to it.
+<H3 ALIGN="CENTER"><A NAME="Heading20"></A><FONT COLOR="#000077">Summary</FONT></H3>
+<P>In this hour you have learned ways you can test and debug your applications. Several
+kinds of bugs exist and Visual Basic can find some bugs for you. Other bugs appear
+at runtime and they can be frustrating. Fortunately, the interactive debugger lets
+you step through your program one line at a time if needed, examining variables and
+controls to make sure that the expressions and input are as expected. Once you eliminate
+as many bugs as possible, you can then compile and distribute the code.</P>
+<P>The next hour begins a new part of the book that teaches more advanced subjects.
+You will learn how your Visual Basic program can interact with other kinds of applications.
+<H3 ALIGN="CENTER"><A NAME="Heading21"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+
+<DL>
+	<DD><B>Q How much testing should I perform?<BR>
+	<BR>
+	A</B> As much as needed and then some. Consider the alternative: If you don't debug
+	your program, your users will find the bugs. A user is rarely happy about such things
+	(users can be so picky!). The more thoroughly you test a program, using extreme values
+	as described in this lesson, and trying all the program branches (entering data that
+	makes each leg of each <TT>If</TT> execute at least once), the less likely a bug
+	will slip through testing.
+</DL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading22"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<H4 ALIGN="CENTER"><A NAME="Heading23"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+
+<DL>
+	<DD><B>1.</B> Which errors are the easiest to find?<BR>
+	<B><BR>
+	2. </B>Which errors are the hardest to find?<BR>
+	<B><BR>
+	3.</B> If you write a program and, during execution, the program halts and displays
+	an error message box telling you that a disk drive does not exist, what kind of error
+	just occurred?<BR>
+	<B><BR>
+	4.</B> How can you tell the current program mode?<BR>
+	<B><BR>
+	5.</B> What is a breakpoint?<BR>
+	<B><BR>
+	6.</B> What are three things you can do at a breakpoint?<BR>
+	<B><BR>
+	7.</B> How do you single-step through a program?<BR>
+	<B><BR>
+	8.</B> True or false: While using the debugger, you have no access to your program's
+	Output window.<BR>
+	<B><BR>
+	9.</B> What's the quickest way to see a variable's value at a breakpoint?<BR>
+	<B><BR>
+	10.</B> What method displays values in the Immediate window?
+</DL>
+
+<H4 ALIGN="CENTER"><A NAME="Heading24"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+
+<DL>
+	<DD><B>1.</B> Larry the Visual Basic programmer wants to send values to the Immediate
+	window right before he reads a disk file. Here are some statements Larry uses to
+	print to the Immediate window:
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">Print lblFileName.Caption
+Print intNumRecs, intNumFields
+Print strCompName</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD>Larry is not having success. Instead of the Immediate window, these values all
+	seem to appear on the form itself! Help determine what Larry is doing wrong so he
+	can view the values in the Immediate window.<BR>
+	<BR>
+	<B>2.</B> Load the <TT>Atm.vbp</TT> sample project. Single-step through the project
+	beginning at a breakpoint that you set in <TT>Form_Load()</TT>'s last statement.
+	The program uses data in a different way from normal because the program uses a resource
+	file to hold its strings. By moving all its data out to a resource file, the strings
+	can be easily translated to other languages and the program needs only to be recompiled.
+	Without a resource file, a programmer would have to search the Code window for all
+	strings and possibly miss some. Use the single-step mode to learn how the resource
+	file and its related built-in functions operate.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch19.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch21.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

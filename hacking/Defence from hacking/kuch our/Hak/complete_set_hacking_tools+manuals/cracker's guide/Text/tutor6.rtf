@@ -1,0 +1,143 @@
+{\rtf1\ansi\ansicpg1252\uc1 \deff0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}
+{\f16\froman\fcharset238\fprq2 Times New Roman CE;}{\f17\froman\fcharset204\fprq2 Times New Roman Cyr;}{\f19\froman\fcharset161\fprq2 Times New Roman Greek;}{\f20\froman\fcharset162\fprq2 Times New Roman Tur;}
+{\f21\froman\fcharset186\fprq2 Times New Roman Baltic;}{\f28\fmodern\fcharset238\fprq1 Courier New CE;}{\f29\fmodern\fcharset204\fprq1 Courier New Cyr;}{\f31\fmodern\fcharset161\fprq1 Courier New Greek;}{\f32\fmodern\fcharset162\fprq1 Courier New Tur;}
+{\f33\fmodern\fcharset186\fprq1 Courier New Baltic;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;
+\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\nowidctlpar\widctlpar\adjustright \fs20\lang3081\cgrid 
+\snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}}{\info{\author Intern}{\operator Intern}{\creatim\yr1999\mo6\dy3\hr17\min21}{\revtim\yr1999\mo6\dy3\hr17\min24}{\version2}{\edmins3}{\nofpages3}{\nofwords743}{\nofchars4238}{\*\company Intern}
+{\nofcharsws5204}{\vern71}}\widowctrl\ftnbj\aenddoc\hyphcaps0\viewkind4\viewscale100 \fet0\sectd \linex0\headery709\footery709\colsx709\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2
+\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6
+\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang
+{\pntxtb (}{\pntxta )}}\pard\plain \nowidctlpar\adjustright \fs20\lang3081\cgrid {\b\f2\fs28\ul\cf2\lang1043\cgrid0 Tutor6}{\lang1046\cgrid0 
+\par 
+\par In the previous tutorial I explained you how to crack a program by modifying the heart of 
+\par the protection : Its serial validation routine. This kind of protections are used very often. In
+\par this tutorial I will demonstrate one :-)
+\par 
+\par The program we are going to crack here, is a website mirroring / web spidering program. 
+\par It is called Aeria Leech version 1.00. You can download it from : http://www.aeria.com/leech
+\par I released a keygenerator for this program and it took me about 1 week to figure out how the 
+\par key generation routine worked. But it is so easy to crack :-) We will do it together \'85
+\par In just a few minutes.
+\par Let's get going ;-)
+\par 
+\par }{\b\lang1043\cgrid0 Step 1: Run the program:
+\par }{\lang1046\cgrid0 Run it. In the help menu you have the option to register. 
+\par Enter any number and press ok.
+\par You get an error message : The key is not a valid license key for this product.
+\par Ok. Let's go on to the next step :)
+\par 
+\par }{\b\lang1043\cgrid0 Step 2: Disassemble the program:
+\par }{\lang1046\cgrid0 Disassemble, and look for the string you see above. 
+\par Found.
+\par This string reference brings us to the next step.
+\par 
+\par }{\b\lang1043\cgrid0 Step 3: Analyzing the protection routine.... / Understanding the jumping Mechanism...
+\par }{\lang1043\cgrid0 Let's analyze the protection routine.
+\par 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0    }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf2\lang1046\cgrid0 * Referenced by a (U)nconditional or (C)onditional Jump at Address:
+\par |:00405E11(C)
+\par |}{\f2\fs16\lang1046\cgrid0 
+\par :00405F28 E86F8C0300              call 0043EB9C
+\par :00405F2D 8B4004                  mov eax, dword ptr [eax+04]
+\par :00405F30 6A10                    push 00000010
+\par 
+\par }{\f2\fs16\cf2\lang1046\cgrid0 * Possible StringData Ref from Data Obj ->"Invalid License Key"
+\par                                   |
+\par }{\f2\fs16\lang1046\cgrid0 :00405F32 6808844500              push 00458408
+\par 
+\par }{\f2\fs16\cf2\lang1046\cgrid0 * Possible StringData Ref from Data Obj ->"The key is not a valid license "
+\par                                         ->"key for this product."
+\par                                   |
+\par }{\f2\fs16\lang1046\cgrid0 :00405F37 68D0834500              push 004583D0
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par 
+\par Well ... This piece of code sure looks familiar :-)
+\par This code is reached after a jump at address : 405E11. The reference shows that. 
+\par Let's go back to address 405E11.
+\par }{\f2\fs16\cf11\lang1043\cgrid0 
+\par 
+\par ////////////////////// Code snip ///////////////////////////
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0    }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\f2\fs16\lang1046\cgrid0 
+\par :00405E04 83C408                  add esp, 00000008
+\par :00405E07 E864380000              call 00409670
+\par :00405E0C 83C404                  add esp, 00000004
+\par :00405E0F 84C0                    test al, al
+\par :00405E11 0F8411010000            je 00405F28
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par 
+\par This jump at address 405E11 jumps over all the piece of code that tells us that we are 
+\par registered. So nopping this jump away would make us display the nice registered dialog box :-)
+\par But luckily we worked through the previous tutorial. and we first try to analyze this code.
+\par }{\f2\fs16\cf11\lang1043\cgrid0 
+\par 
+\par ////////////////////// Code snip ///////////////////////////
+\par }{\f2\fs16\lang1046\cgrid0 call 409670\tab ; }{\f2\fs16\cf11\lang1046\cgrid0 isregistered ? 
+\par }{\f2\fs16\lang1046\cgrid0 test al, al \tab ; }{\f2\fs16\cf11\lang1046\cgrid0 result of the call is in eax :-) 
+\par \tab \tab }{\f2\fs16\cf1\lang1046\cgrid0 ;}{\f2\fs16\cf11\lang1046\cgrid0  ( }{\b\f2\fs16\cf11\lang1046\cgrid0 al}{\f2\fs16\cf11\lang1046\cgrid0  is the }{\b\f2\fs16\cf11\lang1046\cgrid0 l}{\f2\fs16\cf11\lang1046\cgrid0 
+ower part of eax, not important now)
+\par }{\f2\fs16\lang1046\cgrid0 je\tab \tab ; }{\f2\fs16\cf11\lang1046\cgrid0 if eax = 0  then jump ! if eax is 1 don't jump !
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par Well ... this code is clear not ?
+\par The call checks the entered serial. And if the serial is ok, it returns 1 in eax, else it returns a zero 
+\par in eax.
+\par Let's trace into the call at address 409670.
+\par }{\f2\fs16\cf11\lang1043\cgrid0 
+\par 
+\par ////////////////////// Code snip ///////////////////////////
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0    }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\f2\fs16\cf2\lang1046\cgrid0 
+\par * Referenced by a CALL at Addresses:
+\par |:004014BF   , :00405E07   
+\par |
+\par }{\f2\fs16\lang1046\cgrid0 
+\par }{\f2\fs16\cf2\lang1046\cgrid0 * Possible Reference to Dialog: DialogID_00CB, CONTROL_ID:00FF, ""
+\par                                   |
+\par }{\f2\fs16\lang1046\cgrid0 :00409670 6AFF                    push FFFFFFFF
+\par :00409672 68F8424400              push 004442F8
+\par :00409677 64A100000000            mov eax, dword ptr fs:[00000000]
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par And yes ... We were right :-)
+\par This call is referenced twice. Once at startup and once while entering the serial :-)
+\par 
+\par 
+\par }{\b\lang1043\cgrid0 Step 4: Changing the original program...
+\par }{\lang1046\cgrid0 
+\par Since we analyzed the jumping mechanism carefully, we can change the original program.
+\par Open the program in hiew after making a backup copy of it.
+\par Get to the beginning of the call at address 409670.
+\par 
+\par Change the beginning of the call into the following : 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par }{\f2\fs16\lang1046\cgrid0 mov eax, 1 \tab ; }{\f2\fs16\cf11\lang1046\cgrid0 1 means serial is ok
+\par }{\f2\fs16\lang1046\cgrid0 ret\tab \tab ; }{\f2\fs16\cf11\lang1046\cgrid0 return to the caller.}{\f2\fs16\lang1046\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par It will look like the following:
+\par 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0    }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\f2\fs16\lang1046\cgrid0 00009670: B801000000                   mov       eax,000000001
+\par 00009675: C3                           retn
+\par 00009676: 0064A100                     add       [ecx][00000],ah
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\lang1046\cgrid0 
+\par 
+\par Save your patched program and exit hiew.
+\par 
+\par }{\b\lang1043\cgrid0 Step 5: Testing your cracked program...
+\par }{\lang1046\cgrid0 Run Leech. It will still tell you that you are unregistered in the about box. 
+\par Register it with any number, and it will happily accept your serial :-)
+\par 
+\par Do not forget to close the program and restart it. You will see that it is still happy with the 
+\par provided serial :-)
+\par 
+\par }}

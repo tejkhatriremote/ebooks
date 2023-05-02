@@ -1,0 +1,72 @@
+
+        Synnergy Laboratories Advisory SLA-1999-3
+
+NAME
+
+       abuse.man webmanager direct path vulnerability
+
+AFFECTED
+ 
+  Linux
+
+
+SYNOPSIS
+
+  Synnergy Labs has found a serious security problem in abuse.man webmanager
+  kit that allows remote and local users to execute arbitary commands on the 
+  webserver as the uid of the httpd.
+
+
+DESCRIPTION
+
+  A carefully constructed url, an attacker could potentially exploit this CGI
+  leading to a root compromise.
+
+  abuse.man used the following absolute path as the url to bring up the base 
+  page. http://server.com/file=/disk1/e/domain/public_html/index.html&
+  domain=hostname.com&script=/index.html
+
+  As we can see, $file shows the actual server side directory that the cgi and 
+  index page resides in. The $domain has been modified for security purposes, 
+  but this variable displays the vhost name. The $script variable opens the 
+  default home page html file.
+
+  Hence, by modifying the $file variable we could then be allowed to view or 
+  execute commands as the httpd.
+
+  Eg: file=/disk1/e/domain/public_html/../../../../../../etc/hosts&
+
+  Now by a carefully constructed url, we are able to pipe arbitary commands to 
+  the server, since this cgi is perl based:
+
+  Eg: file=/disk1/e/domain/public_html/../../../../../../bin/ls+/|&
+
+  The contents of the root directory were thus displayed.
+ 
+
+SOLUTION
+
+
+  An email was sent to the manufacturers website regarding this bug
+  in detail, with information of how to fix the problem. We have been
+  informed that the problem has now been patched.
+
+  By patching the abuse.man cgi, the webmaster could verify all user
+  input and use relative links rather than absolute paths to avoid this
+  potential exploitation.
+        
+
+AUTHOR
+
+  Discovery: dethy @ synnergy.net
+  Exploit: dvorak @ synnergy.net
+
+DISCLAIMER
+
+  Synnergy Laboratories may not be held liable for the use or potential effects 
+  of these programs or advisories, nor the content contained within. Use them 
+  at your own risk.
+
+COPYRIGHT
+
+        Synnergy Laboratories -  www.synnergy.net (c) 1998-2000 

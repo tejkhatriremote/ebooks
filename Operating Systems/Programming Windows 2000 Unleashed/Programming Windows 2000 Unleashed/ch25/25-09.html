@@ -1,0 +1,157 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=872-875//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In this example, <small>IStockEvents</SMALL> is part of the co-class <small>StockSubscriber</SMALL>.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B><p>To simplify the Implement Interface Wizard&#146;s interface, first change the IDL. Compile the IDL and then right-click to implement the interface. This way, the current project type library will have the <small>IStockEvents</SMALL> interface available.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Defining Filters</B></FONT></P>
+<p>When the events are generated as shown previously, all the subscribers get all the messages. However, it may be preferable for specific subscribers to get specific events. You can accomplish this using one of two different methods: publisher filtering or subscriber filtering.
+</P>
+<p>Subscriber is the simpler of the two filtering techniques. It has the drawback that the message is sent to the destination subscriber. To activate this filter, the subscribing COM object needs to implement the <small>ISubscriberControl</SMALL> interface. An example of the header and IDL is given in the previous source code pieces. An example of implementing this interface with a single method is as follows and can be seen in Figure 25.14:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CStockSubscriber::PreEventCall(IEventSubscription
+&#8658; *spIEventSubscription)
+{
+        HRESULT hr = S_OK;
+        CComBSTR    SubscriptionName;
+        _TCHAR  MessageText[150];
+hr = spIEventSubscription-&gt;get_SubscriptionName(&amp;SubscriptionName);
+    if (FAILED(hr))
+    {
+        Error(&#147;Failed to get SubscriptionName&#148;, IID_IStockSubscriber, hr);
+        return hr;
+    }
+        wsprintf(MessageText, TEXT(&#147;SubscriptionName is [%S]&#148;),
+        &#8658; SubscriptionName);
+        return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p><a name="Fig14"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-14.jpg',205,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-14t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-14.jpg',205,420)"><font color="#000077"><b>Figure 25.14</B></FONT></A>&nbsp;&nbsp;Event filtering in Subscriber.</P>
+<p>The method is passed in an <small>IEventSubscription</SMALL> interface. Using this passed-in interface, you can retrieve all aspects of the subscription event being triggered. At this point, the COM object can take further action.</P>
+<p><b>Filtering in the Publisher</B></P>
+<p>This filtering is a bit more complicated because it occurs on the publisher side. When a filter is called, another object is called with the method being triggered. This method can filter out the properties and modify them (see Figure 25.15).</P>
+<p><a name="Fig15"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-15.jpg',195,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-15t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-15.jpg',195,420)"><font color="#000077"><b>Figure 25.15</B></FONT></A>&nbsp;&nbsp;Event filtering in Publisher.</P>
+<p>Here&#146;s an example:
+</P>
+<!-- CODE //-->
+<pre>
+CHECK_RESULT( CoCreateInstance(CLSID_PublisherFilter,
+        NULL,
+        CLSCTX_SERVER,
+        IID_IPublisherFilter,
+               (void**)&amp;spIPublisherFilter) );
+ CComBSTR    bstrMethodName(&#147;StockPriceChange&#148;);
+CHECK_RESULT(spIStockEvents-&gt;QueryInterface(IID_IEventControl,
+        (void **)&amp;spIEventControl));
+ CComPtr&lt;IEventObjectCollection&gt; spIEventObjectCollection;
+CHECK_RESULT(spIEventControl-&gt;GetSubscriptions (bstrMethodName, NULL,NULL,
+        &amp;spIEventObjectCollection));
+ // Give the Collection of Subscriptions to the PublisherFilter
+CHECK_RESULT(spIPublisherFilter-&gt;Initialize(bstrMethodName,
+        spIEventObjectCollection));
+ // Set the PublisherFilter
+CHECK_RESULT(spIEventControl-&gt;SetPublisherFilter(bstrMethodName,
+         spIPublisherFilter));
+ bstrStockSymbol = L&#148;MSFT&#148;;
+Price         = 154.25;
+CHECK_RESULT (spIStockEvents-&gt;StockPriceChange ( bstrStockSymbol, Price ));
+</PRE>
+<!-- END CODE //-->
+<p>COM&#43; event services need to be informed of the filtering class. In this example, the class is <small>CLSID_PublisherFilter</SMALL>. In a previous step, the <small>IStockEvents</SMALL> class was instantiated. Remember that when this interface is instantiated, it&#146;s a stub to the COM&#43; event services. This is mentioned because the filtering class needs a reference to the current subscriptions. The interface <small>IStockEvents</SMALL> is queried for the <small>IEventControl</SMALL> interface. This interface makes it possible to interact with the details of the event and its associated subscriptions. The subscription details are of interest and are therefore retrieved (line 13). The next step is to call the <small>Initialize</SMALL> method of the filtering class. This method is used like a constructor to set up the filtering class for any further calls.</P>
+<p>The last step is to associate the publisher interface with the <small>IEventControl</SMALL> interface (line 21). Now, if any calls to the event are made, the publisher filter class will receive the events first.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

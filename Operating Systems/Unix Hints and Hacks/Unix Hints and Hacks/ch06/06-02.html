@@ -1,0 +1,214 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=199-203//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Some flavors of tar can display various results. This is one result; yours might differ.
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The steps you read can be replaced by a single-line command that pipes the archived data to the destination for extraction:
+</P>
+<!-- CODE //-->
+<pre>
+rocket 17% tar -cvf - project | (cd /disk2; tar -xvf - )
+/disk2
+a projects/ 0K
+a projects/file01 61K
+x projects/, 0 bytes, 0 tape blocks
+x projects/file01, 62038 bytes, 122 tape blocks
+a projects/file02 3K
+a projects/file03 19K
+x projects/file02, 2448 bytes, 5 tape blocks
+x projects/file03, 19167 bytes, 38 tape blocks
+</PRE>
+<!-- END CODE //-->
+<p>If you look at this line closer, it <small>tar</SMALL>s the file into a buffer (<small>-</SMALL>), changes to the destination directory, and extracts the files from the buffer all at once. From the results of the verbose (<small>v</SMALL>) option you can see how the files are archived (<small>a</SMALL>) into the buffer and extracted (<small>x</SMALL>) into the destination directory. For extremely large amounts of files that are being transferred, you might want to leave off the verbose option to gain more speed in the transfer. The speed is gained by not dedicating any time to displaying the activity to standard output.</P>
+<p>You can create an alias that copies the current directory and all its contents to a new destination and shortens the command entirely:</P>
+<!-- CODE SNIP //-->
+<pre>
+alias cptar &#145;tar cvf - . | ( cd \!* ; tar xvf - )&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>The <small>tar</SMALL> command cannot archive block devices and paths that exceed 256 characters in length. The archive will continue, but those paths will be excluded.
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Example Three: Copy with cpio</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> <i>dir</I> <b>-print | cpio -pudv</B> <i>destination</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>cpio</SMALL> command is similar to <small>tar</SMALL> in some respects. It is, however, more cryptic in the commands but is still powerful when used. Where the <small>tar</SMALL> command finishes, <small>cpio</SMALL> keeps going. The <small>cpio</SMALL> command supports up to 1024-character pathnames and can continue if an error is encountered while archiving.</P>
+<p>Copying files from one directory to another is done differently with <small>cpio.</SMALL> With <small>cpio</SMALL>, data is piped or redirected through it and extracted at the destination directory.</P>
+<!-- CODE //-->
+<pre>
+rocket 18% cd project
+rocket 19% ls -l
+-rw-r--r--   1 jim     staff     8192 Nov  8 16:51 file01
+-rw-r--r--   1 jim     staff    28415 Nov  8 16:52 file02
+-rw-r--r--   1 jim     staff    40960 Nov  8 16:52 file03
+
+rocket 19% find . -print | cpio -pumdv /production/
+/production/./file02
+/production/./file01
+/production/./file03
+152 blocks
+</PRE>
+<!-- END CODE //-->
+<p>This command isn&#146;t that confusing when you really look at it. The <small>find</SMALL> command progresses through all the files and subdirectories down the tree from the current directory and pipes each one to <small>cpio.</SMALL> If you break the <small>cpio</SMALL> command down by the arguments that are being passed to it, the command makes a lot of sense. It reads from standard in (<small>p</SMALL>), and then copies (<small>u</SMALL>) each file unconditionally. While doing this, it retains all previous modification times (<small>m</SMALL>) and creates any directories (<small>d</SMALL>) that are needed. The verbose option (<small>v</SMALL>) lists all the filenames that are being copied to the destination directory.</P>
+<p>If there is a standard list of files, including their paths, that need to be copied to a destination directory, the <small>cat</SMALL> command can be used to pipe data into the cpio file as well:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 20% cat project.txt | cpio -pumdv /production
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this example, project.txt is a list of needed project files that is copied to the /production directory.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 21% vi project.txt
+
+/project/file01.txt
+/project/texture/tex03.dat
+/project/pdf/ppp05.pdf
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>There are critical files that might need to retain their permissions and time stamps but be moved to other filesystems on the local system.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Using the <small>tar</SMALL> and <small>cpio</SMALL> commands should become second nature to system administrators. Consider using these commands when you deal with users&#146; home directories, system files, application files, database files, and program-development files.</P>
+<p>There are versions of the <small>tar</SMALL> command that support error correction and exceed the 256 character path limitations. They are available from GNU at their Web site (see &#147;Other Resources,&#148; immediately following).</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>cpio, find, ls, tar, whoami</SMALL></P>
+<p>World Wide Web:</P>
+<p>GNU&#146;s Not UNIX site - <a href="http://www.gnu.org">http://www.gnu.org</A></P>
+<h3><a name="Heading4"></A><font color="#000077">6.2 Copy Files Remotely</FONT></H3>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">6.2.1 Description</FONT></H4>
+<p>In the interconnected mesh of systems that can exist on your LAN, there are times when migrating files over from one host to another is necessary. There are several ways to copy files to a remote host. Here are a few ways to achieve this using <small>rcp, tar</SMALL>, and <small>ftp</SMALL>, and through network file system (NFS) mount points.</P>
+<p><font size="+1"><b>Example One: Remote Copy With the rcp Command</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+rcp -[pr] [source] [host:][destination]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>For this to work, the local system and remote system must have a trusted relationship between the local and remote hosts. The level of trust is dependent on what type of account is performing the <small>cp</SMALL> command.</P>
+<p>This is the easiest of all the commands. It is similar to the <small>cp</SMALL> command. Simply provide the source of the files to copy, the remote host, and the destination on that remote host where you want the files. The host and destination need to be separated by a colon. If the user joedee has files on a system called rocket, and wants to copy them to a remote system named planet, the command is</P>
+<!-- CODE SNIP //-->
+<pre>
+# rcp -pr joedee planet:/home
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The command executes a remote copy that attempts to retain all permissions and ownership (<small>p</SMALL>) on the files under the directory joedee while the files are recursively (<small>r</SMALL>) copied into /home on the remote system planet.</P>
+<p><font size="+1"><b>Example Two: Using tar Across the Network</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>tar -cvf</B> [source] [destination] | <b>rsh</B> <i>hostname</I> &#145;(<b>cd</B> [dir];
+<b>&#8658;tar -xvfB</B> [source] )&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A copy can be made of an entire directory structure to a remote host using the <small>tar</SMALL> command. Although it might look ugly, it is easy to understand. The process involves archiving the data, sending it to a remote host, and extracting it in the appropriate directory. If you want to copy the joedee home directory to a remote host called planet using <small>tar</SMALL>, the command is</P>
+<!-- CODE SNIP //-->
+<pre>
+# tar cf - joedee | rsh planet &#145;( cd /home; tar xfB - )&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

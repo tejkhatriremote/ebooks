@@ -1,0 +1,256 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-02//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Example</FONT></H4>
+<p>Listing 4.1 contains the source code for VolInfo, a console mode program that displays information about drive volumes accessible from your computer.
+</P>
+<p><b>Listing 4.1</B> The VolInfo Program Displays Volume Information<hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * VolInfo.c
+ *
+ * Retrieves volume information for a root directory passed on the
+ * command line. For example, to check drive C:, use:
+ *
+ *    VolInfo C:\
+ *
+ * This example program is from &#147;Programming Windows 2000
+ * Unleashed&#148;, by Mickey Williams.
+ */
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+LPTSTR pszVolumePath;
+TCHAR szVolumeName[_MAX_PATH];
+TCHAR szFileSystemName[_MAX_PATH];
+DWORD dwSerialNo;
+DWORD dwMaxComponent;
+DWORD dwFileSysFlags;
+
+VOID Usage(VOID);
+
+/*
+ * A structure that defines file system flags and simple
+ * descriptions. There is also a table that contains all
+ * of the current flags.
+ */
+typedef struct tagVOL_FLAGS{
+    DWORD dwFlag;    // File system flag
+    LPCTSTR szDesc;  // Description of the flag
+}VOL_FLAGS;
+
+#define VOL_FLAG_COUNT 11
+
+VOL_FLAGS flagTable[VOL_FLAG_COUNT] = {
+    FS_CASE_IS_PRESERVED,_T(&#147;FS_CASE_IS_PRESERVED&#148;),
+    FS_CASE_SENSITIVE,_T(&#147;FS_CASE_SENSITIVE&#148;),
+    FS_UNICODE_STORED_ON_DISK,_T(&#147;FS_UNICODE_STORED_ON_DISK&#148;),
+    FS_PERSISTENT_ACLS,_T(&#147;FS_PERSISTENT_ACLS&#148;),
+    FS_FILE_COMPRESSION,_T(&#147;FS_FILE_COMPRESSION&#148;),
+    FS_VOL_IS_COMPRESSED,_T(&#147;FS_VOL_IS_COMPRESSED&#148;),
+    FILE_SUPPORTS_ENCRYPTION,_T(&#147;FILE_SUPPORTS_ENCRYPTION&#148;),
+    FILE_SUPPORTS_OBJECT_IDS,_T(&#147;FILE_SUPPORTS_OBJECT_IDS&#148;),
+    FILE_SUPPORTS_REPARSE_POINTS,_T(&#147;FILE_SUPPORTS_REPARSE_POINTS&#148;),
+    FILE_SUPPORTS_SPARSE_FILES,_T(&#147;FILE_SUPPORTS_SPARSE_FILES&#148;),
+    FILE_VOLUME_QUOTAS,_T(&#147;FILE_VOLUME_QUOTAS&#148;)
+};
+
+int _tmain(int argc, TCHAR* argv[])
+{
+    int ndx;
+    BOOL fVolInfo = FALSE;
+
+    if(argc != 2)
+    {
+        Usage();  // display usage information
+        return 1;
+
+    }
+    else
+        pszVolumePath = argv[1];
+    fVolInfo = GetVolumeInformation(pszVolumePath,
+                                    szVolumeName,
+                                    _MAX_PATH,
+                                    &ampdwSerialNo,
+                                    &ampdwMaxComponent,
+                                    &ampdwFileSysFlags,
+                                    szFileSystemName,
+                                    _MAX_PATH);
+    if(fVolInfo == FALSE)
+    {
+        DWORD dwError = GetLastError();
+        _tprintf(_T(&#147;Failed due to Win32 error %X\n&#148;), dwError);
+        return 1;
+    }
+
+    _tprintf(_T(&#147;Information for %s:\n\n&#148;), pszVolumePath);
+    _tprintf(_T(&#147;The volume&#146;s name: %s\n&#148;), szVolumeName);
+    _tprintf(_T(&#147;The serial number: %X\n&#148;), dwSerialNo);
+    _tprintf(_T(&#147;The file system: %s\n&#148;), szFileSystemName);
+    _tprintf(_T(&#147;Filename component size: %X\n&#148;), dwMaxComponent);
+    _tprintf(_T(&#147;These file system flags have been set:\n&#148;));
+
+    for(ndx = 0; ndx &lt VOL_FLAG_COUNT; ndx&#43;&#43;)
+    {
+        if(dwFileSysFlags &amp flagTable[ndx].dwFlag)
+            _tprintf(_T(&#147;\t%s\n&#148;), flagTable[ndx].szDesc);
+    }
+    return 0;
+}
+VOID Usage(VOID)
+{
+    _tprintf(_T(&#147;Invalid number of parameters \n\n&#148;));
+    _tprintf(_T(&#147;To check drive C:, use:\n&#148;));
+    _tprintf(_T(&#147;\tVolInfo C:\\ \n\n&#148;));
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>To use VolInfo, pass a path as a command-line parameter. For example, to check drive C, use this:</P>
+<!-- CODE SNIP //-->
+<pre>
+VolInfo C:\
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Information about the volume, such as the serial number, file system, and file system flags, will be displayed.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Opening, Closing, and Deleting Files</FONT></H4>
+<p>You open files by using the <small>CreateFile</SMALL> function. You can use <small>CreateFile</SMALL> to open existing files as well as new files. To open an existing file, you use the <small>OPEN_EXISTING</SMALL> flag, as Listing 4.2 shows.</P>
+<p><b>Listing 4.2</B> Using <small>CreateFile</SMALL> to Open an Existing File</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+TCHAR szFile[255] = (&#147;TestFile.txt&#148;);
+HANDLE   hReadFile = CreateFile( szFile,
+                                 GENERIC_READ,
+                                 0,
+                                 (LPSECURITY_ATTRIBUTES)NULL,
+                                 OPEN_EXISTING,
+                                 FILE_ATTRIBUTE_NORMAL,
+                                 (HANDLE)NULL );
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>The return value from <small>CreateFile</SMALL> is a file handle that identifies the created file.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>It&#146;s possible for a valid handle to have a value of 0; therefore, you must test the returned handle against <small>INVALID_FILE_HANDLE</SMALL>, rather than 0 or <small>NULL</SMALL>.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The parameters used by <small>CreateFile</SMALL> specify the following:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the file (<small>TestFile.txt</SMALL>, in the example in Listing 4.2).
+<dd><b>&#149;</B>&nbsp;&nbsp;The read and write attributes for the file; in this case, the file is opened as read-only. Other values for this parameter are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;The share mode attributes for this file; in this case, 0 prevents any file sharing. Other values for this parameter are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;The security descriptor for this access of the file. This parameter has no effect when used on file systems that don&#146;t support security (such as FAT and CDFS, for example).
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that states how the file should be opened; in this case, the call to <small>CreateFile</SMALL> will open only existing files. Other values for this parameter are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies the file-level attributes for the file (in this case, <small>FILE_ATTRIBUTE_NORMAL</SMALL>). Other values for this parameter are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional handle to a template file that specifies extended attributes for the file.
+</DL>
+<p>The parameter used to specify read and write permissions can be one or both of the following values:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GENERIC_READ</SMALL>. Opens the file with read access
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GENERIC_WRITE</SMALL>. Opens the file with write access
+</DL>
+<p>If a value of 0 is used, the file is created or opened without read or write permission, and the file handle can be used to collect information about the file. Note that <small>GENERIC_WRITE</SMALL> does not imply automatic read access. If you want both read and write access, you must specify <small>GENERIC_READ|GENERIC_WRITE</SMALL>.</P>
+<p>The share attributes for the file can be 0, indicating that file sharing is not allowed, or one or all of the following flags:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_SHARE_READ</SMALL>. Indicates that other read operations can be performed on the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_SHARE_WRITE</SMALL>. Indicates that other write operations can be performed on the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_SHARE_DELETE</SMALL>. Indicates that any other attempts to open the file will fail unless delete access is requested
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

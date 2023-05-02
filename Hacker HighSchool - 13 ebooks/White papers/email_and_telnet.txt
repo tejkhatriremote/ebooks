@@ -1,0 +1,99 @@
+
+  ___________    ____________    ____  __  ___    ______________
+ |\    ____  \  |\    ____   \  |\   \|\ \|\  \  |\_____    ____\
+ | \   \__|\  \ | \   \__|\   \ | \   \ \ \ \  \ | |   |\   \   |
+ \  \    ___   | \ \    ____   \ \ \   \_| \_|  \ \|___| \   \__|
+  \  \   \_|\  \_ \ \   \__|\   \ \ \      _     \      \ \   \
+   \  \   \\ \   \ \ \   \ \ \   \ \ \     |\ http://www.haxworx.com
+    \  \___\\ \___\ \ \___\ \ \___\ \ \____| \_____\      \ \___\
+     \ |   | \ |   | \ |   | \ |   | \ |   |\ |    |       \ |   |
+      \|___|  \|___|  \|___|  \|___|  \|___| \|____|        \|___|
+ 
+  Understanding SMTP and how to send emails via Telnet.                    
+                                                            
+  Author: BrainRawt                                         
+  Email: brainrawt@hotmail.com                              
+  Site: http://www.haxworx.com 
+
+  Updated on 9-11-02                            
+ 
+ This text explains how one can telnet do an SMTP server, and use that
+ server to their advantage via commandline.  What you are about to see, is
+ what really goes on behind the scenes of every program you use to send 
+ email.  Now you will know how to do it manually and how to send email
+ from other people.  This can be easily done in your email software, but
+ we dont like that GUI mess, so we stick with the commandline.
+
+ NOTE:  I do not recommend that anyone take this knowledge and attempt 
+        to cause any harm with it.  The emails being sent "CAN" be 
+        traced back to you if needed. If you plan to use this in a manner
+        that is not appropriate then i suggest highly that you bnc through 
+        wingates, proxies and/or shells before reaching the smtp server. (It wont
+        guarantee anything but it will make the smtp owners attempt to trace 
+        you just alittle harder.)
+
+
+ Vulnerable Machines: Any machine running an SMTP server.  (port 25 usually)
+
+                      Any machine running SMTP that allows forwarding will let you
+                      send emails to anywhere in the world. (not many of these around
+                      anymore) The rest will only allow you to send emails within
+                      their domain.
+
+
+
+ -------------------------------------------------------------------------------
+ Found below is an example on how one can achieve the sending of spoofed mail.  
+ -------------------------------------------------------------------------------
+
+
+ /* Connect to the smtp server */
+
+ [brainrawt@yourmommas brainrawt]$ telnet blau.com 25
+ Trying 205.123.15.34...
+ Connected to mail.blau.com (205.123.15.34).
+ Escape character is '^]'.
+ 220 mail.blau.com ESMTP Sendmail 8.9.3/8.9.3; Tue, 3 Jul 2001 18:32:54 -0500
+
+ /* Say "helo" to the server.  Its the nice thing to do. */
+
+ >helo blau.com
+ 250 mail.blau.com Hello rawt.blazingpenguin.com [192.168.0.3], pleased to meet you
+
+ /* Tell the server where this email will "appear" to come from */
+
+ >mail from: root@blau.com
+ 250 root@blau.com... Sender ok
+
+ /* Tell the server where this email IS going */
+
+ >rcpt to: brainrawt@blau.com
+ 250 brainrawt@blau.com... Recipient ok
+
+ /* Prepare the server for our message by typing "data" */ 
+
+ >data
+ 354 Enter mail, end with "." on a line by itself
+
+ /* Now we shall get that msg in there (dont forget the "." on the line by itself.) */
+
+ >This is my message and i am only sending it to help you better understand how this works.
+ >.
+ 250 SAA29307 Message accepted for delivery
+
+
+ /* Message has been accepted by the server.  Lets get outta here! */
+
+ >quit
+ 221 mail.blau.com closing connection
+ Connection closed by foreign host.
+ [brainrawt@yourmommas brainrawt]$
+
+ --------------------------------------------------------------------------------------------
+ The above example has sent an email from "root@blau.com" to "brainrawt@blau.com" with the 
+ message "This is my message and i am only sending it to help you better understand how this 
+ works." and it has all been done remotely by a user that doesnt even have an account on 
+ blau.com. 
+ --------------------------------------------------------------------------------------------
+
+ Which looks better?  Blackhat or White?  You decide. - BrainRawt

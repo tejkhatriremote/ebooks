@@ -1,0 +1,1242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 26 -- Levels of Attack</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="../button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="../ch25/ch25.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch27/ch27.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">26</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Levels of Attack</FONT></H1>
+</CENTER>
+<P>This chapter examines various levels of attack. An <I>attack</I> is any unauthorized
+action undertaken with the intent of hindering, damaging, incapacitating, or breaching
+the security of your server. Such an attack might range from a denial of service
+to complete compromise and destruction of your server. The level of attack that is
+successful against your network depends on the security you employ.
+<H2><FONT COLOR="#000077"><B>When Can an Attack Occur?</B></FONT></H2>
+<P>An attack can occur any time your network is connected to the Internet. Because
+most networks are connected 24 hours a day, that means attacks can occur at <I>any
+time</I>. Nonetheless, there are some conventions that you can expect attackers to
+follow.</P>
+<P>The majority of attacks occur (or at least commence) late at night relative to
+the position of the server. That is, if you are in Los Angeles and your attacker
+is in London, the attack will probably occur during the late night-early morning
+hours Los Angeles time. You might think that crackers would work during the day (relative
+to the target) because the heavy traffic might obscure their activity. There are
+several reasons, however, why crackers avoid such times:
+
+<UL>
+	<LI>Practicality--The majority of crackers hold jobs, go to school, or spend time
+	in other environments during the day that may preclude cracking. That is, these characters
+	do more than spend time in front of a machine all day. This differs from the past,
+	when most crackers were kids at home, with nothing to do.<BR>
+	<BR>
+	
+	<LI>Speed--The network is becoming more and more congested. Therefore, it is often
+	better to work during times that offer fast packet transport. These windows depend
+	largely on geographical location. Someone in the southwestern United States who is
+	attacking a machine in London would best conduct their affairs between 10:00 p.m.
+	and 12:00 a.m. local time. Playing the field slightly earlier will catch local traffic
+	(people checking their mail before bed, users viewing late news, and so on). Working
+	much later will catch Netizens of the UK waking up to check their e-mail. Going out
+	through Mae East (the largest and busiest Internet exchange gateway) in the early
+	morning hours may be fast, but once across the Atlantic, speed dies off quickly.
+	Anyone who stays up all night surfing the Net will confirm this. Once you hit the
+	morning e-mail check, the Net grinds to a halt. Try it sometime, even locally. At
+	4:00 a.m. things are great. By 7:00 a.m., you will be praying for a T3 (or SONET).<BR>
+	<BR>
+	
+	<LI>Stealth--Suppose for a moment that a cracker finds a hole. Suppose further that
+	it is 11:00 a.m. and three system administrators are logged on to the network. Just
+	what type of cracking do you suppose can be done? Very little. Sysads are quick to
+	track down bizarre behavior if they are there to witness it. I once had a system
+	administrator track me down immediately after I grabbed her password file. She was
+	in Canada and I was in Los Angeles. She issued me a talk instruct before I could
+	even cut the line. We had a lovely, albeit short, conversation. This also happened
+	once when I broke into a server in Czechoslovakia. The lady there had a Sun and an
+	SGI. I cracked the SGI. The conversation there was so good, I stayed connected. We
+	discussed her security and she actually gave me an account on an old SPARC at her
+	university. The account probably still exists.
+</UL>
+
+<P>Favorite targets of crackers are machines with no one on them. For a time, I used
+a workstation in Japan to launch my attacks because no one ever seemed to be logged
+in. I Telnetted out of that machine, back into the United States. I found a similar
+situation with a new ISP in Rome. (I can say no more, because they will definitely
+remember me and my identity will be blown. They actually told me that if I ever came
+to hack in Italy, I should look them up!)</P>
+<P>With such machines, you can temporarily take over, setting things to your particular
+tastes. Moreover, you have plenty of time to alter the logs. So be advised: Most
+of this activity happens at night relative to your geographical location.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you have been doing heavy logging
+	and you have only limited time and resources to conduct analysis of those logs, I
+	would concentrate more on the late night connection requests. These portions of your
+	logs will undoubtedly produce interesting and bizarre information. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>What Operating Systems Do Crackers Use?</B></FONT></H2>
+<P>Operating systems used by crackers vary. Macintosh is the least likely platform
+for a cracker; there simply aren't enough tools available for MacOS, and the tools
+needed are too much trouble to port. UNIX is the most likely platform and of that
+class, probably FreeBSD or Linux.</P>
+<P>The most obvious reason for this is cost. For the price of a $39 book on Linux
+(with the accompanying CD-ROM), a cracker gets everything he could ever need in the
+way of tools: C, C++, Smalltalk, Perl, TCP/IP, and much more. Moreover, he gets the
+full source code to his operating system.</P>
+<P>This cost issue is not trivial. Even older workstations can be expensive. Your
+money will buy more computing power if you stay with an IBM compatible. Today, you
+can get a 100MHz PC with 8MB of RAM for $300. You can put either FreeBSD or Linux
+on that machine and suddenly, you have a powerful workstation. Conversely, that same
+$300 might buy you a 25MHz SPARCstation 1 with a disk, monitor, and keyboard kit.
+Or perhaps an ELC with an external disk and 16MB of RAM. Compounding this is the
+problem of software. If you get an old Sun, chances are that you will also be receiving
+SunOS 4.1.<I>x</I>. If so, a C compiler (cc) comes stock. However, if you buy an
+RS/6000 with AIX 4.1.<I>x</I>, you get a better deal on the machine but you are forced
+to get a C compiler. This will probably entail getting GCC from the Internet. As
+you might guess, a C compiler is imperative. Without it, you cannot build the majority
+of tools distributed from the void. This is a big consideration and one reason that
+Linux is becoming much more popular.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Compatibility is not really an issue.
+	The majority of good tools are written under the UNIX environment and these can be
+	easily ported to the free UNIX platforms. In fact, in many cases, binaries for Linux
+	and FreeBSD already exist (although I readily admit that this is more prevalent for
+	FreeBSD, as early implementations of Linux had a somewhat eclectic source tree that
+	probably more closely resembled AIX than other traditional flavors, like SunOS).
+	This is somewhat of a cult issue as well. Purists generally prefer BSD. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>I should mention that professional crackers (those who get paid for their work)
+can probably afford any system. You can bet that those forces in American intelligence
+investigating cyberwar are using some extreme computing power. For these individuals,
+licensing and cost are not issues.
+<H3><FONT COLOR="#000077"><B>Sun</B></FONT></H3>
+<P>It is fairly common to see crackers using either SolarisX86 or SCO as a platform.
+This is because even though these products are licenseware, they can easily be obtained.
+Typically, crackers using these platforms know students or are students. They can
+therefore take advantage of the enormous discounts offered to educational institutions
+and students in general. There is a radical difference between the price paid by
+a student and the price paid by the average man on the street. The identical product's
+price could differ by hundreds of dollars. Again, because these operating systems
+run on PC architecture, they are still more economical alternatives. (SolarisX86
+2.4 became enormously popular after support was added for standard IDE drives and
+CD-ROM devices. Prior to the 2.4 driver update, the system supported only SCSI drives:
+a slightly more expensive proposition.) And of course, one can always order demo
+disks from Sun and simply keep the distribution, even though you are in violation
+of the license.
+<H3><FONT COLOR="#000077"><B>UNIX</B></FONT></H3>
+<P>UNIX platforms are popular because they generally require a low overhead. A machine
+with Windows 95 and all the trimmings requires a lot of RAM; in contrast, you can
+run Linux or FreeBSD on a paltry 386 and gain good performance (provided, of course,
+that you do not use X). This is reasonable, too, because even tools that have been
+written for use in the X environment usually have a command-line interface as well
+(for example, you can run SATAN in CLI).
+<H3><FONT COLOR="#000077"><B>Microsoft</B></FONT></H3>
+<P>The Microsoft platform supports many legitimate security tools that can be used
+to attack remote hosts. Of that class, more and more crackers are using Windows NT.
+It outperforms 95 by a wide margin and has advanced tools for networking as well.
+Also, Windows NT is a more serious platform in terms of security. It has access control
+as well, so crackers can safely offer remote services to their buddies. If those
+&quot;friends&quot; log in and attempt to trash the system, they will be faced with
+the same controls as they would on a non-cracker-friendly box.</P>
+<P>Moreover, NT is becoming more popular because crackers know they must learn this
+platform. As NT becomes a more popular platform for Internet servers (and it will,
+with the recent commitments between DEC and Microsoft), crackers will need to know
+how to crack these machines. Moreover, security professionals will also develop tools
+to test internal NT security. Thus, you will see a dramatic rise in the use of NT
+as a cracking platform.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Windows 95 tools are also rapidly
+	emerging, which will greatly alter the state of cracking on the Net. Such tools are
+	typically point and click, requiring little skill on the part of the operator. As
+	these tools become more common, you can expect even more security violations on the
+	Net. Nonetheless, I don't think 95 will ever be a major platform for serious crackers.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Origin of Attacks</B></FONT></H2>
+<P>Years ago, many attacks originated from universities because that is where the
+Internet access came from. Most crackers were youngsters who had no other easy means
+of accessing the Internet. This naturally influenced not only the origin of the attack
+but also the time during which the attack happened. Also, real TCP/IP was not available
+as an option in the old days (at least not from the comfort of your home, save a
+shell account).</P>
+<P>Today the situation is entirely different. Crackers can crack your network from
+their home, office, or vehicle. However, there are some constants. For instance,
+serious crackers do not generally use providers such as America Online, Prodigy,
+or Microsoft Network. (The obvious exceptions are those crackers who utilize stolen
+credit-card numbers. In those cases, AOL is an excellent choice.) One reason for
+this is that these providers will roll over a hacker or cracker to the authorities
+at the drop of a hat. The suspect may not have even done anything wrong (smaller
+ISPs may simply cut them loose). Ironically, big providers allow spammers to pummel
+the Internet with largely unwanted advertising. Go figure. Curiosity is frowned upon,
+but stone-cold commercialism is A-OK.</P>
+<P>Furthermore, these providers do not offer a UNIX shell environment in addition
+to garden-variety PPP. A shell account can facilitate many actions that are otherwise
+more difficult to undertake. System tools available that can provide increased functionality
+include the various shells, Perl, AWK, SED, C, C++, and a handful of system commands
+(<TT>showmount</TT> is one; <TT>rusers</TT> is another).</P>
+<P>So the picture of a typical cracker is developing: This is a person who works
+late at night, who is armed with a UNIX or an NT box and advanced tools, and, with
+all likelihood, is using a local provider.
+<H2><FONT COLOR="#000077"><B>What Is the Typical Cracker Like?</B></FONT></H2>
+<P>The typical cracker can probably be described by at least three qualities in the
+following profile:
+
+<UL>
+	<LI>Can code in C, C++, or Perl--These are general requirements, because many of
+	the baseline security tools are written in one or more of these languages. At minimum,
+	the cracker must be able to properly interpret, compile, and execute the code. More-advanced
+	crackers can take code not expressly written for a particular platform and port it
+	to their own. Equally, they may develop new modules of code for extensible products
+	such as SATAN and SAFEsuite (these programs allow the integration of new tools written
+	by the user).<BR>
+	<BR>
+	
+	<LI>Has an in-depth knowledge of TCP/IP--No competent cracker can get along without
+	this requirement. At minimum, a cracker must know how the Internet works. This knowledge
+	must necessarily go deeper than just what it takes to connect and network. The modern,
+	competent cracker must know the raw codes within TCP/IP, such as the composition
+	of IP packet headers. This knowledge, however, need not be acquired at school and
+	therefore, a B.S. in Computer Science is not required. Many individuals get this
+	knowledge by networking equipment within their home or at their place of business.<BR>
+	<BR>
+	
+	<LI>Uses the Internet more than 50 hours per month--Crackers are not casual users.
+	To watch a cracker at work is to watch someone who truly knows not only his or her
+	own machine, but the Net. There is no substitute for experience, and crackers must
+	have it. Some crackers are actually habitual users and suffer from insomnia. No joke.<BR>
+	<BR>
+	
+	<LI>Intimately knows at least two operating systems--One of these will undoubtedly
+	be UNIX or VMS.<BR>
+	<BR>
+	
+	<LI>Has (or had) a job using computers--Not every cracker wakes up one morning and
+	decides to devote a major portion of his or her life to cracking. Some have had jobs
+	in system administration or development. These individuals tend to be older and more
+	experienced. In such cases, you are probably dealing with a professional cracker
+	(who probably has had some experience developing client/server applications).<BR>
+	<BR>
+	
+	<LI>Collects old, vintage, or outdated computer hardware or software--This may sound
+	silly, but it isn't. Many older applications and utilities can perform tasks that
+	their modern counterparts cannot. For example, I recently had a hard drive that reported
+	bad sectors. I reformatted it a dozen times and tried various disk utilities to repair
+	it; still, I had problems. After several tries with modern utilities, I turned to
+	a very obscure program called hdscrub.com, coded many years ago. It repaired the
+	problem in no time, reformatting the disk clean. Other examples include old utilities
+	that can format disks to different sizes, break up large files for archiving on disks,
+	create odd file systems, and so forth. As a cracker's experience grows, he or she
+	collects such old utilities.
+</UL>
+
+<H2><FONT COLOR="#000077"><B>What Is the Typical Target Like?</B></FONT></H2>
+<P>The typical target is hard to pin down because crackers attack different types
+of networks for different reasons. Nonetheless, one popular target is the small,
+private network. Crackers are well aware of organizational behavior and financial
+realities. Because firewalls are expensive to acquire and maintain, smaller networks
+are likely to go without or obtain inferior products. Also, few small companies have
+individuals assigned specifically to anti-cracking detail (think about the Finnish
+report I mentioned in Chapter 4, &quot;Just Who Can Be Hacked, Anyway?&quot;). Finally,
+smaller networks are more easily compromised because they fit this profile:
+
+<UL>
+	<LI>The owners are new to the Internet<BR>
+	<BR>
+	
+	<LI>The sysad is experienced with LANs rather than TCP/IP<BR>
+	<BR>
+	
+	<LI>Either the equipment or the software (or both) are old (and perhaps outdated)
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Seizing such a network is generally
+	easier, as it is maintaining a box there. Crackers refer to this as <I>owning</I>
+	a box, as in &quot;I just cracked this network and I now own a box there.&quot; This
+	<I>owning</I> refers to a condition where the cracker has root, supervisor, or administrator
+	privileges on the box. In other words, the cracker has total control of the machine
+	and, at any time, could totally down or otherwise destroy the network. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>This profile, however, is not set in stone. Many crackers prefer to run with the
+bleeding-edge target, seeing whether they can exploit a newly discovered hole before
+the sysad plugs it. In this instance, the cracker is probably cracking for sport.</P>
+<P>Another issue is familiarity. Most crackers know two or more operating systems
+intimately from a user standpoint, but generally only one from a cracking standpoint.
+In other words, these folks tend to specialize. Few crackers are aware of how to
+crack multiple platforms. For example, perhaps one individual knows VAX/VMS very
+well but knows little about SunOS. He will therefore target VAX stations and ultimately,
+perhaps through experience, DEC Alphas.</P>
+<P>Universities are major targets in part because they possess extreme computing
+power. For example, a university would be an excellent place to run an extensive
+password cracking session. The work can be distributed over several workstations
+and can thus be accomplished much more quickly than by doing it locally. Another
+reason universities are major targets is that university boxes usually have several
+hundred users, even in relatively small network segments. Administration of sites
+that large is a difficult task. There is a strong chance that a cracked account can
+get lost in the mix.</P>
+<P>Other popular targets are government sites. Here, you see the anarchistic element
+of the cracker personality emerging: the desire to embarrass government agencies.
+Such an attack, if successful, can bring a cracker great prestige within the subculture.
+It does not matter if that cracker is later caught; the point is, he or she cracked
+a supposedly secure site. This telegraphs the news of the cracker's skill to crackers
+across the Internet.
+<H2><FONT COLOR="#000077"><B>Why Do They Want to Attack?</B></FONT></H2>
+<P>There are a number of reasons why crackers might want to attack your system:
+
+<UL>
+	<LI>Spite--Plainly stated, the cracker may dislike you. Perhaps he is a disgruntled
+	employee from your company. Perhaps you flamed him in a Usenet group. One common
+	scenario is for a cracker to crack an ISP with which he once had an account. Perhaps
+	the ISP discovered the cracker was cracking other networks or storing warez on its
+	box. For whatever reason, the ISP terminated the cracker's account, and now the cracker
+	is out for revenge.<BR>
+	<BR>
+	
+	<LI>Sport--Perhaps you have been bragging about the security of your system, telling
+	people it's impenetrable. Or worse, you own a brand-spanking-new system that the
+	cracker has never dealt with before. These are challenges a cracker cannot resist.<BR>
+	<BR>
+	
+	<LI>Profit--Someone pays a cracker to bring you down or to get your proprietary data.<BR>
+	<BR>
+	
+	<LI>Stupidity--Many crackers want to impress their friends, so they purposefully
+	undertake acts that will bring the FBI to their door. These are mostly kids.<BR>
+	<BR>
+	
+	<LI>Curiosity--Many crack purely for sake of curiosity, simple enjoyment of the process,
+	or out of boredom.<BR>
+	<BR>
+	
+	<LI>Politics--A small (but significant) percentage of crackers crack for political
+	reasons. That is, they seek press coverage to highlight a particular issue. This
+	could be animal rights, arms control, free speech, and so forth. This phenomenon
+	is much more common in Europe than in the U.S. Americans fall victim to pride or
+	avarice far more often than they do to ideology.
+</UL>
+
+<P>All of these reasons are vices. These vices become excess when you break the law.
+With breaking the law comes a certain feeling of excitement; that excitement can
+negatively influence your reasoning.
+<H2><FONT COLOR="#000077"><B>About Attacks</B></FONT></H2>
+<P>At what point can you say you have suffered a network attack? Some insist that
+it is the moment when crackers either penetrate your network or temporarily disable
+any portion of it. Certainly, from a legal point of view, this could be a valid place
+to mark the event called an attack (though, in some jurisdictions, intent and not
+the successful completion of the act will suffice).</P>
+<P>Although the legal definition of an attack suggests that it occurs only after
+the act is completed and the cracker is inside, it is my opinion that the mere undertaking
+of actions that will result in a network break-in constitutes an attack. The way
+I see it, you are under attack the moment a cracker begins working on the target
+machine.</P>
+<P>The problem with that position is that sometimes, partly out of sophistication
+and partly out of opportunity, a cracker will take some time to actually implement
+an attack. For example, a series of fishing expeditions may occur over a period of
+weeks. These probes in themselves could not reasonably be called <I>attacks</I> because
+they do not occur contiguously. If a cracker knows that logs are being run, he may
+opt for this &quot;slow boat to China&quot; approach. The level of paranoia in system
+administrators varies; this is not a quality that a cracker can accurately gauge
+without undertaking some action (perhaps trying a mock attack from a temporary address
+and waiting for the response, repercussions, or activity from the sysad). However,
+the majority of system administrators do not fly off the handle at a single instruction
+from the void unless that instruction is quite obviously an attack.</P>
+<P>An example of an obvious attack is when the log reveals the attempt of an old
+sendmail exploit. This is where the cracker issues two or three command lines on
+port 25. These commands invariably attempt to trick the server into mailing a copy
+of the <TT>/etc/passwd</TT> file back to the cracker. If a system administrator sees
+this, he will obviously be concerned. However, contrast that with evidence of a <TT>showmount</TT>
+query. A system administrator may well know that a <TT>showmount</TT> query is an
+ominous indication, but it cannot be indisputably classed as an attempted intrusion.
+In fact, it is nothing more than evidence of someone contemplating an intrusion,
+if that.</P>
+<P>These techniques of gradually gaining information about a system have their advantages
+and their pitfalls. For example, the cracker may come from different addresses at
+different times, quietly knocking on the doors (and checking the windows) of a network.
+Sparse logging evidence from disparate addresses may not alarm the average system
+administrator. In contrast, a shotgun approach (heavy scanning) will immediately
+alert the sysad to a problem. Unless the cracker is reasonably certain that an exploit
+hole exists on a machine, he will not conduct an all-out scanning attack (at least,
+not if he is smart).</P>
+<P>If you are just getting started in security, the behavior of crackers is an important
+element of your education; this element should not be neglected. Security technicians
+usually downplay this, because they maintain a high level of disdain for the cracker.
+Nonetheless, even though sites employ sophisticated security technology, crackers
+continue to breach the security of supposedly solid servers.</P>
+<P>Most crackers are not geniuses. They often implement techniques that are tried,
+true, and well known in the security community. Unless the cracker is writing his
+own tools, he must rely on available, existing tools. Each tool has limitations peculiar
+to its particular design. Thus, from the victim's point of view, all attacks using
+such tools will look basically the same. Attacks by crackers using strobe will probably
+look identical as long as the target machine is, say, a SPARC with SunOS 4.1.3. Knowing
+those signatures is an important part of your security education. However, the study
+of behavior goes a bit deeper.</P>
+<P>Most crackers learn their technique (at least the basics) from those who came
+before them. Although there are pioneers in the field (Kevin Mitnik is one), the
+majority of crackers simply follow in the footsteps of their predecessors. These
+techniques have been described extensively in online documents authored by crackers,
+and such documents are available at thousands of locations on the Internet. In them
+are extremely detailed examples of how to implement a particular class of attack.</P>
+<P>The new cracker typically follows these instructions to the letter, often to his
+detriment because some attack methods are pathetically outdated (solutions have since
+been devised and the cracker employing them is wasting his own time). If you examine
+such an attack in your logs, it may look almost identical to sample logs posted by
+security professionals in various technical presentations designed with the express
+purpose of illustrating cracking examples.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can create scripts that will
+	extract such attacks from logs. These scripts are really nothing more than powerful
+	regex searches (Perl is most suitable for this) that scan log files for strings that
+	commonly appear during or after such an attack. These output strings generally differ
+	only slightly from platform to platform. The key is, if you have never seen those
+	strings, generate some. Once you know the construct of the output, you will know
+	what to scan for. Likewise, check out some of the tools I reference later in this
+	chapter. These tools are designed for wholesale scanning of large log files. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>However, there comes a point within a cracker's experience where he begins to
+develop specialized methods of implementing attacks. Some of these methods emerge
+as a result of habit; others emerge because the cracker realizes that a tool can
+be used for more than its express purpose. These types of attacks, called <I>hybrid</I>
+attacks, are where one or more techniques are used in concert to produce the ultimate
+end. (The example given in the preceding paragraphs is where an apparent denial-of-service
+attack is actually one phase of a spoofing attack.) Incredibly, there may be crackers
+who still use traditional type-one-command-at-a-time techniques, in which case, you
+will see all sorts of interesting log messages.</P>
+<P>In any event, studying the behavior of crackers in actual cracking situations
+is instructive. There are documents of this sort on the Internet, and you should
+obtain at least two or three of them. One of the most extraordinary papers of this
+class was written by Bill Cheswick, then of AT&amp;T Bell Laboratories. Cheswick
+begins this classic paper as follows:
+
+<DL>
+	<DD>On January 7 1991 a cracker, believing he had discovered the famous sendmail
+	DEBUG hole in our Internet gateway machine, attempted to obtain a copy of our password
+	file. I sent him one.
+	<P>Cheswick forwarded the password file and allowed the cracker to enter a protected
+	environment. There, the cracker was observed as he tried various methods to gain
+	leveraged access and ultimately, to delete all the files. The attack had an apparent
+	originating point at Stanford University, but it was later determined that the cracker
+	was operating from the Netherlands. At the time, such activity was not unlawful in
+	the Netherlands. Therefore, though the calls were ultimately traced and the cracker's
+	identity known, he was reportedly untouchable. At any rate, the cracker proceeded
+	to make a series of clumsy attempts to crack a specific machine. The story that Cheswick
+	relates from there is truly fascinating. Cheswick and his colleagues created a special,
+	protected (chroot) environment in which the cracker was free to crack as he pleased.
+	In this way, the cracker could be observed closely. The paper contains many logs
+	and is a must read.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find Cheswick's &quot;An
+	Evening With Berferd In Which a Cracker is Lured, Endured and Studied&quot; online
+	at <A HREF="ftp://research.att.com/dist/internet_security/berferd.ps"><TT>ftp://research.att.com/dist/internet_security/berferd.ps</TT></A>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Tsutomu Shimomura and Weitse Venema
+	were also involved in this case, which spanned a fairly lengthy period of time. Shimomura
+	reportedly assisted in capturing the network traffic, while Venema monitored the
+	cracker (and his associates) in the Netherlands. Also, Cheswick reports that Steve
+	Bellovin constructed a throwaway machine that they intended to use for such cases.
+	They reasoned that such a machine would provide a better environment to observe a
+	cracker at work, because the machine could actually be compromised at a root level
+	(and perhaps even the file system could be destroyed). They would simply locate the
+	machine on a network segment on which a sniffer could also be installed. Thus, if
+	the cracker destroyed the file system of the instant machine, they could still reap
+	the benefit of the logs. This is truly an important paper. It is humorous, entertaining,
+	and enormously instructive.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>As it happens, Steve Bellovin did
+	provide a dedicated bait machine, which would later become the model for other such
+	machines. In the referenced paper, there is an extensive discussion of how to build
+	a jail like the one the folks at Bell Labs used for the Berferd. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Other such reports exist. A particularly scathing one was authored by Tsutomu
+Shimomura, who had a cracker who closely resembled the Berferd mentioned above. The
+individual claimed to be from the <I>Mitnik Liberation Front</I> (the name of this
+so-called organization says it all). In any event, this individual &quot;compromised&quot;
+a baited machine, similar to the one that Bellovin reportedly constructed. Shimomura's
+commentary is interlaced between failed attempts by the cracker to accomplish much.
+There are logs of the sessions. It is an interesting study.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Shimomura's paper is
+	located online at <A HREF="http://www.takedown.com/evidence/anklebiters/mlf/index.html"><TT>http://www.takedown.com/evidence/anklebiters/mlf/index.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Another engrossing account was authored by Leendert van Dorn, from Vrije University
+in the Netherlands. It is titled &quot;Computer Break-ins: A Case Study&quot; (January
+21, 1993). The paper addresses various types of attacks. These techniques were collected
+from actual attacks directed against Vrije University. Some of the attacks were quite
+sophisticated.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find van Dorn's account
+	online at <A HREF="http://www.alw.nih.gov/Security/FIRST/papers/general/holland.ps"><TT>http://www.alw.nih.gov/Security/FIRST/papers/general/holland.ps</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Perhaps a better-known paper is &quot;Security Breaches: Five Recent Incidents
+at Columbia University.&quot; Because I analyze that paper elsewhere in this text,
+I will refrain from doing so again. However, it is an excellent study (some 23 pages
+in all) that sheds significant light on the behavior of crackers implementing attacks.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Security Breaches:
+	Five Recent Incidents at Columbia University&quot; can be found online at <A HREF="http://www.alw.nih.gov/Security/FIRST/papers/general/fuat.ps"><TT>http://www.alw.nih.gov/Security/FIRST/papers/general/fuat.ps</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Gordon R. Meyer wrote a very interesting paper titled &quot;The Social Organization
+of the Computer Underground&quot; as his master's thesis at Northern Illinois University.
+In it, Meyer analyzed the computer underground from a sociological point of view
+and gathered some enlightening information. The paper, although dated, provides excerpts
+from radio and television interviews, message logs, journals, and other publications.
+Although Meyer's paper does not reveal specific methods of operation in the same
+detail as the papers mentioned earlier, it does describe (with considerable detail
+and clarity) the social aspects of cracking and crackers.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Meyer's paper, written
+	in August, 1989, is located online at <TT>http://www.alw.nih.gov/Security/FIRST/papers/general/hacker.txt</TT>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>The Sams Crack Level Index</B></FONT></H2>
+<P>Figure 26.1 shows six levels, each representing one level of depth into your network.
+I will refer to these as <I>levels of sensitivity</I>. Points along those levels
+identify the risks associated with each cracking technique. I will refer to those
+as <I>states of attack</I>.</P>
+<P><A NAME="01"></A><A HREF="01.htm"><B>FIGURE 26.1.</B></A> <I><BR>
+The Sams crack level index.</I>
+<H3><FONT COLOR="#000077"><B>Levels of Sensitivity</B></FONT></H3>
+<P>The levels of sensitivity in all networks are pretty much the same (barring those
+using secure network operating systems). The common risks can be summed up in a list,
+which has basically not changed for a decade. The list rarely changes, except with
+the introduction of new technologies, such as ActiveX, that allow arbitrary execution
+of binaries over the Net.</P>
+<P>The majority of crackers capitalize on the holes we hear about daily in security
+newsgroups. If you have frequented these groups (or a security mailing list) you
+will have read these words a thousand times:
+
+<UL>
+	<LI>&quot;Oh, they had <TT>test.cgi</TT> still installed in their cgi-bin directory.&quot;<BR>
+	<BR>
+	
+	<LI>&quot;It was a Linux box and apparently, they installed sudo and some of the
+	demo users.&quot;<BR>
+	<BR>
+	
+	<LI>&quot;It was the <TT>phf</TT> script that did them in.&quot;
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Level One</B></FONT></H4>
+<P>Attacks classified in the level-one category are basically irrelevant. Level-one
+attacks include denial-of-service attacks and mail bombing. At best, these techniques
+require 30 minutes of your time to correct. This is because these attacks are instituted
+with the express purpose of nuisance. In most instances, you can halt these problems
+by applying an exclusionary scheme, as discussed in Computer Security Advisory 95-13
+(<I>SATAN Update</I>), issued by the University of Pittsburgh:
+
+<DL>
+	<DD>Denial-of-service attacks are always possible: The best way to deal with this
+	is to react to intrusions by adding intruder source hosts/networks into the DENY
+	listings in the inetd.sec. There is no proactive way to avoid this without disabling
+	networking altogether.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you uncover evidence of a denial-of-service
+	attack, you should look elsewhere on the system for possible intrusions. Flooding
+	and denial-of-service attacks are often precursors (or even integral portions) of
+	a spoofing attack. If you see a comprehensive flooding of a given port on one machine,
+	take note of the port and what it does. Examine what service is bound to it. If that
+	service is an integral part of your internal system--where other machines use it
+	and the communication relies on address authentication--be wary. What looks like
+	a denial-of-service attack could in fact be the beginning of a breach of network
+	security, though generally, denial-of-service attacks that last for long periods
+	of time are just what they appear to be: nuisances. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>There are some instances in which a denial-of-service attack can be more serious.
+Certain, obscure configurations of your network could foster more threatening conditions.
+Christopher Klaus of Internet Security Systems defined several such configurations
+in a post concerning denial-of-service attacks. In that posting, Klaus wrote:
+
+<DL>
+	<DD>By sending a UDP packet with incorrect information in the header, some Sun-OS
+	4.1.3 UNIX boxes will panic and then reboot. This is a problem found frequently on
+	many firewalls that are on top of a Sun-OS machine. This could be high risk vulnerability
+	if your firewall keeps going down.
+</DL>
+
+<P>Klaus also addressed other denial-of-service attacks in that post. I would recommend
+reviewing it. Klaus provides information on vulnerabilities for NT, Novell, Linux,
+and UNIX generally.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Klaus's posting can be
+	found online at <A HREF="http://vger.alaska.net/mail/bos/msg00002.html"><TT>http://vger.alaska.net/mail/bos/msg00002.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>If the attack is a syn_flood attack, there are some measures you can take to identify
+the cracking party. Currently, four major syn_flooding utilities are floating around
+on the Internet. At least two of these tools have a fundamental flaw within them
+that reveals the identity of the attacker, even if indirectly. These tools have provisions
+within their code for a series of PING instructions. These PING instructs carry with
+them the IP address of the machine issuing them. Therefore, if the cracker is using
+one of these two utilities, he is telegraphing his IP address to you for each PING.
+Although this will not give you the e-mail address of the party, you can, through
+methods described earlier in this book, trace it to its ultimate source. (As noted,
+traceroute will reveal the actual network the cracker is coming from. This is generally
+the second-to-last entry on the reverse traceroute lookup.) The problem with this,
+however, is that you must log heavily enough to capture all the traffic between you
+and the cracking party. To find that IP address, you will have to dig for it. At
+any rate, you have a 50 percent chance of the cracker using such a flawed utility.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The remaining two utilities for
+	syn_flooding do not have this PING flaw. The developers of these tools were a bit
+	more sophisticated. They added a provision to randomize the purported IP address.
+	This naturally presents a much more difficult situation to the victim. Even low-level
+	analysis of the received packets is a waste of time. However, to the inexperienced
+	system administrator, this could be a bit confusing. Tricky, right? 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Most denial-of-service attacks represent a relatively low-level risk. Even those
+attacks that can force a reboot (of over-utilization of a processor) are only temporary
+problems. These types of attacks are vastly different from attacks where someone
+gains control of your network. The only truly irritating thing about denial-of-service
+attacks is that in the same way that they are low-level risks, they are also high-level
+possibilities. A cracker implementing a denial-of-service attack need have only very
+limited experience and expertise. These attacks are therefore common, though not
+nearly as common as mail bombings.</P>
+<P>As for mail bombings, the perpetrators are usually easily tracked. Furthermore,
+bozo files (kill files) and exclusionary schemes basically render these attacks utterly
+harmless (they ultimately bring more sorrow to the perpetrator than anyone). The
+only real exception to this is where the bombing is so consistent and in such volume
+that it cripples a mail server.</P>
+<P>Other level-one intrusions consist of knuckleheads initiating Telnet sessions
+to your mail or news server, trying to ascertain shared out directories and whatnot.
+As long as you have properly secured your network, these activities are harmless.
+If you haven't properly configured shares, or if you are running the r services (or
+other things you shouldn't), some of these garden- variety level-one techniques can
+expand into real trouble.
+<H4><FONT COLOR="#000077"><B>Levels Two and Three</B></FONT></H4>
+<P>Levels two and three involve things like local users gaining read or write access
+to files (or directories) they shouldn't. This can be a problem, depending largely
+on the character of the file(s). Certainly, any instance of a local user being able
+to access the <TT>/tmp</TT> directory can be critical. This could potentially pave
+a pathway to level-three issues (the next stage) where a user could conceivably gain
+write access as well (and thus progress to a level-four environment). This is an
+issue primarily for UNIX administrators or NT administrators.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Microsoft Windows 95 does not have
+	granular access control and therefore, barring installation of some third-party,
+	access-control device, Windows 95 networks are completely insecure. Because of this,
+	level-two attacks are critical and can easily progress to levels three, four, five,
+	and six in seconds. If you run such a network, immediately get an access-control
+	device of some sort. If you do not, anyone (at any time) can delete one or more critical
+	files. Many programs in the Windows 95 environment rely on file dependencies. As
+	long as you run a Windows 95 network connected to the Internet (without access control
+	or closing the holes in Internet Explorer), it is only a question of how long before
+	someone mangles your network. By deleting just a few files on a Windows 95 network,
+	a cracker can incapacitate it permanently. If you have the ability to do so, monitor
+	all traffic to ports 137-139, where the sharing process occurs. Furthermore, I would
+	<I>strictly</I> prohibit users within that network from installing Web or FTP servers.
+	If you are running the Microsoft platform and want to provide servers open to the
+	outside world (an idea that I would furiously argue against), get NT. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Local attacks are a bit different. The term <I>local user</I> is, I realize, a
+relative one. In networks, <I>local user</I> refers to literally anyone currently
+logged to any machine within the network. Perhaps a better way to define this is
+to say that a local user is anyone who has a password to a machine within your local
+network and therefore has a directory on one of your drives (regardless of what purpose
+that directory serves: a Web site, a local hard disk drive on one of the workstations,
+and so forth).</P>
+<P>The threat from local users correlates directly to what type of network you are
+maintaining. If you are an ISP, your local users could be anyone; you have probably
+never met or spoken to 90 percent of your local users. As long as their credit card
+charges ring true each month, you probably have little contact with these folks even
+by e-mail (barring the distribution of monthly access or maintenance reports; this
+interaction doesn't really count as contact, though). There is no reason to assume
+that these faceless persons are not crackers. Everyone but your immediate staff should
+be suspect.</P>
+<P>An attack initiated by a local user can be either pathetic or extremely sophisticated.
+Nevertheless, no matter what level of expertise is behind these attacks, will almost
+invariably originate over Telnet. I have indicated before that if you are an ISP,
+it is an excellent idea to isolate all shell accounts to a single machine. That is,
+logins should only be accepted on the one or more machines that you have allocated
+for shell access. This makes it much easier to manage logs, access controls, loose
+protocols, and other potential security issues.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>In general, you should also segregate
+	any system boxes that are going to house user-created CGI. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>These machines should be blocked into their own networked segment. That is, they
+should be surrounded by either routers or hubs, depending on how your network is
+configured. The topology should ensure that bizarre forms of hardware address spoofing
+cannot leak beyond that particular segment. This brings up some issues of trust,
+a matter I address later in this book.</P>
+<P>There are only two kinds of attack you will encounter. The less serious one is
+the <I>roving user</I>, a cracker who is new to the subject and therefore looks around
+for things (oh, they might print the <TT>passwd</TT> file to <TT>SDTOUT</TT>, see
+if they can read any privileged files, and whatnot). Conversely, you may encounter
+an organized and well-thought-out attack. This is where the attacker already knows
+your system configuration well. Perhaps he previously assessed it from an account
+with another provider (if your system gives away information from the outside, this
+is a definite possibility).</P>
+<P>For those using access-control-enabled environments, there are two key issues
+regarding permissions. Each can affect whether a level-two problem escalates into
+levels three, four, or five. Those factors are
+
+<UL>
+	<LI>Misconfiguration on your part<BR>
+	<BR>
+	
+	<LI>Holes inherent within software
+</UL>
+
+<P>The first contingency arises when you don't properly understand the permission
+scheme. This is not a crime. I recognize (though few will admit it) that not every
+UNIX or NT system administrator is a guru. It takes time to acquire in-depth knowledge
+of the system. Just because you have earned a B.S. in CS doesn't mean you will know
+for certain that your system is secure. There are tools to check for common misconfigurations,
+and I offer quite a few throughout this book. If you have even the slightest suspicion
+that permissions may be set inaccurately, get these tools and double-check.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Many security tools come with tutorials
+	about vulnerabilities. SATAN is a great example. The tutorials included with SATAN
+	are of significant value and can be used to understand many weaknesses within the
+	system, even if you do not run UNIX. For example, suppose you are a journalist and
+	want to gain a better understanding of UNIX security. You don't need UNIX to read
+	the HTML tutorials included with SATAN. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The second contingency is more common than you think. In fact, it crops up all
+the time. For example, according to the CERT advisory titled &quot;Vulnerability
+in IRIX csetup&quot; (issued in January, 1997):
+
+<DL>
+	<DD>The CERT Coordination Center has received information about a vulnerability in
+	the csetup program under IRIX versions 5.x, 6.0, 6.0.1, 6.1, and 6.2. csetup is not
+	available under IRIX 6.3 and 6.4. By exploiting this vulnerability, local users can
+	create or overwrite arbitrary files on the system. With this leverage, they can ultimately
+	gain root privileges.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find this advisory online
+	at <A HREF="http://www.fokus.gmd.de/vst/Security/cert/0073.html"><TT>http://www.fokus.gmd.de/vst/Security/cert/0073.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Take a good look at this advisory. Note the date. This is not some ancient advisory
+from the 1980s. This appeared very recently. These types of problems are not exclusive
+to any one company. Holes are routinely found in programs on every manner of operating
+system, as noted in the CERT advisory titled &quot;Vulnerability in Solaris admintool&quot;
+(August, 1996):
+
+<DL>
+	<DD>AUSCERT has received a report of a vulnerability in the Sun Microsystems Solaris
+	2.x distribution involving the program admintool. This program is used to provide
+	a graphical user interface to numerous system administration tasks. This vulnerability
+	may allow a local user to gain root privileges...In Solaris 2.5, admintool is set-user-id
+	root by default. That is, all file accesses are performed with the effective uid
+	of root. An effect of this is that the vulnerability will allow access to any file
+	on the system. If the vulnerability is exploited to try and create a file that already
+	exists, the contents of that file will be deleted. If the file does not exist, it
+	will be created with root ownership and be world writable.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find this advisory online
+	at <A HREF="http://www.fokus.gmd.de/vst/Security/cert/0050.html"><TT>http://www.fokus.gmd.de/vst/Security/cert/0050.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>It makes no difference what flavor you are running. Bugs are posted for almost
+all operating systems. Most networked systems see at least one advisory a month of
+this nature (by <I>this nature</I>, I mean one that can lead to leveraged or even
+root access). There is no immediate solution to this problem because most of these
+holes are not apparent at the time the software is shipped. The only solution is
+that you subscribe to every mailing list germane to bugs, holes, and your system.
+In this respect, security is a never-ending, learning process.</P>
+<P>There are some techniques that you can employ to keep up with the times. First,
+if you subscribe to several mailing lists, you will be hammered with e-mail. Some
+lists generate as many as 50 messages a day. On UNIX platforms, this is not much
+of a problem, because you can control how these messages are written to the disk
+at their time of arrival (by trapping the incoming address and redirecting the mail
+to a particular directory and so forth). In a Microsoft Windows environment, however,
+that volume of mail can be overwhelming for someone busy with other tasks. If you
+are the system administrator of a network running NT, there are several actions you
+can take. One is to direct different lists to different accounts. This makes management
+of incoming mail a bit easier (there are also products on the market for this sort
+of thing). Nonetheless, no matter what platform you use, you should fashion scripts
+to analyze those mail messages before you read them. I would install Perl (which
+is also available for NT) and use it to scan the messages for strings that would
+likely appear in a post relevant to your specific configuration. With a little effort,
+you can even create a script that rates these hits by priority.
+<H4><FONT COLOR="#000077"><B>Level Four</B></FONT></H4>
+<P>Level-four issues are usually related to outsiders being able to access internal
+files. This access may vary. They may be able to do no more than verify the existence
+of certain files, or they may be able to read them. Level-four problems also include
+those vulnerabilities whereby remote users--without valid accounts--can execute a
+limited number of commands on your server.</P>
+<P>The highest percentage of these holes arise through misconfiguration of your server,
+bad CGI, and overflow problems.
+<H4><FONT COLOR="#000077"><B>Levels Five and Six</B></FONT></H4>
+<P>Levels five and six consist of conditions whereby things are allowed to occur
+that <I>never</I> should. Any level five or six hole is fatal. At these stages, remote
+users can read, write, and execute files (usually, they have used a combination of
+techniques to get to this stage). Fortunately, if you have closed levels two, three,
+and four, it is almost impossible that you will ever see a level five or six crisis.
+If you close lesser avenues of entry, a level-six vulnerability is most likely to
+originate with a vendor's faulty software.
+<H3><FONT COLOR="#000077"><B>Response Levels</B></FONT></H3>
+<P>What do you do if you discover an attack in progress? It depends on the situation.
+<H4><FONT COLOR="#000077"><B>Responding to Level-One Attacks</B></FONT></H4>
+<P>Level-one attacks can be treated as described previously. Filter the incoming
+address and contact the attacker's service provider. These are minor inconveniences.
+Only when the denial-of-service attack appears to be related to some other form of
+attack (perhaps more sophisticated) or where it continues for some time (as in the
+Panix.com case) should you bother to do more than exclude the incoming traffic. However,
+if you are in a situation identical to Panix, you may want to contact CERT or other
+authorities.
+<H4><FONT COLOR="#000077"><B>Responding to Level-Two Attacks</B></FONT></H4>
+<P>Level-two attacks can be dealt with internally. There is no reason to leak information
+that local users can access things they shouldn't. Basically, freeze or eliminate
+the user's account. If there are complaints, let your lawyers sort it out. If you
+&quot;counsel&quot; the individual, you will see poor results. Within a month, he
+or she will be at it again. You are not engaged in a game. There is no guarantee
+that this internal user is just an innocent, curious individual. One last thing:
+give no warning about freezing the account. This way, you can preserve any evidence
+that might otherwise be deleted.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In cases where you cannot cut the
+	user loose entirely (perhaps the user is an employee), you can give warnings and
+	make the user's position contingent on compliance. Carefully document the incident
+	as well, so that if further problems occur, the user has no case for a wrongful termination
+	action if fired. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Responding to Level-Three, -Four, and -Five Attacks</B></FONT></H4>
+<P>If you experience any sort of an attack higher than a level two, you have a problem.
+Your job, then, is to undertake several actions:
+
+<UL>
+	<LI>Isolate the network segment so that the activity can only occur in a small area<BR>
+	<BR>
+	
+	<LI>Allow the activity to continue<BR>
+	<BR>
+	
+	<LI>Log all activity heavily<BR>
+	<BR>
+	
+	<LI>Make every effort (using a different portion of the network) to identify the
+	source or sources of the attacks
+</UL>
+
+<P>You are dealing with a criminal. Under state and federal statutes, this type of
+access is a crime. If you are to capture that criminal, you will need evidence. Generating
+that evidence will take time.</P>
+<P>The standards of evidence in an Internet criminal case are not exactly settled.
+Certainly, the mere act of someone trying to retrieve your <TT>/etc/passwd</TT> file
+by sendmail will not support a criminal case. Nor will evidence of a handful of <TT>showmount</TT>
+requests. In short, to build an iron-clad case against an intruder, you must have
+some tangible evidence that the intruder was within your network or, alternatively,
+some tangible evidence identifying the intruder as the one who downed your server
+in a denial-of-service attack. To do this, you must endure the brunt of the attack
+(although you can institute come safeguards to ensure that this attack does not harm
+your network).</P>
+<P>My advice in such a situation would be to call in not only some law enforcement
+but also at least one qualified security firm to assist in snagging the offender.
+The most important features of such an operation are logs and, of course, locating
+the perpetrator. You can provide the logs on your own. However, as far as tracing
+the individual, you can only go so far. You might start with a simple traceroute
+and, before you're finished, you may have implemented a dozen different techniques
+only to find that the network from which the perpetrator is hailing is either also
+a victim (that is, the cracker is island hopping), a rogue site, or even worse, located
+in a country beyond the reach of the U.S. Justice Department. In such cases, little
+can be done besides shoring up your network and getting on with your business. Taking
+any other course of action might be very costly and largely a waste of time.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>In this chapter, you learned about levels of attack. These levels of attack are
+defined numerically (level one being the least harmful, level six being the most
+harmful). This chapter discusses how to combat attacks of various levels, and informs
+you of tools you can use to wage a successful battle.
+<H2><FONT COLOR="#000077"><B>Resources</B></FONT></H2>
+<P><B>UNIX Incident Guide How to Detect an Intrusion.</B>
+
+<UL>
+	<LI><A HREF="http://ciac.llnl.gov/ciac/documents/CIAC-2305_UNIX_Incident_Guide_How_to_Detect_an_Intrusion.pdf"><TT>http://ciac.llnl.gov/ciac/documents/CIAC-2305_UNIX_Incident_Guide_How_to_Detect_an_Intrusion.pdf</TT></A>
+</UL>
+
+<P><B>Securing Internet Information Servers.</B> CIAC-2308.
+
+<UL>
+	<LI><A HREF="http://ciac.llnl.gov/ciac/documents/CIAC-2308_Securing_Internet_Information_Servers.pdf"><TT>http://ciac.llnl.gov/ciac/documents/CIAC-2308_Securing_Internet_Information_Servers.pdf</TT></A>
+</UL>
+
+<P><B>Threat Assessment of Malicious Code and Human Computer Threats.</B> L.E. Bassham
+and T.W. Polk. National Institute of Standards and Technology. Report to the U.S.
+Army Vulnerability/Survivability Study Team, NISTIR 4939. October, 1992.
+
+<UL>
+	<LI><A HREF="http://bilbo.isu.edu/security/isl/threat.html"><TT>http://bilbo.isu.edu/security/isl/threat.html</TT></A>
+</UL>
+
+<P><B>Hackers in the Mist.</B> R. Blake. Northwestern University, Independent study
+in anthropology. December 2, 1994.
+
+<UL>
+	<LI><A 
+HREF="http://www.eff.org/pub/Privacy/Security/Hacking_cracking_phreaking/Net_culture_and_hacking/Hackers/hackers_in_the_mist.article"><TT>http://www.eff.org/pub/Privacy/Security/Hacking_cracking_phreaking/Net_culture_and_hacking/Hackers/hackers_in_the
+_mist.article</TT></A>
+</UL>
+
+<P><B>Computer Break-ins: A Case Study.</B> Leendert van Dorn. Vrije University.
+January 21, 1993.
+
+<UL>
+	<LI><A HREF="http://www.alw.nih.gov/Security/FIRST/papers/general/holland.ps"><TT>http://www.alw.nih.gov/Security/FIRST/papers/general/holland.ps</TT></A>
+</UL>
+
+<P><B>Concerning Hackers Who Break into Computer Systems.</B> Presented at the 13th
+National Computer Security Conference, October 1, 1990.
+
+<UL>
+	<LI><A HREF="http://www.cpsr.org/ftp/cpsr/computer_crime/denning_defense_hackers.txt"><TT>http://www.cpsr.org/ftp/cpsr/computer_crime/denning_defense_hackers.txt</TT></A>
+</UL>
+
+<P><B>Selling Security: Security Policies Are Key to a Strong Defense, But Top Management
+Must First Be Brought on Board.</B> C. Waltner. InfoWorld.
+
+<UL>
+	<LI><A HREF="http://www.infoworld.com/cgi-bin/displayArchives.pl?dt_iwe52-96_82.htm"><TT>http://www.infoworld.com/cgi-bin/displayArchives.pl?dt_iwe52-96_82.htm</TT></A>
+</UL>
+
+<P><B>The United States vs. Craig Neidorf: A Debate on Electronic Publishing Constitutional
+Rights and Hacking.</B> D.E. Denning. Communications of the ACM, March, 1991.
+
+<UL>
+	<LI><A HREF="http://www.aracnet.com/~gtr/archive/intrusions.html"><TT>http://www.aracnet.com/~gtr/archive/intrusions.html</TT></A>
+</UL>
+
+<P><B>An Evening With Berferd In Which a Cracker is Lured, Endured and Studied.</B>
+B. Cheswick. AT&amp;T Bell Labs.
+
+<UL>
+	<LI><A HREF="ftp://research.att.com/dist/internet_security/berferd.ps"><TT>ftp://research.att.com/dist/internet_security/berferd.ps</TT></A>
+</UL>
+
+<P><B>Recombinant Culture: Crime in the Digital Network.</B> C. E. A. Karnow. Presented
+at Defcon II, July 1994.
+
+<UL>
+	<LI><A HREF="http://www.cpsr.org/cpsr/computer_crime/net.crime.karnow.txt"><TT>http://www.cpsr.org/cpsr/computer_crime/net.crime.karnow.txt</TT></A>
+</UL>
+
+<P><B>The Baudy World of the Byte Bandit: A Postmodernist Interpretation of the Computer
+Underground.</B> G. Meyer and J. Thomas. Department of Sociology, Northern Illinois
+University. March 5, 1990.
+
+<UL>
+	<LI><A HREF="http://ei.cs.vt.edu/~cs6704/papers/meyer.txt"><TT>http://ei.cs.vt.edu/~cs6704/papers/meyer.txt</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>Intrusion Detection</B></FONT></H3>
+<P><B>An Introduction to Intrusion Detection.</B> Aurobindo Sundaram.
+
+<UL>
+	<LI><A HREF="http://www.techmanager.com/nov96/intrus.html"><TT>http://www.techmanager.com/nov96/intrus.html</TT></A>
+</UL>
+
+<P><B>Intrusion Detection for Network Infrastructures.</B> S. Cheung, K.N. Levitt,
+and C. Ko. 1995 IEEE Symposium on Security and Privacy, Oakland, CA, May 1995.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/papers/clk95.ps"><TT>http://seclab.cs.ucdavis.edu/papers/clk95.ps</TT></A>
+</UL>
+
+<P><B>Fraud and Intrusion Detection in Financial Information Systems.</B> S. Stolfo,
+P. Chan, D. Wei, W. Lee, and A. Prodromidis. 4th ACM Computer and Communications
+Security Conference, 1997.
+
+<UL>
+	<LI><A HREF="http://www.cs.columbia.edu/~sal/hpapers/acmpaper.ps.gz"><TT>http://www.cs.columbia.edu/~sal/hpapers/acmpaper.ps.gz</TT></A>
+</UL>
+
+<P><B>Detecting Unusual Program Behavior Using the Statistical Component of the Next-
+Generation Intrusion Detection Expert System (NIDES).</B> Debra Anderson, Teresa
+F. Lunt, Harold Javitz, Ann Tamaru, and Alfonso Valdes. SRI-CSL-95-06, May 1995.
+(Available in hard copy only.)
+
+<UL>
+	<LI><A HREF="http://www.csl.sri.com/tr-abstracts.html#csl9506"><TT>http://www.csl.sri.com/tr-abstracts.html#csl9506</TT></A>
+</UL>
+
+<P><B>Intrusion Detection Systems (IDS): A Survey of Existing Systems and A Proposed
+Distributed IDS Architecture.</B> S.R. Snapp, J. Brentano, G.V. Dias, T.L. Goan,
+T. Grance, L.T. Heberlein, C. Ho, K.N. Levitt, B. Mukherjee, D.L. Mansur, K.L. Pon,
+and S.E. Smaha. Technical Report CSE-91-7, Division of Computer Science, University
+of California, Davis, February 1991.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/papers/bd96.ps"><TT>http://seclab.cs.ucdavis.edu/papers/bd96.ps</TT></A>
+</UL>
+
+<P><B>A Methodology for Testing Intrusion Detection Systems.</B> N. F. Puketza, K.
+Zhang, M. Chung, B. Mukherjee, and R. A. Olsson. IEEE Transactions on Software Engineering,
+Vol.22, No.10, October 1996.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/papers/tse96.ps"><TT>http://seclab.cs.ucdavis.edu/papers/tse96.ps</TT></A>
+</UL>
+
+<P><B>GrIDS--A Graph-Based Intrusion Detection System for Large Networks.</B> S.
+Staniford-Chen, S. Cheung, R. Crawford, M. Dilger, J. Frank, J. Hoagland, K. Levitt,
+C. Wee, R. Yip, and D. Zerkle. The 19th National Information Systems Security Conference.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/papers/nissc96.ps"><TT>http://seclab.cs.ucdavis.edu/papers/nissc96.ps</TT></A>
+</UL>
+
+<P><B>NetKuang--A Multi-Host Configuration Vulnerability Checker.</B> D. Zerkle and
+K. Levitt, Proceedings of the 6th Usenix Security Symposium. San Jose, California.
+1996.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/papers/zl96.ps"><TT>http://seclab.cs.ucdavis.edu/papers/zl96.ps</TT></A>
+</UL>
+
+<P><B>Simulating Concurrent Intrusions for Testing Intrusion Detection Systems: Parallelizing
+Intrusions.</B> M. Chung, N. Puketza, R.A. Olsson, and B. Mukherjee. Proceedings
+of the 1995 National Information Systems Security Conference. Baltimore, Maryland.
+1995.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/papers/cpo95.ps"><TT>http://seclab.cs.ucdavis.edu/papers/cpo95.ps</TT></A>
+</UL>
+
+<P><B>Holding Intruders Accountable on the Internet.</B> S. Staniford-Chen and L.T.
+Heberlein. Proceedings of the 1995 IEEE Symposium on Security and Privacy, Oakland,
+CA, 8-10 May 1995.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/~stanifor/papers.html"><TT>http://seclab.cs.ucdavis.edu/~stanifor/papers.html</TT></A>
+</UL>
+
+<P><B>Machine Learning and Intrusion Detection: Current and Future Directions.</B>
+J. Frank. Proceedings of the 17th National Computer Security Conference, October
+1994.
+
+<UL>
+	<LI><A HREF="http://seclab.cs.ucdavis.edu/~frank/mlid.html"><TT>http://seclab.cs.ucdavis.edu/~frank/mlid.html</TT></A>
+</UL>
+
+<P><B>Another Intrusion Detection Bibliography.</B>
+
+<UL>
+	<LI><A HREF="http://doe-is.llnl.gov/nitb/refs/bibs/bib1.html"><TT>http://doe-is.llnl.gov/nitb/refs/bibs/bib1.html</TT></A>
+</UL>
+
+<P><B>Intrusion Detection Bibliography.</B>
+
+<UL>
+	<LI><A HREF="http://www.cs.purdue.edu/coast/intrusion-detection/ids_bib.html"><TT>http://www.cs.purdue.edu/coast/intrusion-detection/ids_bib.html</TT></A>
+</UL>
+
+<P><B>Bibliography on Intrusion Detection.</B> The Collection of Computer Science
+Bibliographies.
+
+<UL>
+	<LI><A HREF="http://src.doc.ic.ac.uk/computing/bibliographies/Karlsruhe/Misc/intrusion.detection.html"><TT>http://src.doc.ic.ac.uk/computing/bibliographies/Karlsruhe/Misc/intrusion.detection.html</TT></A>
+</UL>
+
+<CENTER>
+<P>
+<HR>
+<A HREF="../ch25/ch25.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch27/ch27.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+<IMG SRC="../button/corp.gif" WIDTH="284" HEIGHT="45" ALIGN="BOTTOM" ALT="Macmillan Computer Publishing USA"
+BORDER="0"></P>
+
+<P>&#169; <A HREF="../copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

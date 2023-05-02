@@ -1,0 +1,1134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 29 -- Telnet-Based Attacks</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch28.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/ch28.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch30.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch30/ch30.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">29</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Telnet-Based Attacks</FONT></H1>
+</CENTER>
+<P>This chapter examines attacks developed over the years using the Telnet service.
+That examination begins with a bit of history. The Telnet protocol was first comprehensively
+defined by Postel in 1980. In RFC 764, Postel wrote:
+
+<DL>
+	<DD>The purpose of the Telnet protocol is to provide a fairly general, bi-directional,
+	eight-bit byte oriented communications facility. Its primary goal is to allow a standard
+	method of interfacing terminal devices and terminal-oriented processes to each other.
+	It is envisioned that the protocol may also be used for terminal-terminal communication
+	(&quot;linking&quot;) and process-process communication (distributed computation).
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>RFC 764 can be found
+	on the Web at <A HREF="javascript:if(confirm('http://sunsite.auc.dk/RFC/rfc/rfc764.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://sunsite.auc.dk/RFC/rfc/rfc764.html'" tppabs="http://sunsite.auc.dk/RFC/rfc/rfc764.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc764.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Telnet</B></FONT></H2>
+<P>As I mentioned in Chapter 6, &quot;A Brief Primer on TCP/IP,&quot; Telnet is unique
+in its design with the notable exception of rlogin. Telnet is designed to allow a
+user to log in to a foreign machine and execute commands there. Telnet (like rlogin)
+works as though you are at the console of the remote machine, as if you physically
+approached the remote machine, turned it on, and began working.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>PC users can get a feel for this
+	by thinking in terms of PCAnywhere or CloseUp. These programs allow you to remotely
+	log in to another PC and execute commands at the remote machine's <TT>C:</TT> prompt
+	(or even execute commands in Windows, providing you have a very high-speed connection
+	to transmit those graphics over the wire). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Virtual Terminal</B></FONT></H3>
+<P>The magic behind Telnet is that it imitates an ASCII terminal connection between
+two machines located great distances from each other. This is accomplished through
+the use of a <I>virtual terminal</I>, as described by Postel in this excerpt from
+RFC 854:
+
+<DL>
+	<DD>When a Telnet connection is first established, each end is assumed to originate
+	and terminate at a &quot;Network Virtual Terminal,&quot; or NVT. An NVT is an imaginary
+	device which provides a standard, network-wide, intermediate representation of a
+	canonical terminal...The Network Virtual Terminal (NVT) is a bi-directional character
+	device. The NVT has a printer and a keyboard. The printer responds to incoming data
+	and the keyboard produces outgoing data which is sent over the Telnet connection
+	and, if &quot;echoes&quot; are desired, to the NVT's printer as well. &quot;Echoes&quot;
+	will not be expected to traverse the network (although options exist to enable a
+	&quot;remote&quot; echoing mode of operation, no host is required to implement this
+	option). The code set is seven-bit USASCII in an eight-bit field, except as modified
+	herein. Any code conversion and timing considerations are local problems and do not
+	affect the NVT.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Read RFC 854 in its entirety
+	at <A HREF="javascript:if(confirm('http://sunsite.auc.dk/RFC/rfc/rfc854.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://sunsite.auc.dk/RFC/rfc/rfc854.html'" tppabs="http://sunsite.auc.dk/RFC/rfc/rfc854.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc854.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A virtual terminal is the equivalent (at least in appearance) of a hard-wired
+serial connection between the two machines. For example, you can simulate something
+very similar to a Telnet session by uncommenting the <TT>respawn</TT> instructions
+in the <TT>inittab</TT> file on a Linux box (and most other UNIX boxes) or by disconnecting
+both the monitor and keyboard on a SPARC and plugging a VT200 terminal into serial
+A or B. In the first instance, a <TT>login:</TT> prompt is issued. In the second,
+all boot process messages are echoed to the connected terminal and eventually, a
+<TT>boot</TT> prompt is issued (or perhaps, if the right SCSI disk drive is specified
+as the boot device in the PROM, the machine will boot and issue a <TT>login:</TT>
+prompt).</P>
+<P>Therefore, Telnet-based connections are what are called <I>bare bones connections</I>.
+You will notice that if you use a VT220 terminal as a head for your SPARC that, when
+the boot occurs, the cool Sun logo is not printed in color, nor do the cool graphics
+associated with it appear. Telnet and terminal sessions are completely text based.
+In addition, Telnet connections do not have facilities to interpret display-oriented
+languages such as HTML without the assistance of a text-based browser such as Lynx.
+Therefore, retrieving a Web page through Telnet will reveal no pictures or nicely
+formatted text; it will reveal only the source of the document (unless, of course,
+you have logged in via Telnet and are now using Lynx).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Lynx is a completely terminal-based
+	HTML browser for use with shell-account or even DOS-based TCP/IP connections. It
+	is a no-frills way to access the World Wide Web. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Telnet Security History</B></FONT></H3>
+<P>Telnet has cropped up in security advisories many times. Telnet security problems
+vary considerably, with a large number of vulnerabilities surfacing due to programming
+errors. However, programming errors are not the only reasons Telnet has appeared
+on advisories. In August of 1989, for example, the problem was a trojan, as the CERT
+advisory &quot;Telnet Break-in Warning&quot; explains:
+
+<DL>
+	<DD>Many computers connected to the Internet have recently experienced unauthorized
+	system activity. Investigation shows that the activity has occurred for several months
+	and is spreading. Several UNIX computers have had their &quot;Telnet&quot; programs
+	illicitly replaced with versions of &quot;Telnet&quot; which log outgoing login sessions
+	(including user names and passwords to remote systems). It appears that access has
+	been gained to many of the machines which have appeared in some of these session
+	logs.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To view this CERT advisory
+	in its entirety, visit <A HREF="javascript:if(confirm('ftp://ftp.uwsg.indiana.edu/pub/security/cert/cert_advisories/CA-89:03.telnet.breakin.warning.  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.uwsg.indiana.edu/pub/security/cert/cert_advisories/CA-89:03.telnet.breakin.warning.'" tppabs="ftp://ftp.uwsg.indiana.edu/pub/security/cert/cert_advisories/CA-89:03.telnet.breakin.warning."><TT>ftp://ftp.uwsg.indiana.edu/pub/security/cert/cert_advisories/CA-89:03.telnet.breakin.warning</TT>.</A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>That attack occurred just prior to the establishment of the DDN Security Coordination
+Center (September 1989), so there is little documentation about whether it affected
+government computers. Also, although the efforts of CERT are appreciated and vital
+to Internet security, DDN advisories sometimes contain a more technical analysis
+of the problem at hand.</P>
+<P>In March, 1991, the telnetd daemon on certain Sun distributions was found to be
+flawed. As the CERT advisory &quot;SunOS<TT> </TT>in.telnetd Vulnerability&quot;
+notes:
+
+<DL>
+	<DD>The Computer Emergency Response Team/Coordination Center (CERT/CC) has obtained
+	information from Sun Microsystems, Inc. regarding a vulnerability affecting SunOS
+	4.1 and 4.1.1 versions of in.telnetd on all Sun 3 and Sun 4 architectures. This vulnerability
+	also affects SunOS 4.0.3 versions of both in.telnetd and in.rlogind on all Sun3 and
+	Sun 4 architectures. To our knowledge, a vulnerability does not exist in the SunOS
+	4.1 and 4.1.1 versions of in.rlogind. The vulnerability has been fixed by Sun Microsystems,
+	Inc.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To view this CERT advisory
+	in its entirety, visit <A HREF="javascript:if(confirm('ftp://info.cert.org/pub/cert_advisories/CA-91:02a.SunOS.telnetd.vulnerability  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://info.cert.org/pub/cert_advisories/CA-91:02a.SunOS.telnetd.vulnerability'" tppabs="ftp://info.cert.org/pub/cert_advisories/CA-91:02a.SunOS.telnetd.vulnerability"><TT>ftp://info.cert.org/pub/cert_advisories/CA-91%3A02a.SunOS.telnetd.vulnerability</TT></A>.
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you buy an old Sun 3/60 over the
+	Net, you will want to get the patches, which are included in the previous advisory.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Months later, it was determined that a specialized LAT/Telnet application developed
+by Digital Corporation was flawed. As the CERT advisory &quot;ULTRIX LAT/Telnet Gateway
+Vulnerability&quot; explains:
+
+<DL>
+	<DD>A vulnerability exists such that ULTRIX 4.1 and 4.2 systems running the LAT/Telnet
+	gateway software can allow unauthorized privileged access...Anyone who can access
+	a terminal or modem connected to the LAT server running the LAT/Telnet service can
+	gain unauthorized root privileges.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To view this CERT advisory
+	in its entirety, visit <A HREF="javascript:if(confirm('ftp://info.cert.org/pub/cert_advisories/CA-91:11.Ultrix.LAT-Telnet.gateway.vulnerability  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://info.cert.org/pub/cert_advisories/CA-91:11.Ultrix.LAT-Telnet.gateway.vulnerability'" tppabs="ftp://info.cert.org/pub/cert_advisories/CA-91:11.Ultrix.LAT-Telnet.gateway.vulnerability"><TT>ftp://info.cert.org/pub/cert_advisories/CA-91%3A11.Ultrix.LAT-Telnet.gateway.vulnerability</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The first Telnet problem that rocked the average man on the street was related
+to a distribution of the NCSA Telnet client for PC and Macintosh machines. So that
+there is no misunderstanding here, this was a <I>client</I> Telnet application that
+included an FTP <I>server</I> within it. The hole was fostered primarily from users'
+poor understanding of how the application worked. As articulated by the folks at
+DDN:
+
+<DL>
+	<DD>The default configuration of NCSA Telnet for both the Macintosh and the PC has
+	a serious vulnerability in its implementation of an FTP server...Any Internet user
+	can connect via FTP to a PC or Macintosh running the default configuration of NCSA
+	Telnet and gain unauthorized read and write access to any of its files, including
+	system files.
+</DL>
+
+<P>The problem was related to a configuration option file in which one could enable
+or disable the FTP server. Most users assumed that if the statement enabling the
+server was not present, the server would not work. This was erroneous. By omitting
+the line (or adding the line option <TT>ftp=yes</TT>), one allowed unauthorized individuals
+read and write access to the files on your hard drive.</P>
+<P>I hope this will settle the argument regarding whether a PC user could be attacked
+from the outside. So many discussions on Usenet become heated over this issue. The
+NCSA Telnet mishap was only one of many situations in which a PC or Mac user could
+be attacked from the void. So depending on the circumstances, the average user at
+home on his or her PC can be the victim of an attack from the outside. People may
+be able to read your files, delete them, and so forth.</P>
+<P>What is more interesting is that even today, those using the NCSA Telnet application
+are at some risk, even if they only allow access to the FTP server by so-called authorized
+individuals. If a cracker manages to obtain from the target a valid username and
+password (and the cracker is therefore an authorized user), the cracker may then
+obtain the file <TT>FTPPASS</TT>. This is an authentication file where the usernames
+and passwords of users are stored. The encrypted passwords in this file are easily
+cracked.</P>
+<P>The username in this file is not stored in encrypted form (in reality, few programs
+encrypt usernames). The password is encrypted, but the encryption scheme is very
+poorly implemented. For example, if the password is fewer than six characters, it
+will take only seconds to crack. In fact, it is so trivial to crack such passwords
+that one can do so with a 14-line BASIC program.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The BASIC program that
+	cracks passwords can be found at <A HREF="javascript:if(confirm('http://www.musa.it/gorgo/txt/NCSATelnetHack.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.musa.it/gorgo/txt/NCSATelnetHack.txt'" tppabs="http://www.musa.it/gorgo/txt/NCSATelnetHack.txt"><TT>http://www.musa.it/gorgo/txt/NCSATelnetHack.txt</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>If you are a Mac or PC user currently using NCSA Telnet (with the FTP server),
+disallow all FTP access to anyone you do not trust. If you fail to heed this warning,
+you may get cracked. Imagine a scenario where a single individual on a network was
+using NCSA Telnet. Even if the rest of the network was reasonably secure, this would
+blow its security to pieces. Moreover, the application does not perform logging (in
+the normal sense) and therefore, no trail is left behind. Any network running this
+application can be attacked, disabled, or destroyed, and no one will be able to identify
+the intruder.</P>
+<P>The most interesting Telnet hole ever discovered, though, was related to the environment
+variable passing option. The DDN bulletin on it was posted on November 20, 1995:
+
+<DL>
+	<DD>A vulnerability exists in some versions of the Telnet daemon that support RFC
+	1408 or 1572, both titled the &quot;Telnet Environment Option,&quot; running on systems
+	that also support shared object libraries...Local and remote users with and without
+	local accounts can obtain root access on the targeted system.
+</DL>
+
+<P>Many sites suffer from this vulnerability. To understand the problem, you must
+understand the term <I>environment</I>. In UNIX vernacular, this generally refers
+to the environment of the shell (that is, what shell you might use as a default,
+what terminal emulation you are using, and so forth).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>DOS/Windows users can most easily
+	understand this by thinking about some of the statements in their <TT>AUTOEXEC.BAT</TT>
+	and <TT>CONFIG.SYS</TT> files. For example, variables are established using the <TT>SET</TT>
+	command, as in <TT>SET PATH=C:\;C:\WINDOWS;</TT> (the <TT>PATH</TT> environment variable
+	is one of several that can be specified in the DOS environment). These statements
+	define what your programming environment will be like when you boot into command
+	mode. Some common environment variables that can be set this way are the shell you
+	are using, the path, the time zone, and so forth. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Changing the Environment</B></FONT></H4>
+<P>In UNIX, you can view or change the environment by using either the <TT>setenv</TT>
+or <TT>printenv </TT>command. Here is an example of what one might see on such an
+instruction:</P>
+<PRE><FONT COLOR="#0066FF">&gt; setenv
+
+ignoreeof=10
+HOSTNAME=samshacker.samshack.net
+LOGNAME=tr
+MINICOM=-c on
+MAIL=/spool/mail/samshack
+TERM=ansi
+HOSTTYPE=i386-linux
+PATH=/usr/local/bin:/bin:/usr/bin:.:/sbin:/usr/sbin:.
+HOME=/usr/local/etc/web-clients/samshacker/./
+SHELL=/bin/bash
+LS_OPTIONS=--8bit --color=tty -F -T 0
+PS1=\h:\w\$
+PS2=&gt;
+TAPE=/dev/nftape
+MANPATH=/usr/local/man:/usr/man/preformat:/usr/man:/usr/X11/man:/usr/openwin/man
+LESS=-MM
+OSTYPE=Linux
+OPENWINHOME=/usr/openwin
+SHLVL=2
+BASH=/bin/bash
+LS_COLORS=
+_=/bin/csh
+PWD=/usr/local/etc/web-clients/samshacker/./
+USER=tr
+HOST=samshack
+</FONT></PRE>
+<P>This listing is a very extensive output of the command on a machine on which a
+virtual domain has been established. A more manageable (and more easily explained)
+version can be taken from a bare shell machine. Here is the output:</P>
+<PRE><FONT COLOR="#0066FF">samshacker% /usr/ucb/printenv
+HOME=/home/hacker
+HZ=100
+LOGNAME=hacker
+MAIL=/var/mail/hacker
+PATH=/usr/bin:
+SHELL=/sbin/sh
+TERM=ansi
+TZ=US/Pacific
+PWD=/home/hacker
+USER=hacker
+</FONT></PRE>
+<P>This output is from a SPARCstation 10 on which I set up a mock shell account (the
+first output was from a Linux box). This is a very stripped-down environment. The
+<TT>PATH</TT> statement (line 6) points only to <TT>/usr/bin</TT>. In practice, this
+is impractical because there are many more binaries on a UNIX system than those located
+in <TT>/usr/bin</TT>. For example, there are binaries located in <TT>/usr/sbin</TT>,
+<TT>/usr/bin/X11</TT>, and so forth. You can see, for example, that even the command
+given (<TT>setenv</TT>) was done by issuing the absolute path statement (<TT>/usr/ucb/setenv</TT>).
+In practice, I would have (within a day or so) set a much longer path, pointing to
+man pages, binaries, and perhaps even include directories.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The <TT>PATH</TT> statement in UNIX
+	works almost exactly as it does in DOS. Directories that you intend to be in the
+	path must be articulated on the <TT>PATH</TT> statement line and separated by colons
+	(instead of semicolons). By articulating these on the <TT>PATH</TT> line, you give
+	the user access to commands within these directories (no matter which directory the
+	user is currently located in). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Terminal Emulation</B></FONT></H4>
+<P>Other variables set in the preceding statements include <TT>HOME</TT>, <TT>MAIL</TT>,
+<TT>SHELL</TT>, and <TT>TERM</TT>. <TT>TERM</TT>, one of the most important variables,
+expresses the type of <I>terminal emulation</I> that you will be using. Because not
+all readers know what terminal emulation is, I want to quickly explain it.</P>
+<P>Years ago, the majority of servers were mainframes. In those days, users did not
+have powerful PCs attached to the mainframe; they had <I>terminals</I>, which were
+(usually) boxes without hard drives. These were screens attached to keyboards. Behind
+terminals were a series of connectors, which might offer different methods of connection.
+One popular method was a bare-bones serial connection (we're talking primitive here:
+a straight serial-to-serial interface). Other terminals might sport hardwire options
+such as Ethernet connections.</P>
+<P>In any event, these terminals had very little functionality (at least in comparison
+to the average PC). Contained on the main board of such a terminal was a small portion
+of memory and firmware (software hardwired into the board itself). This firmware
+would grant the user several options. For example, one could set the speed and type
+of connection, the need for local echo, and so forth. Sometimes, there were options
+to set the type of printer that might be used or even what port the data was to be
+sent from.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Such terminals are still sold on
+	certain Usenet newsgroups. If you are a student with limited funds and you have been
+	granted some form of Ethernet or even serial connection to your college's server,
+	and if that server account is a shell account, get a terminal. For a mere $25-40,
+	you can get high-speed access to the Internet. True, you cannot generally save materials
+	to a disk, but you can print what is currently on the screen. You will not believe
+	how quickly the screen will update. It is the absolutely ideal situation for Internet
+	Relay Chat (IRC). These boxes are small, cheap, and fast. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The two best-known terminals were the Tektronix 4010 and the VT100 (also the IBM
+3270, which is a bit different). Each had a set number of characters per line and
+lines per screen that could be displayed. In fact, most terminals usually had two
+settings. As terminals became more fancy, one could even set columns and, eventually,
+graphics (the Tektronix was graphics oriented).</P>
+<P>Because these terminals became the standard method of connecting to mainframes,
+they also bled into the UNIX world. As such, all UNIX operating systems have keyboard
+and screen mappings for terminals. <I>Mappings</I> are descriptions of the screen
+and the keyboard settings (for example, how many lines and columns per screen or,
+more importantly, what Ctrl key sequences represent special characters). These are
+required because certain terminals use more keys than are offered on the standard
+PC or Mac keyboard. In addition to the regular typewriter keyboard and F function
+keys, there may be P keys that perform special actions, including the activation
+of menus and the navigation of the screen cursor in databases. To make up for this
+on PC, Mac, or even some UNIX keyboards, Esc or Ctrl sequences are defined. These
+are combinations of keystrokes that equal a P key. These key assignments are called
+<I>key</I> <I>bindings</I>, which are statements made within the program code that
+define what happens if this or that key combination is executed. Key bindings are
+a big part of programming, especially in C where you offer a semi-graphical interface
+(for example, where you use Borland's famous TurboVision libraries to create drop-down
+menus in a DOS application).</P>
+<P>One can generally define key bindings in a program (at least, in a well written
+one). This gives the user application-level control over which keys do what. For
+example, perhaps the user can set the binding of the Ctrl key plus the letter <I>F</I>
+to perform a variety of functions. Some specialized applications actually ask the
+user to do so before launching the program for the first time. There is one such
+program--a freeware editor for UNIX, written in Germany--that allows you to completely
+remap the keyboard.</P>
+<P>In UNIX, terminal mappings are generally stored in a file called <TT>termcap</TT>.
+The termcap library, reportedly introduced with Berkeley UNIX, is a very important
+addition to the system. Without it, many machines would not communicate well with
+each other. For example, if you perform a fresh install of a Linux operating system
+and do nothing to alter the <TT>TERM</TT> variable, it will be set to <TT>Linux</TT>.
+If you then Telnet to a SPARCstation (or other machine that also has its default
+<TT>TERM</TT> configuration), you will be unable to clear the screen with the well-known
+command <TT>clear</TT>. This is because the two terminal emulation settings are incompatible.
+Furthermore, if you try to execute a program such as <TT>PINE</TT>--which relies
+on compatible terminal types--the program will exit on error, reporting that the
+terminal is not supported. (SysV systems traditionally use <TT>terminfo</TT> as opposed
+to <TT>termcap</TT>.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>CAUTION:</B></FONT><B> </B>Many distributions of UNIX have
+	complete termcap listings, which sometimes contain hundreds of terminal emulations.
+	If you are new to UNIX and are toying with the idea of altering your termcap entries,
+	be extremely careful. You may end up with bizarre results. In some cases, what once
+	looked like nicely formatted text may appear as strange, disjointed, scattered blocks
+	of words that are largely illegible. Study the man page before fiddling with your
+	<TT>termcap</TT> file. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Many different environmental variables can be set. These variables can strongly
+influence how a remote machine will receive, process, and support your remote Telnet
+connection. Thus, the Telnet protocol was designed to allow the passing of certain
+environment variables at the time of the connection. As explained in RFC 1408:
+
+<DL>
+	<DD>Many operating systems have startup information and environment variables that
+	contain information that should be propagated to remote machines when Telnet connections
+	are established. Rather than create a new Telnet option each time someone comes up
+	with some new information that they need propagated through a Telnet session, but
+	that the Telnet session itself doesn't really need to know about, this generic information
+	option can be used.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To view RFC 1408 in its
+	entirety, visit <A HREF="javascript:if(confirm('http://sunsite.auc.dk/RFC/rfc/rfc1408.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://sunsite.auc.dk/RFC/rfc/rfc1408.html'" tppabs="http://sunsite.auc.dk/RFC/rfc/rfc1408.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc1408.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The recent Telnet security hole was based on the capability of a Telnet server
+to receive, respond to, and authorize the passing of these environment variables.
+Because this option was so prominent in the UNIX system, an incredible number of
+platforms were vulnerable to this attack.</P>
+<P>This vulnerability is more common than one would expect. In a rather engrossing
+report, one firm, Novatech, posted the results of an actual security audit of a network
+with 13 hosts. In it, the Telnet vulnerability appears, as do<I> 138 other holes</I>.
+The most extraordinary thing is that the site had already been assessed as having
+a clean bill of health, complete with a firewall. As Novatech's sample audit report
+notes:
+
+<DL>
+	<DD>This is a copy of a actual attack report with definitions and possible rectifications
+	of actual problems found. The network had a state of the art firewall installed and
+	had been checked by CERT. As you can see there were many small problems and a number
+	of larger ones as well. This was not the fault of the systems administration but
+	of a mix that systems change and need constant attention and the lack of knowledge
+	of how intruders gain access (a specialist field). We are able to check your system
+	for nearly 390 different forms of access vulnerability all of which are Internet
+	only type access.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference: </B></FONT>For those who have a &quot;let's
+	wait and see&quot; attitude about security, I suggest that you go immediately to
+	this site and view the results. They are astonishing. See the results of the audit
+	at <A HREF="javascript:if(confirm('http://www.novatech.net.au/sample.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.novatech.net.au/sample.htm'" tppabs="http://www.novatech.net.au/sample.htm"><TT>http://www.novatech.net.au/sample.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The line that reveals the Telnet environment option vulnerability reads as follows:</P>
+<PRE><FONT COLOR="#0066FF">Dynamic Linker Telnet Vulnerability [High Risk]2
+</FONT></PRE>
+<P>This line reports that a Telnet vulnerability in the high risk category was found
+(in the audit cited previously, this vulnerability was found on two hosts within
+the same subnet). <TT>[High Risk]2</TT> refers to the level of risk the hole represents.
+This is an extremely high risk vulnerability. Remember, this was found on a host
+with a state-of-the-art firewall!</P>
+<P>To understand the method, you must understand precisely what options can be passed
+from the client to the server. One of these involves the passing of a custom <TT>libc</TT>.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B><TT>libc</TT> is the standard C
+	library. A full distribution of <TT>libc</TT> commonly contains header and include
+	files for use in C programming. All UNIX flavors have (or should have) this library
+	installed. It is a requisite for compiling programs written in the C programming
+	language. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>As Sam Hartman of MIT notes in his article &quot;Telnet Vulnerability: Shared
+Libraries&quot;:
+
+<DL>
+	<DD>The problem is that telnetd will allow the client to pass LD_LIBRARY_PATH, LD_PRELOAD,
+	and other run-time linker options into the process environment of the process that
+	runs login.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find Hartman's article
+	on the Web at <A HREF="javascript:if(confirm('http://geek-girl.com/bugtraq/1995_4/0032.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://geek-girl.com/bugtraq/1995_4/0032.html'" tppabs="http://geek-girl.com/bugtraq/1995_4/0032.html"><TT>http://geek-girl.com/bugtraq/1995_4/0032.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>By passing the <TT>LD_LIBRARY_PATH</TT> environment option to the server, the
+cracker can add to this search path a custom directory (and therefore a custom library).
+This can alter the dynamic linking process, greatly increasing the chances of a root
+compromise.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Hartman noted that if the target
+	was using a Kerberos-aware telnetd, only users with a valid account on the remote
+	box could actually implement the attack. My guess, however, is that the larger majority
+	of machines out there are not using such a means of secure Telnet. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One interesting note about this hole: It was determined that one could identify
+Telnet sessions in which the environment variables had been passed by executing a
+<TT>ps</TT> instruction. However, one individual (Larry Doolittle) determined that
+on certain flavors of UNIX (Linux, specifically), one has to be root to ID those
+processes. In response to the Hartman report, Doolittle advised:
+
+<DL>
+	<DD>Recent Linux kernels do not allow access to environment strings via ps, except
+	for the user him/herself. That is, /proc/*/environ is protected 400. This could confuse
+	people reading your instructions, since they would see environments for their own
+	process but not root's. To verify environment strings of login, you need to run ps
+	as root.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find Larry Doolittle's
+	article on the Web at <A HREF="javascript:if(confirm('http://geek-girl.com/bugtraq/1995_4/0042.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://geek-girl.com/bugtraq/1995_4/0042.html'" tppabs="http://geek-girl.com/bugtraq/1995_4/0042.html"><TT>http://geek-girl.com/bugtraq/1995_4/0042.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Here are patches for various distributions of telnetd:
+
+<UL>
+	<LI>DEC. (OSF/1):
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('ftp://ftp.service.digital.com/public/osf/v3.2c/ssrt0367_c032  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.service.digital.com/public/osf/v3.2c/ssrt0367_c032'" tppabs="ftp://ftp.service.digital.com/public/osf/v3.2c/ssrt0367_c032"><TT>ftp://ftp.service.digital.com/public/osf/v3.2c/ssrt0367_c032</TT></A>
+</DL>
+
+
+<UL>
+	<LI>A compressed version is available at
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/'" tppabs="ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/"><TT>ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/</TT></A>
+</DL>
+
+
+<UL>
+	<LI>Linux:
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/linux/telnetd  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/linux/telnetd'" tppabs="ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/linux/telnetd"><TT>ftp://ftp.ox.ac.uk/pub/comp/security/software/patches/telnetd/linux/telnetd</TT></A>
+</DL>
+
+
+<UL>
+	<LI>Red Hat:
+</UL>
+
+
+<DL>
+	<DD><TT>h</TT><A HREF="ttp://www.io.com/~ftp/mirror/linux/redhat/redhat/updates/i386/NetKit-B-0.09-1.1.i386.rpm"><TT>ttp://www.io.com/~ftp/mirror/linux/redhat/redhat/updates/i386/NetKit-B-0.09-1.1.i386.rpm</TT></A>
+</DL>
+
+
+<UL>
+	<LI>SGI (IRIX):
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('ftp://sgigate.sgi.com/security/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://sgigate.sgi.com/security/'" tppabs="ftp://sgigate.sgi.com/security/"><TT>ftp://sgigate.sgi.com/security/</TT></A>
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Although patches have been issued
+	for this problem, some other Telnet-related modules and programs may still be affected.
+	As late as February, 1997, <TT>in.telnetsnoopd</TT> was reported as vulnerable to
+	the <TT>LD_PRELOAD</TT> passing on some platforms, including Linux. There is reportedly
+	a patch for this problem, and it has been uploaded to <TT>ftp://sunsite.unc.edu</TT>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Garden-variety Telnet is not a particularly secure protocol. One can easily eavesdrop
+on Telnet sessions. In fact, there is a utility, called ttysnoop, designed for this
+purpose. As describe by its author, Carl Declerck:
+
+<DL>
+	<DD>[ttynsoop] allows you to snoop on login tty's through another tty-device or pseudo-tty.
+	The snoop-tty becomes a &quot;clone&quot; of the original tty, redirecting both input
+	and output from/to it.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Declerck's <TT>README</TT>
+	for ttysnoop 0.12 (alpha) can be found on the Web at <A HREF="javascript:if(confirm('http://ion.apana.org.au/pub/linux/sources/admin/ttysnoop-0.12.README  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://ion.apana.org.au/pub/linux/sources/admin/ttysnoop-0.12.README'" tppabs="http://ion.apana.org.au/pub/linux/sources/admin/ttysnoop-0.12.README"><TT>http://ion.apana.org.au/pub/linux/sources/admin/ttysnoop-0.12.README</TT></A><BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>ttysnoop is not simply a Telnet-specific
+	snooper; it snoops on the tty, not the Telnet protocol. A network sniffer like sniffit
+	can also be used (and is probably more suitable) to sniff the Telnet protocol. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Telnet sessions are also especially sensitive. One reason for this is that these
+sessions are often conducted in an island-hopping pattern. That is, the user may
+Telnet to one network to tidy his or her Web page; from there, the user may Telnet
+to another machine, and another machine, and so on. If a cracker can snoop on such
+a session, he or she can obtain login IDs and passwords to other systems.
+<H3><FONT COLOR="#000077"><B>Aren't These Attacks No Longer Effective?</B></FONT></H3>
+<P>No; this is due primarily to a lack of education. The environment option attack
+described previously is quite effective on many systems in the void. This is so even
+though advisories about the attack are readily available on the Internet.
+<H3><FONT COLOR="#000077"><B>Telnet as a Weapon</B></FONT></H3>
+<P>Telnet is an interesting protocol. As explained earlier, one can learn many things
+using Telnet. For example, you can cull what version of the operating system is being
+run. Most distributions of UNIX will report this information on connection. It is
+reported by at least one authoritative source that various scanners use the issue
+information at connect to identify the type of system (SATAN being one such scanner).
+The operating system can generally be determined by attacking any of these ports:
+
+<UL>
+	<LI>Port 21: FTP
+	<LI>Port 23: Telnet (Default)
+	<LI>Port 25: Mail
+	<LI>Port 70: Gopher
+	<LI>Port 80: HTTP
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE: </B></FONT>Although I have only listed five ports,
+	one can connect to the majority of TCP/IP ports by initiating a Telnet session. Some
+	of these ports will remain in an entirely passive state while the connection is active,
+	and the user will see nothing happen in particular. This is so with port 80 (HTTP),
+	for example. However, you can issue perfectly valid requests to port 80 using Telnet
+	and if those requests are valid, port 80 will respond. (The request needn't necessarily
+	be valid. Issuing an erroneous <TT>GET</TT> instruction will elicit a lively response
+	from the Web server if the request is sufficiently malformed.) 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In their now-famous paper, &quot;Improving the Security of Your Site by Breaking
+Into It,&quot; Dan Farmer and Wietse Venema point out ports that can be attacked.
+Specifically, they address the issue of port 6000:
+
+<DL>
+	<DD>X windows is usually on port 6000...If not protected properly (via the magic
+	cookie or xhost mechanisms), window displays can be captured or watched, user keystrokes
+	may be stolen, programs executed remotely, etc. Also, if the target is running X
+	and accepts a Telnet to port 6000, that can be used for a denial of service attack,
+	as the target's windowing system will often &quot;freeze up&quot; for a short period
+	of time.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Improving the Security
+	of Your Site by Breaking Into It&quot; can be found on the Web at <A 
+HREF="javascript:if(confirm('http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html'" tppabs="http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html"><TT>http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html</TT></A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In the paper by Farmer and Venema are many attacks implemented with Telnet alone
+or in conjunction with other programs. One such attack involves an X terminal:
+
+<DL>
+	<DD>X Terminals are generally diskless clients. These are machines that have the
+	bare minimum of hardware and software to connect to an X server. These are most commonly
+	used in universities and consist of a 17&quot; or 19&quot; screen, a base, a keyboard
+	and a mouse. The terminal usually supports a minimum of 4 megabyte of RAM but some
+	will hold as much as 128 megabytes. X terminals also have client software that allows
+	them to connect to the server. Typically, the connection is via fast Ethernet, hardwired
+	to the back of the terminal. X Terminals provide high-speed connectivity to X servers,
+	coupled with high-powered graphics. These machines are sold on the Internet and make
+	great &quot;additional&quot; terminals for use at home. (They are especially good
+	for training.)
+</DL>
+
+<P>The Farmer-Venema X terminal technique uses a combination of rsh and Telnet to
+produce a coordinated attack. The technique involves stacking several commands. The
+cracker uses rsh to connect to the X terminal and calls the X terminal's Telnet client
+program. Finally, the output is redirected to the cracker's local terminal via the
+specification of the <TT>DISPLAY</TT> option or variable.</P>
+<P>Another interesting thing that Telnet can be used for is to instantly determine
+whether the target is a <I>real</I> or <I>virtual</I> domain (this can be done through
+other methods, but none perform this function quite as quickly). This can assist
+a cracker in determining exactly which machine he or she must crack to reach your
+resources or, more precisely, exactly which machine he or she is engaged in cracking.</P>
+<P>Under normal circumstances, a <I>real domain</I> is a domain that has been registered
+with InterNIC and also has its own dedicated server. Somewhere in the void is a box
+with a permanent IP address, and that box is attached permanently to the Internet
+via 28.8Kbps modem, ISDN, 56Kbps modem, frame relay, T1, T3, ATM, or perhaps, if
+the owner spares no expense, SONET. As such, when you Telnet to such a real site,
+you are reaching that machine and no other.</P>
+<P><I>Virtual domains</I>, however, are simply directories on a real server, aliased
+to a particular domain name. That is, you pay some ISP to register your domain name
+and create a directory on its disk where your virtual domain exists. This technique
+allows <TT>your_company.com</TT> to masquerade as a real server. Thus, when users
+point their browsers to <TT>www.your_company.com</TT>, they are reaching the ISP's
+server. The ISP's server redirects the connection request to your directory on the
+server. This virtual domain scheme is popular for several reasons, including cost.
+It saves your company the trouble of establishing a real server and therefore eliminates
+some of these expenses:
+
+<UL>
+	<LI>Hardware
+	<LI>Software
+	<LI>24-hour maintenance
+	<LI>Tech support
+</UL>
+
+<P>Basically, you pay a one-time fee (and monthly fees thereafter) and the ISP handles
+everything. To crackers, this might be important. For example, if crackers are about
+to crack your domain--without determining whether your machine is truly a server--they
+may get into trouble. They think they are cracking some little machine within your
+internal offices when in fact, they are about to attack a large, well-known network
+provider.</P>
+<P>Telnet instantly reveals the state of your server. When a cracker initiates a
+Telnet connection to <TT>your_company.com</TT> (and on connect, sees the name of
+the machine as a node on some other, large network), he or she immediately knows
+that your address is a virtual domain.</P>
+<P>Moreover, Telnet can be used for other nefarious purposes. One is the ever-popular
+<I>brute-force</I> attack. I am not sure why brute-force attacks are so popular among
+young crackers; almost all servers do some form of logging these days. Nevertheless,
+the technique has survived into the 1990s. These attacks are most commonly initiated
+using Telnet clients that have their own scripting language built in. Tera Term is
+one such application.</P>
+<P>Tera Term sports a language that allows you to automate Telnet sessions. This
+language can be used to construct scripts that can determine valid usernames on a
+system that refuses to cough up information on finger or sendmail-expn queries. Versions
+of Telnet reveal this information in a variety of ways. For example, if a bogus username
+is given, the connection will be cut. However, if a valid username is given, a new
+<TT>login:</TT> prompt is reissued.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Tera Term can be found
+	on the Web at <A HREF="javascript:if(confirm('http://tucows.phx.cox.com/files/ttermv13.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://tucows.phx.cox.com/files/ttermv13.zip'" tppabs="http://tucows.phx.cox.com/files/ttermv13.zip"><TT>http://tucows.phx.cox.com/files/ttermv13.zip</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Moreover, Telnet is a great tool for quickly determining whether a particular
+port is open or whether a server is running a particular service. Telnet can also
+be used as a weapon in denial-of-service attacks. For example, sending garbage to
+certain ports on an NT Web server under IIS can cause the targeted processor to jump
+to 100 percent utilization. Initiating a Telnet session to other ports on an NT Web
+server can cause the machine to hang or crash. This is particularly so when issuing
+a Telnet connection request to port 135.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>A fix for this problem,
+	issued by Microsoft, can be found at<TT> </TT><A HREF="javascript:if(confirm('ftp://ftp.microsoft.com/bussys/winnt/winnt-public/fixes/usa/nt40/hotfixes-postS  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.microsoft.com/bussys/winnt/winnt-public/fixes/usa/nt40/hotfixes-postS'" tppabs="ftp://ftp.microsoft.com/bussys/winnt/winnt-public/fixes/usa/nt40/hotfixes-postS"><TT>ftp://ftp.microsoft.com/bussys/winnt/winnt-public/fixes/usa/nt40/hotfixes-postS</TT></A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One can also crash Microsoft's Internet Information Server by Telnetting to port
+80 and issuing a <TT>GET.../...</TT> request. Reportedly, however, that problem was
+remedied with the Microsoft Windows NT Service Pack 2 for Windows NT 4.0. If you
+do not have that patch/service pack, get it. A good treatment of this and other problems
+can be found in the Denial of Service Info post, posted by Chris Klaus of Internet
+Security Systems. In it, Klaus writes:
+
+<DL>
+	<DD>The file sharing service if available and accessible by anyone can crash the
+	NT machine and require it to be rebooted. This technique using the dot...dot bug
+	on a Windows 95 machine potentially allows anyone to gain access to the whole hard
+	drive...Solution: This vulnerability is documented in Microsoft Knowledge Base article
+	number Q140818 last revision dated March 15, 1996. Resolution is to install the latest
+	service pack for Windows NT version 3.51. The latest service pack to have the patch
+	is in service pack 4.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Visit the Denial of Service
+	Info post at <A HREF="javascript:if(confirm('http://geek-girl.com/bugtraq/1996_2/0052.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://geek-girl.com/bugtraq/1996_2/0052.html'" tppabs="http://geek-girl.com/bugtraq/1996_2/0052.html"><TT>http://geek-girl.com/bugtraq/1996_2/0052.html</TT></A>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>This was only a vulnerability in
+	the Internet Information Server 2.0 World Wide Web server (HTTP). Later versions
+	of IIS are reportedly clean. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Finally, Telnet is often used to generate fakemail and fakenews. Spammers often
+use this option instead of using regular means of posting Usenet messages. There
+are certain options that can be set this way that permit spammers to avoid at least
+some of the screens created by spam-killing robots on the Usenet network.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Telnet is a very versatile protocol and, with some effort, it can be made secure.
+(I personally favor SSH as a substitute, for it prevents against snooped Telnet sessions.)
+Nevertheless, Telnet is not always secure out of the box. If you are using older
+software (pre 1997), check whether the appropriate patches have been installed.</P>
+<P>Telnet can also be used in a variety of ways to attack or otherwise cull information
+from a remote host (some of those are discussed in this chapter). By the time this
+book is released, many more Telnet attack techniques will have surfaced. If you run
+a network and intend to supply your users with Telnet access, beware. This is especially
+so on new Telnet servers. These new servers may have bugs that have not yet been
+revealed. And, because Telnet is so interactive and offers the user so much power
+to execute commands on remote machines, any hole in a Telnet distribution is a critical
+one. It stands in the same category as FTP or HTTP in this respect (or is perhaps
+even worse).
+<H3><FONT COLOR="#000077"><B>Resources</B></FONT></H3>
+<P><B>Sendmail Bug Exploits List.</B> Explains methods of attacking sendmail. Some
+of these techniques use Telnet as the base application.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.crossroads.fi/~tkantola/hack/unix/sendmail.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.crossroads.fi/%7Etkantola/hack/unix/sendmail.txt'" tppabs="http://www.crossroads.fi/%7Etkantola/hack/unix/sendmail.txt"><TT>http://www.crossroads.fi/~tkantola/hack/unix/sendmail.txt</TT></A>
+</UL>
+
+<P><B>Improving the Security of Your Site by Breaking Into It.</B> Dan Farmer and
+Wietse Venema.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html'" tppabs="http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html"><TT>http://stos-www.cit.cornell.edu/Mark_html/Satan_html/docs/admin_guide_to_cracking.html</TT></A>
+</UL>
+
+<P><B>The Telnet Protocol Specification (RFC 854).</B> J. Postel and J. Reynolds.
+May 1983.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://sunsite.auc.dk/RFC/rfc/rfc854.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://sunsite.auc.dk/RFC/rfc/rfc854.html'" tppabs="http://sunsite.auc.dk/RFC/rfc/rfc854.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc854.html</TT></A>
+</UL>
+
+<P><B>The Telnet Environment Option (RFC 1408).</B> D. Borman, Editor. Cray Research,
+Inc. January 1993.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://sunsite.auc.dk/RFC/rfc/rfc1408.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://sunsite.auc.dk/RFC/rfc/rfc1408.html'" tppabs="http://sunsite.auc.dk/RFC/rfc/rfc1408.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc1408.html</TT></A>
+</UL>
+
+<P><B>Telnet Environment Option (RFC 1572). </B>S. Alexander.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1572.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1572.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1572.txt"><TT>ftp://ds.internic.net/rfc/rfc1572.txt</TT></A>
+</UL>
+
+<P><B>Telnet Authentication: SPX (RFC 1412).</B> K. Alagappan.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1412.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1412.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1412.txt"><TT>ftp://ds.internic.net/rfc/rfc1412.txt</TT></A>
+</UL>
+
+<P><B>Telnet Remote Flow Control Option. (RFC 1372).</B> C. Hedrick and D. Borman.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1372.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1372.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1372.txt"><TT>ftp://ds.internic.net/rfc/rfc1372.txt</TT></A>
+</UL>
+
+<P><B>Telnet Linemode Option (RFC 1184).</B> D.A. Borman.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1184.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1184.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1184.txt"><TT>ftp://ds.internic.net/rfc/rfc1184.txt</TT></A>
+</UL>
+
+<P><B>The Q Method of Implementing Telnet Option Negotiation (RFC 1143).</B> D.J.
+Bernstein.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1143.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1143.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1143.txt"><TT>ftp://ds.internic.net/rfc/rfc1143.txt</TT></A>
+</UL>
+
+<P><B>Telnet X Display Location Option (RFC 1096).</B> G.A. Marcy.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1096.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1096.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1096.txt"><TT>ftp://ds.internic.net/rfc/rfc1096.txt</TT></A>
+</UL>
+
+<P><B>Telnet Binary Transmission (RFC 856).</B> J. Postel and J.K. Reynolds.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc856.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc856.txt'" tppabs="ftp://ds.internic.net/rfc/rfc856.txt"><TT>ftp://ds.internic.net/rfc/rfc856.txt</TT></A>
+</UL>
+
+<P><B>Remote User Telnet Service (RFC 818).</B> J. Postel.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc818.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc818.txt'" tppabs="ftp://ds.internic.net/rfc/rfc818.txt"><TT>ftp://ds.internic.net/rfc/rfc818.txt</TT></A>
+</UL>
+
+<P><B>Discussion of Telnet Protocol (RFC 139).</B> T.C. O'Sullivan. Unfortunately,
+this RFC is no longer available online.</P>
+<P><B>First Cut at a Proposed Telnet Protocol (RFC 97).</B> J.T. Melvin and R.W.
+Watson. Unfortunately, this RFC is no longer available online.</P>
+<P><B>The Telnet Authentication Option.</B> Internet Engineering Task Force Internet
+Draft. Telnet Working Group. D. Borman, Editor. Cray Research, Inc. February 1991.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://web.dementia.org/~shadow/telnet/preliminary-draft-borman-telnet-authentication-00.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://web.dementia.org/%7Eshadow/telnet/preliminary-draft-borman-telnet-authentication-00.html'" tppabs="http://web.dementia.org/%7Eshadow/telnet/preliminary-draft-borman-telnet-authentication-00.html"><TT>http://web.dementia.org/~shadow/telnet/preliminary-draft-borman-telnet-authentication-00.html</TT></A>
+</UL>
+
+<P><B>Telnet Authentication: Kerberos Version 4 (RFC 1411). </B>D. Borman, Editor.
+Cray Research, Inc. January 1993.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1411.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1411.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1411.txt"><TT>ftp://ds.internic.net/rfc/rfc1411.txt</TT></A>
+</UL>
+
+<P><B>STEL: Secure Telnet.</B> Encryption-enabled Telnet. David Vincenzetti, Stefano
+Taino, and Fabio Bolognesi.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://idea.sec.dsi.unimi.it/stel.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://idea.sec.dsi.unimi.it/stel.html'" tppabs="http://idea.sec.dsi.unimi.it/stel.html"><TT>http://idea.sec.dsi.unimi.it/stel.html</TT></A>
+</UL>
+
+<P><B>Session-Layer Encryption.</B> Matt Blaze and Steve Bellovin. Proceedings of
+the Usenix Security Workshop, June 1995.</P>
+<P><B>Attaching Non-TCP-IP Devices with Telnet.</B> Stefan C. Johnson. <I>Sys Admin:
+The Journal for UNIX Systems Administrators</I>. June 1996.</P>
+<P><B>Secure RPC Authentication (SRA) for Telnet and FTP.</B> David K. Hess, David
+R. Safford, and Douglas Lee Schales. Proceedings of the Fourth Usenix Security Symposium,
+Supercomputer Center, Texas A&amp;M University, 1993.</P>
+<P><B>Internetworking with TCP/IP Vol. 1: Principles, Protocols and Architecture.</B>
+Douglas Comer. Prentice Hall. 1991.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.pcmag.com/issues/1606/pcmg0050.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pcmag.com/issues/1606/pcmg0050.htm'" tppabs="http://www.pcmag.com/issues/1606/pcmg0050.htm"><TT>http://www.pcmag.com/issues/1606/pcmg0050.htm</TT></A>
+</UL>
+
+<P><B>Terminal Hopping.</B> Karen Bannan. <I>PC Magazine's InternetUser</I>--CRT,
+Version 1.1.4 (01/30/97).
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.pcmag.com/iu/util/telnet/vdcrt114.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pcmag.com/iu/util/telnet/vdcrt114.htm'" tppabs="http://www.pcmag.com/iu/util/telnet/vdcrt114.htm"><TT>http://www.pcmag.com/iu/util/telnet/vdcrt114.htm</TT></A>
+</UL>
+
+<P><B>Telnet &amp; Terminal Emulation.</B> <I>PC Magazine's InternetUser</I>. January
+30, 1997.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.pcmag.com/iu/roundup/ru970130.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pcmag.com/iu/roundup/ru970130.htm'" tppabs="http://www.pcmag.com/iu/roundup/ru970130.htm"><TT>http://www.pcmag.com/iu/roundup/ru970130.htm</TT></A>
+</UL>
+
+<P><B>EFF's (Extended) Guide to the Internet--Telnet.</B> Adam Gaffin. <I>Mining
+the Net</I>, Part I.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://cuiwww.unige.ch/eao/www/Internet/Extended.Guide/eeg_93.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://cuiwww.unige.ch/eao/www/Internet/Extended.Guide/eeg_93.html'" tppabs="http://cuiwww.unige.ch/eao/www/Internet/Extended.Guide/eeg_93.html"><TT>http://cuiwww.unige.ch/eao/www/Internet/Extended.Guide/eeg_93.html</TT></A>
+</UL>
+
+<CENTER>
+<P>
+<HR>
+<A HREF="ch28.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/ch28.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch30.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch30/ch30.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

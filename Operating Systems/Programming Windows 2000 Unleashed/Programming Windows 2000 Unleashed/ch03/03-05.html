@@ -1,0 +1,243 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=070-074//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Each thread in the process has access to its own copy of the thread-local storage. It cannot change the values used by any other threads.
+</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Determining a Thread&#146;s Identifier</FONT></H4>
+<p>When a thread is created, the operating system will assign a thread identifier to it. The thread ID uniquely identifies the thread for the entire system&#151;no two processes will contain threads with the same thread ID. The thread ID is a useful tag that&#146;s used in many thread-centric API calls.
+</P>
+<p>There are two ways to determine the thread identifier:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Store the thread ID returned to you when the thread is created using the <small>CreateThread</SMALL>, <small>_beginthread</SMALL>, or <small>_beginthreadex</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;Use the <small>GetCurrentThreadId</SMALL> function.
+</DL>
+<p>If you&#146;re only interested in the thread ID for a small number of worker threads, it&#146;s fairly easy to store the thread ID when the thread is created. However, this approach will not help you determine the thread ID of the primary thread for the process. It may also require a substantial amount of bookkeeping if you have a lot of worker threads.
+</P>
+<p><small>GetCurrentThreadId</SMALL> has no parameters and returns the thread ID used to identify the thread that made the function call:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwThreadID = GetCurrentThreadId();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can also retrieve a pseudohandle for your own thread by calling the <small>GetCurrentThread</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hThread = GetCurrentThread();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A <i>pseudohandle</I> is not really a thread handle, but it will serve as a placeholder for any functions that require an actual thread handle. Also, a pseudohandle never needs to be closed.</P>
+<p>You can retrieve a pseudohandle for the current process with the <small>GetCurrentProcess</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hProcess = GetCurrentProcess();
+</PRE>
+<!-- END CODE SNIP //-->
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Working with Thread Affinity</FONT></H4>
+<p><i>Thread affinity</I> is the association between a particular thread and another object. Later, in Chapter 16, &#147;COM Threading Models,&#148; thread affinity for COM objects will be covered. In this chapter, thread affinity toward particular CPUs is discussed.</P>
+<p>Windows 2000 allows you to specify thread affinity for a process or thread so that it&#146;s allowed to run on a subset of available processors. Setting the thread affinity for a thread or process, <i>in some cases</I>, can improve performance by optimizing the usage of your CPU cache.</P>
+<p>The thread and process affinity APIs only work with multiprocessor systems&#151;if you&#146;re working with a single CPU machine, all your threads are bound to a single CPU. Keep in mind that on an SMP machine, the thread affinity defined for your threads or processes does not prevent other threads from using your preferred CPUs&#151;used improperly, the thread and processor affinity APIs can cause the performance of your application to suffer.</P>
+<p>The thread affinity mask is a <small>DWORD</SMALL> variable, with bit zero (the least-significant bit) used for the first CPU, bit one used for the second CPU, and so on.</P>
+<p>You can set the affinity mask for the entire process or for a particular thread in the process. To set the thread affinity for a thread, call <small>SetThreadAffinityMask</SMALL>, as shown in Listing 3.3.</P>
+<p><b>Listing 3.3</B> Forcing a Thread to Run on the Second CPU<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+
+int _tmain()
+{
+    // Get pseudo handle for thread
+    HANDLE hThread = GetCurrentThread();
+    DWORD dwAffinity = 0x02; // run on second processor only!
+    DWORD dwOldAffinity = SetThreadAffinityMask(hThread, dwAffinity);
+    _tprintf(_T(&#147;Old affinity mask was %x\n&#148;), dwOldAffinity);
+    .
+    .
+    .
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The <small>SetThreadAffinityMask</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the thread that will have its affinity mask changed
+<dd><b>&#149;</B>&nbsp;&nbsp;The new affinity mask
+</DL>
+<p>The <small>SetThreadAffinityMask</SMALL> function returns the thread&#146;s previous affinity mask.</P>
+<p>You can set the affinity mask for all the threads in a process with the <small>SetProcessAffinityMask</SMALL> function, as shown in Listing 3.4.</P>
+<p><b>Listing 3.4</B> Forcing a Process to Run on the Second CPU<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+
+int _tmain()
+{
+    // Get pseudo handle for process
+    HANDLE hProcess = GetCurrentProcess();
+    DWORD  dwAffinity = 0x02;  // run on second processor only!
+    BOOL fSetAffinity = SetProcessAffinityMask(hProcess,
+                                               dwAffinity);
+    .
+    .
+    .
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The <small>SetProcessAffinityMask</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process that will have its affinity mask changed
+<dd><b>&#149;</B>&nbsp;&nbsp;The new affinity mask
+</DL>
+<p>The <small>SetProcessAffinityMask</SMALL> function returns <small>FALSE</SMALL> upon failure and nonzero upon success&#151;it does not return the previous affinity mask. To retrieve the affinity mask for the process, you must call the <small>GetProcessAffinityMask</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwProcAffinity;
+DWORD dwSysAffinity;
+HANDLE hProcess = GetCurrentProcess();
+BOOL fGetAffinity = GetProcessAffinityMask(hProcess,
+                                           &ampdwProcAffinity,
+                                           &ampdwSysAffinity);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>GetProcessAffinityMask</SMALL> function has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process you&#146;re interested in.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that will be filled with the current process affinity mask.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that will be filled with the affinity mask for the system. Every available processor will have its bit set in this affinity mask.
+</DL>
+<p>As discussed earlier, locking a thread or process to a particular processor can negatively affect performance. Even if a processor is available, your thread will be prevented from running if the affinity mask allows none of the available processors to run your thread.
+</P>
+<p>The <small>SetThreadIdealProcessor</SMALL> function gives you a means to indicate your preferred processor for a thread. Your thread won&#146;t be prevented from running, but it will be scheduled to run on the specified processor whenever possible. You can&#146;t set a mask of preferred processors&#151;you must specify a single processor as your ideal processor:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hProcess = GetCurrentThread();
+DWORD  dwPreferredProc = 0x02;  // Prefer processor 3
+DWORD  dwPrevious = SetThreadIdealProcessor(hProcess,
+                                            dwPreferredProc);
+if(dwPrevious == -1)
+    ReportError();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetThreadIdealProcessor</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the thread that will have its affinity mask changed
+<dd><b>&#149;</B>&nbsp;&nbsp;The preferred processor for the thread
+</DL>
+<p>The <small>SetThreadIdealProcessor</SMALL> function returns the previous preferred processor or <small>MAXIMUM_PROCESSORS</SMALL> if no preferred processor was previously specified. If an error occurs, the function returns <small>-1</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Getting Multiple Threads to Cooperate</FONT></H4>
+<p>The need to manage threads and processes in an application is not something unique to Windows 2000. Once you break an application into more than one thread, you may need to handle problems you never knew existed under single-threaded programming.
+</P>
+<p>For example, the simple act of reading and writing to a global variable must be properly synchronized. Often, seemingly innocent code fragments can hide danger areas:</P>
+<!-- CODE //-->
+<pre>
+/* global variable */
+int g_nRequestsOutstanding;
+
+void QueueNewRequest(void)
+{
+    &#43;&#43;g_nRequestsOutstanding;
+    DoSomethingInterestingToQueueRequest();
+}
+
+void SatisfyRequest(void)
+{
+    RemoveOutstandingRequestInAnEfficientManner();
+    &#151; -g_nRequestsOutstanding;
+}
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

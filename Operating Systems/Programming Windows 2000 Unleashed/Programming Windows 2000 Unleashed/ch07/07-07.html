@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=249-252//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading12"></A><font color="#000077">Trustee-based Access Control</FONT></H3>
+<p>Trustee-based access control was originally introduced in Windows NT 4.0, where it was commonly known as <i>Windows NT 4.0 Access Control</I>. Windows 2000 has extended the trustee-based access control functions to include support for Active Directory objects as well as support for alternate security providers. In Windows 2000, you can also interact with securable objects on non-Windows systems.</P>
+<p>The structures used in trustee-based access control are nested several layers deep, as shown in Figure 7.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-04.jpg',331,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-04.jpg',331,420)"><font color="#000077"><b>Figure 7.4</B></FONT></A>&nbsp;&nbsp;The structures used in Windows 2000 access control.</P>
+<p>As shown in Figure 7.4, five structures are used in Windows 2000 access control:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE</SMALL>. A structure that represents a trustee or security principal. A trustee may be a user, group, or login session.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_ACCESS_ENTRY</SMALL>. A structure that contains access control information about a single <small>TRUSTEE</SMALL>, including a mask of the rights that are controlled by the <small>TRUSTEE</SMALL> as well as whether those rights are allowed or denied. This structure includes a <small>TRUSTEE</SMALL> as one of its member variables.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_ACCESS_ENTRY_LIST</SMALL>. A structure that represents the actual access control list. This structure hosts an array of zero or more <small>ACTRL_ACCESS_ENTRY</SMALL> structures.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_PROPERTY_ENTRY</SMALL>. Manages a collection of <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structures for an object. In a typical simple case where an object does not offer management of individual properties, there&#146;s one <small>ACTRL_PROPERTY_ENTRY</SMALL> per <small>ACTRL_ACCESS</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_ACCESS</SMALL>. A structure that contains access control lists for an object. A new feature in Windows 2000 is the ability to set attributes for properties located on some objects. This structure contains a pointer to an array of <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structures, with one structure for each managed property.
+</DL>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Using the TRUSTEE Structure</FONT></H4>
+<p>The <small>TRUSTEE</SMALL> structure is used to identify a security principal, and it can easily be initialized using either the security principal&#146;s name or a <small>SID</SMALL> that refers to the principal.</P>
+<p>The <small>TRUSTEE</SMALL> structure is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _TRUSTEE
+{
+    PTRUSTEE                    pMultipleTrustee;
+    MULTIPLE_TRUSTEE_OPERATION  MultipleTrusteeOperation;
+    TRUSTEE_FORM                TrusteeForm;
+    TRUSTEE_TYPE                TrusteeType;
+    LPTSTR                      ptstrName;
+} TRUSTEE;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here are the members of the <small>TRUSTEE</SMALL> structure:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pMultipleTrustee</SMALL>. Reserved for future use. Must be set to <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MultipleTrusteeOperation</SMALL>. The only valid value for this member is <small>NO_MULTIPLE_TRUSTEE</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TrusteeForm</SMALL>. Indicates whether the <small>TRUSTEE</SMALL> structure contains a <small>SID</SMALL> or the name of a security principal. If the structure contains a <small>SID</SMALL>, the value of this member is <small>TRUSTEE_IS_SID</SMALL>; if the structure contains a principal name, the value of this member is <small>TRUSTEE_IS_NAME</SMALL>. A value of <small>TRUSTEE_BAD_FORM</SMALL> indicates that neither member is valid.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TrusteeType</SMALL>. Indicates the type of trustee identified by the structure. Values for this member are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ptstrName</SMALL>. A pointer to a <small>SID</SMALL> or security principal name. If <small>TrusteeForm</SMALL> is <small>TRUSTEE_IS_SID</SMALL>, this member is a pointer to the trustee&#146;s <small>SID</SMALL>. If <small>TrusteeForm</SMALL> is <small>TRUSTEE_IS_NAME</SMALL>, this member is a pointer to the trustee&#146;s name.
+</DL>
+<p>The following values can be used for the <small>TrusteeType</SMALL> member variable:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_UNKNOWN</SMALL>. The trustee has an unknown trustee type.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_USER</SMALL>. The trustee is a user account.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_GROUP</SMALL>. The trustee is a group account.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_DOMAIN</SMALL>. The trustee is a domain.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_ALIAS</SMALL>. The trustee is an alias account.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_WELL_KNOWN_GROUP</SMALL>. The trustee is a well-known group, such as Everyone.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_DELETED</SMALL>. The trustee refers to a deleted account.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRUSTEE_IS_INVALID</SMALL>. The trustee is an invalid trustee type.
+</DL>
+<p>Although you&#146;re free to manipulate the <small>TRUSTEE</SMALL> structure directly, Windows 2000 includes two functions that make it easy to initialize a <small>TRUSTEE</SMALL> structure:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BuildTrusteeWithName</SMALL>. Initializes a <small>TRUSTEE</SMALL> structure from a trustee&#146;s name
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BuildTrusteeWithSid</SMALL>. Initializes a <small>TRUSTEE</SMALL> structure from a trustee&#146;s <small>SID</SMALL>
+</DL>
+<p>The <small>BuildTrusteeWithName</SMALL> function properly initializes a <small>TRUSTEE</SMALL> structure from a trustee&#146;s name:</P>
+<!-- CODE SNIP //-->
+<pre>
+TRUSTEE trustee;
+BuildTrusteeWithName(&amptrustee, _T(&#147;codevtech.com\\mickeyw&#148;));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>BuildTrusteeWithName</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the <small>TRUSTEE</SMALL> structure to be initialized
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a string that contains the trustee name
+</DL>
+<p>The <small>BuildTrusteeWithName</SMALL> function doesn&#146;t allocate any data for the <small>TRUSTEE</SMALL> structure, particularly the <small>ptstrName</SMALL> member variable. The string passed to the function must remain valid for the lifetime of the <small>TRUSTEE</SMALL> structure; otherwise, you&#146;ll have unpredictable results. Functions such as the one in Listing 7.7 must be avoided.</P>
+<p><b>Listing 7.7</B> Improper Use of the <small>BuildTrusteeWithName</SMALL> Function</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+void BuildBadTrusteeStruct(TRUSTEE* pTrustee)
+{
+    LPTSTR pTempString = _T(&#147;codevtech\\ali&#148;);
+    BuildTrusteeWithName(pTrustee, pTempString);
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>Inside <small>BuildBadTrusteeStruct</SMALL>, the address of a variable with local scope, <small>pTempString</SMALL>, is used to initialize the <small>TRUSTEE</SMALL> structure. The <small>pTempString</SMALL> variable is allocated on the thread&#146;s stack; when the function returns to the caller, the variable will be discarded. Any attempt to use the <small>TRUSTEE</SMALL> structure will result in difficult-to-trace faults.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

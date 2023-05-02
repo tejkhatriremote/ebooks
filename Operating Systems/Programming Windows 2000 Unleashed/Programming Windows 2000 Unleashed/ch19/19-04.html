@@ -1,0 +1,345 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Asynchronous COM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=19//-->
+<!--PAGES=633-638//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="19-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The values used in the Attributes property sheet for the <small>Shop</SMALL> object are listed in Table 19.2.</P>
+<table width="100%"><caption align="LEFT" valign="TOP"><b>Table 19.2</B> Names Property Sheet Values for the <small>Shop</SMALL> COM Object
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Field</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Name</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Threading Model
+<td align="LEFT" valign="TOP">Free
+<tr>
+<td align="LEFT" valign="TOP">Interface
+<td align="LEFT" valign="TOP">Custom
+<tr>
+<td align="LEFT" valign="TOP">Aggregation
+<td align="LEFT" valign="TOP">Yes
+<tr>
+<td align="LEFT" valign="TOP">ISupportErrorInfo
+<td align="LEFT" valign="TOP">Unchecked
+<tr>
+<td align="LEFT" valign="TOP">Connection Points
+<td align="LEFT" valign="TOP">Unchecked
+<tr>
+<td align="LEFT" valign="TOP">Free Threaded Marshaler
+<td align="LEFT" valign="TOP">Unchecked
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>As discussed earlier, the <small>IShop</SMALL> interface has one method: <small>FindSalesClerk</SMALL>. The implementation of <small>FindSalesClerk</SMALL> is provided in Listing 19.8.</P>
+<p><b>Listing 19.8</B> The <small>CShop::FindSalesClerk</SMALL> Function<hr></P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CShop::FindSalesClerk(BSTR *bstrClerkName)
+{
+    // Hide from customer for a while
+    Sleep(5000);
+    *bstrClerkName = SysAllocString(L&#148;Zaphod&#148;);
+    if(*bstrClerkName)
+        return S_OK;
+    else
+        return E_OUTOFMEMORY;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>FindSalesClerk</SMALL> function sleeps for five seconds and then fills <small>bstrClerkName</SMALL> with the name of a helpful sales clerk.</P>
+<p>After building the AsyncTest project, you must also build and register the proxy/stub DLL. Build the proxy/stub from the command line in the project directory with this command:</P>
+<!-- CODE SNIP //-->
+<pre>
+nmake AsyncTestps.mk
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Register the proxy/stub DLL with this command:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+RegSvr32 AsyncTestps
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The proxy/stub DLL must be rebuilt and re-registered whenever the project&#146;s IDL changes.
+</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">A Synchronous Test Client</FONT></H4>
+<p>The SyncClient subdirectory contains the SyncClient project, a Win32 console-mode project that makes synchronous calls to the AsyncTest COM server. The source code used for SyncClient is provided in Listing 19.9.
+</P>
+<p><b>Listing 19.9</B> A Synchronous Test Driver for the <small>IShop</SMALL> Interface<hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * SyncClient - main.cpp
+ *
+ * Tests synchronous version of the IShop interface.
+ */
+
+#define _WIN32_WINNT 0&#215;0500
+#include &lt;windows.h&gt;
+#include &lt;wchar.h&gt;
+
+#include &#147;asynctest.h&#148;
+#include &#147;asynctest_i.c&#148;
+
+void   HandleError(LPCWSTR strTitle, HRESULT hr);
+
+int wmain()
+{
+    IUnknown* punk = NULL;
+    IShop*    pShop = NULL;
+    BSTR      bstr;
+
+    // Initialize COM library
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoInitFailed&#148;, hr);
+        return 0;
+    }
+
+    // Use SEH to ensure that interface reference are cleaned up.
+    __try
+    {
+        // Create an instance of the COM object.
+        hr = CoCreateInstance(CLSID_Shop,
+                              NULL,
+                              CLSCTX_ALL,
+                              IID_IUnknown,
+                              (void**)&amp;punk);
+        if(FAILED(hr))
+        {
+            HandleError(L&#148;CoCreate Failed&#148;, hr);
+            __leave;
+        }
+
+        // Query for IShop.
+        hr = punk-&gt;QueryInterface(&amp;pShop);
+        if(FAILED(hr))
+        {
+            HandleError(L&#148;QIF for IShop Failed&#148;, hr);
+            __leave;
+        }
+
+        // Make the function call.
+        hr = pShop-&gt;FindSalesClerk(&amp;bstr);
+        if(FAILED(hr))
+        {
+            HandleError(L&#148;Method call Failed&#148;, hr);
+            __leave;
+        }
+        wprintf(L&#148;The sales clerk&#146;s name is %s\n&#148;, bstr);
+    }
+    __finally
+    {
+        SysFreeString(bstr);
+        if(punk) punk-&gt;Release();
+        if(pShop) pShop-&gt;Release();
+        CoUninitialize();
+    }
+    return 0;
+}
+
+/*
+ * Error handling routine
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amp;lpMsgBuf,
+                  0,
+                  NULL);
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The SyncClient directory also includes copies of the <small>AsyncTest_i.c</SMALL> and <small>AsyncTest.h</SMALL> files from the AsyncTest project directory. These files were generated by the MIDL compiler when the AsyncTest project was built.</P>
+<p>Build and run the SyncClient project. If you use a debugger to step through the source code, you&#146;ll see that the client blocks for approximately five seconds after calling <small>FindSalesClerk</SMALL>. In the next two sections, we&#146;ll convert the <small>IShop</SMALL> interface into an asynchronous version so that the client won&#146;t be forced to wait for the server.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">The Second Version of the IShop Interface</FONT></H4>
+<p>The AsyncProxy subdirectory contains the asynchronous version of the AsyncTest proxy/stub DLL. Three files are copied into the AsyncProxy subdirectory from the AsyncTest directory. These three files will be used to build the proxy/stub DLL that supports asynchronous method calls:
+</P>
+<dl>
+<dd>&#149;	<small>AysncTest.idl</SMALL>
+<dd>&#149;	<small>AsyncTestps.mk</SMALL>
+<dd>&#149;	<small>AsyncTestps.def</SMALL>
+</DL>
+<p>The <small>AsyncTest.idl</SMALL> file was modified by adding the <small>async_uuid</SMALL> attribute to the <small>IShop</SMALL> interface. The new version of the <small>AsyncTest.idl</SMALL> file is provided in Listing 19.10, with the modified line shown in bold.</P>
+<p><b>Listing 19.10</B> The Asynchronous Version of the <small>AsyncTest</SMALL> IDL File<hr></P>
+<!-- CODE //-->
+<pre>
+// AsyncTest.idl : IDL source for AsyncTest.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (AsyncTest.tlb) and marshalling code.
+
+import &#147;oaidl.idl&#148;;
+import &#147;ocidl.idl&#148;;
+    [
+        object,
+        uuid(C57B11E4-AF61-11D2-9935-00104B36573E),
+        <b>async_uuid(127B59FE-AF70-11D2-9935-00104B36573E),</B>
+
+
+        helpstring(&#147;IShop Interface&#148;),
+        pointer_default(unique)
+    ]
+    interface IShop : IUnknown
+    {
+        [helpstring(&#147;method FindSalesClerk&#148;)]
+        HRESULT FindSalesClerk([out] BSTR* bstrClerkName);
+    };
+
+[
+    uuid(C57B11D6-AF61-11D2-9935-00104B36573E),
+    version(1.0),
+    helpstring(&#147;AsyncTest 1.0 Type Library&#148;)
+]
+library ASYNCTESTLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+
+    [
+        uuid(C57B11E5-AF61-11D2-9935-00104B36573E),
+        helpstring(&#147;Shop Class&#148;)
+    ]
+    coclass Shop
+    {
+        [default] interface IShop;
+    };
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Asynchronous behavior is only supported beginning with Windows 2000. Depending on the version of your C<small>&#43;&#43;</SMALL> compiler, you may need to modify the <small>AsyncTestps</SMALL> makefile to define the <small>_WIN32_WINNT</SMALL> symbol as <small>0&#215;500</SMALL> or later. Listing 19.11 shows the modified portion of the <small>AsyncTestps</SMALL> makefile, with the changed portion shown in bold.</P>
+<p><b>Listing 19.11</B> Changes to the <small>AsyncTestps.mk</SMALL> Makefile (in Bold)<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+.c.obj:
+    cl /c /Ox /DWIN32 /D_WIN32_WINNT=<b>0&#215;0500</B> /DREGISTER_PROXY_DLL \
+        $&lt;
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>Build the new version of the proxy/stub by running nmake from the command line:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+nmake AsyncTestps.mk
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After building the new proxy/stub DLL, register it from the command line using RegSvr32:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+RegSvr32 AsyncTestps.dll
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You&#146;re now ready to make asynchronous method calls towards the AsyncTest server.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="19-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

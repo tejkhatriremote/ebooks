@@ -1,0 +1,216 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=243-246//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The access rights controlled by the <small>ACL</SMALL> are a combination of one or more of the following flags:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DELETE</SMALL>. The <small>ACE</SMALL> affects the right to delete the object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>READ_CONTROL</SMALL>. The <small>ACE</SMALL> affects the right to read non-<small>SACL</SMALL> security descriptor information.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SYNCHRONIZE</SMALL>. The <small>ACE</SMALL> affects the right to use the object for process and thread synchronization.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WRITE_DAC</SMALL>. The <small>ACE</SMALL> affects the right to modify the object&#146;s <small>DACL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WRITE_OWNER</SMALL>. The <small>ACE</SMALL> affects the right to change the owner in the object&#146;s security descriptor.
+</DL>
+<p>To simplify things, here are a number of constants that combine one or more of the preceding flags:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>STANDARD_RIGHTS_ALL</SMALL>. Combines all rights from the previous list
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>STANDARD_RIGHTS_EXECUTE</SMALL>. Same as <small>READ_CONTROL</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>STANDARD_RIGHTS_READ</SMALL>. Same as <small>READ_CONTROL</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>STANDARD_RIGHTS_REQUIRED</SMALL>. Combines all flags except <small>SYNCHRONIZE</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>STANDARD_RIGHTS_WRITE</SMALL>. Same as <small>READ_CONTROL</SMALL>
+</DL>
+<p>There&#146;s also a set of generic rights that can be applied to securable objects in Windows 2000. You can use the following generic rights with an <small>ACE</SMALL> in place of the preceding flags:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GENERIC_ALL</SMALL>. Includes read, write, and execute access.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GENERIC_EXECUTE</SMALL>. Execute access only.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GENERIC_READ</SMALL>. Read access only.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GENERIC_WRITE</SMALL>. Write access only.
+</DL>
+<p>The <small>AddAccessDeniedAceEx</SMALL> function works just like <small>AddAccessAllowedAceEx</SMALL>, except that it adds an access-denied <small>ACE</SMALL> to the end of the <small>DACL</SMALL>. Both functions may result in a <small>DACL</SMALL> that contains <small>ACE</SMALL> structures in the wrong order. When using low-level security functions such as <small>AddAccessAllowedAceEx</SMALL> and <small>AddAccessDeniedAceEx</SMALL>, you need to make sure that all access-denied entries are located before any access-allowed entries. If necessary, you must manually reorder the list.</P>
+<p>The <small>AddAccessAllowedAceEx</SMALL> function does not allocate new storage for an <small>ACL</SMALL>&#151;it simply adds the new <small>ACE</SMALL> to the end of an existing <small>ACL</SMALL>. You must calculate the required size of your new <small>ACL</SMALL> and allocate a new <small>ACL</SMALL> if necessary. In cases where you&#146;re adding an <small>ACE</SMALL> to an existing <small>ACL</SMALL>, it&#146;s easier to use a newer <small>TRUSTEE</SMALL>-based access control function, such as <small>SetEntriesInAccessList</SMALL>. These functions will be discussed later in this chapter.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Security Descriptors</FONT></H4>
+<p>The <small>SECURITY_DESCRIPTOR</SMALL> structure is used to store security information for a securable object. The security descriptor for an object includes the following items:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional <small>DACL</SMALL> that specifies access rights for the object
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional <small>SACL</SMALL> that specifies what type of access results in security audit events
+<dd><b>&#149;</B>&nbsp;&nbsp;An owner <small>SID</SMALL> that identifies the owner of the object
+<dd><b>&#149;</B>&nbsp;&nbsp;A group <small>SID</SMALL> that identifies group membership of the object
+</DL>
+<p>There are two basic types of security descriptors:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A security descriptor in <i>absolute form</I> contains pointers to the <small>SID</SMALL> and <small>ACL</SMALL> information. <small>SID</SMALL> and <small>ACL</SMALL> information is usually not located in the same contiguous chunk of memory as the <small>SECURITY_DESCRIPTOR</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;A security descriptor in <i>self-relative form</I> contains the <small>SID</SMALL> and <small>ACL</SMALL> information in the same contiguous chunk of memory as the <small>SECURITY_DESCRIPTOR</SMALL> structure. Instead of pointers, the structure contains offsets to the <small>SID</SMALL> and <small>ACL</SMALL> information. This type of security descriptor is useful in COM, because it can easily be transmitted to another machine on the network.
+</DL>
+<p>Figure 7.3 illustrates the difference between absolute and self-relative security descriptors.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-03.jpg',222,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch07/images/07-03.jpg',222,420)"><font color="#000077"><b>Figure 7.3</B></FONT></A>&nbsp;&nbsp;The layout of self-relative and absolute security descriptors.</P>
+<p>The process of creating a security descriptor begins by initializing it. Listing 7.4 contains a wrapper function that illustrates how to allocate and initialize an empty security descriptor.
+</P>
+<p><b>Listing 7.4</B> Creating an Empty Security Descriptor</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+PSECURITY_DESCRIPTOR CreateEmptySecurityDescriptor()
+{
+    PSECURITY_DESCRIPTOR psd = NULL;
+
+    psd = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
+    if(psd)
+    {
+        BOOL fInit = InitializeSecurityDescriptor(psd,
+                                     SECURITY_DESCRIPTOR_REVISION);
+        if(!fInit)
+        {
+            LocalFree(psd);
+            psd = NULL;
+        }
+    }
+    return psd;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 7.4, the <small>CreateEmptySecurityDescriptor</SMALL> function begins by allocating a buffer with a length of <small>SECURITY_DESCRIPTOR_MIN_LENGTH</SMALL>. This is the size of a security descriptor that does not include <small>SID</SMALL> or <small>DACL</SMALL> information in the same memory block as the <small>SECURITY_DESCRIPTOR</SMALL> structure. Next, the security descriptor is initialized into an empty state with the <small>InitializeSecurityDescriptor</SMALL> function. Note that the security descriptor returned from the function in Listing 7.4 is allocated using <small>LocalAlloc</SMALL>. Any function that calls this function must free the returned security descriptor using <small>LocalFree</SMALL>.</P>
+<p>The <small>SetSecurityDescriptorDacl</SMALL> function is used to add a <small>DACL</SMALL> to a security descriptor:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fAdded = SetSecurityDescriptorDacl(psd, TRUE, pAcl, FALSE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetSecurityDescriptorDacl</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a security descriptor
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that indicates whether a <small>DACL</SMALL> is included in the security descriptor
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the <small>ACL</SMALL> to be used as the security descriptor&#146;s <small>DACL</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that&#146;s set to <small>TRUE</SMALL> if the <small>DACL</SMALL> is a default <small>DACL</SMALL>
+</DL>
+<p>To create a security descriptor that contains a <small>DACL</SMALL>, you need to allocate and initialize the security descriptor and <small>ACL</SMALL> and then use <small>SetSecurityDescriptorDacl</SMALL> to add the <small>ACL</SMALL> to the security descriptor. Listing 7.5 is an example of a function that creates a security descriptor that grants access to a specific user.</P>
+<p><b>Listing 7.5</B> Creating a Security Descriptor That Allows Access to a Specific User</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+PSECURITY_DESCRIPTOR CreateAllowedSDForUser(LPCTSTR lpszUser)
+{
+    PSECURITY_DESCRIPTOR psd = NULL;
+
+    psd = CreateEmptySecurityDescriptor();
+    if(!psd) return NULL;
+
+    PSID  pSid = AccountNameToSid(lpszUser);
+    if(!pSid || !IsValidSid(pSid))
+    {
+        LocalFree(pSid);
+        LocalFree(psd);
+        return NULL;
+    }
+
+    DWORD cbSid = GetLengthSid(pSid);
+    PACL pAcl = NULL;
+    DWORD cbAcl = sizeof(ACL) &#43; sizeof(ACCESS_ALLOWED_ACE) &#43; cbSid;
+    pAcl = (PACL)LocalAlloc(LPTR, cbAcl);
+
+    BOOL fAdded = AddAccessAllowedAceEx(pAcl,
+                                        ACL_REVISION,
+                                        0,
+                                        GENERIC_ALL,
+                                        pSid);    LocalFree(pSid);
+    SetSecurityDescriptorDacl(psd, TRUE, pAcl, FALSE);
+
+    return psd;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

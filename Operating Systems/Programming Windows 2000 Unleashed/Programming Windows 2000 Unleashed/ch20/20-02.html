@@ -1,0 +1,186 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=647-650//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>CoGetClassObject</SMALL> function has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The CLSID of the class object to be created.
+<dd><b>&#149;</B>&nbsp;&nbsp;The creation context that the class object must adhere to. <small>CLSCTX_ALL</SMALL> allows the class object to be created anywhere. Other, more restrictive values can be found in the <small>CLSCTX</SMALL> enumeration.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>COSERVERINFO</SMALL> structure that specifies how a remote activation of the class object is to be handled. If this value is <small>NULL</SMALL>, the class object will be created using information from the Registry.
+<dd><b>&#149;</B>&nbsp;&nbsp;The interface ID of the initial interface to be returned from the class object. This value is usually <small>IID_ClassFactory</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an interface pointer that&#146;s compatible with the IID passed in the previous parameter. If the call to <small>CoGetClassObject</SMALL> is successful, this parameter can be used to access an interface on the class object.
+</DL>
+<p>As with most COM functions, <small>CoGetClassInfo</SMALL> returns an <small>HRESULT</SMALL> that&#146;s used to determine whether the call succeeded or failed.</P>
+<p><small>CoCreateInstanceEx</SMALL> is an updated version of <small>CoCreateInstance</SMALL> that offers two improvements:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>COSERVERINFO</SMALL> structure may be passed as a parameter, thus allowing a client to specify a remote computer to handle the activation request.
+<dd><b>&#149;</B>&nbsp;&nbsp;The client can request an array of initial interface pointers using an array of <small>MULTI_QI</SMALL> structures, thus reducing the number of network roundtrips required when working with the interface.
+</DL>
+<p><small>CoCreateInstanceEx</SMALL> works very much like <small>CoCreateInstance</SMALL>, although it has extra parameters that are used mostly for creating remote instances, as shown in Listing 20.2.</P>
+<p><b>Listing 20.2</B> Creating a Remote Instance of a COM Object Using <small>CoCreateInstanceEx</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+MULTI_QI[2]  mqi;
+ZeroMemory(&amp;mqi, sizeof(mqi));
+mqi[0].pIID = &amp;IID_IEspresso;
+mqi[1].pIID = &amp;IID_ILatte;
+
+COSERVERINFO csi;
+ZeroMemory(&amp;csi, sizeof(csi));
+csi.pwszName = L&#147;slartibartfast.codevtech.com&#148;;
+
+HRESULT hr = CoCreateInstanceEx(CLSID_MyClass,
+                                NULL,
+                                CLSCTX_ALL,
+                                &amp;csi,
+                                2,
+                                &ampmqi);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>CoCreateInstanceEx</SMALL> function has six parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The CLSID of the class object to be created.
+<dd><b>&#149;</B>&nbsp;&nbsp;If the new instance is to be aggregated, a pointer is needed to the <small>IUnknown</SMALL> interface of the controlling outer object. Otherwise, pass <small>NULL</SMALL> as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The creation context that the class object must adhere to. <small>CLSCTX_ALL</SMALL> allows the class object to be created anywhere. Other, more restrictive values can be found in the <small>CLSCTX</SMALL> enumeration.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>COSERVERINFO</SMALL> structure that specifies how a remote activation of the class object is to be handled. If this value is <small>NULL</SMALL>, the class object will be created using information from the Registry.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of <small>MULTI_QI</SMALL> structures in the array passed as the last parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of one or more <small>MULTI_QI</SMALL> structures, with each element used to specify a separate interface.
+</DL>
+<p><small>CoCreateInstanceEx</SMALL> returns an <small>HRESULT</SMALL> that&#146;s used to determine whether the call succeeded or failed. As discussed later, each element in the <small>MULTI_QI</SMALL> array also has an <small>HRESULT</SMALL> that provides a return code specific to that interface.</P>
+<p>The <small>MULTI_QI</SMALL> structure is used by <small>CoCreateInstanceEx</SMALL> to enable a client to request an array of interface pointers for the created instance. The <small>MULTI_QI</SMALL> structure is defined as this:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _MULTI_QI
+{
+    const IID*  pIID;
+    IUnknown *  pItf;
+    HRESULT     hr;
+}MULTI_QI;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>MULTI_QI</SMALL> structure has three members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pIID</SMALL> is a pointer to an interface ID. This is the only parameter that must be a nonzero value when the <small>CoCreateInstanceEx</SMALL> function is called.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pItf</SMALL> is an interface pointer that will be filled if the call is successful.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hr</SMALL> is an <small>HRESULT</SMALL> that&#146;s associated with this <small>MULTI_QI</SMALL> element.
+</DL>
+<p><font size="+1"><b>Other Functions Used to Create Remote Instances</B></FONT></P>
+<p>COM has two other, less commonly used functions that can be used to create and initialize instances of COM objects on remote computers:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoGetInstanceFromFile</SMALL> creates an instance of a COM object and initializes it using a filename passed as a parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoGetInstanceFromStorage</SMALL> creates an instance of a COM object and initializes it using an <small>IStorage</SMALL> pointer passed as a parameter.
+</DL>
+<p>These functions accept a pointer to an optional <small>COSERVERINFO</SMALL> structure that can be used to specify the remote computer that should instantiate the COM object.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Using the IMultiQI Interface</FONT></H4>
+<p>Earlier, in Listing 20.2, <small>CoCreateInstanceEx</SMALL> is used to create an instance of the <small>CLSID_MyClass</SMALL> COM object and return pointers to the <small>IEspresso</SMALL> and <small>ILatte</SMALL> interfaces. The ability to return multiple interfaces when you&#146;re creating the COM object helps reduce unnecessary network traffic. DCOM also introduces the <small>IMultiQI</SMALL> interface, a synthesized interface that enables a client to request multiple interfaces in a single roundtrip. A simplified version of <small>IMultiQI</SMALL> is provided in Listing 20.3.</P>
+<p><b>Listing 20.3</B> A Simplified Version of the <small>IMultiQI</SMALL> Interface Definition</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+interface IMultiQI : IUnknown
+{
+    HRESULT QueryMultipleInterfaces([in]ULONG cMQIs,
+                                    [in,out] MULTI_QI *pMQIs);
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>The <small>IMultiQI</SMALL> interface includes one method: <small>QueryMultipleInterfaces</SMALL>. This method has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of interfaces requested
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of <small>MULTI_QI</SMALL> structures (one element for each requested interface pointer)
+</DL>
+<p>As with <small>CoCreateInstanceEx</SMALL>, the return value from <small>QueryMultipleInterfaces</SMALL> is <small>S_OK</SMALL> if all requested interfaces were returned. If the return value is <small>CO_S_NOTALLINTERFACES</SMALL>, you must test each <small>MULTI_QI</SMALL> element&#146;s <small>hr</SMALL> member value to determine the status of each requested interface.</P>
+<p>Your distributed COM object does not need to actually implement the <small>IMultiQI</SMALL> interface&#151;the standard proxy implements this interface and passes multiple <small>IUnknown::QueryInterface</SMALL> method calls to your COM object.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

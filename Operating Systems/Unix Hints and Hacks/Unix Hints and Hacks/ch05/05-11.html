@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=191-193//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch06/06-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Line 1: Define the shell.
+</P>
+<p>Line 2: Process the PIDs of the window manager from the user that is running the script.</P>
+<p>Line 3: Kill the PIDS one-by-one.</P>
+<p>Line 4: Continue processing: go to line 2.</P>
+<p>The brackets ([]) conceal the <small>grep</SMALL> command from the <small>ps</SMALL>. If they weren&#146;t there, the <small>kill</SMALL> command would kill itself before it had a chance to do anything. As you can see, the scripts looks for the <small>fvwm</SMALL>&#146;s process, which is the window manager on this particular flavor. The pattern in the <small>grep</SMALL> can be rewritten as needed for the window manager that you are using, such as Motif (<small>mwm</SMALL>) or Open Look (<small>olwm</SMALL>).</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Sometimes the inevitable happens: your terminal is completely hung and your keyboard locks up. You have no choice but to <small>kill</SMALL> yourself (in the UNIX sense of the word, of course!).</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>&#147;It was the best of times; it was the worst of times.&#148; It was the time Netscape released its browser to the UNIX world. My phone rang; a loyal user wanted to know why his unsupported beta copy of Netscape that was two weeks old was killing his entire session consistently every ten minutes. At first I thought it was because of beta problems, but 42 other users were running the same copy on the same platform without any problems. It made no sense to me. The next day one of my power users saw me struggling trying to figure out the problem with Netscape (because the system checked out). When he asked what was up, I told him the whole tragic Netscape story. His mouth dropped open with guilt after hearing the amount of time I spent on the problem. He then told me that there was a process running that monitored how long this user was on Netscape because he wasn&#146;t doing any work. When he exceeded ten minutes the process would kill his X session with a script similar to those in the preceding examples. I couldn&#146;t see the process because it ran on a remote system. It would appear for a millisecond on local machines, then drop out. From that I learned that many practical jokes were consistently being played, and I went to them first when really bizarre problems developed.
+</P>
+<h3><a name="Heading32"></A><font color="#000077">5.16 Nulling the Root Password Without vi</FONT></H3>
+<h4 align="LEFT"><a name="Heading33"></A><font color="#000077">5.16.1 Description:</FONT></H4>
+<p>This is a way to clear the root password when you don&#146;t have access to the <small>vi</SMALL> editor.</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>If no one has access to the root password on a system and it is a matter of urgency to get into that system, you can boot miniroot and clear the password out of the root account. This can be done even when the vi editor is inaccessible. To do this on a system using the /etc/shadow file, use the <small>ed</SMALL> editor with 13 dots and your problems are solved:</P>
+<!-- CODE SNIP //-->
+<pre>
+# cp /etc/shadow /etc/shadow.bak
+
+# ed /etc/shadow
+1p
+s/:.............:/::/
+1p
+w
+q
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: While in the <small>ed</SMALL> editor, go to the first line of the file.</P>
+<p>Line 2: Switch the first occurrence of a field that has 13 characters with nothing. This is the password field.</P>
+<p>Line 3: Write out the file.</P>
+<p>Line 4: Quit.</P>
+<p>You&#146;re finished! You swapped out the 13 characters of root&#146;s password field with nothing and cleared the password. You can now bring the system to single user and change the root password. The same basic commands can be used on the /etc/passwd file for those platforms that don&#146;t support shadow passwords. The result is the same.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>As professional UNIX system administrators, you never forget passwords. You can use this hack in situations such as when you inherit a machine on which there was no root password provided when you received the system, and nothing seems to let you in.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>In large installations, inheriting old systems is all too common. I remember one instance when we received a system that was running an obsolete version of the operating system. Management wanted the data checked before it was junked. We needed to have a CD-ROM shipped from the East Coast and had our local sales rep hunt one down. Two weeks later we were finally ready to boot miniroot. As we booted miniroot, the owner of the system walked in and asked whether I wanted the root password. After everything I&#146;d gone through, I politely rejected her offer. I&#146;d put so much time into this that I wasn&#146;t going to take the easy way out now. Needless to say, I didn&#146;t need the password from her, I gained access, and found that there wasn&#146;t anything on the disks anyway. All in a day&#146;s work, right?
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>ed</SMALL></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch06/06-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0058)http://www.astalavista.com/library/basics/guides/cipa.html -->
+<HTML><HEAD><TITLE>Changing IP Address - Astalavista Group</TITLE>
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+<META content="MSHTML 5.00.3103.1000" name=GENERATOR></HEAD>
+<BODY>
+<P align=center><STRONG>Changing IP Addresses</STRONG></P>
+<P><BR><STRONG>I. About</STRONG><BR>This is my second submission to 
+Astalavista.com, my first was an explanation of using proxies on IRC. This 
+tutorial will teach teach you how to change your ip address to any other one on 
+your ip range instead of having your DHCP Server pick one for you. This is very 
+usefull because you can change your ip when you are getting DDoS'ed or if you 
+wish to piss off someone running a webserver (or other service) on your ip 
+range, it is also usefull to get around a bans as long as the ban only covered 
+your ip not your whole ip range.<BR><BR>As usualy anything illegal you do while 
+reading this tutorial or after reading this tutorial is not my fault, your 
+actions are your own so don't blame me. I do not claim that the things I teach 
+are legal, so concider that everything i mention here is illegal if you are not 
+sure your self.<BR><BR><STRONG>II. Needed Information</STRONG><BR>Before you can 
+change your ip you need some information. This information includes your ip 
+range, subnet mask, default gateway, dhcp server, and dns servers.</P>
+<BLOCKQUOTE>
+  <P><BR><U>1. Getting your IP range</U> - Getting information about your ip 
+  range is not difficult, I recomend using Neo Trace on your own ip. But for our 
+  test just look at your ip address, say it's 24.193.110.13 you can definetly 
+  use the ip's found between 24.193.110.1 &lt; [new ip] &lt; 24.193.110.255, 
+  dont use x.x.x.1 or x.x.x.255. To find your ip simply open a dos/command 
+  prompt window and type ipconfig at the prompt, look for "IP Address. . . . . . 
+  . . . . . . : x.x.x.x".</P>
+  <P><BR><U>2. Subnet Mask, Default Gateway, DHCP Server</U> - These are very 
+  easy to find, just open a dos/command prompt window and type 'ipconfig /all' 
+  without the ' '. You should see something like this:<BR>Windows IP 
+  Configuration</P>
+  <P>&nbsp;</P>
+  <BLOCKQUOTE>
+    <P><FONT face="Lucida Console" size=1>Host Name . . . . . . . . . . . . : My 
+    Computer Name Here<BR>Primary Dns Suffix . . . . . . . :<BR>Node Type . . . 
+    . . . . . . . . . : Unknown<BR>IP Routing Enabled. . . . . . . . : 
+    No<BR>WINS Proxy Enabled. . . . . . . . : No<BR><BR>Ethernet adapter Local 
+    Area Connection:<BR><BR>Connection-specific DNS Suffix . : 
+    xxxx.xx.x<BR>Description . . . . . . . . . . . : NETGEAR FA310TX Fast 
+    Ethernet Adapter (NGRPCI)<BR>Physical Address. . . . . . . . . : 
+    XX-XX-XX-XX-XX-XX<BR>Dhcp Enabled. . . . . . . . . . . : 
+    Yes<BR>Autoconfiguration Enabled . . . . : Yes<BR>IP Address. . . . . . . . 
+    . . . . : 24.xxx.xxx.xx<BR>Subnet Mask . . . . . . . . . . . : 
+    255.255.240.0<BR>Default Gateway . . . . . . . . . : 24.xxx.xxx.x<BR>DHCP 
+    Server . . . . . . . . . . . : 24.xx.xxx.xx<BR>DNS Servers . . . . . . . . . 
+    . . : 24.xx.xxx.xxx<BR>24.xx.xxx.xx<BR>24.xx.xxx.xxx<BR>Lease Obtained. . . 
+    . . . . . . . : Monday, January 20, 2003 4:44:08 PM<BR>Lease Expires . . . . 
+    . . . . . . : Tuesday, January 21, 2003 3:43:16 
+AM</FONT></P></BLOCKQUOTE></BLOCKQUOTE>
+<P><BR>This is all the information you will need for now, I sugest you either 
+keep your dos/command prompt window open or copy &amp; paste the information 
+somewhere, to copy right click the window and select text and click 
+once.<BR><BR><STRONG>III. Changing your IP Address</STRONG><BR>To change your ip 
+address first pick any ip you like out of your ip range and remember it or write 
+it down. It is usualy a good idea to make sure the ip is dead (except for what 
+we are going to do later on) so just ping it via "ping x.x.x.x" and if it times 
+out then you can use it. Now go to My Computer, then Control Panel. In Control 
+Panel select Network Connections and pick your active connection, probably Local 
+Area Connection or your ISP name. Open that connection by double clicking on the 
+icon in Network Connections, then select Properties under the General Tab. In 
+the new window that pops up select Internet Protocol (TCP/IP) and click 
+properties, it's under the general tab. In this new window select the General 
+tab and choose "Use the following IP address" and for the IP address enter the 
+ip you would like to use (the one you picked from your subnet earlier) and for 
+the Subnet Mask enter the subnet mask you got when your ran ipconfig /all, same 
+goes for the Default Gateway. Now select "Use the following DNS server 
+addresses" and enter the information you got earlier. Now just click OK. Test 
+that it worked, try to refresh a website and if it works you know everything is 
+okay and you are connected. To make sure the change worked type ipconfig agein 
+and the ip address should have changed to your new one.<BR><BR><STRONG>IV. DDoS 
+&amp; DoS Protection</STRONG><BR>If your firewall shows that you are being 
+ddosed, this is usualy when you are constantly getting atempted UDP connections 
+several times a second from either the same ip address or multiple ip addresses 
+(ddos), you can protect your self by changing your ip address via the method i 
+described above.<BR><BR><STRONG>V. Webservers &amp; Other 
+Services</STRONG><BR>If you know someone on your ip range is running a webserver 
+and he or she has pissed you off or you just like messing around you can "steal" 
+their ip address so any dns going to that ip will show your site instead because 
+you would be running a webserver your self.<BR><BR>To "steal" an ip is to 
+basicaly use the changing ip address method above and picking an ip that someone 
+that is running a webserver has in use. Often you will be able to keep that ip 
+at least for some time, other times you wont be able to use it so just keep 
+trying untill it works. You your self will need to have a web server on the same 
+port with your message. You can do this with other services too. You can also 
+DoS or DDoS the ip address you are trying to steal to kick him off the net, but 
+I dont recomend as its pretty illegal, your isp will get pissed and feds may go 
+ape-shit.</P></BODY></HTML>

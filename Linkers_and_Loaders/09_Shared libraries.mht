@@ -1,0 +1,1088 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Shared libraries
+Date: Fri, 13 May 2005 10:00:03 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_006F_01C557A2.889B3A40"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_006F_01C557A2.889B3A40
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker09.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Shared libraries</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Shared libraries</H1><I>$Revision: 2.3 $</I> <BR><I>$Date: =
+1999/06/15=20
+03:30:36 $</I>=20
+<P>
+<P>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Program libraries date back to the earliest days of computing, =
+since=20
+      programmers quickly realized that they could save a lot of time =
+and effort=20
+      by reusing chunks of program code. With the advent of compilers =
+for=20
+      languages like Fortran and COBOL, libraries became an integral =
+part of=20
+      programming. Compiled languages use libraries explictly when a =
+program=20
+      calls a standard procedure such as sqrt(), and they use libraries=20
+      implicitly for I/O, conversions, sorting, and many other functions =
+too=20
+      complex to express as in-line code. As languages have gotten more =
+complex,=20
+      libraries have gotten correspondingly more complex. When I wrote a =
+Fortran=20
+      77 compiler twenty years ago, the runtime library was already more =
+work=20
+      than the compiler itself, and a Fortran 77 library is far simpler =
+than one=20
+      for C++.=20
+      <P>
+      <P>The growth of language libraries means not only that all =
+programs=20
+      include library code, but that most programs include a lot of the =
+same=20
+      library code. Every C program, for example, uses the system call =
+library,=20
+      nearly all use the standard I/O library routines such as printf, =
+and many=20
+      use other popular libraries for math, networking, and other common =
+
+      functions. This means that in a typical Unix system with a =
+thousand=20
+      compiled programs, there's close to a thousand copies of printf. =
+If all=20
+      those programs could share a single copy of the library routines =
+they use,=20
+      the savings in disk space would be substantial. (On a Unix system =
+without=20
+      shared libraries, there's five to ten megabytes of copies of =
+printf=20
+      alone.) Even more important, if running programs could share a =
+single=20
+      in-memory copy of the libraries, the main memory savings could be =
+very=20
+      significant, both saving memory and improving paging behavior.=20
+      <P>
+      <P>All shared library schemes work essentially the same way. At =
+link time,=20
+      the linker searches through libraries as usual to find modules =
+that=20
+      resolve otherwise undefined external symbols. But rather than =
+copying the=20
+      contents of the module into the output file, the linker makes a =
+note of=20
+      what library the module came from, and puts a list of the =
+libraries in the=20
+      executable. When the program is loaded, startup code finds those =
+libraries=20
+      and maps them into the program's address space before the program =
+starts,=20
+      Figure 1. Standard operating system file mapping semantics =
+automatically=20
+      share pages that are mapped read-only or copy-on-write. The =
+startup code=20
+      that does the mapping may be in the operating system, the =
+executable, in a=20
+      special dynamic linker mapped into the process' address space, or =
+some=20
+      combination of the three. </P></TD></TR></TBODY></TABLE>
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig09-01.html"><IMG=20
+      height=3D81 =
+src=3D"http://www.iecc.com/linker/thumb-linker09-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> Program with shared libraries <BR>Picture of=20
+      executable, shared libraries <BR>main excutable, app library, C =
+library=20
+      <BR>files from different places <BR>arrows show refs from main to =
+app,=20
+      main to C, app to C </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>In this chapter, we look at static linked shared libraries, that is,=20
+libraries where program and data addresses in libraries are bound to =
+executables=20
+at link time. In the next chapter we look at the considerably more =
+complex=20
+dynamic linked libraries. Although dynamic linking is more flexible and =
+more=20
+"modern", it's also a lot slower than static linking because a great =
+deal of=20
+work that would otherwise have been done once at link time is redone =
+each time a=20
+dynamically linked program starts. Also, dynamically linked programs =
+usually use=20
+extra ``glue'' code to call routines in shared libraries. The glue =
+usually=20
+contains several jumps, which can slow down calls considerably. On =
+systems that=20
+support both static and dynamic shared libraries, unless programs need =
+the extra=20
+flexibility of dynamic linking, they're faster and smaller with static =
+linked=20
+libraries.=20
+<P>
+<H2>Binding time</H2>Shared libraries raise binding time issues that =
+don't apply=20
+to conventionally linked programs. A program that uses a shared library =
+depends=20
+on having that shared library available when the program is run. One =
+kind of=20
+error occurs when the required libraries aren't present. There's not =
+much to be=20
+done in that case other than printing a cryptic error message and =
+exiting.=20
+<P>
+<P>A much more interesting problem occurs when the library is present, =
+but the=20
+library has changed since the program was linked. In a conventionally =
+linked=20
+program, symbols are bound to addresses and library code is bound to the =
+
+executable at link time, so the library the program was linked with is =
+the one=20
+it uses regardless of subsequent changes to the library.. With static =
+shared=20
+libraries, symbols are still bound to addresses at link time, but =
+library code=20
+isn't bound to the executable until run time. (With dynamic shared =
+libraries,=20
+they're both delayed until runtime.)=20
+<P>
+<P>A static linked share library can't change very much without breaking =
+the=20
+programs that it is bound to. Since the addresses of routines and data =
+in the=20
+library are bound into the program, any changes in the addresses to =
+which the=20
+program is bound will cause havoc.=20
+<P>
+<P>A static shared library can sometimes be updated without breaking the =
+
+programs that use it, if the updates can be made in a way that don't =
+move any=20
+addresses in the library that programs depend on. This permits "minor =
+version"=20
+updates, typically for small bug fixes. Larger changes unavoidably =
+change=20
+program addresses, which means that a system either needs multiple =
+versions of=20
+the library, or forces programmers to relink all their programs each =
+time the=20
+library changes. In practice, the solution is invariably multiple =
+versions,=20
+since disk space is cheap and tracking down every executable that might =
+have=20
+used a shared library is rarely possible.=20
+<P>
+<H2>Shared libraries in practice</H2>In the rest of this chapter we =
+concentrate=20
+on the static shared libraries provided in UNIX System V Release 3.2 =
+(COFF=20
+format), older Linux systems (a.out format), and the BSD/OS derivative =
+of 4.4BSD=20
+(a.out and ELF formats.) All three work nearly the same, but some of the =
+
+differences are instructive. The SVR3.2 implementation required changes =
+in the=20
+linker to support searching shared libraries, and extensive operating =
+system=20
+support to do the runtime startup required. The Linux implemention =
+required one=20
+small tweak to the linker and added a single system call to assist in =
+library=20
+mapping. The BSD/OS implementation made no changes at all to the linker =
+or=20
+operating system, using a shell script to provide the necessary =
+arguments to the=20
+linker and a modified version of the standard C library startup routine =
+to map=20
+in the libraries.=20
+<P>
+<H2>Address space management</H2>The most difficult aspect of shared =
+libraries=20
+is address space management. Each shared library occupies a fixed piece =
+of=20
+address space in each program in which it is used. Different libraries =
+have to=20
+use non-overlapping addresses if they can be used in the same program. =
+Although=20
+it's possible to check mechanically that libraries don't overlap, =
+assigning=20
+address space to libraries is a black art. On the one hand, you want to =
+leave=20
+some slop in between them so if a new version of one library grows a =
+little, it=20
+won't bump into the next library up. On the other hand, you'd like to =
+put your=20
+popular libraries as close together as possible to minimize the number =
+of page=20
+tables needed. (Recall that on an x86, for example, there's a second =
+level table=20
+for each 4MB block of address space active in a process.)=20
+<P>
+<P>There's invariably a master table of shared library address space on =
+each=20
+system, with libraries starting some place in the address space far away =
+from=20
+applications. Linux's start at hex 60000000, BSD/OS at a0000000. =
+Commercial=20
+vendors subdivide the address space further between vendor supplied =
+libraries=20
+and user and third-party libraries which start at a0800000 in BSD/OS, =
+for=20
+example.=20
+<P>
+<P>Generally both the code and data addresses for each library are =
+explicitly=20
+defined, with the data area starting on a page boundary a page or two =
+after the=20
+end of the code. This makes it possible to create minor version updates, =
+since=20
+the updates frequently don't change the data layout, but just add or =
+change=20
+code.=20
+<P>
+<P>Each individual shared library exports symbols, both code and data, =
+and=20
+usually also imports symbols if the library depends on other libraries. =
+Although=20
+it would work if one just linked routines together into a shared library =
+in=20
+haphazard order, real libraries use some discipline in assigning =
+addresses to=20
+make it easier, or at least possible, to update a library without =
+changing the=20
+addresses of exported symbols. For code addresses, rather than exporting =
+the=20
+actual address of each routine, the library contains a table of jump=20
+instructions which jump to all of the routines, with the addresses of =
+the jump=20
+instructions exported as the addresses of the routines. All jump =
+instruction are=20
+the same size, so the addresses in the jump table are easy to compute =
+and won't=20
+change from version to version so long as no entries are added or =
+deleted in the=20
+middle of the table. One extra jump per routine is an insignificant =
+slowdown,=20
+but since the actual routine addresses are not visible, new versions of =
+the=20
+library will be compatible even if routines in the new version aren't =
+all the=20
+same sizes and addresses as in the old version.=20
+<P>
+<P>For exported data, the situation is more difficult, since there's no =
+easy way=20
+to add a level of indirection like the one for code addresses. In =
+practice it=20
+turns out that exported data tends to be tables of known sizes that =
+change=20
+rarely, such as the array of <TT>FILE</TT> structures for the C standard =
+I/O=20
+library or single word values like <TT>errno</TT> (the error code from =
+the most=20
+recent system call) or <TT>tzname</TT> (pointers to two strings giving =
+the name=20
+of the current time zone.) With some manual effort, the programmer who =
+creates=20
+the shared library can collect the exported data at the front of the =
+data=20
+section in front of any anonymous data that are part of individual =
+routines,=20
+making it less likely that exported addresses will change from one =
+version to=20
+the next.=20
+<P>
+<H2>Structure of shared libraries</H2>The shared library is an =
+executable format=20
+file that contains all of the library code and data, ready to be mapped =
+in,=20
+Figure 2.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 2 --></TD>
+    <TD><I>Figure 2:</I> Structure of typical shared library <BR>File =
+header,=20
+      a.out, COFF, or ELF header <BR>(Initialization routine, not always =
+
+      present) <BR>Jump table <BR>Code <BR>Global data <BR>Private data=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>Some shared libraries start with a small bootstrap routine used to =
+map in the=20
+rest of the library. After that comes the jump table, aligned on a page =
+boundary=20
+if it's not the first thing in the library. The exported address of each =
+public=20
+routine in the library is the jump table entry. Following the jump table =
+is the=20
+rest of the text section (the jump table is considered to be text, since =
+it's=20
+executable code), then the exported data and private data. The bss =
+segment=20
+logically follows the data, but as in any other executable file, isn't =
+actually=20
+present in the file.=20
+<P>
+<H2>Creating shared libraries</H2>A UNIX shared library actually =
+consists of two=20
+related files, the shared library itself and a stub library for the =
+linker to=20
+use. A library creation utility takes as input a normal library in =
+archive=20
+format and some files of control information and uses them to create =
+create the=20
+two files. The stub library contains no code or data at all (other than =
+possibly=20
+a tiny bootstrap routine) but contains symbol definitions for programs =
+linked=20
+with the library to use.=20
+<P>
+<P>Creating the shared library involves these basic steps, which we =
+discuss in=20
+greater detail below:=20
+<UL>
+  <LI>Determine at what address the library's code and data will be =
+loaded.=20
+  <LI>Scan through the input library to find all of the exported code =
+symbols.=20
+  (One of the control files may be a list of some of symbols not to =
+export, if=20
+  they're just used for inter-routine communication within the library.) =
+
+  <LI>Make up the jump table with an entry for each exported code =
+symbol.=20
+  <LI>If there's an initialization or loader routine at the beginning of =
+the=20
+  library, compile or assemble that.=20
+  <LI>Create the shared library: Run the linker and link everything =
+together=20
+  into one big executable format file.=20
+  <LI>Create the stub library: Extract the necessary symbols from the =
+newly=20
+  created shared library, reconcile those symbols with the symbols from =
+the=20
+  input library, create a stub routine for each library routine, then =
+compile or=20
+  assemble the stubs and combine them into the stub library. In COFF =
+libraries,=20
+  there's also a little initialization code placed in the stub library =
+to be=20
+  linked into each executable. </LI></UL>
+<P>
+<H3>Creating the jump table</H3>The easiest way to create the jump table =
+is to=20
+write an assembler source file full of jump instructions, Figure 3, and =
+assemble=20
+it. Each jump instruction needs to be labelled in a systematic way so =
+that the=20
+addresses can later be extracted for the stub library.=20
+<P>
+<P>A minor complication occurs on architectures like the x86 that have =
+different=20
+sizes of jump instructions. For libraries containing less than 64K of =
+code,=20
+short 3 byte jumps are adequate. For libraries larger than that, longer =
+5 byte=20
+jumps are necessary. Mixed sizes of jumps aren't very satisfactory, both =
+because=20
+it makes the table addresses harder to compute and because it makes it =
+far=20
+harder to make the jump table compatible in future builds of the =
+library. The=20
+simplest solution is to make all of the jumps the largest size. =
+Alternatively,=20
+make all of the jumps short, and for routines that are too far away for =
+short=20
+jumps, generate anonymous long jump instructions at the end of the table =
+to=20
+which short instructions can jump. (That's usually more trouble than =
+it's worth,=20
+since jump tables are rarely more than a few hundred entries in the =
+first=20
+place.)=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 3 --></TD>
+    <TD><I>Figure 3:</I> Jump table <BR>
+      <P><TT><BR>... start on a page boundary <BR>.align 8 ; align on =
+8-byte=20
+      boundary for variable length insns <BR>JUMP_read: jmp _read =
+<BR>.align 8=20
+      <BR>JUMP_write: jmp _write <BR>... <BR>_read: ... code for read() =
+<BR>...=20
+      <BR>_write: ... code for write()=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<H3>Creating the shared library</H3>Once the jump table and, if needed, =
+the=20
+loader routine are created, creating the shared library is easy. Just =
+run the=20
+linker with suitable switches to make the code and data start at the =
+right=20
+places, and link together the bootstrap, the jump tables, and all of the =
+
+routines from the input library. This both assigns addresses to =
+everything in=20
+the library and creates the shared library file.=20
+<P>
+<P>One minor complication involves interlibrary references. If you're =
+creating,=20
+say, a shared math library that uses routines from the shared C library, =
+the=20
+references have to be made correctly. Assuming that the library whose =
+routines=20
+are needed has already been built when the linker builds the new =
+library, it=20
+needs only to search the old library's stub library, just like any =
+normal=20
+executable that refers to the old library. This will get all of the =
+references=20
+correct. The only remaining issue is that there needs to be some way to =
+ensure=20
+that any programs that use the new library also link to the old library. =
+
+Suitable design of the new stub library can ensure that.=20
+<P>
+<H3>Creating the stub library</H3>Creating the stub library is one of =
+the=20
+trickier parts of the shared library process. For each routine in the =
+real=20
+library, the stub library needs to contain a corresponding entry that =
+defines=20
+both the exported and imported global symbols.=20
+<P>
+<P>The data global symbols are wherever the linker put them in the =
+shared=20
+library image, and the most reasonable way to get their values is to =
+create the=20
+shared library with a symbol table and extract the symbols from that =
+symbol=20
+table. For code global symbols, the entry points are all in the jump =
+table, so=20
+it's equally easy to extract the symbols from the shared library or =
+compute the=20
+addresses from the base address of the jump table and each symbol's =
+position in=20
+the table.=20
+<P>
+<P>Unlike a normal library module, a module in the stub library contains =
+no code=20
+nor data, but just has symbol definitions. The symbols have to be =
+defined as=20
+absolute numbers rather than relocatable, since the shared library has =
+already=20
+had all of its relocation done. The library creation program extracts =
+each=20
+routine from the input library, and from that routine gets the defined =
+and=20
+undefined globals, as well as the type (text or data) of each global. It =
+then=20
+writes the stub routine, usually as a little assembler program, defining =
+each=20
+text global as the address of the jump table entry, each data or bss =
+global as=20
+the actual address in the shared library, and each undefined global as=20
+undefined. When it has a complete set of stub sources, it assembles them =
+all and=20
+combines them into a normal library archive.=20
+<P>
+<P>COFF stub libraries use a different, more primitive design. They're =
+single=20
+object files with two named sections. The <TT>.lib</TT> section contains =
+all of=20
+the relocation information pointing at the shared library, and the=20
+<TT>.init</TT> section contains initialization code that is linked into =
+each=20
+client program, typically to initialize variables in the shared library. =
+
+<P>
+<P>Linux shared libraries are simpler still, an a.out file containing =
+the symbol=20
+definitions with "set vector" symbols described in more detail below for =
+use at=20
+program link time.=20
+<P>
+<P>Shared libraries have names assigned that are mechanically derived =
+from the=20
+original library, adding a version number. If the original library was =
+called=20
+<TT>/lib/libc.a</TT>, the usual name for the C library, and the current =
+library=20
+version is 4.0, the stub library might be <TT>/lib/libc_s.4.0.0.a</TT> =
+and the=20
+shared library image <TT>/shlib/libc_s.4.0.0</TT>. (The extra zero =
+allows for=20
+minor version updates.) Once the libraries are moved into the =
+appropriate=20
+directories they're ready to use.=20
+<P>
+<H3>Version naming</H3>Any shared library system needs a way to handle =
+multiple=20
+versions of libraries. When a library is updated, the new version may or =
+may not=20
+be address-compatible and call-compatible with previous versions. Unix =
+systems=20
+address this issue with the multi-number version names mentioned above.=20
+<P>
+<P>The first number changes each time a new incompatible version of the =
+library=20
+is released. A program linked with a 4.x.x library can't use a 3.x.x nor =
+a=20
+5.x.x. The second number is the minor version. On Sun systems, each =
+executable=20
+requires a minor version at least as great as the one with which the =
+executable=20
+was linked. If it were linked with 4.2.x, for example, it would run with =
+a 4.3.x=20
+library but not a 4.1.x. Other systems treat the second component as an=20
+extension of the the first component, so an executable linked with a =
+4.2.x=20
+library will only run with a 4.2.x library. The third component is =
+universally=20
+treated as a patch level. Executables prefer the highest available patch =
+level,=20
+but any patch level will do.=20
+<P>
+<P>Different systems take slightly different approaches to finding the=20
+appropriate libraries at runtime. Sun systems have a fairly complex =
+runtime=20
+loader that looks at all of the file names in the library directory and =
+picks=20
+the best one. Linux systems use symbolic links to avoid the search =
+process. If=20
+the latest version of the libc.so library is version 4.2.2, the =
+library's name=20
+is <TT>libc_s.4.2.2</TT>, but the library is also linked to =
+<TT>libc_s.4.2</TT>=20
+so the loader need only open the shorter name and the correct version is =
+
+selected.=20
+<P>
+<P>Most systems permit shared libraries to reside in multiple =
+directories. An=20
+environment variable such as <TT>LD_LIBRARY_PATH</TT> can override the =
+path=20
+built into the executable, permitting developers to substitute library =
+versions=20
+in their private directories for debugging or performance testing. =
+(Programs=20
+that use the "set user ID" feature to run as other than the current user =
+have to=20
+ignore <TT>LD_LIBRARY_PATH</TT> to prevent a malicious user from =
+substituting a=20
+trojan horse library.)=20
+<P>
+<H2>Linking with shared libraries</H2>Linking with static shared =
+libraries is=20
+far simpler than creating the libraries, because the process of creating =
+the=20
+stub libraries has already done nearly all the hard work to make the =
+linker=20
+resolve program addresses to the appropriate places in the libraries. =
+The only=20
+hard part is arranging for the necessary shared libraries to be mapped =
+in when=20
+the program starts.=20
+<P>
+<P>Each format provides a trick to let the linker create a list of =
+libraries=20
+that startup code can use to map in the libraries. COFF libraries use a =
+brute=20
+force approach; ad hoc code in the linker creates a section in the COFF =
+file=20
+with the names of the libraries. The Linux linker had a somewhat less =
+brute=20
+force approach that created a special symbol type called a "set vector". =
+Set=20
+vectors are treated like normal global symbols, except that if there are =
+
+multiple definitions, the definitions are all put in an array named by =
+the=20
+symbol. Each shared library stub defines a set vector symbol=20
+<TT>___SHARED_LIBRARIES__</TT> that is the address of a structure =
+containing the=20
+name, version, and load address of the library. The linker creates an =
+array of=20
+pointers to each of those structures and calls it =
+<TT>___SHARED_LIBRARIES__</TT>=20
+so the runtime startup code can use it. <B></B>The BSD/OS shared library =
+scheme=20
+uses no linker tricks at all. Rather, the shell script wrapper used to =
+create a=20
+shared executable runs down the list of libraries passed as arguments to =
+the=20
+command or used implicitly (the C library), extracts the file names and =
+load=20
+addresses for those libraries from a list in a system file, writes a =
+little=20
+assembler source file containing an array of structures containing =
+library names=20
+and load addresses, assembles that file, and includes the object file in =
+the=20
+list of arguments to the linker.=20
+<P>
+<P>In each case, the references from the program code to the library =
+addresses=20
+are resolved automatically from the addresses in the stub library.=20
+<P>
+<H2>Running with shared libraries</H2>Starting a program that uses =
+shared=20
+libraries involves three steps: loading the executable, mapping the =
+libraries,=20
+and doing library-specific initialization. In each case, the program =
+executable=20
+is loaded into memory by the system in the usual way. After that, the =
+different=20
+schemes diverge. The System V.3 kernel had extensions to handle COFF =
+shared=20
+library executables and the kernel internally looked at the list of =
+libraries=20
+and mapped them in before starting the program. The disadvantages of =
+this scheme=20
+were ``kernel bloat'', adding more code to the nonpagable kernel, and=20
+inflexibility, since it didn't permit any flexibility or upgradability =
+in future=20
+versions. (System V.4 scrapped the whole scheme and went to ELF dynamic =
+shared=20
+libraries which we address in the next chapter.)=20
+<P>
+<P>Linux added a single uselib() system call that took the file name and =
+address=20
+of a library and mapped it into the program address space. The startup =
+routine=20
+bound into the executable ran down the list of libraries, doing a =
+uselib() on=20
+each.=20
+<P>
+<P>The BSD/OS scheme uses the standard mmap() system call that maps =
+pages of a=20
+file into the address space and a bootstrap routine that is linked into =
+each=20
+shared library as the first thing in the library. The startup routine in =
+the=20
+executable runs down the table of shared libraries, and for each one =
+opens the=20
+file, maps the first page of the file to the load address, and then =
+calls the=20
+bootstrap routine which is at a fixed location near the beginning of =
+that page=20
+following the executable file header. The bootstrap routine then maps =
+the rest=20
+of the text segment, the data segment, and maps fresh address space for =
+the bss=20
+segment, then returns.=20
+<P>
+<P>Once the segments are all mapped, there's often some library-specific =
+
+initialization to do, for example, putting a pointer to the system =
+environment=20
+strings in the global variable <TT>environ</TT> specified by standard C. =
+The=20
+COFF implementation collects the initialization code from the =
+<TT>.init</TT>=20
+segments in the program file, and runs it from the program startup code. =
+
+Depending on the library it may or may not call routines in the shared =
+library.=20
+The Linux implemention doesn't do any library initialization and =
+documents the=20
+problem that variables defined in both the program and the library don't =
+work=20
+very well.=20
+<P>
+<P>In the BSD/OS implementation, the bootstrap routine for the C library =
+
+receives a pointer to the table of shared libraries and maps in all of =
+the other=20
+libraries, minimizing the amount of code that has to be linked into =
+individual=20
+executables. Recent versions of BSD use ELF format executables. The ELF =
+header=20
+has a <TT>interp</TT> section containing the name of an "interpreter" =
+program to=20
+use when running the file. BSD uses the shared C library as the =
+interpreter,=20
+which means that the kernel maps in the shared C library before the =
+program=20
+starts, saving the overhead of some system calls. The library bootstrap =
+routine=20
+does the same initializations, maps the rest of the libraries, and, via =
+a=20
+pointer, calls the main routine in the program.=20
+<P>
+<H2>The malloc hack, and other shared library problems</H2>Although =
+static=20
+shared libraries have excellent performance, their long-term maintenance =
+is=20
+difficult and error-prone, as this anecdote illustrates.=20
+<P>
+<P>In a static library, all intra-library calls are permanently bound, =
+and it's=20
+not possible to substitute a private version of a routine by redefining =
+the=20
+routine in a program that uses the library. For the most part, that's =
+not a=20
+problem since few programs redefine standard library routines like=20
+<TT>read()</TT> or <TT>strcmp()</TT>, or even if they do it's not a =
+major=20
+problem if the program uses a private version of <TT>strcmp()</TT> while =
+
+routines in the library call the standard version.=20
+<P>
+<P>But a lot of programs define their own versions of <TT>malloc()</TT> =
+and=20
+<TT>free()</TT>, the routines that allocate heap storage, and multiple =
+versions=20
+of those routines in a program don't work. The standard =
+<TT>strdup()</TT>=20
+routine, for example, returns a pointer to a string allocated by malloc, =
+which=20
+the application can free when no longer needed. If the library allocated =
+the=20
+string one version of malloc, but the application freed that string with =
+a=20
+different version of free, chaos would ensue.=20
+<P>
+<P>To permit applications to provide their own versions of malloc and =
+free, the=20
+System V.3 shared C library uses an ugly hack, Figure 4. The system's=20
+maintainers redefined malloc and free as indirect calls through pointers =
+bound=20
+into the data part of the shared library that we'll call =
+<TT>malloc_ptr</TT> and=20
+<TT>free_ptr.</TT>=20
+<P><TT><BR>extern void *(*malloc_ptr)(size_t); <BR>extern void =
+(*free_ptr)(void=20
+*); <BR>#define malloc(s) (*malloc_ptr)(s) <BR>#define free(s) =
+(*free_ptr)(s)=20
+<P></TT>
+<P>
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig09-04.html"><IMG=20
+      height=3D68 =
+src=3D"http://www.iecc.com/linker/thumb-linker09-04.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 4:</I> The malloc hack <BR>picture of program, shared =
+C=20
+      library. <BR>malloc pointer and init code <BR>indirect calls from =
+library=20
+      code </TD></TR></TBODY></TABLE></CENTER>
+<P>Then they recompiled the entire C library, and added these lines (or =
+the=20
+assembler equivalent) to the <TT>.init</TT> section of the stub library, =
+so they=20
+are included in every program that uses the shared library.=20
+<P><TT><BR>#undef malloc <BR>#undef free malloc_ptr =3D &amp;malloc; =
+<BR>free_ptr=20
+=3D &amp;free;=20
+<P></TT>
+<P>Since the stub library is bound into the application, not the shared =
+library,=20
+its references to malloc and free are resolved at the time each program =
+is=20
+linked. If there's a private version of malloc and free, it puts =
+pointers to=20
+them in the pointers, otherwise it will use the standard library =
+version. Either=20
+way, the library and the application use the same version of malloc and =
+free.=20
+<P>
+<P>Although the implementation of this trick made maintenance of the =
+library=20
+harder, and doesn't scale to more than a few hand-chosen names, the idea =
+that=20
+intra-library calls can be made through pointers that are resolved at =
+program=20
+runtime is a good one, so long as it's automated and doesn't require =
+fragile=20
+manual source code tweaks. We'll find out how the automated version =
+works in the=20
+next chapter.=20
+<P>
+<P>Name conflicts in global data remain a problem with static shared =
+libraries.=20
+Consider the small program in Figure 5. If you compile and link it with =
+any of=20
+the shared libraries we described in this chapter, it will print a =
+status code=20
+of zero rather than the correct error code. That's because=20
+<P><TT><BR>int errno;=20
+<P></TT>
+<P>defines a new instance of errno which isn't bound to the one in the =
+shared=20
+library. If you uncomment the <TT>extern</TT>, the program works, =
+because now=20
+it's an undefined global reference which the linker binds to the errno =
+in the=20
+shared library. As we'll see, dynamic linking solves this problem as =
+well, at=20
+some cost in performance.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 5 --></TD>
+    <TD><I>Figure 5:</I> Address conflict example <BR>
+      <P><TT><BR>#include &lt;stdio.h&gt; /* extern */ <BR>int errno; =
+main()=20
+      <BR>{ <BR>unlink("/non-existent-file"); <BR>printf("Status was =
+%d\n",=20
+      errno); <BR>}=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>Finally, even the jump table in Unix shared libraries has been known =
+to cause=20
+compatibility problems. From the point of view of routines outside a =
+shared=20
+library, the address of each exported routine in the library is the =
+address of=20
+the jump table entry. But from the point of view of routines within the =
+library,=20
+the address of that routine may be the jump table entry, or may be the =
+real=20
+entry point to which the table entry jumps. There have been cases where =
+a=20
+library routine compared an address passed as an argument to see if it =
+were one=20
+of the other routines in the library, in order to do some special case=20
+processing.=20
+<P>
+<P>An obvious but less than totally effective solution is to bind the =
+address of=20
+the routine to the jump table entry while building the shared library, =
+since=20
+that ensures that all symbolic references to routines within the library =
+are=20
+resolved to the table entry. But if two routines are within the same =
+object=20
+file, the reference in the object file is usually a relative reference =
+to the=20
+routine's address in the text segment. (Since it's in the same object =
+file, the=20
+routine's address is known and other than this peculiar case, there's no =
+reason=20
+to make a symbolic reference back into the same object file.) Although =
+it would=20
+be possible to scan relocatable text references for values that match =
+exported=20
+symbol addresses, the most practical solution to this problem is ``don't =
+do=20
+that'', don't write code that depends on recognizing the address of a =
+library=20
+routine.=20
+<P>
+<P>Windows DLLs have a similar problem, since within each EXE or DLL, =
+the=20
+addresses of imported routines are considered to be the addresses of the =
+stub=20
+routines that make indirect jumps to the real address of the routine. =
+Again, the=20
+most practical solution to the problem is ``don't do that.''=20
+<P>
+<H2>Exercises</H2>
+<P>
+<P>If you look in a /shlib directory on a Unix system with shared =
+libraries,=20
+you'll usually see three or four versions of each library with names =
+like=20
+<TT>libc_s.2.0.1</TT> and <TT>libc_s.3.0.0</TT>. Why not just have the =
+most=20
+recent one?=20
+<P>
+<P>In a stub library, why is it important to include all of the =
+undefined=20
+globals for each routine, even if the undefined global refers to another =
+routine=20
+in the shared library?=20
+<P>
+<P>What difference would it make if a stub library were a single large=20
+executable with all of the library's symbols as in COFF or Linux, or an =
+actual=20
+library with separate modules?=20
+<P>
+<H2>Project</H2>We'll extend the linker to support static shared =
+libraries. This=20
+involves several subprojects, first to create the shared libraries, and =
+then to=20
+link exectables with the shared libraries.=20
+<P>
+<P>A shared library in our system is merely an object file which is =
+linked at a=20
+given address. There can be no relocations and no unresolved symbol =
+references,=20
+although references to other shared libraries are OK. Stub libraries are =
+normal=20
+directory-format or file-format libraries, with each entry in the =
+library=20
+containing the exported (absolute) and imported symbols for the =
+corresponding=20
+library member but no text or data. Each stub library has to tell the =
+linker the=20
+name of the corresponding shared library. If you use directory format =
+stub=20
+libraries, a file called "LIBRARY NAME" contains lines of text. The =
+first line=20
+is the name of the corresponding shared library, and the rest of the =
+lines are=20
+the names of other shared libraries upon which this one depends. (The =
+space=20
+prevents name collisions with symbols.) If you use file format =
+libraries, the=20
+initial line of the library has extra fields:=20
+<P><TT><BR>LIBRARY nnnn pppppp fffff ggggg hhhhh ...=20
+<P></TT>
+<P>where fffff is the name of the shared library and the subsequent =
+fields are=20
+the names of any other shared libraries on which it depends.=20
+<P>
+<P><I>Project 9-1:</I> Make the linker produce static shared libraries =
+and stub=20
+libraries from regular directory or file format libraries. If you =
+haven't=20
+already done so, you'll have to add a linker flag to set the base =
+address at=20
+which the linker allocates the segments. The input is a regular library, =
+and=20
+stub libraries for any other shared libraries on which this one depends. =
+The=20
+output is an executable format shared library containing the segments of =
+all of=20
+the members of the input library, and a stub library with a stub member=20
+corresponding to each member of the input library.=20
+<P>
+<P><I>Project 9-2:</I> Extend the linker to create executables using =
+static=20
+shared libraries. Project 9-1 already has most of the work of searching =
+stub=20
+libraries symbol resolution, since the way that an executable refers to =
+symbols=20
+in a shared library is the same as the way that one shared library =
+refers to=20
+another. The linker needs to put the names of the required libraries in =
+the=20
+output file, so that the runtime loader knows what to load. Have the =
+linker=20
+create a segment called <TT>.lib</TT> that contains the names of the =
+shared=20
+libraries as strings with a null byte separating the strings and two =
+null bytes=20
+at the end. Create a symbol <TT>_SHARED_LIBRARIES</TT> that refers to =
+the=20
+beginning of the <TT>.lib</TT> section to which code in the startup =
+routine can=20
+refer. </P></BODY></HTML>
+
+------=_NextPart_000_006F_01C557A2.889B3A40
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker09-01.jpg
+
+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
+
+------=_NextPart_000_006F_01C557A2.889B3A40
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker09-04.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABEAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3Q7Ry
+O9Jg5J4AppAUc9Kx9avNWt57aPS7JLjzFcu0jYCEbdvcdcn8u3UIRtbs96T5TkdCK5L+1vFX237O
+NFgH7rzN7P8ALnP3c5xn0/M46VpaRc65POBqljawRGHcTFJuKyZA29emMnNAGvM0yMgiRdmfmPtT
+Ua4Mp3IVUjOeOOn/ANepQMZyTimscDOCaYCvKV56n2oDE/N0HvSKMnPHPNZHiaOGTToxJYy3gW4S
+QJExDKVyQ3HPbH40gNdLhZY1ljkRkZQyurZBB7g+lIs6yM4WRWZDtYA52nGcH04IP415fFaaRJbW
+ynwhqaGX5VRiwEeAx7nj7xGTjJb612fhaCyTTWm020a3huZWnZXfLbvuk9T/AHRjtimBvkuVPOPr
+TAWA7U/bknOOKGXngc0gHB+OTRUDHBwUyfXFFMROT7VVKGWeQsvAAHDke/b61bJwMbQa53xHZ/bI
+CiWE93h23eTP5TICoHHqf855pAbaxQOuVAYezk/1pEhC3DhIlQbVPyj61y2l3Wsafpwgg8LzRQoG
+ZUN0jFc888kk5z0rorV7qVFlkjEcjRKWjYkbevFAy9jbn1700kn+GhDvB3AAjgilHU8/SgQLgfw1
+nXt9punvJNftbxgnIaRRnAXP9K0mHPXn61kavYS32I7ea2R0w5M8IlHcdD0oAtWF5Y6hZJdWSo8E
+mdriPHQ47ipgSJX2heg6Ljn/ADiufh0nxFBAyjWrViRkKtsFVT6DHbPP5+uRsWUdwsJM8we4XAZg
+PvcD6fypjLYxk5GDT/4jjpQsiuM8EEZFGCTxgCkIU8dj+VFDNg4AFFACZwSKo3Oo2enyEXd1DB5r
+4QSMBuwo6fmKvFfyrJv7Vru42o1uUUOGWRAfmITb1B44b9KAFh8TaO+8x6jbtszkbuTgZ49R7ir0
+Fz9qfzYyGikjRlIHUHJBrNt9Ft/MuGuIbdkJXylEaHA2AHsO5b/PAtQq8MqwQBQkcaLjbjgZ6frx
+QMtk7Z+F4YdMdx/+v9Kl3nsvGKjlDMPlIDDkfWkjJdSehHBHpQIeSC3I5HNYWrSy3DpDDPcWTM+z
+ciI2cK7c7jjGAa3WJAYAZOKhXHnld4GEUgY6de9AHLWOnamXlto/EV27LGshkeJGB3ZAxg8fcPA9
+vfPS2CtFbCOWUvIDgsw5NWBGoJIAbPU0yMKJJsRhfm69ewoAcgwjKOACR/hUmCB1xTYj8jP/AHjk
+fTt+lISSMbSaAFZlDd6KRoxmimA8bhzUJhtWlZymX4ycmrBZQcHpTcKCTkLn1GaQERhhbI2Ej0Yk
+0LEI3IRVRcdFXHNSkDnn8cUhK9iTxQMjIGTjhj3pDEWOSSrDjehxkfjUh4UgLRlh2/CgRXMsqvs3
+xux6DO0/1zWZf68dOlQNply/mK5AjXcQFIOSB0HzVtrnByBUEsQ88SC3VsA5bgcnH+FAHOp4wLzJ
+F/Zd2pfABKYUH3J6D3OKX/hJbqVpNmmXLwo+yZI4S7HryOmVOK6ISzkfcUD3egGYyM7CLG0A4cn1
+7Y96AMe08VvdTpG2iatCJGCq0lqQADjlvTr+lbcbTOxzFgHtkZp4+Yd/ypcEHjk0AKwbP3sUVGzf
+N1FFAErAFR71ETkGiigY7ACmhfmdgewoooEPycGmlj8w9KKKAF7kU11HA96KKABgF6AdKax4PA6e
+lFFADwSDgU9eW5oooAjbg0UUUAf/2Q==
+
+------=_NextPart_000_006F_01C557A2.889B3A40--

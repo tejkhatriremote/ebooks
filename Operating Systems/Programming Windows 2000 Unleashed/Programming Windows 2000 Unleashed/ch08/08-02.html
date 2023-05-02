@@ -1,0 +1,158 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Windows 2000 Debugging</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=08//-->
+<!--PAGES=267-270//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="08-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Understanding the Difference Between VERIFY and ASSERT</B></FONT></P>
+<p>If you&#146;re building a non-debug version of your application, all <small>ASSERT</SMALL> macros are removed by the compiler&#146;s preprocessor when the project is built. In non-debug builds, <small>VERIFY</SMALL> macros are left untouched, although the expression inside the macro is not tested as it is in non-debug builds.</P>
+<p>Be sure you understand the difference between the <small>ASSERT</SMALL> and <small>VERIFY</SMALL> macros. For example, the following line of code will be removed in non-debug compilations, thus leading to disaster if the <small>pWnd</SMALL> variable is used later:</P>
+<!-- CODE SNIP //-->
+<pre>
+ASSERT(pWnd = GetDlgItem(IDC_TREE));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You have two options if you want to perform an assertion test on a variable such as <small>pWnd</SMALL> in the preceding example. One way is to test the return value on a separate line:</P>
+<!-- CODE SNIP //-->
+<pre>
+pWnd = GetDlgItem(IDC_TREE);
+ASSERT(pWnd);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The other option is to use the <small>VERIFY</SMALL> macro:</P>
+<!-- CODE SNIP //-->
+<pre>
+VERIFY(pWnd = GetDlgItem(IDC_TREE));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Both methods cost the same in terms of program execution. The method that&#146;s right for you depends on your preferred coding style. Remember, when you use the <small>ASSERT</SMALL> macro, the expression included in the macro must not include the function call unless you want the function call removed for non-debug builds.</P>
+<p><font size="+1"><b>Launching the Debugger on ASSERT or VERIFY Failures</B></FONT></P>
+<p>If you&#146;re executing a debug build and an expression inside an <small>ASSERT</SMALL> or <small>VERIFY</SMALL> macro evaluates to <small>False</SMALL>, the message box presented earlier in Figure 8.2 will be displayed. This message box presents you with three options:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Abort</I>. Causes the application to call <small>AfxAbort</SMALL>, which terminates the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Retry</I>. Causes <small>AfxDebugBreak</SMALL> to be called.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Ignore</I>. Causes the <small>ASSERT</SMALL> or <small>VERIFY</SMALL> macro to be bypassed. Execution will continue at the next line following the macro.
+</DL>
+<p>If you click Retry, nothing is actually retried. What really happens is that <small>AfxDebugBreak</SMALL> is immediately called. If your process is not running in the context of the debugger, the message box shown earlier in Figure 8.1 is displayed.</P>
+<p>At this point, you can click Cancel to launch the debugger. The debugger will load the necessary symbols and source code for your application and take you to the offending line in your application, as shown in Figure 8.3.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-03.jpg',800,600 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-03.jpg',800,600)"><font color="#000077"><b>Figure 8.3</B></FONT></A>&nbsp;&nbsp;The Visual C<small>&#43;&#43;</SMALL> debugger running after an <small>ASSERT</SMALL> failure.
+</P>
+<h3><a name="Heading6"></A><font color="#000077">Windows 2000 Debugging Overview</FONT></H3>
+<p>Several tools are available for you to use in debugging your Windows 2000 applications. (You probably already have a number of these tools.) This chapter will also touch on a number of third-party tools that can be used to debug your code.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Understanding Symbolic Debug Information</FONT></H4>
+<p>Before you debug your application, you should install the Windows 2000 debug symbols. This is the symbolic debug information for Windows 2000, stripped out into a collection of separate files. The symbolic information is supplied in both DBG and PDB files for each module. You must explicitly install the symbolic information from the support directory on your Windows 2000 CD-ROM&#151;the files are not installed as part of the normal operating system installation process in order to save space.
+</P>
+<p>You must install the symbolic debug information to reliably debug your Windows 2000 applications. Due to the way recent versions of the Visual C<small>&#43;&#43;</SMALL> compiler optimize stack management, it&#146;s not always possible for the debugger to display the proper call stack if the symbolic information has not been installed.</P>
+<p>In order to be useful, the debug symbols must precisely match the version of Windows you&#146;re using. Don&#146;t try to install the Windows NT debug symbols found on your Visual C<small>&#43;&#43;</SMALL> CD-ROM.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Microsoft&#146;s Debugging Tools</FONT></H4>
+<p>Microsoft supplies four debuggers that can be used for Windows 2000 debugging:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The Visual Studio debugger is the simplest debugger to use, and it&#146;s the most widely used debugger simply because it&#146;s integrated with Visual C<small>&#43;&#43;</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The GUI-based Windows kernel debugger is included with the Platform SDK. This debugger is sometimes called <i>WindBag</I> because of its filename, <small>WINDBG.EXE</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The command-line Windows 2000 kernel mode debugger, KD, is also supplied. This debugger&#146;s executable file is <small>I386KD.EXE</SMALL> on Intel systems and <small>ALPHAKD.EXE</SMALL> on systems that use the Alpha processor. This debugger is often used in device-driver development, but it&#146;s difficult to use for application debugging.
+<dd><b>&#149;</B>&nbsp;&nbsp;The command-line Windows 2000 symbolic debugger, NTSD, provides a minimal command-line interface and is also difficult to use for application debugging.
+</DL>
+<p>The last two debuggers in this list are normally used with two computers connected by a serial communications cable. One computer hosts the debugger, and the other computer hosts the target executable. Because this book doesn&#146;t discuss kernel-mode device-driver development, the last two debuggers aren&#146;t discussed further in this chapter.
+</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Third-party Debugging Tools</FONT></H4>
+<p>In addition to the debugging tools available from Microsoft, a number of third-party debugging tools are available for testing and debugging your applications. Here&#146;s a list of some of the more popular tools:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>BoundsChecker</I>. A tool that detects misuse of memory and API calls.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>SoftIce</I>. Widely regarded as the best debugger for Windows development.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Purify</I>. A tool that detects misuse of memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Visual Test</I>. An automated testing tool for Windows applications.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>BugTrapper</I>. A tool that records the steps leading up to a fault so that they can be replayed for debugging.
+</DL>
+<p>Several of these programs are discussed later in the chapter. Also, contact information for the companies that provide these tools is provided at the end of this chapter.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="08-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

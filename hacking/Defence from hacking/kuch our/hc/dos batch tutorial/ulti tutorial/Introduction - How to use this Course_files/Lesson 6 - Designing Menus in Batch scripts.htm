@@ -1,0 +1,867 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw060.htm -->
+<HTML><HEAD><TITLE>Lesson 6 - Designing Menus in Batch scripts</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=6,LnIdx="Lesson "+Ln;</SCRIPT>
+
+<SCRIPT language=JavaScript 
+src="Lesson 6 - Designing Menus in Batch scripts_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 6 - Designing Menus in Batch scripts_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 6 - Designing Menus in Batch scripts_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 6 - Designing Menus in Batch scripts_files/r2.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Image();M.src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>Designing menus in scripts</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Design the menu for our script tool <SPAN class=fs>BKSETUP.BAT</SPAN> 
+  <LI>Study the working of the menu using a Return-code shell 
+  <LI>Learn to test the
+  <SCRIPT>cn('choice')</SCRIPT>
+   reply, and jump to the right section for that reply</LI></UL><SPAN 
+class=fg>&nbsp;Note&nbsp;</SPAN> Each Lesson relies on your files from the 
+previous one. It's better to use your own files, but if you can't, download a 
+copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 5";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson5.zip">end&nbsp;of&nbsp;Lesson&nbsp;5</A> 
+and click<IMG 
+src="Lesson 6 - Designing Menus in Batch scripts_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.
+<P></P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Building the menu:</SPAN><BR>The menu defines the flow through 
+the script</P></DIV>
+<DIV class=bd>
+<P><BR>In menu-driven scripts, each menu choice defines one possible route that 
+the flow of logic can take through the script. It's a good idea to get the menu 
+logic working first, and fill in the code to do each job later. We already have 
+the commented-label outline for the different menu choices in place. There's no 
+code in these sections yet, but we can use dummy task messages for now, to show 
+the right section was reached.</P>
+<P>We've covered the groundwork for building a menu with our study of
+<SCRIPT>cn('choice')</SCRIPT>
+ and
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ return codes. Let's remind ourselves about that, and extend our knowledge a 
+little.</P></DIV>
+<DIV class=lm>
+<P>Use a Return-code shell to see what's happening</P></DIV>
+<DIV class=bd>
+<P>To help see what's going on, we'll work in a Return-code shell. Open a 
+Return-code child shell in the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> 
+with our <SPAN class=fs>RC.BAT</SPAN> script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>rc</SPAN> to run our Return-code shell script. The <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title changes and the script sets a new prompt in the child shell (purely as a reminder).','C:&#92;CSW&#62;rc<BR>Opening Return-Code shell...<BR>Return code (ERRORLEVEL):   0<BR><NOBR>WARNING: Reloaded COMMAND.COM transient</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Displaying a prompt string with
+<SCRIPT>cn('choice')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('choice')</SCRIPT>
+ command can display a simple text prompt as well as its list of acceptable 
+responses. You simply add the text on the end of the command line, like 
+this:</P>
+<P><NOBR><SPAN class=cl>choice /c:qab Please choose-</SPAN></NOBR></P>
+<P>Try it now, then press <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> as your response 
+to the command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qab Please choose-</SPAN> then reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. The final <SPAN CLASS=ky>&nbsp;&#8211;&nbsp;</SPAN> at the end of the text prompt is simply to keep the reply separated from the text. Later, we&#39;ll see a better way to space out the <SPAN CLASS=bb>choice</SPAN> text prompt.','<NOBR>RCode C:&#92;CSW>choice /c:qab Please choose- </NOBR><BR>Please choose-[Q,A,B]?Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> We see
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ only because we're in a Return-code shell. Normally, you would see nothing, nor 
+even know a code had been returned. We receive return-code <SPAN 
+class=fs>1</SPAN> because <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> is in the first 
+position in our <SPAN class=fs>/c:qab</SPAN> list.</P></DIV>
+<DIV class=lm>
+<P>Using the <SPAN class=fs>/n</SPAN> switch to suppress response list</P></DIV>
+<DIV class=bd>
+<P>When using menus, we shall use
+<SCRIPT>cn('ECHO')</SCRIPT>
+ to display a list of menu options and each corresponding response. We shan't 
+need the list – <SPAN class=qfs>[Q,A,B]?</SPAN> – displayed with the <NOBR><SPAN 
+class=qfs>Please choose-</SPAN></NOBR> text. We've previously used the <SPAN 
+class=fs>/n</SPAN> switch to suppress the list, and that's what is needed here. 
+Our command line becomes:</P>
+<P><NOBR><SPAN class=cl>choice /c:qab /n Please choose-</SPAN></NOBR></P>
+<P>Try it now. Press <SPAN class=ky>&nbsp;B&nbsp;</SPAN> as your response to the 
+command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <NOBR><SPAN CLASS=qfx>choice /c:qab /n Please choose-</SPAN></NOBR> then press <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> to respond. This time the <SPAN CLASS=fs>/<SPAN CLASS=or>n</SPAN></SPAN> switch means the reply list is <SPAN CLASS=br>n</SPAN>ot shown. It&#39;s now clearer why the <SPAN CLASS=ky>&nbsp;&#8211;&nbsp;</SPAN> is needed to separate the text prompt from the reply. The return-code is <SPAN CLASS=fs>3</SPAN> because we pressed the 3rd reply in the list.','<NOBR>RCode C:&#92;CSW>choice /c:qab /n Please choose- </NOBR><BR>Please choose-B<BR>Return code (ERRORLEVEL):   3<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> The <SPAN class=fs>/<SPAN 
+class=or>n</SPAN></SPAN> switch means the list of acceptable responses is <SPAN 
+class=br>n</SPAN>ot shown. It doesn't suppress the text prompt you add to the
+<SCRIPT>cn('choice')</SCRIPT>
+ command line.</P></DIV>
+<DIV class=lm>
+<P>Adding the menu to <SPAN class=fs>BKSETUP.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>Let's add the menu to our script tool. The
+<SCRIPT>cn('choice')</SCRIPT>
+ command line we've just been using is exactly the one we need for <SPAN 
+class=fs>BKSETUP.BAT</SPAN>. Part two of the plan is: 
+<OL>
+  <LI value=2>Main menu - user chooses an option: 
+  <UL>
+    <LI type=disc>Option: build fresh test folder 
+    <LI type=disc>Option: add files and make changes to the test folder 
+    <LI type=disc>Option: quit the script </LI></UL></LI></OL></DIV>
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('ECHO')</SCRIPT>
+ to display descriptions of choices</P></DIV>
+<DIV class=bd>
+<P>We'll need to display descriptions of the options for the user, and also what 
+key to press for each. We'll display these three lines:</P>
+<P>
+<DIV class=dbu><SPAN class=fx>&nbsp;Build fresh test folder.....B</SPAN> 
+<BR><SPAN class=fx>&nbsp;Add files and make changes..A</SPAN> <BR><SPAN 
+class=fx>&nbsp;Quit (no further action)....Q</SPAN></DIV>
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>This will display each option clearly, with its corresponding reply key next 
+to it.</P></DIV>
+<DIV class=lm>
+<P>The list in <SPAN class=fs>/c</SPAN> works best if it's in reverse 
+order</P></DIV>
+<DIV class=bd>
+<P>It's a good idea to list the letters in the <SPAN class=fs>/c</SPAN> switch 
+in the <SPAN class=br>reverse</SPAN> order that we echo the options on the 
+screen. And it's a good idea to list the <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>uit 
+option last on the screen, so that it becomes the first in our <SPAN 
+class=fs>/c</SPAN> list. The reasons will become clear later in the Lesson.</P>
+<P>Open the script by starting <B>Notepad</B> from the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>, as usual
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /min notepad bksetup.bat</SPAN>. After a second or two, the <B>Notepad</B> button appears on the Taskbar. Back to the Lesson window for now.','<NOBR>RCode C:&#92;CSW>start /min notepad bksetup.bat</NOBR><BR>Return code (ERRORLEVEL):   0<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Add the option display lines to the script</P></DIV>
+<DIV class=bd>
+<P>Let's add the three <SPAN class=fs>ECHO</SPAN> lines we need to the <SPAN 
+class=fs>:MAINMENU</SPAN> section of our script. Indent each menu option with a 
+<SPAN class=ky title="Space bar">&nbsp;Space&nbsp;</SPAN>, as we did for the 
+menu title. Add blank display lines (use <SPAN class=qfs>ECHO.</SPAN> on its 
+own) both above and below the menu options; this will help space it out on the 
+screen when the script runs
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Click the <B>Notepad</B> button on the Taskbar. Position its window in the bottom left corner of the screen. Add the lines below. Make sure you space the text as shown, this will make it line up neatly in the display.','<SPAN CLASS=dtn>CLS<BR>ECHO. BKUP.BAT test folder is %SRC%</SPAN><BR>ECHO.<BR><NOBR>ECHO. Build fresh test folder.....B </NOBR><BR><NOBR>ECHO. Add files and make changes..A</NOBR><BR><NOBR>ECHO. Quit (no further action)....Q</NOBR><BR>ECHO.<BR><BR><SPAN CLASS=dtn>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Add
+<SCRIPT>cn('choice')</SCRIPT>
+ command</P></DIV>
+<DIV class=bd>
+<P>Now let's add our choice command line. We'll add another blank display line 
+below it. Again, this blank display line is just to make the display clearer on 
+screen when the script runs
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the lines, then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save the file (but don&#39;t close <B>Notepad</B>).','<SPAN CLASS=dtn><NOBR>ECHO. Quit (no further action)....Q </NOBR><BR>ECHO.</SPAN><BR>choice /c:qab /n Please choose-<BR>ECHO.<BR><BR><SPAN CLASS=dtn>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Make sure changes to the script are saved</P></DIV>
+<DIV class=bd>
+<P>Did you remember to click <SPAN class=qu>File</SPAN>, <SPAN 
+class=qu>Save</SPAN> in <B>Notepad</B> to save the changes? Merely as a check, 
+the <SPAN class=fs>:MAINMENU</SPAN> section of our script now looks like this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('You can check your version against this.','<SPAN CLASS=dtn>SET SRC=C:\BKTEST</SPAN><BR><BR>:MAINMENU choose option from menu<BR>CLS<BR>ECHO. BKUP.BAT test folder is %SRC%<BR>ECHO.<BR><NOBR>ECHO. Build fresh test folder.....B</NOBR><BR><NOBR>ECHO. Add files and make changes..A</NOBR><BR><NOBR>ECHO. Quit (no further action)....Q</NOBR><BR>ECHO.<BR>choice /c:qab /n Please choose-<BR>ECHO.<BR><BR><SPAN CLASS=dtn>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script</P></DIV>
+<DIV class=bd>
+<P>Run <SPAN class=fs>BKSETUP.BAT</SPAN> in the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> to check it. Reply <NOBR><SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> and reply with <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> at the text prompt. Notice the text prompt doesn&#39;t line up properly with our text in the menu cues. We&#39;ll fix that problem next.','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>Please choose-Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Indenting the
+<SCRIPT>cn('choice')</SCRIPT>
+ prompt with <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s</P></DIV>
+<DIV class=bd>
+<P>Notice that, unlike our carefully indented text, the
+<SCRIPT>cn('choice')</SCRIPT>
+ prompt, <SPAN class=qfs>Please choose-</SPAN>, is not indented, so it doesn't 
+line up properly. You can't fix this by inserting <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s in front of the prompt. Let's confirm that. 
+First, type the command (exactly as we have it) in immediate mode, and reply 
+<NOBR><SPAN class=ky>&nbsp;Q&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('We&#39;ll work in immediate mode to see how to indent the <SPAN CLASS=bb>choice</SPAN> text prompt. First, type the <SPAN CLASS=bb>choice</SPAN> command line exactly as we have it in the script, and reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>.','<NOBR>RCode C:&#92;CSW>choice /c:qab /n Please choose-</NOBR><BR>Please choose-Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Simply adding extra <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s won't 
+work</P></DIV>
+<DIV class=bd>
+<P>Use the same command line, but this time try putting three extra <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s in front of the prompt
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qab /n <SPAN CLASS=bkhw>&nbsp;&nbsp;&nbsp;</SPAN>Please choose-</SPAN> using three extra <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s before the text prompt, then reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. You&#39;ll find that merely adding <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s in this way doesn&#39;t work and the text prompt isn&#39;t indented.','<NOBR>RCode C:&#92;CSW>choice /c:qab /n    Please choose-</NOBR><BR>Please choose-Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The prompt must be included in "quotes"</P></DIV>
+<DIV class=bd>
+<P>The extra <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s were ignored. To have 
+effect, they (together with the text prompt) need to be in "quotes". Use three 
+extra <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s before the text prompt, as 
+before, but this time use "quotes" around them and the prompt
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:qab /n &#34;<SPAN CLASS=bkhw>&nbsp;&nbsp;&nbsp;</SPAN>Please choose-&#34;</SPAN>, then reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. This time the text prompt is indented by the number of <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s inside the &#34;quotes&#34;.','<NOBR>RCode C:&#92;CSW>choice /c:qab /n &#34;   Please choose-&#34;</NOBR><BR>   Please choose-Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Now the text prompt is indented by the number of <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s inside the "quotes".</P></DIV>
+<DIV class=lm>
+<P>A right-aligned prompt is easier to use</P></DIV>
+<DIV class=bd>
+<P>One leading <SPAN class=ky>&nbsp;Space&nbsp;</SPAN> would be enough to 
+left-align the prompt. But, if we use 15 extra <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s, this will right-align the prompt. This makes 
+the menu more intuitive, because the user's input point (the blinking cursor) is 
+just below the column of acceptable replies.</P>
+<P>In the script, change the
+<SCRIPT>cn('choice')</SCRIPT>
+ line to enclose the prompt in "quotes", and use 15 extra <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s in front of the <NOBR><SPAN class=qfs>Please 
+choose-</SPAN></NOBR> text
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the &#34;quotes&#34; and the 15 <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s. Use the text above to help you count the spaces and match the alignment below. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>ECHO. Quit (no further action)....Q<BR>ECHO.</SPAN><BR><NOBR><SPAN CLASS=dtn>choice /c:qab /n</SPAN> &#34;               <SPAN CLASS=dtn>Please choose-</SPAN>&#34; </NOBR><BR><SPAN CLASS=dtn>ECHO.</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script again</P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>, so run 
+the script to check alignment. Reply <NOBR><SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> and reply with <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. This time the input point is right-aligned under the column of acceptable replies. If your display doesn&#39;t quite align, alter the spacing (in the <B>Notepad</B> window, and remember to save the changes) until it&#39;s right.','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose-Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The trailing <SPAN class=ky>&nbsp;–&nbsp;</SPAN> is no longer 
+needed</P></DIV>
+<DIV class=bd>
+<P>We used a trailing <SPAN class=ky>&nbsp;–&nbsp;</SPAN> in our prompt so that 
+when Windows displays our reply key, it wasn't placed immediately after the 
+prompting text. Now we're using "quotes" around our prompt, we can simply 
+replace the <SPAN class=ky>&nbsp;–&nbsp;</SPAN> with a <NOBR><SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Replace the original <SPAN CLASS=or>&#8211;</SPAN> in <NOBR><SPAN CLASS=qfs>Please choose<SPAN CLASS=or>&#8211;</SPAN></SPAN></NOBR> with a single <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> before the close double-quote, but don&#39;t otherwise change the prompting text, so the alignment remains as before. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtd>ECHO.</SPAN><BR><SPAN CLASS=dtn>choice /c:qab /n &#34;</SPAN>               Please choose &#34;<BR><SPAN CLASS=dtd>ECHO.</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script again</P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>, so run 
+the script again. Reply <NOBR><SPAN class=ky>&nbsp;Q&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> and reply with <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. This time, the input point is separated by a <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> from the text prompt, but still aligns with the column of acceptable replies.','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR>Return code (ERRORLEVEL):   1<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The return-code won't show in normal use</P></DIV>
+<DIV class=bd>
+<P>The alignment of the prompt and the reply key options makes the menu easier 
+to use. We shan't see the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ line in a normal shell, so its alignment isn't relevant.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>The flow of logic:</SPAN><BR>The path through a 
+script</SPAN></P></DIV>
+<DIV class=bd>
+<P><BR>In a simple script, such as <SPAN class=fs>LEVEL.BAT</SPAN>, the flow of 
+logic is top to bottom, then stop. The flow of logic means the route Windows 
+takes through a script when the script runs.</P>
+<P>In <SPAN class=fs>BKSETUP.BAT</SPAN>, the option chosen when the menu appears 
+will decide the flow through the script. This is the outline of how <SPAN 
+class=fs>BKSETUP.BAT</SPAN> will work:</P></DIV>
+<DIV class=lm>
+<P><SPAN class=fs>BKSETUP.BAT</SPAN> flow</P></DIV>
+<DIV class=bd>
+<P>
+<UL>
+  <LI>Initial setups - then fall through to: 
+  <LI><SPAN class=fs>:MAINMENU</SPAN>, get the response - then go to one of: 
+  <UL>
+    <LI><SPAN class=fs>:BUILD</SPAN> fresh test folder - then go to <SPAN 
+    class=fs>JOBDONE</SPAN> 
+    <LI><SPAN class=fs>:ADDFILES</SPAN> 
+    <UL>
+      <LI>if folder missing, go to <SPAN class=fs>E_FOLDER</SPAN> 
+      <LI>otherwise, make the changes, then go to to <SPAN 
+      class=fs>JOBDONE</SPAN></LI></UL>
+    <LI><SPAN class=fs>:QUIT</SPAN> (no further action) - then go to <SPAN 
+    class=fs>CLEANUP</SPAN></LI></UL>
+  <LI><SPAN class=fs>:JOBDONE</SPAN>, announce job is done - then go to <SPAN 
+  class=fs>CLEANUP</SPAN> 
+  <LI><SPAN class=fs>:CLEANUP</SPAN>, clean up variables and workfiles - then go 
+  to <SPAN class=fs>EOF</SPAN> 
+  <LI><SPAN class=fs>:E_FOLDER</SPAN> error message - then go to <SPAN 
+  class=fs>MAINMENU</SPAN> 
+  <LI><SPAN class=fs>:EOF</SPAN> (end-of-file)</LI></UL>Study the flow and notice 
+how each option needs to jump over the code for the other options, so that only 
+that code for the selected option actually runs.
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>We'll use the
+<SCRIPT>cn('choice')</SCRIPT>
+ reply codes to route the flow correctly through our script.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Testing
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ :</SPAN><BR>Using the
+<SCRIPT>cn('IF')</SCRIPT>
+ test</P></DIV>
+<DIV class=bd>
+<P><BR>Our script must do different things, depending on the option chosen. 
+We've already used the <SPAN class=qfs>IF ERRORLEVEL </SPAN><SPAN class=qu><SPAN 
+class=br>is greater than or equal to</SPAN></SPAN> test to set variables. Now 
+we'll use it to jump to the right section for the option chosen.</P></DIV>
+<DIV class=lm>
+<P>Test for <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> option</P></DIV>
+<DIV class=bd>
+<P>We know that the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ returned for <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> is <SPAN class=fs>1</SPAN>; so 
+when we get this code, we need to jump to the <NOBR><SPAN class=qfs>:QUIT no 
+further action</SPAN></NOBR> section.</P>
+<P>Our <SPAN class=qfs>:QUIT</SPAN> label is in place, and we've seen that to 
+jump to a label with a
+<SCRIPT>cn('GOTO')</SCRIPT>
+ command we omit the colon (but our comment can remain). So the line we need 
+is:</P>
+<P><SPAN class=np>IF ERRORLEVEL 1 GOTO QUIT no further action</SPAN></P>
+<P>Let's add that line. We must put it in the <SPAN class=fs>:MAINMENU</SPAN> 
+section just after the
+<SCRIPT>cn('choice')</SCRIPT>
+ command that gets the reply from the user
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the return-code test for a <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> reply like this for now. We&#39;ll see later that a test for the <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>uit option isn&#39;t really necessary.','<SPAN CLASS=dtn><NOBR>choice /c:qab /n &#34;               Please choose-&#34; </NOBR><BR>ECHO.</SPAN><BR><NOBR>IF ERRORLEVEL 1 GOTO QUIT no further action </NOBR><BR><BR><SPAN CLASS=dtn>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Add code for <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> option</P></DIV>
+<DIV class=bd>
+<P>It's a good idea to send the user a confirming message whenever an option is 
+selected. If, we add those messages now, they'll confirm our jumps are working, 
+which is useful. For the <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> for Quit option, 
+we'll just say <NOBR><SPAN class=qfs>No further action taken</SPAN></NOBR>.</P>
+<P>Let's put a command to display this in the <SPAN class=fs>:QUIT</SPAN> 
+section. We'll indent the text with a <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>, 
+as usual
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the echo command to the <SPAN CLASS=fx>:QUIT</SPAN> section. This message will show us that the menu correctly jumps to this section when we press <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>.','<SPAN CLASS=dtn>:QUIT no further action</SPAN><BR>ECHO. No further action taken<BR><BR><SPAN CLASS=dtn>:JOBDONE</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>We need to jump to the <SPAN class=fs>:CLEANUP</SPAN> section</P></DIV>
+<DIV class=bd>
+<P>At it stands, the script falls through to <SPAN class=fs>:JOBDONE</SPAN>. 
+However, after the user has selected <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> for 
+Quit, there's no job to report done. So the next place to go is <SPAN 
+class=fs>:CLEANUP</SPAN>.</P>
+<P>Remember that the variable <SPAN class=fs>SRC</SPAN> will have been set (it 
+was expanded to display the menu title). The user won't know about this, but we 
+need to clear it before the script finishes. The <NOBR><SPAN 
+class=fs>:CLEANUP</SPAN></NOBR> section already has the code to clear <SPAN 
+class=fs>SRC</SPAN> for us.</P>
+<P>So use a
+<SCRIPT>cn('GOTO')</SCRIPT>
+ command to route flow through <SPAN class=fs>:CLEANUP</SPAN> to finish
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line to the <SPAN CLASS=fx>:QUIT</SPAN> section, so that the variable is properly cleared before the script finishes. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save changes.','<SPAN CLASS=dtn>:QUIT no further action<BR>ECHO. No further action taken</SPAN><BR>GOTO CLEANUP<BR><BR><SPAN CLASS=dtn>:JOBDONE</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> option</P></DIV>
+<DIV class=bd>
+<P>The <SPAN class=fs>:CLEANUP</SPAN> section has a jump to the <SPAN 
+class=fs>:EOF</SPAN> (end-of-file) label, so that completes the code for the 
+<SPAN class=ky>&nbsp;Q&nbsp;</SPAN> (for quit) option. You remembered to click 
+<SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> in <B>Notepad</B>? Let's 
+test the script. Run it now, and choose <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> from 
+the menu
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. Now the message confirming the Quit action is correctly displayed.','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR>Return code (ERRORLEVEL):   1<BR><BR> No further action taken<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> You've grown used to the DVM screen 
+clearing immediately <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> is pressed after 
+typing <SPAN class=fs>bksetup</SPAN>. We shan't show the split before/after 
+simulation any more, unless there is a special point to demonstrate. Instead, 
+the window simulation will show the DVM screen in the final state 
+only.</P></DIV>
+<DIV class=lm>
+<P>The <SPAN class=ky>&nbsp;A&nbsp;</SPAN> option</P></DIV>
+<DIV class=bd>
+<P>To add the <SPAN class=ky>&nbsp;A&nbsp;</SPAN> option, which is second in the 
+<SPAN class=fs>/c:qab</SPAN> list, we'll need an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ test for a return code of <SPAN class=fs>2</SPAN>. You remember that all these 
+tests are for whether or not the current code <SPAN class=br>is greater than or 
+equal to</SPAN> the number you test for, don't you?</P>
+<P>Before we add any code to the <SPAN class=fs>:ADDFILES</SPAN> section, let's 
+just run the script again, as it is, but we'll reply <NOBR><SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN>. We see the Quit message, as before, since we don&#39;t yet have any code to handle the <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> reply properly.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose A<BR>Return code (ERRORLEVEL):   2<BR><BR> No further action taken<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> test is true for all the other 
+replies, too</P></DIV>
+<DIV class=bd>
+<P>We saw the <SPAN class=qfs>No further action taken</SPAN> message just as if 
+we'd pressed <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>. Why does that happen?</P>
+<P>We can see the return code was <SPAN class=fs>2</SPAN>, so our <SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN> reply was detected properly. The problem is that 
+our test for <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>:</P>
+<P><SPAN class=np>IF ERRORLEVEL 1 GOTO QUIT no further action</SPAN></P>
+<P>is really a test for any return code that <SPAN class=br>is greater than or 
+equal to</SPAN> <SPAN class=fs>1</SPAN>, so it's true for a value of <SPAN 
+class=fs>2</SPAN>, as well, and the script jumped straight to <SPAN 
+class=fs>:QUIT</SPAN></P></DIV>
+<DIV class=lm>
+<P>An <SPAN class=ky>&nbsp;A&nbsp;</SPAN> reply returns a code of <SPAN 
+class=fs>2</SPAN></P></DIV>
+<DIV class=bd>
+<P>We shall need a line to test for the <SPAN class=ky>&nbsp;A&nbsp;</SPAN> 
+option (which returns <NOBR><SPAN class=fs>2</SPAN>)</NOBR> and it will look 
+like this:</P>
+<P><SPAN class=np>IF ERRORLEVEL 2 GOTO ADDFILES and make changes</SPAN></P>
+<P>It can't go <B>after</B> our test for return-code <SPAN class=fs>1</SPAN>, 
+because any reply that set a return-code <SPAN class=fs>2</SPAN> (or higher) 
+would jump on the test for <SPAN class=fs>1</SPAN> (and so always jump straight 
+to the <SPAN class=fs>:QUIT</SPAN> section).</P></DIV>
+<DIV class=lm>
+<P>This time tests must be in descending order</P></DIV>
+<DIV class=bd>
+<P>The solution is that we must put the test for <SPAN class=fs>2</SPAN> 
+immediately <B>before</B> the test for <SPAN class=fs>1</SPAN>. This is the 
+opposite of the test order we needed to set our variable in <SPAN 
+class=fs>LEVEL.BAT</SPAN>. In that script, all the
+<SCRIPT>cn('IF')</SCRIPT>
+ tests were checked (but some were false).</P>
+<P>In a menu script, the first
+<SCRIPT>cn('IF')</SCRIPT>
+ test that is true usually sends the flow off elsewhere, with a
+<SCRIPT>cn('GOTO')</SCRIPT>
+ command, and so the remaining tests aren't ever reached. With
+<SCRIPT>cn('choice')</SCRIPT>
+ menus, you must test for the return codes in <SPAN class=br>descending 
+order</SPAN>.</P></DIV>
+<DIV class=lm>
+<P>Add the <SPAN class=ky>&nbsp;A&nbsp;</SPAN> test above the <SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN> test</P></DIV>
+<DIV class=bd>
+<P>Add the line to test for the <SPAN class=ky>&nbsp;A&nbsp;</SPAN> option above 
+the test for <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>, like this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the return-code test for an <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> reply like this. Now a return-code of <SPAN CLASS=fs>2</SPAN> will be intercepted before it can accidentally trigger the test for <SPAN CLASS=fs>1</SPAN>.','<SPAN CLASS=dtn><NOBR>choice /c:qab /n &#34;               Please choose &#34; </NOBR><BR>ECHO.</SPAN><BR><NOBR>IF ERRORLEVEL 2 GOTO ADDFILES and make changes </NOBR><BR><SPAN CLASS=dtn><NOBR>IF ERRORLEVEL 1 GOTO QUIT no further action</NOBR><BR><BR>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>The same applies to the test for our <SPAN class=ky>&nbsp;B&nbsp;</SPAN> 
+option</P></DIV>
+<DIV class=bd>
+<P>In the same way, we can't test for <SPAN class=ky>&nbsp;B&nbsp;</SPAN> (which 
+will return <NOBR><SPAN class=fs>3</SPAN>)</NOBR> after our other two tests. The 
+<SPAN class=ky>&nbsp;B&nbsp;</SPAN> test must go first. The code is similar to 
+the other lines, so add it now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the return-code test for a <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> reply. Now a return-code of <SPAN CLASS=fs>3</SPAN> will be intercepted before it can accidentally trigger the tests for the two lower values. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn><NOBR>choice /c:qab /n &#34;               Please choose &#34; </NOBR><BR>ECHO.</SPAN><BR><NOBR>IF ERRORLEVEL 3 GOTO BUILD fresh test folder</NOBR><BR><SPAN CLASS=dtn><NOBR>IF ERRORLEVEL 2 GOTO ADDFILES and make changes </NOBR><BR><NOBR>IF ERRORLEVEL 1 GOTO QUIT no further action</NOBR><BR><BR>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>The reversed <SPAN class=fs>/c</SPAN> list is now reversed again</P></DIV>
+<DIV class=bd>
+<P>Now you can see why it's a good idea to put the options in the
+<SCRIPT>cn('choice')</SCRIPT>
+ <SPAN class=fs>/c:</SPAN> list in the reverse order their descriptions are 
+displayed. We echoed the descriptions: <SPAN class=ky>&nbsp;B&nbsp;</SPAN> <SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN> <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>, but reversed 
+the order is our <SPAN class=fs>/c:qab</SPAN> switch. Since the return codes 
+must be checked in descending order, the checks are in the same order as the 
+descriptions. This makes the script very clear to follow when we read it, as you 
+now see
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('You can check your version against this. The colour coding merely shows how the menu cues and the descending tests now match (because we reversed the <SPAN CLASS=bb>choice</SPAN> reply list).','<NOBR><SPAN CLASS=lg>ECHO. Build fresh test folder.....B</SPAN></NOBR><BR><NOBR><SPAN CLASS=ob>ECHO. Add files and make changes..A</SPAN></NOBR><BR><NOBR><SPAN CLASS=or>ECHO. Quit (no further action)....Q</SPAN></NOBR><BR><SPAN CLASS=dtn>ECHO.<BR><NOBR>choice /c:qab /n &#34;               Please choose &#34; </NOBR><BR>ECHO.</SPAN><BR><NOBR><SPAN CLASS=lg>IF ERRORLEVEL 3 GOTO BUILD fresh test folder</SPAN></NOBR><BR><NOBR><SPAN CLASS=ob>IF ERRORLEVEL 2 GOTO ADDFILES and make changes</SPAN></NOBR><BR><NOBR><SPAN CLASS=or>IF ERRORLEVEL 1 GOTO QUIT no further action</SPAN></NOBR>')</SCRIPT>
+
+<DIV class=lm>
+<P>Using a task message for <SPAN class=ky>&nbsp;A&nbsp;</SPAN> and <SPAN 
+class=ky>&nbsp;B&nbsp;</SPAN> options</P></DIV>
+<DIV class=bd>
+<P>The two sections, <SPAN class=fs>:ADDFILES</SPAN> and <SPAN 
+class=fs>:BUILD</SPAN>, don't have any code at the moment. They just fall 
+through to <SPAN class=fs>:QUIT</SPAN>.</P>
+<P>We'll set a variable, <SPAN class=fs>TASK</SPAN>, in each section to hold a 
+task description. To prevent fall through into <SPAN class=fs>:QUIT</SPAN>, 
+we'll also add a jump to <SPAN class=fs>:JOBDONE</SPAN>.</P></DIV>
+<DIV class=lm>
+<P>Task description for the <SPAN class=fs>:BUILD</SPAN> section</P></DIV>
+<DIV class=bd>
+<P>In the <SPAN class=fs>:BUILD</SPAN> section, we'll set <SPAN 
+class=fs>TASK</SPAN> to the message <NOBR><SPAN class=qfs>Build fresh test 
+folder</SPAN></NOBR>, and add the jump to <SPAN class=fs>:JOBDONE</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the two lines to the <SPAN CLASS=fx>:BUILD</SPAN> section. Displaying a task message is useful to get the menu logic working (and it confirms to the user that the correct action was selected).','<SPAN CLASS=dtn>:BUILD fresh test folder</SPAN><BR>SET TASK=Build fresh test folder<BR>GOTO JOBDONE<BR><BR><SPAN CLASS=dtn>:ADDFILES and make changes</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Task description for the <SPAN class=fs>:ADDFILES</SPAN> section</P></DIV>
+<DIV class=bd>
+<P>In <SPAN class=fs>:ADDFILES</SPAN>, we'll set <SPAN class=fs>TASK</SPAN> to 
+the message <NOBR><SPAN class=qfs>Add files and make changes</SPAN></NOBR>, and 
+add the jump to <SPAN class=fs>:JOBDONE</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the two lines to the <SPAN CLASS=fx>:ADDFILES</SPAN> section. The different task message will show whenever the flow is routed through this section. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:ADDFILES and make changes</SPAN><BR>SET TASK=Add files and make changes<BR>GOTO JOBDONE<BR><BR><SPAN CLASS=dtn>:QUIT no further action</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>We can't test the script properly yet</P></DIV>
+<DIV class=bd>
+<P>We need to test the lines we've added, but we can't test yet, because we 
+won't see their effect properly. We need to add some code to the <SPAN 
+class=fs>:JOBDONE</SPAN> section to report the <SPAN class=fs>TASK</SPAN> 
+message. Then we'll know whether the jumps to the different sections of the 
+script are each working properly.</P></DIV>
+<DIV class=lm>
+<P>Using <SPAN class=fs>TASK</SPAN> message</P></DIV>
+<DIV class=bd>
+<P>The actual text message set in <SPAN class=fs>TASK</SPAN> will depend on the 
+user. If the user chooses: 
+<UL>
+  <LI><SPAN class=ky>&nbsp;B&nbsp;</SPAN> <IMG 
+  src="Lesson 6 - Designing Menus in Batch scripts_files/bcab.gif"> <SPAN 
+  class=fs>TASK</SPAN> is set to <NOBR><SPAN class=qfs>Build fresh test 
+  folder</SPAN></NOBR> 
+  <LI><SPAN class=ky>&nbsp;A&nbsp;</SPAN> <IMG 
+  src="Lesson 6 - Designing Menus in Batch scripts_files/bcab.gif"> <SPAN 
+  class=fs>TASK</SPAN> is set to <NOBR><SPAN class=qfs>Add files and make 
+  changes</SPAN></NOBR> </LI></UL>Then (with code we have yet to add) the right 
+section of the script will perform the task. Afterwards, in either case, we jump 
+to <SPAN class=fs>:JOBDONE</SPAN>. If we put a single
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command there to display whatever is in <SPAN class=fs>TASK</SPAN>, it will 
+display the task description that was set.
+<P></P></DIV>
+<DIV class=lm>
+<P>Reporting that the <SPAN class=fs>TASK</SPAN> selected has finished</P></DIV>
+<DIV class=bd>
+<P>We'll display the content of the variable, by using <NOBR><SPAN 
+class=fs>%TASK%</SPAN></NOBR>, plus a message that it's finished. By this stage 
+in the completed script, the task will be finished, and the confirming message 
+will be useful to us while we write the code.</P>
+<P>Add the line in <SPAN class=fs>:JOBDONE</SPAN> now </P></DIV>
+<SCRIPT>cwn('Add the new line. Leave a <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> before <NOBR><SPAN CLASS=qfx>%TASK%</SPAN></NOBR> to indent the message. When the script runs, the <SPAN CLASS=fs>TASK</SPAN> variable will be expanded to show whatever message is set in it.','<SPAN CLASS=dtn>:JOBDONE</SPAN><BR>ECHO. %TASK% - finished<BR><BR><SPAN CLASS=dtn>:CLEANUP</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Each new variable needs cleaning up</P></DIV>
+<DIV class=bd>
+<P>We've used a new variable, <SPAN class=fs>TASK</SPAN>, so we also need to add 
+a command to clear it again in <SPAN class=fs>:CLEANUP</SPAN>. Let's do it now 
+before we forget
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line to clear the <SPAN CLASS=fx>TASK</SPAN> variable. Always clean up as you go. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:CLEANUP<BR>SET SRC=</SPAN><BR>SET TASK=<BR><SPAN CLASS=dtn>GOTO EOF (end-of-file)</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Now we can test the script; test with <SPAN 
+class=ky>&nbsp;B&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> so we can 
+test all three options now. We'll see the messages to show that the flow of the 
+script went to the right section each time. Run the script, and choose 
+<NOBR><SPAN class=ky>&nbsp;B&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> and the <SPAN CLASS=fs>TASK</SPAN> message will confirm whether or not the menu routes flow through the correct section of the script.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR>Return code (ERRORLEVEL):   3<BR><BR> Build fresh test folder - finished<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>If you see errors reported</P></DIV>
+<DIV class=bd>
+<P>We've added a lot of code, and it's easy to make typing mistakes. If you see 
+error messages or syntax errors, remember the simple
+<SCRIPT>cn('ECHO')</SCRIPT>
+ debug technique to use when new lines added are leading to problems: 
+<UL>
+  <LI>Insert an <NOBR><SPAN class=qfs>ECHO ON</SPAN></NOBR> (on a line alone) 
+  <B>before</B> the new lines 
+  <LI>Insert an <NOBR><SPAN class=qfs>@ECHO OFF</SPAN></NOBR> (on a line alone) 
+  <B>after</B> the new lines 
+  <LI>Run the script again, and you'll see the new lines echoed as they're 
+  executed 
+  <LI>It's then usually quite easy to identify and correct the lines giving rise 
+  to errors 
+  <LI>Remove these two diagnostic
+  <SCRIPT>cn('ECHO')</SCRIPT>
+   commands afterwards</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>Test with reply <SPAN class=ky>&nbsp;A&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Once all is well, run the script again, and choose <NOBR><SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> and again the <SPAN CLASS=fs>TASK</SPAN> message will confirm whether or not the menu routes flow through the correct section of the script.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose A<BR>Return code (ERRORLEVEL):   2<BR><BR><NOBR> Add files and make changes - finished </NOBR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>And test with <SPAN class=ky>&nbsp;Q&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Run the script once again, and choose <NOBR><SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> and the Quit message confirms that the flow was routed to the <SPAN CLASS=fs>:QUIT</SPAN> section.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR>Return code (ERRORLEVEL):   1<BR><BR> No further action taken<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Add a further blank display line</P></DIV>
+<DIV class=bd>
+<P>The task message will be clearer if it's not immediately followed by the 
+system prompt <NOBR><SPAN class=cl>RCode C:\CSW&gt;_</SPAN></NOBR>. We can add a 
+blank display line to our <SPAN class=fs>:CLEANUP</SPAN> section, since the code 
+there is always executed just before the script finishes. Remember, the code for 
+a blank display line is <SPAN class=qfs>ECHO.</SPAN> on its own, so add it now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the <SPAN CLASS=qfx>ECHO.</SPAN> to display a blank line. Blank lines in the display make it much easier to read. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:CLEANUP<BR>SET SRC=<BR>SET TASK=</SPAN><BR>ECHO.<BR><SPAN CLASS=dtn>GOTO EOF (end-of-file)</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script in a normal shell</P></DIV>
+<DIV class=bd>
+<P>You remembered to click <SPAN class=qu>File</SPAN>, <SPAN 
+class=qu>Save</SPAN>? To finish off, we'll try out the script in a normal shell 
+(where the return-code message won't be displayed). Exit the Return-code shell 
+now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN>. The <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title bar changes back to <NOBR><SPAN CLASS=tle>&nbsp;BatchWindow&nbsp;</SPAN></NOBR> to show that the Return-code shell has closed, and the parent prompt returns.','RCode C:&#92;CSW>exit<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the script with <SPAN class=ky>&nbsp;B&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Run the script, and choose <NOBR><SPAN class=ky>&nbsp;B&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> (now we no longer see the return-code and only the task messages confirm our menu structure is working).','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR> Build fresh test folder - finished<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the script with <SPAN class=ky>&nbsp;A&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>Run the script again, and choose <NOBR><SPAN 
+class=ky>&nbsp;A&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;A&nbsp;</SPAN> (without the return-code report we see that the display output is aligned neatly).','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose A<BR><BR><NOBR> Add files and make changes - finished </NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Two finishing touches to the menu</P></DIV>
+<DIV class=bd>
+<P>There are two more simple tweaks to make to the menu before we test the <SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN> option. They're two good habits to get into, and 
+they make menu operation fail-safe.</P></DIV>
+<DIV class=lm>
+<P>1: Can we get a <SPAN class=fs>0</SPAN> code?</P></DIV>
+<DIV class=bd>
+<P>As we know, the reply <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> will <NOBR>return 
+<SPAN class=fs>1</SPAN></NOBR>, because it's the first letter in our
+<SCRIPT>cn('choice')</SCRIPT>
+ <SPAN class=fs>/c</SPAN> list. All other replies return a higher code (they're 
+further down the list). So we can't get a <SPAN class=fs>0</SPAN>.</P>
+<P>However, if any reply did return <SPAN class=fs>0</SPAN> it wouldn't trigger 
+<SPAN class=br>any</SPAN> of our
+<SCRIPT>cn('IF')</SCRIPT>
+ tests (they're all for <SPAN class=fs>1</SPAN> or more), and we'd fall straight 
+through into whatever option we happened to code first. Bad idea. But it can't 
+happen; so nothing can possibly go wrong <STRIKE><U>go wrong</U></STRIKE>, can 
+it?</P></DIV>
+<DIV class=lm>
+<P>Coding <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>uit as default</P></DIV>
+<DIV class=bd>
+<P>You don't get far with computer programming before realising that almost 
+anything can go wrong. For example, the
+<SCRIPT>cn('choice')</SCRIPT>
+ command executable file, <SPAN class=fs>CHOICE.COM</SPAN>, could be missing or 
+corrupt. Then we wouldn't get a new
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ set, and <SPAN class=fs>0</SPAN> is the initial
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ when we start a session. Better to code our <SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN>uit option to fail safe: 
+<UL>
+  <LI>Always put the <SPAN class=fs>QUIT</SPAN> option first in the <SPAN 
+  class=fs>/c</SPAN> list, so it returns <SPAN class=fs>1</SPAN> (we've done 
+  that) 
+  <LI>Don't use an
+  <SCRIPT>cn('IF')</SCRIPT>
+   test for <SPAN class=fs>1</SPAN> (quit), just use a simple (unconditional)
+  <SCRIPT>cn('GOTO')</SCRIPT>
+   </LI></UL>Then, if
+<SCRIPT>cn('choice')</SCRIPT>
+ is missing, our script will quit. We've already coded in the jump, all we need 
+to do is take out the
+<SCRIPT>cn('IF')</SCRIPT>
+ test from in front of the <NOBR><SPAN class=qfs>GOTO QUIT</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :
+<P></P></DIV>
+<SCRIPT>cwn('Simply delete the last conditional test, leaving only the simple jump. As we said when we first coded this test, it&#39;s not needed if you write the menu correctly. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn><NOBR>IF ERRORLEVEL 3 GOTO BUILD fresh test folder</NOBR><BR><NOBR>IF ERRORLEVEL 2 GOTO ADDFILES and make changes</NOBR></SPAN><BR><NOBR><STRIKE>IF ERRORLEVEL 1 </STRIKE><SPAN CLASS=dtn>GOTO QUIT no further action</SPAN></NOBR><BR><BR><SPAN CLASS=dtn>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>2: Getting more than <SPAN class=fs>3</SPAN>?</P></DIV>
+<DIV class=bd>
+<P>Nothing else can possibly go wrong, because with only three items, we can't 
+receive a reply code of more than <SPAN class=fs>3</SPAN>, can we? It's just as 
+well since any code more than <SPAN class=fs>3</SPAN> would trigger our first
+<SCRIPT>cn('IF')</SCRIPT>
+ test. Remember the test is for <SPAN class=br>greater-than-or-equal-to</SPAN>, 
+so a reply code of <SPAN class=fs>4</SPAN> (or more) would test true, and jump 
+to the <SPAN class=fs>:BUILD</SPAN> section. But it can't happen.</P>
+<P>You don't get far with computer programming ... Exactly. You'll recall that 
+in Lesson&nbsp;2, Lesson&nbsp;3, and Lesson&nbsp;4, we used
+<SCRIPT>cn('choice')</SCRIPT>
+ with an invalid switch <NOBR>(<SPAN class=fs>/x</SPAN>)</NOBR> to <NOBR>return 
+<SPAN class=fs>255</SPAN></NOBR>.</P></DIV>
+<DIV class=lm>
+<P>Mistakes are frequent during development</P></DIV>
+<DIV class=bd>
+<P>While we're writing a script, it's very easy to alter an existing line by 
+accident. So we'll code a test for <SPAN 
+class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>4</SPAN>, and make it 
+jump to the <SPAN class=fs>:QUIT</SPAN> section. Add it, with a new comment 
+afterwards
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the second fail-safe, and give it a new comment to explain why we&#39;re jumping on an &#34;impossible&#34; return-code. The comment part of a label is ignored, so our comment here doesn&#39;t have to match the comment in the <SPAN CLASS=fs>:QUIT</SPAN> section. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn><NOBR>choice /c:qab /n &#34;               Please choose &#34;</NOBR><BR>ECHO.</SPAN><BR><NOBR>IF ERRORLEVEL 4 GOTO QUIT (bad choice syntax)</NOBR><BR><SPAN CLASS=dtn><NOBR>IF ERRORLEVEL 3 GOTO BUILD fresh test folder</NOBR><BR><NOBR>IF ERRORLEVEL 2 GOTO ADDFILES and make changes</NOBR><BR>GOTO QUIT no further action</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Nothing can go wrong</P></DIV>
+<DIV class=bd>
+<P>Now nothing can possibly go wrong (well, not much).</P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN>
+<SCRIPT>cn('choice')</SCRIPT>
+ problems are rare in Windows 95/98/ME, but much of its Batch syntax is similar 
+to that in Windows NT, so sometimes scripts are "borrowed". And
+<SCRIPT>cn('choice')</SCRIPT>
+ is <SPAN class=br>not</SPAN> a default install in Windows NT and related 
+operating systems, so it's often missing (a version of the command is available 
+for such systems, but it's not loaded by default).</P></DIV>
+<DIV class=lm>
+<P>Test the script with <SPAN class=ky>&nbsp;Q&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>With that change saved, run the script once again, and choose <NOBR><SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN></NOBR>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN>, then at the menu, reply <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> and we can now regard our menu logic as thoroughly tested!','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR><BR> No further action taken<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>That completes the script flow for the menu</P></DIV>
+<DIV class=bd>
+<P>We now have the menu logic fully working. Choosing each option makes the 
+script flow jump to the right section, as confirmed by the messages we put in 
+each section.</P>
+<P>Getting the menu working first is a good way to write a complex script, 
+because the menu and its tests and jumps defines the structure of the script. 
+All that remains is to add the code to do the actual work once we've learnt how 
+to! That will come later.</P></DIV>
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","What switch do you use to ensure <SPAN CLASS=fs>choice</SPAN> does <SPAN CLASS=fs>n</SPAN>ot display the list of valid replies?","<SPAN CLASS=cl>choice /c:qny /<SPAN CLASS=hr>n</SPAN></SPAN> ensures the default display of <SPAN CLASS=fx>[Q,Y,N]?</SPAN> does <SPAN CLASS=br>n</SPAN>ot  appear.","How do you make <SPAN CLASS=fs>choice</SPAN> display a text prompt such as <SPAN CLASS=cl>Please choose-</SPAN>?","<NOBR><SPAN CLASS=cl>choice /c:yn Please choose-</SPAN></NOBR> just add it at the end of the <SPAN CLASS=bb>choice</SPAN> command.","How do you make <SPAN CLASS=fs>choice</SPAN> indent its text prompt, or leave <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s after it?","<NOBR><SPAN CLASS=cl>choice /c:12 /n &#34; Hit 1 or 2 &#34;</SPAN></NOBR> &#34;double-quote&#34; the text and any <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s. We use <SPAN CLASS=fx>/n</SPAN> because our prompt message already lists the keys to hit, so we don&#39;t need <SPAN CLASS=bb>choice</SPAN> to list them as well.","A <SPAN CLASS=fs>choice</SPAN> menu always jumps to the same option whichever valid reply key is pressed. What mistake has probably been made?","The <SPAN CLASS=bb>ERRORLEVEL</SPAN>s are <SPAN CLASS=br>not</SPAN> being tested in descending order = <SPAN CLASS=bp>higher values first</SPAN>. An initial test for <SPAN CLASS=bb>ERRORLEVEL</SPAN> <SPAN CLASS=fs>1</SPAN> is true for <SPAN CLASS=br>1 or more</SPAN> (and so for any valid reply).","Syntax errors are reported when a script runs. How can you see which command lines are giving the errors?","Add an <SPAN CLASS=qfx>ECHO ON</SPAN> command before any lines you suspect, and <SPAN CLASS=qfx>@ECHO OFF</SPAN> after. The suspect lines will be displayed.","Why is it a good idea to place any Quit option first in the <SPAN CLASS=fs>choice</SPAN> <SPAN CLASS=fx>/c</SPAN> reply list?","Its test comes last. And instead of testing, just <SPAN CLASS=bb>GOTO</SPAN> <SPAN CLASS=fs>QUIT</SPAN>, and you safely Quit if the <SPAN CLASS=bb>choice</SPAN> command is corrupted or missing.");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>In this Lesson we have learnt how to: 
+<UL>
+  <LI>Design a menu with
+  <SCRIPT>cn('ECHO')</SCRIPT>
+   commands and a
+  <SCRIPT>cn('choice')</SCRIPT>
+   prompt 
+  <LI>Use a Return-code shell to study the
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   s returned by a
+  <SCRIPT>cn('choice')</SCRIPT>
+   menu 
+  <LI>Use "quotes" to align the
+  <SCRIPT>cn('choice')</SCRIPT>
+   prompt with the menu text 
+  <LI>Test menu replies with <NOBR>
+  <SCRIPT>cn('IF')</SCRIPT>
+
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+  </NOBR>in the correct <B>descending</B> order 
+  <LI>Use messages to check that the flow of logic through a menu is correct 
+  <LI>Code the
+  <SCRIPT>cn('IF')</SCRIPT>
+   tests so that a missing or bad
+  <SCRIPT>cn('choice')</SCRIPT>
+   command will fail safe</LI></UL>The <A 
+onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson6">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw070.htm">next&nbsp;Lesson</A>, where we 
+cover a lot of new ground. We learn to <B>redirect</B> the output of commands, 
+and capture it in files. See you then.
+<P></P></DIV></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

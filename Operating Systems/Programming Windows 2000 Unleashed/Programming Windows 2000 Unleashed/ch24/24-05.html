@@ -1,0 +1,223 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using the COM[TITLE]#43; In-Memory Database</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=24//-->
+<!--PAGES=837-840//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="24-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch25/25-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Creating Tables</B></FONT></P>
+<p>Up to this point, the discussion has revolved around the fact that the table is defined as a basis in another database. This is the preferable method, because any failure is recoverable. However, because the data is read mostly, it&#146;s cached and quickly accessible.
+</P>
+<p>There is the need sometimes to create a table dynamically. Or the data is to be kept temporarily. An example could be a shopping cart where the purchase list is kept in RAM and not on the hard disk. To do this you need to create your table and index in an @IMDBTEMP database.</P>
+<p>When you&#146;re creating a table, the <small>ITableDefinition</SMALL> interface has to be used. This interface has the facility to create a table and then incrementally add, remove, or modify columns. IMDB cannot cope with this. Therefore, these actions should be avoided. To create a table, you must pass in the column definition as data to the <small>ITableDefinition::CreateTable</SMALL> method. The <small>DBPROP_TBL_SMALLTABLE</SMALL> property (type <small>VT_BOOL</SMALL>; read/write) must be specified.</P>
+<p>IMDB supports a way to optimize the index creation and storage for memory consumption. All tables in @IMDBTEMP that have this property set to <small>TRUE</SMALL> upon creation will use this optimization. <small>TRUE</SMALL> is the default setting.</P>
+<p>At this point, you must also define an index; otherwise, IMDB will not be able to function. The following properties for <small>IIndexDefinition::CreateIndex</SMALL> can be specified:</P>
+<table width="100%"><th width="40%" valign="TOP" align="LEFT"><i>Property</I>
+<th width="20%" valign="TOP" align="LEFT"><i>Type</I>
+<th width="20%" valign="TOP" align="LEFT"><i>Default Value</I>
+<th valign="TOP" align="LEFT"><i>Read/Write</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>DBPROP_INDEX_</SMALL>
+<td valign="TOP" align="LEFT"><small>VT_I4</SMALL>
+<td valign="TOP" align="LEFT"><small>DBPROP_NC_LOW</SMALL>
+<td valign="TOP" align="LEFT">Read/Write
+<tr>
+<td valign="TOP" align="LEFT"><small>NULLSCOLLATION</SMALL>
+<td valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT">
+<tr>
+<td valign="TOP" align="LEFT"><small>DBPROP_INDEX_NULLS</SMALL>
+<td valign="TOP" align="LEFT"><small>VT_I4</SMALL>
+<td valign="TOP" align="LEFT"><small>0</SMALL>
+<td valign="TOP" align="LEFT">Read/Write
+<tr>
+<td valign="TOP" align="LEFT"><small>DBPROP_INDEX_UNIQUE</SMALL>
+<td valign="TOP" align="LEFT"><small>BOOL</SMALL>
+<td valign="TOP" align="LEFT"><small>FALSE</SMALL>
+<td valign="TOP" align="LEFT">Read/Write
+</TABLE>
+<p><font size="+1"><b>Supported Data Types</B></FONT></P>
+<p>When the wizard generates the static accessor, the data map does not specify the OLE DB data type. This is figured out from the type of variable within the <small>COLUMN_ENTRY</SMALL> macro. Here&#146;s a list of supported OLE DB data types:</P>
+<table width="100%"><td width="5%">
+<td width="30%" valign="TOP" align="LEFT"><small>DBTYPE_I2</SMALL>
+<td width="12%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>DBTYPE_UI4</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_I4</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_I8</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_R4</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_UI8</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_R8</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_GUID</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_CY</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_BYTES</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_DATE</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_STR</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_BOOL</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_WSTR</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_DECIMAL</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_NUMERIC</SMALL> (up to a limit of 38)
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_UI1</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_DBDATE</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_I1</SMALL>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_DBTIME</SMALL>
+<tr>
+<td>
+<td valign="TOP" align="LEFT"><small>DBTYPE_UI2</SMALL>
+<td valign="TOP" align="LEFT" colspan="2"><small>DBTYPE_DBTIMESTAMP</SMALL>
+</TABLE>
+<p>The data types <small>DBTYPE_VARIANT</SMALL>, <small>DBTYPE_BSTR</SMALL>, and <small>DBTYPE_IUNKNOWN</SMALL> are supported in the accessor map. If the IMDB data type is long and defined as <small>DBTYPE_VARIANT</SMALL> in <small>COLUMN_ENTRY</SMALL>, IMDB will coerce it.</P>
+<p>The data types <small>DBTYPE_VARIANT</SMALL>, <small>DBTYPE_BSTR</SMALL>, and <small>DBTYPE_IUNKNOWN</SMALL> are not supported in dynamically created tables that do not reference a data source table.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">The Details of Using ADO</FONT></H4>
+<p>When you&#146;re using ADO, the situation has been that you&#146;re connecting to a relational database or, potentially, an object-oriented database. IMDB is an ISAM OLE DB provider. This is different than a relational model and has some ramifications when you&#146;re specifying settings.
+</P>
+<p><font size="+1"><b>ADO Connection Strings</B></FONT></P>
+<p>When you&#146;re connecting to an IMDB, the following connection string (<small>connection.ConnectionString</SMALL>) can be used:</P>
+<!-- CODE SNIP //-->
+<pre>
+&#147;provider=msimdb;data source=IMDB_DSN&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Using this notation, you don&#146;t have to specify the <small>connection.provider</SMALL> property.</P>
+<p>The notation</P>
+<!-- CODE SNIP //-->
+<pre>
+&#147;data source=IMDB_DSN&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>or
+</P>
+<!-- CODE SNIP //-->
+<pre>
+&#147;IMDB_DSN&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>can be used if the <small>connection.Provider</SMALL> property is set to <small>MSIMDB</SMALL>. The difference with these notations is that the IMDB data sources are enumerated until the desired one is found.</P>
+<p><font size="+1"><b>ADO Data Source Objects</B></FONT></P>
+<p>When an IMDB connection has been made, it will connect to your resource. You can&#146;t iterate through the IMDB catalog using the <small>DBPROP_CURRENTCATALOG</SMALL> property. Any attempt to do so will result in an error.</P>
+<p>It&#146;s assumed that you know which tables you want to use ahead of time. IMDB is not the general provider. You cannot enumerate the tables in a catalog or look at certain properties of the table. It&#146;s assumed that you know what you are accessing. Therefore, if what you&#146;re trying to do doesn&#146;t work, it&#146;s a configuration situation.</P>
+<p><font size="+1"><b>ADO Recordset Default Lock Type</B></FONT></P>
+<p>Since the data is read-mostly, the default lock type for a recordset is <small>adLockReadOnly</SMALL> and <small>adLockOptimistic</SMALL>.</P>
+<p><font size="+1"><b>ADO CursorLocation Property</B></FONT></P>
+<p>When you&#146;re developing IMDB applications, the client consuming the IMDB data will reside on the same machine. Also, the cursor location should be <small>adUseNone</SMALL>. This forces the ADO recordset to communicate directly with the provider. It also moves the responsibility of rowset functionality (find, filter, and so on) to the provider.</P>
+<p>Using <small>adUseNone</SMALL> has the benefit of ensuring maximum performance. However, because you&#146;re dealing with an ISAM provider, less functionality can be used. In general, the ramifications of cursor location is dependent on the consumer of the data. The advice is to keep it simple.</P>
+<p><font size="+1"><b>Creating Tables Using a Schema</B></FONT></P>
+<p>For ADO DDL, the optional <small>IDBSchemaRowset</SMALL> interface for sessions is used to populate the <small>Tables</SMALL>, <small>Procedures</SMALL>, and <small>Views</SMALL> collections as well as subordinate collections, such as <small>Columns</SMALL> and <small>Indexes</SMALL>. Without support for <small>IDBSchemaRowset</SMALL>, these collections will not populate with information regarding the structure of the currently active connection. However, ADO DDL will work to support the creation of new collections as well as the deletion of existing ones, assuming the caller can identify them uniquely by name alone.</P>
+<h3><a name="Heading12"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter focused on learning about IMDB and what it can do. IMDB is just like another OLE DB provider, with a few exceptions. IMDB is a specialized COM&#43; service that&#146;s used to tune applications based on a few conditions. IMDB works very well when it&#146;s used for high performance on read-mostly data. Outside this scope, however, IMDB becomes less efficient and should be avoided.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="24-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch25/25-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

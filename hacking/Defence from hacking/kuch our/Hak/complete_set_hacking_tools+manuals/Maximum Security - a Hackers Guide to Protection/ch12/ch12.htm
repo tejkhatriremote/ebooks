@@ -1,0 +1,1059 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 12 -- Sniffers</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="../button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="../ch11/ch11.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch13/ch13.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">12</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Sniffers</FONT></H1>
+</CENTER>
+<P>A <I>sniffer</I> is any device, whether software or hardware, that grabs information
+traveling along a network. That network could be running any protocol: Ethernet,
+TCP/IP, IPX, or others (or any combination of these). The purpose of the sniffer
+to place the network interface--in this case, the Ethernet adapter--into promiscuous
+mode and by doing so, to capture all network traffic.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><I><B> </B>Promiscuous</I> <I>mode</I> refers
+	to that mode where all workstations on a network listen to all traffic, not simply
+	their own. In other words, non-promiscuous mode is where a workstation only listens
+	to traffic route it its own address. In promiscuous mode, the workstation listens
+	to all traffic, no matter what address this traffic was intended for. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>When one discusses sniffers, one is not discussing <I>key capture utilities</I>,
+which grab keystrokes and nothing more. Essentially, a key capture utility is the
+software equivalent of peering over someone's shoulder. This peering might or might
+not reveal important information. True, it might capture passwords typed into the
+console of the local terminal, but what about other terminals? In contrast, sniffers
+capture network traffic. This network traffic (irrespective of what protocol is running)
+is composed of <I>packets</I> (these might be IP datagrams or Ethernet packets).
+These are exchanged between machines at a very low level of the operating-system
+network interface. However, these also carry vital data, sometimes very sensitive
+data. Sniffers are designed to capture and archive that data for later inspection.
+<H2><FONT COLOR="#000077"><B>About Ethernet</B></FONT></H2>
+<P>As I have discussed, Ethernet was created at Xerox's Palo Alto Research Center.
+(Sometimes referred to as <I>PARC Place.</I>) You might remember an RFC document
+that I presented earlier in this book: It was posted over a Christmas holiday and
+discussed the issue of hackers gaining access to a network that would soon become
+the Internet. The author of that RFC was Bob Metcalfe, who, along with David Boggs
+(both at PARC), invented Ethernet.</P>
+<P>In 1976, these two gentlemen presented to the computing communities a document
+titled <I>Ethernet: Distributed Packet Switching for Local Computer Networks</I>.
+The ideas set forth in that paper revolutionized business-based computing. Prior
+to the birth of Ethernet, most large networks were strung to mainframe computers
+(in even earlier years, most systems were based on computer time sharing).</P>
+<P>Today, Ethernet is probably the most popular way to network machines. A group
+of machines within an office that are linked via Ethernet might be referred to as
+a <I>local area network </I>(LAN). These machines are strung together with high-speed
+cable that transfers information as quickly (or sometimes much more quickly) than
+most hard drives.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You might remember that in Chapter
+	6, &quot;A Brief Primer on TCP/IP,&quot; I noted that one element of TCP/IP networking
+	was the full-duplex transmission path, which allows information to travel in both
+	directions at one time, a common situation in TCP/IP that is especially vital to
+	the error-reporting process during a transmission (a typical example might be during
+	a FTP transfer). Ethernet does not truly support full-duplex transmission and therefore,
+	although Ethernet interfaces are advertised as being capable of extremely high-speed
+	transmission, you can expect only perhaps 50-75 percent of the actual advertised
+	speed when using Ethernet on a high-traffic network. If you were to employ a packet
+	sniffer, you would see that while a card is receiving a heavy transmission of data
+	from some card elsewhere on the network, it cannot also send data out with any great
+	reliability. That represents an interesting security issue of sorts. For example,
+	can an Ethernet card answer an ARP request while being bombarded with data? If not,
+	couldn't a cracker temporarily conduct an ARP spoofing session under such circumstances?
+	At any rate, there are switching products that can remedy this limitation. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>The Composition of an Ethernet Network</B></FONT></H3>
+<P>The composition of a network is complex. First, in order for each machine to be
+part of a network, it must have both software and hardware designed to traffic Ethernet
+packets. The four minimal components necessary are illustrated in Figure 12.1.</P>
+<P><A NAME="01"></A><A HREF="01.htm"><B>Figure 12.1.</B></A><B><BR>
+</B><I>The minimum requirements for a single workstation.</I></P>
+<P>The software can either come with the operating system (Novell NetWare, UNIX,
+Windows NT, Windows 95), or it can be a third-party product added later (LANtastic).
+At a minimum, the software needed is as follows:
+
+<UL>
+	<LI>Ethernet packet driver<BR>
+	<BR>
+	
+	<LI>Network adapter driver
+</UL>
+
+<P>The network adapter driver commonly comes with the network adapter or Ethernet
+card. It is typically provided by the manufacturer of the card but might also be
+included in a total package. This is not always true. It is primarily the IBM-compatible
+architecture that requires an Ethernet card. Most workstations (and most Macintoshes)
+have on-board Ethernet support. This means that the Ethernet card is already hard-wired
+to the motherboard. I believe that IBM-based RS/6000 machines might be one of the
+few real exceptions to this. A good example would be an IBM Powerstation 320H.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Most operating systems now come
+	with boot drivers for various Ethernet cards. Linux certainly does, as does Windows
+	95 and Windows NT. Chances are, unless you have a very strange, off-beat Ethernet
+	card, you may never need the manufacturer's driver. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The packet driver negotiates packets back and forth. The network adapter driver
+is used to bind the Ethernet protocol to the Ethernet card. The card transmits these
+packets from the workstation and into wire. This wire may be one of several kinds.
+Some Ethernet cable transmits packets at 10MB/sec, others at 100MB/sec.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>TCP/IP can be bound to most Ethernet
+	cards as quickly as IPX or other network protocols. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>So you have a machine running Ethernet software (for both packet and card). The
+machine is a classic workstation, equipped with an Ethernet card that connects to
+a cable. But where does the data that travels down that cable lead? The answer depends
+on the network needs of the organization.</P>
+<P>In general, there will be a least several other workstations and a network hub
+(see Figure 12.2). The workstations may be deposited throughout a building, with
+the wire strung through the walls.</P>
+<P><A NAME="02"></A><A HREF="02.htm"><B>Figure 12.2.</B></A><B><BR>
+</B><I>Basic network setting.</I></P>
+<P>Figure 12.2 shows a very simple network setting. Thousands of businesses nationwide
+have such a setting, using any of a dozen different networked operating systems.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In many network settings, you can
+	take the hub out of the picture altogether. There are plenty of Novell NetWare networks
+	that have simply a file server or a closed-circuit cabling scheme, precisely like
+	the setup in Figure 12.2. Hubs are used for many things, including enhancement of
+	security, as you will see later. But if you have no fear of allowing indiscriminate,
+	network-wide broadcasts, a hub might not be necessary. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Note the line in Figure 12.2 that represents information flow. On networks without
+hubs, the data doesn't point in any particular direction. Instead, it travels in
+<I>all</I> directions. A typical example of this is at the moment a message needs
+to be sent. Each network node or workstation is an interface. When a message needs
+to be sent, a request is forwarded to all interfaces, looking for the intended recipient.
+This request is sent in the form of a general broadcast.</P>
+<P>This broadcast issues a message to all interfaces, saying: &quot;Hey! Which one
+of you is this data destined for? Will the real recipient please stand up?&quot;
+All interfaces receive this message, but only one (the one for which the message
+is intended) actually replies. In this respect, then, there is no established flow
+of information until the recipient is known. As you might expect, because this broadcast
+is global on the network, all machines hear it. Those that are not intended recipients
+of the data hear the broadcast but ignore it. The request packet dies at such workstations
+because there is no reply.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>This all broadcast scenario only
+	occurs in network blocks, or segments. In other words, bar hard-wiring by hub (where
+	all machines are strung to a hub), the information will be broadcast between all
+	machines within that network segment. As you will see, the topology of such segments
+	can greatly enhance or debilitate your network security, at least with respect to
+	sniffers. In general, however, all machines are sent this request. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The workstation that <I>is</I> the intended recipient responds, forwarding its
+hardware address. The information is then sent down the wire (in packets) from the
+issuing workstation to the recipient. You might imagine that in this scenario (and
+from the instant that the recipient is known), all other workstations ignore the
+data being sent between the bona-fide sender and recipient. This is true; they do.
+However, they do not necessarily <I>have</I> <I>to</I> ignore this data, and if they
+don't, they can still hear it. In other words, any information traveling through
+the network is always &quot;hear-able&quot; by all interfaces within a segment (barring
+installation of controls to prevent it).</P>
+<P>A sniffer is nothing more than hardware or software that hears (and does not ignore)
+all packets sent across the wire. In this respect, every machine and every router
+is a sniffer (or at least, each of these devices <I>could</I> be a sniffer). This
+information is then stored on some media and archived for later viewing.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>To use your machine as a sniffer,
+	you will need either special software (a promiscuous driver for the Ethernet card)
+	or a version of networking software that allows promiscuous mode. <BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Think of the network as a dynamic
+	atmosphere, such as a river. In that river, packets flow freely along the path of
+	least resistance. A sniffer is an entity that sticks its hand into the river and
+	filters the water through its fingers. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A sniffer can be (and usually is) a combination of both hardware and software.
+The software might be a general network analyzer enabled with heavy debugging options,
+or it might be a real sniffer.</P>
+<P>A sniffer must be located within the same network block (or net of trust) as the
+network it is intended to sniff. With relatively few exceptions, that sniffer could
+be placed anywhere within that block (see Figure 12.3).</P>
+<P><A NAME="03"></A><A HREF="03.htm"><B>Figure 12.3.</B></A><B><BR>
+</B><I>Possible placements for sniffers.</I></P>
+<P>Notice that one of the positions I have marked as a sniffer is located in the
+void (along the network wire instead of within a workstation). This is possible,
+though unlikely. Certain tools designed for network-traffic analysis can be spliced
+into the cable itself. These tools are quite expensive and not something that the
+average cracker would employ (however, I thought I should mention them).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>There are also devices
+	that are referred to as cable sniffers, which are used to diagnose problems along
+	network cable. One such product is called the <I>Cable Sniffer</I> by Macally. It
+	can be used to sniff cable problems on AppleTalk networks. Their page is located
+	at <A HREF="http://www.macally.com/"><TT>http://www.macally.com/</TT></A>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Sniffers are a significant threat because of the following:
+
+<UL>
+	<LI>They can capture passwords.<BR>
+	<BR>
+	
+	<LI>They can capture confidential or proprietary information.<BR>
+	<BR>
+	
+	<LI>They can be used to breach security of neighboring networks.
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Where Is One Likely to Find a Sniffer?</B></FONT></H2>
+<P>You are likely to find a sniffer almost anywhere. However, there are some strategic
+points that a cracker might favor. One of those points is anywhere adjacent to a
+machine or network that receives many passwords. This is especially so if the targeted
+machine is the gateway of a network, or a path of data going to or coming from the
+outside world. If your network goes out to the Internet (and that's really what I'm
+getting at here), the cracker will want to capture authentication procedures between
+your network and other networks. This could exponentially expand the cracker's sphere
+of activity.
+<H2><FONT COLOR="#000077"><B>What Level of Risk Do Sniffers Represent?</B></FONT></H2>
+<P>Sniffers represent a high level of risk. In fact, the existence of a sniffer in
+itself shows a high level of compromise. In fact, if a sniffer has been placed on
+your network (by folks other than those authorized to undertake such an action),
+your network is already compromised. That is, taking the case study out of the LAN
+and into the Internet, if your Internet-enabled network has a sniffer, someone has
+breached your network security. One scenario is that he or she has come from the
+outside and placed a monitoring device on your network. The other scenario is that
+one of your own is up to no good. Either way, the situation is grave.</P>
+<P>Security analysts characterize a sniffer attack as a second-level attack. The
+cracker has already worked his or her way into your network and now seeks to further
+compromise the system. To do so, he must begin by capturing all the user IDs and
+passwords. For that reason (and for the information a sniffer gathers), a sniffer
+represents an extremely high level of risk.</P>
+<P>However, sniffers can catch more than simply user IDs and passwords; they can
+capture sensitive financial data (credit-card numbers), confidential information
+(e-mail), and proprietary information. Depending on the resources available to the
+cracker, a sniffer is capable of capturing nearly all traffic on a network.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I do not believe that, in practice,
+	any sniffer can catch absolutely all traffic on a network. This is because as the
+	number of packets increases, the chances of lost packets is high. If you examine
+	technical reports on sniffers, you will discover that at high speeds and in highly
+	trafficked networks, a more-than negligible amount of data can be lost. This suggests
+	that sniffers employed by the good guys might be vulnerable to attacks themselves.
+	In other words, just how many packets per second can a sniffer take before it starts
+	to fail in its fundamental mission? That is a subject probably worth investigating.</P>
+	<P>Security technology has evolved considerably. Some operating systems now employ
+	encryption at the packet level, and, therefore, even though a sniffer attack can
+	yield valuable data, that data is encrypted. This presents an additional obstacle
+	likely to be passed only by those with deeper knowledge of security, encryption,
+	and networking. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Where Do Sniffers Come From and Why Do They Exist?</B></FONT></H2>
+<P>Sniffers are designed as devices that can diagnose a network connection. You will
+remember that in Chapter 9, &quot;Scanners,&quot; I referred to a UNIX command called
+<TT>traceroute</TT>. <TT>traceroute</TT> examines the route between two points and
+is used to determine whether problems exist along that route (for example, if one
+of the machines a&#218; g that route has died).</P>
+<P>Tools such as <TT>traceroute</TT> are sniffers of sorts. However, a hard-core
+sniffer is designed to examine the packet traffic at a very deep level. Again, this--like
+the scanner--has a perfectly legitimate purpose. Sniffers were designed by those
+aiding network engineers (and not for the purpose of compromising networks).</P>
+<P>Some companies produce entire suites of sniffer applications designed to diagnose
+network problems. The leading company in this industry is Network General Corporation
+(NGC), which offers a wide variety of sniffer products, including
+
+<UL>
+	<LI>The Sniffer Network Analyzer (I should mention that the term <I>The Sniffer</I>
+	is a registered trademark of NGC)<BR>
+	<BR>
+	
+	<LI>A wide area network (WAN) Sniffer<BR>
+	<BR>
+	
+	<LI>Network General Reporter
+</UL>
+
+<H2><FONT COLOR="#000077"><B>On What Platforms Will a Sniffer Run?</B></FONT></H2>
+<P>Sniffers now exist for every network platform, but even if they did not, they
+would still be a threat to you. Here is why: Sniffers sniff packets, not machines.
+Unless your network is entirely homogenous, a sniffer could exist there. As I pointed
+out, a sniffer need be only on a single node of a network (or at a gateway) to sniff
+traffic. This is because of the manner in which Ethernet broadcasts occur. Because
+the traffic is broadcasted to all nodes on a network segment, any platform that you
+have will do. Also, more sniffers for different operating systems emerge every few
+months; because source is now available for a wide variety of systems, it seems likely
+that trend will continue. Eventually, you will see the ultimate sniffer written for
+Windows 95 with some sort of VB front end. You can bet on it.
+<H2><FONT COLOR="#000077"><B>Has Anyone Actually Seen a Sniffer Attack?</B></FONT></H2>
+<P>There have been many sniffer attacks executed over the Internet; these attacks
+were disparate in terms of target and scope. Consider this security advisement update:
+
+<DL>
+	<DD>In February 1994, an unidentified person installed a network sniffer on numerous
+	hosts and backbone elements collecting over 100,000 valid user names and passwords
+	via the Internet and Milnet. Any computer host allowing FTP, Telnet or remote log
+	in to the system should be considered at risk...All networked hosts running a UNIX
+	derivative operating system should check for the particular promiscuous device driver
+	that allows the sniffer to be installed.<FONT SIZE="1"><SUP>1</SUP></FONT>
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT SIZE="1"><SUP>1</SUP></FONT>Naval Computer &amp; Telecommunications Area Master
+	Station LANT advisory. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD>
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>You can access the Naval
+	Computer &amp; Telecommunications Area Master Station LANT advisory at <A HREF="http://www.chips.navy.mil/chips/archives/94_jul/file14.html"><TT>http://www.chips.navy.mil/chips/archives/94_jul/file14.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Naturally, institutions and private companies are reluctant to state what level
+of compromise might have occurred. But, there are many such victims:
+
+<UL>
+	<LI>California State University at Stanislaus<BR>
+	<BR>
+	
+	<LI>A United States Army missile research laboratory<BR>
+	<BR>
+	
+	<LI>White Sands Missile Range
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For more information
+	about the Stanislaus incident, visit <A HREF="http://yahi.csustan.edu/studnote.html"><TT>http://yahi.csustan.edu/studnote.html</TT></A>.</P>
+	<P>For more information about the U.S. Army missile research lab and White Sands
+	Missile Range incidents, see the GAO report at <A HREF="http://www.securitymanagement. com/library/000215.html"><TT>http://www.securitymanagement.
+	com/library/000215.html</TT></A>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Universities seem to be consistent targets, mainly because of the sheer volume
+of usernames and passwords that can be gleaned from such an attack. This also translates
+into bigger and more complex networks. Network administration in a university is
+quite a job, even if crackers aren't prowling around. How many times have you fingered
+an account at a university only to find that the target was discharged or graduated
+a year or more before? Two days before writing this chapter, I encountered exactly
+that situation. Except that the individual had been gone 18 months. Even so, his
+account was still active!
+<H2><FONT COLOR="#000077"><B>What Information Is Most Commonly Gotten from a Sniffer?</B></FONT></H2>
+<P>A sniffer attack is not as easy as you might think. It requires some knowledge
+of networking before a cracker can effectively launch one. Simply setting up a sniffer
+and leaving it will lead to problems because even a five-station network transmits
+thousands of packets an hour. Within a short time, the outfile of a sniffer could
+easily fill a hard disk drive to capacity (if you logged every packet).</P>
+<P>To circumvent this problem, crackers typically sniff only the first 200-300 bytes
+of each packet. Contained within this portion is the username and password, which
+is really all most crackers want. However, it is true that you could sniff all the
+packets on a given interface; if you have the storage media to handle that kind of
+volume, you would probably find some interesting things.
+<H2><FONT COLOR="#000077"><B>Where Does One Get a Sniffer?</B></FONT></H2>
+<P>There are many sniffers available on many platforms. As you might expect, the
+majority of these are commercial. Commercial sniffing applications are a good idea
+if you have a real need to diagnose your network (or catch a cracker). They are probably
+a poor idea if you simply want to learn about networking.
+<H3><FONT COLOR="#000077"><B>Gobbler (Tirza van Rijn)</B></FONT></H3>
+<P>Gobbler, shown in Figure 12.4, is probably the best sniffer for someone wanting
+to learn a bit about network traffic. It was designed to work on the MS-DOS platform
+but can be run in Windows 95.</P>
+<P><A NAME="04"></A><A HREF="04.htm"><B>Figure 12.4.</B></A><B><BR>
+</B><I>Gobbler's opening screen.</I></P>
+<P>Operation of Gobbler might seem a little confusing at first. There are no menus
+in the traditional sense (that is, the menus are not immediately apparent when you
+start the application); the application just pops up, as shown in Figure 12.4. (The
+menus are there; it is just that Gobbler is not the most user-friendly application.)
+Depending on what package you get, you may or may not receive documentation. If you
+do, it will be a PostScript document titled <TT>Paper.gs</TT>. Of the four locations
+where I have found Gobbler, only one has the document. It is the first of the addresses
+that follow.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Gobbler is no longer
+	widely distributed; these links are quite remote. Expect some download time. Gobbler
+	can be found at
+
+	<UL>
+	<LI><A HREF="http://www.cse.rmit.edu.au/~rdssc/courses/ds738/watt/other/gobbler.zip"><TT>http://www.cse.rmit.edu.au/~rdssc/courses/ds738/watt/other/gobbler.zip</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://cosmos.ipc.chiba-u.ac.jp/~simizu/ftp.ipc.chiba-u.ac.jp/.0/network/noctools/sniffer/gobbler.zip"><TT>http://cosmos.ipc.chiba-u.ac.jp/~simizu/ftp.ipc.chiba-u.ac.jp/.0/network/noctools/sniffer/gobbler.zip</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="ftp://ftp.mzt.hr/pub/tools/pc/sniffers/gobbler/gobbler.zip"><TT>ftp://ftp.mzt.hr/pub/tools/pc/sniffers/gobbler/gobbler.zip</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="ftp://ftp.tordata.se/www/hokum/gobbler.zip"><TT>ftp://ftp.tordata.se/www/hokum/gobbler.zip</TT></A>
+	</UL>
+
+	<P>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Press the F1 key after booting the application to view a legend that provides
+information about the program's functions (see Figure 12.5).</P>
+<P><A NAME="05"></A><A HREF="05.htm"><B>Figure 12.5.</B></A><B><BR>
+</B><I>Gobbler's function and navigation help screen.</I></P>
+<P>Gobbler runs on any PC running DOS, Windows, Windows 95, and perhaps NT. It can
+be run from a single workstation, analyzing only local packets, or it can be used
+remotely over a network (this is an especially useful function).</P>
+<P>Contained within the program are some fairly complex functions for packet filtering
+as well as an event-triggered mechanism (that is, one can specify a particular type
+of packet that must be encountered before the deep logging process starts or stops).
+Perhaps most importantly, Gobbler allows you to view both the source and destination
+addresses for each packet without further effort (these are printed to the screen
+in a very convenient manner).</P>
+<P>The program allows you to view the recording process as it happens. This is a
+vital element of its usefulness. As noted in one of the case studies presented with
+the application:
+
+<DL>
+	<DD>A bridge was having problems in getting through its startup sequence using the
+	<TT>bootp</TT> protocol. `The Gobbler' packet catcher was used to capture the packets
+	to and from the bridge. The dump file viewer and protocol analyzer made it possible
+	to follow the whole startup sequence and to track down the cause of the problem.<FONT
+	SIZE="1"><SUP>1</SUP></FONT>
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT SIZE="1"><SUP>1</SUP></FONT>T.V. Rijn and J.V. Oorschot, <I>The Gobbler, An
+	Ethernet Troubleshooter/Protocol Analyzer.</I> November 29, 1991. Delft University
+	of Technology, Faculty of Electrical Engineering, the Netherlands. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>ETHLOAD (Vyncke, Vyncke, Blondiau, Ghys, Timmermans,
+Hotterbeex, Khronis, and Keunen)</B></FONT></H3>
+<P>A freeware packet sniffer written in C for Ethernet and token ring networks, ETHLOAD
+runs well atop or in conjunction with any of the following interfaces:
+
+<UL>
+	<LI>Novell ODI
+	<LI>3Com/Microsoft Protocol Manager
+	<LI>PC/TCP/Clarkson/Crynwr
+</UL>
+
+<P>Further, it analyzes the following protocols:
+
+<UL>
+	<LI>TCP/IP
+	<LI>DECnet
+	<LI>OSI
+	<LI>XNS
+	<LI>NetWare
+	<LI>NetBEUI
+</UL>
+
+<P>One thing that is not available in the standard distribution is the source code.
+This is unfortunate because some time ago, the source was available. However, as
+the authors explain:
+
+<DL>
+	<DD>After being flamed on some mailing lists for having put a sniffer source code
+	in the public domain and as I understand their fears (even if a large bunch of other
+	Ethernet sniffers are available everywhere), I have decided that the source code
+	is not made available.
+</DL>
+
+<P>What is interesting is that the program did have the capability to sniff rlogin
+and Telnet sessions, though only with a special key that had to be obtained from
+the author. As one might expect, even when this key was available, the author restricted
+its access to those who could provide some form of official certification.</P>
+<P>For a free sniffer executable on a DOS/Novell platform, ETHLOAD is probably the
+most comprehensive currently available (this is certainly so for the PC platforms).
+It is also more easily found than others (<TT>altavista.digital.com</TT> returns
+approximately one hundred instances of the file name, and more than half of those
+sites have the product).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Here are a few sites
+	that offer ETHLOAD:
+
+	<UL>
+	<LI><A HREF="ftp://oak.oakland.edu/SimTel/msdos/lan/ethld104.zip"><TT>ftp://oak.oakland.edu/SimTel/msdos/lan/ethld104.zip</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://www.med.ucalgary.ca:70/1/ftp/dos/regular"><TT>http://www.med.ucalgary.ca:70/1/ftp/dos/regular</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="ftp://ftp.vuw.ac.nz/simtel/msdos/lan/ethld104.zip"><TT>ftp://ftp.vuw.ac.nz/simtel/msdos/lan/ethld104.zip</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://www.apricot.co.uk/ftp/bbs/atsbbs/allfiles.htm"><TT>http://www.apricot.co.uk/ftp/bbs/atsbbs/allfiles.htm</TT></A>
+	</UL>
+
+	<P>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Netman (Schulze, Benko, and Farrell)</B></FONT></H3>
+<P>Netman is a little different from ETHLOAD in that you can obtain the source, although
+the process is more complex than &quot;ask and ye shall receive.&quot; It involves
+money ($500 for educational institutions, $1,000 for private firms), and the development
+team makes it clear that that source is not to be used for commercial purposes.</P>
+<P>The team at Curtin University has developed a whole suite of applications in the
+Netman project:
+
+<UL>
+	<LI>Interman
+	<LI>Etherman
+	<LI>Packetman
+	<LI>Geotraceman
+	<LI>Loadman
+	<LI>Analyser
+</UL>
+
+<P>Etherman is of main interest in tracing Ethernet activity. It is important to
+note that this tool is no ordinary ASCII-to-outfile packet sniffer. As the authors
+explain in <I>Homebrew Network Monitoring: A Prelude to Network Management</I>, Etherman
+takes a whole new approach that is completely distinct from its counterparts:
+
+<DL>
+	<DD>In this project, we attempt to extend the goals of these by visualizing network
+	data. This has been achieved by applying a graphical model to a collection of continuously
+	updating network statistics.
+</DL>
+
+<P>True to their claims, these individuals created an extraordinary tool. The program
+presents a black screen on which addresses, traffic, and interfaces are all represented
+as points within the network (connection points or flows of data between these are
+represented in red). This accurate graphical model is altered as traffic varies.</P>
+<P>The entire suite of applications constitutes a formidable arsenal for network
+analysis and management. In the hands of a cracker, this suite could prove quite
+a weapon. However, the main features of the Etherman program, at least, run in X.
+It is extremely unlikely that a cracker would be running X apps on your network without
+your knowledge. If this <I>is</I> going on, you better wake up and mind your network;
+your problems are deeper than a sniffer.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The Netman project, papers,
+	and all binaries for these programs are located at <A HREF="http://www.cs.curtin.edu.au/~netman/"><TT>http://www.cs.curtin.edu.au/~netman/</TT></A>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The Netman suite of applications
+	was reportedly coded on the Sun and DEC platforms (SPARC and Decstation 5000, respectively).
+	Information about porting is scarce, but this much is certain: This application runs
+	only on UNIX platforms. Moreover, remember when I suggested that some sniffers might
+	lose data on high-speed, high-volume networks? Packetman is apparently one such application,
+	although the problem is reportedly limited to the SunOS platform. This application
+	is probably the most functional sniffer suite for the UNIX platform (if not in terms
+	of superb functionality, at least in design). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Esniff.c (the Posse)</B></FONT></H3>
+<P>Esniff.c is a sniffer program that is always distributed in source form (C language),
+designed primarily to sniff packet traffic on the SunOS platform. It is probably
+the most popular among crackers. It is already coded to capture only the beginning
+portion of each packet (and thereby capture user login IDs and passwords).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Esniff.c is available
+	at many locations, including
+
+	<UL>
+	<LI><A HREF="ftp://ftp.infonexus.com"><TT>ftp.infonexus.com</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://pokey.nswc.navy.mil/Docs/Progs/ensnif.txt"><TT>http://pokey.nswc.navy.mil/Docs/Progs/ensnif.txt</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/"><TT>http://www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/</TT></A>
+	</UL>
+
+	<P>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Sunsniff (Author Unknown)</B></FONT></H3>
+<P>Sunsniff is also designed specifically for the SunOS platform. It consists of
+513 lines of C source, coded reportedly by crackers who wish to remain anonymous.
+It works reasonably well on Sun, and is probably not easily portable to another flavor.
+This program is good for experimentation.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Sunsniff is available
+	at
+
+	<UL>
+	<LI><A HREF="http://www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/"><TT>www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://mygale.mygale.org/08/datskewl/elite/"><TT>http://mygale.mygale.org/08/datskewl/elite/</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://hacked-inhabitants.com/warez/SUNSNIFF.C"><TT>http://hacked-inhabitants.com/warez/SUNSNIFF.C</TT></A>
+	</UL>
+
+	<P>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>linux_sniffer.c (Author Unknown)</B></FONT></H3>
+<P>This program's name pretty much says it all. It consists of 175 lines of C code,
+distributed primarily at cracker sites on the Net. This program is Linux specific.
+It is another utility that is great for experimentation on a nice Sunday afternoon;
+it's a free and easy way to learn about packet traffic.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>linux_sniffer.c is available
+	at
+
+	<UL>
+	<LI><A HREF="http://www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/"><TT>www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://mygale.mygale.org/08/datskewl/elite/"><TT>http://mygale.mygale.org/08/datskewl/elite/</TT></A><BR>
+	<BR>
+	
+	<LI><A HREF="http://www.hacked-inhabitants.com/warez/"><TT>http://www.hacked-inhabitants.com/warez/</TT></A>
+	</UL>
+
+	<P>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Nitwit.c (Author Unknown)</B></FONT></H3>
+<P>This C source (159 lines, excluding comments) is distributed primarily at cracker
+sites. When compiled, it runs as a NIT (Network Interface Tap) sniffer. It is yet
+another SunOS-only utility. The authors anonymously claim that the utility is:
+
+<DL>
+	<DD>...better than CERT's `cpm' because the sniffer can be reading in normal (non
+	promiscuous) mode from <TT>/dev/nit</TT> and nittie.c will sense this.
+</DL>
+
+<P>I would closely examine the source before employing this utility. This utility
+emerged from the back alleys of the Net.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Nitwit.c can be found
+	at <A HREF="http://www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/nitwit.c"><TT>www.catch22.com/Twilight.NET/phuncnet/hacking/proggies/sniffers/nitwit.c</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>How Do I Detect a Sniffer on My Network?</B></FONT></H2>
+<P>The short answer to this question is: You don't. Here lies one of the reasons
+sniffers are so threatening to security. They are largely passive applications and
+generate nothing. In other words, they leave no trace on the system.</P>
+<P>One way to detect a sniffer is to search all current processes being run. This
+isn't entirely reliable, of course, but you can at least determine whether a process
+is being run from your machine. Commands differ from platform to platform in performing
+this operation. Those with DOS, Windows for Workgroups, or Windows 95 might have
+a problem. However, those using UNIX or Windows NT can easily obtain a list of current
+processes. In UNIX, issue the following command:</P>
+<PRE><FONT COLOR="#0066FF">ps -aux
+</FONT></PRE>
+<P>or</P>
+<PRE><FONT COLOR="#0066FF">ps -augx
+</FONT></PRE>
+<P>This command results in a listing of all processes, who initiated those processes,
+what percentage of the CPU those processes are using, what percentage of memory,
+and so on. The output comes in standard table form on <TT>STDOUT</TT>. If a process
+is still running, it should be listed here (unless your <TT>ps</TT> or other binaries
+have been trojaned).</P>
+<P>Another method is to go searching for the sniffer. There are only so many sniffers
+in existence. Chances are a cracker is using a freeware version. There is a possibility
+that the cracker has written his or her own. In this case, you are in trouble and
+will spend much time reconciling your directories. This is a complicated procedure,
+and I am unaware of a utility that does expressly this. On the UNIX platform, you
+likely will have to hack a program for yourself.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Programs like <TT>ps</TT> (in fact,
+	most programs) can be hidden from the <TT>ps</TT> query by changing their <TT>argv[0]</TT>
+	(their first argument) to the name of a program one that is innocuous and not so
+	suspicious. <BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B><I>Directory reconciliation</I>
+	is a fancy way of saying you need to perform frequent backups (ideally, once a day).
+	The trick is to hack a program that takes the list of files on each backup and compares
+	them to the backup on the following day. Include a type of file field, which contains
+	the information you normally glean from the <TT>file</TT> command. This command reports
+	the status of the file (whether it is binary, text, sound, and so on). If a file
+	in a user's directory was a compiled binary one day and a shell script the next,
+	it might not necessarily mean anything is wrong, but it is worth noting. A number
+	of programs can help you per-form file reconciliation and are treated in Chapter
+	11, &quot;Trojans.&quot; Some of these programs are Tripwire, ATP, and Hobgoblin.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Some utilities, however, can identify whether your system has been thrown into
+promiscuous mode. These can at least detect whether a running sniffer would even
+work under your current configuration. Nitwit.c is one such utility.
+<H2><FONT COLOR="#000077"><B>What Can I Do to Foil a Sniffer?</B></FONT></H2>
+<P>Foiling a sniffer attack is not a difficult task. You have quite a few choices
+and what you pick will probably depend on how paranoid you truly are. The rest will
+depend on cost.</P>
+<P>Your main concern is probably the transmission of truly sensitive data (namely,
+user IDs and passwords). Some of these cross the network in plain (or <I>clear</I>)
+text and, when captured with a sniffer, are easily read. Solutions to this problem
+are straightforward and cost effective.
+<H3><FONT COLOR="#000077"><B>Encryption</B></FONT></H3>
+<P>At various points in this book, I mention a product called Secure Shell, or <I>SSH</I>.
+SSH is a protocol that provides secure communications in an application environment
+such as Telnet. It is built on the client/server model, as are most protocols out
+there. The official port that the SSH server binds to is 22. Connections are negotiated
+using an algorithm from RSA. After the authentication procedure is complete, all
+subsequent traffic is encrypted using IDEA technology. This is typically strong encryption
+and is suitable for just about any nonsecret, nonclassified communication.</P>
+<P>For quite some time, the original SSH has been lauded (rightly so) for being the
+chief communications protocol that provided security by encrypted session. However,
+that all changed in mid-1996. SSH forged an alliance with Data Fellows, and F-SSH
+currently provides high-level, military-grade encryption to communication sessions.
+It provides the strongest encryption available to the general public for communications
+across TCP/IP.</P>
+<P>If you employ F-SSH on your site, usernames and passwords become less of an issue.
+To my knowledge, there have been no instances of anyone cracking such an encryption
+scheme. If you employ this product, even if a sniffer is present, the value of the
+information gleaned would be negligible. The hard part is getting your staff to use
+it.</P>
+<P>People sometimes receive new policies and authentication procedures poorly. In
+short, you might have to demonstrate to your local users exactly how easy it is to
+use SSH.</P>
+<P>Both free and commercial versions of SSH and F-SSH exist. The free version is
+a UNIX utility; commercial versions for Windows 3.11, Windows 95, and Windows NT
+are available.
+<H2><FONT COLOR="#000077"><B>What Are Some Other Ways to Defeat Sniffer Attacks?</B></FONT></H2>
+<P>The generally accepted way to defeat sniffer attacks is to employ safe topology.
+That sounds easy enough, but involves some cost.</P>
+<P>Are you familiar with that puzzle game that consists of a series of numbered tiles?
+The object of the game is to arrange the numbers so they appear in sequential, ascending
+order using the fewest possible moves. When working with network topology (under
+cost constraints by management), you are playing a game much like the tile game.</P>
+<P>Here are the rules:
+
+<UL>
+	<LI>Network blocks should only trust other network blocks if there is a reason.<BR>
+	<BR>
+	
+	<LI>The network blocks should be designed around the trust relationships between
+	your staff and not your hardware needs.
+</UL>
+
+<P>That established, let's have a look. The first point is this: a network block
+should be composed of only those machines that need to trust one another. These typically
+belong in the same room or, at worst, within the same office. Your accounting staff,
+for example, should be bunched together in some portion of the building (see Figure
+12.6).</P>
+<P><A NAME="06"></A><A HREF="06.htm"><B>Figure 12.6.</B></A><B><BR>
+</B><I>The accounting office.</I></P>
+<P>From the diagram in Figure 12.6, you can immediately see one difference in this
+configuration as compared to the others earlier in this chapter. Notice that each
+of the stations is hardwired to the hub. (There is no closed-circuit wrap, like you
+often see in small Novell networks. I see that kind of configuration all the time
+in medical and legal offices.) Furthermore, the hub is wired to a switch. The major
+difference is that because the segment is hardwired in this fashion, packets can
+only be sniffed within that network segment. Thus, the remaining portion of the network
+(beyond the switch) is protected from sniffing activity. This technique is commonly
+referred to as <I>compartmentalization</I> or <I>segmentation</I>.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can also use bridges or routers
+	to perform this segmentation. This may be more suitable, depending upon your configuration
+	and finances. In fact, an older PC or workstation can be made to act as a bridge
+	or a router.<I> </I>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In segmentation, costs rise dramatically. Suppose you have 50 departments. Does
+that mean you need 50 hubs, 50 switches, and a router to tie them together? Possibly.
+It depends on how paranoid you really are. If you are doing sensitive work, then
+yes, you will be spending money on hardware. But consider the advantages: If an evil
+accounting employee wants to plant a sniffer, he can get no more than he could by
+physically tampering with his coworker's workstation. Moreover, if a sniffer is found
+on one of the three stations in accounting, there are only a limited number of individuals
+who could have placed it there.</P>
+<P>The problem is a matter of trust. Some machines must trust one another in order
+to traffic information between themselves. Your job as a system administrator is
+to determine ways in which to create the fewest trust relationships possible. In
+this way, you build a framework that can tell you when a sniffer is placed, where
+it is, and who could have placed it.</P>
+<P>The problem is, in most offices, there is no real level of trust. The average
+American business is in the business of making money. Tech support is expensive and
+so is the downtime to restring a network. Additionally, there can be serious costs
+involved in that restringing. What if all the wiring is embedded in the walls? These
+are all issues that you must consider. In legacy networks, these are real problems.</P>
+<P>Also, you must consider the level of risk. What are you protecting? What are you
+planning to do regarding the Internet? These are the real issues. If you intend to
+connect your LAN to the Net, a firewall is not going to be enough. Relying solely
+on a firewall is a bad idea because new cracking techniques are always emerging.
+Are firewalls impenetrable? Vendors say yes, as long as they are properly configured.
+However, think about that statement for a moment. There was a time, not long ago,
+when shadowed password schemes were touted as pretty close to infallible (in spite
+of the fact that everyone deep in security knew that NIS would remain a weakness
+that could render the best shadowing a wet noodle). Crackers can already scan behind
+a firewall and determine the services running there. That is the first and most important
+step.</P>
+<P>It will not be long before firewalls get cracked, so be prepared. Your first concern
+should be the worst case: If an intruder cuts through your armor, how far can he
+or she get? Try to think of it in terms of a path or a trajectory. Starting at your
+Web server and working your way back, how deep do the various levels of trust go?
+For example, the Web server probably trusts one machine, which we'll call <TT>workstation1</TT>.
+How many machines does <TT>workstation1</TT> trust? How many of those machines trust
+others? In other words, worst case scenario, where will the cracker finally run out
+of machines to compromise?</P>
+<P>Your job is to prevent that worst-case scenario from becoming a disaster. You
+do so by ensuring that if an intruder places a sniffer, that sniffing activity is
+confined to a very small area.</P>
+<P>If I ran a large LAN connected to the Net, I would be sniffing the traffic on
+it. There are products that can reliably and conveniently present the results of
+such sniffing in tabular form. A good storage device, such as a Jazz drive, makes
+an excellent target to save those sniffer logs.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>In this chapter, you learned a bit about sniffers:
+
+<UL>
+	<LI>Sniffers capture packet traffic across a network, usually an Ethernet.<BR>
+	<BR>
+	
+	<LI>These can be placed surreptitiously on your drives.<BR>
+	<BR>
+	
+	<LI>A sniffer can catch all packet traffic on a particular network block (or <I>segment</I>).<BR>
+	<BR>
+	
+	<LI>Prevention of compromise is a two-fold process: encryption and compartmentalization.<BR>
+	<BR>
+	
+	<LI>Encrypted communications can be used to prevent the capture of passwords if a
+	sniffer attack is underway.<BR>
+	<BR>
+	
+	<LI>Detection methods are scarce because sniffers leave little trace. However, you
+	can run file-reconciliation utilities to determine new files on the system.<BR>
+	<BR>
+	
+	<LI>You can monitor processes as they occur.
+</UL>
+
+<P>I assert that you can benefit greatly by running a sniffer on your network, even
+if only for a day. This will familiarize you with what a cracker is facing to implement
+such an attack. Also, after you are proficient with a sniffer, you can see for yourself
+what type of information can actually be gleaned from your particular network configuration.</P>
+<P>Lastly, sniffer or no sniffer, trace the levels and relationships of trust on
+your network. You might be surprised to find that this path extends through the larger
+portion of your network for one reason or another. This becomes more complicated,
+depending on how many interfaces you are running and how many protocols run on them.
+For example, if your firm is running Novell in one area, AppleTalk in another, TCP/IP
+in another, DECnet in another, NFS in another, and so forth, you have your job cut
+out for you. Starting at any given point, how far can you travel before you reach
+a trust roadblock?
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Levels of trust and relationships
+	between network segments will be examined further in Chapter 28, &quot;Spoofing Attacks.&quot;
+	<I>Spoofing</I> relies almost solely on trust relationships and has little to do
+	with passwords. (After all, who needs a password if two machines already trust one
+	another?) 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>These considerations are all relevant to the sniffer issue. In closing, sniffers
+are very powerful tools for crackers, but only if you let them be. Moreover, if you
+find one on your network, do not immediately remove it. Instead, install one of your
+own and find out who is pulling the strings. Successful conclusions to network break-ins
+almost never begin with confrontations. They begin with stealth. You cannot go to
+the halls of justice without evidence.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="../ch11/ch11.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch13/ch13.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+<IMG SRC="../button/corp.gif" WIDTH="284" HEIGHT="45" ALIGN="BOTTOM" ALT="Macmillan Computer Publishing USA"
+BORDER="0"></P>
+
+<P>&#169; <A HREF="../copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

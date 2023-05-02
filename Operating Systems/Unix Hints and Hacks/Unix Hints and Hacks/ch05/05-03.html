@@ -1,0 +1,216 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=164-165//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>passwd, shadow, vipw</SMALL></P>
+<p>World Wide Web:</P>
+<p>Crack&#151;<a href="http://ftp.cert.org/pub/tools/crack">http://ftp.cert.org/pub/tools/crack</A></P>
+<p>AntiCrack&#151;<a href="http://www.teu.ac.jp/siit/~tominaga/anticrack/">http://www.teu.ac.jp/siit/~tominaga/anticrack/</A></P>
+<h3><a name="Heading6"></A><font color="#000077">5.3 UID</FONT></H3>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">5.3.1 Description</FONT></H4>
+<p>Not only do UIDs need to be unique, they need to be managed from a central point within your environment.
+</P>
+<p><font size="+1"><b>Example One: Large Installations</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>A UID can range from 0 to 32,767. The possibility of so many numbers being propagated to such a large number of users has the potential of getting out of control very fast and becoming an administrative nightmare. This definitely holds true at any large corporation or educational facility. A designated administrator or centralized UID file should be set in place for delegating and managing the UIDs that are issued and reclaimed. They should consist of the UID and all available information on the user that owns the UID.</P>
+<p><font size="+1"><b>Example Two: Migrating to Existing Systems</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>chown -R</B> [UID] [dirs|files]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Things are always simple when there are new systems with new or continued users, but what can be done to an existing user that has been working standalone on a different network? There are times when users acquire systems without your knowledge. They might even have the capability to bring the system up on their own or enlist the help of a power user and apply the necessary network information to bring it up talking on the network. In doing so, users often decide, or are told by a vendor or another user, to accept the defaults when creating an account for themselves. The day usually arrives when they call and ask to have their systems mounted to or from other machines on the network and need to share files with other users. Keep in mind, this could be your first contact with the user.
+</P>
+<p>You now have to inform them&#151;no, convince them&#151;that the gigabytes of data they created might all need to be touched or modified with a new UID before they can mount their computers over the network. Because they might have accepted the defaults in creating an account, there is an almost-guaranteed chance that their UID conflicts with another UID. In working with the user on this issue, let them know up front what is involved and what the repercussions are in performing or not performing this process.</P>
+<p>If a UID is conflicting with multiple users, all users are at risk of having full access to each other&#146;s files. The password entry needs to be modified with a new UID for the user. You can assure the user that the content of the files will not be touched. It is a nonintrusive recursive action. The time stamps on the files would even still remain the same.</P>
+<!-- CODE SNIP //-->
+<pre>
+# chown -R 564 /home/bill
+</PRE>
+<!-- END CODE SNIP //-->
+<p>They would still maintain ownership on all the files, and no one else would be able to gain access to their files unless the permissions were lowered on the file by the user. Assure them this would be at their discretion.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>At this time, you might want to verify that the user&#146;s umask and file permissions are set up correctly. The permissions of the directories and files should be checked and discussed with the user.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>If this is not controlled, existing machines that need to be part of your network can present an internal security risk to you, your user community, and your environment.
+</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>If two different systems share a common password file that has multiple users with the same UID, one user might notice someone else having ownership of their files. This is a common scenario. There is a way for two users to share the same UID and have complete access to each other&#146;s files without even knowing the conflict exists. It works like this:
+</P>
+<p>Bill is on the host called <i>rocket</I> and Tom is on the host called <i>saucer</I>. They both have the same UID in their local password files on each of their own hosts. Each host has an NFS mount point to the filesystem /<i>disk2</I> on a third host, <i>planet</I>.</P>
+<p>Host: rocket</P>
+<!-- CODE SNIP //-->
+<pre>
+Password Entry:  bill:ypt5jSOS7ha.s:<b>125</B>:20:Bill Adams:/home/bill:
+&#8658;/bin/tcsh
+Mount:           planet:/disk2     nfs 8360424  3619992 4740432 44
+&#8658;/disk2
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Host: saucer
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Password Entry:  tom:kThFG24y4l.j4:<b>125</B>:20:Tom
+Irvine:/home/bill:/bin/tcsh
+Mount:           planet:/disk2     nfs 8360424  3619992 4740432 44
+&#8658;/disk2
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you follow the path of /disk2 to an area in the filesystem that both users work in, you should be able to find files that would appear to be owned by both users.
+</P>
+<p>Host: rocket</P>
+<!-- CODE SNIP //-->
+<pre>
+% cd /disk2/files
+% ls -al
+-rwxr-----    1 <b>bill</B> user         640 Oct  9  9:24 asdb.pl*
+-rw-r-----    1 <b>bill</B> user        4512 Jun  5 10:55 database.log
+-r--r-----    1 <b>bill</B> user         123 Oct 21  8:12 record.dat
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Host: Saucer
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% cd /disk2/files
+% ls -al
+-rwxr-----    1 <b>tim</B> user         640 Oct  9  9:24 asdb.pl*
+-rw-r-----    1 <b>tim</B> user        4512 Jun  5 10:55 database.log
+-rw-r-----    1 <b>tim</B> user         123 Oct 21  8:12 record.dat
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Because the file is owned by the UID 125, both system recognize the files as being owned by the local user defined in the /etc/password file.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<small>chown, mount, passwd</SMALL>
+<h3><a name="Heading8"></A><font color="#000077">5.4 Group IDs and /etc/group</FONT></H3>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">5.4.1 Description</FONT></H4>
+<p>Group IDs (GID) are mapped to the groups defined in the /etc/group file. These numbers should be managed from a central point within your environment as the UIDs are. Almost every environment already has a list of predefined groups in a master /etc/group file and a list of users belonging to each group. Although there is no naming standard, it is best to name the group of users after a project, department, or group within the department. Use something that associates all the users and files with one thing.
+</P>
+<p><font size="+1"><b>Example One: /etc/groups</B></FONT></P>
+<p>If you are fortunate to start building your list or migrating from an old list because it was never done from the start, select a high GID number such as 500 for the first group.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+vi/etc/group
+
+root::0:root
+bin::1:root,bin,daemon
+daemon::2:root,bin,daemon
+users::20:eric,bryan,scott,gary
+<b>finance::500:chris,lisa,bob</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This way, as new groups of users are added to the newly formed GIDs it is easy to pick out which accounts still need to be migrated or added. In a lot of cases, preexisting admins and users would take the default and the group ID 10 and 20 which would be &#147;users&#148; or &#147;staff&#148; on most flavors.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+#vi /etc/group
+
+staff::10:
+users::20:
+</PRE>
+<!-- END CODE SNIP //-->
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>There is no way to lock this file so two people cannot make changes to it at the same time. If an administrative tool is available on your flavor, use the tool rather than a simple editor. Only then can you know that one person at a time will make changes to the file.
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Example Two: Changing User GIDs</B></FONT></P>
+<p>If you are migrating existing users, plan out your strategy for the migration. Some might be easy and some might take an extensive amount of time. Work closely with your users on the location of all their data, and the data they need access to. It saves you a lot of time in the end.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

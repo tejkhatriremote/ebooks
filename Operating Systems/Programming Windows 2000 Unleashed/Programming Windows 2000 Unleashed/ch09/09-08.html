@@ -1,0 +1,249 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=309-313//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The FileSpy service functions that perform work specific to the service are found in the <small>FSpy.c</SMALL> source file. This file is similar to the <small>FileChange</SMALL> example from Chapter 4, except for the following features:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It has been modified to present a user interface via the event log.
+<dd><b>&#149;</B>&nbsp;&nbsp;It uses synchronization events to signal when the process should terminate.
+<dd><b>&#149;</B>&nbsp;&nbsp;Parameters are collected from the system Registry.
+</DL>
+<p>Excerpts from the source code for <small>FSpy.c</SMALL> is provided in Listing 9.7. The complete listing can be found on the CD-ROM accompanying this book.</P>
+<p><b>Listing 9.7</B> The <small>FSpy.c</SMALL> Source File from the FileSpy Service<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+
+#include &#147;fspy.h&#148;
+#include &#147;util.h&#148;
+#include &#147;svcmain.h&#148;
+#include &#147;reg.h&#148;
+
+/*
+ * Main program loop - initialize the change notification
+ * handles, and hang in a loop waiting for notifications
+ * to be signaled.
+ */
+DWORD WINAPI fspymain(void* pv)
+{
+    __try
+    {
+        while(1)
+        {
+            DWORD dwWait;
+            dwWait = WaitForMultipleObjects(FN_TABLESIZE,
+                                            g_hndlTable,
+                                            FALSE,
+                                            INFINITE);
+            if(dwWait &gt= FN_MINWAIT &amp&amp dwWait &lt FN_MAXWAIT)
+            {
+                // One of the file notification events was signaled
+                int ndx = dwWait - WAIT_OBJECT_0;
+                OnFileNotification(ndx);
+                SetNextNotification(ndx);
+            }
+            else if(dwWait == FN_KILLEVENT)
+            {
+                /*
+                 * The service is terminating. The control handler
+                 * has already set the terminate event. We can just
+                 * write to the event log, and break out of the
+                 * loop.
+                 */
+                WriteToEventLog(EVENTLOG_INFORMATION_TYPE,
+                                _T(&#147;Main loop terminating&#148;));
+                break;
+            }
+            else
+            {
+                /*
+                 * An error has occurred. We must write the error
+                 * to the event log, and set the terminate event
+                 * before breaking out of the loop.
+                 */
+                WriteToEventLog(EVENTLOG_ERROR_TYPE,
+                   _T(&#147;Error while receiving file notifications&#148;));
+                UpdateServiceStatus(g_hSvcStatus,
+                                    SERVICE_STOP_PENDING,
+                                    GetLastError(),
+                                    FS_CTRL_INTERVAL);
+                SetEvent(g_hTerminate);
+                break;
+            }
+        }
+    }
+    __finally
+    {
+        /*
+         * Cleanup resources, if any - in this case there are none.
+         */
+    }
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Declarations for functions implemented in <small>FSpy.c</SMALL> are found in the <small>FSpy.h</SMALL> header file, which can be found on the CD-ROM.</P>
+<p>The FileSpy service functions that work directly with the system Registry are located in the <small>Reg.c</SMALL> source file. <small>Reg.c</SMALL> includes functions that simplify commonly performed functions, such as retrieving Boolean or string variables from the registry. Some of the source code for this file is provided in Listing 9.8. The complete source is found on the CD-ROM that accompanies this book.</P>
+<p><b>Listing 9.8</B> Registry Access Functions for the FileSpy Service<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#include &#147;reg.h&#148;
+
+/*  Returns a handle to the Options key for the service in the
+ *  Registry, given a handle to the service key as a parameter. If
+ *  the Options key does not exist, it is created.
+ */
+HKEY GetRegParamKey(HKEY hKeyService)
+{
+    HKEY  hKeyRet = NULL;
+    DWORD dwDisposition;
+    LONG lRet = RegCreateKeyEx(hKeyService,
+                               _T(&#147;Options&#148;),
+                               0,
+                               NULL,
+                               REG_OPTION_NON_VOLATILE,
+                               KEY_ALL_ACCESS,
+                               NULL,
+                               &amphKeyRet,
+                               &ampdwDisposition);
+    if(lRet != ERROR_SUCCESS)
+    {
+        hKeyRet = NULL;
+    }
+    return hKeyRet;
+}
+
+/* Given a key handle, retrieve a named BOOL value. Returns FALSE
+ * if an error occurs. If the value isn&#146;t present, it is added
+ * with the default value.
+ */
+BOOL GetRegValBool(HKEY    hkey,
+                   LPCTSTR pszValueName,
+                   BOOL*   pfValue,
+                   BOOL    fDefault)
+{
+    DWORD dwType;
+    BOOL  fReturn = FALSE;
+    DWORD dwSize = sizeof(BOOL);
+    LONG  lQuery = RegQueryValueEx(hkey,
+                                   pszValueName,
+                                   NULL,
+                                   &ampdwType,
+                                   (LPBYTE)pfValue,
+                                   &ampdwSize);
+    if(lQuery == ERROR_SUCCESS)
+        fReturn = TRUE;
+    else if(lQuery == ERROR_FILE_NOT_FOUND)
+    {
+        LONG lSet = RegSetValueEx(hkey,
+                                  pszValueName,
+                                  0,
+                                  REG_DWORD,
+                                  (LPBYTE)&ampfDefault,
+                                  dwSize);
+        if(lSet == ERROR_SUCCESS)
+        {
+            // Copy default value to return value.
+            *pfValue = fDefault;
+            fReturn = TRUE;
+        }
+    }
+    return fReturn;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Declarations for functions implemented in <small>Reg.c</SMALL> are found in the <small>Reg.h</SMALL> header file, which can be found on the CD-ROM that accompanies this book.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

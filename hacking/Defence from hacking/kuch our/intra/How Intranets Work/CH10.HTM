@@ -1,0 +1,238 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter  10 -- Subnetting an Intranet</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;10</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Subnetting an Intranet</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#SubnettinganIntranet">
+Subnetting an Intranet</A>
+</UL>
+
+<HR>
+<P>
+Intranets come in different sizes. In a small company, an intranet
+can be composed of only a handful of computers. In a medium-sized
+business, it may include dozens or hundreds of computers. And
+in a large corporation, there may be thousands of computers spread
+across the globe, all connected to a single intranet. When intranets
+get large, they need to be subdivided into individual <I>subnets</I>
+or <I>subnetworks.</I>
+<P>
+To understand how subnetting works, you first need to understand
+IP addresses. Every IP address is a 32-bit numeric address that
+uniquely identifies a network and then a specific host on that
+network. The IP address is divided into two sections: the network
+section, called the <I>netid,</I> and the host section, called
+the <I>hostid</I>.
+<P>
+Each 32-bit IP address is handled differently, according to what
+<I>class</I> of network the address refers to. There are three
+main classes of network addresses: <I>Class A</I>, <I>Class B,</I>
+and <I>Class C</I>. In some classes, more of the 32-bit address
+space is devoted to the netid, while in others, more of the address
+space is devoted to the hostid. In a Class A network, the netid
+is composed of 8 bits, while the hostid is composed of 24 bits.
+In a Class B network, both the netid and the hostid are composed
+of 16 bits. In a Class C network, the netid is composed of 24
+bits, while the hostid is composed of 8 bits. There's a simple
+way of knowing what class a network is in. If the first number
+of the IP address is less than 128, the network is a Class A address.
+If the first number is from 128 to 191, it's a Class B network.
+If the first number is from 192 to 223, it's a Class C network.
+Numbers above 223 are reserved for other purposes. The smaller
+the netid, the fewer number of networks that can be subnetted,
+but the larger number of hosts on the network. A Class A rating
+is best for large networks while a Class C is best for small ones.
+<P>
+To create a subnet, the demarcation line on the IP address is
+moved between the netid and the hostid, to give the netid more
+bits to work with and to take away bits from the hostid. To do
+this, a special number called a <I>subnet mask</I> is used.
+<P>
+Subnetting is used when intranets grow over a certain size and
+they begin to have problems. One problem is management of host
+IP addresses-making sure that every computer on the network has
+a proper, up-to-date host address, and that old host addresses
+are put out of use until needed in the future. In a corporation
+spread out over several locations-or across the world-it's difficult,
+if not impossible, to have one person responsible for managing
+the host addresses at every location and department in the company.
+<P>
+Another problem has to do with a variety of hardware limitations
+of networks. Dissimilar networks may all be part of an intranet.
+An intranet may have some sections that are Ethernet, other sections
+that are Token Ring networks, and conceivably other sections that
+use different networking technologies altogether. There is no
+easy way for an intranet router to link these dissimilar networks
+together and route the information to the proper places.
+<P>
+Another set of problems has to do with the physical limitations
+of network technology. In some kinds of networks, there are some
+strict limitations on how far cables can extend in the network.
+In other words, you can't go over a certain distance of cabling
+without using repeaters or routers. A &quot;thick&quot; Ethernet
+cable, for example, can only be extended to 500 meters, while
+a &quot;thin&quot; Ethernet cable can only go to 300 meters. Routers
+can be used to link these cables together, so that an intranet
+can be extended well beyond those distances. But when that is
+done, each length of wire is essentially considered its own subnetwork.
+<P>
+Yet one more set of problems has to do with the volume of traffic
+that travels across an intranet. Often in a corporation, in a
+given department, most of the traffic is intradepartmental traffic-in
+other words, mail and other data that people within a department
+send to each another. The volume of traffic outside to other departments
+is considerably less. What's called for is a way to confine intradepartmental
+traffic inside the departments, to cut down on the amount of data
+that needs to be routed and managed across the entire intranet.
+<P>
+Subnetting solves all these problems and more. When an intranet
+is divided into subnets, one central administrator doesn't have
+to manage every aspect of the entire intranet. Instead, each subnet
+can take care of its own administration. That means smaller organizations
+within the larger organization can take care of problems such
+as address management and a variety of troubleshooting chores.
+If an intranet is subnetted by divisions or departments, it means
+that each division or department can guide the development of
+its own network, while adhering to general intranet architecture.
+Doing this allows departments or divisions more freedom to use
+technology to pursue their business goals.
+<P>
+Subnets also get around problems that arise when an intranet has
+within it different kinds of network architecture, such as Ethernet
+and Token Ring technologies. Normally-if there is no subnetting-a
+router can't link these different networks together because they
+don't have their own addresses. However, if each of the different
+networks is its own subnet-and so has its own network address-routers
+can then link them together and properly route intranet traffic.
+<P>
+Subnetting can also cut down on the traffic traveling across the
+intranet and its routers. Since much network traffic may be confined
+within departments, having each department be its own subnet means
+that all that traffic need never cross an intranet router and
+cross the intranet-it will stay within its own subnet.
+<P>
+Subnetting can also increase the security on an intranet. If the
+payroll department, for example, were on its own subnet, then
+much of its traffic would not have to travel across an intranet.
+Having its data traveling across the intranet could mean that
+someone could conceivably hack into the data to read it. Confining
+the data to its own subnet makes that much less likely to happen.
+<P>
+Dividing an intranet into subnets can also make the entire intranet
+more stable. If an intranet is divided in this way, then if one
+subnet goes down or is often unstable, it won't affect the rest
+of the intranet. 
+<P>
+This all may sound rather confusing. To see how it's done, let's
+take a look at a network, and see how to use the IP address to
+create subnets. Let's say we have a Class B network. That network
+is assigned the address of 130.97.0.0. When a network is given
+an address, it is assigned the netid numbers-in this case, the
+130.97-and it can assign the host numbers (in this case, 0.0)
+in any way that it chooses.
+<P>
+The 130.97.0.0 network is a single intranet. It's getting too
+large to manage, though, and we've decided to divide it into two
+subnets. What we do is fairly straightforward. We take a number
+from the hostid field and use it to identify each of the subnets.
+So one subnet gets the address 130.97.1.0, and the other gets
+the address 130.97.2.0. Individual machines on the first subnet
+get addresses of 130.97.1.1, 130.97.1.2, and so on. Individual
+machines on the second subnet get addresses of 130.97.2.1, 130.97.2.2
+and so on.
+<P>
+Sounds simple. But we have a problem. The Internet doesn't recognize
+130.97.1.0 and 130.97.2.0 as separate networks. It treats them
+both as 130.97.0.0 since the &quot;1&quot; and &quot;2&quot; that
+we're using as a netid is only known to the Internet as a hostid.
+So our intranet router will not be able to route incoming traffic
+to the proper network.
+<P>
+To solve the problem, a subnet mask is used. A subnet mask is
+a 32-bit number in IP form used by intranet routers and hosts
+that will help routers understand how to route information to
+the proper subnet. To the outside Internet, there is still only
+one network, but the subnet mask allows routers inside the intranet
+to send traffic to the proper host.
+<P>
+A subnet mask is a number such as 255.255.255.0 (the built-in
+default for Class C addresses; the Class B default is 255.255.0.0
+and the default for Class A is 255.0.0.0). A router takes the
+subnet mask and applies that number against the IP number of incoming
+mail to the network by using it to perform a calculation. Based
+on the resulting IP number, it will route mail to the proper subnet,
+and then to a particular computer on the subnet. For consistency,
+everyone in a particular intranet will use the same subnet mask.
+<H2><A NAME="SubnettinganIntranet"><FONT SIZE=5 COLOR=#FF0000>
+Subnetting an Intranet</FONT></A></H2>
+<P>
+When intranets are over a certain size, or are spread over several
+geographical locations, it becomes difficult to manage them as
+a single network. To solve the problem, the single intranet can
+be subdivided into several <I>subnets</I>, subsections of an intranet
+that make them easier to manage. To the outside world, the intranet
+still looks as if it's a single network.
+<OL>
+<LI>If you're building an intranet and want it to be connected
+to the Internet, you'll need a unique IP address for your intranet
+network, which the InterNIC Registration Services will handle.
+There are three classes of intranet you can have: Class A, Class
+B, or Class C. Generally, a Class A rating is best for the largest
+networks, while a Class C is best for the smallest. A Class A
+network can be composed of 127 networks, and a total of 16,777,214
+nodes on the network. A Class B network can be composed of 16,383
+networks, and a total of 65,534 nodes. A Class C network can be
+composed of 2,097,151 networks, and 254 nodes.
+<LI>When an intranet is assigned an address, it is assigned the
+first two IP numbers of the Internet numeric address (called the
+<I>netid</I> field) and the remaining two numbers (called the
+<I>hostid</I> field) are left blank, so that the intranet itself
+can assign them, such as 147.106.0.0. The hostid field consists
+of a number for a subnet and a host number.
+<LI>When an intranet is connected to the Internet, a router handles
+the job of sending packets into the intranet from the Internet.
+In our example, all incoming mail and data comes to a router for
+a network with the netid of 147.106.0.0.
+<LI>When intranets grow-for example, if there is a department
+located in another building, city, or country-there needs to be
+some way to manage network traffic. It may be impractical and
+physically impossible to route all the data necessary among many
+different computers spread across a building or the world. A second
+network-called a <I>subnetwork</I> or <I>subnet</I>-needs to be
+created.
+<LI>In order to have a router handle all incoming traffic for
+a subnetted intranet, the first byte of the hostid field is used.
+The bits that are used to distinguish among subnets are called
+<I>subnet numbers</I>. In our example, there are two subnets on
+the intranet. To the outside world, there appears to be only one
+network.
+<LI>Each computer on each subnet gets its own IP address, as in
+a normal intranet. The combination of the netid field, the subnet
+number, and then finally a host number, forms the IP address.
+<LI>The router must be informed that the hostid field in subnets
+must be treated differently than non-subnetted hostid fields,
+otherwise it won't be able to properly route data. In order to
+do this, a <I>subnet mask</I> is used. A subnet mask is a 32-bit
+number such as 255.255.0.0 that is used in concert with the numbers
+in the hostid field. When a calculation is performed using the
+subnet mask and the IP address, the router knows where to route
+the mail. The subnet mask is put in people's network configuration
+files.
+</OL>
+<HR>
+
+<CENTER><P><A HREF="ch9.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch11.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

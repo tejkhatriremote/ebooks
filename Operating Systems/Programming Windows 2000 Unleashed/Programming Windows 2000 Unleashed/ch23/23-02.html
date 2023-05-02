@@ -1,0 +1,196 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=769-772//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Function</I>. When a variable is declared at the function level, it exists only within that function. After the function has been exited, the value is lost.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Page</I>. When an ASP page is being retrieved, the processing of the page starts from the top and goes to the bottom. If during this processing a variable is declared, the variable exists for the life of the page.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>User</I>. When a specific user accesses an ASP page within the ASP application, a token is associated with that user. The token is a cookie that is returned to the client browser. Then when the client retrieves another page within the ASP application, the token is associated with any state established in a previous ASP request. One caveat with User scope state is that it is subject to timeout. Timeout applies when the delta between two ASP requests exceeds the Application defined time amount. When timeout executes, any state that has been established is released. Note that an ASP application is not the only environment that uses this technique. An example is ODBC, which uses timeout to cancel a database connection. Therefore, if you keep an ODBC database connection and that timeout is less than the ASP timeout, you have invalid calls and errors.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Everybody</I>. In the user scope, the state is associated with a specific client. If it is desired to create a state that can be shared between the various users, everybody scope applies. This scope needs synchronization because it applies to all users.
+</DL>
+<p><font size="+1"><b>Page Scope</B></FONT></P>
+<p>Page scope may seem simple to handle. However, it&#146;s actually more complicated than it appears. Consider the following example:
+</P>
+<!-- CODE //-->
+<pre>
+&lt%
+var value1;
+value1 = 2;
+%&gt
+&ltscript language=javascript runat=server&gt
+var value2;
+value2 = value1 &#43; 3;
+function valueBefore() {
+return value2;
+}
+function valueAdd() {
+value2 = value2 &#43; value1 &#43; 3;
+return value2;
+}
+function valueAfter() {
+return value2;
+}
+&lt/script&gt
+Output values are
+&ltbr&gtValue 1:(&lt%=value1%&gt)
+&ltbr&gtValue 2:(&lt%=value2%&gt) direct access before
+&ltbr&gtValue 2:(&lt%=valueBefore()%&gt) before adding
+&ltbr&gtValue 2:(&lt%=valueAdd()%&gt) adding
+&ltbr&gtValue 2:(&lt%=valueAfter()%&gt) after adding
+&ltbr&gtValue 2:(&lt%=value2%&gt) direct access after
+</PRE>
+<!-- END CODE //-->
+<p>This code segment shows the various situations on how page scope applies. It was previously mentioned that the page is processed starting at the top and then ending at the bottom. This applies only to instructions that reside within the page scope. These instructions are executed in sequential order. Therefore, order is critical. The other code pieces are functions and are called from the page scope. The order in which they are called does not matter, nor does their location on the page.
+</P>
+<p>This code segment is interesting because of the results that it returns:</P>
+<!-- CODE SNIP //-->
+<pre>
+2, , , -1.#IND,-1.#IND and -1.#IND
+</PRE>
+<!-- END CODE SNIP //-->
+<p>However, we expect the results to be
+</P>
+<!-- CODE SNIP //-->
+<pre>
+2, 5, 5, 10, 10 and 10
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Why the difference? The answer is that lines 6 and 8 are not executed. They are part of a block that is called up when the page execution requires it. This means no declarations or commands will have any effect. The only time that page scope applies is when the objects are declared within <small>&lt%</SMALL> and <small>%&gt</SMALL> tags.</P>
+<p>The reason the values <small>-1.#IND</SMALL> are output is because of how variables are managed within a scripting environment. Scripting does not understand the concept of data types. Within a scripting environment, all data types are variant. A variant data type is a data type that can be of any type. It can be an integer, string, currency, or object. There are no restrictions, generally. The exceptions in the scripting environment are arrays, which are beyond the scope of this book. Therefore, when attempting to do something with the variable like an addition operator, it does not understand, because the addition could also mean a string concatenation (this is JavaScript specific). And because it does not understand, it will output the error value <small>-1.#IND</SMALL>, which means this is not a number. To check the type, you could use the following code:</P>
+<!-- CODE SNIP //-->
+<pre>
+typeof( value2)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This will return one of the following strings: &#147;<small>number</SMALL>&#148;, &#147;<small>string</SMALL>&#148;, &#147;<small>boolean</SMALL>&#148;, &#147;<small>object</SMALL>&#148;, &#147;<small>function</SMALL>&#148;, or &#147;<small>undefined</SMALL>&#148;.</P>
+<p><font size="+1"><b>User Scope</B></FONT></P>
+<p>When a token is created to build a state between ASP requests, it is stored in a COM object called Session. This COM object is an intrinsic object within the ASP environment. It is not a complicated object, because its sole purpose is to store state. This is done by assigning a value to the Session object while defining a key as an identifier. Here&#146;s an example:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Session(&#147;SomeData&#148;) = 3
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Like the scripting environment, there are no specific data types when the Session object is assigned. Everything is a variant. This means that when you&#146;re developing, you won&#146;t know what the data type is unless you query for it.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B><p>Even though not necessary, it is good practice to initialize your state values. This does two things&#151;declares a specific value, which makes your code more readable, and type-defines your variable.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Because the session&#146;s at the user level, you don&#146;t have to deal with concurrency issues. Using variables is straightforward&#151;whenever you need one, you assign it. If you&#146;re retrieving the value of an unassigned variable, an empty value is returned. This may seem odd, but it makes sense. In C<small>&#43;&#43;</SMALL>, an unassigned variable returns an unknown value. Scripting will initialize an unassigned variable to an empty value. This is not a <small>NULL</SMALL> value. It is a value without value. In most situations this does not matter, but when performing operations where a value is assumed, you will get unpredictable results (as shown in the preceding script). This is another reason to initialize your variables.</P>
+<p>It&#146;s possible to store objects within the <small>Session</SMALL> object. Here&#146;s how to create an object:</P>
+<!-- CODE SNIP //-->
+<pre>
+Session(&#147;MyObject&#148;) = Server.CreateObject(&#147;Simple.Object&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the creation is successful, the object can be used directly, like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Session(&#147;MyObject&#148;).someMethod( param1);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>On the other hand, an unsuccessful creation results in a <small>NULL</SMALL> value, and this must be checked.</P>
+<p><font size="+1"><b>Everybody Scope</B></FONT></P>
+<p>The <small>Application</SMALL> object is a built-in object that has global ASP application scope. Each client that establishes a unique <small>Session</SMALL> object will be able to see the same <small>Application</SMALL> object. The purpose of the <small>Application</SMALL> object is to share data and information among the individual clients. Because the object has Application scope, the problem of variable corruption exists. The methods <small>Lock</SMALL> and <small>Unlock</SMALL> must be used to solve this problem. Setting a variable to the <small>Application</SMALL> object is the same as setting a variable to the <small>Session</SMALL> object. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%
+Application.Lock();
+Application(&#147;AValue&#148;) = &#147;something&#148;;
+Application.UnLock();
+%&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

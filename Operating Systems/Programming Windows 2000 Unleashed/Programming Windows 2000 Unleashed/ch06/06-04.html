@@ -1,0 +1,203 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=195-199//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>LoadLibrary</SMALL> function returns an instance handle that refers to the DLL. If <small>LoadLibrary</SMALL> is not successful, <small>NULL</SMALL> is returned. In order to use any functions exported by the DLL, you must call <small>GetProcAddress</SMALL> with the library&#146;s instance handle and the name of the function:</P>
+<!-- CODE SNIP //-->
+<pre>
+pFunc = (PFUNC)GetProcAddress(hLibInstance, _T(&#147;GetUltimateAnswer&#148;));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The function name must be spelled exactly as it is exported. Alternatively, you can use the ordinal export value, if one exists, like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+pFunc = (PFUNC)GetProcAddress(hLibInstance, MAKEINTRESOURCE(1));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The return value from <small>GetProcAddress</SMALL> is typed as a <small>FARPROC</SMALL>. In most cases, you must cast it to the proper type, as shown in the preceding example.</P>
+<p>After you get the address, you use it like any other function pointer:</P>
+<!-- CODE SNIP //-->
+<pre>
+int n = pFunc();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After you finish using the library, you should release it by calling <small>FreeLibrary</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+FreeLibrary(hLibInstance);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When using <small>LoadLibrary</SMALL>, you don&#146;t need to link your application with an import library for the DLL. Because you don&#146;t explicitly call any of the DLL functions, the linker doesn&#146;t complain about missing references.</P>
+<p>This method is extremely useful in situations in which a DLL may not exist on a particular installation. You can use <small>LoadLibrary</SMALL> to load a DLL containing optional resources or functions; if it&#146;s not found, you can take some alternative action.</P>
+<p>The Win32 API also contains <small>LoadLibraryEx</SMALL>, a function that can offer improved performance in special cases. For example, if you&#146;re loading a resource-only DLL, <small>LoadLibraryEx</SMALL> can be called with flags that indicate that the operating system need not initialize the DLL or call the <small>DllMain</SMALL> function.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Using Version Control with DLLs</FONT></H4>
+<p>One of the types of resources that can be bound to Win32 executable files and fonts is the <i>version resource</I>. The version resource tags the executable files and font resources with the company name, filename, and other version information. Other programs can use this information to compare files to determine the revision level of the file. Windows 2000 offers version control functions that can be used to query standard version resources.</P>
+<p>Adding version information to a DLL project is easy and takes only a few minutes. To take advantage of the standard version control functions, you must define a version resource for your project. Figure 6.3 shows a version resource being edited inside the Visual C<small>&#43;&#43;</SMALL> Developer Studio IDE.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-03.jpg',800,600 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-03.jpg',800,600)"><font color="#000077"><b>Figure 6.3</B></FONT></A>&nbsp;&nbsp;Using Visual C<small>&#43;&#43;</SMALL> Developer Studio to edit a version resource.
+</P>
+<p>If you use Developer Studio to edit your version resource, the individual fields are conveniently displayed for editing. Just fill in the relevant information and rebuild the DLL project.
+</P>
+<p>That&#146;s all there is to marking your files with version information. You can see this information easily by using the Windows 2000 Explorer and displaying the file properties. Figure 6.4 shows an example of version information for a DLL.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-04.jpg',372,443 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-04.jpg',372,443)"><font color="#000077"><b>Figure 6.4</B></FONT></A>&nbsp;&nbsp;Displaying version information for a DLL.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Creating Shared Memory for a DLL</FONT></H4>
+<p>It&#146;s sometimes necessary for processes that use a DLL to share information. In 16-bit versions of Windows, this usually is done through shared memory owned by the DLL. Because the DLL in 16-bit Windows is mapped into the global address space, all applications have access to data owned by the DLL, so this scheme is easy to implement.
+</P>
+<p>In Windows 2000, where each DLL is mapped into the address space of the process that loaded the DLL, any memory used by the DLL is actually in the address space of the calling process. You can still share memory&#151;it just takes a little more work.</P>
+<p>A section of memory used by a DLL is defined as sharable by using the <small>SECTIONS</SMALL> keyword in a module definition file. Listing 6.4 defines a section named <small>.shared</SMALL> as a readable, writable, and shared section of memory. Windows 2000 memory sections always begin with a dot (<small></SMALL>.), but you can give them any name you want.</P>
+<p><b>Listing 6.4</B> A DEF File Defining a Shared Data Section</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+LIBRARY      &#147;ESPRESSODLL&#148;
+DESCRIPTION  &#145;ESPRESSODLL Windows Dynamic Link Library&#146;
+
+SECTIONS
+    .shared  READ WRITE SHARED
+
+EXPORTS
+
+    ; Explicit exports can go here
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>After you define a memory section, you must place your shared memory into that section and initialize it. Only initialized data can be shared using this method; uninitialized data is not placed into the shared memory section. If you&#146;re using Visual C<small>&#43;&#43;</SMALL>, the <small>data_seg</SMALL> pragma is used to mark the beginning and end of a data segment, as Listing 6.5 shows.</P>
+<p><b>Listing 6.5</B> Using the <small>data_seg</SMALL> Pragma to Mark a Data Segment</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#pragma data_seg(&#147;.shared&#148;)
+int nServedLattes = 42;
+#pragma data_seg()
+
+int GetLatteCount( void )
+{
+    return  &#43;&#43;nServedLattes;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The code fragment in Listing 6.5 creates a data segment named <small>.shared</SMALL> that contains one variable: <small>nServedLattes</SMALL>. When this code is used in a DLL, every process will share the <small>nServedLattes</SMALL> variable. When <small>GetLatteCount</SMALL> is called, <small>nServedLattes</SMALL> is incremented and the new value is returned.</P>
+<p>When this code is run on a Windows 2000 installation with one processor, it works as expected. On a machine with multiple processors, however, it has a fatal flaw. It&#146;s possible for more than one CPU to attempt to change the value of <small>nServedLattes</SMALL>, thus resulting in undefined results.</P>
+<p>As discussed in Chapter 3, &#147;Threads and Processes,&#148; data that&#146;s shared between threads may be corrupted if multiple threads access the data simultaneously. A similar problem exists when multiple processes access shared memory sections exposed by a DLL. If you&#146;re using shared memory in a DLL, beware of using nonatomic operations on data or functions that may be used by multiple threads or processes simultaneously.</P>
+<p>As discussed in Chapter 3, the <small>InterlockedIncrement</SMALL> function safely increments a variable stored at an address passed to it as a parameter:</P>
+<!-- CODE SNIP //-->
+<pre>
+InterlockedIncrement(&ampnServedLattes);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Listing 6.6 shows an improved version of <small>GetLatteCount</SMALL>. Using a test driver, this version of <small>GetLatteCount</SMALL> compiles into a DLL, which runs without losing any transactions.</P>
+<p><b>Listing 6.6</B> A Multiprocessor-safe Version of <small>GetLatteCount</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#pragma data_seg(&#147;.shared&#148;)
+int nServedLattes = 0;
+#pragma data_seg()
+
+int GetLatteCount(void)
+{
+    InterlockedIncrement(&ampnServedLattes);
+    return nServedLattes;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Looking at a Simple DLL Example</FONT></H4>
+<p>To show you how DLLs are used in Windows 2000 applications, several sample programs have been included on the CD-ROM accompanying with this book. These examples range from simple examples involving console mode applications to MFC-based DLLs.
+</P>
+<p>The first sample program demonstrates how different applications can use a DLL as a &#147;function warehouse.&#148; The FuncDll project creates a DLL that exports a single function; later, shared memory is added. This DLL is also used later in the chapter by a console mode program and a dialog-based MFC application.</P>
+<p>Each version of the DLL and its clients are included on the CD-ROM. You can use those projects or create them from scratch by following the steps presented here.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

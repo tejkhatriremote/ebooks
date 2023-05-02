@@ -1,0 +1,200 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Asynchronous COM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=19//-->
+<!--PAGES=624-629//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="19-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using the Call Object</B></FONT></P>
+<p>All asynchronous COM activities rotate in an orbit around call objects. The call object is new in Windows 2000&#151;it&#146;s used by a client to begin, track, and complete an asynchronous method call. Each call object can handle one asynchronous method call at any given time. A single client thread may have several instances of call objects in various states, but each call object may only have a single asynchronous method call outstanding at any given time.
+</P>
+<p>A client retrieves a call object through the <small>ICallFactory</SMALL> interface, which is exposed by the server. Proxies that have been compiled with asynchronous attributes also expose this interface. The call object is responsible for managing asynchronous communication with the server&#151;the DCOM wire protocol has not been changed to manage asynchronous communication.</P>
+<p>For example, consider the most common case where asynchronous COM provides the most benefit&#151;communication with a COM object that&#146;s out of process or even located on a remote computer. As shown in Figure 19.3, communication between a proxy that implements asynchronous versions of the server&#146;s COM interfaces and the actual COM object is still synchronous.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-03.jpg',500,339 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-03.jpg',500,339)"><font color="#000077"><b>Figure 19.3</B></FONT></A>&nbsp;&nbsp;Communication between a call object and a COM server is still synchronous.</P>
+<p>The asynchronous method call shown in Figure 19.3 follows these steps:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The client creates an instance of the COM server. Because the COM server is an EXE, the operating system creates a proxy and stub for the client to communicate with the server.
+<dd><b>2.</B>&nbsp;&nbsp;The client queries the COM object for <small>ICallFactory</SMALL>. In this case, the COM object does not support <small>ICallFactory</SMALL>, but the proxy has been rebuilt from an IDL definition that includes the <small>async_uuid</SMALL> attribute. The proxy returns an interface to its <small>ICallFactory</SMALL> interface.
+<dd><b>3.</B>&nbsp;&nbsp;The client creates a call object for the asynchronous version of <small>IShop</SMALL> from the call factory, asking for the <small>AsyncIShop</SMALL> interface as its initial interface pointer.
+<dd><b>4.</B>&nbsp;&nbsp;The client calls <small>AsynchIShop::Begin_TakeSomeTime</SMALL> to begin the asynchronous method call. This method contains all the <small>[in]</SMALL> parameters passed to the COM object.
+<dd><b>5.</B>&nbsp;&nbsp;The call object creates a thread that makes a synchronous method call to the COM object&#146;s <small>ITakeTime::TakeSomeTime</SMALL> method.
+<dd><b>6.</B>&nbsp;&nbsp;The COM object processes the method call synchronously and returns the result to the proxy.
+<dd><b>7.</B>&nbsp;&nbsp;Meanwhile, the client thread has been free to perform other work. At some point, the client calls the proxy&#146;s <small>ISynchronize::Wait</SMALL> method. This method is similar to the Win32 <small>WaitForSingleObject</SMALL> API function, and it typically blocks until the asynchronous method call can be completed.
+<dd><b>8.</B>&nbsp;&nbsp;When the proxy completes the synchronous call to <small>ITakeTime::TakeSomeTime</SMALL>, it signals to the machinery handling the <small>ISynchronize</SMALL> interface that the asynchronous method call can be completed.
+<dd><b>9.</B>&nbsp;&nbsp;The client calls <small>AsynchIShop::Finish_TakeSomeTime</SMALL> to complete the asynchronous method call. This method contains all the <small>[out]</SMALL> parameters received from the COM object.
+<dd><b>10.</B>&nbsp;&nbsp;The client can either release the call object or reuse it in another asynchronous call.
+</DL>
+<p>It may seem as though this list contains a lot of steps for just one method call, but many of these steps involve creating the call object and acquiring pointers to the interfaces required to implement asynchronous method calls. You would typically perform these steps to create a series of call objects and then reuse the call objects as needed. As shown in Figure 19.4, each client thread may have several asynchronous call objects available for use at any given time.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-04.jpg',398,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch19/images/19-04.jpg',398,420)"><font color="#000077"><b>Figure 19.4</B></FONT></A>&nbsp;&nbsp;Each client may have multiple call objects for each interface.</P>
+<p><font size="+1"><b>Using the ICallFactory Interface to Create Call Objects</B></FONT></P>
+<p>The <small>ICallFactory</SMALL> interface is used to create an instance of a call object. Every COM object that supports asynchronous interfaces must support <small>ICallFactory</SMALL>&#151;this is the only way to create the call objects that are required to make asynchronous method calls. Each COM object has a unique call object that&#146;s used to access its unique set of interfaces.</P>
+<p>Asynchronous behavior for an interface is always implemented in the proxy, if one exists. The only time the underlying COM object must support <small>ICallFactory</SMALL> is when the COM object is used in the same apartment as the client. As discussed earlier in the chapter, it&#146;s possible for a proxy to support <small>ICallFactory</SMALL>, even if the underlying COM object does not support asynchronous method calls, simply by modifying the IDL and rebuilding the proxy/stub DLL.</P>
+<p>The client obtains a pointer to <small>ICallFactory</SMALL> via <small>QueryInterface</SMALL>. The proxy will return the pointer to the <small>ICallFactory</SMALL> interface implemented by the proxy, which can then be used to create multiple call objects.</P>
+<p>A simplified definition of the <small>ICallFactory</SMALL> interface is provided in Listing 19.3.</P>
+<p><b>Listing 19.3</B> The <small>ICallFactory</SMALL> Interface<hr></P>
+<!-- CODE //-->
+<pre>
+interface ICallFactory : public IUnknown
+{
+public:
+    HRESULT CreateCall(REFIID riid,
+                       IUnknown *pCtrlUnk,
+                       REFIID riid2,
+                       IUnknown** ppv);
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>ICallFactory</SMALL> interface has one method: <small>CreateCall</SMALL>. The <small>CreateCall</SMALL> method has four parameters:</P>
+<dl>
+<dd>&#149;	The interface ID for the asynchronous interface.
+<dd>&#149;	A pointer to a controlling <small>IUnknown</SMALL> interface if aggregation is used or <small>NULL</SMALL> if no aggregation is performed.
+<dd>&#149;	The interface ID of the initial interface pointer to be returned from the call object. This may be the same value as the first parameter.
+<dd>&#149;	The address of a pointer to a COM interface that will receive the initial interface pointer from the call object.
+</DL>
+<p>A client may use the call factory to create several call objects that can be used over the lifetime of the client, as shown in Listing 19.4.
+</P>
+<p><b>Listing 19.4</B> Using <small>ICallFactory</SMALL> to Create Several Call Objects<hr></P>
+<!-- CODE //-->
+<pre>
+struct ASYNC_OBJS
+{
+    AsyncIPark* pPark;
+    AsyncIShop* pShop;
+    AsyncICharge* pCharge;
+
+};
+HRESULT LoadCallObjects(IUnknown* punk, ASYNC_OBJS&amp; obs)
+{
+    HRESULT hr;
+    ICallFactory* pcf = NULL;
+
+    ZeroMemory(&amp;obs, sizeof(ASYNC_OBJS));
+
+    try
+    {
+        hr = punk-&gt;QueryInterface(&amp;pCallFactory);
+        if(FAILED(hr)) throw hr;
+
+        hr = pCallFactory-&gt;CreateCall(IID_AsyncIPark,
+                                      NULL,
+                                      IID_AsyncIPark,
+                                      (IUnknown**)&amp;obs.pPark);
+
+        if(FAILED(hr)) throw hr;
+        hr = pCallFactory-&gt;CreateCall(IID_AsyncIShop,
+                                      NULL,
+                                      IID_AsyncIShop,
+                                      (IUnknown**)&amp;obs.pShop);
+
+        hr = pCallFactory-&gt;CreateCall(IID_AsyncICharge,
+                                      NULL,
+                                      IID_AsyncICharge,
+                                      (IUnknown**)&amp;obs.pCharge);
+        if(FAILED(hr)) throw hr;
+    }
+    catch(HRESULT hr)
+    {
+        if(pcf) pcf-&gt;Release();
+        if(obs.pPark) obs.pPark-&gt;Release();
+        if(obs.pShop) obs.pShop-&gt;Release();
+        if(obs.pCharge) obs.pCharge-&gt;Release();
+    }
+    return hr;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="19-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

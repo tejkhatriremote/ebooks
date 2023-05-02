@@ -1,0 +1,88 @@
+Introduction
+
+ 
+
+Many people are interested in how Google works, and Google is mostly interested in keeping it a secret. I'm going to tell you a few things I've learned about Google by playing around with their software . It's not terribly advanced, but I think it's interesting nonetheless. The first thing I will cover is Google's cookie, and then I will explain how I used this information to exploit Google Print. 
+
+
+
+Google's Cookie
+
+ 
+
+Most web browsers allow small text files, called cookies, to be stored on behalf of web servers ... this allows a persistent state to be associated with a user. After a cookie is created, it will be sent back to the web server every time you request a page (but only when you request a page from the server that originally requested the cookie). For example, when you set your SafeSearch preferences on the Google web site it stores your choice in the Google cookie. Then, whenever you request a page from Google it can see what you set your preference to earlier and use it without having to ask you again. If you delete your cookie, you'll just get a new cookie the next time you visit ... but you'll have to set your preference again. Pretty useful, huh? 
+
+
+Google does some more interesting things with its cookie, though. Some of them are hard to figure out. The first thing to notice is that your cookie will store some preferences locally, like SafeSearch, because Google probably doesn't care if you see that information (it won't bother you to see that they are storing your preferences). Otherwise, they probably have a server side system that uses the following characteristics of the cookie to store more .. ahem .. personalized information about you. 
+
+
+Here is an example of a Google cookie: 
+
+
+GPREF=ID=26b2149fe108b391:TM=1109736400:LM=1109736400:S=pbbDWyL8tVmJrILc 
+
+
+You can see that after "GPREF=", there are name-value pairs ID, TM, LM, and S (separated by colons). In this case, our ID is 26b2149fe108b391. This is a (hopefully) unique ID, and it is most likely generated randomly. Google probably doesn't worry about "collisions" (two users getting the same ID) because this is a 16-digit hexadecimal number, and there are 16^16 = 18446744073709551616 = 18.44674 x 10^18 possible IDs that could be assigned. Even if everyone on the planet used Google, the chance of collision would be very low. Google's cookie has an expiration date of January 17, 2038. Essentially, unless you purposely clear your cookies, format your hard drive, etc. this means it will be with you for a very long time. 
+
+
+The TM value is a timestamp of the moment (to the second) that Google generated your cookie. Here it is 1109736400, measured in seconds since January 1, 1970, or March 1, 2005 at 10:06:40 PM (CST). 
+
+
+LM seems unimportant because it is a timestamp of when the user last changed their preferences. Many other name-value pairs can appear, but the only others that I have seen represent more preferences. Having the unique ID means they are most definitely storing *something* on the server side, but don't worry it's probably only analyzed in aggregate unless you are one of Sergey's ex-girlfriends :-p. 
+
+
+Now, S is the most interesting value in the cookie. Some have hypothesized that it is a checksum of some sort. It could be a hash, for instance. In my experience, the signature only varies with different ID and/or TM values. Thus, Google is assured that THEY generated the cookie at a given time by doing a simple calculation of the hash. But relying on a pure hash would be security through obscurity, i.e. Google would basically be relying on the secrecy of the hash function. Instead, I think that Google probably uses a digital signature algorithm of some kind to generate it. So, maybe S stands for signature. It appears that the signature is 16 characters long, case-sensitive, and alpha-numeric only, giving (10+26+26)^16 possibilities or roughly the equivalent of a 93-bit hash (not incredibly strong by today's standards, but definitely a good chunk of hash). I tried my luck at guessing a hash function and mapping parts to base 62 numbers, but I just don't think that they are stupid enough to do it that way. Sucks for me, because I'm no Bruce Schneier when it comes to cryptography. My instinct is that an attack against the signature would be futile. 
+
+
+Now, the payoff. Well, after another explanation that is :) What are some reasons that Google needs to know you by an ID and when your cookie was created? 
+
+
+Google Print
+
+ 
+
+Google Print URLs are of the form: 
+
+
+http://print.google.com/print?id=VvBRboW2icUC&pg=1&sig=hoLj_9Ot12vG6mSjZ vK547vbP3E 
+
+
+Anything look familiar here? Another signature! Maybe this one is generated in a similar manner (then again, maybe not ... they are probably different teams). The ID in the URL points to the book that you are viewing, and PG points to the page number. Now click the "Next Page" arrow. You'll get a URL like: 
+
+
+http://print.google.com/print?id=VvBRboW2icUC&lpg=1&pg=2&sig=gBBbI6T 0FzHxgVeJJQKQqmZ_MNk 
+
+
+The signature changes when you change pages, and LPG points to the page you started from! Eventually, you will not be able to advance through the pages any more. Google wants to limit you on the amount of pages you can scroll just so you can't read an entire book for free (that would make the publishers very unhappy, and here's my sad face for it :(). Try removing LPG and going to the resulting URL. You'll get a "page not found". So, apparently, the signature depends on the page you entered on, the page you are at, and the book you are viewing. This allows Google to impose their "page lookahead/lookbehind" limit. 
+
+
+You may see a search box on the side of the Google Print page to search within the book. Funny enough, you can use this to search for page numbers and skip through parts of the book. However, it will eventually hit a hard limit based on your unique ID ... i.e. you've viewed too many pages overall in this book; nothing to see here, please move along. Google probably already knows you can skip around pages like this because the search box doesn't appear unless your cookie is 24 hours old or more! Try it, if you have the search box now delete your cookie and refresh the page. The box will disappear! If you saved some of the URLs for the search results of the search-in-book feature, they will also not work! Wait 24 hours or so and try again. Now it works. Here's where the timestamped cookie comes to play. This way, if a user hits the hard limit they cannot clear their cookie and come back instantaneously to leech more pages. 
+
+
+So recently I wrote some software to grab and store up a bunch of cookies, keep them for more than 24 hours, and then automate searching for pages by this method. If I wanted to view page 100, the software would search for it and attempt to extract the image with a regular expression. If that doesn't work, it will search for page 99 and extract the "next page" link to get to page 100. It will continue doing this for page 101, 98, and 102 until it finds the correct page. Whenever a cookie would hit the hard limit, I'd replace it with a new cookie from the queue. By grabbing the "next" and "previous" links automatically in this "inductive" fashion and using the search for skipping, I could view an entire book on Google Print with one click every time. I later modified the software to spit out a PDF of the book. I used simple components like GoogleCookie (cookie with accessible properties), GoogleCookieOven (queue with "baking time", i.e. it only pops when the head of the queue is old enough to get the ability to search), and GoogleCookieBaker (thread that keeps the oven full of baking cookies by querying Google for new ones when the number drops below a certain threshold). Theoretically, if you set the cookie limit to a high enough number, the new cookies being fed in will have aged enough by the time you need them. This is a lot simpler than breaking an unknown digital signature algorithm, but of course that solution *would* be a lot more elegant. Oh well. 
+
+
+I sent a link to this software (web-based) to Google, and I actually got a response! I think they actually changed up some things because the software broke now and then, but it seemed to work consistently after many algorithm improvements. I'll be honest, I was trying to impress them to get in on some of that rumored Google goodness (a.k.a. a job), but they ended up just sending me a Google t-shirt and some pens. Oh, and a note reminding me that my software violated their terms of service. 
+
+
+Instead of giving you the software, I'll give you a general overview of the algorithm and the regular expressions used to extract information: 
+
+
+(read code snippets at the page due to formatting issues.) 
+
+
+The regular expressions are not too advanced, but here they are (I think these are POSIX compliant, but don't quote me on that, and they may be really poorly written since I'm still learning the ropes on regexes): 
+
+
+Individual search-in-book results (captures URL only): <a href="(http://print.google.com/print\?.*?)">
+ Next page link on book viewing page (captures URL only): <a href="([^<>"]*)"><img align=middle alt="Next
+ Previous page link on book viewing page (captures URL only): <a href="([^<>"]*)"><img align=middle alt="Previous
+ The image URL on the book viewing page (it's hidden in CSS): \.theimg\s*\{\s*background-image:\s*url\(\s*"(.*)"\s*\)
+ Parsing Google's Cookie: \APREF=ID=([a-f0-9]{16}):TM=(\d{10}):LM=(\d{10}):S=([a-zA-Z0-9-_]{16})\z
+ 
+
+
+Conclusion 
+
+
+Sorry, I'd distribute the software (open source, of course), but I don't want to incur "teh wrath of teh google." They have billions of dollars, and I'm a college student. Oh well. Back to the drawing board. Hope you enjoyed this little write up! 

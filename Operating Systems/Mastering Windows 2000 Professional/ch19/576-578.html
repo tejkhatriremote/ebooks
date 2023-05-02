@@ -1,0 +1,157 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Living with Windows 2000's Strict Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=19//-->
+<!--PAGES=576-578//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="573-575.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="578-580.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Local Logon to Access a Local File</FONT></H4>
+<p>Suppose you want to edit a file called <tt>report.doc</TT>, that is sitting on your workstation, and the workstation is named M133. What steps do you (and the operating system) go through to edit that file?</P>
+<p><font size="+1"><b>Step 1: The Logon Creates the SAT</B></FONT></P>
+<p>First, as you know, you must log on to your system. The Windows 2000 logon screen instructs you to enter a username and a password that is valid for the system. Then the logon screen asks for username, password, and domain.
+</P>
+<p>The username and password part are pretty easy. For <i>domain,</I> you just choose the name of the machine&#151;M133. That name tells your system to look to itself for the list of known user accounts&#151;the user accounts mentioned in the previous section (and which are covered in more detail later in this chapter). Assuming you entered a correct name and password, you&#146;re logged on to your workstation&#151;and, by the way, you now have your key. You see, one of the programs that logged you on was the Local Security Authority (LSA), a program named <tt>lsass.exe</TT>. It collected some information about you&#151;your username, password, whether you&#146;re an administrator, whatever groups you&#146;re a member of&#151;and used that information to create a SAT, the &#147;key.&#148; Your workstation then stores that SAT in its memory.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>If you want to understand Windows 2000 security both on the workstation and over the network, you need to know that the main result of logging on&#151;either to a domain account or a local account (both are defined later in the &#147;Domain Logon to Access a Network File&#148; section)&#151;is to create your SAT.<hr></FONT>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Step 2: The Processes You Start Inherit Your SAT</B></FONT></P>
+<p>Next, you ask Windows 2000 via the user interface to start Microsoft Word, a program called <tt>winword.exe</TT>. When you ask Windows 2000 to start this program, Windows 2000 makes a copy of your SAT and attaches it to the copy of <tt>winword.exe</TT> that&#146;s running in the computer&#146;s memory. Now when you try to open the file <tt>report.doc</TT> with Word, the SRM automatically intervenes, as it does whenever a program tries to access an object.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>The SRM is part of the Windows 2000 Executive; its job is to clear all attempts to access files, printers, directories, or the like. The SRM says to itself, &#147;Who&#146;s allowed to access <tt>report.doc</TT>, anyway?&#148; It essentially makes sure that the &#147;key&#148; (the SAT) fits the &#147;lock&#148; (the SD).<hr></FONT>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Step 3: The SRM Gathers Object Access Information</B></FONT></P>
+<p>To learn who can access a file, the SRM checks with <i>the file system&#151;</I>the programs that keep track of files on the network. Under NT, you have three options for the file system:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;FAT, which is the old DOS file system and is included in Windows 2000 for backwards compatibility
+<dd><b>&#149;</B>&nbsp;&nbsp;FAT32, the newer version of FAT that was included in Windows 98
+<dd><b>&#149;</B>&nbsp;&nbsp;NTFS, the NT file system
+</DL>
+<p>If the file is on a drive that&#146;s been formatted as FAT or FAT32, then everyone&#146;s cleared to read all files; the file system would tell the SRM that everyone is cleared to access <tt>report.doc</TT>. In contrast, if the drive is formatted as NTFS, then NTFS has a list called a Security Descriptor (SD), which describes everyone who can access this file. Again, the SD is the <i>lock</I> in the key-and-lock analogy. Assume for this example that you have an NTFS-formatted drive; the file system would retrieve the list of users approved to access <tt>report.doc</TT> and then pass that list on to the SRM.</P>
+<p><font size="+1"><b>Step 4: The SRM Matches the SD and the SAT</B></FONT></P>
+<p>Now the SRM can compare the key and the lock; it makes sure that the user&#146;s SAT matches up with the object&#146;s SD.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>In plain English, the Security Reference Monitor makes sure that the Security Access Token corresponds to the appropriate Security Descriptor.<hr></FONT>
+</BLOCKQUOTE>
+<p>Looking at the process in a bit more detail, you can see that your SAT might contain the following information:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Your username is M133\Mark.
+<dd><b>&#149;</B>&nbsp;&nbsp;Your password is windows.hater.
+<dd><b>&#149;</B>&nbsp;&nbsp;You have a user (rather than administrator) level of privilege.
+<dd><b>&#149;</B>&nbsp;&nbsp;You are a member of the group M133\Users.
+</DL>
+<p>The SD on <tt>report.doc</TT> might say the following:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Members of the group M133\Users may modify <tt>report.doc</TT>. (<i>Modify</I> is Windows 2000-speak for &#147;read, write, execute, and delete.&#148;)
+<dd><b>&#149;</B>&nbsp;&nbsp;Members of the group M133\Administrators can do <i>anything</I> to this file. (Yes, there are things you might want to do beyond changing a file; you&#146;ll see that when we go over file permissions in the &#147;Making the Locks&#148; section later in this chapter.)
+</DL>
+<p>The SRM would see the following:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The SAT says that the user belongs to the group M133\Users.
+<dd><b>2.</B>&nbsp;&nbsp;The user is asking for change-level access to <tt>report.doc</TT>.
+<dd><b>3.</B>&nbsp;&nbsp;The <tt>report.doc</TT> grants the request (because it allows members of M133\Users to have change-level access).
+</DL>
+<p>Whew! That&#146;s a lot to do just to read a file on your <i>own</I> computer! Does this slow Windows 2000 down? Yes, a bit, but this process is the only way to have a completely secure workstation. Figure 19.1 illustrates how this security setup works.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-01.jpg',500,339)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-01.jpg',500,339)"><font color="#000077"><b>Figure 19.1</B></FONT></A>&nbsp;&nbsp;A local account authorizes access to a local object</P>
+<p>The diagram in Figure 19.1 shows that first the LSA looks up user account information in the SAM database to verify a logon, producing a SAT. When prompted, the file system produces an SD for the object in question, the file <tt>report.doc</TT>. The SRM then compares the two and, if all is correct, approves the access request.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="573-575.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="578-580.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

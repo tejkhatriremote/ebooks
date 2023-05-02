@@ -1,0 +1,266 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-10//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 4.14 provides the source code for these three functions.
+</P>
+<p><b>Listing 4.14</B> Message-handling Functions for the <small>CAsynchCopyDlg</SMALL> Class</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CAsynchCopyDlg::OnDest()
+{
+    CFileDialog     fileDlg(FALSE);
+    if(fileDlg.DoModal() == IDOK)
+    {
+        m_szDestPath = fileDlg.GetPathName();
+        CWnd* pWnd = GetDlgItem(IDC_LABEL_DEST);
+        ASSERT(pWnd);
+        CString szTitle = fileDlg.GetFileTitle();
+        szTitle &#43;= &#147;.&#148; &#43; fileDlg.GetFileExt();
+        pWnd-&gtSetWindowText(szTitle);
+    }
+}
+void CAsynchCopyDlg::OnSource()
+{
+    CFileDialog     fileDlg(TRUE);
+    if(fileDlg.DoModal() == IDOK)
+    {
+        m_szSourcePath = fileDlg.GetPathName();
+        CWnd* pWnd = GetDlgItem(IDC_LABEL_SRC);
+        ASSERT(pWnd);
+        CString szTitle = fileDlg.GetFileTitle();
+        szTitle &#43;= &#147;.&#148; &#43; fileDlg.GetFileExt();
+        pWnd-&gtSetWindowText( szTitle );
+    }
+}
+void CAsynchCopyDlg::OnCopy()
+{
+    m_hReadFile = CreateFile(m_szSourcePath,
+                             GENERIC_READ,
+                             0,
+                             (LPSECURITY_ATTRIBUTES)NULL,
+                             OPEN_EXISTING,
+                             FILE_FLAG_OVERLAPPED,
+                             (HANDLE)NULL );
+    m_hWriteFile = CreateFile(m_szDestPath,
+                              GENERIC_WRITE,
+                              0,
+                              (LPSECURITY_ATTRIBUTES)NULL,
+                              CREATE_ALWAYS,
+                              FILE_FLAG_OVERLAPPED,
+                              (HANDLE)NULL);
+    if(m_hReadFile == INVALID_HANDLE_VALUE)
+    {
+        AfxMessageBox(_T(&#147;Can&#146;t Open Source File&#148;));
+        return;
+    }
+    if(m_hWriteFile == INVALID_HANDLE_VALUE)
+    {
+        AfxMessageBox(_T(&#147;Can&#146;t Open Destination File&#148;));
+        CloseHandle(m_hReadFile);
+        return;
+    }
+    m_progressCtrl.SetRange(0, 100);
+    m_progressCtrl.ShowWindow(SW_SHOW);
+
+    m_fDone = FALSE;
+    m_overlapped.ov.hEvent = NULL;
+    m_overlapped.pWnd = this;
+    m_dwReadChunk = 4096;
+    m_overlapped.ov.OffsetHigh = 0;
+    m_overlapped.ov.Offset = 0;
+
+    ReadBuffer((OVERLAPPED*)&ampm_overlapped);
+    while(m_fDone == FALSE)
+        SleepEx(INFINITE, TRUE);
+    m_progressCtrl.ShowWindow(SW_HIDE);
+    CloseHandle(m_hReadFile);
+    CloseHandle(m_hWriteFile);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The <small>OnSource</SMALL> and <small>OnDest</SMALL> functions are straightforward; they use the Open File common dialog box to get source and destination filenames from the user and store the filenames in member variables.</P>
+<p>The <small>OnCopy</SMALL> member function is slightly more complicated. It attempts to open the source and destination files with the overlapped file flag. If the files are opened successfully, <small>OnCopy</SMALL> initializes the progress control and makes it visible.</P>
+<p>Next, <small>m_overlapped</SMALL> is initialized, and the copy process is kicked off by a call to the <small>ReadBuffer</SMALL> member function, followed by a call to <small>SleepEx</SMALL>. The main thread sleeps until alerted by a completed I/O function. If the <small>m_fDone</SMALL> flag is still <small>FALSE</SMALL>, <small>SleepEx</SMALL> is called again. This process continues until <small>m_fDone</SMALL> is set to <small>TRUE</SMALL>.</P>
+<p>Several member functions are involved in the I/O processing in the AsynchCopy project, as shown in Figure 4.5.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-05.jpg',386,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-05.jpg',386,420)"><font color="#000077"><b>Figure 4.5</B></FONT></A>&nbsp;&nbsp;Member functions used to process I/O in AsynchCopy.</P>
+<p>The <small>ReadBuffer</SMALL> function calls <small>ReadFileEx</SMALL> to read a buffer from the source file and specifies <small>ReadCompletion</SMALL> as its completion routine. If the read is successful, <small>ReadCompletion</SMALL> calls <small>WriteBuffer</SMALL> to write the buffer contents. <small>WriteBuffer</SMALL> calls <small>WriteFileEx</SMALL> and uses <small>WriteCompletion</SMALL> as its completion routine. <small>WriteCompletion</SMALL> calls <small>ReadBuffer</SMALL>, and the entire process starts again. If, at any time, an end-of-file marker is detected, the <small>m_fDone</SMALL> flag is raised and I/O stops.</P>
+<p>Listing 4.15 provides the source code for the remaining I/O functions.</P>
+<p><b>Listing 4.15</B> Alertable File I/O Functions from the <small>CAsynchCopyDlg</SMALL> Class</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CAsynchCopyDlg::ReadBuffer(OVERLAPPED* pOverlapped)
+{
+    int nPos = pOverlapped-&gtOffset * 100;
+    nPos /= GetFileSize(m_hReadFile, NULL);
+    m_progressCtrl.SetPos(nPos);
+    BOOL fRead = ReadFileEx(m_hReadFile,
+                            m_buffer,
+                            sizeof(m_buffer),
+                            pOverlapped,
+                            ReadCompletion);
+    if(fRead == FALSE)
+    {
+        if(GetLastError() == ERROR_HANDLE_EOF)
+        {
+            // End of file
+            m_fDone = TRUE;
+        }
+        else
+        {
+            TRACE(_T(&#147;ReadBuffer error = %l\n&#148;), GetLastError());
+            // Some other error
+        }
+    }
+}
+void CAsynchCopyDlg::WriteBuffer(DWORD dwWrite, OVERLAPPED* pOverlapped)
+{
+    BOOL fWrite = WriteFileEx(m_hWriteFile,
+                              m_buffer,
+                              dwWrite,
+                              pOverlapped,
+                              WriteCompletion );
+    if(fWrite == FALSE)
+    {
+        if(GetLastError() == ERROR_HANDLE_EOF)
+        {
+            // End of file
+            m_fDone = TRUE;
+        }
+        else
+        {
+            // Some other error
+            TRACE(_T(&#147;WriteBuffer error = %l\n&#148;), GetLastError());
+        }
+    }
+}
+void WINAPI CAsynchCopyDlg::ReadCompletion(DWORD dwErr,
+                                           DWORD dwBytes,
+                                           OVERLAPPED* pOv)
+{
+    MY_OVERLAPPED* pOverlapped = (MY_OVERLAPPED*)pOv;
+    CAsynchCopyDlg* pDlg = (CAsynchCopyDlg*)pOverlapped-&gtpWnd;
+    ASSERT(pDlg);
+    if(dwErr == 0)
+        pDlg-&gtWriteBuffer(dwBytes, pOv);
+    else if(dwErr == ERROR_HANDLE_EOF)
+        pDlg-&gtm_fDone = TRUE;
+    else
+        AfxMessageBox(_T(&#147;Error in Read Completion&#148;));
+}
+void WINAPI CAsynchCopyDlg::WriteCompletion(DWORD dwErr,
+                                            DWORD dwBytes,
+                                            OVERLAPPED* pOv)
+{
+    MY_OVERLAPPED* pOverlapped = (MY_OVERLAPPED*)pOv;
+    CAsynchCopyDlg* pDlg = (CAsynchCopyDlg*)pOverlapped-&gtpWnd;
+    ASSERT(pDlg);
+    if(dwErr == 0)
+    {
+        pOverlapped-&gtov.Offset &#43;= pDlg-&gtm_dwReadChunk;
+        pDlg-&gtReadBuffer((OVERLAPPED*)pOverlapped);
+    }
+    else if(dwErr == ERROR_HANDLE_EOF)
+        pDlg-&gtm_fDone = TRUE;
+    else
+        AfxMessageBox(_T(&#147;Error in Write Completion&#148;));
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Compile and run the AsynchCopy project. Select the source and destination files and copy a file to a new location. You might need to choose very large files; on my machine, anything smaller than 1MB barely shows the progress control. Figure 4.6 shows the AsynchCopy dialog box copying a file.</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-06.jpg',640,480 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-06.jpg',640,480)"><font color="#000077"><b>Figure 4.6</B></FONT></A>&nbsp;&nbsp;Copying a file with AsynchCopy.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,294 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter  18 -- How Passwords and Authentication Systems Work
+</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;18</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Passwords and Authentication
+Systems Work</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowPasswordsWork">
+How Passwords Work</A>
+<UL>
+<LI><A HREF="#PasswordAuthenticationProtocol">
+Password Authentication Protocol</A>
+<LI><A HREF="#ChallengeHandshakeAuthenticationProtocol">
+Challenge Handshake Authentication Protocol</A>
+</UL>
+<LI><A HREF="#HowAdditionalAuthenticationSystemsWork">
+How Additional Authentication Systems Work</A>
+</UL>
+
+<HR>
+<P>
+What's the most effective way to gain unauthorized access to an
+intranet? If you guessed high-tech wizardry, programming beyond
+the mere ken of mortals, or some kind of mastery of and insight
+into the innermost workings of TCP/IP, you would be wrong. Most
+attacks occur because an unauthorized person has managed to discover
+an authorized person's user name and password. One cumbersome
+way to address this problem is to require that users log in through
+a firewall with one password, and then require additional, different
+passwords to access various resources. However, making it hard
+for users to use passwords is counterproductive and leads to increased
+vulnerability. The passwords of systems administrators or superusers
+require special care, since if these passwords were compromised,
+the intruder would have full access to an intranet and all its
+corporate riches.
+<P>
+New servers often come with standard default passwords. However,
+it is really the fault of the systems administrators who fail
+to change the defaults. Similarly, care must be taken when, due
+to necessary technical work being done, technicians require root
+access or load custom utilities. Sometimes the default passwords
+are changed, and you think you are safe, but at some point during
+a disaster recovery process old users and/or passwords are loaded
+back in place.
+<P>
+Passwords can be discovered through brute force. Programs can
+be written (or bought) that generate thousands of passwords. This
+is often referred to as a &quot;dictionary&quot; password checker
+program. Administrators can purchase such programs to help find
+weak passwords, and can customize them to include additional terms.
+Brute force is more effective when passwords are short, so systems
+administrators may require certain minimum lengths for passwords
+and password phrases.
+<P>
+Unauthorized access is an internal as well as external threat.
+No one would intentionally allow all internal users access to
+their company's financial system, such as a check-writing program,
+even though as employees they would be authorized users for other
+parts of the intranet. Secure passwords are probably more critical
+for protection from internal threats than external threats. Insiders
+already have access to the names of fellow employees, their departments,
+and would know the conventions of the user name format. 
+<P>
+In an effort to use passwords they can remember, people create
+passwords that can be fairly easily guessed. Many people, for
+example, use passwords made up of some combination of their first
+and last names or their initials. Other popular passwords include
+the names of children, birth dates or anniversary dates, license
+numbers of cars, and other familiar things. Again, internal threats
+are the greater risk because of insider familiarity with colleagues'
+habits and physical access to cubicles (where the poster of the
+cobra is so prominently displayed).
+<P>
+Social engineering is another technique that can easily break
+the security of passwords. A remote access caller who contacts
+the help desk late at night with a tale of woe about &quot;a big
+report due the next morning and I can't get in under my usual
+password, and so please just change it to something to get me
+in for this emergency&quot; is using social engineering to crack
+the security of the password system. People don't want to mistrust
+their colleagues and are reluctant to sound paranoid or foolish
+by refusing access to co-workers. Workers also often need to provide
+others with access to something that would normally be off-limits,
+while workers are on vacation, for example. In such cases intruders
+don't have to guess passwords, they are told the passwords. The
+real problems from this can come later, when authorized users
+fail to change their password upon returning from vacation or
+when, unknown to them, a third party has been told the password
+for some purpose while they were gone.
+<P>
+Most systems require that passwords be changed periodically so
+that even if passwords are discovered or given out, there is only
+a limited window of vulnerability. People, of course, might (and
+often do) try to circumvent this by changing their password and
+then changing it right back again. However, this can be prevented
+by systems requiring that when users change their passwords they
+must choose a password that they have not used before. 
+<P>
+The logical extension of this &quot;never before used&quot; password
+requirement is the single-use password. There are several methods
+of generating these passwords, including software and hardware
+methods. The software method still requires a truly secret password
+but it is used to generate a number of one-time variations that
+are used without encryption. The software method is still fundamentally
+a &quot;something you know&quot; type of protection. Hardware
+solutions add a &quot;something you have&quot; component, a physical
+device that generates single use passwords. Smart cards are a
+hardware solution. They are credit card-sized devices that work
+with special readers to respond to authorization requests. 
+<P>
+Authentication systems work with password systems to make sure
+the users are who they say they are. Depending on the kind of
+password system used in authentication systems, the password files
+containing the master list of all passwords on an intranet can
+be plain text or encrypted.
+<P>
+In one system called the Password Authentication Protocol (PAP),
+the password file is encrypted. When someone logs onto the intranet,
+a server asks them for their user name and password. The user's
+response is not encrypted at the workstation and so goes over
+the wire in clear text. When the server receives the password
+from the user, it encrypts it using the same encryption scheme
+that was used to encrypt the password in the password file. The
+server then compares the two encrypted passwords. If they match,
+it knows to let the person in.
+<P>
+While the password file itself is particularly secure since it's
+encrypted, the PAP system is vulnerable in another way. Since
+the password isn't encrypted until the server encrypts it, this
+method is vulnerable to packet sniffing attacks. Packet sniffing
+is a form of eavesdropping on the traffic over the wire. Since
+the passwords travel in clear text, someone capturing traffic
+could steal all passwords transmitted across the intranet. Even
+encrypted passwords traveling the wire are vulnerable to eavesdropping
+when they are captured and replayed, convincing the server that
+they are authorized users. This is another reason why single-use
+passwords provide more security.
+<P>
+The Challenge Handshake Authentication Protocol (CHAP), <I>a challenge-response</I>
+system, does not completely eliminate sending clear text over
+the wire to solve the problem. Furthermore, the table of passwords
+on the server is not encrypted. What happens is this: When someone
+types in a user name, the server generates a random key and sends
+the key (also in clear text) to the user. The user uses the key
+to encrypt his or her password and sends the encrypted password
+back to the server. The server checks the password table for the
+key it assigned, and encrypts the password. The server then compares
+the encrypted password from the user with the encrypted password
+it created. If they match, the user is allowed in. 
+<P>
+CHAP performs an additional check to authenticate the user, that
+is, it attempts to verify that the person in an ongoing session
+is the person originally authorized. CHAP continuously sends different
+challenges to the user throughout the session, not just at the
+beginning. This authentication process solves problems with unattended-but-logged-in
+workstations. This system also solves the problem of password
+theft by packet sniffing, since the password sent between user
+and server is encrypted. However, the password file itself is
+vulnerable, since it's not encrypted. 
+<P>
+Extensive systems have been devised that combine encryption, password
+technology, and authentication to make sure that no unauthorized
+person can gain access to intranets.
+<P>
+One particularly secure authentication system is called Kerberos.
+Kerberos is named after the mythological three-headed dog who
+guarded the gates of Hades in Greek mythology. (The dog is also
+called Cerberus, sometimes spelled Kerberos.) Developed at the
+Massachusetts Institute of Technology, the Kerberos system requires
+that all computers, servers, and workstations be running the Kerberos
+software. When anyone wants to get onto the network, they have
+to type in a password and user name. They are then given an encrypted
+token by the system. In order to use any network resource, that
+encrypted token is required. This stops any intruders from accessing
+any intranet resources unless they first go through password authentication.
+<H2><A NAME="HowPasswordsWork"><FONT SIZE=5 COLOR=#FF0000>
+How Passwords Work</FONT></A></H2>
+<P>
+One of an intranet's first lines of defense is to use password
+protection. A variety of security techniques, including encryption,
+helps ensure that passwords are kept secure. It is also necessary
+to require that passwords are changed frequently, are not easily
+guessed or common dictionary words, and are not simply given out.
+Authentication is the additional step of verifying that the person
+providing the password is the person authorized to do so.
+<H3><A NAME="PasswordAuthenticationProtocol">
+Password Authentication Protocol</A></H3>
+<OL>
+<LI>The server encrypts the password it receives from the user,
+using the same encryption technique used to encrypt the server
+table of pass-words. It compares the encrypted password from the
+user against the en-crypted password in the table. If the results
+match, the user is allowed into the system. If the results don't
+match, the user isn't allowed in.
+<LI>People's passwords and user names on an intranet are stored
+in table form in a file on a server that verifies passwords. Often,
+the file name is <I>passwd</I> and the directory it is in is <I>/etc</I>.
+Depending on the password authentication technique to be used,
+the file may either be encrypted or not encrypted.
+<LI>One method of authenticating a user is through the Password
+Authentication Protocol (PAP). PAP doesn't mandate encryption,
+but the table of passwords on the server is usually encrypted.
+When someone wants to log into the network or a password-protected
+network resource, they are asked for a user name and password.
+The user name and password are then sent to the server.
+</OL>
+<H3><A NAME="ChallengeHandshakeAuthenticationProtocol">
+Challenge Handshake Authentication Protocol</A></H3>
+<P>
+START=4
+<OL>
+<LI>The Challenge Handshake Authentication Protocol (CHAP) system
+is a challenge-response system. CHAP requires an unencrypted table
+of passwords. When someone logs into a system with CHAP, a random
+key is generated by the server and sent to the user for encrypting
+his or her password.
+<LI>The user's computer uses this key to encrypt his or her password.
+The encrypted password is then sent back to the server. The server
+refers to the password table for the random key, and encrypts
+the password with the same key that was sent to the user. The
+server then compares the encrypted password from the user with
+the encrypted password it created. If they match, the user is
+allowed in. 
+<LI>The key difference with CHAP is that <I>the<B> </B>server
+continues to challenge the user's computer throughout the session</I>.
+Additionally, different challenges are sent that must be encrypted
+and returned by the computer, without human intervention. This
+way CHAP limits your window of vulnerability. A session cannot
+be hijacked, since a hijacker would be dropped once his computer
+failed to respond correctly to the periodically occurring challenges.
+<LI>No matter which kind of password system is used-and whether
+the password table is encrypted or not-it's important to protect
+the password table. The file must be protected against FTP access
+and there should be very restricted access to the file so that
+only the administrator or someone under the administrator's control
+can gain access to it.
+</OL>
+<H2><A NAME="HowAdditionalAuthenticationSystemsWork"><FONT SIZE=5 COLOR=#FF0000>
+How Additional Authentication Systems Work</FONT></A></H2>
+<P>
+Various methods and devices provide additional security barriers
+to prevent unauthorized access. Devices supplement the &quot;something
+you know&quot; of login names and passwords with the requirement
+that remote users also provide &quot;something you have.&quot;
+Many intranets allow people from remote locations to dial in to
+the intranet and use its resources. In order to get onto the network,
+a user name and password are required. Authentication systems
+are built to make sure that people logging into an intranet really
+are who they claim to be. This is especially important for remote
+access since none of the physical security necessary to enter
+a company's headquarters is available to screen dial-in users.
+<UL>
+<LI>A call-back system is one way to ensure that only people who
+are supposed to dial in are al-lowed in. In a call-back system,
+after a user logs in with a user name and password, the system
+hangs up and calls back to a predetermined phone number. That
+way, no one can pose as an employee since it will call only specific
+phone numbers.<FONT FACE="Arial"> </FONT>This works for telecom-muters
+who consistently work from their home, but is not practical for
+a roving sales force who never know the numbers in advance.
+<LI>Security devices that continuously respond to challenges are
+useful tools for roving sales forces. Users need to bring a card
+reader device and insert their cards to take care of the authentication
+when challenged by the server software when they log in. The server
+software continues to challenge the user's card during the session
+as well.
+<LI>&quot;Packet sniffing&quot; and replay is one of the dangers
+that can be avoided by additional authentication measures. The
+nature of Ethernet contributes to packet sniffing and spoofing
+vulnerability because all of the packets pass through the network
+and can be picked up by unauthorized users. Essentially, you can
+eavesdrop and record legitimate traffic and re-play it to trick
+the system into thinking their traffic is from a legitimate source.
+A variation of this is session hijacking, where rather than simply
+inserting traffic into the data stream, legitimate traffic is
+way-laid and substitute traffic is inserted.
+</UL>
+<HR>
+
+<CENTER><P><A HREF="ch17.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch19.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

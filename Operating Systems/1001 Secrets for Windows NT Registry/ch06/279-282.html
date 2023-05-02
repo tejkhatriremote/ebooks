@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:Performance</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=6//-->
+<!--PAGES=279-282//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="276-278.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="282-285.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Redirector</FONT></H4>
+<p><big>T</BIG>he Windows NT Redirector manages remote volume connections. When you access a volume across the network, Redirector takes the file system request and invokes the appropriate protocol to send the request to a file system server component on the other machine.</P>
+<p><b>VI-9</B> <big>T</BIG>he entry below switches the behavior of Redirector between write-through and write-behind. By default, Redirector delays sending the server write requests to a volume, which lets other operations proceed or complete. When you change this value, Redirector sends write operations immediately and waits for a response before proceeding with other operations.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Rdr\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>UseWriteBehind
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>To disable write-behind, change this value to 1; the default is 0. You may need to use this highly synchronous mode in specialized environments or when tracking down networking problems with a network monitoring tool; otherwise, you should use the write-behind value because write-through degrades performance.
+</P>
+<p><b>VI-10</B> <big>T</BIG>he value in the registry entry below is a hybrid between write-through and write-behind modes.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Rdr\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>UseAsyncWriteBehind
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>The default value of 1 enables asynchronous write-behind, which means that Redirector immediately sends write requests to the server but doesn&#146;t wait for a response before processing other requests. Changing the value to 0 disables asynchronous write-behind; you should disable it only when the network requires special coherency guarantees or when you&#146;re debugging.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Lanmanager Workstation</FONT></H4>
+<p><big>L</BIG>anmanager Workstation is Microsoft&#146;s implementation of a Redirector. It speaks SMB (Server Message Block).</P>
+<table width="100%"><tr>
+<td width="10%"><b>V-11</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanWorkstation\ Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>MaxCmds
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>15
+</TABLE>
+<p>This value specifies the number of threads that the Workstation service creates during initialization to handle requests; the default value is 15. If Workstation has more requests than it has threads to service those requests, it holds up some requests until a thread finishes servicing a request. Therefore, if multiple users or applications are simultaneously accessing remote shares, increasing this value can improve network throughput.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>VI-12</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanWorkstation\ Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>SessTimeout
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>RED_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>45
+</TABLE>
+<p>This value sets the number of seconds after a request is queued before Lanmanager indicates that the request has failed (if it hasn&#146;t been processed). The default value is 45. Applications that access network shares may report not having enough memory to process a request &#151; too many outstanding operations are on the volume and some requests are timing out. Raising this value lets more operations be serviced asynchronously and may cause the messages to go away.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>VI-13</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanWorkstation\ Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>CacheFileTimeout
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>10
+</TABLE>
+<p>This value specifies the time after which Lanmanager Workstation purges its locally cached data after closing a file. Many applications open files, perform an operation, close them, and repeat this sequence to perform more operations. If you have a system with a dedicated application, you can adjust this value to improve performance. Increase the time if applications close and reopen the same files at intervals longer than 10 seconds, and reduce the time if applications access few files and do not open and close them regularly.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>VI-14</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanWorkstation\ Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>DormantFileLimit
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>45
+</TABLE>
+<p>This value sets the number of files that Lanmanger leaves open in the file system cache after an application closes it. By default, Lanmanager Server allows only a certain number of open files from any one Lanmanager Redirector connection. Having a file open on the connection can improve performance if the application opens it again. However, keeping files open can also overload the server&#146;s limit, and in those cases you should reduce this value.
+</P>
+<p><b>VI-15</B> <big>N</BIG>ormally, Lanmanager Workstation reads and stores data in the local file cache before an application requests it. These read-aheads can cause network degradation when applications rarely read files sequentially on shared volumes or when the network&#146;s throughput is low. To better manage the read-ahead function, change this registry entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanWorkstation\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>ReadAheadThroughput
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>-1
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="276-278.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="282-285.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

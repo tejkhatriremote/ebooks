@@ -1,0 +1,210 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Pipes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=26//-->
+<!--PAGES=889-892//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="26-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Compile the AnonPipe project. Before executing AnonPipe, make sure that the <small>Hex.exe</SMALL> executable created by the previous project is found somewhere in the path. When AnonPipe is launched, it creates a Hex child process and sends the string &#147;Fuzzy Wuzzy was a bear&#148; to the child process for translation. The Hex child process converts the string to hexadecimal and returns it to the AnonPipe process, which appears in hexadecimal format, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+46 75 7A 7A 79 20 57 75 7A 7A 79 20 77 61 73 20 61 20 62 65 61 72 00
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can extend this example to use any sort of child process that expects to read and write from its standard input and output handles.
+</P>
+<h3><a name="Heading8"></A><font color="#000077">Using Named Pipes</FONT></H3>
+<p>Named pipes are similar to anonymous pipes, except that they have several features that make them well suited for communication between unrelated processes:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Named pipes can be referenced by name, instead of just by a handle.
+<dd><b>&#149;</B>&nbsp;&nbsp;Named pipes have more flexible connection options than anonymous pipes.
+<dd><b>&#149;</B>&nbsp;&nbsp;Unlike anonymous pipes, named pipes can be used over a network.
+<dd><b>&#149;</B>&nbsp;&nbsp;Named pipes can use asynchronous, overlapped I/O.
+</DL>
+<p>The name of a named pipe always follows this format:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+\\<i>machine_name</I>\pipe\<i>pipe_name</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A pipe named &#147;foo&#148; on a machine named &#147;pongo,&#148; for example, looks like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+\\pongo\pipe\foo
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When a pipe is referred to on its own machine, a dot is substituted for the machine name:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+\\.\pipe\foo
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Note that pipe names are not case sensitive.
+</P>
+<p>A named pipe instance connects one server with one client. If multiple clients connect to a server using the same named pipe, multiple instances of the named pipe are created; there is no communication directly between the clients.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Examining the Types of Named Pipes</FONT></H4>
+<p>You can create named pipes as blocking or nonblocking. The <i>nonblocking</I> type of pipe is not really asynchronous; after you issue a read or write request to the pipe, you must continue to call the read or write request until the pipe finishes the operation. These pipes are often called <i>polling pipes</I>. For maximum efficiency, pipes should be opened in <i>blocking</I> mode, with asynchronous read and write operations implemented using overlapped structures or completion routines.</P>
+<p>You can create pipes as byte-type or message-type pipes. A <i>byte-type</I> pipe sends and receives data as a stream of bytes, with no implied division of data sent in separate writes to the pipe. A <i>message-type</I> pipe separates the data written to the pipe into a separate packet that can be read from the pipe as a single chunk of data.</P>
+<p>After a byte-type pipe is created, it can be opened and read from only as a byte-type pipe. After creating a message-type pipe, however, you can read it as a message-type pipe or a byte-type pipe.</P>
+<p>As an option, a pipe can wait to return a result of a write operation until the data is delivered to the other end of the named pipe; this option is called <i>write-through</I>. A message-type pipe always has write-through enabled; byte-type pipes must have this option explicitly enabled.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Creating and Closing a Named Pipe</FONT></H4>
+<p>You can create a named pipe by calling the <small>CreateNamedPipe</SMALL> function. <small>CreateNamedPipe</SMALL> returns a handle to a created pipe instance if successful, or it returns <small>INVALID_HANDLE_VALUE</SMALL> if the pipe can&#146;t be created. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+HANDLE hPipe = CreateNamedPipe(_T(&#147;\\\\.\\pipe\\Foo&#148;),
+                               PIPE_ACCESS_DUPLEX,
+                               PIPE_TYPE_MESSAGE|
+                               PIPE_READMODE_MESSAGE|
+                               PIPE_WAIT,
+                               PIPE_UNLIMITED_INSTANCES,
+                               4096,
+                               4096,
+                               INFINITE,
+                               &ampsa );
+if(hPipe == INVALID_HANDLE_VALUE)
+{
+    // Handle error
+}
+</PRE>
+<!-- END CODE //-->
+<p>The parameters used by <small>CreateNamedPipe</SMALL> follow:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the pipe. The pipe always is created initially on the local machine, using a dot in place of the machine name, as shown in the preceding code.
+<dd><b>&#149;</B>&nbsp;&nbsp;The read, write, and security attributes for the pipe. In this case, the pipe is opened in <i>duplex</I> mode, meaning that the pipe is bidirectional.
+<dd><b>&#149;</B>&nbsp;&nbsp;The pipe mode and blocking characteristics of the pipe. In this case, the pipe is created in message mode for both reading and writing, and it&#146;s created as a blocking pipe.
+<dd><b>&#149;</B>&nbsp;&nbsp;Either the number of instances allowed for the pipe or <small>UNLIMITED_PIPE_INSTANCES</SMALL> (to indicate that an unlimited number of instances is permitted).
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of bytes reserved for the pipe&#146;s output buffer.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of bytes reserved for the pipe&#146;s input buffer.
+<dd><b>&#149;</B>&nbsp;&nbsp;Either the time-out period for a pipe operation in milliseconds or <small>INFINITE</SMALL> for no timeout.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure. If <small>NULL</SMALL> is passed as this parameter, the pipe receives the security descriptor of the current access token.
+</DL>
+<p>Table 26.1 lists the read, write, and security attributes for the pipe.
+</P>
+<caption align="LEFT" valign="2" colspan="2"><b>Table 26.1</B> Read, Write, and Security Attributes for Named Pipes
+<table width="100%">
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th valign="TOP" align="LEFT" width="35%"><i>Attribute</I>
+<th valign="TOP" align="LEFT" width="65%"><i>Function</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>ACCESS_SYSTEM_SECURITY</SMALL>
+<td valign="TOP" align="LEFT">Specifies that the client side of the pipe will have write access to the named pipe&#146;s SACL (SACLs were discussed in Chapter 7, &#147;Distributed Security&#148;).
+<tr>
+<td valign="TOP" align="LEFT"><small>FILE_FLAG_OVERLAPPED</SMALL>
+<td valign="TOP" align="LEFT">Specifies that read, write, and connect operations can be performed asynchronously using an <small>OVERLAPPED</SMALL> structure.
+<tr>
+<td valign="TOP" align="LEFT"><small>FILE_FLAG_WRITE_THROUGH</SMALL>
+<td valign="TOP" align="LEFT">Indicates that write-through mode is enabled.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_ACCESS_DUPLEX</SMALL>
+<td valign="TOP" align="LEFT">Specifies a bidirectional pipe.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_ACCESS_INBOUND</SMALL>
+<td valign="TOP" align="LEFT">Specifies a pipe used for incoming traffic to the server side of the pipe.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_ACCESS_OUTBOUND</SMALL>
+<td valign="TOP" align="LEFT">Specifies a pipe used for outgoing traffic from the server side of the pipe.
+<tr>
+<td valign="TOP" align="LEFT"><small>WRITE_DAC</SMALL>
+<td valign="TOP" align="LEFT">Indicates that the client side of the pipe will have write access to the named pipe&#146;s discretionary access control list.
+<tr>
+<td valign="TOP" align="LEFT"><small>WRITE_OWNER</SMALL>
+<td valign="TOP" align="LEFT">Indicates that the client side of the pipe will have write access to the named pipe&#146;s owner.
+<tr>
+<td colspan="2"><hr>
+<tr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="26-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

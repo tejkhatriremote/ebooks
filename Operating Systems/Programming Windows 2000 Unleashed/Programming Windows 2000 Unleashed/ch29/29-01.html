@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=963-967//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch28/28-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 29<br>Cluster Server
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Microsoft Cluster Server Architecture <i>964</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Clustering APIs <i>969</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>A Cluster-aware Example <i>983</I></B>
+</DL>
+<p>This chapter discusses Microsoft Cluster Server, which enables multiple computers to be joined together into a single virtual computer. Clusters improve the availability of critical resources by providing facilities to move failed applications to other computers in the cluster.
+</P>
+<p>This chapter discusses how you can write applications that are &#147;cluster-aware&#148; and can take advantage of services offered by Microsoft Cluster Server. You must have Windows 2000 Advanced Server in order to run the examples in this chapter.</P>
+<h3><a name="Heading2"></A><font color="#000077">Microsoft Cluster Server Architecture</FONT></H3>
+<p>Microsoft Cluster Server, or MSCS, enables you to join multiple computers together to form a cluster. A <i>cluster</I> is a group of machines that appears to be a single server to clients of the cluster. Applications that run on the cluster tend to increase their availability to clients, because they can run on any machine in the cluster. The current release of MSCS supports clusters with two nodes; future releases will support larger clusters.</P>
+<p>Applications, disk drives, IP addresses, and other server properties are registered with MSCS as <i>cluster resources</I>. When a cluster node fails, MSCS will move resources running on the failed node to a surviving node. Each cluster resource registers other resources that it depends on. Here are some examples of resources that an application might depend on:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Other applications or services
+<dd><b>&#149;</B>&nbsp;&nbsp;Hardware (such as disk drives)
+<dd><b>&#149;</B>&nbsp;&nbsp;Network interfaces
+</DL>
+<p>If an application that a resource depends on becomes unavailable, the application is moved to another node in the cluster. Moving an application from one node to another is known as <i>failover</I>.</P>
+<p>In addition, cluster-aware applications are monitored by the cluster service to ensure that they remain available. If an application fails due to an internal fault, the cluster service will failover the application to another node in the cluster.</P>
+<p>Resources are placed into cluster objects known as <i>groups</I>. A group contains one or more cluster resources that failover together. An example of a group used on all clusters is a virtual server. A virtual server includes IP address and network name resources. Client computers can connect to the virtual server using the virtual server&#146;s IP address and computer name. If the node currently hosting the virtual server fails, a failover occurs, moving the virtual server to another node.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Cluster Server Hardware</FONT></H4>
+<p>Using the MSCS clustering service requires specific hardware that&#146;s used to support communication between nodes in the cluster. Although you can create a cluster using readily available components, Microsoft supports MSCS on hardware platforms that have been certified as part of its Hardware Compatibility List program. A list of certified cluster configurations can be viewed at
+</P>
+<a href="www.microsoft.com\hwtest\hcl">www.microsoft.com\hwtest\hcl</A>
+<p>The physical architecture of a cluster is shown in Figure 29.1.
+</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-01.jpg',405,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-01.jpg',405,420)"><font color="#000077"><b>Figure 29.1</B></FONT></A>&nbsp;&nbsp;Hardware used in a Windows 2000 MSCS cluster.</P>
+<p>Nodes in a cluster share a storage bus that contains information about the cluster. Storage devices on the shared bus are each owned by only one node at a time. One device on the shared bus is designated as the cluster&#146;s <i>quorum device</I>&#151;the node that owns the quorum device has controlling ownership over the cluster.</P>
+<p>Nodes in a cluster are usually connected to two networks:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A private network, sometimes called an <i>interconnect</I>, which is used for private communication between nodes. Clusters that have two nodes typically use a crossover cable to connect their network interface cards. In the future, when MSCS supports more than two nodes, larger clusters will require a hub.
+<dd><b>&#149;</B>&nbsp;&nbsp;A client access network, which provides access to the cluster for clients.
+</DL>
+<p>Clients that connect to a cluster do not require any special hardware or software.
+</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">MSCS Software Components</FONT></H4>
+<p>A cluster is made up of a number of software components. The major software components in a Windows 2000 cluster are shown in Figure 29.2.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-02.jpg',500,264 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-02.jpg',500,264)"><font color="#000077"><b>Figure 29.2</B></FONT></A>&nbsp;&nbsp;The major software components in a Windows 2000 MSCS cluster.</P>
+<p>As shown in Figure 29.2, here are the major software components in a cluster:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Cluster service</I>. Must run on every node that participates in the cluster. The cluster service is composed of several smaller components that control communication with the network, maintain the cluster database, control failover, and perform other similar activities.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Management applications</I>. Programs that control the cluster or cluster-aware applications.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Cluster-aware applications</I>. Programs written to take advantage of MSCS. They may be able to detect that they&#146;re running in a cluster, or they may have features that enable them to be more manageable in a clustered environment.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Cluster-unaware applications</I>. Programs that are oblivious to MSCS. These applications are manageable by the cluster, but they won&#146;t be as available as an application that can interact with the cluster. You can transform an application that&#146;s unaware of the cluster into a cluster-aware application by writing a custom resource type.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Cluster database</I>. Currently implemented through the Win32 Registry. The cluster database stores configuration information about the cluster. More information about the cluster database is provided later in the section titled &#147;Using the Cluster Database.&#148;
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Resource DLLs</I>. Used by the cluster service to manage one or more resources. Resource DLLs are discussed in more detail in the section titled &#147;Understanding Resource DLLs.&#148;
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Resource monitors</I>. An isolation layer for the cluster service that&#146;s used to interact with resource DLLs. Resource monitors are discussed in more detail in the section titled &#147;Understanding Resource Monitors.&#148;
+</DL>
+<p><font size="+1"><b>Using the Cluster Database</B></FONT></P>
+<p>The cluster database is used to store configuration information about the cluster. Cluster-aware applications also use the cluster database to store state and property data. When a failover occurs, the application that becomes active can retrieve a copy of the current state and property information from the cluster database.
+</P>
+<p>Changes to the cluster database are automatically replicated to other nodes in the cluster. Changes are transactional, so you can be sure that the changes have been made to all nodes. The cluster database is routinely tested, or <i>checkpointed</I>, by the cluster service in order to ensure consistency.</P>
+<p>The preferred method for accessing the cluster database is to use control code functions and property lists. Using code functions and property lists is discussed later in the section titled &#147;Using Cluster Object Management APIs.&#148;</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Do not attempt to use Win32 Registry functions to access the cluster database directly. Your changes will not be properly replicated to other nodes, and you may destroy the cluster.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch28/28-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

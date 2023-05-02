@@ -1,0 +1,231 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Structured Exception Handling</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=05//-->
+<!--PAGES=174-179//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>If the <small>CreateException</SMALL> function creates an exception, the calls to delete the dynamic objects that <small>pFoo</SMALL> and <small>pBar</SMALL> point to will be bypassed. From the C<small>&#43;&#43;</SMALL> language&#146;s point of view, <small>pFoo</SMALL> and <small>pBar</SMALL> are not objects&#151;instead, they are simply pointers to objects. The pointers do not have destructors and will not be automatically cleaned up if an exception occurs.</P>
+<p>In order to avoid this problem, the C<small>&#43;&#43;</SMALL> standard library includes the <small>auto_ptr</SMALL> class, a &#147;smart pointer&#148; class that mimics a pointer. Because <small>auto_ptr</SMALL> is a C<small>&#43;&#43;</SMALL> class, it will be destroyed at the appropriate time in the presence of exceptions. In turn, the <small>auto_ptr</SMALL> destructor will delete any dynamic objects that <small>auto_ptr</SMALL> points to.</P>
+<p>Using <small>auto_ptr</SMALL> also reduces the amount of code you need to write. Because the <small>auto_ptr</SMALL> destructor automatically deletes its dynamic objects, you don&#146;t need to explicitly call <small>delete</SMALL>. As the <small>auto_ptr</SMALL> goes out of scope, its destructor will be called, and any dynamically created object will be freed.</P>
+<p>Rewriting the previous example to use <small>auto_ptr</SMALL>, as shown in Listing 5.14, results in less code as well as a function that is guaranteed to release its dynamic data, even if an exception occurs.</P>
+<p><b>Listing 5.14</B> Using <small>auto_ptr</SMALL> to Avoid Memory Leaks<hr></P>
+<!-- CODE //-->
+<pre>
+   void DontCreateMemoryLeaks()
+   {
+       try
+       {
+           auto_ptr&ltCFoo&gt pFoo = new CFoo;
+           auto_ptr&ltCBar&gt pBar = new CBar;
+           CreateException(); // exceptions created here!
+       }
+       catch(...)
+       {
+            // Cleanup here
+       }
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Using the Standard Exception Library</FONT></H4>
+<p>The Standard Exception Library is part of the ANSI C<small>&#43;&#43;</SMALL> Draft Standard. It defines a hierarchy of exception types that can be thrown to indicate an exception condition. The only mandatory exception is <small>bad_alloc</SMALL>, which is thrown to indicate a failed request for memory allocation. The ANSI draft requires a conforming implementation of C<small>&#43;&#43;</SMALL> to throw <small>bad_alloc</SMALL> instead of returning 0 for the allocation request.</P>
+<p>Other than <small>bad_alloc</SMALL>, there is no requirement that these exception types be used; as shown in earlier examples, any type of object can be thrown as an exception. A standard set of exceptions helps to provide an easy way to handle exceptions thrown by code written by others, however. Figure 5.2 shows the ANSI C<small>&#43;&#43;</SMALL> exception hierarchy.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch05/images/05-02.jpg',395,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch05/images/05-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch05/images/05-02.jpg',395,420)"><font color="#000077"><b>Figure 5.2</B></FONT></A>&nbsp;&nbsp;The ANSI C<small>&#43;&#43;</SMALL> Standard Exception Library.
+</P>
+<p>The standard exception hierarchy is divided into two sections:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Runtime errors. Indicate problems that are not possible to predict&#151;for example, lack of memory or hardware failure.
+<dd><b>&#149;</B>&nbsp;&nbsp;Logic errors. Indicate a problem with function processing, such as illegal function parameter values or other preconditions.
+</DL>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Using Runtime Exceptions</FONT></H4>
+<p>Runtime exceptions normally are used to indicate problems that have occurred outside the program&#146;s control. Problems with hardware, lack of memory, or other resources are examples of runtime errors. These problems generally are difficult, if not impossible, to predict when the program is compiled.
+</P>
+<p>When a runtime error is encountered, it&#146;s often possible to take some sort of alternative action without terminating the current process. If memory cannot be allocated, it may be possible to process an operation differently. Likewise, if a disk is full, you might want to ask the user to take some action and then try the operation again.</P>
+<p>All runtime exception classes included in the Standard Exception Library are derived from <small>runtime_error</SMALL>. Any runtime exception can be caught by specifying <small>runtime_error</SMALL> in the <small>catch</SMALL> expression, as shown in Listing 5.15.</P>
+<p><b>Listing 5.15</B> Throwing and Catching a <small>runtime_error</SMALL> Exception<hr></P>
+<!-- CODE //-->
+<pre>
+   void SomeFunc()
+   {
+       try
+       {
+           char szDest[] = &#147;Hello&#148;;
+           char szSrc[] = &#147;World&#148;;
+           Concatenate(szDest, sizeof(szDest), szSrc);
+       }
+       catch(runtime_error e)
+       {
+           cout &lt&lt e.what() &lt&lt endl;
+       }
+   }
+
+   void Concatenate(char szDest[], int nSize, char szSrc[])
+   {
+       int nStrlen = lstrlen(szSrc) &#43; lstrlen(szDest);
+       if(nStrlen &lt nSize)
+           lstrcat(szDest, szSrc);
+       else
+           throw range_error(&#147;Concatenate:Destination too small&#148;);
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Using Logic Exceptions</FONT></H4>
+<p><i>Logic exceptions</I> normally are used to indicate a problem in the coding or logic used in the program. A parameter that&#146;s out of range, for example, is a logic error. Logic errors are difficult to recover from because they often result from a misunderstanding about how a particular object or function is meant to be used.</P>
+<p>All logic error exception classes included in the Standard Exception Library are derived from the <small>logic_error</SMALL> class. Four classes are used to throw logic error exceptions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>domain_error</SMALL>. Indicates an internal processing error.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>invalid_argument</SMALL>. Indicates that a faulty parameter argument has been detected.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>length_error</SMALL>. Indicates an attempt to create or use an object of illegal size.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>out_of_range</SMALL>. Indicates that a parameter is out of range.
+</DL>
+<p>Any logic error exception can be handled by specifying <small>logic_error</SMALL> in the <small>catch</SMALL> expression, as Listing 5.16 shows.</P>
+<p><b>Listing 5.16</B> Throwing and Catching <small>logic_error</SMALL> Exceptions<hr></P>
+<!-- CODE //-->
+<pre>
+   void SomeFunc()
+   {
+       try
+       {
+           CMySafeArray    ar;
+           int nVal = ar[5];
+       }
+       catch(logic_error e)
+       {
+           cout &lt&lt e.what() &lt&lt endl;
+       }
+   }
+
+   int CMySafeArray::operator[](int nIndex)
+   {
+       if(nIndex &lt 0)
+           throw domain_error(&#147;Negative index&#148;);
+       else
+           return m_nData[nIndex];
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Detecting Errors During Construction</FONT></H4>
+<p>As discussed earlier, one of the reasons exceptions were added to the C<small>&#43;&#43;</SMALL> language was to handle errors that occur inside constructors. Because a constructor does not have a return value, there are only two ways to handle errors during construction if exceptions are not used:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Using <i>two-stage construction</I>, in which only &#147;safe&#148; operations that cannot fail are performed during construction. A separate <small>Create</SMALL> or <small>Init</SMALL> function then is used to complete construction of the object.
+<dd><b>&#149;</B>&nbsp;&nbsp;Using a <i>test function</I> that returns an error code if construction failed.
+</DL>
+<p>Each of these methods has drawbacks. Two-stage construction results in code that is difficult to read and write. One of the advantages of using constructors is that initialization is done automatically inside the constructor. When two-stage construction is used, this benefit is reduced. Also, two-stage construction cannot be used for copy constructors and doesn&#146;t work well with assignment operators; therefore, those operations must be handled in other ways.
+</P>
+<p>The primary difficulty with using a function to determine whether construction was successful is that a great deal of extra source code must be added. There&#146;s also a problem using copy constructors and assignment operators, because it might not always be obvious when a test function should be called.</P>
+<p>Exception handling is easier to use than either of these methods. As shown in the console mode program in Listing 5.17, the <small>try</SMALL> block should enclose all objects that might throw exceptions when they&#146;re constructed.</P>
+<p><b>Listing 5.17</B> Throwing and Catching Errors During Construction<hr></P>
+<!-- CODE //-->
+<pre>
+   CSafeArray::CSafeArray(int nArraySize)
+   {
+       try
+       {
+           m_nData = new int[nArraySize];
+           m_pLogger = new CLog;
+       }
+       catch(...)
+       {
+           cout &lt&lt &#147;Error constructing CSafeArray&#148; &lt&lt endl;
+           throw;
+       }
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Using <small>throw</SMALL> with no argument inside a <small>catch</SMALL> block rethrows the currently executing exception, just as if it had not been handled. This allows the expression to be caught and handled by an enclosing set of <small>try</SMALL> and <small>catch</SMALL> blocks.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

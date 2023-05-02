@@ -1,0 +1,239 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=779-783//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This ASP page contains three code blocks. The first block retrieves the values using <small>Request.Form</SMALL>. This method retrieves a value as per the passed-in value from the <small>POST</SMALL> collection. The second code block retrieves the values using <small>Request.QueryString</SMALL>. This method retrieves the value as per the parameter from the <small>GET</SMALL> collection. The last code block retrieves the parameter from any of the five collections, including <small>POST</SMALL> and <small>GET</SMALL>.</P>
+<p>In the form code segment, the <small>POST</SMALL> method was used; therefore, the output will look like this:</P>
+<!-- CODE //-->
+<pre>
+Form collection
+
+Field 1: sdf
+
+Field 2: df
+
+Querystring collection
+
+Field 1:
+
+Field 2:
+
+Either collection
+
+Field 1: sdf
+
+Field 2: df
+
+</PRE>
+<!-- END CODE //-->
+<p>If the form method is changed to <small>method=GET</SMALL>, the following output will be generated:</P>
+<!-- CODE //-->
+<pre>
+Form collection
+
+Field 1:
+
+Field 2:
+
+Querystring collection
+
+Field 1: sdfsdf
+
+Field 2: sdsdfsdf
+
+Either collection
+
+Field 1: sdfsdf
+
+Field 2: sdsdfsdf
+</PRE>
+<!-- END CODE //-->
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Managing Cookies</FONT></H4>
+<p>To store persistent information without using a <small>Session</SMALL> or <small>Application</SMALL> object, you need to use cookies. You can access the cookie from the <small>Request</SMALL> collection. For example, the following code iterates through all the available cookies:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=Javascript %&gt
+&lt%Response.Cookies(&#147;Something&#148;) = &#147;something&#148;;%&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+
+&lth1&gtCookie enumeration&lt/h1&gt
+&lt%
+var cookieCollection = new Enumerator( Request.Cookies);
+
+while( ! cookieCollection.atEnd()) {
+
+ var aCookie = cookieCollection.item();
+
+ cookieCollection.moveNext();
+%&gt
+&ltbr&gtValue is &lt%=aCookie.toString()%&gt
+&lt%
+}
+%&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>All collections can be iterated through using the JavaScript <small>Enumerator</SMALL> object. This object does not have a <small>Count</SMALL> property. It can iterate through a collection only in a forward direction (<small>moveNext</SMALL>). During this process, it can move back to the beginning (<small>moveFirst</SMALL>). To check whether you&#146;re at the end the method, you can use <small>atEnd</SMALL>. Finally, to retrieve the item, the method item is used. The object that&#146;s returned is of the type within the collection. If there is no item or an empty collection exists, the JavaScript <small>undefined</SMALL> value is returned.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Creating Cookies</FONT></H4>
+<p>To send a cookie to the client, you use the <small>Response.Cookie</SMALL> collection. The simplest way of sending a cookie is as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&lt%Response.Cookies(&#147;someCookie&#148;) = &#147;Hello world&#148;;%&gt
+&ltHTML&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This creates a cookie that&#146;s valid only for the life of the browser. When the browser is closed, the cookie disappears. There&#146;s no time limit for the cookie. These attributes are defined using the following notation:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%@ Language=Javascript %&gt
+&lt%
+ Response.Cookies(&#147;SomeCookie&#148;) = &#147;Some other cookie&#148;;
+ Response.Cookies(&#147;SomeCookie&#148;).Expires = &#147;July 7, 1999&#148;;
+ Response.Cookies(&#147;SomeCookie&#148;).Path = &#147;/&#148;;
+%&gt
+&ltHTML&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this example, the cookie has a set path for which it&#146;s valid and an expiration date. The path defines when the cookie is sent from the client to the server. If the cookie is outside the URL, it isn&#146;t sent. The <small>expires</SMALL> attribute creates a persistent cookie, even if the browser is closed.</P>
+<p><font size="+1"><b>To Keep a Cookie or Not</B></FONT></P>
+<p>Cookies are, at times, controversial. Some say they&#146;re good and some say they&#146;re bad. The reason for cookies is simple. When the original HTTP protocol was developed, it was considered stateless. Although this may seem like a good thing considering our sample transaction-processing system, it really isn&#146;t. The real problem is that the statelessness is per request. For example, when a request for a page is made, the page is served and the connection is terminated. Therefore, unless the full transaction runs in one HTTP request, it becomes very tedious. For every request, a context has to be created. ASP uses cookies to identify the user and build a <small>Session</SMALL> object. A <i>cookie</I> is a simple token used to identify the user. It&#146;s text based and does not execute any code. Therefore, a cookie is not bad, because it does not know anything but the context on a specific server.</P>
+<p>A problem that needs to be discussed is what happens if the cookie was not accepted. This can happen if the browser does not accept cookies or the user of the browser simply does not accept the cookie. For example, Microsoft Internet Explorer allows the user to decline acceptance of a cookie. A more critical situation is when a system administrator has turned off the ability to keep <small>Session</SMALL> objects. This presents a problem because it means keeping the state is not possible. In this case, you need an alternate plan and a way of determining whether the browser can support it without causing havoc. The following code shows how to test for cookies.</P>
+<!-- CODE //-->
+<pre>
+&lt%@ LANGUAGE=&#148;VBSCRIPT&#148; %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual InterDev 1.0&#148;&gt
+&ltMETA HTTP-EQUIV=&#148;Content-Type&#148; content=&#148;text/html; charset=iso-8859-1&#148;&gt
+&ltMETA HTTP-EQUIV=&#148;REFRESH&#148; CONTENT=&#148;5; URL=hellotest.asp&#148;&gt
+&ltTITLE&gtDocument Title&lt/TITLE&gt
+&lt/HEAD&gt
+&ltBODY&gt
+&ltH1&gtHello&lt/H1&gt
+&lt%
+<i>On Error Resume Next
+Session(&#147;TestBrowser&#148;)=&#148;Hello&#148;
+On Error Goto 0
+</I>%&gt
+&lt/BODY&gt
+&lt/HTML&gt
+hello.asp
+&lt%@ LANGUAGE=&#148;VBSCRIPT&#148; %&gt
+&lt%
+<i>On Error Resume Next
+if IsEmpty(Session(&#147;TestBrowser&#148;)) true then
+Response.Redirect &#147;helloNoCookie.asp&#148;
+Else
+Response.Redirect &#147;helloAllowCookie.asp&#148;
+End if
+On Error Goto 0</I>
+%&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual InterDev 1.0&#148;&gt
+&ltMETA HTTP-EQUIV=&#148;Content-Type&#148; content=&#148;text/html; charset=iso-8859-1&#148;&gt
+&ltTITLE&gtDocument Title&lt/TITLE&gt
+&lt/HEAD&gt
+&ltBODY&gt
+&ltH1&gtHello&lt/H1&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Living with Windows 2000's Strict Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=19//-->
+<!--PAGES=578-580//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="576-578.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="581-584.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Local Logon to Access a Network File</FONT></H4>
+<p>Now let&#146;s look at a slightly different situation. Suppose you&#146;ve got a few Windows 2000 Professional machines on a network. Suppose further that one of them is your machine&#151; you&#146;re still on M133&#151;and another Windows 2000 machine named RASPBOX contains a file that you want to access over the network.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>TIP:&nbsp;&nbsp;</B>The specifics of networking Windows 2000 Professional machines are covered in great detail in Part V.<hr></FONT>
+</BLOCKQUOTE>
+<p>Briefly, here&#146;s how it works: Every Windows 2000 workstation can act as a kind of mini file server, sharing files on its local hard disk with the rest of the network. In this example, suppose that your file <tt>report.doc</TT> is now on RASPBOX, rather than on M133.</P>
+<p>Again, you log on to M133 and now have a SAT identifying you as M133\Mark. Remember that you got that SAT from your LSA when you logged on.</P>
+<p>Now you try to open the <tt>report.doc</TT> file on RASPBOX. (That&#146;s why it&#146;s called RASPBOX&#151;it contains files. Sorry, just couldn&#146;t resist.) Here&#146;s where the process is different from the SRM on RASPBOX; this SRM checks your credentials. Suppose the SRM on RASPBOX finds that the group RASPBOX\Users has full control of <tt>report.doc</TT>. The SRM then looks at your SAT and sees that you&#146;re M133\Mark. RASPBOX wants to talk only to people with RASPBOX accounts, so the process then moves to the next phase.</P>
+<p>The LSA in RASPBOX looks at your SAT and sees that your username without the machine part is <i>Mark</I> and that your password is <i>windows.hater</I>. If there is another RASPBOX account with username Mark and the same password, then LSA gives you a second SAT, granting you access as RASPBOX\Mark. (If that happens, then you also get access to <tt>report.doc</TT>.) If not, then the LSA on RASPBOX asks the LSA on your PC to authenticate you for RASPBOX. You&#146;ll then see a dialog box on your local screen that says something like &#147;Invalid password or username for RASPBOX.&#148; That dialog box will also have space for you to type in another name and password. As you can probably guess, the name and password you enter is for an account stored on RASPBOX, not one stored on M133.</P>
+<p>If you enter a RASPBOX name and password (suppose the username is RMark), then <tt>lsass.exe</TT> on RASPBOX will receive it and issue you a RASPBOX SAT. Again, you end up with multiple active SATs. When you access something on M133, then the SRM on M133 looks at your M133\Mark SAT; when you access something on RASPBOX, then the SRM on RASPBOX looks at your RASPBOX\RMark SAT.</P>
+<p>Before we leave this example, let&#146;s add another detail. In the first example, the SRM ended up getting an SD from the file system. In this second example, recall that <tt>report.doc</TT> was being accessed not only through the file system but also through the network. The SRM received <i>two</I> sets of SDs: one from the network file-sharing software on RASPBOX and one from the file system on RASPBOX. You would have to be on <i>both</I> SDs to get to that file, because both the network file-sharing software and the file system must agree to allow you to access <tt>report.doc</TT>.</P>
+<p>If this routine is getting a bit confusing, here&#146;s a reminder about the cast of characters in the security world.</P>
+<dl>
+<dt><b>Local Security Authority (LSA)</B>
+<dd>The LSA system oversees logons. The main job of the LSA is to check that you have a valid username and password on the LSA&#146;s PC. The result of that check is a Security Access Token (SAT), an enumeration of information about who you are and to what groups you belong.
+<dt><b>File system and network file-sharing system</B>
+<dd>These modules essentially &#147;own&#148; data accessed either via a local hard disk or over the network. They keep lists called Security Descriptors (SDs) of users authorized to access their data.
+<dt><b>Security Reference Monitor (SRM)</B>
+<dd>The part of the Windows 2000 Executive that compares SATs with SDs to authorize a user to access an object. If you&#146;re dealing with two Windows 2000 machines&#151;the one the user is logged on to and the one that&#146;s holding the desired files&#151;then the SRM that does the checking is the SRM on the Windows 2000 machine holding the files.
+</DL>
+
+<p>This arrangement looks like Figure 19.2.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-02.jpg',500,340)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-02.jpg',500,340)"><font color="#000077"><b>Figure 19.2</B></FONT></A>&nbsp;&nbsp;A remote machine authorizes an access to a network file.</P>
+<p>Figure 19.2 is much like Figure 19.1, but note that in Figure 19.2 the SRMs and SDs appear on the machine that&#146;s considering the request. Note, again, that both the file system and the network file-sharing system produce SDs, and they both have to be satisfied for the access to happen&#151;that is, this door has two locks.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="576-578.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="581-584.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

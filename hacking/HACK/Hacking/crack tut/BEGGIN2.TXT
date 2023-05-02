@@ -1,0 +1,129 @@
+
+                                  Cracking for the beginner - Part two 
+
+
+                                            by Y0SHi
+
+                                            06/12/97
+                                            mm/dd/yy
+
+In part two of this beginners cracking tutorial, I examine one of Lord Caligo's own creations; try_me.com. This file was
+altogether not too difficult, and can be found on Lord Caligo's website. 
+
+                                       And now, the cracking! 
+
+
+Ok, the first thing I did was to dissassemble the program with Sourcer. The listing looks like this: 
+
+                in      al,21h                  ; port 21h, 8259-1 int
+IMR
+                xor     cx,cx                   ; Zero register
+                mov     bx,12Ah
+                mov     dx,16Ch
+                call    sub_1
+                call    sub_3
+                call    sub_4                   ; Sub does not return
+here
+loc_1:
+                inc     ch
+loc_2:
+                int     21h                     ; DOS Services
+ah=function 00h
+                                                ;  terminate, cs=progm
+seg prefx
+                jmpn    loc_3
+                db       31h, 32h, 33h
+sub_1           proc    near
+                or      al,2
+                retn
+sub_1           endp
+sub_2           proc    near
+                and     al,0FDh
+                retn
+sub_2           endp
+sub_3           proc    near
+                cmp     al,0AAh
+                jne     loc_4                   ; Jump if not equal
+                retn
+loc_3:
+                inc     cl
+                inc     bx
+                cmp   ch,3
+                je      loc_5                   ; Jump if equal
+                cmp     al,[bx]
+                je      loc_1                   ; Jump if equal
+                call    sub_5
+                jmpn    loc_7
+loc_4:
+                mov     dx,164h
+                jmpn    loc_6
+loc_5:
+                mov     dx,offset data_2        ; ('')
+loc_6:
+                mov     ah,9
+                int     21h                     ; DOS Services
+ah=function 09h
+                                                ;  display char string at
+ds:dx
+loc_7:
+                int     20h                     ; DOS program terminate
+sub_3           endp
+sub_4:
+                out     21h,al                  ; port 21h, 8259-1 int
+comands
+
+sub_5           proc    near
+                cmp     al,0Dh
+                jne     loc_2                   ; Jump if not equal
+                jmp     short loc_4
+sub_5           endp
+
+                db      0C3h
+                db      0Ah, 0Dh, 'false$'
+                db      ' - TRY*ME v1.00 '
+copyright       db      '(c) by Lord Caligo - 
+
+In the above code, basically we see that in loc_3, ch is compared with 3, and
+if they are equal, data_2 ("right") is put into dx and then is printed, after,
+the program is terminated with int 20. So, all we really have to do is change
+loc_3 to read jmp loc_5 (actually, we'd have to chane loc_5 to some sort of
+memory location). So.... the crack for try_me.com:
+
+  search for:  the mnemonics for je loc_5 (7516)
+replace with:  the mnemonics for jmp loc_5 (EB1C)
+
+
+
+                                            WTF???
+
+
+
+It seems that when we modified the program, no longer is the prompt for the
+password shown; the password is automatically right, you don't have to enter
+anything! Tres bizzare! (I'm not french; this is appropriate though. I am
+the only American cracker I know)
+
+
+                                   Why I chose to accept this crack
+
+
+
+The reason I didn't go back and alter this crack to ask for a password is
+that if you've ever downloaded a cracked password crippled game, you notice
+that most of the time you don't have to enter a password anyway, the cracker
+did a good job. So I thought "What the hell, no one wants to enter a password anyway".
+
+
+                                        Contacting the Author
+
+
+
+To contact me on IRC, DON'T look for Y0SHi, this is some stupid bot for
+y0shi.paradise.com (no, that's not my web page). Look for YOSHi on EfNet.
+
+
+Email: gargos@juno.com
+
+Contacting Lord Caligo: caligo@lords.com
+
+

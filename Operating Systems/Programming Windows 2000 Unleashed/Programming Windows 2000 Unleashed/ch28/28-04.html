@@ -1,0 +1,210 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=937-941//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Application-defined message properties are set when the message is placed into the message queue. The properties associated with a message are retrieved when the message is read from the message queue. Examples of sending and receiving messages are provided later in this chapter.
+</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Computer Properties</FONT></H4>
+<p>The third type of MSMQ properties is machine properties. Machine properties aren&#146;t used as often as queue and message properties. Here are the most commonly used machine properties:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PROPID_QM_ENCRYPTION_PK</SMALL>. An array of bytes (<small>VT_VECTOR|VT_UI1</SMALL>) that contains the public encryption key used by the computer
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PROPID_QM_MACHINE_ID</SMALL>. A GUID (<small>VT_CLSID</SMALL>) that identifies the computer
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PROPID_QM_PATHNAME</SMALL>. A Unicode string (<small>VT_LPWSTR</SMALL>) that specifies the pathname of the computer
+</DL>
+<p>All machine properties are read-only. Machine properties are retrieved using the <small>MQGetMachineProperties</SMALL> function.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Memory Allocation</FONT></H4>
+<p>In general, your application allocates memory buffers that are passed to MSMQ, which copies the contents of the buffer. Your application remains responsible for memory that it allocates when setting or retrieving MSMQ properties.
+</P>
+<p>You can also request that MSMQ allocate the buffer for a property by passing <small>VT_NULL</SMALL> as the variant property type. When the property is returned, MSMQ will have filled in the property type and allocated data, if required, for the property.</P>
+<p>If MSMQ allocates memory for a property value returned to your application, you must free the memory using the <small>MQFreeMemory</SMALL> function. For example, if you retrieve the <small>PROPID_Q_TYPE</SMALL> property, passing <small>VT_NULL</SMALL> as the variant&#146;s type, MSMQ will allocate data for the property, which must be freed in order to avoid a memory leak. Listing 28.1 is an example of a function that retrieves a property and then frees the memory buffer returned by the message queue.</P>
+<p><b>Listing 28.1</B> Using the <small>MQFreeMemory</SMALL> Function to Avoid Memory Leaks<hr></P>
+<!-- CODE //-->
+<pre>
+HRESULT GetQueueTypeGuid(LPWSTR pwszFormatName, GUID* pguid)
+{
+    // Set up queue property structures.
+    MQQUEUEPROPS  queueProps;
+    PROPVARIANT   queuePropVar;
+    MSGPROPID     queuePropID;
+
+    queuePropID = PROPID_Q_TYPE; //Request queue type guid
+    queuePropVar.vt = VT_NULL;   //MSMQ will supply type and buffer
+
+    queueProps.cProp = 1;  // array contains one element
+    queueProps.aPropID = &ampqueuePropID;
+    queueProps.aPropVar = &ampqueuePropVar;
+    queueProps.aStatus = NULL;
+
+    // Retrieve queue property
+    HRESULT hr = MQGetQueueProperties(pwszFormatName,
+                                      &ampqueueProps);
+    if(SUCCEEDED(hr))
+    {
+        // Copy guid to buffer passed as parameter
+        MoveMemory(pguid, queuePropVar.puuid, sizeof(GUID));
+        // Free MSMQ supplied buffer
+        MQFreeMemory(queuePropVar.puuid);
+    }
+    return hr;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>You don&#146;t need to use <small>MSFreeMemory</SMALL> for properties that are copied to buffers supplied by your application. For example, if you allocate a buffer for the message body using <small>malloc</SMALL>, you must use <small>free</SMALL> to release the buffer.</P>
+<h3><a name="Heading12"></A><font color="#000077">Using a Message Queue with the Win32 API</FONT></H3>
+<p>The Win32 API includes functions used to create and manage message queues. All MSMQ functions begin with <i>MQ</I>, such as <small>MQCreateQueue</SMALL>. All MSMQ functions also return an <small>HRESULT</SMALL>. However, in early Windows 2000 Beta releases, the text translation for the <small>HRESULT</SMALL> codes is not available through the <small>FormatMessage</SMALL> function. A list of error codes returned by MSMQ functions is provided in the <small>mq.h</SMALL> header file.</P>
+<p>Here are the most commonly used message queue functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQCreateQueue</SMALL>. Creates a message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQOpenQueue</SMALL>. Opens a handle to an existing message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQCloseQueue</SMALL>. Closes a handle to a message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQPathNameToFormatName</SMALL>. Translates a message queue pathname into a format name
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQSendMessage</SMALL>. Sends a message over a message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQReceiveMessage</SMALL>. Reads a message from a message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQDeleteQueue</SMALL>. Deletes a message queue
+</DL>
+<p>When using the Win32 API to create and manage message queues, you must include the MSMQ header file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &ltmq.h&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>mq.h</SMALL> header file includes the declaration for <small>PROPVARIANT</SMALL> as well as descriptions for all error and warning <small>HRESULT</SMALL> codes returned from MSMQ functions.</P>
+<p>You must also modify your project to link with the MSMQ library, <small>mqrt.lib</SMALL>. To modify a Visual C<small>&#43;&#43;</SMALL> 6.0 project, follow these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Select Settings from the Project menu. This will cause the Project Settings dialog box to be displayed.
+<dd><b>2.</B>&nbsp;&nbsp;Select the Link tab on the Project Settings dialog box.
+<dd><b>3.</B>&nbsp;&nbsp;Select the General category from the drop-down list and add <small>mqrt.lib</SMALL> to the beginning of the Object/Library Modules edit control.
+<dd><b>4.</B>&nbsp;&nbsp;Close the Project Settings dialog box.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>MSMQ API functions accept Unicode strings only. To simplify this chapter&#146;s examples, all the projects are compiled with the <small>_UNICODE</SMALL> and <small>UNICODE</SMALL> preprocessor symbols defined.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Creating a Message Queue</FONT></H4>
+<p>The first step in using any of the message queue functions is to create a message queue. A message queue is created with the <small>MQCreateQueue</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = MQCreateQueue(pSecDescriptor,
+                           &ampqueueProps,
+                           wszFormat,
+                           &ampcbFormat);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>MQCreateQueue</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_DESCRIPTOR</SMALL> for the queue. You can pass <small>NULL</SMALL> for this value to use the default security settings; these settings allow the process that creates the queue to send messages and allow all other processes the ability to receive them.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an <small>MQQUEUEPROPS</SMALL> structure that specifies the initial properties for the queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a buffer that will receive the format string for the message queue. This must be a Unicode string buffer.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that contains the size of the buffer passed in the previous parameter. If the buffer is too small, <small>MQCreateQueue</SMALL> will return an <small>HRESULT</SMALL> with a value of <small>MQ_INFORMATION_FORMATNAME_BUFFER_TOO_SMALL</SMALL>, and it will store the required buffer size in this variable.
+</DL>
+<p><font size="+1"><b>Properties Used When Creating a Message Queue</B></FONT></P>
+<p>The only property that&#146;s required when you&#146;re creating a message queue is the pathname. As discussed earlier, the pathname for a public message queue consists of the computer name and the name of the message queue, separated by a backslash:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+kenzie.codevtech.com\teletubbyqueue
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In addition to this mandatory property, here are some other commonly used properties:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PROPID_Q_JOURNAL</SMALL>. Used to specify that messages removed from the queue are placed into a journal queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PROPID_Q_LABEL</SMALL>. Used to specify a label for the message queue
+</DL>
+<p><font size="+1"><b>An Example of Creating a Message Queue</B></FONT></P>
+<p>Listing 28.2 contains a console mode application that creates a message queue. The source code in Listing 28.2 is part of the CreateQueue project, which can be found on the CD-ROM that accompanies this book.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

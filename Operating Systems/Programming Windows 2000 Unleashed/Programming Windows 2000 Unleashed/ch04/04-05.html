@@ -1,0 +1,206 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-05//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 4.5 shows an example of how <small>FindFirstFile</SMALL>, <small>FindNextFile</SMALL>, and <small>FindClose</SMALL> can be used. In this listing, a console mode program uses these functions to list all files with the <small>.c</SMALL> extension in the <small>C:\</SMALL> directory.</P>
+<p><b>Listing 4.5</B> Using <small>FindFirstFile</SMALL> to Search for Files</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+void DisplayError(LPCTSTR pszTitle);
+
+int _tmain(int argc, TCHAR* argv[])
+{
+    WIN32_FIND_DATA wfd;
+    HANDLE hSearch = FindFirstFile(_T(&#147;C:\\*.c&#148;), &ampwfd);
+    if(hSearch != INVALID_HANDLE_VALUE)
+    {
+        _tprintf(_T(&#147;%s\n&#148;),wfd.cFileName);
+        while(FindNextFile(hSearch, &ampwfd))
+            _tprintf(_T(&#147;%s\n&#148;),wfd.cFileName);
+        FindClose(hSearch);
+    }
+    else
+    {
+        //File not found or other error
+        DisplayError(argv[0]);
+    }
+    return 0;
+}
+void DisplayError(LPCTSTR pszTitle)
+{
+    LPVOID pv;
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  GetLastError(),
+                  MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),
+                  (LPTSTR)&amppv,
+                  0,
+                  NULL);
+    MessageBox(NULL, pv, pszTitle, MB_ICONHAND);
+    LocalFree(pv);
+}
+</PRE>
+<!-- END CODE //-->
+<p>As you can see in Listing 4.5, if a search is successful, the <small>FindFirstFile</SMALL> and <small>FindNextFile</SMALL> functions fill in a <small>WIN32_FIND_DATA</SMALL> structure with information about files that were found. The <small>WIN32_FIND_DATA</SMALL> structure is defined as this:</P>
+<!-- CODE //-->
+<pre>
+typedef struct _WIN32_FIND_DATA {
+    DWORD    dwFileAttributes;
+    FILETIME ftCreationTime;
+    FILETIME ftLastAccessTime;
+    FILETIME ftLastWriteTime;
+    DWORD    nFileSizeHigh;
+    DWORD    nFileSizeLow;
+    DWORD    dwReserved0;
+    DWORD    dwReserved1;
+    TCHAR    cFileName[MAX_PATH];
+    TCHAR    cAlternateFileName[14];
+} WIN32_FIND_DATA;
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>As shown here, the <small>WIN32_FIND_DATA</SMALL> structure has 11 members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwFileAttributes</SMALL>. One or more flags combined to indicate the attributes of the file or directory returned in the search result. The possible values for this parameter are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ftCreationTime</SMALL>. A <small>FILETIME</SMALL> variable that indicates when the file was created. The <small>FILETIME</SMALL> type stores time in UTC format and is discussed later in this section.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ftLastAccessTime</SMALL>. The time the file was last accessed (stored as a <small>FILETIME</SMALL>).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ftLastWriteTime</SMALL>. The time the file was last written to (stored as a <small>FILETIME</SMALL>).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>nFileSizeHigh</SMALL>. The upper 32 bits of the file size.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>nFileSizeLow</SMALL>. The lower 32 bits of the file size.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwReserved0</SMALL>. The reparse point tag, if one exists.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwReserved1</SMALL>. Not used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>cFileName</SMALL>. The name of the file or directory found in the search.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>cAlternateFileName</SMALL>. The 8.3 name of the file or directory found in the search.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwAfileAttributes</SMALL>. Filled with one or more of the following file attribute flags (some of the following flags were discussed earlier in Table 4.2):
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_ARCHIVE</SMALL>. The file is an archive file.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_COMPRESSED</SMALL>. The file or directory is compressed. If the search result is a directory, this flag means that, by default, all files stored in it are compressed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_DIRECTORY</SMALL>. The search result is a directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_ENCRYPTED</SMALL>. The file is encrypted. For directories, this flag indicates that files are encrypted by default.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_HIDDEN</SMALL>. The search result is a hidden file or directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_NORMAL</SMALL>. This attribute is set when no other flags apply.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_OFFLINE</SMALL>. The file data for this file is located in storage that isn&#146;t immediately available.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_READONLY</SMALL>. The search result is a read-only file or directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_REPARSE_POINT</SMALL>. The search result has a reparse point.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_SPARSE_FILE</SMALL>. The search result is a sparse file.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_SYSTEM</SMALL>. The search result is part of the operating system, or it&#146;s a file or directory used only by the operating system.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_ATTRIBUTE_TEMPORARY</SMALL>. The file is being used for temporary storage. Windows 2000 will try to cache the file in RAM.
+</DL>
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>You can use the <small>FindFirstFile</SMALL> function to convert from an old-style 8.3 filename into the true filename. Just call <small>FindFirstFile</SMALL> with the 8.3 filename as the search pattern. Windows will return the full file name in the <small>WIN32_FIND_DATA</SMALL> structure&#146;s <small>cFileName</SMALL> member variable.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">A Hint of Things to Come: FindFirstFileEx</FONT></H4>
+<p>You may be interested in searching for files based on information other than the filename. For example, you may want to apply additional search criteria to a file search, such as returning only files that match a certain set of attributes.
+</P>
+<p>The good news is that Windows 2000 includes <small>FindFirstFileEx</SMALL>, a function that has extra parameters for additional control over filename searches. The bad news is that the function isn&#146;t completely implemented. By examining <small>FindFirstFileEx</SMALL>, you can see that Windows 2000 will eventually allow powerful searches based on file attributes. However, in the current prerelease of Windows 2000 used when writing this book (beta 3), it&#146;s just a complex version of <small>FindFirstFile</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hSearch = FindFirstFileEx(_T(&#147;C:\\*.*&#148;),
+                                 FindExInfoStandard,
+                                 &ampwfd,
+                                 FindExSearchLimitToDirectories,
+                                 NULL,
+                                 FIND_FIRST_EX_CASE_SENSITIVE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

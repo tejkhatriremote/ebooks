@@ -1,0 +1,214 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=653-656//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Understanding Cloaking and Impersonation</FONT></H4>
+<p>COM clients and servers use two methods that enable a COM server to assume the role of a client:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Impersonation
+<dd><b>&#149;</B>&nbsp;&nbsp;Cloaking
+</DL>
+<p>Impersonation has always been available in DCOM, and it works exactly like the impersonation method discussed in Chapter 7, &#147;Distributed Security.&#148; A server assumes the security level and identity of the client in order to determine whether a client is allowed to perform a specific task. The problem with impersonation is that it does not work across multiple machine boundaries; a COM server that calls another COM server on a client&#146;s behalf cannot project the original client&#146;s identity to the next server.
+</P>
+<p>Cloaking allows a COM server to control the identity that&#146;s sent to another COM server on a client&#146;s behalf. If a client allows delegation, the COM server can use cloaking to assume the client&#146;s identity and project that identity across machine boundaries to other COM servers.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Setting Security Levels for a Computer</FONT></H4>
+<p>Default security permissions for a computer are located in the Registry under the <small>HKEY_LOCAL_MACHINE</SMALL> Registry key. A number of values must be set properly to manage DCOM. By default, DCOM is permitted for administrators and other power users. If you decide to actively manage DCOM, it&#146;s a good idea to learn which parts of the Registry are used by the operating system for DCOM.</P>
+<p><font size="+1"><b>Enabling or Disabling DCOM for a Computer</B></FONT></P>
+<p>The first value, <small>EnableDCOM</SMALL>, can be used to enable or disable DCOM for the entire machine:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    EnableDCOM=Y
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the <small>EnableDCOM</SMALL> named value is set to <small>Y</SMALL> or <small>y</SMALL>, remote machines are allowed to launch remote instances of COM objects on this machine, subject to further security permissions. If the value is <small>N</SMALL> or <small>n</SMALL>, remote access is not allowed. This is the first checkpoint for determining whether a DCOM connection can be established.</P>
+<p>If you&#146;re using DCOM Config, this value is set in the Default Properties tab.</P>
+<p><font size="+1"><b>Setting Default Launch Permissions for a Computer</B></FONT></P>
+<p>The <small>DefaultLaunchPermission</SMALL> value is used to specify an ACL for principals that are allowed to launch COM servers. The <small>DefaultLaunchPermission</SMALL> named value has the <small>REG_BINARY</SMALL> type and is located under <small>HKEY_LOCAL_MACHINE</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    DefaultLaunchPermission=&lt <i>acl</I>&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This value is not used if the COM server has a <small>LaunchPermission</SMALL> value set under its AppID key. By default, administrators, the interactive user, and the system account are allowed launch permissions through this Registry key.</P>
+<p><font size="+1"><b>Setting Default Access Permissions for a Computer</B></FONT></P>
+<p>The <small>DefaultAccessPermission</SMALL> value is used to specify an ACL for principals that are allowed to access a running COM server. The <small>DefaultAccessPermission</SMALL> value has the <small>REG_BINARY</SMALL> type and is located under <small>HKEY_LOCAL_MACHINE</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    DefaultAccessPermission=&lt<i>acl</I>&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This value is not used if the COM server has called <small>CoInitializeSecurity</SMALL> or if the COM server has an <small>AccessPermission</SMALL> value set under its AppID key. By default, this ACL is empty.</P>
+<p><font size="+1"><b>Setting Legacy Security Permissions for a Computer</B></FONT></P>
+<p>To be sure, COM is a moving target. Security and distributed features have evolved into COM over the last few releases of Windows NT and various service packs. Windows 2000 allows you to define default values for COM servers that are unaware of DCOM security options. These options are as follows:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The authentication level
+<dd><b>&#149;</B>&nbsp;&nbsp;The impersonation level
+<dd><b>&#149;</B>&nbsp;&nbsp;Mutual authentication availability
+<dd><b>&#149;</B>&nbsp;&nbsp;Security on <small>AddRef</SMALL> and <small>Release</SMALL> method calls
+</DL>
+<p>The <small>LegacyAuthenticationLevel</SMALL> value is used to specify the default authentication level used by a COM server when interacting with a remote client. The <small>LegacyAuthenticationLevel</SMALL> value has the <small>REG_WORD</SMALL> type and is located under <small>HKEY_LOCAL_MACHINE</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    LegacyAuthenticationLevel=&lt<i>Authentication level</I>&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The authentication level must be a value between 1 and 6, as shown in Table 20.1.
+</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 20.1</B> Legacy Authentication Levels
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="15%" align="LEFT" valign="TOP"><i>Value</I>
+<th width="85%" align="LEFT" valign="TOP"><i>Authentication Level</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">1
+<td align="LEFT" valign="TOP"><small>RPC_C_AUTHN_LEVEL_NONE</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">2
+<td align="LEFT" valign="TOP"><small>RPC_C_AUTHN_LEVEL_CONNECT</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">3
+<td align="LEFT" valign="TOP"><small>RPC_C_AUTHN_LEVEL_CALL</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">4
+<td align="LEFT" valign="TOP"><small>RPC_C_AUTHN_LEVEL_PKT</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">5
+<td align="LEFT" valign="TOP"><small>RPC_C_AUTHN_LEVEL_PKT_INTEGRITY</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">6
+<td align="LEFT" valign="TOP"><small>RPC_C_AUTHN_LEVEL_PKT_PRIVACY</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The legacy authentication level is not used if the COM server has called <small>CoInitializeSecurity</SMALL>. If the legacy authentication level is not set and the COM server has not called <small>CoInitializeSecurity</SMALL>, the system will use a value of <small>RPC_C_AUTHN_LEVEL_CONNECT</SMALL>.</P>
+<p>The <small>LegacyImpersonationLevel</SMALL> value is used to specify the default impersonation level used by a COM server when acting on behalf of a remote client. The <small>LegacyImpersonationLevel</SMALL> value has the <small>REG_WORD</SMALL> type and is located under <small>HKEY_LOCAL_MACHINE</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_LOCAL_MACHINE\Software\Microsoft\OLE]
+    LegacyImpersonationLevel=&lt<i>Impersonation level</I>&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The impersonation level must be a value between 1 and 4, as shown in Table 20.2.
+</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 20.2</B> Legacy Impersonation Levels
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="15%" align="LEFT" valign="TOP"><i>Value</I>
+<th width="85%" align="LEFT" valign="TOP"><i>Impersonation Level</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">1
+<td align="LEFT" valign="TOP"><small>RPC_C_IMP_LEVEL_ANONYMOUS</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">2
+<td align="LEFT" valign="TOP"><small>RPC_C_IMP_LEVEL_IDENTIFY</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">3
+<td align="LEFT" valign="TOP"><small>RPC_C_IMP_LEVEL_IMPERSONATE</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">4
+<td align="LEFT" valign="TOP"><small>RPC_C_IMP_LEVEL_DELEGATE</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

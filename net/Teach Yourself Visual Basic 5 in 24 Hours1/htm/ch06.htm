@@ -1,0 +1,849 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch05.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch07.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 6</A>
+	<UL>
+		<LI><A HREF="#Heading2">Improving Code: Message and Input Boxes</A>
+		<UL>
+			<LI><A HREF="#Heading3">A Function Preview</A>
+			<UL>
+				<LI><A HREF="#Heading4">Figure 6.1.</A>
+			</UL>
+			<LI><A HREF="#Heading5">A MsgBox() and InputBox() Overview</A>
+			<UL>
+				<LI><A HREF="#Heading6">Figure 6.2.</A>
+				<LI><A HREF="#Heading7">Figure 6.3.</A>
+			</UL>
+			<LI><A HREF="#Heading8">Examining MsgBox()</A>
+			<UL>
+				<LI><A HREF="#Heading9">Figure 6.4.</A>
+			</UL>
+			<LI><A HREF="#Heading10">MsgBox()s Return Value</A>
+			<UL>
+				<LI><A HREF="#Heading11">Visual Basics Code Window Help</A>
+				<UL>
+					<LI><A HREF="#Heading12">Figure 6.5.</A>
+					<LI><A HREF="#Heading13">Figure 6.6.</A>
+				</UL>
+				<LI><A HREF="#Heading14">A Short Detour: Remarks</A>
+				<LI><A HREF="#Heading15">Examining InputBox()</A>
+				<UL>
+					<LI><A HREF="#Heading16">Figure 6.7.</A>
+				</UL>
+			</UL>
+			<LI><A HREF="#Heading17">Summary</A>
+			<LI><A HREF="#Heading18">Q&amp;A</A>
+			<LI><A HREF="#Heading19">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading20">Quiz</A>
+				<LI><A HREF="#Heading21">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 6</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Improving Code: Message
+and Input Boxes</FONT></H2>
+<P>In this and subsequent lessons, your application will need to display messages
+and ask questions of the user. The application needs to receive the user's response
+from the questions. Although the Label and Text Box controls work well for giving
+and receiving user information, such controls don't lend themselves to messages and
+questions that the program displays during execution such as error messages and warning
+boxes.</P>
+<P>For example, suppose you want to know if the user has prepared the printer for
+printing. To prepare a printer, the user has to turn on the printer, make sure paper
+is there, and ensure that the online light is on. Your program should not attempt
+to print a report until the user has performed these actions or an error will occur.
+Therefore, when the user initiates a report for printing, your application can gather
+the data and then ask the user if the printer is ready. If the user responds affirmatively,
+you can start the report's output. The form's controls simply do not provide such
+interaction. In this hour's lesson you will learn how to display message boxes and
+input boxes that provide runtime I/O.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>How message boxes differ from text boxes
+	<P>
+	<LI>Why functions benefit programmers
+	<P>
+	<LI>When to test message box return values
+	<P>
+	<LI>Why to add remarks
+	<P>
+	<LI>How to receive input box answers
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">A Function Preview</FONT></H3>
+<P>The programming language you've learned so far--the variable declarations, assignments,
+and operator usage--has focused on programming statements. This lesson begins to
+discuss a new kind of programming language concept called a function.</P>
+<P>Visual Basic comes supplied with several built-in functions (often called intrinsic
+functions) that do work for you. Many functions perform common mathematical tasks
+such as computing a square root. Other functions manipulate sting data such as converting
+text inside a string to uppercase or lowercase letters. Other functions, such as
+the functions taught in this lesson, perform input and output.</P>
+<P>A function is a routine that accepts zero, one, or more arguments and returns
+a single result based on the argument list.</P>
+<P>An intrinsic function is a function supplied with Visual Basic.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Hours 13, &quot;Modular
+	Programming,&quot; and 14, &quot;Built-in Functions Save Time,&quot; describe how
+	you can write your own functions. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A function takes zero, one, or more arguments and converts those arguments to
+a single return value. Figure 6.1 shows an overview of a function's job. The most
+important thing to remember is that a function always returns a single value.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>An argument is a value you
+pass to a function so the function has data to work with.<BR>
+<BR>
+<A NAME="Heading4"></A><A HREF="../art/ch06/0601.jpg"><FONT COLOR="#000077">Figure
+6.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>A function accepts arguments and
+returns a single value. </I><BR>
+<BR>
+A function's job is to save you time. For example, if you need to compute the square
+root of a user's entered value, you could write the assignments and expressions to
+compute the square root. The square root, however, is such a common routine that
+Microsoft wrote the code once and stored the square root routine in an intrinsic
+function. Now, if you want the square root of a value, you'll pass the value as a
+single argument to the square root function, and after performing the necessary math,
+the square root function will return the root.</P>
+<P>This lesson focuses on two intrinsic functions that don't do math. Instead, they
+display messages or receive user input. Don't worry too much about what a function
+is as long as you have the general idea. You'll become much more familiar with them
+before you're through with this tutorial.</P>
+<P>This lesson spends the rest of the hour teaching you these functions:
+
+<UL>
+	<LI><TT>MsgBox()</TT>
+	<P>
+	<LI><TT>InputBox()</TT>
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Function names,
+	unlike variable names, usually appear with parentheses at the end. The parentheses
+	hold the function arguments that you send to the function. Even if a function receives
+	no arguments, the parentheses are still required when you use the functions. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading5"></A><FONT COLOR="#000077">A MsgBox() and InputBox()
+Overview</FONT></H3>
+<P>You use input boxes and message boxes when you need to ask the user questions
+or display error messages and advice to the user. As stated earlier, the form's controls
+don't often work well for such user dialogs. For example, suppose the user is to
+enter a sales code of <TT>A</TT>, <TT>B</TT>, or <TT>C</TT> to indicate a discount
+to be used in a total calculation. Users don't always know what's expected of them,
+so a message box can pop up when the user enters a bad value and the message box
+can explain that the user needs to enter only <TT>A</TT>, <TT>B</TT>, or <TT>C</TT>.
+If the user enters an invalid code, your program could display an error message such
+as the one shown in Figure 6.2.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A message box is a dialog
+box you display to give the user information.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>An input box is a dialog
+box you display to ask the user questions.<BR>
+<BR>
+<A NAME="Heading6"></A><A HREF="../art/ch06/06cce02.jpg"><FONT COLOR="#000077">Figure
+6.2.</FONT></A><FONT COLOR="#000077"><I> </I></FONT><I>A message box can tell the
+user what to expect.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>You may
+	hear about a Visual Basic statement called the <TT>MsgBox</TT> statement (as opposed
+	to the <TT>MsgBox()</TT> function). Although Visual Basic does still support the
+	<TT>MsgBox</TT> statement, Microsoft recommends that you use only the <TT>MsgBox()</TT>
+	function due to its inspection ability for a return value. (The <TT>MsgBox</TT> statement
+	does not even appear in Visual Basic 5's online help.) 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The Text Box controls that you've seen are great for getting values from the user.
+Other controls that you'll learn as you progress through this book also accept the
+user's input from the keyboard or mouse. Nevertheless, Visual Basic's controls just
+aren't enough to handle all the input that your program will need. Input boxes are
+great to use when the user must respond to certain kinds of questions. Text boxes
+and other controls are fine for getting fixed input from the user, such as data values
+with which the program will compute. Input boxes are great for asking the user questions
+that arise only under certain conditions. Input boxes always give the user a place
+to respond with an answer. In Figure 6.3, the input box is asking the user for a
+title that will go at the top of a printed report listing.<BR>
+<BR>
+<A NAME="Heading7"></A><A HREF="../art/ch06/06cce03.jpg"><FONT COLOR="#000077">Figure
+6.3.</FONT></A><FONT COLOR="#000077"><I> </I></FONT><I>Input boxes get user information.
+</I><BR>
+<BR>
+Note that there is more than one way for the user to respond to the input box in
+Figure 6.3. The user can answer the question by typing the title at the bottom of
+the input box and pressing Enter or clicking the OK command button. The user also
+can click the Cancel command button whether or not the user entered a title. Therefore,
+the program must be capable of reading the user's entered answer as well as responding
+to a Cancel command button press. Responding to message box and input box command
+buttons is part of the processing that you'll learn about in the remaining sections
+of this lesson.
+<H4 ALIGN="CENTER"><A NAME="Heading8"></A><FONT COLOR="#000077">Examining MsgBox()</FONT></H4>
+<P>Always assign a <TT>MsgBox()</TT> function to an integer variable. The variable
+will hold the return value, and that value will indicate the button the user clicked
+(message boxes can display multiple buttons such as OK and Cancel).</P>
+<P>Here is the format of the <TT>MsgBox()</TT> function:</P>
+<PRE><FONT COLOR="#0066FF">anIntVariable = MsgBox( strMsg [, [intType] [, strTitle]])
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The <TT>MsgBox()</TT>
+	function's format shown here accepts one required (strMsg) and two optional (intType
+	and strTitle) arguments. <TT>MsgBox()</TT> can accept more arguments, but these three
+	are the only ones needed in most applications. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>strMsg is a string (either a variable or a string constant enclosed in quotation
+marks) and forms the text of the message displayed in the message box. intType is
+an optional numeric value or expression that describes the options you want in the
+message box. Table 6.1, Table 6.2, and Table 6.3 contain all the possible values
+you can use for the type of message box you want displayed. (Visual Basic displays
+no icon if you don't specify an intType value.) If you want to use a value from two
+or more of the tables, you'll add the values together. Although you can use the integer
+value, if you use the built-in Visual Basic named literal, you'll more easily understand
+the message box's style if you ever have to change the message box in the future.
+strTitle is an optional string that represents the text in the message box's title
+bar. If you omit strTitle, Visual Basic uses the project's name for the message box's
+title bar text.</P>
+<CENTER>
+<P><B>Table 6.1. The buttons displayed in a message box. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Named Literal</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Value</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbOKOnly</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>0</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays the OK button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbOKCancel</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>1</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays the OK and Cancel buttons.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbAbortRetryIgnore</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>2</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays the Abort, Retry, and Ignore buttons.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbYesNoCancel</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>3</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays the Yes, No, and Cancel buttons.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbYesNo</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>4</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays the Yes and No buttons.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbRetryCancel</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>5</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays the Retry and Cancel buttons.</TD>
+	</TR>
+</TABLE>
+<BR>
+<B><I><BR>
+</I>Table 6.2. The icons displayed in a message box. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><B><I>Named Literal</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Value</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbCritical</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>16</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays Critical Message icon.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbQuestion</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>32</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays Warning Query icon.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbExclamation</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>48</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays Warning Message icon.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbInformation</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>64</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Displays Information Message icon.</TD>
+	</TR>
+</TABLE>
+<B><I><BR>
+<BR>
+</I>Table 6.3. The default buttons displayed in a message box. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><B><I>Named Literal</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Value</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbDefaultButton1</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>0</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The first button is the default.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbDefaultButton2</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>256</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The second button is the default.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbDefaultButton3</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>512</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The third button is the default.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>The options that you select, using the intType value in the <TT>MsgBox()</TT>
+function, determine whether the message box displays an icon and controls the modality
+of the message box. The modality determines whether a message box is application
+specific or system specific. If it is application specific, the user must respond
+to the message box before the user can do anything else in the application. If the
+message box is system specific, the user must respond to the message box before doing
+anything else on the system.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>Modality determines how the
+system handles a dialog box.</P>
+<P>The modality often causes confusion. If you don't specify a system-modal intType
+value of <TT>4096</TT> (or if you don't use the named literal <TT>vbSystemModal</TT>
+to specify the system's modal mode), the user's application will not continue until
+the user closes the message box, but the user can switch to another Windows program
+by pressing Alt+Tab or by switching to another program using the application's control
+menu. If, however, you do specify that the message box is system modal, the user
+will not be able to switch to another Windows program until the user responds to
+the message box because the message box will have full control of the system. Reserve
+the system-modal message boxes for serious error messages that you want the user
+to read and respond to before continuing the program.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If you don't
+	specify an icon, Visual Basic doesn't display an icon. If you don't specify the system
+	modality, Visual Basic assumes that you want an application-modal message box. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The following <TT>MsgBox()</TT> function produces the message box shown in Figure
+6.4:</P>
+<PRE><FONT COLOR="#0066FF">intPress = MsgBox(&quot;Are you ready for the report?&quot;, vbQuestion + _
+  vbYesNoCancel, &quot;Report Request&quot;)
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you need to
+	type long VB program statements, such as this <TT>MsgBox()</TT> function, you can
+	break the line into multiple, more manageable lines by terminating the first line
+	with an underscore character (<TT>_</TT>). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><A NAME="Heading9"></A><A HREF="../art/ch06/06cce04.jpg"><FONT COLOR="#000077">Figure
+6.4.</FONT></A><FONT COLOR="#000077"> </FONT><I>Message boxes support several command
+buttons. </I><BR>
+<BR>
+Remember that the <TT>MsgBox()</TT> values such as <TT>vbQuestion</TT> and <TT>vbYesNoCancel</TT>
+are not variables but are named literals that Visual Basic has defined to correspond
+with matching integer values. The named literals <TT>vbQuestion</TT> and <TT>vbYesNoCancel</TT>
+produced both a question mark icon and the three buttons. A title also appeared due
+to the third value inside the <TT>MsgBox()</TT> function.
+<CENTER>
+<H4><A NAME="Heading10"></A><FONT COLOR="#000077">MsgBox()s Return Value</FONT></H4>
+</CENTER>
+<P>The reason that you assign <TT>MsgBox()</TT> functions to variables is so you
+can tell which button the user presses. Suppose that the user pressed the Yes button
+in Figure 6.4. The program could then print the report. If, however, the user pressed
+the No button, the program could describe what the user needed to do to get ready
+for the report (load paper, turn on the printer, and so on). If the user pressed
+the Cancel button, the program would know that the user didn't want the report at
+all.</P>
+<P>Table 6.4 lists the seven possible <TT>MsgBox()</TT> return values. You can test
+either for the integer or the named literal return value.</P>
+<CENTER>
+<P><B>Table 6.4. MsgBox() return values. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Named Constant</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Value</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbOK</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>1</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the OK button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbCancel</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>2</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the Cancel button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbAbort</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>3</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the Abort button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbRetry</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>4</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the Retry button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbIgnore</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>5</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the Ignore button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbYes</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>6</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the Yes button.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>vbNo</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>7</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user clicked the No button.</TD>
+	</TR>
+</TABLE>
+
+</CENTER>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You'll learn
+	how to test for specific values in Hour 7, &quot;Making Decisions.&quot; 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H4><A NAME="Heading11"></A><FONT COLOR="#000077">Visual Basics Code Window Help</FONT></H4>
+</CENTER>
+<P>Can you remember the named literals in this lesson's tables? How can you remember
+that the named literal value to display three buttons--Yes, No, and Cancel--is the
+<TT>vbYesNoCancel</TT> named literal?</P>
+<P>Fortunately, with version 5, Visual Basic now supplies you with all the help you
+need. As soon as VB's Code window editor recognizes that you're entering a function,
+the editor immediately displays pop-up help that displays the function's format,
+as shown in Figure 6.5.<BR>
+<BR>
+<A NAME="Heading12"></A><A HREF="../art/ch06/06cce05.jpg"><FONT COLOR="#000077">Figure
+6.5.</FONT></A><FONT COLOR="#000077"> </FONT><I>Visual Basic displays the function's
+format for you. </I><BR>
+<BR>
+Visual Basic give you help not only with a function's format, but also with the function's
+named literals. When you get to any function argument that requires one of the named
+literals, Visual Basic displays a drop-down list box such as the one in Figure 6.6,
+from which you can select a named literal. To accept the selected named literal,
+press Enter, type a comma, or press the Spacebar to continue with the program.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The format and
+	argument list box pop-up help appears all throughout Visual Basic. As you learn additional
+	Visual Basic statements, you'll see the pop-up Code window help more often. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><A NAME="Heading13"></A><A HREF="../art/ch06/06cce06.jpg"><FONT COLOR="#000077">Figure
+6.6.</FONT></A><FONT COLOR="#000077"> </FONT><I>Visual Basic displays the function's
+named literals.</I>
+<CENTER>
+<H4><A NAME="Heading14"></A><FONT COLOR="#000077">A Short Detour: Remarks</FONT></H4>
+</CENTER>
+<P>Figures 6.5 and 6.6 show two new program statements you've not seen to this point.
+Two remark statements appear in each figure. Remarks help both you and other programmers
+who might modify and update your Visual Basic applications in the future. Remarks
+offer descriptive messages that explain in English (or whatever language you prefer)
+what's going on in the program's event procedures.</P>
+<P>It's said that a program is written once and read many times. That saying is true
+because of the nature of applications. Often, you'll write a program that helps you
+or your business compute required calculations and keep track of daily transactions.
+Over time, requirements change. Businesses buy and sell other businesses, the government
+changes its reporting and taxing requirements, and people's needs change. You should
+realize that, after you write and implement a program, you will make modifications
+to that program later. If you use the program in a business, you'll almost certainly
+make many modifications to the program to reflect changing conditions.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you program
+	for someone else or as part of a team, the chances are high that others will modify
+	the programs that you write and that you'll modify programs that other programmers
+	write. Therefore, as you write programs, think about the future maintenance that
+	you and others will make. Write your programs clearly, using ample spacing and indentation,
+	and add remarks that explain difficult sections of code. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A remark is a message that
+you put inside a program's code. Programmers concerned about maintenance know that
+ample remarks help clarify code and aid future maintenance. Visual Basic completely
+ignores any and all remarks because those remarks are for people looking at your
+program code. Users don't see remarks because users don't see the program's code;
+rather, users see a program's output.</P>
+<P>Programmers often add remarks to their programs for the following purposes:
+
+<UL>
+	<LI>To state the programmer's name and the date that the program was written
+	<P>
+	<LI>To describe in the <TT>general</TT> section the overall goal of the program (the
+	<TT>general</TT> section appears before all of a procedure's procedures and is the
+	location Hour 5, &quot;Putting Code into Visual Basic,&quot; described when it talked
+	about declaring global variables)
+	<P>
+	<LI>To describe at the top of every procedure the overall goal of that procedure
+	<P>
+	<LI>To explain tricky or difficult statements so that others who modify the program
+	later can understand the lines of code without having to decipher cryptic code
+</UL>
+
+<P>Even if you write programs for yourself, and if you are the only one who will
+modify your programs, you should still add remarks to your programs! Weeks or months
+after you write a program, you'll have forgotten the exact details of the program,
+and remarks that you interspersed throughout the code will simplify your maintenance
+and will help you find the code that you need to change.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Add remarks as
+	you write your programs. Often, programmers say to themselves, &quot;I'll finish
+	the program and add remarks later.&quot; Trust me--the remarks don't get added. It's
+	only later, when programmers need to modify the program, that they notice the lack
+	of remarks--and regret it. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Add remarks to your program so that you and others can more quickly grasp the
+nature of the program and can make modifications to it more easily when needed. Visual
+Basic supports several remark formats. Unlike in some other programming languages,
+Visual Basic remarks are easy to add to your code, and their free-form nature enables
+you to add remarks whenever and wherever needed.</P>
+<P>Visual Basic supports two kinds of remarks:
+
+<UL>
+	<LI>Remarks that begin with the <TT>Rem</TT> statement
+	<P>
+	<LI>Remarks that begin with the apostrophe (<TT>`</TT>)
+</UL>
+
+<P>The <TT>Rem</TT> statement is more limiting than the apostrophe and isn't as easy
+to use. Nevertheless, you'll run across programs that use <TT>Rem</TT> statements,
+so you should learn how <TT>Rem</TT> works. Here is the format of the <TT>Rem</TT>
+statement:</P>
+<PRE><FONT COLOR="#0066FF">Rem The remark's text
+</FONT></PRE>
+<P>You can put anything you want in place of The remark's text. The following are
+examples of remarks:</P>
+<PRE><FONT COLOR="#0066FF">Rem Programmer: Grant Holdorf, Date: Mar-27-1999
+Rem
+Rem This program supports the check-in and check-out
+Rem  process for the dry-cleaning business.
+Rem
+Rem This event procedure executes when the user
+Rem  clicks on the Exit command button. When pressed,
+Rem  this event procedure closes the program's data
+Rem  files, prints an exception report, and terminates
+Rem  the application
+</FONT></PRE>
+<P>The first of these remark sections consists of a one-line remark that tells the
+programmer's name and the date that the program was last modified. If someone else
+must modify the program later, that person can find the original programmer if needed
+to ask questions about the program's code. The second remark describes the overall
+program's goal by starting with a high-level description of the program's purpose.
+The third remark might appear at the top of a command button's <TT>Click</TT> event
+procedure.</P>
+<P>As you can see, you can add one or more lines of remarks depending on the amount
+of description needed at that point in the program. Visual Basic ignores all lines
+that begin with <TT>Rem</TT>. When someone looks at the program code later, that
+person will know who the programmer is, the date that the program was written, the
+overall purpose of the program, and the overall description of each procedure that
+includes a remark section.</P>
+<P>Say that you used apostrophes in place of the <TT>Rem</TT> statement in the previous
+remarks. The following rewritten remarks demonstrate that the remarks are even more
+effective because <TT>Rem</TT> doesn't get in the way of each remark's text:</P>
+<PRE><FONT COLOR="#0066FF">` Programmer: Grant Holdorf, Date: Mar-27-1999
+`
+` This program supports the check-in and check-out
+`  process for the dry-cleaning business.
+`
+` This event procedure executes when the user
+`  clicks on the Exit command button. When pressed,
+`  this event procedure closes the program's data
+`  files, prints an exception report, and terminates
+`  the application
+</FONT></PRE>
+<P>The remarks don't have to go at the beginning of event procedures. You can place
+remarks between lines of code, as done here:</P>
+<PRE><FONT COLOR="#0066FF">Dim intRec As Integer
+Rem Step through each customer record
+For intRec = 1 To intNumCusts
+  ` Test for a high balance
+  If custBal(intRec) &gt; 5000 Then
+    Call PayReq
+  End If
+Next intRec
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Don't try to
+	understand the details of this code yet. Concentrate now on the remarks. The code
+	contains some advanced features (Visual Basic arrays and subroutine procedures) that
+	you'll learn about in the last half of this book. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You can place apostrophe remarks at the end of Visual Basic statements. By placing
+a remark to the right of certain lines of code, you can clarify the purpose of the
+code. Consider how the following code section uses a remark to explain a specific
+line of code:</P>
+<PRE><FONT COLOR="#0066FF">a = 3.14159 * r ^ r    ` Calculate a circle's area
+</FONT></PRE>
+<P>Perhaps only a mathematician could interpret the formula without the remark. The
+remark helps even non-mathematicians understand the purpose of the statement. There
+is no reason that you should have to re-examine code every time you look at it. By
+reading remarks, you can glean the code's purpose without taking the time to interpret
+the Visual Basic code.</P>
+<P>The wrong kind of remarks won't help clarify code, though, so don't overdo remarks.
+As a matter of fact, lots of lines of code need no remarks to explain their purpose.
+The following remark is redundant and wastes both your programming time and the time
+of anyone who may maintain the program later:</P>
+<PRE><FONT COLOR="#0066FF">Dim Sales As Single   ` Define a variable named Sales
+</FONT></PRE>
+<CENTER>
+<H4><A NAME="Heading15"></A><FONT COLOR="#000077">Examining InputBox()</FONT></H4>
+</CENTER>
+<P>You'll find that the <TT>InputBox()</TT> function is easy because it acts a lot
+like the <TT>MsgBox()</TT> function. The <TT>InputBox()</TT> function receives answers
+that are more complete than the <TT>MsgBox()</TT> function can get. Whereas <TT>MsgBox()</TT>
+returns one of seven values that indicate the user's command button press, the <TT>InputBox()</TT>
+function returns a string data value that holds the answer typed by the user.</P>
+<P>Here is the format of the <TT>InputBox()</TT> function:</P>
+<PRE><FONT COLOR="#0066FF">strVariable = InputBox( strprompt [, [strTitle] [, strDefault]
+         &#194;[, intXpos, intYpos]]])
+</FONT></PRE>
+<P>strPrompt works a lot like the strmsg value in a <TT>MsgBox()</TT> function. The
+user sees strPrompt inside the input box displayed on the screen. strTitle is the
+title inside the input box's title bar. strDefault is a default string value that
+Visual Basic displays for a default answer, and the user can accept the default answer
+or change the default answer.</P>
+<P>The intXpos and intYpos positions indicate the exact location where you want the
+input box to appear on the form. The intXpos value holds the number of twips from
+the left edge of the Form window to the left edge of the input box. The intYpos value
+holds the number of twips from the top edge of the Form window to the top edge of
+the input box. If you omit the intXpos and intYpos values, Visual Basic centers the
+message box on the form.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Input boxes
+	always contain OK and Cancel command buttons. If the user clicks OK (or presses Enter,
+	which selects OK by default), the answer in the input box is sent to the variable
+	being assigned the returned value. If the user clicks Cancel, a null string (<TT>&quot;&quot;</TT>)
+	returns from the <TT>InputBox()</TT> function. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The following statement displays an input box that asks the user for a company
+name. The user either enters a response to the prompt or clicks the Cancel command
+button to indicate that no answer is coming.</P>
+<PRE><FONT COLOR="#0066FF">strCompName = InputBox(&quot;What is the name of the company?&quot;,
+          &#194; &quot;Company Request&quot;, &quot;XYZ, Inc.&quot;)
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can offer a
+	default answer that the user can accept or change in the strDefault argument. The
+	input box function returns the answer to the string variable to which you assign
+	the function. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 6.7 contains the message box displayed from this <TT>InputBox()</TT> function.<BR>
+<BR>
+<A NAME="Heading16"></A><A HREF="../art/ch06/06cce07.jpg"><FONT COLOR="#000077">Figure
+6.7.</FONT></A><FONT COLOR="#000077"> </FONT><I>Asking the user a question and getting
+the answer with <TT>InputBox()</TT>.</I>
+<CENTER>
+<H3><A NAME="Heading17"></A><FONT COLOR="#000077">Summary</FONT></H3>
+</CENTER>
+<P>This hour introduces functions so you can prepare for message boxes and input
+boxes. Message boxes display output, and input boxes get input. The message and input
+boxes offer ways for your programs to request information that regular controls can't
+handle. Use controls to display and get data values that are always needed. Use message
+and input boxes to display messages and get answers that the program needs in special
+cases, such as for error conditions and exception handling.</P>
+<P>The next hour explains how to test the return values from this hour's functions
+as well as shows you additional operators with which your applications can make decisions.
+<CENTER>
+<H3><A NAME="Heading18"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+</CENTER>
+
+<DL>
+	<DD><B>Q When do I use controls and when do I use message and input boxes?<BR>
+	<BR>
+	A</B> You use Form controls when the user is to interact with a form and enter values
+	the form module will process. The Toolbox controls are extremely useful for guiding
+	the user through a list of choices. The message box is a program feature you can
+	use to display one-time notes and warnings to your users. The input box is a great
+	one-time dialog box you can display to ask the user for questions when needed during
+	the execution of the program.<BR>
+	<BR>
+	<B>Q Why should I add remarks to my code?<BR>
+	<BR>
+	A</B> You'll modify your programs over time. The more you modify a program, the faster
+	that modification (called maintenance) will go if you add ample remarks at the time
+	you create the program. The remarks help you remember what a particular section of
+	code is for. In addition to remarks, use named literals when available for options
+	such as the message box button type because the named literal mnemonics are easier
+	to remember than their numeric equivalents.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading19"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+</CENTER>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<CENTER>
+<H4><A NAME="Heading20"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> What is the difference between a message box and a text box?<BR>
+	<BR>
+	<B>2.</B> Which stays on the user's screen during the majority of a program's execution:
+	a text box or an input box?<BR>
+	<BR>
+	<B>3. </B>Why do the named literals provide for better program maintenance?<BR>
+	<BR>
+	<B>4. </B>What are the two kinds of remark statements?<BR>
+	<BR>
+	<B>5.</B> Who are remarks for?<BR>
+	<BR>
+	<B>6.</B> What does modal mean?<BR>
+	<BR>
+	<B>7.</B> How many icons can you display with message boxes?<BR>
+	<BR>
+	<B>8.</B> True or false: You can pass multiple arguments and receive multiple return
+	values from functions.<BR>
+	<BR>
+	<B>9.</B> What role do default values play in input boxes?<BR>
+	<BR>
+	<B>10.</B> True or false: The <TT>MsgBox()</TT> function can return one of seven
+	values.
+</DL>
+
+<CENTER>
+<H4><A NAME="Heading21"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Write three remarks for the top of a program that calculates sales
+	tax. The first remark should hold your name, the second should hold the date that
+	you write the remark, and the third should span at least two lines and should describe
+	the purpose of the program.<BR>
+	<BR>
+	<B>2.</B> Write an input box function that asks users for their ages. Display a default
+	value of <TT>25</TT>.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch05.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch07.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=929-932//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch27/27-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 28<br>Using MSMQ
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>An Introduction to the Microsoft Message Queue Server <i>930</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>MSMQ Object Properties <i>933</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using a Message Queue with the Win32 API <i>939</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>A Message Queue Client Written in Visual Basic <i>958</I></B>
+</DL>
+<p>This chapter discusses Microsoft Message Queue, a mechanism used to send information between applications. The most commonly used features of MSMQ are discussed in this chapter. Also, examples are provided that use the Win32 API, and an MSMQ client example that&#146;s written in Visual Basic is provided.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">An Introduction to the Microsoft Message Queue Server</FONT></H3>
+<p>As its name suggests, Microsoft Message Queue Server, or MSMQ, provides support for message queues. A <i>message queue</I> is a communication path between applications located in a distributed environment. Unlike named pipes, sockets, DCOM, and other protocols used for similar purposes, a message queue allows computers that aren&#146;t currently connected to communicate through its message store-and-forward capacity. The term <i>message queue</I> sometimes leads to confusion, because a message queue is not involved with messaging as the term is commonly used to apply to email and similar systems. Message queues can transport all types of data; they aren&#146;t limited to just sending text messages.</P>
+<p>Several types of messages queues are supported by MSMQ. In general, a message queue is a reliable, persistent transportation medium that&#146;s located between two or more applications, as shown in Figure 28.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-01.jpg',893,321 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-01.jpg',893,321)"><font color="#000077"><b>Figure 28.1</B></FONT></A>&nbsp;&nbsp;Message queues enable reliable communication between applications.</P>
+<p>As shown in Figure 28.1, one application, known as the <i>sending application</I>, creates messages and places them into the message queue. Another application, known as the <i>receiving application</I>, retrieves messages from the queue. A unique quality of message queues is that the two applications can communicate even if they&#146;re never connected to the network at the same time. MSMQ will store messages until they can be delivered to their destinations.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">MSMQ Versus Named Pipes</FONT></H4>
+<p>From a high-level view, a message queue looks a great deal like a named pipe. Here are a few of the differences between named pipes and message queues:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Most importantly, message queues can be used to ensure delivery of messages sent between disconnected clients. If a message cannot be delivered, the message can be stored in the message queue until delivery is possible.
+<dd><b>&#149;</B>&nbsp;&nbsp;A message queue is maintained by the operating system, not an application. Message queues can accept messages even if the application that&#146;s interested in reading the message is unavailable.
+<dd><b>&#149;</B>&nbsp;&nbsp;Message queues are maintained in Active Directory, so it&#146;s very easy for an application to discover the location of a message queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;Message queues support transactions; named pipes do not.
+<dd><b>&#149;</B>&nbsp;&nbsp;Message queues are easily used from languages other than C or C<small>&#43;&#43;</SMALL>. As you&#146;ll see later in this chapter, Visual Basic can easily be used with message queue.
+</DL>
+<p>Microsoft Message Queue Server, or MSMQ, was originally introduced as part of the Windows NT 4.0 option pack. As originally delivered, MSMQ used SQL Server to store the current state of message queues in a database known as the Message Queue Information Store, or MQIS. In Windows 2000, MSMQ has better integration with the operating system and uses Active Directory to store this information.
+</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Installing MSMQ</FONT></H4>
+<p>Before you use MSMQ, you must install the MSMQ components on your Windows 2000 machines. There are four different types of MSMQ installations:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>MSMQ Active Directory Server</I> must be installed on a Windows 2000 domain controller and is usually the first MSMQ component installed in your network. The MSMQ server contains messages queues and message queue management software.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>MSMQ Routing Server</I> is an MSMQ server that provides intermediate store-and-forward capability for messages. This type of server is generally used between remote Windows 2000 sites. Routing servers are also used to route messages between computers running different network transport protocols.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>MSMQ Independent Client</I> is the default client installation. An independent client contains message queues and management software. If contact with Active Directory is lost, messages will be stored on a local queue until contact can be regained with Active Directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>MSMQ Dependent Client</I> is a lightweight client installation that doesn&#146;t include local message queues of management software. This type of client cannot send messages if contact with Active Directory is lost.
+</DL>
+<p>If the MSMQ components weren&#146;t installed during the initial installation of Windows 2000, you must install them before using any of the examples in this chapter. The easiest way to do this is to run the Add/Remove Programs applet in Control Panel. If you attempt to use message queue services on a machine that doesn&#146;t have message queue components installed, you&#146;ll receive an <small>HRESULT</SMALL> with an error of <small>MQ_ERROR_SERVICE_NOT_AVAILABLE</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Types of Messages Queues</FONT></H4>
+<p>There are several types of messages queues, and they fall into two basic categories:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Application queues</I>. Used by applications to pass messages.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>System queues</I>. Created and maintained by the operating system.
+</DL>
+<p>Application queues are created by processes that use MSMQ and include the following queue types:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Message queues</I>. Used to send messages from one application to another.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Administration queues</I>. Used by a sending application to receive notification feedback generated by MSMQ about the status of a message.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Response queues</I>. Used to receive responses sent from a receiving application back to a sending application.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Report queues</I>. Used to track tracing information about the progress of a message through a message queue. Trace report messages are usually generated by MSMQ, but it&#146;s also possible for a receiving application to generate a report message.
+</DL>
+<p>MSMQ also creates and manages a set of system queues that are used to help support the management of the queuing service. Although you have access to these queues, you don&#146;t need to create them yourself&#151;they&#146;re created by MSMQ automatically. System queues include the following:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Journal queues</I>. Used to track messages that are successfully removed from a message queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Dead letter queues</I>. Used to store messages that cannot be delivered.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch27/27-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

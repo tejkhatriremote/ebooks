@@ -1,0 +1,186 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=096-099//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-12.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The call to <small>CreateSemaphore</SMALL> has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure. Using this structure is discussed later in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;An initial value for the semaphore&#146;s counter. This value must be greater than or equal to zero.
+<dd><b>&#149;</B>&nbsp;&nbsp;A maximum value for the semaphore&#146;s counter. This value must be at least 1; it must also be at least as large as the initial value for the counter.
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional name for the semaphore. Keep in mind that all event, mutex, and file-mapping objects use the same namespace, so you must take care not to reuse names. In most cases, this value is <small>NULL</SMALL>.
+</DL>
+<h4 align="LEFT"><a name="Heading28"></A><font color="#000077">Returning Semaphore-controlled Resources</FONT></H4>
+<p>When a semaphore-controlled resource becomes available, the resource counter must be incremented by calling <small>ReleaseSemaphore</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fReleased = ReleaseSemaphore(hSemBarbers,
+                                   1,
+                                   NULL);
+if(fReleased == FALSE)
+{
+    // Handle Error
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The call to <small>ReleaseSemaphore</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the semaphore to be released
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of steps the semaphore counter is to be incremented by
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional pointer to a long variable to hold the previous counter value (otherwise, <small>NULL</SMALL>)
+</DL>
+<h3><a name="Heading29"></A><font color="#000077">Using Semaphores and Critical Sections in an Application</FONT></H3>
+<p>As an example of using semaphores in a Windows 2000 application, a program named SkiLift can be found on the CD-ROM accompanying this book. SkiLift is a dialog-based application that displays the status of a group of skiers using a ski lift.
+</P>
+<p>A semaphore controls access to the ski lift, enabling a maximum of four skiers at a time to use the lift. After reaching the top of the mountain, each skier takes a semirandom amount of time to enter the lift line at the base of the mountain. For the purposes of this demonstration, there&#146;s no shortcut line for the ski patrol. Figure 3.13 shows the SkiLift application in use.</P>
+<p><a name="Fig13"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-13.jpg',285,306 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-13t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-13.jpg',285,306)"><font color="#000077"><b>Figure 3.13</B></FONT></A>&nbsp;&nbsp;The SkiLift application uses semaphores to control lift access.</P>
+<p>The main dialog box for the SkiLift project contains two pushbutton controls and 20 checkbox controls, as shown in Figure 3.14.
+</P>
+<p><a name="Fig14"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-14.jpg',285,306 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-14t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-14.jpg',285,306)"><font color="#000077"><b>Figure 3.14</B></FONT></A>&nbsp;&nbsp;Adding controls to the main dialog box for the SkiLift project.</P>
+<p>Properties for the checkbox and pushbutton controls are listed in Table 3.1. All properties that aren&#146;t listed should be set to the default values. The checkbox controls must be assigned sequentially, with <small>IDC_CHECK1</SMALL> through <small>IDC_CHECK8</SMALL> in the first column, <small>IDC_CHECK9</SMALL> through <small>IDC_CHECK12</SMALL> in the middle column, and <small>IDC_CHECK13</SMALL> through <small>IDC_CHECK20</SMALL> in the last column.</P>
+<table width="100%"><caption align="LEFT" colspan="3"><b>Table 3.1</B> Property Values for Controls in the SkiLift Main Dialog Box
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="20%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Resource ID</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Caption</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Start button
+<td align="LEFT" valign="TOP"><small>IDC_STARTSTOP</SMALL>
+<td align="LEFT" valign="TOP"><small>&ampStart Lift</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Status static control
+<td align="LEFT" valign="TOP"><small>IDC_STATUS</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Checkbox buttons
+<td align="LEFT" valign="TOP"><small>IDC_CHECK1</SMALL> through <small>IDC_CHECK20</SMALL>
+<td align="LEFT" valign="TOP"> empty
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>The <small>SkiLift.h</SMALL> file serves as the header file for the SkiLift project; it&#146;s provided in Listing 3.10.</P>
+<p><b>Listing 3.10</B> The <small>SkiLift.h</SMALL> Header File<hr></P>
+<!-- CODE //-->
+<pre>
+struct CSkier
+{
+    int  m_nID;
+    HWND m_hWnd;
+};
+
+BOOL InitApplication(HINSTANCE hInst);
+BOOL InitInstance(HINSTANCE hInst, int nCmdShow);
+LRESULT CALLBACK WndProc(HWND   hWnd,
+                         UINT   uMsg,
+                         WPARAM wParam,
+                         LPARAM lParam);
+
+BOOL CALLBACK DialogProc(HWND   hWndDlg,
+                         UINT   uMsg,
+                         WPARAM wParam,
+                         LPARAM lParam);
+void  OnStart();
+DWORD WINAPI SkiThread(PVOID pv);
+DWORD WINAPI Cleaner(PVOID pv);
+void  WaitForLift(CSkier* pSkier);
+void  GetOnLift(CSkier* pSkier);
+void  SkiAWhile(CSkier* pSkier);
+void  SetCheckBoxArray(UINT low, UINT high, BOOL fSet);
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The main source file for the SkiLift project is found in <small>SkiLift.cpp</SMALL>. The most relevant parts of this source file are shown in Listing 3.11.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-12.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

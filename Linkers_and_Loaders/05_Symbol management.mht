@@ -1,0 +1,1056 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Symbol management
+Date: Fri, 13 May 2005 09:57:35 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0056_01C557A2.2FEA9B70"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0056_01C557A2.2FEA9B70
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker05.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Symbol management</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Symbol management</H1><I>$Revision: 2.2 $</I> <BR><I>$Date: =
+1999/06/30=20
+01:02:35 $</I>=20
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>
+      <P>
+      <P>Symbol management is a linker's key function. Without some way =
+to refer=20
+      from one module to another, there wouldn't be much use for a =
+linker's=20
+      other facilities.=20
+      <P>
+      <H2>Binding and name resolution</H2>Linkers handle a variety of =
+kinds of=20
+      symbols. All linkers handle symbolic references from one module to =
+
+      another. Each input module includes a symbol table. The symbols =
+include:=20
+      <UL>
+        <LI>Global symbols defined and perhaps referenced in the module. =
+
+        <LI>Global symbols referenced but not defined in this module =
+(generally=20
+        called externals).=20
+        <LI>Segment names, which are usually also considered to be =
+global=20
+        symbols defined to be at the beginning of the segment.=20
+        <LI>Non-global symbols, usually for debuggers and crash dump =
+analysis.=20
+        These aren't really symbols needed for the linking process, but=20
+        sometimes they are mixed in with global symbols so the linker =
+has to at=20
+        least skip over them. In other cases they can be in a separate =
+table in=20
+        the file, or in a separate debug info file. (Optional)=20
+        <LI>Line number information, to tell source language debuggers =
+the=20
+        correspondence between source lines and object code. (Optional) =
+</LI></UL>
+      <P>
+      <P>The linker reads all of the symbol tables in the input module, =
+and=20
+      extracts the useful information, which is sometimes all of the =
+incoming=20
+      info, frequently just what's needed to link. Then it builds the =
+link-time=20
+      symbol tables and uses that to guide the linking process. =
+Depending on the=20
+      output file format, the linker may place some or all of the symbol =
+
+      information in the output file.=20
+      <P>
+      <P>Some formats have multiple symbol tables per file. For example, =
+ELF=20
+      shared libraries can have one symbol table with just the =
+information=20
+      needed for the dynamic linker and a separate, larger table useful =
+for=20
+      debugging and relinking. This isn't necessarily a bad design; the =
+dynamic=20
+      linker table is usually much smaller than the full table and =
+making it=20
+      separate can speed up the dynamic linking process, which happens =
+far more=20
+      often than a library is debugged or relinked. =
+</P></TD></TR></TBODY></TABLE>
+<P>
+<H2>Symbol table formats</H2>Linker symbol tables are similar to those =
+in=20
+compilers, although usually simpler, since the kinds of symbols a linker =
+needs=20
+to keep are usually less complex than those in a compiler. Within the =
+linker,=20
+there's one symbol table listing the input files and library modules, =
+keeping=20
+the per-file information. A second symbol table handles global symbols, =
+the ones=20
+that the linker has to resolve among input files. A third table may =
+handle=20
+intra-module debugging symbols, although more often than not the linker =
+need not=20
+create a full-fledged symbol table for debug symbols, needing only pass =
+the=20
+debugging symbols through from the input to the output file.=20
+<P>
+<P>Within the linker itself, a symbol table is often kept as an array of =
+table=20
+entries, using a hash function to locate entries, or as an array of =
+pointers,=20
+indexed by a hash function, with all of the entries that hash together =
+chained=20
+from each header, Figure 1. To locate a symbol in the table, the linker =
+computes=20
+a hash of the symbol name, uses that hash value modulo the number of =
+buckets to=20
+select one of the hack buckets (symhash[h%NBUCKET] in the figure where h =
+is the=20
+hash), runs down the chain of symbols looking for the symbol.=20
+<P>
+<P>Traditionally, linkers only supported short names, ranging from eight =
+
+charaters on IBM mainframes and early UNIX systems to six on most DEC =
+systems to=20
+as few as two on some justly obscure minicomputers. Modern linkers =
+support much=20
+longer names, both because programmers use longer names than they used =
+to (or,=20
+in the case of Cobol, are no longer willing to twist the names around to =
+make=20
+them unique in the first eight characters), and because compilers =
+``mangle''=20
+names by adding extra characters to encode type information.=20
+<P>
+<P>Older linkers with limited name lengths did a string comparison of =
+each=20
+symbol name in the lookup hash chain until they found a match or ran out =
+of=20
+symbols. These days, a program can easily contains many long symbols =
+that are=20
+identical up the last few characters, as is often the case with C++ =
+mangled=20
+names, which makes the string comparisons expensive. An easy fix is to =
+store the=20
+full hash value in the symbol table and to do the string comparison only =
+when=20
+the hashes match. Depending on the context, if a symbol is not found, =
+the linker=20
+may either add it to the chain or report an error.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig05-01.html"><IMG=20
+      height=3D115 =
+src=3D"http://www.iecc.com/linker/thumb-linker05-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> Symbol table <BR>Typical symbol table with =
+hashes or=20
+      hash headers with chains of symbols <BR>struct sym =
+*symhash[NBUCKET];=20
+      <P>struct sym { <BR>struct sym *next; <BR>int fullhash; /* full =
+hash value=20
+      */ <BR>char *symname; <BR>... <BR>}; =
+</P></TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<H3>Module tables</H3>The linker needs to track every input module seen =
+during a=20
+linking run, both modules linked explicitly and those extracted from =
+libraries.=20
+Figure 2 shows the structure of a simplified version of the module table =
+for a=20
+GNU linker that produces a.out object files. Since most of the key =
+information=20
+for each a.out file is in the file header, the table just stores a copy =
+of the=20
+header,=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 2 --></TD>
+    <TD><I>Figure 2:</I> Module table <BR>
+      <P><TT><BR>/* Name of this file. */ <BR>char *filename; <BR>/* =
+Name to use=20
+      for the symbol giving address of text start */ <BR>char =
+*local_sym_name;=20
+      /* Describe the layout of the contents of the file */ /* The =
+file's a.out=20
+      header. */ <BR>struct exec header; <BR>/* Offset in file of debug =
+symbol=20
+      segment, or 0 if there is none. */ <BR>int symseg_offset; /* =
+Describe data=20
+      from the file loaded into core */ /* Symbol table of the file. */=20
+      <BR>struct nlist *symbols; <BR>/* Size in bytes of string table. =
+*/=20
+      <BR>int string_size; <BR>/* Pointer to the string table. */ =
+<BR>char=20
+      *strings; /* Next two used only if `relocatable_output' or if =
+needed for=20
+      */ <BR>/* output of undefined reference line numbers. */ /* Text =
+and data=20
+      relocation info */ <BR>struct relocation_info *textrel; <BR>struct =
+
+      relocation_info *datarel; /* Relation of this file's segments to =
+the=20
+      output file */ /* Start of this file's text seg in the output file =
+core=20
+      image. */ <BR>int text_start_address; <BR>/* Start of this file's =
+data seg=20
+      in the output file core image. */ <BR>int data_start_address; =
+<BR>/* Start=20
+      of this file's bss seg in the output file core image. */ <BR>int=20
+      bss_start_address; <BR>/* Offset in bytes in the output file =
+symbol table=20
+      <BR>of the first local symbol for this file. */ <BR>int =
+local_syms_offset;=20
+
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>The table also contains pointers to in-memory copies of the symbol =
+table=20
+string table (since in an a.out files, the symbol name strings are in a =
+separate=20
+table from the symbol table itself), and relocation tables, along with =
+the=20
+computed offsets of the text, data, and bss segments in the output. If =
+the file=20
+is a library, each library member that is linked has its own module =
+table entry.=20
+(Details not shown here.)=20
+<P>
+<P>During the first pass, the linker reads in the symbol table from each =
+file,=20
+generally just copying it verbatim into an in-memory buffer. In symbol =
+formats=20
+that put the symbol names in a separate string table, the linker also =
+reads in=20
+the symbol names and, for ease of subsequent processing, runs down the =
+symbol=20
+table and turns each name string offset into a pointer to the in-memory =
+version=20
+of the string.=20
+<P>
+<H3>Global symbol table</H3>The linker keeps a global symbol table with =
+an entry=20
+for every symbol referenced or defined in <I>any</I> input file, Figure =
+3. Each=20
+time the linker reads an input file, it adds all of the file's global =
+symbols to=20
+the symbol table, keeping a chain of the places where the symbol is =
+defined or=20
+referenced. When the first pass is done, every global symbol should have =
+exactly=20
+one definition and zero or more references. (This is a minor =
+oversimplification,=20
+since UNIX object files disguise common blocks as undefined symbols with =
+
+non-zero values, but that's a straightforward special case for the =
+linker to=20
+handle.)=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 3 --></TD>
+    <TD><I>Figure 3:</I> Global symbol table <BR>
+      <P><TT><BR>/* abstracted from gnu ld a.out */ <BR>struct glosym =
+<BR>{=20
+      <BR>/* Pointer to next symbol in this symbol's hash bucket. */ =
+<BR>struct=20
+      glosym *link; <BR>/* Name of this symbol. */ <BR>char *name; =
+<BR>/* Value=20
+      of this symbol as a global symbol. */ <BR>long value; <BR>/* Chain =
+of=20
+      external 'nlist's in files for this symbol, both defs <BR>and =
+refs. */=20
+      <BR>struct nlist *refs; <BR>/* Nonzero means definitions of this =
+symbol as=20
+      common have been seen, <BR>and the value here is the largest size=20
+      specified by any of them. */ <BR>int max_common_size; <BR>/* =
+Nonzero means=20
+      a definition of this global symbol is known to exist. <BR>Library =
+members=20
+      should not be loaded on its account. */ <BR>char defined; <BR>/* =
+Nonzero=20
+      means a reference to this global symbol has been seen <BR>in a =
+file that=20
+      is surely being loaded. <BR>A value higher than 1 is the n_type =
+code for=20
+      the symbol's <BR>definition. */ <BR>char referenced; <BR>/* 1 =
+means that=20
+      this symbol has multiple definitions. 2 means <BR>that it has =
+multiple=20
+      definitions, and some of them are set <BR>elements, one of which =
+has been=20
+      printed out already. */ <BR>unsigned char multiply_defined; <BR>}=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>As the symbols in each file are added to the global symbol table, the =
+linker=20
+links each entry from the file to its corresponding global symbol table =
+entry,=20
+Figure 4. Relocation items generally refer to symbols by index in the =
+module's=20
+own symbol table, so for each external reference, the linker has to be =
+able to=20
+tell that, for example, symbol 15 in module A is named <TT>fruit</TT>, =
+while=20
+symbol 12 in module B is also named <TT>fruit</TT>, that is, it's the =
+same=20
+symbol. Each module has its own set of indices and needs its own vector =
+of=20
+pointers.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig05-04.html"><IMG=20
+      height=3D73 =
+src=3D"http://www.iecc.com/linker/thumb-linker05-04.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 4:</I> Resolving a symbol from a file to the global =
+symbol=20
+      table <BR>Each module entry points to vector of symbols from input =
+file,=20
+      each of which is set to point to global symbol table entry.=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<H3>Symbol resolution</H3>During the second pass of linking, the linker =
+resolves=20
+symbol references as it creates the output file. The details of =
+resolution=20
+interact with relocation (Chapter 7), since in most object formats, =
+relocation=20
+entries identify the program references to the symbol. In the simplest =
+case, in=20
+which the linker is creating an output file with absolute addresses =
+(such as=20
+data references in Unix linkers) the address of the symbol simply =
+replaces the=20
+symbol reference. If the symbol is resolved to address 20486, the linker =
+
+replaces the reference with 20486.=20
+<P>
+<P>Real situations are more complex. For one thing, there are many ways =
+that a=20
+symbol might be referred to, in a data pointer, in an instruction, or =
+even=20
+synthesized from multiple instructions. For another, the output of the =
+linker is=20
+itself frequently relocatable. This means that if, say, a symbol is =
+resolved to=20
+offset 426 in the data section, the output file has to contain a =
+relocatable=20
+reference to data+426 where the symbol reference was.=20
+<P>
+<P>The output file will usually have a symbol table of its own, so the =
+linker=20
+needs to create a new vector of indexes of the symbols to be used in the =
+output=20
+file, then map symbol numbers in outgoing relocation entries to those =
+new=20
+indices.=20
+<P>
+<H3>Special symbols</H3>Many systems use a few special symbols defined =
+by the=20
+linker itself. Unix systems all require that the linker define =
+<TT>etext</TT>,=20
+<TT>edata</TT>, and <TT>end</TT> as the end of the text, data, and bss =
+segments,=20
+respectively. The system sbrk() routine uses <TT>end</TT> as the address =
+of the=20
+beginning of the runtime heap, so it can be allocated contiguously with =
+the=20
+existing data and bss.=20
+<P>
+<P>For programs with constructor and destructor routines, many linkers =
+create=20
+tables of pointers to the routines from each input file, with a =
+linker-created=20
+symbol like <TT>___CTOR_LIST__</TT> that the language startup stub uses =
+to find=20
+the list and call all the routines.=20
+<P>
+<H2>Name mangling</H2>The names used in object file symbol tables and in =
+linking=20
+are often not the same names used in the source programs from which the =
+object=20
+files were compiled. There are three reasons for this: avoiding name =
+collisions,=20
+name overloading, and type checking. The process of turning the source =
+program=20
+names into the object file names is called <I>name mangling</I>. This =
+section=20
+discusses mangling typically done to names in C, Fortran, and C++ =
+programs.=20
+<P>
+<H3>Simple C and Fortran name mangling</H3>In older object formats =
+(before maybe=20
+1970), compilers used names from the source program directly as the =
+names in the=20
+object file, perhaps truncating long names to a name length limit. This =
+worked=20
+reasonably well, but caused problems due to collisions with names =
+reserved by=20
+compilers and libraries. For example, Fortran programs that do formatted =
+I/O=20
+implicitly call routines in the library to do their reads and writes. =
+Other=20
+routines handle arithmetic errors, complex arithmetic, and everything =
+else in a=20
+programming language that's too complicated to be generated as in-line =
+code.=20
+<P>
+<P>The names of all of these routines are in effect reserved names, and =
+part of=20
+the programming folklore was to know what names not to use. As a =
+particularly=20
+egregious example, this Fortran program would for quite a few years =
+crash an=20
+OS/360 system:=20
+<P><TT><BR>CALL MAIN <BR>END=20
+<P></TT>
+<P>Why? The OS/360 programming convention is that every routine =
+including the=20
+main program has a name, and the name of the main program is MAIN. When =
+a=20
+Fortran main program starts, it calls the operating system to catch a =
+variety of=20
+arithmetic error traps, and each trap catch call allocated some space in =
+a=20
+system table. But this program called itself recursively over and over =
+again,=20
+each time establishing another nested set of trap calls, the system =
+table ran=20
+out of space, and the system crashed. OS/390 is a lot more robust than =
+its=20
+predecessors were 30 years ago, but the reserved name problem remains. =
+It's even=20
+worse in mixed language programs, since code in all languages has to =
+avoid using=20
+any name used by any of the language runtime libraries in use.=20
+<P>
+<P>One approach to the reserved name problem was to use something other =
+than=20
+procedure calls to call the runtime library. On the PDP-6 and -10, for =
+example,=20
+the interface to the Fortran I/O package was through a variety of system =
+call=20
+instruction that trapped back to the program rather than to the =
+operating=20
+system. This was a clever trick, but it was quite specific to the =
+PDP-6/10=20
+architecture and didn't scale well, since there was no way for mixed =
+language=20
+code to share the trap, nor was it practical to link the minimum =
+necessary part=20
+of the I/O package because there was no easy way to tell which traps the =
+input=20
+modules in a program used.=20
+<P>
+<P>The approach taken on UNIX systems was to <I>mangle</I> the names of =
+C and=20
+Fortran procedures so they wouldn't inadvertently collide with names of =
+library=20
+and other routines. C procedure names were decorated with a leading =
+underscore,=20
+so that <TT>main</TT> became <TT>_main</TT>. Fortran names were further =
+mangled=20
+with both a leading and trailing underscore so that <TT>calc</TT> became =
+
+<TT>_calc_</TT>. (This particular approach made it possible to call C =
+routines=20
+whose names ended with an underscore from Fortran, which made it =
+possible to=20
+write Fortran libraries in C.) The only significant disadvantage of this =
+scheme=20
+is that it shrank the C name space from the 8 characters permitted by =
+the object=20
+format to 7 characters for C and six characters for Fortran. At the =
+time, the=20
+Fortran-66 standard only required six character names, so it wasn't much =
+of an=20
+imposition.=20
+<P>
+<P>On other systems, compiler designers took an opposite tack. Most =
+assemblers=20
+and linkers permit characters in symbols that are forbidden in C and C++ =
+
+identifiers such as . and $. Rather than mangling names from C or =
+Fortran=20
+programs, the runtime libraries use names with forbidden characters that =
+can't=20
+collide with application program names. The choice of name mangling vs.=20
+collision-proof library names is one of developer convenience. At the =
+time UNIX=20
+was rewritten in C in about 1974, its authors already had extensive =
+assembler=20
+language libraries, and it was easier to mangle the names of new C and C =
+
+compatible routines than to go back and fix all the existing code. Now, =
+twenty=20
+years later, the assembler code has all been rewritten five times and =
+UNIX C=20
+compilers, particularly ones that create COFF and ELF object files, no =
+longer=20
+prepend the underscore.=20
+<P>
+<H3>C++ type encoding: types and scopes</H3>Another use for mangled =
+names is to=20
+encode scope and type information, which makes it possible to use =
+existing=20
+linkers to link programs in C++, Ada, and other languages that have more =
+complex=20
+naming rules than do C, Cobol, or Fortran.=20
+<P>
+<P>In a C++ program, the programmer can define many functions and =
+variable with=20
+the same name but different scopes and, for functions, argument types. A =
+single=20
+program may have a global variable <TT>V</TT> and a static member of a =
+class=20
+<TT>C::V</TT>. C++ permits function name overloading, with several =
+functions=20
+having the same name but different arguments, such as <TT>f(int x)</TT> =
+and=20
+<TT>f(float x)</TT>. Class definitions can include functions, including=20
+overloaded names, and even functions that redefine built-in operators, =
+that is,=20
+a class can contain a function whose name is in effect <TT>&gt;&gt;</TT> =
+or any=20
+other built-in operator.=20
+<P>
+<P>C++ was initially implemented as a translator called cfront that =
+produced C=20
+code and used an existing linker, so its author used name mangling to =
+produce=20
+names that can sneak through the C compiler into the linker. All the =
+linker had=20
+to do with them was its usual job of matching identically named defined =
+and=20
+undefined global names. Since then, nearly all C++ compilers generate =
+object=20
+code or at least assembler code directly, but name mangling remains the =
+standard=20
+way to handle overloaded names. Modern linkers now know enough about =
+name=20
+mangling to demangle names reported in error messages, but otherwise =
+leave=20
+mangled names alone.=20
+<P>
+<P>The influential Annotated C++ Reference Manual described the name =
+mangling=20
+scheme that cfront used, which with minor variations has become a =
+de-facto=20
+standard. We describe it here.=20
+<P>
+<P>Data variable names outside of C++ classes don't get mangled at all. =
+An array=20
+called <TT>foo</TT> has a mangled name of <TT>foo</TT>. Function names =
+not=20
+associated with classes are mangled to encode the types of the arguments =
+by=20
+appending <TT>__F</TT> and a string of letters that represent the =
+argument types=20
+and type modifiers listed in Figure 5. For example, a function =
+<TT>func(float,=20
+int, unsigned char)</TT> becomes <TT>func__FfiUc</TT>. Class names are=20
+considered types, and are encoded as the length of the class name =
+followed by=20
+the name, such as <TT>4Pair</TT>. Classses can contain names of internal =
+classes=20
+to multiple levels; these "qualified" names are encoded as Q, a digit =
+indicating=20
+the number of levels, and the encoded class names, so=20
+<TT>First::Second::Third</TT> becomes <TT>Q35First6Second5Third</TT>. =
+This means=20
+that a function that takes two class arguments <TT>f(Pair,=20
+First::Second::Third)</TT> becomes =
+<TT>f__F4PairQ35First6Second5Third</TT>.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 5 --></TD>
+    <TD><I>Figure 5:</I> Type letters in C++ mangled names <BR>l c. _ =
+Type=20
+      Letter _ void v char c short s int i long l float f double d long =
+double r=20
+      varargs e _ unsigned U const C volatile V signed S _ pointer P =
+reference R=20
+      array of length <I>n</I> A<I>n</I>_ function F pointer to nth =
+member=20
+      M<I>n</I>S </TD></TR></TBODY></TABLE></CENTER>
+<P>Class member functions are encoded as the function name, two =
+underscores, the=20
+encoded class name, then F and the arguments, so <TT>cl::fn(void)</TT> =
+becomes=20
+<TT>fn__2clFv</TT>. All of the operators have four or five character =
+encoded=20
+names as well, such as <TT>__ml</TT> for <TT>*</TT> and <TT>__aor</TT> =
+for=20
+<TT>|=3D</TT>. Special functions including constructor, destructor, new, =
+and=20
+delete have encodings as well <TT>__ct</TT>, <TT>__dt</TT>, =
+<TT>__nw</TT>, and=20
+<TT>__dl</TT>. A constructor for class Pair taking two character pointer =
+
+arguments <TT>Pair(char*,char*)</TT> becomes <TT>__ct__4PairFPcPc</TT>.=20
+<P>
+<P>Finally, since mangled names can be so long, there are two shortcut =
+encodings=20
+for functions with multiple arguments of the same type. The code =
+<TT>Tn</TT>=20
+means "same type as the nth argument" and <TT>Nnm</TT> means "n =
+arguments the=20
+same type as the mth argument. A function <TT>segment(Pair, Pair)</TT> =
+would be=20
+<TT>segment__F4PairT1</TT> and a function <TT>trapezoid(Pair, Pair, =
+Pair,=20
+Pair)</TT> would be <TT>trapezoid__F4PairN31</TT>.=20
+<P>
+<P>Name mangling does the job of giving unique names to every possible =
+C++=20
+object at the cost of tremendously long and (lacking linker and debugger =
+
+support) unreadable names in error messages and listings. Nonetheless, =
+C++ has=20
+an intrinsic problem that it has a potentially huge namespace. Any =
+scheme for=20
+representing the names of C++ objects has to be nearly as verbose as =
+name=20
+mangling, and mangled names do have the advantage of being readable by =
+at least=20
+some humans.=20
+<P>
+<P>Early users of mangled names often found that although linkers in =
+theory=20
+supported long names, in practice the long names didn't work very well, =
+and=20
+performance was dreadful when linking programs that contained many long =
+names=20
+that were identical up to the last few characters. Fortunately, symbol =
+table=20
+algorithms are a well-understood subject, and now one can expect linkers =
+to=20
+handle long names without trouble.=20
+<P>
+<H3>Link-time type checking</H3>Although mangled names only became =
+popular with=20
+the advent of C++, the idea of linker type checking has been around for =
+a long=20
+time. (I first encountered it in the Dartmouth PL/I linker in about =
+1974.) The=20
+idea of linker type checking is quite straightforward. Most languages =
+have=20
+procedures with declared argument types, and if the caller doesn't pass =
+the=20
+number and type of arguments that the callee expects, it's an error, =
+often a=20
+hard-to-diagnose error if the caller and callee are in separately =
+compiled=20
+files. For linker type checking, each defined or undefined global symbol =
+has=20
+associated with it a string representing the argument and return types, =
+similar=20
+to the mangled C++ argument types. When the linker resolves a symbol, it =
+
+compares the type strings for the reference and definition of the =
+symbol, and=20
+reports an error if they don't match. A nice property of this scheme is =
+that the=20
+linker need not understand the type encoding at all, just whether the =
+strings=20
+are the same or not.=20
+<P>
+<P>Even in an environment with C++ mangled names, this type checking =
+would still=20
+be useful, since not all C++ type information is encoded into a mangled =
+name.=20
+The types that functions return, and types of global data could =
+profitably be=20
+checked by a scheme like this one.=20
+<P>
+<H2>Weak external and other kinds of symbols</H2>Up to this point, we've =
+
+considered all linker global symbols to work the same way, and each =
+mention of a=20
+name to be either a definition or a reference to a symbol. Many object =
+formats=20
+can qualify a reference as weak or strong. A strong reference must be =
+resolved,=20
+while a weak reference may be resolved if there's a definition, but it's =
+not an=20
+error if it's not. Linker processing of weak symbols is much like that =
+for=20
+strong symbols, except that at the end of the first pass an undefined =
+reference=20
+to one isn't an error. Generally the linker defines undefined weak =
+symbols to be=20
+zero, a value that application code can check. Weak symbols are =
+primarily useful=20
+in connection with libraries, so we revisit them in Chapter 6.=20
+<P>
+<H2>Maintaining debugging information</H2>Modern compilers all support =
+source=20
+language debugging. That means that the programmer can debug the object =
+code=20
+referring to source program function and variable names, and set =
+breakpoints and=20
+single step the program. Compilers support this by putting information =
+in the=20
+object file that provides a mapping from source file line numbers to =
+object code=20
+addresses, and also describes all of the functions, variables, types, =
+and=20
+structures used in the program.=20
+<P>
+<P>UNIX compilers have two somewhat different debug information formats, =
+stab=20
+(short for symbol table) that are used primarily in a.out, COFF, and =
+non-System=20
+V ELF files, and DWARF that was defined for System V ELF files. =
+Microsoft has=20
+defined their own formats for their Codeview debugger, with CV4 being =
+the most=20
+recent.=20
+<P>
+<H3>Line number information</H3>All symbolic debuggers need to be able =
+to map=20
+between program addresses and source line numbers. This lets users set=20
+breakpoints by line number with the debugger placing the breakpoint at =
+the=20
+appropriate place in the code, and also lets the debugger relate the =
+program=20
+addresses in call stack tracebacks and error reports back to source =
+lines.=20
+<P>
+<P>Line number information is simple execpt with optimizing compilers =
+that can=20
+move code around so that the sequence of code in the object file doesn't =
+match=20
+the sequence of source lines.=20
+<P>
+<P>For each line in the source file for which the compiler generated any =
+code,=20
+the compiler emits a line number entry with the line number and the =
+beginning of=20
+the code. If a program address lies between two line number entries, the =
+
+debugger reports it as being the lower of the two line numbers. The line =
+numbers=20
+need to be scoped by file name, both source file name and include file =
+name.=20
+Some formats do this by creating a list of files and putting a file =
+index in=20
+each line number entry. Others intersperse "begin include" and "end =
+include"=20
+items in the list of line numbers, implicitly maintaining a stack of =
+line=20
+numbers.=20
+<P>
+<P>When compiler optimization makes the generated code from a single =
+statement=20
+discontiguous, some object formats (notably DWARF) let the compiler map =
+each=20
+byte of object code back to a source line, using a lot of space in the =
+process,=20
+while others just emit approximate locations.=20
+<P>
+<H3>Symbol and variable information</H3>Compilers also have to emit the =
+names,=20
+types, and locations of each program variable. The debug symbol =
+information is=20
+somewhat more complex than mangled names are, because it needs to encode =
+not=20
+just the type names, but for structure types the definitions of the =
+types so the=20
+debugger can correctly format all of the subfields in a structure.=20
+<P>
+<P>The symbol information is an implicit or explicit tree. At the top =
+level in=20
+each file is a list of types, variables, and functions defined at the =
+top level,=20
+and within each of those are the fields of structures, variables defined =
+within=20
+functions, and so forth. Within functions, the tree includes "begin =
+block" and=20
+"end block" markers referring to line numbers, so the debugger can tell =
+what=20
+variables are in scope at each point in the program.=20
+<P>
+<P>The trickiest part of the symbol information is the location =
+information. The=20
+location of a static variable doesn't change, but a local variable =
+within a a=20
+routine may be static, on the stack, in a register, or in optimized =
+code, moved=20
+from place to place in different parts of the routine. On most =
+architectures,=20
+the standard calling sequence for routines maintains a chain of saved =
+stack and=20
+frame pointers for each nested routine, with the local stack variables =
+in each=20
+routine allocated at known offsets from the frame pointer. In leaf =
+routines or=20
+routines that allocate no local stack variables, a common optimization =
+is to=20
+skip setting the frame pointer. The debugger needs to know about this in =
+order=20
+both to interpret call stack tracebacks correctly and to find local =
+variables in=20
+a routine with no frame pointer. Codeview does this with a specific list =
+of=20
+routines with no frame pointer.=20
+<P>
+<H3>Practical issues</H3>For the most part, the linker just passes =
+through debug=20
+information uninterpreted, perhaps relocating segment-relative addresses =
+on the=20
+way through.=20
+<P>
+<P>One thing that linkers are starting to do is detecting and removing=20
+duplicated debug information. In C and particularly C++, programs =
+usually have a=20
+set of header files that define types and declare functions, and each =
+source=20
+file includes the headers that define all of the types and functions =
+that file=20
+might use.=20
+<P>
+<P>Compilers pass through the debug information for everything in all of =
+the=20
+header files that each source file includes. This means that if a =
+particular=20
+header file is included by 20 source files that are compiled and linked=20
+together, the linker will receive 20 copies of the debug information for =
+that=20
+file. Although debuggers have never had any trouble disregarding the =
+duplicated=20
+information, header files, particularly in C++, can be large which means =
+that=20
+the amount of duplicated header info can be substantial. Linkers can =
+safely=20
+discard the duplicated material, and increasingly do so, both to speed =
+the=20
+linker and debugger and to save space. In some cases, compilers put the =
+debug=20
+information directly into files or databases to be read by the debugger, =
+
+bypassing the linker, so the linker need only add or update information =
+about=20
+the relative locations of the segments contributed by each source file, =
+and any=20
+data such as jump tables created by the linker itself.=20
+<P>
+<P>When the debug information is stored in an object file, sometimes the =
+debug=20
+information is intermixed with the linker symbols in one big symbol =
+table, while=20
+sometimes the two are separate. Unix systems added debug information to =
+the=20
+compilers a little at a time over the years, so it all ended up in one =
+huge=20
+symbol table. Other formats including Microsoft's ECOFF tend to separate =
+linker=20
+symbols from debug symbols and both from line numbers.=20
+<P>
+<P>Sometimes the resulting debug information goes into the output file,=20
+sometimes into a separate debug file, sometimes both. The advantage of =
+putting=20
+all of the debug information into the output file is simplicity in the =
+build=20
+process, since all of the information used to debug the program is =
+present in=20
+one place. The most obvious disadvantage is that it makes the executable =
+file=20
+enormous. Also if the debug information is separated out, it's easy to =
+build a=20
+final version of a program, then ship the executable but not the debug =
+files.=20
+This keeps the size of the shipped program down and discourages casual =
+reverse=20
+engineering, but the developers still have the debug files if needed to =
+debug=20
+errors found in the shipping project. UNIX systems have a "strip" =
+command that=20
+removes the debugging symbols from an object file but doesn't change the =
+code at=20
+all. The developers keep the unstripped file and ship the stripped =
+version. Even=20
+though the two files are different, the running code is the same and the =
+
+debugger can use the symbols from the unstripped file to debug a core =
+dump made=20
+from the stripped version.=20
+<P>
+<H2>Exercises</H2>
+<P>
+<P>1. Write a C++ program with a lot of functions whose mangled names =
+differ=20
+only in the last few characters. See how long they take to compile. =
+Change them=20
+so the mangled names differ in the first few characters. Time a compile =
+and link=20
+again. Do you need a new linker?=20
+<P>
+<P>2. Investigate the debug symbol format that your favorite linker =
+uses. (Some=20
+on-line resources are listed in the bibiography.) Write a program to =
+dump the=20
+debugging symbols from an object file and see how much of the source =
+program you=20
+can reconstruct from it.=20
+<P>
+<H2>Project</H2><I>Project 5-1:</I> Extend the linker to handle symbol =
+name=20
+resolution. Make the linker read the symbol tables from each file and =
+create a=20
+global symbol table that subsequent parts of the linker can use. Each =
+symbol in=20
+the global symbol table needs to include, along with the name, whether =
+the=20
+symbol is defined, and which module defines it. Be sure to check for =
+undefined=20
+and multiply defined symbols.=20
+<P>
+<P><I>Project 5-2:</I> Add symbol value resolution to the linker. Since =
+most=20
+symbols are defined relative to segments in linker input files, the =
+value of=20
+each symbol has to be adjusted to account for the address to which each =
+segment=20
+is relocated. For example, if a symbol is defined as location 42 within =
+a file's=20
+text segment, and the segment is relocated to 3710, the symbol becomes =
+3752.=20
+<P>
+<P><I>Project 5-3:</I> Finish the work from project 4-2; handle =
+Unix-style=20
+common blocks. Assign location values to each common block. =
+</P></BODY></HTML>
+
+------=_NextPart_000_0056_01C557A2.2FEA9B70
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker05-01.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABzAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2xhlm
+4B4o2/d+UdKRidxIyTj1pD/CSG5HrUkjyOF+VepqOWWOJSH2AscAFsZ6U4cgcN19ax9c0+11a1a1
+uHuEUOjHy1J+6yvjoe6imI1N6q+5wq9AMkDnnigyIhRflyeMZ9s/0rjYvBelGcmXUdYudsnnNHLl
+g2SOCNvT5B+tWLnwppd41s73eqh0iSHcNwMmwDBJ25J+Un6kmgZ04uIdiNlPnPy8g55qQsjMeE5H
+HPWuFk8A6SFUve6yx+4G5ByXz12jGSccVs6RoFno17PcW32/LxCMpKCw65yOOtAHSgpuH7tc4xmj
+ZvVPkHX+lV/OXaT5U/y9tjZP0FL5+yJHEMxPTYAc9KBErKBuGwdRRgZIKDp2ppKtkfOp3e9KwAyM
+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
+
+------=_NextPart_000_0056_01C557A2.2FEA9B70
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker05-04.jpg
+
+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
+
+------=_NextPart_000_0056_01C557A2.2FEA9B70--

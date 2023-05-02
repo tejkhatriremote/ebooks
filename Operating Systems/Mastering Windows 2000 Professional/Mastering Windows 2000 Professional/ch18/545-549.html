@@ -1,0 +1,160 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Understanding the Architecture</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=18//-->
+<!--PAGES=545-549//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="543-545.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="549-551.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Process Privilege Levels: Kernel and User Mode</FONT></H4>
+<p>Most modern processors enable you to designate any program running in the processor as either a Kernel mode application or a User mode application. A <i>Kernel mode application</I> is allowed to, among other things, allocate memory to all other applications. Kernel mode programs are the only programs allowed to modify a very important piece of data in the computer&#146;s memory: a table of memory boundaries that defines each application currently running and exactly what memory each application is allowed to access. You&#146;ll see that this table of memory boundaries is vitally important.</P>
+<p>Here&#146;s the sequence of events for allocating memory boundaries:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;An application asks the operating system (which is a Kernel mode program) to load it.
+<dd><b>2.</B>&nbsp;&nbsp;The operating system asks the application how much memory it needs.
+<dd><b>3.</B>&nbsp;&nbsp;The application tells the operating system its required amount of memory.
+<dd><b>4.</B>&nbsp;&nbsp;The operating system loads the application into memory, securing the memory boundaries around the application.
+</DL>
+<p>From that point on, whenever the application tries to access memory, the CPU consults a table of application memory boundaries that indicates which RAM goes with which application. Using that information, the CPU can either allow the memory access or declare a <i>memory access fault</I>. (We <i>would</I> use the term general protection fault<i>,</I> as a memory access fault <i>is</I> a GPF, but that term is applied only to Intel processors and, remember, Windows 2000 is built to work on other processors as well. Memory access fault is the more generic term applying to all processors; think of it as architecture-independent jargon.)</P>
+<p>Only a Kernel mode application can modify the table that the CPU consults. The major difference between Kernel mode programs and User mode programs is that Kernel mode programs define the memory boundaries and User mode programs live in them.</P>
+<p>The dichotomy between programs that can define memory boundaries and those that can&#146;t is built into the processors that Windows 2000 currently runs on&#151;the Intel <i>x86</I> chips, and soon will run on the IA64 chips. While RISC chips support only two levels of privilege (Kernel mode and User mode), the Intel chips support <i>four</I> levels of privilege, which are called <i>rings.</I> You&#146;ll never see the terms <i>Kernel mode</I> and <i>User mode</I> in an Intel programming manual. Ring 0 applications (Intel-speak for <i>Kernel mode</I>) can control anything about memory, but can also leave some memory control to ring 1 applications. Ring 1 applications, in turn, cannot modify memory protections set by a ring 0 application, but can set memory protection on memory that <i>they</I> own; ring 1 restrictions must be followed by ring 2 applications. Ring 2 applications get to bully around the last kind, ring 3 applications, and ring 3 applications can&#146;t modify any memory and therefore have no one to boss around.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Windows 2000 on Intel computers uses only ring 0 (for Kernel mode) and ring 3 (for User mode). Windows 2000 does not use rings 1 or 2, because many reduced instruction set computing (RISC) CPUs support only two levels of privilege, and Windows 2000 must be able to run on many kinds of CPUs.<hr></FONT>
+</BLOCKQUOTE>
+<p>Even though the concept of rings took a few pages to describe, it&#146;s a basic and fundamentally important thing to understand about Windows 2000&#151;how it protects the memory of one application from all other applications.
+</P>
+<p>You&#146;ve also got the tools now to understand why Windows 3.1 was so unstable: <i>All applications lived in ring 0</I>. Every single device driver, screen saver, application&#151;you name it&#151;had the capability to reallocate the table of memory boundaries anytime one felt like it.</P>
+<p>Now you can easily understand an important Windows 2000 design goal: <i>Don&#146;t let the applications get within 10 miles of the Kernel mode</I> (ring 0 on Intel, recall). If an application tries to exceed its allotted memory space, then the processor will detect a memory access fault and remove the offending application from memory.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>An operating system will not protect an application from itself. If an application uses several memory areas and one area overflows into another, then Windows 2000 will probably not detect the overflow unless the application tries to read or write outside of its allotted memory space. That&#146;s not an immutable truth, however; a programmer can design a program to take advantage of Windows 2000&#146;s built-in memory protection capabilities, but doing so is not a requirement for building an application<hr></FONT>
+</BLOCKQUOTE>
+<p>This distinction of Kernel mode programs versus User mode programs turned out to be crucial in Windows 2000&#146;s design, as you&#146;ll see in the rest of this chapter.
+</P>
+<h3><a name="Heading6"></A><font color="#000077">Designing Architecture Independence</FONT></H3>
+<p>We&#146;ve already peppered this discussion with references to PCs with processors other than the standard Intel <i>x</I>86 chips. But to the average user, architecture independence may seem like a fairly unimportant concept&#151;after all, doesn&#146;t everybody use Intel Pentiums, Pentium Pros, and Pentium IIs and IIIs? Well, no, not exactly.</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Architecture Independence in Windows 2000: The Big Picture</FONT></H4>
+<p>Recall the last chapter, where we said that NT had found a place for itself in the graphics world? We noted that the graphics folks were looking for massive power; after all, a fair number of Cray supercomputers have been sold to people whose main use for them was graphics of some kind. (George Lucas&#146; firm, Industrial Light and Magic, bought a second Cray a few years ago because the designers needed to finish the special effects for <i>Jurassic Park</I> on time. That was in 1992, before the advent of NT; perhaps 40 high-end machines&#151;which would have cost around &#36;80,000&#151;could have done the job and saved Lucas from having to spend &#36;26 million on the new Cray.)</P>
+<p>You don&#146;t get massive power from Intel <i>x</I>86 systems; you get it from a four-processor Alpha with 512MB of RAM running at 500MHz. Windows 2000 is positioned to capture the high end of the desktop workstation market; if it happens to end up in the mid-range, pushing out Windows 9<i>x</I> machines in business and in the home, well, then, so be it. You can be sure that Microsoft won&#146;t complain&#151;but taking market share from Windows 9<i>x</I> wasn&#146;t the initial goal.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Late in the Beta process of Windows 2000, Compaq announced that they would no longer pursue development efforts with Microsoft on the Alpha processor. Microsoft then announced that they were dropping their support for the Alpha as well. Microsoft does, however, plan to support Intel&#146;s new 64-bit RISC platform, IA64, so Windows 2000 will continue to carry on NT&#146;s cross-platform development.<hr></FONT>
+</BLOCKQUOTE>
+<p>Computer manufacturers will always be making a chip that&#146;s bigger, faster, and, most importantly, <i>newer.</I> But the days are gone when consumers would wait five years for an operating system for that chip. The vital and central importance of architecture independence for Windows 2000 is that its easily portable structure usually enables Windows 2000 to be the first operating system implemented on a new CPU, and in this business, being first often means being the only one in the game.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Minimum CPU Requirements to Be Windows 2000-Possible</FONT></H4>
+<p>Well, how architecture-independent <i>is</I> Windows 2000?</P>
+<p>Not every CPU <i>can</I> host Windows 2000. Obviously, the 80286 lacks the 32-bit strength that Windows 2000 needs. But Windows 2000 doesn&#146;t demand much. Before Microsoft can implement Windows 2000 on a CPU, it must have the following:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Data registers that are at least 32 bits or larger
+<dd><b>&#149;</B>&nbsp;&nbsp;Memory address registers that are at least 32 bits or larger
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Windows 2000 needs to be able to allocate a space up to 2 to the 32nd bits, or 4 gigabytes. (No, Windows 2000 doesn&#146;t need that much RAM; it&#146;s just that the underlying architecture is laid out on a 4GB memory map, as you&#146;ll learn later in this chapter.)<hr></FONT>
+</BLOCKQUOTE>
+<dd><b>&#149;</B>&nbsp;&nbsp;A memory protection model
+<dd><b>&#149;</B>&nbsp;&nbsp;At least two levels of privilege for processes so that Windows 2000 can implement Kernel mode and User mode privilege
+<dd><b>&#149;</B>&nbsp;&nbsp;The capability to control how any arbitrary process accesses any given block of memory in the following ways:
+<dl>
+<br>
+<dd><b>&#149;</B>&nbsp;&nbsp;A given process can or cannot read the block of memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;A given process can or cannot write the block of memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;A given process can or cannot execute the block of memory.
+</DL>
+<br>
+<dd><b>&#149;</B>&nbsp;&nbsp;A memory <i>paging</I> ability, or CPU support for virtual memory
+</DL>
+<p>That looks like a fair number of requirements, but it isn&#146;t, really. These requirements describe most advanced microprocessors on the market today, as well as larger computers. A Microsoft source once said that they were looking into building NT/370, NT for an IBM mainframe. In theory, that would be possible due to NT&#146;s fairly liberal requirements; of course, whether it&#146;s <i>advisable</I> is a different matter. (Where do you plug in the mouse?...)</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="543-545.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="549-551.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

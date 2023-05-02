@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=810-813//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-13.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-15.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Here, two methods are used. The first method resets the counter (<small>CCounter::reset</SMALL>), and the second method returns a value in the sequence (<small>CCounter::getValue</SMALL>). Here&#146;s how you would use this object in the new ASP page:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=Javascript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+<i>&ltOBJECT RUNAT=server PROGID=ASPComponent.Counter.1</I>
+        id=objCounter&gt &lt/OBJECT&gt
+&lttable border=1&gt
+&lt%
+// Following code is used if the
+// OBJECT tag did not exist
+// var objCounter;
+// objCounter = Server.CreateObject(&#147;ASPComponent.Counter.1&#148;);
+objCounter.reset();
+var c1;
+
+for( c1 = 0; c1 &lt 10; c1 &#43;&#43;) {
+%&gt
+&lttr&gt&lttd&gt&lt%=c1%&gt&lt/td&gt&lttd&gt&lt%=objCounter.getValue()%&gt&lt/td&gt&lt/tr&gt
+&lt%
+}
+%&gt
+&lt/table&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>In this piece of code, the COM object is instantiated on the ASP page (<small>this needs to be defined</SMALL>). There are two ways to do this. The first is to use the <small>OBJECT</SMALL> tag. To do this, you need to supply three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RUNAT=server</SMALL>. This tells the ASP parser that the object will be instantiated on the server side. If this isn&#146;t added, the object is instantiated on the client side.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PROGID</SMALL>. This is the COM PROGID used to instantiate the object. You could use CLSID, but it&#146;s more abstract and harder to understand.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Id</SMALL>. This defines the object identifier used by the scripts to reference the instantiated objects.
+</DL>
+<p>The other way to instantiate the object is to use the <small>Server.CreateObject</SMALL> method. This method requires the PROGID of the COM object as a parameter. If the COM object instantiation is successful, the object is returned. In the preceding code piece, this technique has been commented, but added as reference.</P>
+<p>After the object has been instantiated, it can be called just like a built-in ASP object. In this example, <small>objCounter.reset</SMALL> is called. Also, in the loop, the method <small>objCounter.getValue()</SMALL> is used to access the value.</P>
+<p>You might be wondering why the <small>getValue</SMALL> method is a return value when it&#146;s defined as pointer in the implementation. The answer lies in the definition of the IDL:</P>
+<!-- CODE //-->
+<pre>
+  [
+     object,
+     uuid(BBC090F3-71E4-11D2-9BC8-0010A4F15EA7),
+     dual,
+     helpstring(&#147;ICounter Interface&#148;),
+     pointer_default(unique)
+  ]
+  interface ICounter : IDispatch
+  {
+     [id(1), helpstring(&#147;method reset&#148;)] HRESULT reset();
+     [id(2), helpstring(&#147;method getValue&#148;)] HRESULT
+getValue([out,retval]long *retvalue);
+  };
+</PRE>
+<!-- END CODE //-->
+<p>In the declaration of <small>getValue</SMALL>, the parameter is defined as <small>out</SMALL> and <small>retval</SMALL>, which means it&#146;s a return parameter.</P>
+<h4 align="LEFT"><a name="Heading28"></A><font color="#000077">A Richer ASP Component</FONT></H4>
+<p>The current implementation of the component does not use any objects exposed by the ASP object model. The problem with the current HTML implementation is that it doesn&#146;t save any programming effort. It still involves quite a bit of coding. To cut down on the amount of HTML coding, you can access the ASP object model. The way to do this is shown in Figure 23.8.
+</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-08.jpg',199,113 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-08.jpg',199,113)"><font color="#000077"><b>Figure 23.8</B></FONT></A>&nbsp;&nbsp;ASP and COM&#43; conceptual architecture.</P>
+<p>A question that may arise is how ASP, the object model, can be accessed from within the COM object. This can be explained by looking at how IIS is designed. For explanation purposes, the diagram shown in Figure 23.8 is not entirely correct. It is, however, <i>conceptually</I> correct, and for the scope of this book, we&#146;ll leave it at that.</P>
+<p>A COM&#43; application runs IIS, and when a request for Web page arises, IIS does not process the request directly but hands it off to a COM&#43; application. The COM&#43; application then runs the ASP script or retrieves the file. This is done to promote robustness and scalability. If the retrieval process crashes, IIS can continue handling requests. Previously, a crash in one Web application would bring down the entire IIS application, which in turn would disable an entire Web server.</P>
+<p>This COM&#43; application will process an ASP page. If that ASP page references a COM object, the in-process COM object will run within the context of the COM&#43; application. ASP is <i>richer</I> in that it considers itself a service that&#146;s part of the COM&#43; application. Now, a situation exists in which if the COM&#43; application context were to be accessed, it would contain a reference to the ASP context. In fact, this is how the COM object works with the ASP object model. Does this mean all COM objects that use the ASP object model must be transactional? No, not at all. Remember that the COM&#43; application is a concept of applying context. That context can be transactional or it can be ASP.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-13.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-15.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,242 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=860-865//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In a publisher/subscriber architecture, the client applies to a subscription that&#146;s made available by a publisher. The publisher is informed of this request. When the publisher has new data, it queries to find out who has subscribed. Those subscribers then get the new information via the <small>I<i>XX</I>Event</SMALL> interface.</P>
+<p>You can build a subscription architecture using COM connection points. However, this is not an ideal solution because the publisher and subscriber are tightly coupled. Connection points assume that there&#146;s one publisher of information. When a connection point is established, it&#146;s not persistent. It&#146;s also not possible to intercept the connection point and perform some other work.</P>
+<p><a name="Fig12"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-12.jpg',208,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-12t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-12.jpg',208,420)"><font color="#000077"><b>Figure 25.12</B></FONT></A>&nbsp;&nbsp;Publisher/subscri-ber architecture.</P>
+<p>Windows 2000 includes a COM&#43; event service. This service handles the plumbing of the subscription mechanism and provides the following features:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Events are fired at the abstract level using COM interface IDs.
+<dd><b>&#149;</B>&nbsp;&nbsp;Subscriptions can be persistent.
+<dd><b>&#149;</B>&nbsp;&nbsp;There can be many publishers of information.
+<dd><b>&#149;</B>&nbsp;&nbsp;The subscriber has to be active while waiting for a message.
+<dd><b>&#149;</B>&nbsp;&nbsp;Events can survive failure.
+<dd><b>&#149;</B>&nbsp;&nbsp;The event service is component based and therefore supports full security, load balancing, and transactions.
+</DL>
+<p>The pieces of the entire process are shown in Figure 25.13.
+</P>
+<p><a name="Fig13"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-13.jpg',199,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-13t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-13.jpg',199,420)"><font color="#000077"><b>Figure 25.13</B></FONT></A>&nbsp;&nbsp;COM&#43; events-based subscription service.</P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Building a Publisher/Subscriber Project</FONT></H4>
+<p>To build an application using this architecture, the first step is to determine what information the client will subscribe to. An example of information could be a stock ticker.
+</P>
+<p>This is the <small>I<i>XX</I>Event</SMALL> object. As an example, consider the following event interface:</P>
+<!-- CODE //-->
+<pre>
+[
+   object,
+   uuid(55d81670-6567-11d1-88c8-0080c7d771bf),
+   dual,
+   oleautomation,
+   helpstring(&#147;StockEvents Interface&#148;),
+   pointer_default(unique)
+]
+interface IStockEvents : IDispatch
+{
+    [id(1), helpstring(&#147;method StockPriceChange&#148;)]
+            HRESULT StockPriceChange ( BSTR StockSymbol, double Price );
+    [id(2), helpstring(&#147;method NewStock&#148;)]
+            HRESULT NewStock ( BSTR StockSymbol, BSTR CompanyName );
+};
+</PRE>
+<!-- END CODE //-->
+<p>This interface is used for communication among the various pieces. In a typical development situation, an IDL file is created. Then, a type library is compiled. Depending on the language, the IDL file or type library is referenced throughout the various projects.
+</P>
+<p>In Figure 25.13, the event class is used. The publisher defines the interface as part of the subscription; then the various subscription clients implement the interface to capture the event.</P>
+<p>The publisher of a subscription has the responsibility of sending content to the various subscribers. This is done using a COM&#43; object.</P>
+<p>The first step a publisher takes is to register itself with the COM&#43; event service. In the sample code, the object is the <small>SimplePublisherATL</SMALL> COM object. A sample registration of a publisher follows:</P>
+<!-- CODE //-->
+<pre>
+HRESULT hr = S_OK;
+ LPOLESTR    strGUID;
+
+ CComBSTR bstrPublisherID;
+ CComBSTR bstrPublisherName;
+
+ CComPtr&lt;IEventSystem&gt; spIEventSystem;
+ CComPtr&lt;IEventPublisher&gt; spIEventPublisher;
+
+ hr = CoCreateInstance(CLSID_CEventSystem,
+                       NULL,
+                       CLSCTX_SERVER,
+                       IID_IEventSystem,
+                       (void**)&amp;spIEventSystem);
+ if (FAILED(hr))
+ {
+     Error(&#147;Failed to create IEventClass&#148;, IID_IStockPublisher, hr);
+     return hr;
+ }
+ hr = CoCreateInstance(CLSID_CEventPublisher,
+                       NULL,
+                       CLSCTX_SERVER,
+                       IID_IEventPublisher,
+                       (void**)&amp;spIEventPublisher);
+ if (FAILED(hr))
+ {
+     Error(&#147;Failed to create IEventPublisher&#148;, IID_IStockPublisher, hr);
+ -    return hr;
+ }
+ hr = StringFromIID(CLSID_StockPublisher, &amp;strGUID );
+ if (FAILED(hr))
+ {
+     Error(&#147;Failed to convert GUID to OLESTR&#148;, IID_IStockPublisher, hr);
+     return hr;
+ }
+ bstrPublisherID = strGUID;
+ CoTaskMemFree(strGUID);
+ bstrPublisherName = str_StockPublisherName;
+ hr = spIEventPublisher-&gt;put_PublisherID(bstrPublisherID);
+ if (FAILED(hr))
+ {
+     Error(&#147;Failed to put PublisherID &#147;, IID_IStockPublisher, hr);
+     return hr;
+ }
+ hr = spIEventPublisher-&gt;put_PublisherName(bstrPublisherName);
+ if (FAILED(hr))
+ {
+     Error(&#147;Failed to put PublisherName &#147;, IID_IStockPublisher, hr);
+     return hr;
+ }
+ hr = spIEventSystem-&gt;Store(PROGID_EventPublisher, spIEventPublisher);
+ if (FAILED(hr))
+ {
+     Error(&#147;Failed to Store EventPublisher &#147;, IID_IStockPublisher, hr);
+     return hr;
+ }
+
+</PRE>
+<!-- END CODE //-->
+<p>The event services will manage all aspects of the subscription. To connect to it, the <small>IEventSystem</SMALL> interface pointer is instantiated using <small>CoCreateInstance</SMALL>. This interface has the ability to accept either a publisher or a subscriber of the event. It&#146;s defined as a parameter within the various methods.</P>
+<p>The next step is to instantiate a publisher definition COM&#43; interface. The interface <small>IEventPublisher</SMALL> is a read/write property that defines the specific publisher. One very important facet of COM&#43; events and subscriptions is that there are no specific interface references. Instead, abstract COM ProgIDs are used to define the attributes. This makes it possible to easily load balance and scale the components and instantiate them regardless of the situation. In the long term, this makes for more flexible programming and utilization.</P>
+<p>For a publisher to be defined, the CLSID of the publisher needs to be extracted using <small>StringFromIID</SMALL>. Then that string is converted into a <small>BSTR</SMALL> and stored in the <small>IEventPublisher::PublisherID</SMALL> property. Stored within the <small>IEventPublisher::PublisherName</SMALL> property is the ProgID of the publishing component.</P>
+<p>The last step is to store the publisher within the COM&#43; event services using the method <small>IEventSystem::Store</SMALL>. The first parameter defines that the item to be stored is a publisher (<small>PROGID_EventPublisher</SMALL>).</P>
+<p>Removing a publisher and event class is simpler, as shown by the following code:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CStockPublisher::Uninstall()
+{
+    LPOLESTR    strGUID;
+    HRESULT hr = S_OK;
+    int         errorIndex;
+
+   CComPtr&lt;IEventSystem&gt; spIEventSystem;
+    hr = CoCreateInstance(CLSID_CEventSystem,
+                          NULL,
+                          CLSCTX_SERVER,
+                          IID_IEventSystem,
+                          (void**)&amp;spIEventSystem);
+    // ----------------------------------------------
+    //      Delete a publisher
+    // ----------------------------------------------
+    hr = StringFromIID(CLSID_StockPublisher, &amp;strGUID);
+    CComBSTR bstrCriteria(&#147;PublisherID=&#148;);
+    bstrCriteria &#43;= strGUID;
+    CoTaskMemFree(strGUID);
+    hr = spIEventSystem-&gt;Remove(PROGID_EventPublisher, bstrCriteria,
+    &#8658; &amp;errorIndex);
+    // ----------------------------------------------
+    //      Delete an event
+    // ----------------------------------------------
+    hr = StringFromIID(CLSID_StockEvents, &amp;strGUID);
+    bstrCriteria = &#147;EventClassID=&#148;;
+    bstrCriteria&#43;= strGUID;
+    CoTaskMemFree(strGUID);
+    hr = spIEventSystem-&gt;Remove(PROGID_EventClass, bstrCriteria,
+    &#8658; &amp;errorIndex);
+    return hr;
+}
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

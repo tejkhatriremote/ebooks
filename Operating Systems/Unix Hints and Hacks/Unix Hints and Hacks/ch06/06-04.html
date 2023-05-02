@@ -1,0 +1,181 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=206-210//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reasons</B></FONT></P>
+<p>Files need to be relocated from one host to another. Like other tasks in UNIX there is more than one way to do execute the transfer. Choosing the appropriate method depends on you configuring your environment to optimize your network and your hosts in the safest and most-efficient way.
+</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>When you transfer large amounts of data across the network, it is best to log in to the remote system and verify that the transfer of files is working properly. You can do three things to verify that all is going well.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If you are piping the <small>tar</SMALL> command through a remote shell to be extracted on the remote system, also check the process table and verify that there is a <small>tar</SMALL> process running for the files that are being copied.
+<!-- CODE SNIP //-->
+<pre>
+# ps -ef | grep tar
+joedee      5835      5829  0 20:46:09 ?     0:00 csh -c
+<b>&#8658;</B>(cd /home; tar xfB -)
+
+joedee      5839      5835  0 20:46:09 ?     0:02 tar xfB -
+</PRE>
+<!-- END CODE SNIP //-->
+<dd><b>&#149;</B>&nbsp;&nbsp;Verify that the command executed from the local system created a directory on the remote machine and files being copied into the directory.
+<!-- CODE //-->
+<pre>
+# ls -la /home/joedee
+total 48
+drwxrwxr-x    2 joedee   user      85 Nov 17 12:32 .
+drwxr-xr-x   35   root    sys    4096 Nov 17 16:02 ..
+-rw-r--r--    1 joedee   user     689 Nov 11 18:58 .cshrc
+-rw-r--r--    1 joedee   user     704 Nov 11 18:58 .login
+-rwxr-xr-x    1 joedee   user     154 Nov 17 12:46 .nologin
+-rw-r--r--    1 joedee   user     638 Nov 11 18:58 .profile
+drwxr-xr-x    1 joedee   user     512 Nov 11 18:58 data
+</PRE>
+<!-- END CODE //-->
+<dd><b>&#149;</B>&nbsp;&nbsp;Check the disk usage on the directory and files being transferred and watch to make sure that it is growing in size.
+<!-- CODE SNIP //-->
+<pre>
+# du -ks .
+22876   .
+# du -ks .
+23820   .
+# du -ks .
+
+25356   .
+</PRE>
+<!-- END CODE SNIP //-->
+</DL>
+<p>This is especially necessary when you are not applying any verbose action of the command to display the progress that the transfer is making.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>cpio, cp, du, find, ftp, rcp, rsh, tar</SMALL></P>
+<h3><a name="Heading6"></A><font color="#000077">6.3 Which tmp Is a Good Temp?</FONT></H3>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">6.3.1 Description</FONT></H4>
+<p>Knowing where to put temporary files can be key to saving or losing the files. There are four types of temporary areas that should be used when managing files and the system.
+</P>
+<p><font size="+1"><b>Example One: Files in /tmp</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>When a file is put in /tmp it can be expected that it will be removed either at a scheduled time or the next time the system reboots. This area is designated for what it truly is, a place for temporary files. The system checks and uses the /tmp area for its own use as well. Some flavors, such as Solaris, actually have /tmp be the swap partition. As you know, nothing ever lasts very long in swap. Do not store anything long-term or even something that you might need in a couple of hours. It might not be there when you return.</P>
+<p>Many times system administrators put patches, restored data, log files, and other useful files into /tmp. This is considered taking an unnecessary risk. So what does get stored in /tmp?</P>
+<p>This area is extremely useful for creating data files for testing, lock files, and other files that you expect to be removed if forgotten about. Do not put any vital data or programs into /tmp. On some flavors, at the time of booting the system, a recursive deletion of files doesn&#146;t take place. You can create subdirectories with files in them and not worry about the files being removed. Check with your flavor of UNIX&#151;if /tmp makes up the swap partition on your system, you will not be able to get away with this hack.</P>
+<p>Large temporary files should not be kept in this area. The /tmp directory often resides in the root partition. If the root partition fills up, this can lead to the system crashing or grinding to a halt. If you have the disk space you should leave it on the root system.</P>
+<p>If the /tmp area is inaccessible, the system does not boot up into a multiuser state. Avoid doing certain things with /tmp to save yourself a lot of grief in the long run:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Never have /tmp as a symbolic link to another partition, if the partition is corrupted and fsck is unsuccessful, the system will not come up.
+<dd><b>&#149;</B>&nbsp;&nbsp;Never create a link to another temporary area, like /var/tmp. If the partition to the directory doesn&#146;t exist or the system is unable to mount the filesystem, the system will be unable to boot up.
+<dd><b>&#149;</B>&nbsp;&nbsp;Never put /tmp on a second disk. If the second disk loses power, gets corrupted, or fails, the system will not boot.
+</DL>
+<p><font size="+1"><b>Example Two: Files in /usr/tmp -&gt /var/tmp</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>In many cases you will see that /usr/tmp is a symbolic link to /var/tmp. Files that are kept in /usr typically are not supposed to fluctuate in size. Those areas in /usr that do change in size are often linked to /var or some other area with more disk space than /usr. These directories include mail, local, spool, and even tmp.</P>
+<p>The size of this temporary area is often larger then the /tmp area. It is an area that is good for storing application-related temporary files, patches waiting to be installed, and administrative temporary files, such as log files, build reports, or anything that doesn&#146;t need permanent storage. Files here have to be removed manually from a scheduled job that is set up from the crontab.</P>
+<p>If /var/tmp lacks sufficient disk space to handle the temporary area and the disk fills up, the only things that would break are any services in /var. These could include mail, printing, scheduling, and accounting. Although it is not recommended or good administrative practice, if there is more disk space in /usr then in /var, you can reverse the direction of the symbolic link.</P>
+<p>Where:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 25% ls -l /usr/tmp
+lrwxrwxrwx   1 root     sys        8 Nov 21 00:07 tmp -&gt /var/tmp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Becomes:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 26% ls -l /var/tmp
+lrwxrwxrwx   1 root     sys        8 Nov 21 00:07 tmp -&gt /usr/tmp
+</PRE>
+<!-- END CODE SNIP //-->
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>There are repercussions for making a change in this structure. The system might begin to grind to a halt if the disk space on the /usr partition reaches 100% capacity. There is also a chance of the system crashing when it fills up.
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Most users and developers do one of two things. They are unaware that this area exists and come close to filling up /tmp. Then there is the other end of the spectrum: They exploit the area to the fullest and you have to sometimes fight to get the area cleaned up.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

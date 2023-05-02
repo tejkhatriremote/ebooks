@@ -1,0 +1,883 @@
+<HTML>
+
+<HEAD>
+
+<TITLE>GT(M)HH Microsoft-only version Number 2 </TITLE>
+
+</HEAD>
+
+<BODY BGCOLOR="#ffffff" TEXT="#000000">
+
+<br>
+<OL>
+
+<PRE>
+
+<A HREF="#batch1">Batch File Programming - Part One</A>
+<A HREF="#batch2">Batch File Programming - Part Two</A>
+
+____________________________________________________________
+
+<A NAME="batch1"></A>
+
+<B>GUIDE TO (mostly) HARMLESS HACKING
+
+
+
+Microsoft-only version Number 2
+
+
+
+Hacking with Win95/NT:  Batch File Programming</B>
+
+____________________________________________________________
+
+
+
+<B>by KeyDet89</B>
+
+
+
+I figured that, after all of the Happy Hacker Digests
+
+and Guides To (mostly) Harmless Hacking that have
+
+dealt with shell programming, something for Win95 and
+
+NT needed to be addressed.
+
+
+
+***************************************************
+
+Newbie Note:  A good resource for batch files is to go to
+
+you local library and look up back issues of PC Magazine.
+
+The older editions, even those published after Win95 came
+
+out, list several useful batch files that you can use
+
+or modify for your own use.  WindowsNT Magazine has had 
+
+several good articles on scripting languages for NT.
+
+
+
+Other excellent sources of information include books from
+
+the library and used bookstores.
+
+
+
+Also, visit the alt.msdos.batch newsgroup.  If you can't
+
+access newsgroups from your ISP, use your browser to
+
+visit DejaNews at <A HREF="http://www.dejanews.com">http://www.dejanews.com</A>.  Or visit
+
+any of the sites listed at the end of this file.
+
+***************************************************
+
+
+
+Let's get started.  First, keep in mind that batch files 
+
+are just series of programs that you would like executed.
+
+The files are made up of commands that already reside on
+
+your machine.  If you have several commands that type over
+
+and over, each with specific switches and parameters, you 
+
+may want to put them into a batch file.  Batch files can
+
+also be used the way aliases are on Un*x...written properly,
+
+you can launch a program from the command line without 
+
+having to type it out each time.
+
+
+
+A word about editors:  You already have two suitable text 
+
+editors on your computer...DOS edit, and Notepad.  Edit
+
+is fairly simple to use, but you may not be used to it.  
+
+Notepad is also easy to use, just remember to save your files
+
+with the correct ".bat" extension so that they will be 
+
+recognized as batch files by the command processor.
+
+
+
+***************************************************
+
+Newbie Note:  Most of the commands that you will want
+
+to run from batch files will be command line programs.
+
+Check out your windows\command directory to see what
+
+is available.  Don't hesitate to look for DOS or Win95
+
+command line programs on the Internet.
+
+***************************************************
+
+
+
+STEP 1 -- "Hello, World"
+
+The first program we will write is the obligatory "Hello World"
+
+program that accompanies every programming language.  Simply 
+
+save a file called "hello.bat" with the following text:
+
+
+
+echo Hello, World!
+
+
+
+Now, if you type "hello" at the prompt, you will see the "echo"
+
+line printed at the prompt, then the line "Hello, World!" on the
+
+line below it.  To suppress the commands at the prompt, add the
+
+line:
+
+
+
+@echo off
+
+
+
+as the first line of the file.  Now rerun the file.
+
+
+
+STEP 2 -- Arguments
+
+Now, let's personalize our program a bit.  Change the second line
+
+to:
+
+
+
+echo Hello, %1
+
+
+
+and run the program by typing:
+
+
+
+c:\&gt;hello Johnny
+
+
+
+Now we've added arguments, as denoted by the "%1".  This refers to
+
+the first argument that is sent to the file.  We can send multiple
+
+arguments.  To demonstrate, open a file called "args.bat" and type
+
+in the following lines:
+
+
+
+@echo off
+
+echo ARGS: %1 %2 %3 %4
+
+echo REV: %4 %3 %2 %1
+
+echo MIXED: %2 %1 %4 %3
+
+
+
+Now run the file with at least two arguments (you can use more and
+
+examine the output):
+
+
+
+c:\&gt;args hello steve dog rain
+
+
+
+STEP 3 -- Redirection
+
+When programming in most languages, there are three references that
+
+you need to be aware of:  standard input (STDIN - usually the 
+
+keyboard), standard output (STDOUT - the screen), and standard
+
+error (STDERR - also the screen).  However, you may not want the 
+
+output to go to the screen, you may want it stored in a file.  Well,
+
+we can do this fairly easily with something called redirection.
+
+
+
+How does this work?  Well, when you type in something like:
+
+
+
+c:\&gt;attrib /?
+
+
+
+to find out what the attrib (attribute) command does, and how
+
+it is used, you see a lot of information on the screen.  Try doing
+
+the same thing with the "net" command under Win95, and the info
+
+seems to disappear off the screen!  So to send the output of the 
+
+command to a file, simply add the greater-than sign and a file
+
+name to the command:
+
+
+
+c:\&gt;net /? &gt; net.txt
+
+
+
+If you want to add or append information to an already existing
+
+file, use the double-greater-than symbol:
+
+
+
+c:\&gt;net view /? &gt;&gt; net.txt
+
+
+
+****************************************************
+
+Cool Trick To Try:  I won't be covering HTML programming here,
+
+but here is something to try.  There are basic commands that
+
+every web page has...these are the tags that are that are used
+
+to designate the header, title, change colors or fonts, etc.
+
+Write a batch file that takes the output of series of commands,
+
+such as "net", "net view", "net use", "net user", and "net time"
+
+and puts them in an HTML file.  That way, you can post it on
+
+the web.  You may even go so far as to include links to examples,
+
+etc.
+
+****************************************************
+
+
+
+STEP 4 -- Autoexec.bat
+
+Now is a good time for a word on the King of All Batch Files,
+
+the autoexec.bat file.  This is the file that is used by DOS
+
+at boot up, and exists for DOS and Win95 (Win3.1 runs on top of
+
+DOS, and is called from the autoexec.bat file).  Use the 
+
+autoexec.bat file "to set the characteristics of your devices, 
+
+customize the information that MS-DOS displays, and start 
+
+memory-resident programs and other applications" (from the
+
+MS-DOS User Guide).  Really?  Well, given that, you can do all
+
+sorts of interesting things with this file...or any other batch
+
+file.
+
+
+
+Note on NT:  NT does not use the autoexec.bat file, but there
+
+is a registry key that when set, will enable the parsing of 
+
+the autoexec.bat file, reportedly for environment variables.
+
+Gee, I wonder what else it will do...
+
+
+
+*****************************************************
+
+Evil Genius Tip:  Take a look at the prompt command by typing:
+
+
+
+c:\&gt;prompt /?
+
+
+
+Play around with different settings.  Typing the command to 
+
+change the prompt at the current command prompt will change 
+
+it for that session...adding the command to the autoexec.bat
+
+file will change if for all sessions.
+
+*****************************************************
+
+
+
+STEP 5 -- Aliases
+
+You'll notice that when you type:
+
+
+
+c:\&gt;notepad somefile.txt
+
+
+
+Notepad opens with the file, and in the DOS window, you get
+
+you command prompt back.  So if you want a quick way to open
+
+the text files, create a small batch file called "np.bat", with
+
+the lines:
+
+
+
+@echo off
+
+notepad %1 
+
+
+
+Now all you have to do is type "np" and the file name. 
+
+
+
+****************************************************
+
+Evil Genius Trick:  Here's a handy little way to create a
+
+mini-syslog daemon of your very own...or someone elses.
+
+Create a file called "file.log", or whatever, on the
+
+target computer, in the Windows directory.  
+
+
+
+HINT:  Investigate the "attrib" command, paying particular
+
+attention to the "h" option.
+
+
+
+Now, create a batch file that will make entries to file.log.
+
+You might want to have something printed, or just the file
+
+that was opened.
+
+Next, click Start -&gt; Help, and type in "associating" and 
+
+display the help on "file types with programs".  Change 
+
+the associations for ".txt" files to point to your batch
+
+file, and make sure that the last line reads:
+
+
+
+notepad %1
+
+
+
+If your friend uses Microsoft Word a lot, make the 
+
+appropriate changes there, too.
+
+**************************************************** 
+
+
+
+****************************************************
+
+Neat Trick Tip:  If you like the Un*x commands, but don't
+
+want to fool with downloading them, write you own.  Create
+
+a batch file called "ls.bat" and use the "dir" commands to
+
+customize the display.  Start with:
+
+
+
+@echo off
+
+dir %1
+
+
+
+Make sure to see what switches are available for the dir 
+
+command...
+
+****************************************************
+
+
+
+STEP 6 -- Information Gathering
+
+There are several commands that can be used to gather
+
+information, especially on a networked computer.  These 
+
+commands can be used to gather information for diagnostic
+
+purposes, as well as being used for other insidious 
+
+purposes (no Evil Genius Tips here, I'll leave it up to
+
+your imagination).  Start by running the following commands
+
+on your machine while connected to a network or to the
+
+Internet:
+
+
+
+nbtstat -c
+
+nbtstat -n
+
+netstat -an
+
+net user (NT only)
+
+net use/config/time/view
+
+arp -a
+
+
+
+When you begin to see the type of information that is
+
+available, tailor the commands to your needs, and put
+
+them in a batch file, redirecting the output to a log file
+
+of some sort.
+
+
+
+STEP 7 -- More Stuff
+
+I have gathered together some sites that provide more
+
+detailed information on batch file programming.  These sources
+
+range all the way from examples to tutorials to post-graduate
+
+theses...so take a look...
+
+
+
+BATCH FILE PROGRAMMING SITES
+
+<A HREF="ftp://garbo.uwasa.fi/pc/ts/tsbat53.zip">ftp://garbo.uwasa.fi/pc/ts/tsbat53.zip</A>
+
+<A HREF="http://gearbox.maem.umr.edu/~batch/">http://gearbox.maem.umr.edu/~batch/</A> 
+
+<A HREF="http://www.nc5.infi.net/~wtnewton/batch/index.html">http://www.nc5.infi.net/~wtnewton/batch/index.html</A>
+
+<A HREF="http://purl.oclc.org/net/dirk/batcoll.all">http://purl.oclc.org/net/dirk/batcoll.all</A>
+
+<A HREF="http://purl.oclc.org/net/dirk/batvirus.all">http://purl.oclc.org/net/dirk/batvirus.all</A>
+
+<A HREF="http://www.deltaelectronics.com/tglbatch/">http://www.deltaelectronics.com/tglbatch/</A>
+
+
+
+
+
+___________________________________________________________
+
+To subscribe to Happy Hacker and receive the Guides to (mostly) Harmless
+
+Hacking, please email <A HREF="MAILTO:hacker@techbroker.com">hacker@techbroker.com</A> with message "subscribe
+
+happy-hacker" in the body of your message.
+
+Copyright 1998 KeyDet89 &lt;<A HREF="MAILTO:keydet89@yahoo.com">keydet89@yahoo.com</A>&gt;. You may forward or post this
+
+GUIDE TO (mostly) HARMLESS HACKING on your Web site as long as you leave
+
+this notice at the end.
+
+___________________________________________________________
+
+
+
+Carolyn Meinel
+
+M/B Research -- The Technology Brokers
+
+<A HREF="http://techbroker.com">http://techbroker.com</A>
+
+</PRE>
+
+</OL>
+
+<A NAME="batch2"></A>
+
+<PRE>
+
+____________________________________________________________
+GUIDE TO (mostly) HARMLESS HACKING
+
+Microsoft-only version Number 3
+
+Hacking with Win95/NT:  Batch File Programming
+____________________________________________________________
+
+by Nezah
+
+        We've learned what a batch file is and how to write them. Now it's
+time to get all that batch files can bring us. Lets start.
+
+        1.- The IF command
+        It's easy to find out what it is for. The if command evaluates an
+a condition and, in case of true result, it executes a command. There are
+three ways to use IF. The different sintax are these:
+        IF [NOT] EXIST file command
+        IF [NOT] string1==string2 command
+        IF [NOT] ERRORLEVEL number command
+        Where command is the order (only one) you want to execute. The
+NOT word is optional, and it makes the condition inverese. Lets see one
+by one.
+
+        **IF [NOT] EXIST file command.
+        What it does is to find out if there is or not a file. If the file
+exist (or not, if the NOT word is typed) then the command is executed.
+Otherwise, the command is ignored.
+
+=========================================================
+TIP: Maybe you don't want to verify a file, but a drive or a directory. In
+        this case, you have to look for the "file" NULL, that is present in
+        any directory. For example, if you want to verify the c:\nezah
+        directory, type this:
+                IF EXIST C:\NEZAH\NULL command
+        To test if a disquette is in, type this:
+                IF EXIST A:\NULL command
+=========================================================
+
+        **IF [NOT] string1==string2 command
+        Compares the two strings string1 and string2. In case that every
+character is equal in both (case sensitive and blank spaces ignored), the
+command is executed.
+        It is useful to play with the parameters (read GTmHH Micro$oft 2).
+Note now that, when a parameter call is found (for example, %1), DOS replaces
+it for the text of the parameter, no matter where it is. For example, if %1
+is Happy, when DOS finds:
+                00%100
+        replaces it for:
+                00Happy00
+        The same with   "%1"    ---&gt    "Happy"
+                        " %1 "  ---&gt    " Happy "
+
+============================================================================
+NOTE: If a parameter does not exist, DOS replaces it with a blank space or
+        just with nothing (in W95 OSR2 is nothing). To avoid lose control of
+        the program, is useful to put every string into quotes. So, for example,
+        if you want to see if a parameter is present, type:
+                IF "%1"==" " command    ---&gt    DOS 6.x
+                IF "%1"=="" command     ---&gt    In W95 is empty string ""
+        In any other cases, quotes are not needed and strings are compared
+        normally.
+=======================================================
+
+        **IF [NOT] ERRORLEVEL number command
+        This evaluates the last errorlevel number present. Errorlevels are
+generated by programs to inform about the way they finished their execution.
+For example, format returns errorlevel 3 when is Ctrl-C is pressed, and
+errorlevel 0 when it finish normally. Not all the programs return errorlevels,
+and errorlevels are lost when another program is runned.
+        This is the most useful feature of IF command. We'll explain it later,
+with the CHOICE command.
+
+        2.- Labels and GOTO command.
+        Labels are used to identify a line of the batch file. The way to
+put a label inside a .bat progam is simply to put : before the label name.
+For example, to create the "example" label, do this:
+                :example
+        And that's all.
+        Labels get useful when you use the order GOTO. GOTO simply goes to
+the labeled line you want. For example, to go to the :example label just type:
+                GOTO :example 
+        That makes the execution of the .bat file continue above that line,
+no matter if it was far below the current line or before it.
+
+======================================================
+NOTE: The label does not defines a function (like in programming languajes).
+        It makes the execution continue below the :label line.
+        When, in normal execution, a :label line is found, it is ignored. The
+        only use of lables is with the order GOTO.
+======================================================
+
+======================================================
+TIP: You can create a :end label at the end of the file, so that, whenever
+        you want to finish the program, you just have to type "GOTO :end". 
+======================================================
+
+======================================================
+TIP: Remember that, in the IF sentence, only was allowed one command.
+        This sucks, I know. But now, you can create a label and make this
+        only one command be GOTO :label. Then, in this :label you can have
+        as many commands as you want, and finish the execution or return to
+        the program point you wanted with :end or :new_label
+======================================================
+
+        3.- CHOICE
+        Now we're ready to get the maximum power from the choice command.
+We saw before that errorlevels are some kind'a number that programs returned
+and so on. That was not very useful, I know, but for the choice program.
+        The choice program takes a letter from the keyboard and returns an
+errorlevel in consecuence of the key pressed. The sintax is:
+                CHOICE [text] [/C[:]keys] [/S] [/N] [/T[:]key,secs]
+
+        Text is no more than the text to show when choice is runned.
+        /C:keys Defines the possibles keys to be pressed. If no option is
+                present, Y/N are the keys. For example:
+                        CHOICE /C:ABCD
+                Defines A,B,C,D as possible keys.
+                If you press a not defined key, you'll hear a beep and will
+                continue as if nothing was pressed.
+        /S  Makes CHOICE case sensitive. By default, Z is equal to z for
+                choice. With /S flag present, Z and z are different.
+        /N  Choice shows the possible keys into brackets when is called.
+                With the /N flag present, it does not, so that only the text
+                you typed (if so) is shown.
+        /T:key,secs  defines a key that is taken as default when secs seconds
+                are passed. For example:
+                        CHOICE  Chose drive /C:AC /T:C,5
+                Shows the message "Chose drive [A,C]" (without quotes) and,
+                if no key pressed, passed 5 seconds, choses C.
+
+        **Way it works
+        Now we know how to make the CHOICE sentence. Lets see what happens
+when CHOICE runs. It returns an errorlevel number corresponding to the key
+position in the /C flag. What???. Well, lets se an example:
+
+                CHOICE /C:ABCD
+                          |||L____&gt    D gives errorlevel 5
+                          ||L_____&gt    C gives errorlevel 4
+                          |L______&gt    B gives errorlevel 3
+                          L_______&gt    A gives errorlevel 1
+
+        Now you see that the errorlevel number depends on nothing but the
+position of the key that you gave to CHOICE. That is, when you type
+                CHOICE /C:2567
+        Pressing 2, CHOICE will give us errorlevel 1, 5 will give
+errorlevel 2, 6 errorlevel 3 and 7 errorlevel 4.
+
+        Lets see now what to do with errorlevel. If you remember the IF
+section, there was an:
+                IF [NOT] ERRORLEVEL number command
+        This evaluates the current errorlevel number. If condition is true
+the command is executed.
+
+===================================================
+IMPORTANT NOTE: The evaluation of an errorlevel is true when the current
+        errorlevel is equal OR HIGHER than the number compared. That means
+        that, in:
+                IF ERRORLEVEL 3 GOTO :label
+        The condition is true for errorlevel 3, 4, 5... and every errorlevel
+        equal or greater than 3.
+===================================================
+
+        To clarify this, read the next example.
+
+                @ECHO OFF
+                ECHO.
+                ECHO 1.- Runs Windoze 3.11
+                ECHO 2.- Runs Dosshell
+                ECHO 3.- Runs Quake
+                ECHO X.- Exit program
+                ECHO.
+                CHOICE "Choose your option " /C:123x /N
+                IF ERRORLEVEL 4 GOTO end
+                IF ERRORLEVEL 3 c:\quake\quake -listen 16
+                IF ERRORLEVEL 2 dosshell
+                IF ERRORLEVEL 1 win
+                :end
+
+        This is a complete batch program. Lets analyze it.
+        First line turns ECHO off: the command lines inside the program will
+not be shown.
+        Second line prints an empty line (like pressing RETURN).
+        Lines 3 to 7 prints the messages for the program.
+        Line 8 is choice. This will show you only the text (because of the
+/N flag) and will only allow you to press 1,2,3,4 or x key. It is case
+unsensitive (no /S flag given). Note that the text is into quotes. This is
+to make CHOICE respect the blank space at the end. Quotes will not be shown,
+and are not required. If you unuse quotes, CHOICE will not print the blank
+spaces of the begining or the end of the text.
+        Lines 9 to 12 evaluates the errorlevel. Note that:
+                Only numbers are evaluated. No X letter is writen.
+                It is in decreasing order. That is because the evaluation is
+                        true if the current errorlevel is equal or higher. So
+                        if I start with errorlevel 1, and errorlevel 4 (an
+                        X) is pressed, I will execute the command anyway.
+                The execution of the batch file continues after the program
+                        you called is runned. So, if the program returns
+                        errorlevels, you may get an error. Commands CLS,
+                        CD and DIR doesn't reset the current errorlevel, and
+                        other DOS commands returns their own errorlevels. So,
+                        when you call a DOS order, is better to make a GOTO
+                        anyway, to avoid stupid errors.
+                In the first IF ERRORLEVEL... the goto order does not have
+                        : before the label name. This is because they are
+                        not required in the goto call.
+        Line 13 is the label end. When you call it, the programs finish.
+
+        4.- The command FOR
+        Now we'll se how to make a batch file smaller. The for order is not
+very useful, but sometimes is exactly what you need. So lets see it.
+        The FOR command makes a "variable" change it's value between the
+posibilities you gave it, and executes a command every time it changes. The
+sintax is that:
+                FOR %%A IN (list of values) DO command
+        Here %%A is the name of the variable. (list of values) is just
+the list of values (easy, uh?) between which will change the variable %%A.
+The different values are separed by a blank space, and are only considered
+as strings.
+
+=======================================================
+Programes NOTE: The variables are not true variables. They are only valid
+        in the FOR command, and will lose any meaning after FOR is finished.
+=======================================================
+
+        Lets see an example to explain it:
+
+                FOR %%B IN (Hello Happy Hacker) DO ECHO %%B
+
+        This will make the variable %%B change it's value. First time will
+be Hello. Second time Happy, and third Hacker. Every time the %%B value is
+changed, the command after the DO word (ECHO %%B in our example) is executed.
+So this line in a batch file will print in our screns:
+
+                Hello Happy Hacker
+
+        There is something more to say about FOR. I have never tried it, but
+I read that: when you give FOR a wildcard, it will take care to substitute it
+for every existing filename that fits the wildcard. That is that, if you have
+                FOR %%A in (AUTO*.BAT) DO copy %%A c:\backup
+the copy command will recive every time complete file names and no wildcards.
+This will execute, for example:
+                copy AUTOEXEC.BAT c:\backup
+                copy AUTODOS.BAT c:\backup
+                copy AUTODOS7.BAT c:\backup
+        And not something like:
+                copy AUTO*.BAT c:\backup.
+        This may be useful with programs with no wildcards alowed, like the
+expand command, that expand a compressed file.
+
+        5.- Other orders.
+        **REM and the commets.
+        To comment a complete line, you should use REM at the begining of it.
+You can also use : before tha line. But this will make the line a label, I
+conseder this quite rough. It's up to you.
+
+========================================================
+Newbie note: A comment is something ignored in the execution of the program.
+        Every programming language has at least one way to make comments.
+        This is extremely useful to make your program easier to read to other
+        people and to yourself in future.
+========================================================
+
+        **CALL
+        When you call an .exe of a .com or a DOS command inside a batch file,
+after the execution of this program, the .bat file will continue at the point
+it was before. But this is not this way when you call a .bat file. I you run
+another .bat file inside another, the second one will take control and won't
+return it after is finished. To run a .bat file inside another and after
+continue the program that called the second, we have to use the order CALL.
+That's what CALL does: execute a .bat file and return to ours after it is
+finished.
+
+        **PAUSE
+        PAUSE is used to stop the execution till a key is pressed. It gives
+a message ("Pulse una tecla para continuar" in Spain), and there is no way
+to change it. I you want to insert you own message, the best way is to
+redirect the text of pause to NULL (NULL is some kind'a black hole). This
+will make pause with no message, and you can now insert yours:
+                ECHO This is my message. Press a key.
+                PAUSE &gt NULL
+        Another way to do this is with the CHOICE order, but this limits
+the valid keys to be pressed.
+
+        **SHIFT
+        If you notice, you can only use 9 parameters: from %1 to %9. In most
+of cases this it more than enough. But, if you need to use more than 9
+parameters in your program, you can use the order SHIFT. SHIFT makes the
+parameters lose their current value and will give them the value of the next
+numbered parameters. Quite confusing, I know. Lets see it.
+        If you give the order SHIFT, %1 lose it's value and, from now, has
+second parameter as content. The same with %2, that now refers to the third
+parameter... and so on till the %9 parameter. Now, the %9 values the 10th
+parameter, that was unaccesible before.
+        You can execute SHIFT as many times as you want. But note that the
+maximun DOS order width is 255 characters, so you don't make a program that
+needs 50 parameters because you won't be able to type all of them.
+
+        Well, that's all I know about batch files. I hope you've enjoyed it
+and excuse my spelling, my grammar... my English in general.
+                                                                Nezah
+                                                         <A HREF="mailto:nezah@zoom.es">nezah@zoom.es</A>
+                                             <A HREF="http://www.zoom.es/~nezah/">http://www.zoom.es/~nezah/</A>
+__________________________________________________________
+To subscribe to Happy Hacker and receive the Guides to (mostly) Harmless
+Hacking, please email <A HREF="mailto:hacker@techbroker.com">hacker@techbroker.com</A> with message "subscribe
+happy-hacker" in the body of your message.
+Copyright 1998 <A HREF="mailto:nezah@zoom.es">nezah@zoom.es</A>. You may forward or post this
+GUIDE TO (mostly) HARMLESS HACKING on your Web site as long as you leave
+this notice at the end.
+___________________________________________________________
+Carolyn Meinel
+M/B Research -- The Technology Brokers
+<A HREF="http://techbroker.com">http://techbroker.com</A>
+
+
+</PRE>
+
+
+
+</BODY>
+
+</HTML>
+
+
+
+

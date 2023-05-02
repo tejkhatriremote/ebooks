@@ -1,0 +1,156 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=985-988//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../book-index.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<p>Three pieces of information are supplied in the first wizard page:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the cluster resource type.
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of a service, if any, that the resource depends on.
+<dd><b>&#149;</B>&nbsp;&nbsp;For the HiAvQuotes project, the resource type name is High Availability Quotes. The resource type does not depend on a service.
+</DL>
+<p>The next Cluster Resource Type Wizard page is shown in Figure 29.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-05.jpg',476,383 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-05.jpg',476,383)"><font color="#000077"><b>Figure 29.5</B></FONT></A>&nbsp;&nbsp;The second Cluster Resource Type Wizard page.</P>
+<p>The second wizard page is used to define properties that are associated with the resource type. For HiAvQuotes, the only property is the <small>PipeName</SMALL> property.</P>
+<p>Each property has three attributes:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The property name. This must be a valid C<small>&#43;&#43;</SMALL> identifier.
+<dd><b>&#149;</B>&nbsp;&nbsp;The property type. This value is selected from a drop-down list and is a type compatible with the cluster database. The <small>PipeName</SMALL> property has the <small>String</SMALL> type.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that indicates that the property is required in order to bring the resource online.
+</DL>
+<p>Clicking the Finish button on the second wizard page closes the Cluster Resource Type Wizard and displays the New Project Information dialog box. Close this dialog box to generate two skeleton projects:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A resource DLL for the new cluster resource type. For the HiAvQuotes, this project is named HiAvQuotes.
+<dd><b>&#149;</B>&nbsp;&nbsp;A Cluster Administrator extension for the new resource type. For HiAvQuotes, this project is named HiAvQuotesEx.
+</DL>
+<p><font size="+1"><b>Writing Handlers for Resource DLL Entry Points</B></FONT></P>
+<p>The skeleton resource DLL created by the wizard contains about 1,500 lines of C code that&#146;s largely complete. Areas that require you to add code are marked with <small>// TODO:</SMALL> comments.</P>
+<p>In the HiAvQuotes project that you&#146;ll find on the CD-ROM that accompanies this book, all changes that have been made to the wizard-generated code are marked with <small>// Hi-Av Quote</SMALL> comments. Changes to the resource DLL include the following:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Code was added to implement the resource-specific work needed in several of the resource DLL entry point functions. A list of the functions is provided in the following list.
+<dd><b>&#149;</B>&nbsp;&nbsp;New worker threads were added to handle the <small>Offline</SMALL> and <small>IsAlive</SMALL> resource DLL entry point functions.
+<dd><b>&#149;</B>&nbsp;&nbsp;A new variable that caches the value of the most recent <small>IsAlive</SMALL> test was added. This value is returned in response to an <small>IsAlive</SMALL> request, and the worker thread calculates a new value.
+</DL>
+<p>The following resource DLL entry point functions were modified:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Online</SMALL>. Added code to create a worker thread and then return <small>ERROR_IO_PENDING</SMALL>. The worker thread creates an instance of ClusterQuote.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LooksAlive</SMALL>. Added code to test the process handle of the current instance of ClusterQuote and return <small>TRUE</SMALL> if the process is still running.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IsAlive</SMALL>. Added code to create a worker thread. While the worker thread performs an in-depth check, the function returns the result from the previous test. The worker thread connects to ClusterQuote and sends a &#147;Status&#148; string to the server. The worker thread then checks to make sure that ClusterQuote responds &#147;Okay&#148;.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Offline</SMALL>. Added code to create a worker thread and then return <small>ERROR_IO_PENDING</SMALL>. The worker thread connects to ClusterQuote and sends a &#147;Terminate&#148; string to the server.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Terminate</SMALL>. Added code to call <small>TerminateProcess</SMALL>. This function is called only if the cluster service is not able to close the resource normally.
+</DL>
+<table width="100%">
+<td width="5%" valign="TOP" align="LEFT"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-01i.jpg"><td valign="TOP" align="LEFT">Due to the vast amount of source code in this project, it&#146;s not presented here. However, the complete project can be found on this book&#146;s CD-ROM.
+</TABLE>
+<p><font size="+1"><b>Installing the Resource Type in the Cluster</B></FONT></P>
+<p>To register the resource DLL programmatically (for example, from a setup program), call the <small>CreateClusterResourceType</SMALL> function. To register the Cluster Administrator extension, call the DLL&#146;s <small>DllRegisterCluAdminExtension</SMALL> function to register the extension with Cluster Administrator and then call the DLL&#146;s <small>DllRegServer</SMALL> function to register the extension with COM.</P>
+<p>To register the resource DLL manually, use the following command line:</P>
+<!-- CODE SNIP //-->
+<pre>
+CLUSTER restype &#147;High Availability Quotes&#148; -create -dllname:&lt;DLL path&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>As discussed earlier in the chapter, to register the Cluster Administrator DLL manually, use the following command line:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+REGCLADM &lt;DLL path&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading14"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter has discussed Microsoft Cluster Server, also known as MSCS. You can use MSCS to make your mission-critical applications more available to clients as well as to increase the overall reliability of your network. This chapter also presented several examples, including a simple cluster-aware application and its associated resource DLL and Cluster Administrator extension DLL.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../book-index.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

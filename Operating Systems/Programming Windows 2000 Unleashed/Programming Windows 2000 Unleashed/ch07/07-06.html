@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=246-249//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In Listing 7.5, the <small>CreateAllowedSDForUser</SMALL> function begins by calling the <small>CreateEmptySecurityDescriptor</SMALL> function presented earlier in Listing 7.4. Next, a <small>SID</SMALL> for the specified user is created using the <small>AccountNameToSid</SMALL> function. The <small>SID</SMALL> is then added to a new <small>ACL</SMALL>, and the <small>ACL</SMALL> is added to the security descriptor before the security descriptor is returned to the caller.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Retrieving a Security Descriptor</FONT></H4>
+<p>Retrieving an existing security descriptor is much easier than creating a new security descriptor. To retrieve a security descriptor, use the <small>GetNamedSecurityInfo</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD GetNamedSecurityInfo(LPTSTR pObjectName,
+                       SE_OBJECT_TYPE ObjectType,
+                       SECURITY_INFORMATION SecurityInfo,
+                       PSID *ppsidOwner,
+                       PSID *ppsidGroup,
+                       PACL *ppDacl,
+                       PACL *ppSacl,
+                       PSECURITY_DESCRIPTOR *ppSecurityDescriptor);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>GetNamedSecurityInfo</SMALL> function has eight parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that identifies the securable object. For a file, this parameter is the path to the file. Each type of securable object has a different name format. For details about specific types, consult the online documentation.
+<dd><b>&#149;</B>&nbsp;&nbsp;An identifier for the object type. Possible values for this parameter are listed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more flags that specify the type of information to be returned by the function. Possible values for this parameter are listed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to a <small>SID</SMALL> that will be set to the address of the owner <small>SID</SMALL> contained in the security descriptor. This parameter can be <small>NULL</SMALL> if the <small>OWNER_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to a <small>SID</SMALL> that will be set to the address of the group <small>SID</SMALL> contained in the security descriptor. This parameter can be <small>NULL</SMALL> if the <small>GROUP_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to an <small>ACL</SMALL> that will be set to the address of the <small>DACL</SMALL> contained in the security descriptor. This parameter can be <small>NULL</SMALL> if the <small>DACL_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to an <small>ACL</SMALL> that will be set to the address of the <small>SACL</SMALL> contained in the security descriptor. This parameter can be <small>NULL</SMALL> if the <small>SACL_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to a <small>SECURITY_DESCRIPTOR</SMALL> structure that will be set when the function returns. This structure is dynamically allocated and must be freed using <small>LocalFree</SMALL> when the structure is no longer needed.
+</DL>
+<p>The object type identifier is used to indicate the type of object named in the first parameter. Here are the possible values for this parameter:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_FILE_OBJECT</SMALL>. The object is a file or directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_SERVICE</SMALL>. The object is a Windows 2000 service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_PRINTER</SMALL>. The object is a printer.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_REGISTRY_KEY</SMALL>. The object is a Registry key.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_LMSHARE</SMALL>. The object is a network share.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_KERNEL_OBJECT</SMALL>. The object is a Windows 2000 kernel object, such as a pipe, mutex, waitable timer, or similar object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_WINDOW_OBJECT</SMALL>. The object is a window station or desktop object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_DS_OBJECT</SMALL>. The object is an Active Directory object. The object can also be a property or property set of an Active Directory object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_DS_OBJECT_ALL</SMALL>. The object is an Active Directory object that includes all its property sets and properties.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SE_PROVIDER_DEFINED_OBJECT</SMALL>. The object is a user-defined object.
+</DL>
+<p>The following security information flags are combined to specify the types of information returned by the function:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OWNER_SECURITY_INFORMATION</SMALL>. A pointer to the owner <small>SID</SMALL> will be returned.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GROUP_SECURITY_INFORMATION</SMALL>. A pointer to the group <small>SID</SMALL> will be returned.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DACL_SECURITY_INFORMATION</SMALL>. A pointer to the <small>DACL</SMALL> will be returned.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SACL_SECURITY_INFORMATION</SMALL>. A pointer to the <small>SACL</SMALL> will be returned.
+</DL>
+<p>An example of a function that returns a security descriptor for a given filename is provided in Listing 7.6. The <small>GetFileSecurityDescriptor</SMALL> function returns a pointer to a <small>SECURITY_DESCRIPTOR</SMALL> structure that must be freed using <small>LocalFree</SMALL>.</P>
+<p><b>Listing 7.6</B> A Function That Retrieves a Security Descriptor for a File</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+PSECURITY_DESCRIPTOR GetFileSecurityDescriptor(LPTSTR pszPath)
+{
+    PSID psidOwner = NULL;
+    PSID psidGroup = NULL;
+    PACL pAcl = NULL;
+    PACL pSacl = NULL;
+    PSECURITY_DESCRIPTOR psd = NULL;
+
+    GetNamedSecurityInfo(pszPath,
+                         SE_FILE_OBJECT,
+                         OWNER_SECURITY_INFORMATION|
+                         GROUP_SECURITY_INFORMATION|
+                         DACL_SECURITY_INFORMATION,
+                         &amppsidOwner,
+                         &amppsidGroup,
+                         &amppAcl,
+                         &amppSacl,
+                         &amppsd);
+    return psd;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Using the Security Attributes Structure</FONT></H4>
+<p>The <small>SECURITY_ATTRIBUTES</SMALL> structure is used by most Win32 functions that create or access securable objects. For example, <small>CreateFile</SMALL>, <small>CreateNamedPipe</SMALL>, and <small>CreateMutex</SMALL> (just to name three), all accept a pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure as a parameter.</P>
+<p>It&#146;s a common practice to pass <small>NULL</SMALL> in place of a pointer to a valid <small>SECURITY_ATTRIBUTES</SMALL> structure. When a securable object is created using a <small>NULL</SMALL> security attributes structure, the default security attributes from the creator&#146;s access token are used.</P>
+<p>The <small>SECURITY_ATTRIBUTES</SMALL> structure is very straightforward:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _SECURITY_ATTRIBUTES
+{
+    DWORD  nLength;
+    LPVOID lpSecurityDescriptor;
+    BOOL   bInheritHandle;
+}SECURITY_ATTRIBUTES;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here are the three member variables in the <small>SECURITY_ATTRIBUTES</SMALL> structure:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>nLength</SMALL>. The size of the <small>SECURITY_ATTRIBUTES</SMALL> structure
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>lpSecurityDescriptor</SMALL>. A pointer to a <small>SECURITY_DESCRIPTOR</SMALL> structure
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>bInheritHandle</SMALL>. A flag that&#146;s set to <small>True</SMALL> to allow the handle to the created object to be inherited
+</DL>
+<p>As you can see, the <small>SECURITY_ATTRIBUTES</SMALL> structure is basically just a wrapper around a <small>SECURITY_DESCRIPTOR</SMALL> pointer.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

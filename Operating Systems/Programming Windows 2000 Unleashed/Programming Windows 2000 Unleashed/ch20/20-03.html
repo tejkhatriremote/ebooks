@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=650-653//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Determining Whether an External Reference Is Valid</FONT></H4>
+<p>Like all distributed systems, DCOM must be concerned with clients and servers that fail or disappear due to network problems. When clients and servers are located in separate machines, connected via networks that are never 100% reliable, there must be a method to detect machines or connections that have disappeared or stopped responding. DCOM uses a sophisticated protocol based on pinging to test the state of connections between clients and servers.
+</P>
+<p>A simplified version of this operation is that every connection between distributed clients and servers is tested by sending a ping message from the client machine to the server. If the server fails to answer a series of pings, the client will receive an <small>HRESULT</SMALL> with a value such as <small>RPC_S_SERVER_UNAVAILABLE</SMALL> or <small>RPC_E_DISCONNECTED</SMALL> when making method calls using the interface pointer. If a server detects that a client has stopped pinging, the interface reference count will be decremented, resulting in the server instance possibly being released.</P>
+<p>A detailed explanation is slightly more complex. If each client object communicated directly with each server object, a great deal of network bandwidth, as well as server processing capacity, would be dedicated to handling garbage collection for COM connections. Consider a large network with thousands of clients, with each client maintaining a dozen or so references to different servers in the network. DCOM would quickly overwhelm such a network if it used a simplistic ping protocol.</P>
+<p>When resolving DCOM messages, the client and server machines use a service known as the <i>OXID Resolver</I>. The OXID Resolver supports an RPC (not COM) interface called <small>IOXIDResolver</SMALL>. The client creates a <i>ping set</I> on the server machine, with each connection between client and server represented in the ping set. The client, therefore, needs to send only one ping message, known as a <i>simple ping</I>, to represent all of the connections in a ping set. When the membership of the ping set changes because a connection has been added or dropped, the ping set is updated by sending a <i>complex ping</I> message to the server. The complex ping message contains information only about connections that have been added or dropped. This process is known as <i>delta pinging</I>.</P>
+<p>Currently, pinging is performed in two-minute intervals. If a client fails three consecutive ping intervals, its connection is released on the server. This means that it can take up to six minutes for a server to detect that a client has disappeared.</P>
+<h3><a name="Heading6"></A><font color="#000077">Security in DCOM</FONT></H3>
+<p>Security is not just a DCOM issue; many of the security issues discussed in this chapter apply to COM in general. However, once you venture out of a single machine into the network, you must deal with COM security issues. Most problems with DCOM applications are really security problems.
+</P>
+<p>COM security is based on Windows 2000 security, but it uses COM-specific APIs and interfaces. One reason for this is that COM is available on platforms other than Windows, such as some versions of UNIX.</P>
+<p>COM allows you to specify security attributes at the following levels:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Per machine.</I> Each computer can have a set of security attributes that are used unless overridden by a process or user. These setting are located in the Registry.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Per process.</I> Each process can have security attributes that are used unless overridden. These settings can be located in the Registry or set programmatically.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Per interface.</I> Each interface can have a set of security attributes that may differ from other interfaces in the same process. These settings are set programmatically.
+</DL>
+<p>You can also specify default security attributes that may be used or overridden, as desired, by applications and clients.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Types of Security</FONT></H4>
+<p>COM uses two basic types of security:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Activation security</I> determines whether a particular user is allowed to create an instance of a COM object. Activation security is applied only when a client attempts to create an instance of a COM object. The Service Control Manager will look into the Registry to determine whether the calling process is allowed access to the desired COM object. If not, the call is rejected. Activation security attributes are set using the DCOM Config tool or through an installation program that sets the Registry values. The specific keys and named values involved in this process are discussed later in the chapter. DCOM Config is a COM configuration utility that is included on every Windows 2000 machine.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Call security</I> determines whether a particular user is allowed to <i>access</I> an existing COM object. Call security is potentially applied for every call made to a COM interface method. Call security can be used to guarantee that each method call is made by an authenticated user, and it can optionally be used to ensure that payload data has not been corrupted. The different levels of call security are discussed in the next section.
+</DL>
+<p>In addition, there are Registry keys and functions that control the context in which a COM object is launched. They also specify the type of impersonation and cloaking that can be performed by the server on behalf of a client.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Understanding Call Security</FONT></H4>
+<p>The strength of the call security applied for a COM object is defined by specifying an authentication level. Here are the seven authentication levels:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_NONE</SMALL>. No call-level authentication is performed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_CONNECT</SMALL>. The credentials of the client will be authenticated when it first establishes a connection with the server. If a connectionless transport is used for DCOM, this option is the same as <small>RPC_C_AUTHN_LEVEL_PKT</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_CALL</SMALL>. Authentication is performed once, when the server receives the underlying RPC call.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_PKT</SMALL>. Authenticates that the contents of the DCOM packet came from the authenticated client but does not attempt to verify the integrity of the data.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_PKT_INTEGRITY</SMALL>. Authenticates the client&#146;s identity and verifies that no data has been modified in the method call.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_PKT_PRIVACY</SMALL>. Authenticates the client&#146;s identity, verifies that the data has not been modified, and encrypts the message packet.
+</DL>
+<p>In addition, here&#146;s another authentication level that&#146;s set aside to represent a default value:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RPC_C_AUTHN_LEVEL_DEFAULT</SMALL>. Indicates that the normal security blanket negotiation algorithm is used. Security blankets are discussed later in the section &#147;Understanding Security Blankets.&#148;
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

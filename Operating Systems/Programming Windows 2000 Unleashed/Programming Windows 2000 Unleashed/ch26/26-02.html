@@ -1,0 +1,281 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Pipes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=26//-->
+<!--PAGES=885-889//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="26-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>To enable a parent process to communicate with a child process using anonymous pipes, follow these steps:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Save the standard input and output handles used by the parent process for later use.
+<dd><b>2.</B>&nbsp;&nbsp;Create the anonymous pipes used for communication with the child process. This results in the creation of four pipe handles: two pipes, each with two ends.
+<dd><b>3.</B>&nbsp;&nbsp;Arbitrarily define how each pipe handle will be used. The parent process uses the write handle for one pipe and the read handle for the other pipe; the child process uses the remaining handles.
+<dd><b>4.</B>&nbsp;&nbsp;Create a noninheritable copy of the parent&#146;s pipe write handle. This handle must not be inherited by the child process, because the parent will close the pipe to signal that all data has been written to the pipe.
+<dd><b>5.</B>&nbsp;&nbsp;Close the parent pipe&#146;s original write handle.
+<dd><b>6.</B>&nbsp;&nbsp;Set the standard input and write handles to use the child process&#146;s read and write handles.
+<dd><b>7.</B>&nbsp;&nbsp;Create the child process.
+<dd><b>8.</B>&nbsp;&nbsp;Close the child pipe&#146;s write handle from within the parent process.
+<dd><b>9.</B>&nbsp;&nbsp;Change the standard input and output handles for the parent process back to the original values stored in step 1.
+</DL>
+<p>The parent and child processes now can communicate over the anonymous pipes. Each of the pipes can be read from and written to until the pipe is destroyed. In practice, you must create a protocol based on the message length, or you must read and write from the pipe until the pipe is destroyed, as demonstrated in the following section.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Looking at an Example Using Anonymous Pipes</FONT></H4>
+<p>As an example of how anonymous pipes are used, two sample programs have been created and included on this book&#146;s CD-ROM. The first program, Hex, reads characters from standard input, converts them into hexadecimal format, and sends the result to standard output. In order to simplify the example, these projects are not Unicode enabled; however, they can easily be converted to use Unicode if needed.
+</P>
+<p>The Hex application believes that it is reading and writing to its standard input and output devices. In fact, when run as a console application, Hex accepts characters from the keyboard and echoes their ASCII hexadecimal equivalents to the display.</P>
+<p>First, create a console mode project named Hex and then add the source code from Listing 26.1 to the project as <small>Hex.c</SMALL>.</P>
+<p><b>Listing 26.1</B> The <small>Hex.c</SMALL> Source Used to Filter Input into Hexadecimal Output<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+
+#define IN_BUF_SIZE  256
+#define OUT_BUF_SIZE (3*IN_BUF_SIZE)
+
+int main()
+{
+    BYTE    rgBytesInput[IN_BUF_SIZE];
+    char    szOutputBuff[OUT_BUF_SIZE];
+    HANDLE  hStdInput  = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE  hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD   dwRead;
+    DWORD   dwCharIndex;
+    DWORD   dwWritten;
+    BOOL    fResult = TRUE;
+
+    do{
+        fResult = ReadFile(hStdInput,
+                           rgBytesInput,
+                           IN_BUF_SIZE,
+                           &ampdwRead,
+                           NULL);
+        if(fResult == FALSE || dwRead == 0) break;
+
+        for(dwCharIndex = 0; dwCharIndex &lt dwRead; dwCharIndex&#43;&#43;)
+        {
+            int ch = rgBytesInput[dwCharIndex];
+            wsprintf(&ampszOutputBuff[dwCharIndex*3], &#147; %02X&#148;, ch);
+        }
+
+        fResult = WriteFile(hStdOutput,
+                            szOutputBuff,
+                            dwRead*3,
+                            &ampdwWritten,
+                            NULL);
+    }while(fResult == TRUE &amp&amp dwWritten &gt 0);
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>When built with <small>_MBCS</SMALL> defined, the non-Unicode version of the program will work on the command line. Any input provided to the program is returned in hexadecimal format. Pressing A and then Enter, for example, displays the following:</P>
+<!-- CODE SNIP //-->
+<pre>
+41 0D 0A
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The ASCII value for A is 41, and the ASCII values for the line-feed and carriage return characters are 0D and 0A, respectively.
+</P>
+<p>The second program used in this example is AnonPipe. The AnonPipe project creates a child process using <small>Hex.exe</SMALL> and uses a pair of anonymous pipes to communicate with the child process. First, create a console mode project named AnonPipe and then add the source code provided in Listing 26.2 to the project as <small>AnonPipe.c</SMALL>.</P>
+<p><b>Listing 26.2</B> The <small>AnonPipe.c</SMALL> Source Used to Create Two Anonymous Pipes<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+
+int ErrorHandling(LPTSTR lpszMsg);
+
+int main()
+{
+    HANDLE hProcess = GetCurrentProcess();
+    HANDLE hDuplicateWrite = NULL;
+    BOOL   fCreated = FALSE;
+    char   szBuff[] = &#147;Fuzzy Wuzzy was a bear&#148;;
+    char   szTrans[255];
+    DWORD  dwRead = 0;
+    DWORD  dwWritten = 0;
+    // These handles are used to cache the standard input and
+    // output handles.
+
+    HANDLE hStdIn  = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    HANDLE hChildRead = NULL;
+    HANDLE hChildWrite = NULL;
+    HANDLE hParentRead = NULL;
+    HANDLE hParentWrite = NULL;
+
+    STARTUPINFO         si;
+    PROCESS_INFORMATION pi;
+    SECURITY_ATTRIBUTES sec;
+
+    sec.nLength = sizeof(SECURITY_ATTRIBUTES);
+    sec.lpSecurityDescriptor = NULL;
+    sec.bInheritHandle = TRUE;
+    // Create two anonymous pipes, defining child and
+    // parent ends for each pipe:
+    // hChildRead  &lt------  hParentWrite
+    // hChildWrite  ------&gt hParentRead
+    CreatePipe(&amphChildRead, &amphParentWrite, &ampsec, 0);
+    CreatePipe(&amphParentRead, &amphChildWrite, &ampsec, 0);
+
+    // Change the standard input and output handles to
+    // use the &#147;child&#148; ends of the anonymous pipes.
+    SetStdHandle(STD_INPUT_HANDLE, hChildRead);
+    SetStdHandle(STD_OUTPUT_HANDLE, hChildWrite);
+
+    // Make a non-inheritable duplicate of the pipe handle
+    // used to communicate between parent and child -- this way
+    // the child won&#146;t increment the usage count on this handle.
+    DuplicateHandle (hProcess,
+                     hParentWrite,
+                     hProcess,
+                     &amphDuplicateWrite,
+                     0,
+                     FALSE,
+                     DUPLICATE_SAME_ACCESS);
+    CloseHandle(hParentWrite);
+
+    // Start the child process
+    memset(&ampsi, 0, sizeof (STARTUPINFO));
+    si.cb = sizeof(STARTUPINFO);
+
+    fCreated = CreateProcess(&#147;hex.exe&#148;,
+                             NULL,
+                             NULL,
+                             NULL,
+                             TRUE,
+                             0,
+                             NULL,
+                             NULL,
+                             &ampsi,
+                             &amppi);
+    if(fCreated == FALSE)
+        return ErrorHandling(&#147;Creating Child Process&#148;);
+
+    // Restore the original standard input and output handles.
+    SetStdHandle(STD_INPUT_HANDLE, hStdIn);
+    SetStdHandle(STD_OUTPUT_HANDLE, hStdOut);
+
+    // Send a message to the child process, then close the
+    // pipe handle, in order to notify the child that the message
+    // is finished.
+    WriteFile(hDuplicateWrite,
+              szBuff,
+              sizeof(szBuff),
+              &ampdwWritten,
+              NULL);
+    CloseHandle(hDuplicateWrite);
+    //Read the result from the child process, and display it
+    //to the standard output.
+    ReadFile(hParentRead, szTrans, sizeof(szTrans), &ampdwRead, NULL);
+    WriteFile(hStdOut, szTrans, dwRead, &ampdwWritten, NULL);
+    return 0;
+}
+
+//
+//Display an error message based on the operating system&#146;s
+//latest error.
+int ErrorHandling(LPTSTR lpszTitle)
+{
+    char szBuffer[256];
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  GetLastError(),
+                  MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
+                  szBuffer,
+                  256,
+                  NULL),
+    MessageBox(NULL, szBuffer, lpszTitle, MB_ICONSTOP);
+    return 1;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="26-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

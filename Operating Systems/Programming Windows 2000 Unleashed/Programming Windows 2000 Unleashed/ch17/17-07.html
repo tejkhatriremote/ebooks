@@ -1,0 +1,269 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=547-551//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Build the InfoClient project. When InfoClient is run from the command line, it displays information about the system, as shown in Figure 17.10.
+</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-10.jpg',651,330 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-10.jpg',651,330)"><font color="#000077"><b>Figure 17.10</B></FONT></A>&nbsp;&nbsp;The InfoClient project uses <small>SystemInfo</SMALL> to collect system information.
+</P>
+<p>The InfoTimer project was also built as a Unicode Win32 console application. The <small>sysinfo_i.c</SMALL> and <small>sysinfo.h</SMALL> files for InfoTimer were copied from the SysInfo project directory into the InfoTimer project directory.</P>
+<p>In addition to the two <small>include</SMALL> files, the InfoTimer project contains one source file, <small>main.cpp</SMALL>, which is provided in Listing 17.6.</P>
+<p><b>Listing 17.6</B> A Timing Client for <small>SystemInfo</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltwchar.h&gt
+
+#include &#147;sysinfo_i.c&#148;
+#include &#147;sysinfo.h&#148;
+
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+
+// Macro that tests for an error - if an error occurs, a message
+// box is displayed, and the program returns.
+#define TESTHR(hr,str)if(FAILED(hr)){HandleError(str,hr);return 0;}
+
+double GetElapsedTime();
+void   StartTimer();
+void   StopTimer();
+void   HandleError(LPCWSTR strTitle, HRESULT hr);
+
+int wmain()
+{
+    ISystemInfo* pInfo = NULL;
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+    TESTHR(hr, L&#148;CoInitialize Failed&#148;);
+    __try{
+
+        hr = CoCreateInstance(CLSID_SystemInfo,
+                              NULL,
+                              CLSCTX_ALL,
+                              IID_ISystemInfo,
+                              (void**)&amppInfo);
+        TESTHR(hr, L&#148;CoCreate Failed&#148;);
+
+        short processors;
+        StartTimer();
+        for(int i = 0; i &lt 1000000; i&#43;&#43;)
+        {
+            hr = pInfo-&gtGetProcessorCount(&ampprocessors);
+            TESTHR(hr, L&#148;GetProcessorCount Failed&#148;);
+        }
+        StopTimer();
+        double elapsed = GetElapsedTime();
+        wprintf(L&#148;Elapsed time = %6.3f seconds&#148;, elapsed);
+    }
+    __finally
+    {
+        if(pInfo)pInfo-&gtRelease();
+        CoUninitialize();
+    }
+    return 0;
+}
+
+/*
+ * Error handling routine
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amplpMsgBuf,
+                  0,
+                  NULL);
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+}
+
+/*
+ * Timer routines
+ */
+#include &lttime.h&gt
+#include &ltsys/timeb.h&gt
+
+_timeb startTime, endTime;
+void StartTimer()
+{
+    _ftime(&ampstartTime);
+}
+
+void StopTimer()
+{
+    _ftime(&ampendTime);
+}
+
+double GetElapsedTime()
+{
+    double msecs = endTime.millitm - startTime.millitm;
+    double secs = difftime(endTime.time, startTime.time);
+    return secs &#43; (msecs/1000);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Build the InfoTimer project. When InfoTimer is run from the command line, it calls the <small>GetProcessorCount</SMALL> method for <small>SystemInfo</SMALL> for one million iterations. When InfoTimer is run on one of my machines, it takes an average of about 266 seconds to complete. Later, in the section titled, &#147;Custom Marshaling,&#148; you&#146;ll see how custom marshaling can be used to reduce this time dramatically.</P>
+<h3><a name="Heading16"></A><font color="#000077">Using Monikers</FONT></H3>
+<p>A <i>moniker</I> is a special type of COM object that&#146;s used to locate another COM object. All monikers support the <small>IMoniker</SMALL> interface, which includes functions that are used to manage the moniker and retrieve a pointer to the COM object that the moniker refers to. Monikers are useful when details about how a COM object is located and initiated should be hidden from the client. Here are some examples:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When a moniker refers to a specific instance of a COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;When a moniker refers to an object that&#146;s difficult to locate, such as an item embedded deeply inside another COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;When a COM object is referenced by a display name. This is discussed in the section titled &#147;Creating a Moniker from a Display Name&#148; later in this chapter.
+</DL>
+<p>The process of asking a moniker for an interface pointer on the object that it refers to is known as <i>binding</I>. The <small>IMoniker</SMALL> interface includes a member function called <small>BindToObject</SMALL> that&#146;s used to retrieve an interface pointer from the object that the moniker refers to. The steps required for creating a moniker and binding to the underlying object are as follows:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Create an instance of a moniker using one of the techniques discussed later in this chapter, in the section titled, &#147;Creating Moniker Instances.&#148;
+<dd><b>2.</B>&nbsp;&nbsp;Call <small>BindToObject</SMALL> through the moniker&#146;s <small>IMoniker</SMALL> interface.
+<dd><b>3.</B>&nbsp;&nbsp;The moniker locates an instance of the desired COM object using whatever means necessary. The actual details of how the COM instance is located or created are implementation details of the moniker.
+<dd><b>4.</B>&nbsp;&nbsp;A pointer to the requested interface is returned to the client.
+<dd><b>5.</B>&nbsp;&nbsp;The client releases the moniker.
+<dd><b>6.</B>&nbsp;&nbsp;The requested COM object is called by the client.
+</DL>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Examples of System Monikers</FONT></H4>
+<p>Windows 2000 includes a number of built-in monikers known as <i>system monikers</I>, because they&#146;re implemented by the operating system:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Class monikers</I> provide access to a particular COM class.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>File monikers</I> provide access to a COM object via a filename that contains persistent data for the COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Composite monikers</I> consist of multiple monikers that are joined together to refer to a single COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Item monikers</I> provide access to an item stored in another COM object, such as a cell in an Excel spreadsheet or a page in a Word document.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Pointer monikers</I> provide a moniker wrapper around an interface pointer.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Anti-monikers</I> are never used by moniker clients&#151;they&#146;re used by monikers to re-create a composite moniker.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>URL monikers</I> provide a moniker wrapper around a URL address.
+</DL>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">Creating Moniker Instances</FONT></H4>
+<p>There are two basic methods used to get an interface pointer to a moniker:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Create a moniker yourself using one of the Windows 2000 API functions that returns a specific type of moniker.
+<dd><b>&#149;</B>&nbsp;&nbsp;Have one created for you by calling an interface function on a COM object that supplies monikers to clients.
+</DL>
+<p>As discussed earlier, monikers are themselves COM objects, so you must handle the usual issues of interface lifetime&#151;remember to call <small>Release</SMALL> through moniker interfaces when you&#146;re finished using them.</P>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Translating Monikers into Text Strings</FONT></H4>
+<p>A moniker can be translated into a text string that represents the moniker. This text string is known as a <i>display name</I>, and it provides a very useful way to store a reference to a COM object. For example, the display name for a class moniker has the following format:</P>
+<!-- CODE SNIP //-->
+<pre>
+clsid:1861FFDA-8002-11D2-B868-00104B36573E:
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This class ID is for the <small>TestFunc</SMALL> COM class, which was used in Chapter 16.</P>
+<p>The class moniker for a COM class can be used to create an instance of that class and return a pointer to any interface supported by the COM object. To create a class moniker, you must use the <small>CreateClassMoniker</SMALL> function:</P>
+<!-- CODE //-->
+<pre>
+IMoniker* pMk = NULL;
+hr = CreateClassMoniker(CLSID_MyComClass, &amppMk);
+if(FAILED(hr))
+{
+    // Handle error
+}
+else
+{
+    // Use moniker
+}
+</PRE>
+<!-- END CODE //-->
+<p>The <small>CreateClassMoniker</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The CLSID for the class the moniker will refer to
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>IMoniker</SMALL> pointer that will refer to the moniker if the call is successful
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

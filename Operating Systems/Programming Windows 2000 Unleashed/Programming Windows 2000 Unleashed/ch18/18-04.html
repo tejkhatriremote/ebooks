@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=580-585//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>As will be demonstrated when we test the control later in this chapter, adding the font property page, along with exposing the stock font property, allows a user to easily change the control font. The only code that&#146;s written is shown in Listing 18.4. <h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Handling Character Input</P>
+</FONT></H4>
+<p>As discussed earlier, AxEdit uses exposed properties to determine whether characters entered on the keyboard are to be stored in the edit control. If an invalid character is entered, an <small>Error</SMALL> event is fired to the control&#146;s container.</P>
+<p>The message sent to the control as characters are input to the control is <small>WM_CHAR</SMALL>. Using ClassWizard, add a message-handling function to the <small>CAxEditCtrl</SMALL> class, using the values from Table 18.7.</P>
+<table width="100%"><td caption align="LEFT" colspan="4"><b>Table 18.7</B> Handling the <small>WM_CHAR</SMALL> Message in <small>CAxEditCtrl</SMALL>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th width="25%" valign="TOP" align="LEFT"><i>Class Name</I>
+<th width="25%" valign="TOP" align="LEFT"><i>Object ID</I>
+<th width="25%" valign="TOP" align="LEFT"><i>Message</I>
+<th width="25%" valign="TOP" align="LEFT"><i>Function</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>CAxEditCtrl</SMALL>
+<td valign="TOP" align="LEFT"><small>CAxEditCtrl</SMALL>
+<td valign="TOP" align="LEFT"><small>WM_CHAR</SMALL>
+<td valign="TOP" align="LEFT"><small>OnChar</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>The source code for the <small>CAxEditCtrl::OnChar</SMALL> function is provided in Listing 18.5.</P>
+<p><b>Listing 18.5</B> Handling the <small>WM_CHAR</SMALL> Message in <small>CAxEditCtrl::OnChar</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+void CAxEditCtrl::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    if( _istdigit(nChar) )
+    {
+        if( m_fNumbersAllowed == FALSE )
+        {
+            FireError( CTL_E_INVALIDPROPERTYVALUE,
+                       _T(&#147;Numbers not allowed&#148;) );
+        }
+        else
+        {
+            COleControl::OnChar(nChar, nRepCnt, nFlags);
+        }
+    }
+    else if( _istalpha(nChar) )
+    {
+        if( m_fTextAllowed == FALSE )
+        {
+            FireError( CTL_E_INVALIDPROPERTYVALUE,
+                       _T(&#147;Characters not allowed&#148;) );
+        }
+        else
+        {
+            COleControl::OnChar(nChar, nRepCnt, nFlags);
+        }
+    }
+    else
+        COleControl::OnChar(nChar, nRepCnt, nFlags);
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>OnChar</SMALL> handler tests for valid characters based on the property flags <small>m_fTextAllowed</SMALL> and <small>m_fNumbersAllowed</SMALL>. Valid characters are passed to <small>COleControl::OnChar</SMALL>, the base class handler for <small>WM_CHAR</SMALL>. If an invalid character is detected, an <small>Error</SMALL> event is fired to the control&#146;s container.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Modifying the Control&#146;s Bitmap</FONT></H4>
+<p>When an ActiveX control is used in a tool such as Developer Studio, Visual Basic, or the ActiveX control test container, a bitmap associated with the control is displayed to the user. In Visual Basic, the bitmap is added to the control palette used to design dialog box resources. In the test container, a toolbar button displaying the bitmap is added to the container&#146;s toolbar.
+</P>
+<p>Open the <small>IDB_AXEDIT</SMALL> bitmap resource and edit the bitmap image, as shown in Figure 18.5. Save the bitmap and compile the AxEdit project.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-05.jpg',800,600 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-05.jpg',800,600)"><font color="#000077"><b>Figure 18.5</B></FONT></A>&nbsp;&nbsp;The <small>IDB_AXEDIT</SMALL> bitmap resource.
+</P>
+<h3><a name="Heading14"></A><font color="#000077">Testing an ActiveX Control</FONT></H3>
+<p>After following the steps in the previous sections, you&#146;re in possession of an AxEdit ActiveX control. However, because the control is an in-process server located in a DLL, it can&#146;t be run as an EXE. Testing an ActiveX control requires a few extra steps, which are discussed in this section.
+</P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Choosing a Test Container for Your Control</FONT></H4>
+<p>Every ActiveX control requires a control container. The simplest control container is the ActiveX control test container included with Visual C<small>&#43;&#43;</SMALL> and the Win32 Platform SDK. Other ActiveX control containers include Microsoft Access and Visual Basic.</P>
+<p>You should test an ActiveX control using as many test containers as possible. In this chapter, AxEdit is tested with <small>TSTCON32.EXE</SMALL>, the ActiveX control test container.</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Using the TSTCON32 Test Container</FONT></H4>
+<p>In order to launch the AxEdit control in the Developer Studio debugger, you must specify the application used to load the control. You can do this by following these steps:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Select Settings from the Project menu in Developer Studio. The Project Settings dialog box is displayed.
+<dd><b>2.</B>&nbsp;&nbsp;Click the tab labeled Debug.
+<dd><b>3.</B>&nbsp;&nbsp;Click the arrow located next to the edit control labeled Executable for Debug Session; then select ActiveX control Test Container from the pop-up menu. The edit control will be filled with the proper path.
+<dd><b>4.</B>&nbsp;&nbsp;Click the OK button to dismiss the dialog box and save your changes.
+</DL>
+<p>After you&#146;ve made these changes, the Developer Studio debugger can be used to launch the test container. Clicking the Go icon in the toolbar or otherwise starting a debug session causes the test container to be displayed, as shown in Figure 18.6.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-06.jpg',601,432 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-06.jpg',601,432)"><font color="#000077"><b>Figure 18.6</B></FONT></A>&nbsp;&nbsp;The ActiveX control test container.</P>
+<p>When an ActiveX control created by ControlWizard is compiled, the control is automatically registered. To display a list of all registered controls, select Insert New Control from the Edit menu. A dialog box containing all available ActiveX controls is displayed. Select the AxEdit control and then click the OK button. The AxEdit control is inserted into the test container, as shown in Figure 18.7.
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-07.jpg',445,383 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-07.jpg',445,383)"><font color="#000077"><b>Figure 18.7</B></FONT></A>&nbsp;&nbsp;The ActiveX control test container and the AxEdit control.</P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Testing Properties</FONT></H4>
+<p>The test container can be used to test your control&#146;s properties in two ways:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Through an Automation interface that lists all exposed properties and methods
+<dd><b>&#149;</B>&nbsp;&nbsp;Through your control&#146;s property sheet
+</DL>
+<p>To access all the methods, including properties, implemented by an ActiveX control, select Invoke Methods from the Control menu. An Invoke Methods dialog box is displayed, as shown in Figure 18.8.
+</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-08.jpg',543,487 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-08.jpg',543,487)"><font color="#000077"><b>Figure 18.8</B></FONT></A>&nbsp;&nbsp;Accessing the methods exposed by AxEdit.</P>
+<p>To display the list of methods exposed by the control, click the drop-down list. Every method and property can be accessed and changed through this dialog box, even if the property isn&#146;t accessible through the control&#146;s property sheet. To invoke a particular method, select the method name from the drop-down list, set any required parameter values, and then click the Invoke button.
+</P>
+<p>A slightly easier way to access properties is provided through the control&#146;s property sheet. The test container can be used to invoke the control&#146;s property sheet by selecting Properties|AxEdit Control Object from the Edit menu. The property sheet for AxEdit is shown in Figure 18.9.</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-09.jpg',100,101 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-09.jpg',100,101)"><font color="#000077"><b>Figure 18.9</B></FONT></A>&nbsp;&nbsp;The property sheet used by AxEdit.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

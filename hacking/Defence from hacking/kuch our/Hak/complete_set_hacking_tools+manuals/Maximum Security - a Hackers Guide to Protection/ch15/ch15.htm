@@ -1,0 +1,1210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 15 -- The Hole</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="../button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="../ch14/ch14.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch16/ch16.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">15</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">The Hole</FONT></H1>
+</CENTER>
+<P>This chapter amounts to easy reading. Its purpose is to familiarize you with holes:
+where they come from, what they are, and how they affect Internet security. This
+is important information because throughout the remainder of this book, I will be
+examining many holes.
+<H2><FONT COLOR="#000077"><B>The Concept of the Hole</B></FONT></H2>
+<P>Before I examine different types of holes, I'd like to define the term <I>hole</I>.
+A hole is any feature of hardware or software that allows unauthorized users to gain
+access or increase their level of access without authorization. I realize this is
+a broad definition, but it is accurate. A hole could be virtually anything. For example,
+many peculiarities of hardware or software commonly known to all users qualify as
+holes. One such peculiarity (perhaps the most well known)is that CMOS passwords on
+IBM compatibles are lost when the CMOS battery is shorted, disabled, or removed.
+Even the ability to boot into single-user mode on a workstation could be classified
+as a hole. This is so because it will allow a malicious user to begin entering interactive
+command mode, perhaps seizing control of the machine.</P>
+<P>So a hole is nothing more than some form of vulnerability. Every platform has
+holes, whether in hardware or software. In short, nothing is absolutely safe.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Only two computer-related items
+	have ever been deemed completely hole free (at least by national security standards).
+	One is the Gemini processor, manufactured by Gemini Computers. It has been evaluated
+	as in the A1 class on the NSA's Evaluated Products List. It is accompanied by only
+	one other product in that class: the Boeing MLS LAN (Version 2.1). Check out both
+	products at <A HREF="http://www.radium.ncsc.mil/tpep/epl/"><TT>http://www.radium.ncsc.mil/tpep/epl/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You might draw the conclusion that no computer system is safe and that the entire
+Net is nothing but one big hole. That is incorrect. Under the circumstances, you
+should be wondering why there aren't more holes. Consider that the end-user never
+takes much time to ponder what has gone into making his system work. Computer systems
+(taken holistically) are absolute wonders of manufacturing. Thousands of people are
+involved in getting a computer (regardless of platform) to a retail location. Programmers
+all over the world are working on applications for any given platform at any given
+time. Everyone from the person who codes your calendar program to the dozen or so
+folks who design your firewall are all working independently. Under these circumstances,
+holes should be everywhere; but they aren't. In fact, excluding holes that arise
+from poor system administration, security is pretty good. The problem is that crackers
+are also good.
+<H2><FONT COLOR="#000077"><B>The Vulnerability Scale</B></FONT></H2>
+<P>There are different types of holes, including
+
+<UL>
+	<LI>Holes that allow denial of service<BR>
+	<BR>
+	
+	<LI>Holes that allow local users with limited privileges to increase those privileges
+	without authorization<BR>
+	<BR>
+	
+	<LI>Holes that allow outside parties (on remote hosts) unauthorized access to the
+	network
+</UL>
+
+<P>These types of holes and attacks can be rated according to the danger they pose
+to the victim host. Some represent significant dangers that can destroy the target;
+others are less serious, qualifying only as nuisances. Figure 15.1 shows a sort of
+&quot;Internet Richter scale&quot; by which to measure the dangers of different types
+of holes.</P>
+<P><A NAME="01"></A><A HREF="01.htm"><B>FIGURE 15.1.</B></A> <I><BR>
+The holes index: dangers that holes can pose.</I>
+<H3><FONT COLOR="#000077"><B>Holes That Allow Denial of Service</B></FONT></H3>
+<P>Holes that allow denial of service are in category C, and are of low priority.
+These attacks are almost always operating-system based. That is, these holes exist
+within the <I>networking portions of the operating system</I> itself. When such holes
+exist, they must generally be corrected by the authors of the software or by patches
+from the vendor.</P>
+<P>For large networks or sites, a denial-of-service attack is of only limited significance.
+It amounts to a nuisance and no more. Smaller sites, however, may suffer in a denial-of-service
+attack. This is especially so if the site maintains only a single machine (and therefore,
+a single mail or news server). Chapters 3, &quot;Hackers and Crackers,&quot; and
+8, &quot;Internet Warfare,&quot; provide examples of denial-of-service attacks. These
+occur most often in the form of attacks like syn_flooding. An excellent definition
+of denial-of-service attacks is given in a popular paper called &quot;Protecting
+Against TCP SYN Denial of Service Attacks&quot;:
+
+<DL>
+	<DD>Denial of Service attacks are a class of attack in which an individual or individuals
+	exploit aspects of the Internet Protocol suite to deny other users of legitimate
+	access to systems and information. The TCP SYN attack is one in which connection
+	requests are sent to a server in high volume, causing it to become overwhelmed with
+	requests. The result is a slow or unreachable server, and upset customers.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Check out &quot;Protecting
+	against TCP SYN Denial of Service Attacks&quot; online at <A HREF="http://www.proteon.com/docs/security/tcp_syn.htm"><TT>http://www.proteon.com/docs/security/tcp_syn.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The syn_flooder attack is instigated by creating a high number of half-open connections.
+Because each connection opened must be processed to its ultimate conclusion (in this
+case, a time-out), the system is temporarily bogged down. This appears to be a problem
+inherent in the design of the TCP/IP suite, and something that is not easily remedied.
+As a CERT advisory on this subject notes:
+
+<DL>
+	<DD>There is, as yet, no generally accepted solution to this problem with the current
+	IP protocol technology. However, proper router configuration can reduce the likelihood
+	that your site will be the source of one of these attacks.
+</DL>
+
+<P>This hole, then, exists within the heart of the networking services of the UNIX
+operating system (or nearly any operating system running full-fledged TCP/IP over
+the Internet). Thus, although efforts are underway for fixes, I would not classify
+this as a high priority. This is because in almost all cases, denial-of-service attacks
+represent no risk of penetration. That is, crackers cannot harm data or gain unauthorized
+levels of privilege through these means; they can just make themselves nuisances.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Good papers available
+	on the Net can give you a clearer picture of what such a denial-of-service attack
+	entails. One is &quot;Security Problems in the TCP/IP Protocol Suite&quot; by Steve
+	Bellovin, which appeared in <I>Computer Communication Review</I> in April 1989. Find
+	it at <A HREF="ftp://research.att.com/dist/internet_security/ipext.ps.Z"><TT>ftp://research.att.com/dist/internet_security/ipext.ps.Z</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Although UNIX is notorious for being vulnerable to denial-of-service attacks,
+other platforms are not immune. For example, as I will discuss in Chapter 16, &quot;Microsoft,&quot;
+it is possible to bring certain NT distributions to a halt simply by Telnetting to
+a particular port and issuing a few simple characters. This forces the CPU to race
+to 100 percent utilization, thus incapacitating the machine altogether.</P>
+<P>There are other forms of denial-of-service attacks. Certain denial-of-service
+attacks can be implemented against the individual user as opposed to a network of
+users. These types of attacks do not really involve any bug or hole per se; rather,
+these attacks take advantage of the basic design of the WWW.</P>
+<P>For example, suppose I harbored ill feelings toward users of Netscape Navigator.
+(Don't laugh. There are such people. If you ever land on their pages, you will know
+it.) Using either Java or JavaScript, I could effectively undertake the following
+actions:
+
+<DL>
+	<DD><B>1. </B>Configure an inline or a compiled program to execute on load, identifying
+	the type of browser used by the user.<BR>
+	<BR>
+	<B>2. </B>If the browser is Netscape Navigator, the program could spawn multiple
+	windows, each requesting connections to different servers, all of which start Java
+	applets on load.
+</DL>
+
+<P>In fewer than 40 seconds, the target machine would come to a grinding halt. (Oh,
+those with more than 64MB of RAM might survive long enough for the user to shut down
+the processes. Nonetheless, the average user would be forced to reboot.) This would
+cause what we technically classify as a denial-of-service attack.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>One good reference about
+	denial-of-service attacks is &quot;Hostile Applets on the Horizon&quot; by Mark D.
+	LaDue. That document is available at <A HREF="http://www.math.gatech.edu/~mladue/HostileArticle.html"><TT>http://www.math.gatech.edu/~mladue/HostileArticle.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>These types of denial-of-service attacks are generally lumped into the category
+of malicious code. However, they do constitute a type of DoS attack, so I thought
+they were worth mentioning here.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Not every denial-of-service attack
+	need be launched over the Internet. There are many types of denial-of-service attacks
+	that occur at a local level, perhaps not even in a network environment. A good example
+	is a well known <I>file locking</I> denial-of-service attack that works on the Microsoft
+	Windows NT platform. Sample code for this attack has been widely distributed on security
+	mailing lists. The code (when compiled) results in a program that will take any file
+	or program as a command-line argument. This command-line argument is the target file
+	that you wish to lock. For example, it might be <TT>WINWORD.EXE </TT>or even a DLL
+	file. The file will remain completely locked (inaccessible to any user) for the length
+	of time specified by the cracker. During that period, no one--not even the administrator--can
+	use the file. If the cracker sets the time period to indefinite (or rather, the equivalent
+	thereof), the only way to subvert the lock is to completely kill that user's session.
+	Such locking programs also work over shared out drives. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One particularly irritating denial-of-service attack (which is being incorporated
+into many Windows 95 cracking programs) is the dreaded CHARGEN attack. CHARGEN is
+a service that runs on port 19. It is a character generator (hence the name) used
+primarily in debugging. Many administrators use this service to determine whether
+packets are being inexplicably dropped or where these packets disappear before the
+completion of a given TCP/IP transaction. In any event, by initiating multiple requests
+to port 19, an attacker can cause a denial-of-service attack, hanging the machine.
+<H3><FONT COLOR="#000077"><B>Holes That Allow Local Users Unauthorized Access</B></FONT></H3>
+<P>Still higher in the hole hierarchy (class B) are those holes that allow local
+users to gain increased and unauthorized access. These types of holes are typically
+found within applications<I> </I>on this or that platform.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In Figure 15.1, I point to an unshadowed
+	<TT>passwd</TT> file as a possible class B problem, and in truth, it is. Nonetheless,
+	this is not an <I>application</I> problem. Many such nonapplication problems exist,
+	but these differ from hard-line class B holes. Here, hard-line class B holes are
+	those that occur within the actual code of a particular application. The following
+	example will help illustrate the difference. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A<I> local user</I> is someone who has an account on the target machine or network.
+A typical example of a local user is someone with shell access to his ISP's box.
+If he has an e-mail address on a box and that account also allows shell access, that
+&quot;local&quot; user could be thousands of miles away. In this context, <I>local</I>
+refers to the user's account privileges, not his geographical location.
+<H4><FONT COLOR="#000077"><B>sendmail</B></FONT></H4>
+<P>A fine example of a hole that allows local users increased and unauthorized access
+is a well-known sendmail problem. sendmail is perhaps the world's most popular method
+of transmitting electronic mail. It is the heart of the Internet's e-mail system.
+Typically, this program is initiated as a daemon at boot time and remains active
+as long as the machine is active. In its active state, sendmail listens (on port
+25) for deliveries or other requests from the void.</P>
+<P>When sendmail is started, it normally queries to determine the identity of the
+user because only root is authorized to perform the startup and maintenance of the
+sendmail program. Other users with equivalent privileges may do so, but that is the
+extent of it. However, according to the CERT advisory titled &quot;Sendmail Daemon
+Mode Vulnerability&quot;:
+
+<DL>
+	<DD>Unfortunately, due to a coding error, sendmail can be invoked in daemon mode
+	in a way that bypasses the built-in check. When the check is bypassed, any local
+	user is able to start sendmail in daemon mode. In addition, as of version 8.7, sendmail
+	will restart itself when it receives a SIGHUP signal. It does this restarting operation
+	by re-executing itself using the exec(2) system call. Re-executing is done as the
+	root user. By manipulating the sendmail environment, the user can then have sendmail
+	execute an arbitrary program with root privileges.
+</DL>
+
+<P>Thus, a local user can gain a form of root access. These holes are quite common.
+One surfaces every month or so. sendmail is actually renowned for such holes, but
+has no monopoly on the phenomenon (nor is the problem indigenous to UNIX).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For information about
+	some commonly known sendmail holes, check out <A HREF="http://info.pitt.edu/HOME/Security/pitt-advisories/95-05-sendmail-vulnerabilities.html">http://info.pitt.edu/HOME/Security/pitt-advisories/95-05-sendmail-vulnerabilities.html</A><FONT
+	COLOR="#000000"> and </FONT><A HREF="http://www.crossroads.fi/~tkantola/hack/unix/sendmail.txt">http://www.crossroads.fi/~tkantola/hack/unix/sendmail.txt</A><FONT
+	COLOR="#000000">.</FONT> 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<PRE></PRE>
+<P>Older versions of sendmail contain a weakness in the buffer (you will learn a
+little bit about the buffer/stack scenario in the following paragraphs). As such,
+one used to be able to crack the system by invoking the <TT>debug</TT> option in
+sendmail and overflowing the buffer. This was done with the <TT>-d</TT> option. A
+similar problem surfaced regarding sendmail's communication with the <TT>syslog</TT>
+daemon (another buffer overflow problem).</P>
+<P>These types of holes represent a serious threat for one reason: If a local user
+successfully manages to exploit such a hole, the system administrator may never discover
+it. Also, leveraged access is far more dangerous in the hands of a local user than
+an outsider. This is because a local user can employ basic system utilities to learn
+more about the local network. Such utilities reveal far more than any scanner can
+from the void. Therefore, a local user with even fleeting increased access can exploit
+that access to a much greater degree. (For that matter, the local user is <I>behind</I>
+your firewall, meaning he is free to conduct his affairs without further complications.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Holes in programs like sendmail
+	are especially significant because these programs are available to all users on the
+	network. All users must have at least basic privileges to use the sendmail program.
+	If they did not, they would have no way to send mail. Therefore, any bug or hole
+	within sendmail is very dangerous. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The only real comfort with respect to these types of holes is that there is a
+much greater chance of identifying the offender, particularly if he is inexperienced.
+If the system administrator is running strong logging utilities, the offender will
+need a fair amount of expertise to escape detection.
+<H4><FONT COLOR="#000077"><B>Other Class B Holes</B></FONT></H4>
+<P>Most class B holes arise from some defect within an application. There are some
+fairly common programming errors that lead to such holes. One such error concerns
+the character buffer in programs written in C (hence, the dreaded buffer overflow).<I>
+Buffer overflow</I> is defined on the Jargon File as
+
+<DL>
+	<DD>What happens when you try to stuff more data into a buffer (holding area) than
+	it can handle. This may be due to a mismatch in the processing rates of the producing
+	and consuming processes (see overrun and firehose syndrome), or because the buffer
+	is simply too small to hold all the data that must accumulate before a piece of it
+	can be processed.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The Jargon File is a
+	wide collection of definitions, which cover strange and colorful terms used in computer
+	lingo or slang (technospeak). All new Internet users should peruse the Jargon File
+	because it reveals the meanings of many acronyms and other slang terms referred to
+	in Usenet newsgroups and general discussion areas on the Internet. A good HTML version
+	of the Jargon File is located at <A HREF="http://nmsmn.com/~cservin/jargon/alpha.html"><TT>http://nmsmn.com/~cservin/jargon/alpha.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Rather than exhaustively treat the subject of buffer overflows, I will briefly
+describe problem here. The purpose of this explanation is to familiarize you with
+a rather ingenious technique of gaining unauthorized access; I hope to do so without
+an endless examination of the C language (C is covered more extensively in Chapter
+30, &quot;Language, Extensions, and Security&quot;).</P>
+<P>Programs written in C often use a <I>buffer</I>. Flatly stated, a buffer is an
+abstraction, an area of memory in which some type of text or data will be stored.
+Programmers make use of such a buffer to provide pre-assigned space for a particular
+block or blocks of data. For example, if one expects the user to input his first
+name, the programmer must decide how many characters that first name buffer will
+require (how many letters should be allowed in that field, or the number of keystrokes
+a user can input in a given field). This is called the size of the character buffer.
+Thus, if the programmer writes:</P>
+<PRE><FONT COLOR="#0066FF">char first_name[20];
+</FONT></PRE>
+<P>he is allowing the user 20 characters for a first name. But suppose the user's
+first name has 35 characters. What happens to the last 15 characters? They overflow
+the character buffer. When this overflow occurs, the last 15 characters are put somewhere
+in memory, at another address (an address the programmer did not intend for those
+characters to go to). Crackers, by manipulating where those extra characters end
+up, can cause arbitrary commands to be executed by the operating system. Most often,
+this technique is used by local users to gain access to a root shell. Unfortunately,
+many common utilities have been found to be susceptible to buffer overflow attacks.</P>
+<P>Programmers can eliminate this problem through careful programming techniques.
+I am not suggesting here that programmers should provide error checking for each
+and every character buffer written; this is probably unrealistic and may be waste
+of time. For although these defects can certainly place your network at risk, the
+cracker requires a high level of skill to implement a buffer overflow attack. Although
+the technique is often discussed in cracking circles, few actually have the programming
+knowledge to do it.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Failure to include checks for buffer
+	overflows have caused some of the very problems I have already discussed, such as
+	sendmail holes. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The buffer overflow issue is nothing new; it has been with us at least since the
+days of the Worm. Eugene Spafford, as I have already noted, was one of the first
+individuals to conduct a purposeful analysis of the Worm. He did so in the now-famous
+paper, &quot;The Internet Worm: An Analysis.&quot; Spafford's paper is undoubtedly
+the best source of information about the Worm.</P>
+<P>In page 4 of that document, Spafford observes that the Morris Worm exploited a
+vulnerability in the fingerd daemon (the daemon that listens for and satisfies finger
+requests directed to port 79). The fingerd program utilized a common C language function
+known as <TT>gets()</TT>, which performs the simple task of reading the next line
+of input. <TT>gets()</TT> lacked any function to check for <I>bounds</I>, or incoming
+input that could potentially exceed the buffer. Thus, Morris was able to overflow
+that buffer and reportedly push other code onto the stack; this code provided the
+Worm with needed system access. Spafford observes that this vulnerability was well
+known in programming communities, even then. He further explains that functions that
+fail to check for potential overflows should not be used. Yet even today, programs
+are written with the same, basic flaws that allowed the Worm to travel so far, so
+fast.
+<H3><FONT COLOR="#000077"><B>Holes That Allow Remote Users Unauthorized Access (Class
+A)</B></FONT></H3>
+<P>Class A holes are the most threatening of all and not surprisingly, most of them
+stem from either poor system administration or misconfiguration. Vendors rarely overlook
+those holes that allow remote users unauthorized access. At this late stage of the
+game, even vendors that were previously not security minded have a general grasp
+of the terrain.</P>
+<P>The typical example of a misconfiguration (or configuration failure) is any sample
+script that remains on the drive, even though the distribution docs advise that it
+be removed. One such hole has been rehashed innumerable times on the Net. It involves
+those files included within Web server distributions.</P>
+<P>Most Web server software contains fairly sparse documentation. A few files may
+exist, true, and some may tout themselves as tutorials. Nonetheless, as a general
+rule, distributions come with the following elements:
+
+<UL>
+	<LI>Installation instructions<BR>
+	<BR>
+	
+	<LI>The binaries<BR>
+	<BR>
+	
+	<LI>In some rare cases, the source<BR>
+	<BR>
+	
+	<LI>Sample configuration files with comments interspersed within them, usually commented
+	out within the code<BR>
+	<BR>
+	
+	<LI>Sample CGI scripts
+</UL>
+
+<P>To the credit of those distributing such software, most configuration files offer
+a warning regarding sample scripts. Nonetheless, for reasons of which I am uncertain,
+not everyone heeds those warnings (at least one government site recently cracked
+had this problem). In any case, these scripts can sometimes provide an intruder from
+the void with access ranging from limited to root.</P>
+<P>Probably the most talked-about hole of this kind is the vulnerability in a file
+called <TT>test-cgi</TT>, distributed with early versions of the Apache Web Server
+distribution. This file contained a flaw that allowed intruders from the void to
+read files within the CGI directory. If your <TT>test-cgi</TT> file contained the
+following line, you were probably vulnerable:</P>
+<PRE><FONT COLOR="#0066FF">echo QUERY_STRING = $QUERY_STRING
+</FONT></PRE>
+<P>As noted in the article titled &quot;Test-CGI Vulnerability in Certain Setups&quot;:
+
+<DL>
+	<DD>All of these lines should have the variables enclosed in loose quotes (&quot;).
+	Without these quotes certain special characters (specifically `*') get expanded where
+	they shouldn't. Thus submitting a query of `*' will return the contents of the current
+	directory (probably where all of the cgi files are).
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find &quot;Test-CGI Vulnerability
+	in Certain Setups&quot; online at <A HREF="http://www.sec.de/sec/bug.testcgi"><TT>http://www.sec.de/sec/bug.testcgi</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Interestingly, no sooner than this advisory (and others like it) circulated, it
+was found that:
+
+<DL>
+	<DD>Test-CGI in the Apache 1.1.1 distribution already has the required:
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">echo QUERY_STRING = &quot;$QUERY_STRING&quot;</FONT></PRE>
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD>However, it does not have the necessary quotes around the
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">&quot;$CONTENT_TYPE&quot;</FONT></PRE>
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD>string. Therefore it's still vulnerable in its default configuration.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from an article titled &quot;Vulnerability in Test-CGI&quot; by Joe
+	Zbiciak. It can be found online at <A HREF="http://geek-girl.com/bugtraq/"><TT>http://geek-girl.com/bugtraq/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Problems like this are common. For example, one HTTP server on the Novell platform
+includes a sample script called <TT>convert.bas</TT>. The script, written in BASIC,
+allows remote users to read any file on the system.</P>
+<P>This problem sometimes involves more than just a sample script; sometimes it involves
+the way scripts are interpreted. For example, version 1.0 of Microsoft's Internet
+Information Server (IIS) contains a hole that allows any remote user to execute arbitrary
+commands. The problem is that the IIS HTTP associates all files with a <TT>*.bat</TT>
+or <TT>*.cmd</TT> extension to the program <TT>cmd.exe</TT>. As explained by Julian
+Assange (author of Strobe), the problem is not restricted to IIS:
+
+<DL>
+	<DD>The First bug allows a user to access any file on the same partition where your
+	wwwroot directory exists (assuming that IIS_user has permission to read this file).
+	It also allows execution of any executable file on the same partition where your
+	scripts directory exists (assuming that IIS_user has permission to execute this file).
+	If cmd.exe file can be executed then it also allows you to execute any command and
+	read any file on any partition (assuming that IIS_user has permission to read or
+	execute this file)...Unfortunately Netscape Communication and Netscape Commerce servers
+	have similar bugs. Similar things can be done with Netscape Server if it uses BAT
+	or CMD files as CGI scripts.
+</DL>
+
+<P>Naturally, these holes pose a significant danger to the system from outside sources.
+In many cases, if the system administrator is running only minimal logs, these attacks
+may go unrecorded. This makes it more difficult to apprehend the perpetrators.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>To be fair, most UNIX implementations
+	of HTTPD do provide for recording of the requesting IP address. However, even given
+	this index to go by, identifying the actual perpetrator can be difficult. For example,
+	if the attacker is coming from AOL, the call will come from one or more of AOL's
+	proxy machines in Reston, Virginia. There could be hundreds of potential suspects.
+	Using the <TT>ACCESS.LOG</TT> file to track a cracker is a poor substitute for more
+	comprehensive logging and is only of real value when the attacker is coming from
+	a small local ISP. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You can readily see, then, why programs like scanners have become such an important
+part of the security scheme. Scanners serve the vital purpose of checking for these
+holes. The problem is, of course, that for a scanner to include the capability to
+scan for a particular vulnerability, that vulnerability must already be well known.
+Thus, although security programmers include such holes as scan options in their programs,
+they are often several months behind the cracking community. (Also, certain holes--such
+as the syn_flooding hole that allows denial-of-service attacks--are not easily remedied.
+Such holes are imperfections that system administrators must learn to live with for
+the moment.)</P>
+<P>What makes the situation more difficult is that holes on platforms other than
+UNIX take more time to surface. Many NT system administrators do not run heavy logs.
+To report a hole, they must first have some evidence that the hole exists. Moreover,
+newer system administrators (of which a higher percentage exists amongst the IBM-compatible
+set) are not well prepared for documenting and reporting security incidents. This
+means that time passes before such holes are presented, tested, re-created in a test
+environment, and ultimately, implemented into scanners.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Microsoft users cannot count on
+	Microsoft to instantly enlighten users as to potential problems. In my opinion, Microsoft's
+	record of publicizing holes has been very poor. It seems to do so only after so many
+	people know about the hole that there is no other choice but to acknowledge it. While
+	a hole is still obscure, Microsoft personnel adamantly deny the existence of the
+	flaw. That situation is only now changing because the hacking (not cracking) community
+	has called their bluff and has initiated the process of exposing all holes inherent
+	within the Microsoft platform. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>There is also the question of quality. Five years ago, software for the Internet
+was coded primarily by the academic communities. Such software had bugs, true, but
+the quality control worked quite differently from today's commercial schemes. In
+those days (they seem so distant now!), a product was coded by and released from
+some CS lab. Several hundred (or even several thousand) people would download the
+product and play with it. Bug reports would flow in, problems would be addressed,
+and ultimately, a slow but progressive process of refinement would ensue.</P>
+<P>In the current commercially charged climate of the Internet, applications of every
+type are popping up each day. Many of them are not subjected to a serious analysis
+for security flaws within the code (no matter how fervently their proponents urge
+otherwise). In fact, it is common to see the same programming errors that spawned
+the Morris Worm.</P>
+<P>To demonstrate this point, I will refer to the buffer overflow problem. As reported
+in a 1995 advisory on a vulnerability in NCSA HTTPD (one of the world's most popular
+Web server packages):
+
+<DL>
+	<DD>A vulnerability was recently (2/17/95) discovered in the NCSA httpd Release 1.3.
+	A program which will break into an HP system running the precompiled httpd has been
+	published, along with step by step instructions. The program overflows a buffer into
+	program space which then gets executed.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted by a paper by Elizabeth Frank, and can be found online at <A HREF="http://ernie.sfsu.edu/patch_desc.html"><TT>http://ernie.sfsu.edu/patch_desc.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>According to the CERT advisory (&quot;NCSA HTTP Daemon for UNIX Vulnerability&quot;)
+that followed:
+
+<DL>
+	<DD>Remote users may gain unauthorized access to the account (uid) under which the
+	httpd process is running.
+</DL>
+
+<P>As explained in Chapter 9, &quot;Scanners,&quot; many individuals unwittingly
+run HTTPD as root. Thus, this vulnerability would provide remote users with root
+access on improperly configured Web servers.
+<H2><FONT COLOR="#000077"><B>Other Holes</B></FONT></H2>
+<P>In the preceding paragraphs, I named only a few holes. This might give you the
+erroneous impression that only a handful of programs have ever had such holes. This
+is untrue. Holes have been found in nearly every type of remote access software at
+one stage or another. The list is very long indeed. Here is a list of some programs
+that have been found (over the years) to have serious class A holes:
+
+<UL>
+	<LI>FTP
+	<LI>Gopher
+	<LI>Telnet
+	<LI>sendmail
+	<LI>NFS
+	<LI>ARP
+	<LI>Portmap
+	<LI>finger
+</UL>
+
+<P>In addition to these programs having class A holes, all of them have had class
+B holes as well. Moreover, in the class B category, dozens of other programs that
+I have not mentioned have had holes. Finally, a good number of programs have class
+C holes as well. I will be addressing many of these in upcoming chapters.
+<H2><FONT COLOR="#000077"><B>The Impact of Holes on Internet Security</B></FONT></H2>
+<P>Now that you have read a bit about some common holes, the next step is to know
+what impact they can have on Internet security. First, know this: <I>Any flaw that
+a cracker can exploit will probably lead to other flaws</I>. That is, each flaw (large
+or small) is a link in the network chain. By weakening one link, crackers hope to
+loosen all the other links. A true cracker may use several techniques in concert
+before achieving even a modest goal. If that modest goal can be achieved, other goals
+can also be achieved.</P>
+<P>For example, perhaps a cracker is working on a network on which he does not have
+an account. In that instance, he must first acquire some form of access to the system
+(access above and beyond whatever diagnostic information he may have culled from
+SATAN, ISS, or other scanners). His first target, then, might be a user on that network.
+If he can compromise a user's account, he can at least gain shell access. From that
+point on, other measures may be taken.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I recently reviewed logs on a case
+	where the cracker had gained control of a local user's account. Unfortunately for
+	the cracker, he did not pick his target well. The unwary user was a complete newbie
+	and had never, ever used her shell account. LAST logs (and other auditing materials)
+	revealed this immediately. So what we had was a dial-up customer who had never used
+	her shell account (or even built a Web page) suddenly compiling programs using a
+	C compiler from a shell account. Hmm. Next time, that cracker will be more choosy
+	about whose account he commandeers. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Is This Hole Problem As Bad As They Say?</B></FONT></H3>
+<P>Yes and no. Holes are reported to a variety of mailing lists each day. Nonetheless,
+those holes vary in severity. Many are in the class C category and not particularly
+important. As an interesting experiment, I decided to categorize (by operating-system
+type) all holes reported over a two-month period.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In my experiment, I excluded all
+	non-UNIX operating systems (I treat non-UNIX operating systems later in this chapter).
+	I did this to be fair, for by sampling a bug mailing list that concentrates primarily
+	on UNIX machines, I would give an erroneously bad image of UNIX and an erroneously
+	good image of non-UNIX systems. This is so because UNIX mailing lists only occasionally
+	receive security advisories on non-UNIX systems. (Although there is now a cross-over
+	because other systems are more commonly being used as server-based platforms for
+	the WWW, that cross-over amounts to a trickle). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Instead of indiscriminately picking instances of a particular operating system's
+name and adding this to the tables (for example, grabbing every posting that referred
+to the syslog hole), I carefully sifted through each posting. I chose only those
+postings that reported the first instance of a hole. All trailing messages that discussed
+that hole were excluded. In this way, only new holes were added to my data. Furthermore,
+I pulled only the first 50 on each operating system. With one minor exception that
+I explain later, I had no reason to assume that the percentage would be greatly influenced
+by pulling 100 or 1,000.</P>
+<P>I must advise you of one final point. Figure 15.2 shows an astonishing number
+of holes in HP-UX (Hewlett Packard's OS). This prevalence of HP-UX holes is largely
+due to a group called &quot;Scriptors of Doom.&quot; These individuals have concentrated
+their efforts on finding holes indigenous to HP-UX. They have promised &quot;one
+hole a week.&quot; Because of their activity, HP-UX appears to have security problems
+that are more serious than other operating systems of a similar ilk. This is not
+really the case. That settled, please examine Figure 15.2.</P>
+<P>Note that Sun (Solaris), AIX, and FreeBSD were running neck and neck, and that
+IRIX had just slightly fewer holes than Linux. But which of these holes were serious
+security risks? Which of these--per platform--were class B or class A vulnerabilities?
+To determine this, I reexamined the data from Figure 15.2 and excluded all vulnerabilities
+that could not result in local or remote users gaining root access. Table 15.1 lists
+the results.</P>
+<P><A HREF="02.htm"><B>FIGURE 15.2.</B></A> <BR>
+<I>Survey of reported operating system holes in October-December 1996.</I>
+<H4><FONT COLOR="#000077"><B>Table 15.1. Operating system holes that allowed root
+access.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating system</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Holes</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">HP-UX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">6</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Solaris</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">2</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">AIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">1</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Linux</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">4</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">IRIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">4</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">FreeBSD</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">3</TD>
+	</TR>
+</TABLE>
+</P>
+<P>Still, this information could be misleading, so I analyzed the data further. All
+of the listed operating systems were vulnerable to at least one bug present in their
+counterparts. That is, at least one bug was common to all operating systems sampled.
+After excluding these holes, the average was 2.5 holes per platform. AIX fell completely
+out of the running at that stage, having a total value of 0. Does this mean that
+AIX is the safest platform? No. It simply means that this two-month period spawned
+few advisories relevant to AIX.</P>
+<P>This brings me to an important point. You may often see, particularly on Usenet,
+individuals arguing over whether Solaris is tighter than AIX or whether Linux is
+tighter than FreeBSD and so forth. These arguments are exercises in futility. As
+it happens, all operating systems have their holes. Long-term examination of reporting
+lists reveals that advisories go in cycles. Were I to sample another period in time,
+AIX might be the predominate victim. There is no mysterious reason for this; it breaks
+down to the nature of the industry. When a hole is discovered in sendmail, for example,
+it is not immediately clear as to which platforms are affected. Determining this
+takes time. When the hole is confirmed, a detailed description is posted to a list,
+and chances are that more than half of all machines running sendmail are affected.
+But when holes are discovered in proprietary software, any number of things can happen.
+This might result in a one-month run of advisories on a single platform.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>This sometimes happens because proprietary
+	software may have multiple file dependencies that are inherent to the distribution,
+	or there may be multiple modules created by the same programming team. Therefore,
+	these executables, libraries, or other files may share the same basic flaws. Thus,
+	there may be a buffer overflow problem in one of the executable programs in the package,
+	and additionally, one of the library implementations is bad. (Or even, systems calls
+	are poorly implemented, allowing commands to be pushed onto the stack.) If a proprietary
+	package is large, problems could keep surfacing for a week or more (maybe even a
+	month). In these cases, the vendor responsible looks very bad; its product is a topic
+	of furious discussion on security lists for an extended period. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Holes on Other Platforms</B></FONT></H4>
+<P>Analyzing holes on other platforms is more difficult. Although vendors maintain
+documents on certain security holes within their software, organized reporting (except
+in cases if virus attacks) has only recently become available. This is because non-UNIX,
+non-VAX systems have become popular server platforms only in the last two years.</P>
+<P>Reporting for these holes has also been done (up until recently) by individual
+users or those managing small networks. Hard-line security professionals have traditionally
+not been involved in assaying, for example, Microsoft Windows. (Oh, there are hundreds
+of firms that specialize in security on such platforms, and many of them are listed
+in this book. Nonetheless, in the context of the Internet, this has not been the
+rule.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>That rule is about to change. Because
+	security professionals know that Microsoft Windows NT is about to become a major
+	player, reporting for NT holes will become a more visible activity. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Discussions About Holes on the Internet</B></FONT></H2>
+<P>Finding information about specific holes is simple. Many sites, established and
+underground, maintain archives on holes. Established sites tend to sport searchable
+indexes and may also have classic security papers ranging back to the days of the
+Worm. Underground sites may have all of this, as well as more current information.
+The majority of holes, in fact, are circulated among cracking communities first.
+For information about locating these resources, see Appendix A, &quot;How to Get
+More Information.&quot; To whet your appetite, a few sites and sources for information
+about security holes follow.
+<H3><FONT COLOR="#000077"><B>World Wide Web Pages</B></FONT></H3>
+<P>You'll find loads of information about holes on numerous Web pages. Following
+are some that you should check out.
+<H4><FONT COLOR="#000077"><B>CERT</B></FONT></H4>
+<P>The Computer Emergency Response Team was established after the Internet Worm debacle
+in 1988 (young Morris scared the wits out of many people on the Net, not the least
+of which were those at DARPA). CERT not only issues advisories to the Internet community
+whenever a new security vulnerability becomes known, it
+
+<UL>
+	<LI>is on call 24 hours a day to provide vital technical advice to those who have
+	suffered a break-in<BR>
+	<BR>
+	
+	<LI>uses its WWW site to provide valuable security information available, both new
+	and old (including papers from the early 1980s)<BR>
+	<BR>
+	
+	<LI>publishes an annual report that can give you great insight into security statistics
+</UL>
+
+<P>The real gold mine at CERT is the collection of advisories and bulletins. You
+can find these and other important information at <A HREF="http://www.cert.org"><TT>http://www.cert.org</TT></A>
+(see Figure 15.3).</P>
+<P><A NAME="03"></A><A HREF="03.htm"><B>FIGURE 15.3.</B></A> <BR>
+<I>The Computer Emergency Response Team (CERT) WWW site.</I>
+<H4><FONT COLOR="#000077"><B>Department of Energy Computer Incident Advisory Capability</B></FONT></H4>
+<P>CIAC was also established in 1989, following the Morris Worm. This organization
+maintains a database of security related material intended primarily for the U.S.
+Department of Energy. The CIAC site is one of the best sources for security information.
+In addition to housing tools, this site also houses a searchable archive of security
+advisories. Moreover, CIAC provides to the public a series of security papers. Also,
+CIAC now utilizes the Adobe PDF file format, so the papers it provides are attractive,
+easily navigated, and easily formatted for printing. PDF format is, in my opinion,
+far superior to PostScript format, particularly for those not running UNIX.</P>
+<P>Important information provided by CIAC to the public includes the following:
+
+<UL>
+	<LI>Defense Data Network advisories
+	<LI>CERT advisories
+	<LI>NASA advisories
+	<LI>A comprehensive virus database
+	<LI>A computer security journal by Chris McDonald
+</UL>
+
+<P>CIAC is located at <A HREF="http://ciac.llnl.gov/"><TT>http://ciac.llnl.gov/</TT></A>
+(see Figure 15.4).</P>
+<P><A NAME="04"></A><A HREF="04.htm"><B>FIGURE 15.4.</B></A> <I><BR>
+The Computer Incident Advisory Capability WWW site.</I>
+<H4><FONT COLOR="#000077"><B>The National Institute of Standards and Technology Computer
+Security Resource Clearinghouse</B></FONT></H4>
+<P>The NIST CSRC WWW site (see Figure 15.5) is a comprehensive starting point. NIST
+has brought together a sizable list of publications, tools, pointers, organizations,
+and support services.</P>
+<P><A NAME="05"></A><A HREF="05.htm"><B>FIGURE 15.5.</B></A> <I><BR>
+The NIST CSRC WWW site.</I>
+<H4><FONT COLOR="#000077"><B>The Forum of Incident Response and Security Teams (FIRST)</B></FONT></H4>
+<P>FIRST is a really a coalition of many organizations, both public and private,
+that work to circulate information on and improve Internet security. Some FIRST members
+are
+
+<UL>
+	<LI>DoE Computer Incident Advisory Capability (CIAC)
+	<LI>NASA Automated Systems Incident Response Capability
+	<LI>Purdue University Computer Emergency Response Team
+	<LI>Stanford University Security Team
+	<LI>IBM Emergency Response Service
+	<LI>Australian Computer Emergency Response Team
+</UL>
+
+<P>The interesting thing about FIRST is that it exercises no centralized control.
+All members of the organization share information, but no one exercises control over
+any of the other components. FIRST maintains a list of links to all FIRST member
+teams with WWW servers. Check out FIRST at <A HREF="http://www.first.org/team-info/"><TT>http://www.first.org/team-info/</TT></A>
+(see Figure 15.6).</P>
+<P><A NAME="06"></A><A HREF="06.htm"><B>FIGURE 15.6.</B></A> <I><BR>
+The FIRST WWW site.</I>
+<H4><FONT COLOR="#000077"><B>The Windows 95 Bug Archive</B></FONT></H4>
+<P>The Windows 95 Bug Archive is maintained at Stanford University by Rich Graves.
+To his credit, it is the only truly comprehensive source for this type of information.
+(True, other servers give overviews of Windows 95 security, but nothing quite like
+this page.) This archive is located at
+
+<UL>
+	<LI><A HREF="http://www-leland.stanford.edu/~llurch/win95netbugs/archives/"><TT>http://www-leland.stanford.edu/~llurch/win95netbugs/archives/</TT></A>
+</UL>
+
+<P>Mr. Graves is a Network Consultant, a Webmaster, an Apple Talk specialist, and
+a master Gopher administrator. He has painstakingly collected an immense set of resources
+about Windows 95 networking (he is, in fact, the author of the Windows 95 Networking
+FAQ). His Win95NetBugs List has a searchable index, which is located here:
+
+<UL>
+	<LI><A HREF="http://www-leland.stanford.edu/~llurch/win95netbugs/search.html"><TT>http://www-leland.stanford.edu/~llurch/win95netbugs/search.html</TT></A>
+</UL>
+
+<P>The site also features an FTP archive of Windows 95 bugs, which can be accessed
+via the WWW at this locale:
+
+<UL>
+	<LI><A HREF="http://www-leland.stanford.edu/~llurch/win95netbugs/archives/"><TT>http://www-leland.stanford.edu/~llurch/win95netbugs/archives/</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>The ISS NT Security Mailing List</B></FONT></H4>
+<P>This list is made available to the public by Internet Security Systems (ISS).
+It is a mailing list archive. Individuals post questions (or answers) about NT security.
+In this respect, the messages are much like Usenet articles. These are presented
+at the following address in list form and can be viewed by thread (subject tag),
+author, or date.
+
+<UL>
+	<LI><A HREF="http://www.iss.net/lists/ntsecurity/"><TT>http://www.iss.net/lists/ntsecurity/</TT></A>
+</UL>
+
+<P>From this address, you can link to other security mailing lists, including not
+only Windows NT-related lists, but integrated security mailing lists, as well. You
+also have the option of viewing the most recent messages available.</P>
+<P>Such lists are of great value because those posting to them are usually involved
+with security on an everyday basis. Moreover, this list concentrates solely on Windows
+NT security and, as such, is easier to traverse and assimilate than mailing lists
+that include other operating systems.</P>
+<P>One particularly valuable element of this page is that you can link to the Windows
+NT Security Digest Archive Listing. This is a comprehensive database of all NT postings
+to the security list. Appendix A provides a description of various methods to incisively
+search these types of archives using agents. For the moment, however, it suffices
+to say that there are some very talented list members here. Even if you visit the
+list without a specific question in mind, browsing the entries will teach you much
+about Windows NT security.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>ISS is also the vendor
+	for a suite of scanning products for Windows NT. These products perform extremely
+	comprehensive analyses of NT networks. If your company is considering a security
+	assessment, you might want to contact ISS (<A HREF="http://iss.net"><TT>http://iss.net</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>The National Institutes of Health</B></FONT></H4>
+<P>The Computer Security Information page at the National Institutes of Health (NIH)
+is a link page. It has pointers to online magazines, advisories, associations, organizations,
+and other WWW pages that are of interest in security. Check out the NIH page at this
+locale:
+
+<UL>
+	<LI><A HREF="http://www.alw.nih.gov/Security/security.html"><TT>http://www.alw.nih.gov/Security/security.html</TT></A>
+</UL>
+
+<P>This is a big site. You may do better examining the expanded index as opposed
+to the front page. That index is located here:
+
+<UL>
+	<LI><A HREF="http://www.alw.nih.gov/Security/tcontents.html"><TT>http://www.alw.nih.gov/Security/tcontents.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>The Bugtraq Archives</B></FONT></H4>
+<P>This extraordinary site contains a massive collection of bugs and holes for various
+operating systems. The Bugtraq list is famous in the Internet community for being
+the number one source for holes.</P>
+<P>What makes Bugtraq so incredibly effective (and vital to those studying Internet
+security) is that the entire archive is searchable. The information can be searched
+so incisively that in just a few seconds, you can pin down not only a hole, but a
+fix for it. The archive search index offers several choices on the type of search.</P>
+<P>One important amenity of the Bugtraq list is that it is not inundated with advertisements
+and other irrelevant information. The majority of people posting to the list are
+extremely knowledgeable. In fact, the list is frequented by bona fide security specialists
+that solve real problems every day. Chris Chasin, the host of Bugtraq, defines the
+list as follows:
+
+<DL>
+	<DD>This list is for *detailed* discussion of UNIX security holes: what they are,
+	how to exploit, and what to do to fix them. This list is not intended to be about
+	cracking systems or exploiting their vulnerabilities. It is about defining, recognizing,
+	and preventing use of security holes and risks.
+</DL>
+
+<P>In my opinion, Bugtraq is the Internet's most valuable resource for online reporting
+of UNIX-based vulnerabilities. Visit it here:
+
+<UL>
+	<LI><A HREF="http://www.geek-girl.com/bugtraq/search.html"><TT>http://www.geek-girl.com/bugtraq/search.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>The Computer and Network Security Reference Index</B></FONT></H4>
+<P>This index is another fine resource page. It contains links to advisories, newsgroups,
+mailing lists, vendors, and archives. Check it out at
+
+<UL>
+	<LI><A HREF="http://www.telstra.com.au/info/security.html"><TT>http://www.telstra.com.au/info/security.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Eugene Spafford's Security Hotlist</B></FONT></H4>
+<P>This site can be summed up in five words: <I>the ultimate security resource page.</I>
+Of the hundreds of pages devoted to security, this is the most comprehensive collection
+of links available. In contrast to many link pages whose links expire, these links
+remain current. Check it out on-line at
+
+<UL>
+	<LI><A HREF="http://www.cs.purdue.edu/homes/spaf/hotlists/csec-top.html"><TT>http://www.cs.purdue.edu/homes/spaf/hotlists/csec-top.html</TT></A>
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Note to Netscape users: Spaff's
+	page utilizes fundamental Web technology to spawn child windows. That means that
+	for each link you click, a new window is spawned. New users may be unfamiliar with
+	this method of linking and may be confused when they try to use the Back button.
+	The Back button does not work because there is no window to go back to. If you plan
+	to try multiple links from Spaff's page, you will need to kill each subsequent, child
+	window to get back to the main list. If you fail to do this (and instead minimize
+	each window) you will soon run out of virtual memory. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Mailing Lists</B></FONT></H3>
+<P>Table 15.2 contains a list of security-related mailing lists that often distribute
+advisories about holes. Most are very useful.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>CAUTION:</B></FONT><B> </B>Remember when I wrote about the
+	large volume of mail one could receive from such a list? Beware. Subscribing to a
+	handful of these lists could easily result in 10-30MB of mail per month. 
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If a list has a sister list that
+	calls itself a <I>digest</I>, subscribe to the digest instead. Digests are bundled
+	messages that come periodically as a single file. These are more easily managed.
+	If you subscribe to three or four lists, you may receive as many as ten messages
+	an hour. That can be overwhelming for the average user. (You'll see messages from
+	distraught users asking how to get off the list. These messages usually start out
+	fairly civil, but end up as &quot;Get me off this damn list! It is flooding my mailbox!&quot;)
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Table 15.2. Mailing lists for holes and vulnerabilities.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>List</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Subject</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:8lgm-list-request@8lgm.org"><TT>8lgm-list-request@8lgm.org</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Security holes only. No junk mail. Largely UNIX.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:bugtraq-request@fc.ne "><TT>bugtraq-request@fc.ne</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Mailing list for holes. No junk mail. UNIX.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:support@support.mayfield.hp.com"><TT>support@support.mayfield.hp.com</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Hewlett Packard security advisories.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:request-ntsecurity@iss.net"><TT>request-ntsecurity@iss.net</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The ISS NT Security mailing list. This is the list that generates the NT archive
+			mentioned previously.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:coast-request@cs.purdue.edu"><TT>coast-request@cs.purdue.edu</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holes and discussion on tools. Primarily UNIX.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:security-alert@Sun.COM"><TT>security-alert@Sun.COM</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Sun Microsystems security advisories.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:www-security-request@nsmx.rutgers.edu"><TT>www-security-request@nsmx.rutgers.edu</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holes in the World Wide Web.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:security-alert@Sun.COM"><TT>security-alert@Sun.COM</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Sun Microsystems security advisories.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><A HREF="mailto:Sneakers@CS.Yale.EDU"><TT>Sneakers@CS.Yale.EDU</TT></A></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The Sneakers list. Real-life intrusion methods using known holes and tools.</TD>
+	</TR>
+</TABLE>
+
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>In this chapter, you have learned a bit about holes. This knowledge will serve
+you throughout the remainder of the book, for I discuss various holes in many chapters.</P>
+<P>In closing, if you are new to security, the preceding pages may leave you with
+the sense that a hole is evidence of vendor incompetence. Not so. Vendor-based holes
+may take a long time to fix. If the vendor is large, this may expand into weeks or
+even months. Development teams in the corporate world work much like any other body.
+There is a hierarchy to be traversed. A software programmer on a development team
+cannot just make a material alteration to a program because he or she feels the need.
+There is a standardized process; protocols must be followed. Perhaps even worse is
+when the flaw exists in some standard that is administrated by a committee or board.
+If so, it may be a long, long time before the hole is fixed.</P>
+<P>For the moment, holes are a fact of life. And there is no likelihood of that changing
+in the near future. Therefore, all system and network administrators should study
+such holes whenever they can. Consider it a responsibility that goes along with the
+job title because even if you don't study them, crackers will.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="../ch14/ch14.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch16/ch16.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+<IMG SRC="../button/corp.gif" WIDTH="284" HEIGHT="45" ALIGN="BOTTOM" ALT="Macmillan Computer Publishing USA"
+BORDER="0"></P>
+
+<P>&#169; <A HREF="../copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,168 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=905-909//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch26/26-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 27<br>Active Directory
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>An Overview of Active Directory <i>906</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using ADSI to Manage Active Directory <i>909</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Additional Resources <i>927</I></B>
+</DL>
+<p>This chapter discusses Active Directory programming. Active Directory is the new, enterprisewide directory service for Windows 2000. Active Directory supports both the industry-standard LDAP API and the Microsoft Active Directory Services Interface (ADSI). ADSI can be used by clients of all types, whether they&#146;re written in C, C<small>&#43;&#43;</SMALL>, Visual Basic, or a scripting language such as VBScript. This chapter&#146;s examples use Visual C<small>&#43;&#43;</SMALL> and Visual Basic with ADSI to demonstrate Active Directory client programming.</P>
+<h3><a name="Heading2"></A><font color="#000077">An Overview of Active Directory</FONT></H3>
+<p>Active Directory is the directory service included with Windows 2000. Active Directory, like all directories, is similar to a database. Items can be added and removed from Active Directory, and items in Active Directory are, in most cases, persistent. Also, as is the case with databases, items stored in the directory have attributes that can be viewed and modified by directory clients. However, unlike a typical database, Active Directory is optimized to provide very fast responses to queries made against the directory. Changes to the directory, especially changes to the directory&#146;s structure, are not executed as quickly as queries.
+</P>
+<p>Although a directory is similar to a database, it&#146;s not suitable for storing large amounts of arbitrary information. Active Directory is not well-suited for constant updates of frequently changing information or for storing large data items.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Namespace Organization</FONT></H4>
+<p>A directory is often referred to as a <i>namespace</I>, which is a storage area that contains objects with unique names. Objects stored in a directory may contain attributes that make each object unique. For example, printers stored in a directory have attributes that specify their name, model, number, and location. A user stored in Active Directory typically has a name, email address, and location, as shown in Figure 27.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-01.jpg',227,195 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-01.jpg',227,195)"><font color="#000077"><b>Figure 27.1</B></FONT></A>&nbsp;&nbsp;A typical user and her attributes as stored in a directory.</P>
+<p>Items stored in the directory may be simply objects, as in the case of a user, or they may be containers. A container is a directory object that can contain other objects. Examples of containers are domains and membership lists. Containers may contain other containers, giving the directory its characteristic tree shape, as shown in Figure 27.2.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-02.jpg',286,139 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-02.jpg',286,139)"><font color="#000077"><b>Figure 27.2</B></FONT></A>&nbsp;&nbsp;A directory container contains other objects.</P>
+<p>Each item in the tree has a <i>distinguished name</I>, or DN, that uniquely specifies the object&#146;s location in the directory tree. Here&#146;s an example of a DN for a user:</P>
+<!-- CODE SNIP //-->
+<pre>
+CN=Ali Williams/CN=Marketing/CN=Users/DC=CodevTech/DC=COM
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Every object&#146;s distinguished name is made up of a number of components that describe the path taken from the root of the directory namespace to the object. Each DN includes a <i>relative distinguished name</I>, or RDN, that differentiates the object from its parent and siblings. Figure 27.3 shows an example of an Active Directory namespace tree.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-03.jpg',800,600 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-03.jpg',800,600)"><font color="#000077"><b>Figure 27.3</B></FONT></A>&nbsp;&nbsp;Distinguished names and relative distinguished names in a directory.</P>
+<p>Every RDN is unique within a particular container. This property ensures that DNs are always unique within an Active Directory namespace. In Figure 27.3, the RDN of the leaf object is Ali Williams. The RDN of the parent is Marketing.
+</P>
+<p>The string format for distinguished names was originally specified in RFC 1779. This RFC specifies a set of keywords used to compose DNs. Table 27.1 contains a partial list of these keywords.</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 27.1</B> Components Used to Compose X.500 Distinguished Names
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="25%" valign="TOP" align="LEFT"><i>Keyword</I>
+<th width="75%" valign="TOP" align="LEFT"><i>Description</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>CN</SMALL>
+<td valign="TOP" align="LEFT">Common name
+<tr>
+<td valign="TOP" align="LEFT"><small>L</SMALL>
+<td valign="TOP" align="LEFT">Locality
+<tr>
+<td valign="TOP" align="LEFT"><small>ST</SMALL>
+<td valign="TOP" align="LEFT">State or province
+<tr>
+<td valign="TOP" align="LEFT"><small>O</SMALL>
+<td valign="TOP" align="LEFT">Organization
+<tr>
+<td valign="TOP" align="LEFT"><small>OU</SMALL>
+<td valign="TOP" align="LEFT">Organizational unit
+<tr>
+<td valign="TOP" align="LEFT"><small>C</SMALL>
+<td valign="TOP" align="LEFT">Country
+<tr>
+<td valign="TOP" align="LEFT"><small>STREET</SMALL>
+<td valign="TOP" align="LEFT">Street address
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>RFC 1779 serves to define how distinguished names found in X.500 networks are presented. X.500 is an OSI protocol rather than an Internet protocol, so it has no keyword defined to indicate an Internet domain name. Active Directory adds a frequently used IETF extension, <small>DC</SMALL>, which stands for <i>domain component</I>.</P>
+<p>Each object is also assigned a GUID that uniquely identifies it. An object may be renamed several times during its lifetime in the Active Directory, but its GUID will remain constant. This allows you to return to specific objects in the directory, even if they have been renamed, simply by storing the objects&#146; GUIDs.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Understanding Trees and Forests</FONT></H4>
+<p>As described earlier, a directory tree is a contiguous namespace, where all the objects in the tree can be traced back to a common node. An Active Directory <i>domain tree</I> is composed of one or more domains that share a directory, use a common schema, and are configured in the same way. In a large enterprise, it may not be desirable, or even possible, for the directory to be placed into one domain tree. Active Directory allows you to divide your directory namespace into <i>forests</I>, which contain one or more domain trees, as shown in Figure 27.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-04.jpg',701,527 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch27/images/27-04.jpg',701,527)"><font color="#000077"><b>Figure 27.4</B></FONT></A>&nbsp;&nbsp;A directory namespace may be divided into forests that contain multiple domain trees.</P>
+<p>As shown in Figure 27.4, trees in a forest do not share the same namespace. Active Directory uses Kerberos to establish transitive trust relationships among trees in a forest. The name of the directory tree located at the root of a forest is used to identify the forest.
+</P>
+<h3><a name="Heading5"></A><font color="#000077">Using ADSI to Manage Active Directory</FONT></H3>
+<p>As discussed earlier in this chapter, Active Directory can be managed through the industry-standard LDAP protocol. Unfortunately for Visual Basic, Java, and scripting language users, the LDAP API is written in C and is very C-oriented. In order to simplify the task of developing directory-enabled applications in any language, Microsoft has introduced the <i>Active Directory Services Interfaces</I>, or ADSI. ADSI is a COM-based API that enables applications written in any Automation-compatible programming language to have complete access to directory services.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch26/26-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

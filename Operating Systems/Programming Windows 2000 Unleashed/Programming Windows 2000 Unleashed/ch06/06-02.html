@@ -1,0 +1,214 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=187-191//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading7"></A><font color="#000077">Creating and Using Dynamic Link Libraries</FONT></H3>
+<p>Dynamic link libraries usually are created using your C or C<small>&#43;&#43;</SMALL> compiler, although you can use other development tools to create DLLs. In this section, you&#146;ll learn the steps required to create a DLL using Visual C<small>&#43;&#43;</SMALL>. Tools from other vendors are similar; see your documentation for the exact details.</P>
+<p>The next few sections cover several issues involved in creating and using DLLs:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Initializing a DLL
+<dd><b>&#149;</B>&nbsp;&nbsp;Exporting functions and data from a DLL
+<dd><b>&#149;</B>&nbsp;&nbsp;Loading a DLL when an application starts
+<dd><b>&#149;</B>&nbsp;&nbsp;Loading a DLL during runtime
+<dd><b>&#149;</B>&nbsp;&nbsp;Using version control with a DLL
+<dd><b>&#149;</B>&nbsp;&nbsp;Using shared memory in a DLL
+</DL>
+<p>Following these general topics, sample projects are developed that demonstrate each of these subjects.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Understanding DLL Initialization</FONT></H4>
+<p>In 16-bit Windows, separate entry and exit points are defined for each DLL. <small>LibMain</SMALL> is called when the DLL is loaded, and <small>WEP</SMALL> is called when the DLL is freed. The world of 16-bit DLL programming is a strange place&#151;for example, under some degenerate error conditions, the <small>WEP</SMALL> exit function could be called without an associated call to <small>LibMain</SMALL>.</P>
+<p>Under Windows 2000, you can define the name of the DLL&#146;s main entry point. By convention, the name of this function is <small>DllMain</SMALL>, but you can use any name you like. This entry point is a function called by the operating system at the following times:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When a process calls the DLL for the first time
+<dd><b>&#149;</B>&nbsp;&nbsp;When a new thread is created by a process attached to a DLL
+<dd><b>&#149;</B>&nbsp;&nbsp;When a thread owned by a process attached to a DLL is destroyed
+<dd><b>&#149;</B>&nbsp;&nbsp;When a process releases a DLL
+</DL>
+<p>If you&#146;re using Visual C<small>&#43;&#43;</SMALL> 6.0, you can change the entry point for the DLL by following these steps in the Developer Studio IDE:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Choose Settings from the Project menu.
+<dd><b>2.</B>&nbsp;&nbsp;Click the Link tab.
+<dd><b>3.</B>&nbsp;&nbsp;Select Output from the Category drop-down list.
+<dd><b>4.</B>&nbsp;&nbsp;Enter a new name as the entry-point symbol. This will be the function name called when the DLL is loaded.
+</DL>
+<p>If you&#146;re using a makefile, the DLL entry point is specified using the <small>/entry:</SMALL> switch in the linker&#146;s command line.</P>
+<p>Changing the DLL entry point requires you to manually manage the construction of global objects, as well as the initialization of the C runtime library.</P>
+<p>Listing 6.1 shows a typical example of a DLL entry-point function.</P>
+<p><b>Listing 6.1</B> A Generic DLL Entry-point Function</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+BOOL DllMain(HINSTANCE  hLibInstance,
+             DWORD      dwReason,
+             LPVOID     lpvReserved)
+{
+    BOOL fResult = FALSE;
+    switch(dwReason)
+    {
+        case DLL_PROCESS_ATTACH:
+        // A process has loaded the library
+        // Set fResult to TRUE if initialization
+        // is successful.
+        break;
+
+        case DLL_PROCESS_DETACH:
+        // A process has unloaded the library
+        break;
+
+        case DLL_THREAD_ATTACH:
+        // A new thread has loaded the library
+        break;
+
+        case DLL_THREAD_DETACH:
+        // A thread has unloaded the library
+        break;
+
+        default:
+        break;
+    }
+    return fResult;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 6.1, the <small>DLL_THREAD_ATTACH</SMALL> and <small>DLL_THREAD_DETACH</SMALL> labels will be reached when a new thread is started in a process that&#146;s already attached to the DLL. It&#146;s not necessary for the new thread to perform any housekeeping; the call is made by the operating system. Also, note that there&#146;s no generic method that the DLL can use to determine how many threads the calling process has launched before it has attached to the DLL.</P>
+<p>If you don&#146;t care to be called every time a process spins up a thread, you can get a small performance increase by calling the <small>DisableThreadLibraryCalls</SMALL> function when the process is attached to the DLL to block these notifications.</P>
+<p>If your DLL has no global data or initialization or cleanup functions that must be performed when it&#146;s loaded or unloaded, you can safely omit the <small>DllMain</SMALL> function from your DLL. If you don&#146;t create an entry point, the compiler and linker conspire together to generate a default version that returns <small>TRUE</SMALL> for every case.</P>
+<p>If you&#146;re using Visual C<small>&#43;&#43;</SMALL> 6.0, the wizard used to create Win32 DLLs will optionally create a skeleton <small>DllMain</SMALL> function for you.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Exporting and Importing DLL Functions and Data</FONT></H4>
+<p>By default, no functions or data located in a DLL are visible to the process that loads the DLL. All functions, data, and resources must be explicitly exported from the DLL using one of these methods:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Placing the names of the exported items in the <small>EXPORTS</SMALL> section of the library&#146;s <small>.def</SMALL> file
+<dd><b>&#149;</B>&nbsp;&nbsp;Using a tool-specific method, such as the <small>__declspec(dllexport)</SMALL> keyword used by Visual C<small>&#43;&#43;</SMALL>
+</DL>
+<p>Once upon a time, when wheels were made of stone and real programmers used C but preferred assembler, all the symbols exported from a library were entered into a library&#146;s definition (DEF) file. You can still use this method. In fact, the MFC Library explicitly lists every exported symbol in the DLL version of the MFC Library. If you&#146;re using a newer compiler, however, you don&#146;t even need a DEF file&#151;in many cases, you can just use the <small>__declspec</SMALL> method to export symbols.</P>
+<p><font size="+1"><b>Examining the Module Definition File</B></FONT></P>
+<p>In 16-bit Windows development, the DEF file has a much more central role than it does in 32-bit Windows. For one thing, you can omit the DEF file in most cases. For a 32-bit DLL, there are at least two entries in a DEF file, if it exists:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LIBRARY</SMALL>. Specifies the name of the DLL
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXPORTS</SMALL>. Marks the beginning of a list of exported symbols
+</DL>
+<p>A minimal DEF file that exports no symbols looks like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LIBRARY      &#147;FOO&#148;
+EXPORTS
+             ; No exports
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Exporting Symbols in a DEF File</B></FONT></P>
+<p>Every symbol that&#146;s exported from the DLL must appear after an <small>EXPORTS</SMALL> label in the DEF file. For example, the following DEF file exports two functions:</P>
+<!-- CODE SNIP //-->
+<pre>
+LIBRARY      &#147;FOO&#148;
+EXPORTS
+             GetData
+             SetData
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Beware of C<small>&#43;&#43;</SMALL> name mangling. If the DLL is compiled with a C<small>&#43;&#43;</SMALL> compiler, you have two options if you want to use the <small>EXPORTS</SMALL> section of the DEF file:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Compile the DLL as a C project in order to turn off name mangling.
+<dd><b>&#149;</B>&nbsp;&nbsp;Determine the mangled names for each of your exported functions and enter these names in the <small>EXPORTS</SMALL> portion of the DEF file.
+</DL>
+<p>In order to determine the mangled names for C<small>&#43;&#43;</SMALL> symbols included in your DLL, build the DLL with no exports and have the linker generate a MAP file. To create a MAP file using Visual C<small>&#43;&#43;</SMALL> 6.0, follow these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Choose Settings from the Projects menu.
+<dd><b>2.</B>&nbsp;&nbsp;Click the Link tab.
+<dd><b>3.</B>&nbsp;&nbsp;Select General from the Category drop-down list.
+<dd><b>4.</B>&nbsp;&nbsp;Click the Generate Mapfile checkbox.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

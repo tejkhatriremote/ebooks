@@ -1,0 +1,179 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=425-429//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Finding the Class Object in the Registry</B></FONT></P>
+<p>The module containing the COM component&#146;s class object is found through the system Registry. If this CLSID is an in-process server, the path to the server&#146;s DLL is stored in the <small>InProcServer32</SMALL> key:</P>
+<!-- CODE SNIP //-->
+<pre>
+HKEY_CLASSES_ROOT\CLSID\&ltGUID&gt\InProcServer32 = Foo.dll
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this example, <small>&ltGUID&gt</SMALL> is replaced by the full CLSID identifying the object. The name of the requested COM object&#146;s server is <small>Foo.dll</SMALL>. You can speed loading by specifying a complete path to the server, or you can just place all your server modules in the Windows 2000 <small>System</SMALL> directory.</P>
+<p><font size="+1"><b>Looking at In-process Server Requirements</B></FONT></P>
+<p>An in-process server must implement three functions, in addition to the functions required by the class object:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllMain</SMALL>. The module&#146;s entry point. The only work done in this function is to stash the instance handle in case it&#146;s needed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllGetClassObject</SMALL>. Must be exported from the module and is called by Windows 2000 when a new COM class object is created.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllCanUnloadNow</SMALL>. Called by Windows 2000 to test whether the DLL can be unloaded. Every object created in the module must increment a global reference counter during construction and decrement this counter when destroyed.
+</DL>
+<p>Figure 13.12 shows the typical layout for an in-process server. An in-process server contains DLL-specific functions, at least one <small>IClassFactory</SMALL> interface, and interfaces supporting at least one OLE custom component.</P>
+<p><a name="Fig12"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-12.jpg',261,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-12t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-12.jpg',261,420)"><font color="#000077"><b>Figure 13.12</B></FONT></A>&nbsp;&nbsp;Contents of a typical COM custom component server.</P>
+<h3><a name="Heading17"></A><font color="#000077">Looking at an Example of a COM Component</FONT></H3>
+<p>The CD-ROM that accompanies this book includes an example of a simple COM component. The CppExt project is a Windows 2000 shell extension that creates a custom context menu after you right-click a C<small>&#43;&#43;</SMALL> file in the shell.</P>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">Using the Shell Extension Mechanism</FONT></H4>
+<p>The shell user interface for Windows 2000 uses COM to support user extensions to the shell. By creating and registering in-process servers supporting the shell extension interfaces, you can create several types of shell extensions, as shown in Table 13.2.
+</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 13.2</B> Windows 2000 Shell Extension Types
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP" width="30%"><i>Shell Extension</I>
+<th align="LEFT" valign="TOP"><i>Function</I>
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Icon handlers
+<td align="LEFT" valign="TOP">Change the appearance of a file&#146;s icon on a per-file object basis. By implementing this interface, for example, you can change the icon displayed for a file object based on its internal state, its age, or any other criteria.
+<tr>
+<td align="LEFT" valign="TOP">Copy hook handlers
+<td align="LEFT" valign="TOP">Invoked when a file object is copied, moved, or deleted. By implementing this interface, you can supplement or prevent the operation.
+<tr>
+<td align="LEFT" valign="TOP">Context menu extensions
+<td align="LEFT" valign="TOP">Add items to the context menu displayed after a file object is right-clicked.
+<tr>
+<td align="LEFT" valign="TOP">Property sheet extensions
+<td align="LEFT" valign="TOP">Add pages to the property sheet displayed by the shell for a particular type of file object.
+<tr>
+<td align="LEFT" valign="TOP">Drag-and-drop handlers
+<td align="LEFT" valign="TOP">Called after a drag-and-drop operation. They&#146;re almost identical to context menu extensions.
+<tr>
+<td align="LEFT" valign="TOP">Drop target handlers
+<td align="LEFT" valign="TOP">Control the activity that occurs when a file object is dropped after a drag-and-drop operation.
+<tr>
+<td align="LEFT" valign="TOP">Data object handlers
+<td align="LEFT" valign="TOP">Supply the file object during drag-and-drop operations.
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+</TABLE>
+<p>All shell extensions implement the <small>IShellExtInit</SMALL> or the <small>IPersistFile</SMALL> interface. They also support additional interfaces used to implement their particular service.</P>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Understanding Context Menu Extensions</FONT></H4>
+<p>A context menu extension supports two interfaces:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IShellExtInit</SMALL>. An interface implemented by several types of shell extensions. <small>IShellExtInit</SMALL> defines one function, <small>Initialize</SMALL>, that provides information a shell extension can use to initialize itself.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IContextMenu</SMALL>. Implemented exclusively by context menu extensions. <small>IContextMenu</SMALL> defines three functions. <small>QueryContextMenu</SMALL> requests that the shell extension add items to the context menu. <small>GetCommandString</SMALL> is used by the shell to collect string descriptions of the added menu items. <small>InvokeCommand</SMALL> signals to the shell extension that a new menu item has been selected. Each of these interfaces is discussed later in this chapter.
+</DL>
+<p>When a user right-clicks a file object that&#146;s handled by a context menu extension, the Windows 2000 shell creates an instance of the shell extension, using the mechanism discussed earlier for in-process servers.
+</P>
+<p>Next, the shell uses <small>QueryInterface</SMALL> for the <small>IShellExtInit</SMALL> interface and calls the <small>Initialize</SMALL> function, thus allowing the context menu to store initialization information. A context menu extension must collect information about the file object in this function.</P>
+<p>The shell then queries for the <small>IContextMenu</SMALL> interface and calls the <small>QueryContextMenu</SMALL> function. The shell extension must add all its menu items to the context menu during this function call. The extension is not allowed to remove items or to make any assumptions about the final configuration of the menu. It&#146;s possible for several shell extensions to be registered for a single file type, and there&#146;s no way to ensure that your extension is called last (or first, for that matter). The shell also calls the <small>GetCommandString</SMALL> function in order to collect strings used as canonical verbs and status bar text.</P>
+<p>If a menu item added by a context menu extension is selected by the user, <small>IContextMenu::InvokeCommand</SMALL> is called by the shell. This is the function that carries out whatever activity is represented by the menu item.</P>
+<p>That&#146;s all there is to context menu extensions. In addition to the general-purpose code that must be written for all in-process servers, you really need to implement only four functions for your server.</P>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Creating the Example</FONT></H4>
+<p>CppExt is a Win32 DLL project that contains three files:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CppExt.def</SMALL> is the project&#146;s module definition file.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CppExt.cpp</SMALL> implements the interfaces required for the shell extension.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CppExt.h</SMALL> is a header file that contains the declarations needed for <small>CppExt.cpp</SMALL>
+</DL>
+<p>Many of the projects built in prior chapters used the <small>tchar.h</SMALL> string compatibility macros to allow the projects to be built using Unicode or non-Unicode strings. COM is almost entirely Unicode, and all COM examples in the next few chapters are Unicode only. However, there are a few non-Unicode system interfaces that involve the shell API, such as the <small>IContextMenu</SMALL> interface used by CppExt.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Caution:&nbsp;&nbsp;</B><p>If you modify this project, you must not reuse my GUID&#151;use UUIDGEN to create your own CLSID.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

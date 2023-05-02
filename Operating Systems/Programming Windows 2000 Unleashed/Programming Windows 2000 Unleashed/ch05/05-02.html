@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Structured Exception Handling</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=05//-->
+<!--PAGES=163-168//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This can lead to even more complex cases. Listing 5.5 shows a case in which the last <small>return</SMALL> statement is inside the termination handler.</P>
+<p><b>Listing 5.5</B> Using <small>return</SMALL> Inside a Termination Handler<hr></P>
+<!-- CODE //-->
+<pre>
+   long CalcAndLogFactorial(int n)
+   {
+       long  lResult;
+       _ _try
+       {
+           if(n &gt 2)
+           {
+               for(lResult = 1; n &gt 1; n--)
+                   lResult *= n;
+           }
+           else
+               return (long)n;
+       }
+       _ _finally
+       {
+           return lResult;
+       }
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 5.5, the <small>return</SMALL> statement inside the <small>_ _try</SMALL> block causes the termination handler to be called. The termination handler also contains a <small>return</SMALL>, however. In this case, the <small>return</SMALL> value from the <small>_ _finally</SMALL> block is returned to the caller.</P>
+<p>Obviously, all these twists and turns, caching and retrieving, come at a performance penalty. If possible, avoid premature exits from <small>_ _try</SMALL>&#150;<small>_ _finally</SMALL> blocks.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Using_ _leave to Exit a_ _try Block</FONT></H4>
+<p>If you must exit a <small>_ _try</SMALL> block, Windows 2000 offers a controlled way that&#146;s more efficient than using <small>return</SMALL>. The <small>_ _leave</SMALL> keyword enables you to make a controlled jump to the termination handler without incurring the extra overhead that results in a <small>goto</SMALL> or <small>return</SMALL>. The syntax is very simple:</P>
+<!-- CODE SNIP //-->
+<pre>
+   _ _try
+   {
+       ...
+       _ _leave;
+       ...
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After a <small>_ _leave</SMALL> is encountered, execution continues at the exception handler.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Using Normal and Abnormal Termination</FONT></H4>
+<p>When executing the code in a termination handler, you may need to know whether the termination handler was called due to an error or as a result of normal processing. There are basically two ways to reach a termination handler:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>_ _try</SMALL> block was executed normally, and execution continued into the <small>_ _finally</SMALL> block.
+<dd><b>&#149;</B>&nbsp;&nbsp;An abnormal exit occurred due to a premature exit from the <small>_ _try</SMALL> block, such as an exception or a <small>goto</SMALL> or <small>return</SMALL> statement.
+</DL>
+<p>The <small>AbnormalTermination</SMALL> function returns <small>FALSE</SMALL> if the termination handler was reached via normal execution. If an abnormal exit from the <small>_ _try</SMALL> block was detected, <small>AbnormalTermination</SMALL> returns a non-zero value. If the <small>_ _try</SMALL> block was exited due to a <small>_ _leave</SMALL> statement, <small>AbnormalTermination</SMALL> returns <small>FALSE</SMALL>, as shown in the console mode program provided in Listing 5.6.</P>
+<p><b>Listing 5.6</B> A Console Mode Program That Tests for an Abnormal Exit Using <small>AbnormalTermination</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+   #include &ltwindows.h&gt
+   #include &lttchar.h&gt
+
+   int main()
+   {
+       _ _try
+       {
+           _ _leave;
+             _tprintf(_T(&#147;never\n&#148;));
+       }
+       _ _finally
+       {
+           if(AbnormalTermination() != FALSE)
+               _tprintf(_T(&#147;Abnormal termination\n&#148;));
+           else
+               _tprintf(_T(&#147;Normal termination\n&#148;));
+       }
+       return 0;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The program in Listing 5.6 displays <small>Normal termination</SMALL>. If the <small>_ _leave</SMALL> statement is replaced by <small>return</SMALL> or <small>goto</SMALL>, the program displays <small>Abnormal termination</SMALL>.</P>
+<p>The only way for you to avoid a termination handler is if you kill the currently executing thread. If <small>abort</SMALL> is called inside a <small>_ _try</SMALL> block, for example, the process is killed and the termination handler is never called.</P>
+<h3><a name="Heading7"></A><font color="#000077">Using Exception Handlers</FONT></H3>
+<p>Of course, the real highlight of structured exception handling is handling errors encountered while executing your program. SEH uses exception filters to determine how errors detected in your application should be handled. Two keywords are used when building an exception handler:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>_ _try.</SMALL> Marks the beginning of a guarded block, much as it is used in termination handlers discussed earlier in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>_ _except.</SMALL> Marks the beginning of an exception filter that may be capable of handling an exception.
+</DL>
+<p>The syntax for an exception handler is similar to that used by termination handlers. In Listing 5.7, using <small>*p</SMALL> generates an access violation, and control immediately is passed to the <small>_ _except</SMALL> block. The string &#147;Never got here&#148; is not sent to <small>cout</SMALL>.</P>
+<p><b>Listing 5.7</B> Handling an Access Violation with an Exception Handler<hr></P>
+<!-- CODE //-->
+<pre>
+   _ _try
+   {
+       char *p = NULL;
+       *p = &#145;A&#146;;
+       _tprintf(_T(&#147;Never got here\n&#148;));
+   }
+   _ _except(EXCEPTION_EXECUTE_HANDLER)
+   {
+       _tprintf(_T(&#147;Caught exception\n&#148;));
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The value used with <small>_ _exceptin</SMALL> this case, <small>EXCEPTION_EXECUTE_HANDLER</SMALL> is an <i>exception filter</I> and is discussed in the next section.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Using Exception Filters</FONT></H4>
+<p>An <i>exception filter</I> indicates how your application will handle an exception. The filter is evaluated when control is passed to the <small>_ _except</SMALL> clause in order to determine how the exception will be handled. The filter can have one of three values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_EXECUTE_HANDLER</SMALL>. Indicates that the exception handler should pass control to the <small>_ _except</SMALL> block, which takes responsibility for handling the exception. This symbol is equivalent to using a value of 1.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_CONTINUE_SEARCH</SMALL>. Indicates that this particular exception handler is not interested in handling the exception. The exception dispatcher should look further for an exception handler. This symbol is equivalent to using a value of 0.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_CONTINUE_EXECUTION</SMALL>. Indicates that the exception handler will handle the exception, and execution should resume at the instruction following the instruction that generated the exception. This symbol is equivalent to using a value of &#150;1.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>CAUTION:&nbsp;&nbsp;</B>
+<p>Take extreme care with <small>EXCEPTION_CONTINUE_EXECUTION</SMALL> as an exception filter. In practice, it&#146;s often impossible to predict exactly what is &#147;next&#148; after the instruction that generates an exception.</P>
+<p>Remember that Windows 2000 determines the next instruction, not the programming language you&#146;re currently using. Many assembly instructions may be generated for a single statement, particularly if you&#146;re using languages such as C<small>&#43;&#43;</SMALL> or Visual Basic.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Handling Specific Exception Codes</B></FONT></P>
+<p>One way to use exception handling is to just catch every possible exception raised in a particular function or even the entire application. It&#146;s much more likely, however, that you&#146;re interested in catching and applying some specific handling to a few specific exceptions. If you&#146;re interested in specific exception codes, you can use the <small>GetExceptionCode</SMALL> function to retrieve the value of the current exception being handled, as shown in Listing 5.8.</P>
+<p><b>Listing 5.8</B> Using <small>GetExceptionCode</SMALL> to Determine the Current Exception Value<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+   _ _except(GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+   {
+       _tprintf(_T(&#147;Caught access violation exception\n&#148;));
+
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>This sample exception filter expression is <small>TRUE</SMALL> for access violations. The exception filter expression evaluates <small>TRUE</SMALL> as equal to <small>EXCEPTION_EXECUTE_HANDLER</SMALL>.</P>
+<p>The <small>GetExceptionCode</SMALL> function can be called only from the exception filter expression, as shown in Listing 5.8, or from within the body of an exception handler.</P>
+<p>If you&#146;re interested in testing for more complicated criteria when deciding whether to handle an exception, you must create a <i>filter function</I> and then call the filter function from inside the <small>_ _except</SMALL> clause, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   _ _try
+   {
+       // some guarded code here
+   }
+   _ _except(ExceptionFilter(GetExceptionCode()))
+   {
+       // exception-handling code here
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

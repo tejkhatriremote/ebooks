@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=783-786//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>These code segments represent two valid HTML pages. The <small>hello.asp</SMALL> page is the first one called. If your HTTP server uses <small>default.asp</SMALL> as its default page, then you should rename <small>hello.asp</SMALL>. <small>Hello.asp</SMALL> is a sort of splash screen. When the page is loaded, it outputs <small>Hello</SMALL>. For your situation, it could be your corporate logo. Below the Hello message is a bit of code that assigns the <small>Session(&#147;TestBrowser&#148;)</SMALL> variable to some value. The value does not really matter. Because we&#146;re dealing with the unknown, <small>On Error Resume Next</SMALL> is a necessity. Otherwise, a runtime error will be generated and the system will not continue processing the page. The key to this page is the <small>&ltMETA HTTP-EQUIV=&#148;REFRESH&#148; CONTENT=&#148;5; URL=hellotest.asp&#148;&gt tag</SMALL>. After the page has finished loading, it waits five seconds and loads the page that will test the value of the <small>Session(&#147;TestBrowser&#148;)</SMALL> variable. If the cookie for the <small>Session</SMALL> object is not accepted under any circumstances, the <small>hellotest.asp</SMALL> page should be able to determine this right away. Looking at the next code segment that represents <small>hellotest.asp</SMALL>, you can see that the magic is in the header. The <small>if IsEmpty( Session(&#147;TestBrowser&#148;)) then</SMALL> statement checks to see whether the variable exists. You cannot perform a direct check here because it would immediately register an error. If the variable is empty, the cookie cannot be set&#151;for example, the browser does not, for one reason or another, have the ability to set the cookie. If the <small>if</SMALL> statement proves true, the client is redirected to a page that&#146;s intended for a non-<small>Session</SMALL> ASP page; otherwise, its business as usual. It&#146;s necessary to wrap the <small>if</SMALL> statement in another <small>On Error Resume Next</SMALL> in case the <small>IsEmpty</SMALL> test fails. Even if the test fails, the next statement is within the <small>if</SMALL> and the end effect of being directed to a page for non-<small>Session</SMALL> capability is achieved. The key to this trick is to make the <small>hello.asp</SMALL> page appear as close as possible to a splash screen. Only then will the client not be misled into believing something isn&#146;t correct.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">ServerVariables Collection</FONT></H4>
+<p>The last collection to discuss is the <small>ServerVariables</SMALL> collection. In the early days of Web servers, this collection was used to identify the server and client environment and provide access to the HTTP headers sent by the client. Now there are more settings, because of evolution and the Microsoft framework. There are many different headers. The following code retrieves all HTTP headers sent by the client:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=Javascript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+
+&ltp&gt&lt%=Request.ServerVariables(&#147;ALL_HTTP&#148;)%&gt&lt/p&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>The preceding code returns this:
+</P>
+<!-- CODE //-->
+<pre>
+HTTP_ACCEPT:image/gif, image/x-xbitmap, image/jpeg, image/pjpeg,
+application/vnd.ms-excel, application/msword,
+application/vnd.ms-powerpoint, */*
+HTTP_ACCEPT_LANGUAGE:en-us
+HTTP_CONNECTION:Keep-Alive
+HTTP_HOST:athena
+HTTP_USER_AGENT:Mozilla/4.0 (compatible; MSIE 4.01; Windows NT)
+HTTP_COOKIE:Something=something;
+SPSESSIONIDGQQGQQAA=DHLDDJGAHGFHLNHMLMNDABOO
+HTTP_ACCEPT_ENCODING:gzip, deflate
+</PRE>
+<!-- END CODE //-->
+<p>This information is important because it tells you a few things about the client. For example, you can see that the client is using a browser based on the language &#147;en-us.&#148; In a multilanguage Web site, this would make it possible to send English content. You can also see that the user is using Internet Explorer version 4.01 on Windows NT.
+</P>
+<p>These headers are not the raw headers. The raw headers do not have the <small>HTTP_</SMALL> part. This means that if a client sends the HTTP header</P>
+<!-- CODE SNIP //-->
+<pre>
+MyContent: Hey folks
+</PRE>
+<!-- END CODE SNIP //-->
+<p>you can access it as follows:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%=Request.ServerVariable(&#147;HTTP_MyContent&#148;)%&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There are other headers that can be retrieved. The full list is available in the Microsoft documentation. These values pertain to security certificates, server information, and so on.
+</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Handling ASP Errors</FONT></H4>
+<p>IIS 5.0 introduces the ability to catch ASP errors yourself. In previous versions, you would receive error messages on the Web page showing the error. However, these errors were terse and referenced numbers that nobody understood. This has changed with the ASP error. It makes it possible to figure out what the error is trying to tell using strings, and is retrieved using <small>Server.ErrorObject</SMALL>. The following section discusses how you catch an error on a Web page.</P>
+<p><font size="+1"><b>Handling the 500-100 Error</B></FONT></P>
+<p>With IIS 5.0, you can handle the custom error 500 value 100. This error is an HTTP error that says the server has caught an unhandled exception and therefore cannot continue processing this request. This error is called up whenever compilation faults, preprocessing faults, or runtime errors occur.
+</P>
+<p>Using the IIS snap-in, you can handle this error via another ASP page. When that page is called, the <small>ASPError</SMALL> object is activated and can be handled as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt&lt/HEAD&gt
+&ltBODY&gt
+The Error is ( &lt%=Server.GetLastError().Source()%&gt)
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This page is called up using a <small>Server.Transfer</SMALL> method; therefore, all the <small>Session</SMALL> information will be available.</P>
+<p><font size="+1"><b>Using Exception Handling</B></FONT></P>
+<p>IIS 5.0 uses JScript 5.0, which introduces exception handling. Using exception handling, you can trap an error and display it. Consider the following example:
+</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+&lt%
+try {
+    if( something == nothing) then
+} catch( e) {
+%&gt
+ Error is ( &lt%=Server.GetLastError().ASPDescription()%&gt)
+&lt%
+}
+%&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>This example contains a JScript syntax fault. The keyword <small>then</SMALL> exists only in VBScript. This will cause a fault in JScript. You can capture the error using the <small>try...catch</SMALL> exception block. Then, using <small>Server.GetLastError</SMALL>, you can access the <small>ASPError</SMALL> object.</P>
+<p>The <small>ASPError</SMALL> object has the following properties:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ASPCode</SMALL>. Error code generated by IIS 5.0.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Number</SMALL>. When a COM object generates an error, it contains the COM error number.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Source</SMALL>. Indicates who generated the error&#151;IIS, scripting, or a COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FileName</SMALL>. The name of the ASP file that generated the error.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LineNumber</SMALL>. The line number in the ASP file where the error was generated.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Description</SMALL>. A description of the error.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ASPDescription</SMALL>. The IIS error string.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

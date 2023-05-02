@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:The Registry</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=21//-->
+<!--PAGES=668-670//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="666-668.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="671-672.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading10"></A><font color="#000077">Finding the Registry in Hives</FONT></H3>
+<p>The Registry is mostly contained in a set of files called the <i>hives</I>. (<i>Mostly</I>, because some of it is built automatically every time you boot up your system&#151;for example, devices on a SCSI chain aren&#146;t known until you boot.) Hives <i>are</I> always open&#151;they&#146;re not hidden, system, or read-only&#151;so you&#146;re kind of limited in what you can do with them. However, using hives is an easy way to load or back up a sizable part of the Registry.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Hives are binary files, so you need a special editor of some kind, such as the Registry Editor, to look at them.<hr></FONT>
+</BLOCKQUOTE>
+<p>The hive files are in the <tt>\Winnt\System32\Config</TT> directory. Table 21.1 lists the hive files that correspond to parts of the subtree.</P>
+<table width="100%"><caption align=LEFT><b>Table 21.1</B> Hive Files (### = System ID for User)
+<th colspan="2"><hr>
+<tr>
+<tr>
+<th width="55%" align="LEFT">Subtree/Key
+<th width="45%" align="LEFT">File Names
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td>HKEY_LOCAL_MACHINE\SAM
+<td>SAM (primary)
+<tr>
+<td>
+<td>SAM.LOG (backup)
+<tr>
+<td>HKEY_LOCAL_MACHINE\SECURITY
+<td>SECURITY (primary)
+<tr>
+<td>
+<td>SECURITY.LOG (backup)
+<tr>
+<td>HKEY_LOCAL_MACHINE\SOFTWARE
+<td>SOFTWARE (primary)
+<tr>
+<td>
+<td>SOFTWARE.LOG (backup)
+<tr>
+<td>HKEY_LOCAL_MACHINE\SYSTEM
+<td>SYSTEM (primary)
+<tr>
+<td>
+<td>SYSTEM.ALT (backup)
+<tr>
+<td>HKEY_USERS\DEFAULT
+<td>DEFAULT (primary)
+<tr>
+<td>
+<td>DEFAULT.LOG (backup)
+<tr>
+<td>HKEY_USERS\Security ID
+<td>xxxxxnnn,
+<tr>
+<td>
+<td>xxxxnnn.LOG
+<tr>
+<td>HKEY_CURRENT_USER
+<td>USE### or ADMIN### (primary)
+<tr>
+<td>
+<td>USER###.LOG, ADMIN###.LOG (backups)
+<tr>
+<td valign="TOP">HKEY_CLASSES_ROOT
+<td>Created from CurrentControlSet at boot time
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>Table 21.1 needs a few notes to clarify it. First, about the HKEY_CLASSES_ROOT subtree: It is copied from <tt>HKEY_LOCAL_MACHINE\SOFTWARE\Classes</TT> at boot time. The file exists for the use of 16-bit Windows applications. While you&#146;re logged on to Windows 2000, however, the two keys are linked; if you make a change to one, the other reflects the change.</P>
+<p>The user profiles now live in <tt>\Winnt\Profiles\Username</TT>, where each user gets a directory named Username. For example, say you&#146;ve got a user account named Mark; there would be a directory named <tt>D:\Winnt\Profiles\Mark</TT> on your computer. If you look in it, you find the files <tt>ntuser.dat</TT> and <tt>ntuser.dat.log</TT>.</P>
+<p>One question remains about the user profiles, however: Why do all the files have a paired file with the <tt>.log</TT> extension ? Read on.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Fault Tolerance in the Registry</FONT></H4>
+<p>Notice that every hive file has another file with the same name but the extension <tt>.log</TT>. Windows 2000 Professional computers use that <tt>.log</TT> file to protect the Registry during updates.</P>
+<p>Whenever a hive file is to be changed, the change is first written into its <tt>.log</TT> file. The <tt>.log</TT> file isn&#146;t a backup file; it&#146;s more a journal of changes to the primary file. After the description of the change to the hive file is complete, the journal file is written to disk. When we say &#147;written to disk&#148; here, we <i>mean</I> written to disk; often, a disk write ends up hanging around in the disk cache for a while, but this write is flushed to disk. Then the system makes the changes to the hive file based on the information in the journal file. If the system crashes during the hive write operation, the journal file contains enough information to &#147;roll back&#148; the hive to its previous position.</P>
+<p>The exception to this procedure comes with the SYSTEM hive. The SYSTEM hive is really important, because it contains the CurrentControlSet. For that reason, the backup file for SYSTEM, <tt>system.alt</TT>, is a complete backup of SYSTEM. If one file is damaged, the system can use the other to boot.</P>
+<p>Notice that <tt>HKEY_LOCAL_MACHINE\HARDWARE</TT> does not have a hive. Because the key is rebuilt each time you boot, Windows 2000 can adapt itself to changes in computer hardware. The program <tt>ntdetect.com</TT>, which runs at boot time, gathers the information that Windows 2000 needs to create <tt>HKEY_LOCAL_MACHINE\HARDWARE</TT>.</P>
+<p>Confused about where all the keys come from? You&#146;ll find a recap in the following lists. They&#146;re similar to the previous table but are more specific about how the keys are built at boot time. First, we&#146;ll look at how the subkeys to the HKEY_LOCAL_MACHINE key are constructed at boot time:</P>
+<center>
+<table width="90%"><tr>
+<th width="50%" align="LEFT">Subkey
+<th width="50%" align="LEFT">How Constructed
+<tr>
+<td>HARDWARE
+<td><tt>ntdetect.com</TT>
+<tr>
+<td>SAM
+<td>SAM hive file
+<tr>
+<td>SECURITY
+<td>SECURITY hive file
+<tr>
+<td>SOFTWARE
+<td>SOFTWARE hive file
+<tr>
+<td>SYSTEM
+<td>SYSTEM hive file
+</TABLE>
+</CENTER>
+<p>Here&#146;s the boot-time information for the other keys:
+</P>
+<center>
+<table width="90%"><tr>
+<th width="50%" align="LEFT">Key
+<th width="50%" align="LEFT">How Constructed
+<tr>
+<td>HKEY_CLASSES_ROOT
+<td>SYSTEM hive file, Classes subkey
+<tr>
+<td>HKEY_USERS_DEFAULT
+<td>DEFAULT hive file
+<tr>
+<td>HKEY_USERS\Sxxx
+<td>username000 hive file
+<tr>
+<td>HKEY_CURRENT_USER
+<td>username000 hive file
+</TABLE>
+</CENTER>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="666-668.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="671-672.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

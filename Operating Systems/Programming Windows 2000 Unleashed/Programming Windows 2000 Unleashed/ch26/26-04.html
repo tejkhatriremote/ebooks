@@ -1,0 +1,197 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Pipes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=26//-->
+<!--PAGES=892-895//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="26-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Table 26.2 lists the pipe mode and blocking characteristics of the pipe.
+</P>
+<caption align="LEFT" colspan="2"><b>Table 26.2</B> Mode and Blocking Attributes for Named Pipes
+<table width="100%">
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th valign="TOP" align="LEFT" width="35%"><i>Attribute</I>
+<th valign="TOP" align="LEFT" width="65%"><i>Function</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_NOWAIT</SMALL>
+<td valign="TOP" align="LEFT">Indicates that nonblocking mode is enabled. As discussed earlier, this mode should be avoided.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_WAIT</SMALL>
+<td valign="TOP" align="LEFT">Indicates that blocking mode is enabled. This mode is the default and is preferred over the nonblocking option.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_READMODE_BYTE</SMALL>
+<td valign="TOP" align="LEFT">Indicates that data is read from the pipe as a stream of bytes.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_READMODE_MESSAGE</SMALL>
+<td valign="TOP" align="LEFT">Indicates that data is read from the pipe as a stream of messages.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_TYPE_BYTE</SMALL>
+<td valign="TOP" align="LEFT">Indicates that data is written to the pipe as a stream of bytes.
+<tr>
+<td valign="TOP" align="LEFT"><small>PIPE_TYPE_MESSAGE</SMALL>
+<td valign="TOP" align="LEFT">Indicates that data is written to the pipe as a stream of messages.
+<tr>
+<td colspan="2"><hr>
+<tr>
+</TABLE>
+<p>You close a named pipe handle by calling the ever-popular <small>CloseHandle</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+CloseHandle(hPipe);
+</PRE>
+<!-- END CODE SNIP //-->
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Connecting and Using a Named Pipe</FONT></H4>
+<p>A pipe must be placed into listening mode by the pipe&#146;s server process before a client can use it. A server process places a pipe into listening mode by calling the <small>ConnectNamedPipe</SMALL> function. If the pipe is not using overlapped I/O, the call to <small>ConnectNamedPipe</SMALL> blocks, or waits, until it times out or a client is connected to the pipe. Listing 26.3 shows a typical call to <small>ConnectNamedPipe</SMALL>.</P>
+<p><b>Listing 26.3</B> Placing a Named Pipe into Listening Mode Using <small>ConnectNamedPipe</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+BOOL fConnected = ConnectNamedPipe(hPipe, NULL);
+if(fConnected || GetLastError() == ERROR_PIPE_CONNECTED)
+{
+    // Connected to a client
+}
+else
+{
+    // Handle error condition
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>ConnectNamedPipe</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The pipe handle
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>OVERLAPPED</SMALL> structure, which is used for overlapped I/O
+</DL>
+<p>The <small>ConnectNamedPipe</SMALL> function returns <small>TRUE</SMALL> if a client connects to the pipe successfully or <small>FALSE</SMALL> if an error occurs. If a client connects to a pipe after the pipe is created but before the server process calls <small>ConnectNamedPipe</SMALL>, the return value is <small>FALSE</SMALL>, and <small>GetLastError</SMALL> returns <small>ERROR_PIPE_CONNECTED</SMALL>.</P>
+<p>In most cases, it&#146;s perfectly okay to continue processing, as shown in Listing 26.3. Be aware that if you attempt to call <small>ConnectNamedPipe</SMALL> on a pipe handle that&#146;s already open, you&#146;ll receive the same error message. It&#146;s up to you to structure your code so that you can separate these cases.</P>
+<p>A client process opens a handle to a named pipe by using the <small>CreateFile</SMALL> function and passing the full name of the pipe as the filename. If a handle to the pipe cannot be opened using the parameters passed to <small>CreateFile</SMALL>, <small>INVALID_HANDLE_VALUE</SMALL> is returned, as shown in Listing 26.4.</P>
+<p><b>Listing 26.4</B> Opening the Client Side of a Named Pipe<hr></P>
+<!-- CODE //-->
+<pre>
+HANDLE  hPipe = CreateFile(_T(&#147;\\\\pongo\\pipe\\lucky&#148;),
+                           GENERIC_READ | GENERIC_WRITE,
+                           0,
+                           NULL,
+                           OPEN_EXISTING,
+                           0,
+                           NULL);
+if(m_hPipe == INVALID_HANDLE_VALUE)
+{
+    // Handle error creating pipe.
+}
+DWORD dwPipeState = PIPE_READMODE_MESSAGE;
+BOOL fChangedState = SetNamedPipeHandleState(hPipe,
+                                             &ampdwPipeState,
+                                             NULL,
+                                             NULL);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>By default, <small>CreateFile</SMALL> opens a pipe handle as a byte-type pipe. In Listing 26.4, <small>SetNamedPipeHandleState</SMALL> specifies a message-type pipe.</P>
+<p>When you&#146;re opening named pipe handles, the parameters for <small>CreateFile</SMALL> are very similar to the ones for opening existing disk files:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The full pipe name
+<dd><b>&#149;</B>&nbsp;&nbsp;The read and write access for the pipe handle
+<dd><b>&#149;</B>&nbsp;&nbsp;The share mode (which always is set to 0 for named pipes)
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure, or <small>NULL</SMALL> if the pipe handle will use the security descriptor of the current access token
+<dd><b>&#149;</B>&nbsp;&nbsp;The handle-creation information (which always is set to <small>OPEN_EXISTING</SMALL> for named pipes)
+<dd><b>&#149;</B>&nbsp;&nbsp;The file attribute flags (set to 0 for named pipes)
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>OVERLAPPED</SMALL> structure if the pipe is opened in <small>OVERLAPPED</SMALL> mode, or <small>NULL</SMALL> if the pipe will block until the <small>CreateFile</SMALL> function is completed
+</DL>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Looking at a Named Pipe Example</FONT></H4>
+<p>Two sample programs that demonstrate the use of named pipes are included on this book&#146;s CD-ROM. BardServ provides a series of quotations from Shakespeare via a named pipe &#147;Quote.&#148; NPClient is a dialog-based MFC program that connects to the named pipe supplied by BardServ and displays a quotation in its main dialog box. Although the source code assumes that both programs are located on the same machine, it&#146;s easy to modify NPClient to work across a network.
+</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">A Named Pipe Server Application</FONT></H4>
+<p>The BardServ application is a fairly simple server application. It spins in a <small>while</SMALL> loop, creating and connecting named pipes for client processes, as shown in Figure 26.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch26/images/26-02.jpg',286,139 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch26/images/26-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch26/images/26-02.jpg',286,139)"><font color="#000077"><b>Figure 26.2</B></FONT></A>&nbsp;&nbsp;The basic architecture of BardServ.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="26-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

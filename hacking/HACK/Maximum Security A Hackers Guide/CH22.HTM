@@ -1,0 +1,519 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 22 -- Who or What Is Root?</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch21.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch21/ch21.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch23.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch23/ch23.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">22</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Who or What Is Root?</FONT></H1>
+</CENTER>
+<P>Throughout this book, I have made references to the terms <I>root</I> and <I>administrator</I>.
+It occurred to me that the average user might have no idea what those terms mean,
+so I have provided this brief chapter to explain these concepts.
+<H2><FONT COLOR="#000077"><B>The General Idea</B></FONT></H2>
+<P>Most users deal primarily with a single workstation. Their first experience with
+such a machine probably comes at home or at school. Even when the machine is connected
+to a network, a user might think of his machine as the only one of relevance. That
+is, he might view his machine as a separate entity that exists (or could exist) without
+the presence of all those other machines.</P>
+<P>In most instances, that is exactly right. The majority of workstations have a
+local disk and on that disk, local software, including an operating system and applications.
+Only in hard-core networking or academic environments do you see the diskless client.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>A <I>diskless client</I> is any
+	machine that lacks a local hard disk drive and must therefore find another way to
+	boot. One way is through the use of a floppy that loads the minimum drivers necessary
+	to engage the Ethernet card within the machine. This card then sends a broadcast
+	message requesting a login session. This is common in networks driven by Novell NetWare,
+	for example; these networks use a floppy with the Ethernet driver, the LAN adapter
+	software, and a small shell. Another method is where the workstation has firmware
+	(or other software, hard-coded to some portion of the board) within it that can initiate
+	a boot session over a network via Ethernet or other protocols. This is more commonly
+	seen in UNIX-based networks, with the use of X terminals or the use of remote booting
+	services. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Nevertheless, most users learn about computers by using their home machine. Although
+machines at work might restrict users to a single program or operate on a now archaic
+platform, the home machine is completely under the users' control. They can navigate,
+execute programs, and delete items as they see fit (alas, often to their detriment).
+So the average user probably has only a murky understanding of how a network operates.
+Indeed, the average user had no reason to understand networking...until now.</P>
+<P>In a network, there must be some central control not just for humans but also
+for machines. Consider the use of name servers. A <I>name</I> <I>server</I> provides
+a method to resolve Internet addresses from names. Every real network on the Internet
+has one such name server. If any machine on that network is unaware of the name server's
+address, that machine will be unable to resolve Internet hostnames to physical addresses.
+The name server's address, therefore, must be located somewhere on the drive. In
+UNIX networks, this information is generally stored in the <TT>/ETC/RESOLV.CONF</TT>
+file. On the Mac platform, this is stored in the MacTCP settings (generally reachable
+through the Control Panels menu). On the Microsoft Windows platform, it is stored
+(at least for dial-up accounts) in the dial-up networking configuration of each individual
+connection. This is generally specified in the TCP/IP settings of the connection
+(see Figure 22.1).</P>
+<P><A NAME="01"></A><A HREF="01-11.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch22/01.htm"><B>FIGURE 22.1.</B></A> <I><BR>
+TCP/IP settings for a connection: the name server.</I></P>
+<P>Using a name server is a way of centralizing information so that it is easier
+to reach. Consider the Archie network. Archie servers can be used to search for files
+all over the world; for example, you could search for a file and find that the only
+location for it is in Iran. The Archie system works differently than you might think.
+It doesn't fan out across the globe, searching every machine on the Internet until
+it finds (or fails to find) the requested file. Instead, administrators of networks
+report the content of their drives to centralized Archie servers. This makes sense
+because it is easier to search a simple record database on an Archie server than
+engage connections all over the world. In this way, Archie servers and gateways use
+simple techniques to perform what appears to be a modern miracle.</P>
+<P>Similarly, a small network has many centralized resources. These may include file
+libraries, applications, or address databases. Centralization of these resources
+ensures that the system runs smoothly and effectively. For example, imagine if everyone
+on the network could designate any Ethernet or IP address they wanted for their workstation.
+How would other machines know what this address was? This would cause a great deal
+of confusion on the network. Certainly, information would not travel reliably in
+such a climate.</P>
+<P>The design of the modern network also provides for some level of economics, not
+only from a financial point of view, but from a practical one. For example, each
+workstation need not install a C compiler as long as one is available to all users.
+These shared resources can be enjoyed by all users, but must be installed only once.
+(This is a slight oversimplification; in many instances, a single interpreter or
+compiler might not suffice.)</P>
+<P>Someone must control where, when, and how such resources can be used; that someone
+is whom I refer to when I use the terms <I>root</I>, <I>supervisor</I>, <I>administrator</I>,
+and <I>operator</I>. This person (or rather, this account) works almost identically
+on all networked operating systems. This account has privileges to read, write, execute,
+delete, create, list, or otherwise modify every file on the drive. As such, this
+person has enormous power.</P>
+<P>Although this power is necessary to maintain the system, it can be quite dangerous
+in inexperienced hands. This lesson is quickly learned by users who decide to migrate
+from the Microsoft Windows platform to UNIX. To get this change-over under way, many
+users purchase a book on Linux that comes with a CD-ROM. They manage to get through
+the installation process and log in as root, and then they travel around the drive,
+trying out various applications. Inevitably, they delete or otherwise modify some
+crucial part of the system, rendering the system unusable. Not yet possessing the
+skills necessary to find and remedy the problem, they simply reinstall. The average
+new Linux user does this two or three times before finally getting it right. (<I>Getting
+it right</I> means not roaming the drive as root without a valid reason. Instead
+of roaming as root, you should create a user account for yourself with limited privileges
+until you learn the system more completely. This user account will inherit privileges
+that forbid you from destroying crucial, indispensable network resources.)</P>
+<P>Because network administration is such a touchy subject, those charged with this
+responsibility are usually long on experience. Most of them are <I>toolsmiths</I>,
+individuals who not only can run the system efficiently, but can create new software
+to improve on deficiencies inherent in the out-of-the-box operating system distribution.
+At a minimum, root must know how to properly administer file and directory access
+control.
+<H2><FONT COLOR="#000077"><B>About Access Control</B></FONT></H2>
+<P><I>Access control</I> refers to methods of controlling user access to files, directories,
+ports, and even protocols. Modern forms of access control grew out of efforts to
+create secure systems. For example, the criteria used to measure the security of
+a system naturally include access control as an integral element. The capability
+to grant or deny access by this or that user to a given resource should be an inherent
+part of the networked operating system. Most networked systems have some form of
+access control.</P>
+<P>Most schemes of access control rely on a system of privileges or permissions.
+These might involve read, write, or list permissions, or they might be even more
+finely implemented. The level to which these are categorized dramatically affects
+whether or not access control will be used. Some forms of access control are so restrictive
+that the network might be unable to run efficiently.</P>
+<P>In any event, root decides the majority of these permissions. Some access control
+schemes are embedded within the system. For example, on many operating systems, a
+series of directories or files are owned (or limited to access) by root or the network
+system administrator by default. Thus, by default, only root can access them. These
+are typically system configuration files vital to the operation of the network. In
+the wrong hands, these could provide unauthorized access to and perhaps compromise
+of the network.</P>
+<P>On a UNIX network, you can easily identify all permissions simply by listing a
+directory structure of the files within that directory. To get an idea of how this
+listing looks, see Figure 22.2.</P>
+
+<P><A NAME="02"></A><A HREF="02-10.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch22/02.htm"><b>Figure 22.2</b></a><i> A typical example of a listing from the base directory of a UNIX box, shows a series of columns of information.</i></p>
+
+<p>Each column displays significant details about the listed file or directory.</p> 
+
+<p><A NAME="03"></A><A HREF="03-10.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch22/03.htm"><b>Figure 22.3</b></a> <i>shows those columns broken down intocategories of information called attributes</I>.</P>
+
+<P>I want to briefly detail these attributes. They are, in reverse order of importance
+in terms of access control:
+
+<UL>
+	<LI>Attribute #4: File Statistics. These columns relate the size of the file or directory,
+	the date and time (usually of its last modification, or where there is no modification,
+	when it was created), and the name. This is very similar to the information you receive
+	on a DOS directory listing or in a file management application like Explorer in Windows
+	95.<BR>
+	<BR>
+	
+	<LI>Attribute #3: The Group. This column specifies the group to which the file is
+	assigned. Groups are clusters of individuals (usually) who have common permissions
+	and requirements throughout the system. However, system processes can also belong
+	to groups, and can even form them. Figure 22.3 lists two groups: <TT>root</TT> and
+	<TT>sys</TT>.<BR>
+	<BR>
+	
+	<LI>Attribute #2: The Owner. This attribute specifies the owner of the file or directory
+	(in this case, root).<BR>
+	<BR>
+	
+	<LI>Attribute #1: Permissions. This field is where permissions are explicitly stated.
+</UL>
+
+<P>It is with Attribute #1 that we most concerned. Attribute #1 (or the permissions)
+are set to reflect three distinct elements of access. Reading Attribute #1 from left
+to right, those elements are
+
+<UL>
+	<LI>The permissions for the owner (who is revealed in Attribute #2)<BR>
+	<BR>
+	
+	<LI>The permissions for the group (identified in Attribute #3)<BR>
+	<BR>
+	
+	<LI>The permissions for those not belonging to the group specified in Attribute #3
+	(the rest of the folks on that system)
+</UL>
+
+<P>In each case, a letter or a dash appears. The dash signifies that a certain access
+permission or privilege is denied. The remaining letters (<TT>r</TT>, <TT>w</TT>,
+and <TT>x</TT>) represent access privileges; specifically, they represent read, write,
+and execute access.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If you examine the listings provided
+	in Figure 22.2, you will also note that a <TT>d</TT> appears within the first field
+	(Attribute #1). This signifies that the listed item is a directory and not a file.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The structure of the permission scheme reads from left to right in ascending order.
+In other words, the first three characters (reading from left to right) represent
+the permissions for the owner. The next three represent permissions for the group.
+The last three represent permissions for the rest of the world.</P>
+<P>Networked operating systems that have access control might not present it in exactly
+this manner. UNIX has presented permissions this way for many years. It is a quick
+and efficient way (at a command prompt) to find out who can access what. Different
+systems might do this in different ways. Older Novell NetWare, for example, has a
+shell interface that allows you to use a semi-graphical interface to set and view
+these permissions. Microsoft Windows NT <I>is</I> graphical, but you can also set
+a surprising number of access control options from a prompt.
+<H2><FONT COLOR="#000077"><B>About Gaining Root</B></FONT></H2>
+<P>If this is how UNIX implements access control, the obvious task of a cracker is
+to gain root privileges. Because UNIX was (and probably still is) the predominant
+operating system on Internet servers, crackers have put themselves to the task of
+gaining root for over 20 years. The reason is simple: Whoever has root sets the permissions;
+whoever sets the permissions has control of the entire system. If you have compromised
+root, you have seized control of the box (and maybe the entire network).
+<H3><FONT COLOR="#000077"><B>Pros and Cons of the Permissions System</B></FONT></H3>
+<P>The permissions system has many advantages, including support of classing. That
+means you can create a hierarchical structure in which you can refine the privileges
+based on classes (of groups, users, and so forth). Because of this, you can quickly
+and efficiently implement at least the basics of security. Groups can reflect the
+organizational structure of your firm. Naturally, any member of a group will inherit
+security permissions from his parent group (in other words, a certain member of a
+group will inherit the same default permissions on files that all members of the
+group would have immediately upon being added to the group). Thus, you can assign
+at least minimal privileges with a single stroke.</P>
+<P>After setting the group (and after the owner and user of the group have inherited
+these permissions from their superseding classes), root can begin to detail a more
+refined expression of those privileges. That is, root can begin to implement even
+more restrictive guidelines for a particular user's permissions. A well-organized
+system administrator can efficiently manage the permissions and privileges of hundreds
+or even thousands of users. Amazing.</P>
+<P>Nevertheless, the system has its drawbacks. Indeed, the very existence of root
+is a security risk for several reasons. For instance, any program that must be run
+as root will, if successfully attacked, grant the attacker root privileges. Furthermore,
+if root is compromised, the entire system is subject to attack. This is especially
+critical in multisegment networks.
+<H3><FONT COLOR="#000077"><B>Cracking Root</B></FONT></H3>
+<P>Although I have no hard evidence, I would suggest that the percentage of crackers
+who can obtain root on a given box or architecture is pretty high. The percentage
+who can do it on a UNIX system is a more or less static value, I would imagine. Much
+is known about UNIX, and the reporting lists are quite informative (the same might
+be said for Novell NetWare). Nonetheless, that number with respect to NT is changing
+rapidly in an upward direction. I suspect that within a year, that number will be
+as high or higher than percentages in other categories.</P>
+<P>Cracking root (at least on UNIX) occurs far more commonly through advanced programming
+techniques than through cracking the <TT>/etc/passwd</TT> file. Root operators know
+a little something about security and generally make their own passwords extremely
+difficult to crack (and they should). Experienced system administrators have probably
+cracked their own <TT>passwd</TT> file a dozen times. They will likely create a password
+that takes weeks or even months to crack. Thus, employing a password cracker is probably
+a waste of time.</P>
+<P>If, on the other hand, programs located on the disk are run as root processes,
+you might be able to crack root quickly and easily. It is not necessary that you
+log in as root, only that you gain root privileges. This most often comes through
+the exploitation of a buffer overflow.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can get a better view of buffer
+	overflows and other programming errors and weaknesses in Chapter 30, &quot;Language,
+	Extensions, and Security.&quot; 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Exploits of this nature are posted regularly to many mailing lists and newsgroups.
+As long as the cracker knows how to run a compiler, these postings can be clipped
+and pasted directly to a text editor, compiled, and executed with minimal effort.
+After the cracker has made a test run on a similar platform (for example, on a SolarisX86
+to simulate a possible Solaris hole, or ideally, Solaris to Solaris), he is ready.
+The compromise will take only seconds.</P>
+<P>In most cases, the cracker need not even keep up with the times. Many older holes
+still work on systems that have not been adequately secured. I hate to say it, but
+most system administrators do not spend their time scouring mailing list archives
+for possible holes within the system. Too bad.
+<H2><FONT COLOR="#000077"><B>Root Might Be a Thing of the Past</B></FONT></H2>
+<P>As incredible as it may seem, root might soon be an outdated concept. Many of
+the security problems that emerge on the Internet are due to the existence of this
+privileged account. Studies are underway to seek alternatives. The folks at Bell
+Labs have actually implemented such a system called Plan 9 (see Chapter 21, &quot;Plan
+9 from Bell Labs&quot;). As explained in the publicly available documentation on
+Plan 9:
+
+<DL>
+	<DD>Plan 9 has no super-user. Each server is responsible for maintaining its own
+	security, usually permitting access only from the console, which is protected by
+	a password. For example, file servers have a unique administrative user called adm,
+	with special privileges that apply only to commands typed at the server's physical
+	console. These privileges concern the day-to-day maintenance of the server, such
+	as adding new users and configuring disks and networks. The privileges do not include
+	the ability to modify, examine, or change the permissions of any files. If a file
+	is read-protected by a user, only that user may grant access to others.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The above paragraph is
+	excerpted from &quot;Plan 9 from Bell Labs,&quot; a paper by the core members of
+	the Plan 9 team. Those members are Rob Pike, Dave Presotto, Sean Dorward, Bob Flandrena,
+	Ken Thompson, Howard Trickey, and Phil Winterbottom. This paper can be found online
+	at <A HREF="javascript:if(confirm('http://plan9.bell-labs.com/plan9/doc/9.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://plan9.bell-labs.com/plan9/doc/9.html'" tppabs="http://plan9.bell-labs.com/plan9/doc/9.html"><TT>http://plan9.bell-labs.com/plan9/doc/9.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Plan 9 is an interesting idea, and will surely eliminate many of the security
+problems now associated with the root account. Nonetheless, there are other problems
+that this new system could create. One revolves around this statement (made in &quot;Plan
+9 from Bell Labs&quot;):
+
+<DL>
+	<DD>If a file is read-protected by a user, only that user may grant access to others.
+</DL>
+
+<P>If this policy was enforced in the most absolute sense, malicious users might
+present a problem. For example, if a malicious user's materials were read-only to
+the rest of the world, or if even more stringent controls were placed on access of
+the files, it might present a situation where the only viable answer to a malicious
+user is to freeze or possibly destroy his account. This is a nice solution, but an
+irritating one, all the same.</P>
+<P>This notwithstanding, I believe the Plan 9 model is far more secure not only because
+it eliminates root but because of the unique manner in which it implements distributed
+computing. As you might remember from Chapter 21, Plan 9 uses both a CPU and a file
+server. The user is saddled with something that is a cross between an X terminal
+and a PC. Because the file server remains isolated, and because nearly all resources
+are distributed and the permissions set on that file server are automatically set
+in a dynamic fashion (for example, as files and processes change or are created),
+there is a good chance that a systemwide compromise of Plan 9 is nearly impossible.</P>
+<P>Nonetheless, there might be other security implications of Plan 9. For example,
+because you can tap a resource from any type of file system, remote or otherwise,
+and because these resources can be attached to local directories to act and appear
+as though they are local, there is the possibility that Plan 9 might ultimately emerge
+as a tool capable of compromising other operating systems. This is hard to say, however,
+because there is relatively little documentation available about tests in this area.
+I haven't tried to make such a test. Yet.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The developers of Plan 9 thought
+	big. By that, I mean they thought in terms of an operating system that could support
+	a total number of users in the tens of thousands. I can see where it will ultimately
+	be used in WAN settings. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Root on Other Operating Systems</B></FONT></H2>
+<P>UNIX is not the only system that uses root. Microsoft Windows NT also uses a version
+of root, called <I>administrator</I>. Similarly, Novell implements a version called
+<I>supervisor</I>. In all cases, root's power and obligations are the same: They
+involve system management. Both systems provide for almost identical control of access
+permissions (however, I believe NetWare is a bit more comprehensive).
+<H2><FONT COLOR="#000077"><B>The Cracker Who Is Root</B></FONT></H2>
+<P>I should explain here that <I>having</I> <I>root</I> is not an uncommon condition.
+Root can be had for the price of a few dollars. For example, you can install Linux
+or FreeBSD on a PC and instantly be root<I> on that particular box.</I> Some administrators
+might scoff at this, thinking it matters little if a cracker establishes a box on
+which he or she is root. But this does give the cracker some small advantages:
+
+<UL>
+	<LI>It gives the cracker access to some native applications in the operating system
+	environment that he would not otherwise have. I have mentioned that having root status
+	on a UNIX box provides the cracker with many tools that are not available on other
+	platforms.<BR>
+	<BR>
+	
+	<LI>Security specialists often write commercial-grade packages and release them on
+	the Internet free of charge. In some instances, this is purely a philanthropic act,
+	a contribution to network security by people with the ability to improve it (SATAN
+	is one such program). In other instances, a product might be provided free to noncommercial
+	users, but might be restricted to use on a localhost box. SAFESuite by ISS is an
+	example of one such utility. Because such tools can be a threat to Internet security
+	if in the wrong hands, developers often design them so that only root can run the
+	software. This poses a natural barrier to many crackers. For example, they cannot
+	simply load the software onto a workstation at a university and expect the software
+	to run. Also, although many free versions of UNIX can be acquired for next to nothing,
+	the cracker also needs to come by the hardware. That means impoverished crackers
+	can't easily set up their own equipment and call themselves root.<BR>
+	<BR>
+	
+	<LI>The cracker gets an opportunity to learn how logging works. Because he is root,
+	he can attack his machine and analyze the results. He can also try out various types
+	of security software and attempt to circumvent those utilities.<BR>
+	<BR>
+	
+	<LI>The cracker who is root learns the fundamentals of system administration. This,
+	more than any other experience, offers valuable knowledge and insight into system
+	security.
+</UL>
+
+<P>There are also less important advantages, such as being able to manipulate one's
+own mail and news server, and provide networking services to other crackers in the
+void. However, these advantages are negligible from an educational point of view.
+The only real challenge involved there is that of preventing individuals who do have
+access to the box from destroying it.
+<H2><FONT COLOR="#000077"><B>Beware of Root</B></FONT></H2>
+<P>If you are a cracker, you will need to beware. Root operators are very testy.
+If they suspect you of wrongdoing, you have problems. This brings us to an important
+issue: Root is always a human being. How that human being deals with you differs
+case by case.</P>
+<P>Crackers routinely position themselves in direct opposition of root, primarily
+because the relationship between these two sets of people is assumed to be adversarial.
+In fact, the relationship is adversarial, but that does not necessarily mean a state
+of war. Many system administrators revel in stories about cracked networks. As long
+as that network is not their own, such stories are consuming and highly informative.
+One almost gets the feeling that some system administrators carry a recessive cracker
+gene, but manage to find a suitable (and constructive) outlet for this darker side
+in testing the security of their own network. In fact, you could say that in order
+to maintain a secure network, one has to have a little cracker sense.</P>
+<P>Nonetheless, contrary to what many might think, root people are often what I would
+characterize as very hip. Their position demands great responsibility, which they
+generally shoulder alone. Thus, one might say that root people exist in their own
+world; within it, they are omnipotent (or at least, they initially appear that way).
+To be a good system administrator, you need more than good toolsmithing skills or
+a solid knowledge of the operating system. You must have a certain level of humanity
+and good judgment. In my experience, most system administrators will tolerate a little
+skullduggery before they freeze an errant user's account. This courtesy is extended
+not because they favor crackers, but because most system administrators have a fundamental
+sense of fair play.</P>
+<P>That said, beware of root. Few individuals are more apt to persevere than a system
+administrator whose network has been compromised. They might hunt you down across
+continents, or might simply fly from California to North Carolina, armed with some
+cell telephone scanning tools (as in the Shimomura case). In one instance, a 75 cent
+error prompted a now famous system administrator (Clifford Stoll) to track down and
+expose an entire espionage ring centered in Germany. The Cuckoo's Egg: Clifford Stoll,
+an astronomer, conducted research at Lawrence Berkeley Laboratory (LBL) in California.
+During his tenure there, Stoll assumed responsibility for management of the network
+(Stoll has in fact been using the Internet since 1975) and was assigned to the task
+of discovering the source of a 75 cent accounting error. His investigation ultimately
+revealed that someone had gained unauthorized access to the local network. Rather
+than immediately deny the unauthorized user access, he allowed the cracker to continue
+these intrusions. Stoll ultimately determined that the cracker was using the LBL
+network as a laun-ching point to crack systems located in the MILNET hierarchy. (MILNET
+is a defense-related grouping of networks, distinct from the rest of the Internet.)
+Stoll determined that the cracker--based in Germany--was stealing important defense-related
+information. Stoll finally enlisted the help of American and German intelligence
+agencies (who were not initially willing to listen to his suspicions). It turned
+out that the cracker was part of a ring that was stealing U.S. defense information
+and selling it to the Soviets. The story became an Internet legend, second only to
+the Internet Worm. For more information, pick up a copy of Stoll's book, <I>The Cuckoo's
+Egg </I>(Doubleday, 1989), which records the events in meticulous detail.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>This chapter clears up a few things about root. This is important because in the
+chapters that follow, I discuss various ways to attack the root account and otherwise
+obtain root access. The following points have been made:
+
+<UL>
+	<LI>Root refers to anyone who has system administrator status.<BR>
+	<BR>
+	
+	<LI>This status is usually issued on a box-by-box basis. For each box on a UNIX network,
+	there is a root. For each NT box, there is an administrator.<BR>
+	<BR>
+	
+	<LI>Root sets all file and directory permissions that are not automatically set by
+	the operating system at the time of install.<BR>
+	<BR>
+	
+	<LI>These permissions either grant or deny users (and groups) read, write, or execute
+	access privileges.
+</UL>
+
+<P><A HREF="ch23.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch23/ch23.htm">Chapter 23</A>, &quot;An Introduction to Breaching
+a Server Internally,&quot; addresses some issues regarding crackers and how they
+obtain root access.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="ch21.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch21/ch21.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch23.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch23/ch23.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

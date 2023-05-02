@@ -1,0 +1,305 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=542-547//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Implementing the SystemInfo Object</B></FONT></P>
+<p>The implementation of the <small>SystemInfo</SMALL> object is found in the <small>SystemInfo.cpp</SMALL> source file. A partial listing of the contents of this file is provided in Listing 17.4. The accompanying CD-ROM includes the complete source code for this file.</P>
+<p><b>Listing 17.4</B> The Implementation of the <small>SystemInfo</SMALL> COM Object<hr></P>
+<!-- CODE //-->
+<pre>
+HRESULT CSystemInfo::FinalConstruct()
+{
+    GetSystemInfo(&ampm_info);
+    return S_OK;
+}
+
+
+STDMETHODIMP CSystemInfo::GetPageSize(unsigned long *pdwPageSize)
+{
+    *pdwPageSize = (DWORD)m_info.dwPageSize;
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::GetProcessorType(ProcessorType *pType)
+{
+    switch(m_info.wProcessorArchitecture)
+    {
+        case PROCESSOR_ARCHITECTURE_INTEL:
+            {
+                if(m_info.wProcessorLevel == 3)
+                    *pType = Intel386;
+                else if(m_info.wProcessorLevel == 4)
+                    *pType = Intel486;
+                else if(m_info.wProcessorLevel == 5)
+                    *pType = IntelPentium;
+                else if(m_info.wProcessorLevel == 6)
+                    *pType = IntelPentiumPro;
+                else
+                    return E_FAIL;
+            }
+            break;
+
+        case PROCESSOR_ARCHITECTURE_MIPS:
+            {
+                if(m_info.wProcessorLevel == 4)
+                    *pType = MipsR4000;
+                else
+                    return E_FAIL;
+            }
+            break;
+
+        case PROCESSOR_ARCHITECTURE_ALPHA:
+            {
+                if(m_info.wProcessorLevel == 21064)
+                    *pType = Alpha21064;
+                else if(m_info.wProcessorLevel == 21066)
+                    *pType = Alpha21066;
+                else if(m_info.wProcessorLevel == 21164)
+                    *pType = Alpha21164;
+                else
+                    return E_FAIL;
+            }
+            break;
+
+        case PROCESSOR_ARCHITECTURE_PPC:
+            {
+                if(m_info.wProcessorLevel == 1)
+                    *pType = PPC601;
+                else if(m_info.wProcessorLevel == 3)
+                    *pType = PPC603;
+                else if(m_info.wProcessorLevel == 4)
+                    *pType = PPC604;
+                else if(m_info.wProcessorLevel == 6)
+                    *pType = PPC603plus;
+                else if(m_info.wProcessorLevel == 9)
+                    *pType = PPC604plus;
+                else if(m_info.wProcessorLevel == 20)
+                    *pType = PPC620;
+                else
+                    return E_FAIL;
+            }
+            break;
+
+        case PROCESSOR_ARCHITECTURE_UNKNOWN: // fall through
+        default:
+            return E_FAIL;
+    }
+    return S_OK;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>When the COM object is constructed, the ATL framework will call the <small>FinalConstruct</SMALL> method. Inside <small>FinalConstruct</SMALL>, the <small>GetSystemInfo</SMALL> API function is called to collect system processor information from the operating system and store it in the <small>m_info</SMALL> member variable. Other method calls pick apart <small>m_info</SMALL> and return interesting data to the client process.</P>
+<p>Build the SysInfo project. After the <small>SysInfo</SMALL> module is successfully compiled, the ATL project will take steps to register the COM object in the system. You won&#146;t be able to use the COM object from a client until you build and register the proxy/stub DLL, as described in the next section.</P>
+<p><font size="+1"><b>Compiling and Registering the Standard Proxy/Stub DLL</B></FONT></P>
+<p>ATL projects include a command-line makefile that&#146;s used to build the proxy/stub DLL for each ATL project. This makefile is the only file in the project directory with an <small>.MK</SMALL> filename extension. For the SysInfo project, the name of the makefile is <small>SysInfoPs.MK</SMALL>. To build the DLL, use the NMAKE utility, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+nmake SysInfoPs.MK
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After the proxy/stub DLL has been successfully built, you can register the DLL using the RegSvr32 utility:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+regsvr32 SysInfoPs
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the DLL is successfully registered, a message box will be displayed, as shown in Figure 17.9.
+</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-09.jpg',271,117 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-09.jpg',271,117)"><font color="#000077"><b>Figure 17.9</B></FONT></A>&nbsp;&nbsp;The RegSvr32 utility is used to register the proxy/stub DLL.</P>
+<p><font size="+1"><b>Creating Test Clients for SystemInfo</B></FONT></P>
+<p>To facilitate testing of the <small>SystemInfo</SMALL> COM object, the CD-ROM that accompanies this book includes two console-mode test driver programs:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>InfoClient</I> calls each interface and displays the results to the console window using <small>wprintf</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>InfoTimer</I> reports the time required to call one of the interface methods one million times and is used to collect timing information that will be used to compare performance using standard and custom marshaling.
+</DL>
+<p>The InfoClient project was built as a Win32 console application, with the <small>_UNICODE</SMALL> and <small>UNICODE</SMALL> preprocessor symbols defined. The <small>sysinfo_i.c</SMALL> and <small>sysinfo.h</SMALL> files were copied from the SysInfo project directory into the InfoClient project directory. These two files are generated by MIDL when the IDL file is compiled; they contain information about the GUIDs and interface declarations used by the <small>SystemInfo</SMALL> COM object.</P>
+<p>The InfoClient project contains one other source file, <small>main.cpp</SMALL>, part of which is provided in Listing 17.5. The accompanying CD-ROM includes the complete source code for this project.</P>
+<p><b>Listing 17.5</B> The InfoClient Test Driver<hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltwchar.h&gt
+
+#include &#147;sysinfo_i.c&#148;
+#include &#147;sysinfo.h&#148;
+
+void ProcTypeEnumToString(ProcessorType procType,
+                          WCHAR szProcessorType[40]);
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+
+// Macro that tests for an error - if an error occurs, a message
+// box is displayed, and the program returns.
+#define TESTHR(hr,str)if(FAILED(hr)){HandleError(str,hr);return 0;}
+
+int wmain()
+{
+    ISystemInfo* pInfo = NULL;
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    TESTHR(hr, L&#148;CoInitialize Failed&#148;);
+    __try{
+
+        hr = CoCreateInstance(CLSID_SystemInfo,
+                              NULL,
+                              CLSCTX_ALL,
+                              IID_ISystemInfo,
+                              (void**)&amppInfo);
+        TESTHR(hr, L&#148;CoCreate Failed&#148;);
+        short processors;
+
+        hr = pInfo-&gtGetProcessorCount(&ampprocessors);
+        TESTHR(hr, L&#148;GetProcessorCount Failed&#148;);
+
+        long processorMask;
+        hr = pInfo-&gtGetProcessorMask(&ampprocessorMask);
+        TESTHR(hr, L&#148;GetProcessorMask Failed&#148;);
+
+
+        ProcessorType procType;
+        hr = pInfo-&gtGetProcessorType(&ampprocType);
+        TESTHR(hr, L&#148;GetProcessorType Failed&#148;);
+
+        WCHAR szProcessorType[40];
+        ProcTypeEnumToString(procType, szProcessorType);
+
+        BSTR bstrRevision;
+        hr = pInfo-&gtGetProcessorRevisionString(&ampbstrRevision);
+        TESTHR(hr, L&#148;GetProcessorRevisionString Failed&#148;);
+
+        unsigned long dwPageSize;
+        hr = pInfo-&gtGetPageSize(&ampdwPageSize);
+        TESTHR(hr, L&#148;GetPageSize Failed&#148;);
+
+        unsigned long dwMinAddr;
+        unsigned long dwMaxAddr;
+        hr = pInfo-&gtGetAddressSpaceBounds(&ampdwMinAddr, &ampdwMaxAddr);
+        TESTHR(hr, L&#148;GetAddressSpaceBounds Failed&#148;);
+
+        unsigned long dwVmChunk;
+        hr = pInfo-&gtGetVmAllocationGranularity(&ampdwVmChunk);
+        TESTHR(hr, L&#148;GetVmAllocationGranularity Failed&#148;);
+
+        wprintf(L&#148;Processors: %d\n&#148;
+                L&#148;Processor mask: %#08.8X\n&#148;
+                L&#148;Processor type: %s\n&#148;
+                L&#148;Revision: %s\n&#148;
+                L&#148;Page size: %d\n&#148;
+                L&#148;Minimum address: %#08.8X\n&#148;
+                L&#148;Maximum address: %#08.8X\n&#148;
+                L&#148;Virtual Alloc Granularity: %#04.4X\n&#148;,
+                (short)processors,
+                (long)processorMask,
+                (OLECHAR*)szProcessorType,
+                (OLECHAR*)bstrRevision,
+                (unsigned long)dwPageSize,
+                (unsigned long)dwMinAddr,
+                (unsigned long)dwMaxAddr,
+                (unsigned long)dwVmChunk);
+
+        SysFreeString(bstrRevision);
+    }
+    __finally
+    {
+        if(pInfo)pInfo-&gtRelease();
+        CoUninitialize();
+    }
+    return 0;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

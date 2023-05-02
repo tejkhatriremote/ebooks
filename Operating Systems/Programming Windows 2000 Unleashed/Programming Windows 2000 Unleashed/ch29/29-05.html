@@ -1,0 +1,164 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=976-977//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>ClusterRegCreateKey</SMALL> function has seven parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to a currently open key in the cluster database.
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode string that contains the name of the subkey to be opened.
+<dd><b>&#149;</B>&nbsp;&nbsp;An option flag for the database key. There are currently two values defined for this parameter: <small>REG_OPTION_VOLATILE</SMALL> specifies that the key is not saved if the system is restarted, and <small>REG_OPTION_NON_VOLATILE</SMALL> specifies that the key is saved if the system is restarted.
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more Registry access flags that indicate the level of desired access to the cluster database.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a security descriptor to be used for the new key. You can specify <small>NULL</SMALL> to use the default security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an <small>HKEY</SMALL> that will contain the subkey if the function succeeds.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that will be set to one of two values: <small>REG_CREATED_NEW_KEY</SMALL>, if a new key was created in the cluster database, or <small>REG_OPENED_EXISTING_KEY</SMALL>, if an existing key was opened.
+</DL>
+<p>The <small>ClusterRegCreateKey</SMALL> function returns <small>ERROR_SUCCESS</SMALL> if successful and a Win32 error code upon failure.</P>
+<p>To retrieve a value from the cluster database, use the <small>ClusterRegQueryValue</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+LONG WINAPI ClusterRegQueryValue(HKEY    hKey,
+                                 LPCWSTR lpszValueName,
+                                 LPDWORD lpdwValueType,
+                                 LPBYTE  lpbData,
+                                 LPDWORD lpcbData);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ClusterRegQueryValue</SMALL> function has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to a currently open key in the cluster database.
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode string that contains the name of the value to be retrieved.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that will be filled with the type of the value. This value can be set to <small>NULL</SMALL> if the type is already known.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a buffer that will be filled with the value retrieved from the cluster database.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that contains the size of the buffer passed in the preceding parameter. If the function succeeds, the <small>DWORD</SMALL> will contain the size of the data stored in the previous parameter.
+</DL>
+<p>If <small>ClusterRegQueryValue</SMALL> succeeds, the function returns <small>ERROR_SUCCESS</SMALL>; otherwise, a Win32 error code is returned.</P>
+<p>To set a value in the cluster database, use the <small>ClusterRegSetValue</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD WINAPI ClusterRegSetValue(HKEY    hKey,
+                                LPCWSTR lpszValueName,
+                                DWORD   dwType,
+                                CONST BYTE* lpbData,
+                                DWORD   cbData);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ClusterRegSetValue</SMALL> function has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to a currently open key in the cluster database
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode string that contains the name of the value to be set
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>DWORD</SMALL> variable that specifies the type of the value
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the value to be stored in the cluster database
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the value passed in the previous parameter
+</DL>
+<p>If <small>ClusterRegSetValue</SMALL> succeeds, the function returns <small>ERROR_SUCCESS</SMALL>; otherwise, a Win32 error code is returned.</P>
+<p>To close a key that has been opened, use the <small>ClusterRegCloseKey</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+LONG WINAPI ClusterRegCloseKey(HKEY hKey);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There are also cluster database functions that support removing keys, enumerating values, and other operations. In general, these functions work exactly like the equivalent Win32 System Registry functions. For more information about these functions, consult the Platform SDK documentation.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Resource DLL APIs</FONT></H4>
+<p>Resource DLLs communicate with a resource monitor and cluster service through two sets of interfaces:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Entry point functions, which are implemented in the resource DLL to handle requests from MSCS
+<dd><b>&#149;</B>&nbsp;&nbsp;Callback functions, which are called from your custom resource DLL back to MSCS
+</DL>
+<p>These functions are discussed in the following sections.
+</P>
+<p><font size="+1"><b>Resource DLL Entry Point Functions</B></FONT></P>
+<p>Resource DLL entry point functions are used by the cluster service and resource monitor to send requests to the resource DLL. The resource DLL is expected not only to act on these requests but also to execute them in a timely manner.
+</P>
+<p>A major constraint when trying to start, failover, or managing a cluster is the amount of time used by resource DLLs. In order to increase the availability of clusters, Microsoft recommends that resource DLLs return in 300 milliseconds <i>or less</I> when handling a resource DLL entry function.</P>
+<p>This time limit is expected to apply to the upper bound of your processing time, which is not necessarily the optimal case. If your resource DLL needs to access devices on the network, or if it makes a Windows API call, it could easily be blocked for much longer than the 300 millisecond boundary. In order to complete within the 300 millisecond time constraint, a resource DLL will usually need to use a worker thread to perform much of the actual work.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

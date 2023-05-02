@@ -1,0 +1,279 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:General System</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=1//-->
+<!--PAGES=067-070//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="065-067.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="070-073.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>I-255</B> <big>W</BIG>e all know that Windows NT lets programs register themselves for later removal. If you ever want to remove a program from the list (and not actually remove the program), this registry entry is for you.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>Software\Microsoft\Windows\CurrentVersion\Uninstall
+</TABLE>
+<p>The programs that are registered show under the uninstall key. I use the example of Internet Information Server, but you can substitute any program.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>SubKey:</B>
+<td width="70%">MSIIS
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>DisplayName
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>Microsoft Internet Information Server
+</TABLE>
+<p>
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-256</B>
+<td width="20%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">UninstallString
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>C:\NTS40\System32\Inetsrv\Setup.exe
+</TABLE>
+<p><b>I-257</B> <big>P</BIG>roblem: On your dual-boot system, the DOS variables are set up when you boot Windows NT. This setup is causing problems, and you want to eliminate it. Changing this registry entry does the trick.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_CURRENT_USER
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>Software\Microsoft\WindowsNT\CurrentVersion\WinLogon
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>ParseAutoexec
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>The default value is 1. Remember, you need to disable autoexec parsing for each user separately.
+</P>
+<h3><a name="Heading15"></A><font color="#000077">Dial-Up</FONT></H3>
+<p><b>I-258</B> <big>T</BIG>o enable or disable autodialing for remote connections for individual users, try the following registry entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_CURRENT_USER
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>Software\Microsoft\RAS Autodial\Control
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>DisableConnectionQuery
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>Setting this value to 0 requires NT to prompt you before it autodials. Restart the machine for these values to take effect.
+</P>
+<h3><a name="Heading16"></A><font color="#000077">System Recovery</FONT></H3>
+<p><b>I-259</B> <big>I</BIG>f you have ever lost the administrative password on a Domain controller, you probably thought it was impossible to recover your system. However, if you follow these steps and use the registry, it is possible to regain control of your system.</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Power down the primary domain controller.
+<dd><b>2.</B>&nbsp;&nbsp;Using the Windows NT installation disks, install Windows NT to a different directory than you&#146;re currently using. For example, if the current installation uses c:\winnt, install this version into c:\winntA.
+<dd><b>3.</B>&nbsp;&nbsp;Copy SrvAny.exe from the resource kit to C:\Temp.
+<dd><b>4.</B>&nbsp;&nbsp;Using Regedt32.exe, open the HKEY_LOCAL_MACHINE hive and highlight the root.
+<dd><b>5.</B>&nbsp;&nbsp;Select the Load Hive option and type the following line: <b>C:\WINNT\ SYSTEM32\CONFIG\SYSTEM.</B> (You must include the period.)
+<dd><b>6.</B>&nbsp;&nbsp;Now click Open and type <b>domain controller</B> at the key name prompt.
+<dd><b>7.</B>&nbsp;&nbsp;Go to the following key and record its value:
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT" valign="TOP"><b>Key:</B>
+<td>DomainSystem\ControlSet001\Services\Spooler<br>\ImagePath
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>ImagePath
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>c:\Temp\Srvany.exe
+</TABLE>
+<br>The default value is %SystemRoot%\System32\Spoolss.exe.
+<dd><b>8.</B>&nbsp;&nbsp;Go the following key and add this key:
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT" valign="TOP"><b>Key:</B>
+<td>DomainController\ControlSet001\Services\Spooler\ Parameters
+</TABLE>
+<br>Add the following two values:
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">Application
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>C:\WinNT\System32\Net.exe
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>AppParameters
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>user Administrator forgotten
+</TABLE>
+<br>This value sets the administrator password to &#147;forgotten.&#148; You can, of course, substitute any password of your liking. Power down the system and reboot using the original configuration (c:\winnt). After the logon screen comes up, wait a few minutes and log on as the domain admin.
+<dd><b>9.</B>&nbsp;&nbsp;Using Regedt32.exe, remove the values you added. Remove the following keys:
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT" valign="TOP"><b>Key:</B>
+<td>SYSTEM\CurrentControlSet\Services\Spooler\<br>Parameters
+</TABLE>
+<br>Delete the following two values:
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">Application
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>C:\Winnt\System32\Net.exe
+</TABLE>
+<br>
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">AppParameters
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>user Administrator forgotten
+</TABLE>
+<dd><b>10.</B>&nbsp;&nbsp;Now change the ImagePath key back to its original value:
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT" valign="TOP"><b>Key:</B>
+<td>DomainController\ControlSet001\Services\Spooler\ImagePath
+</TABLE>
+<br>Change the value to c:\Temp\Srvany.exe
+<table width="90%">
+<tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">ImagePath
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>%SystemRoot%\system32\spoolss.exe
+</TABLE>
+</DL>
+<p>You can now edit the Boot.ini file and remove the reference to the c:\winntA installation of Windows NT. When you reboot your machine, all is as it was before, except now you know the Domain administrator password again.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="065-067.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="070-073.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

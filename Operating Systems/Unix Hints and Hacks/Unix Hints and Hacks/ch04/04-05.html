@@ -1,0 +1,236 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=131-134//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Paging Service With the advancement of the Internet, some companies that provide paging services also provide a means of emailing a message directly to your pager through their servers. This method does have advantages and disadvantages. One advantage is that the service generally doesn&#146;t cost anything extra. Another advantage is that you don&#146;t have to purchase any extra software for your server, a real money saver for you. The disadvantage is the number of points-of-failure in getting the email message to the paging service. The message could travel through any number of computer systems to reach the destination host. Your email message could get delayed or bounced. A general email address with this method can take the form <small>[pin]@pageserver.com</SMALL> or <small>5558919@skymail.com</SMALL>.</P>
+<p>If you monitor the same thing on all your machines and they all generate some type of report, you might want to email everything from one spot. Collect the data from all the remote machines via NFS mount points or via FTP at a given time. Then email all the small files, or parse them together into one large systems report from one mail server.</P>
+<p>You might want to set up a back-up plan. When I monitor my systems, I test to make sure that the remote mail forwarding host and the default router is up first. If not, I have a modem configured on the local mail host to notify me via pager that there is a bigger problem.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+mail, Mail
+</PRE>
+<!-- END CODE SNIP //-->
+<p>WWW:
+</P>
+<a href="http://www.ugu.com/sui/ugu/show?vendors.software.pagers">http://www.ugu.com/sui/ugu/show?vendors.software.pagers</A>
+<h3><a name="Heading12"></A><font color="#000077">4.6 Watching the Disk Space</FONT></H3>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">4.6.1 Description</FONT></H4>
+<p>Use the <small>df</SMALL> command to keep an eye on the disk space.</P>
+<p>Flavors: AT&ampT, BSD</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>df</B> -[<b>kl]</B> [-v] [<i>filesystem</I>]
+<b>bdf</B> -[<b>k]</B> [<i>filesystem]</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>df</SMALL> command has different variances depending on the flavor you are using. In the examples that I will discuss, the BSD form of <small>df</SMALL> is used to display the available space:</P>
+<!-- CODE SNIP //-->
+<pre>
+% df -kl
+Filesystem            kbytes    used   avail capacity  Mounted on
+/dev/dsk/c0t1d0s0    1203886  896255  187251    83%    /
+/dev/dsk/c0t1d0s6     634354  194243  376681    34%    /usr
+/dev/dsk/c0t2d0s0    3941764 3420328  324351    91%    /local
+/dev/dsk/c0t0d0s6    3692074  591902 2730972    18%    /mnt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Check your man pages for the syntax that is comparable to the BSD form; it can take the form as one of the following:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% df
+% df -k
+% df -v
+% bdf -k
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example One: Get the Percentage of Space</B></FONT></P>
+<p>Monitoring the percentage of disk space being used can help keep the disk from filling up.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# df -k | awk &#145;{ print $6&#148;\t&#148;$5}&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This simple command displays fields <small>5</SMALL> and <small>6</SMALL> from the output of the <small>df</SMALL> command. It also places a tab in between the two fields, where field <small>6</SMALL> is the name of the mounted filesystem and field <small>5</SMALL> is the percentage of disk space being used.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>The field numbers on your system might be different. The goal is to extract the filesystem mounted and the percentage of disk space used.</FONT><hr>
+</BLOCKQUOTE>
+<!-- CODE SNIP //-->
+<pre>
+Mounted capacity
+/       83%
+/usr    34%
+/local  91%
+/mnt    18%
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can write a script to monitor the percentage of disk space being used. After a certain predefined threshold limit is hit, mail a notification to the administrator.
+</P>
+<!-- CODE //-->
+<pre>
+#! /bin/sh
+df -kl | grep -iv filesystem |  awk &#145;{ print $6&#148; &#147;$5}&#146; | while
+&#8658; read LINE; do
+  PERC=`echo $LINE | cut -d&#148;%&#148; -f1 | awk &#145;{ print $2 }&#146;`
+  if [ $PERC -gt 98 ]; then
+    echo &#147;${PERC}% ALERT&#148;  | Mail -s &#147;${LINE} on `hostname` is
+&#8658; almost full&#148;  admin@rocket.ugu.com
+  fi
+done
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the shell to be used.
+</P>
+<p>Line 2: Collect the amount of free space from the <small>df</SMALL> command and strip out the header information. From the data collected, output the name of the mounted filesystem and the percentage of disk space used. Read in each line collected one by one.</P>
+<p>Line 3: Take each line, strip out the character <small>%</SMALL>, and store only the percentage value of the mounted filesystem into the variable <small>$PERC</SMALL>.</P>
+<p>Line 4: Check whether the value stored in the variable <small>$PERC</SMALL> is greater than the defined threshold limit (<small>98</SMALL>).</P>
+<p>Line 5: If <small>$PERC</SMALL> is greater than the threshold limit, send an alert to the administrators via email.</P>
+<p>The script could be executed from the crontab every 30 minutes throughout the day:</P>
+<!-- CODE SNIP //-->
+<pre>
+5,35 * * * * /usr/local/bin/dfmon
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The output then shows up in the administrator&#146;s mailbox. Here is a look at what is displayed when you read your mail after the script runs:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+      Mailbox is &#145;/var/mail/admin&#146; with 3 messages [ELM 2.4
+&#8658; PL24 PGP2]
+
+N  1   Oct 20 Unix Guru Universe  (30)   A HOT UNIX TIP
+<b>N  2   Oct 21 root</B>                <b>(10)   /local 99% on moon is</B>
+&#8658; <b>almost full</B>
+   3   Oct 20 Harry Beeson        (25)   Need Unix Help.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the email is sent off to the system administrator, the subject header provides direct information about the problem. Displayed is the filesystem that is filling up, the percentage full, and the host that the disk lives on.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Message 2/3  From root@moon.ugu.com             Oct 29, 98
+&#8658; 00:28:53 am -0400
+Date: Wed, 29 Oct 1998 00:28:53 -0413 (EDT)
+To: admin@rocket.ugu.com
+Subject: /local 99% on moon is almost full
+
+99% ALERT
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Two: Get the Amount of Free Space</B></FONT></P>
+<p>If you need to track the amount of free space available, use the <small>df</SMALL> command. The defined available free space field, is field <small>5</SMALL> from the sample version of <small>df</SMALL> you are using.</P>
+<!-- CODE SNIP //-->
+<pre>
+$ df -k | awk &#145;{ print $6&#148;\t&#148;$4 }&#146;
+Mounted avail
+/       187251
+/usr    376681
+/local  324351
+/mnt    2730972
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To monitor a filesystem that might drop below 100MB, modify the previous script from Example One. In this version, you can redirect the alert out to a log file instead of a mail message. If you expect the filesystem to grow and shrink in size, constantly going over and under the threshold limit, it might be easier to monitor the results from a file rather than to send constant email notifications.
+</P>
+<!-- CODE //-->
+<pre>
+#! /bin/sh
+df -kl | grep -iv filesystem |  awk &#145;{ print $6&#148; &#147;$4}&#146; | while
+&#8658; read LINE; do
+  FSPC=`echo $LINE | awk &#145;{ print $2 }&#146;`
+  if [ $FSPC -lt 100000 ]; then
+    echo &#147;`date` - ${LINE} space left on `hostname` &#147; &gt&gt
+&#8658; /var/log/df.log
+  fi
+done
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

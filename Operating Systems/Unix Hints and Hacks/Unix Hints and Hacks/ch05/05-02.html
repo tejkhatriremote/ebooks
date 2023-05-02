@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=159-161//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<blockquote>
+<p><font size="-1"><hr><b>Caution:&nbsp;&nbsp;</B>If an account needs to be disabled, <i>never</I> place a pound sign (<small>#</SMALL>) in front of the account name. In some flavors, UNIX accepts metacharacters as part of the user name and see this as just another account name. A pound sign <i>does not</I> denote the line as being a comment. Disabling accounts should be done from the password field.
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading4"></A><font color="#000077">5.2 Passwords</FONT></H3>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">5.2.1 Description</FONT></H4>
+<p>You all know about good and bad passwords by now, but there are good ways and bad ways to use the password field in the password file.
+</P>
+<p><font size="+1"><b>Example One: Password File with Encrypted Field</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>The DES-encrypted password can be manipulated in various ways. The fields can be duplicated, deleted, or even disabled. You can use a graphical user interface (GUI), a program, or even the <small>vipw</SMALL> command. If it comes to altering the password file to this extent, most UNIX administrators choose to do it manually with the <small>vipw</SMALL> command. While in the password file, there are three things that can be done to the password field:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Clear the password field</I>&#151;There are times when a user forgets his password and doesn&#146;t want you to know his new password. If he attempts to change his password on his own, he sometimes is continually prompted for his forgotten password. When this happens, clear the password field using a single space. When using <small>vipw</SMALL> to clear the this field, never use the Delete Word (<small>dw</SMALL>) command within the editor. Always use the <small>x</SMALL> command to delete characters in the field. Because the field is made up of alphabetic, numeric, and metacharacters, deleting the word might not get the entire field and only part of the field. It is best to hit <small>x</SMALL> thirteen times or <small>13x</SMALL>. Write out the file and have the user change his password while you monitor the password file for the change.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Changing The Password</I>&#151;Occasionally users call and ask whether their password can be propagated from their local workstation to several remote servers or workstations. If NIS/YP is not running on these systems and the user already has an account on the workstations, you can simply cut and paste the password field from the local workstation to all the other remote systems. Even if the remote systems are other flavors of UNIX, the DES encryption type is the same. All the systems understand the encrypted password string.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Disabling An Account</I>&#151;Many administrators simply place an asterisk at the beginning of the encrypted field. To disable the file temporarily if they know a user will return at a later date and not have to reset the password later. The safest way to disable an account from the password file is to completely replace the encrypted string with an asterisk.
+<!-- CODE SNIP //-->
+<pre>
+axjones:*FC6XUtvRxVcWU:7272:20:Al Jones:/home/al:/bin/csh
+axjones:*:7272:20:Al Jones:/home/al:/bin/csh
+</PRE>
+<!-- END CODE SNIP //-->
+</DL>
+<p><font size="+1"><b>Example Two: Shadow Passwords</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Many flavors are now adopting the shadow technique to conceal the password encryption string. It forces potential intruders and hackers to attempt the brute force method of cracking passwords on a system rather than running cracking routines on the encrypted strings. With an /etc/shadow file, there are nine fields. The most common fields that you deal with are the user account name and the encrypted password string for that account, the rest can be handled by the system.</P>
+<!-- CODE SNIP //-->
+<pre>
+username:password:lastchg:min:max:warn:inactive:expire:flag
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Because these fields aren&#146;t widely known, it is easy to figure out what their function is.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>username</I>&#151;Login name
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>password</I>&#151;Encrypted password
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>lastchg</I>&#151;Days since Month, Day, Year, when password was last changed
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>min</I>&#151;Days before password may be changed
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>max</I>&#151;Days after which password must be changed
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>warn</I>&#151;Days before password is to expire that user is warned
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>inactive</I>&#151;Days after password expires that account is disabled
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>expire</I>&#151;Days since Month, Day, Year that account is disabled
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>flag</I>&#151;A reserved field
+</DL>
+<p>The encrypted password string in the original /etc/passwd file displays an <small>x</SMALL> in all the password fields of every account; this can have the appearance of being disabled, but in fact these accounts are using shadow passwords.</P>
+<!-- CODE SNIP //-->
+<pre>
+axjones:<b>x</B>:7272:20:Al Jones:/home/axjones:/bin/csh
+toddh:<b>x</B>:7273:20:Todd Howardson:/home/toddh:/bin/sh
+</PRE>
+<!-- END CODE SNIP //-->
+<p>All modifications to the encrypted password string are then handled from the /etc/shadow file instead of the /etc/password file. The password field in this file should be treated as if it were the same encrypted password field as in the /etc/passwd file. To disable an account place an asterisk in the encrypted password field of the /etc/shadow file. Sometimes, instead of the asterisk you might see the letters <small>NP</SMALL>&#151;this is another way some disable an account&#151;which stand for <i>No Password</I>. If this feature is available on your flavor, you should take every step to implement this feature.</P>
+<!-- CODE SNIP //-->
+<pre>
+axjones:NP:6445::::::
+toddh:93RttkSgw18KA:9441::::::
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Some client/server&#150;based applications don&#146;t work with this feature turned on. The application server performs a lookup of the user account and password with the client application from the /etc/passwd file. If the encrypted password string is not visible, the server-side application cannot process the request to the client. Check all your applications that are running on your system to see whether you might be affected by this process before making the switch to shadow passwords.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The password field is the main target for many intruders attempting to hack a system. It needs to be well guarded and controlled. Shadow files help protect the visible password file.
+</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>Some beginning and intermediate system administrators have been caught off guard by seeing every password field in the /etc/passwd file having an <small>x</SMALL> in it. They&#146;ve gone on to believe that all the entries were disabled for some reason. Some have gone as far as attempting to restore the password file from backups only to always find the same file containing the same entries.</P>
+<p>In many organizations, users are constantly being added on a daily basis to systems. They often are provided with temporary passwords and given instructions on how to change the password to something else. If your system does not force the issue of changing passwords the first time the users log in to a system, you need to be sure that you can verify that the users have actually changed their passwords. If you run any of the password-cracking programs that are available on the Internet, add the temporary password you select for users to the dictionary that the password-cracking program uses to check against. You will soon find that many users never get around to changing their password. Remember, <i>never</I> use the user&#146;s name in any part of the password.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

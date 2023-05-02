@@ -1,0 +1,196 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=02//-->
+<!--PAGES=073-076//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>On some large servers with databases and special applications, the shutdown process can take up to 10 to 15 minutes before the system completes its graceful shutdown. This is sometimes enough to get across campus or to another building where the server is waiting in a halted state. You can tell the user that it saves time to do it remotely; not to mention that if the system isn&#146;t down by the time you get there and is hung, something even more serious could be the problem.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>The reality is that in most cases a reboot is executed because the graphics, an application, or the desktop are hung and you cannot kill the running process. There are times when processes go into a zombie state and you know nothing is wrong with the system, but just these processes. Likewise, NFS mount points could go stale; when they do, the only recourse, if they do not unmount or remount, is to reboot. In almost every case I try to verify that the user or computer operator is in the area or in front of the terminal.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+halt, reboot, shutdown
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading12"></A><font color="#000077">2.6 Talking NFS3 to NFS2</FONT></H3>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">2.6.1 Description</FONT></H4>
+<p>There are two versions of the Network File System protocol (NFS), NFS Version 2 and NFS Version 3. Here is how to get NFS3 to talk to NFS2.
+</P>
+<p><font size="+1"><b>Example: Apply a type NFS2 to the Mount Point Being Made</B></FONT></P>
+<p>Flavors: AT&ampT
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>mount</B> [ <b>-t</B> nfs|nfs2 ] fsname dirname
+<b>df</B> [ <b>-F</B> nfs|nfs3 ] <b>-k</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Although it is always best to have NFS2 talking to NFS2 and NFS3 talking to NFS3, there are probably times when you need to have NFS3 talk to NFS2. NFS3 is supposed to drop down to NFS2 after it attempts to connect with NFS3 and timeouts. Network connectivity from the remotely mounted filesystem sometimes drops off the network, slowing down the system response time.
+</P>
+<p>By passing the NFS <small>type</SMALL> into the mount when it is initiated, the operating system does not have to worry about any confusion or a wait to timeout while trying to communicate between NFS3 to NFS2.</P>
+<p>Here is what you do if you want to force NFS3 to talk to NFS2 from a UNIX shell:</P>
+<!-- CODE SNIP //-->
+<pre>
+# mount -t nfs2 rocket:/alt /alt
+# df -F nfs -k
+Filesystem         Type  kbytes     use    avail  %use Mounted on
+rocket:/animate    nfs   2051936  1915648  136288  94  /animate
+
+# df -F nfs3 -k
+Filesystem         Type  kbytes     use    avail  %use Mounted on
+shuttle:/model     nfs3  1627996  1465936  162060  91  /model
+</PRE>
+<!-- END CODE SNIP //-->
+<p>On the system that is talking in NFS3, issue the <small>mount</SMALL> command with a <small>-t</SMALL> option, for type. This tells the system that you want talk to the remote system via NFS2.</P>
+<p>Always verify that the command executed successfully with the <small>df</SMALL> command. Your filesystem should reflect that the mount point has been made with NFS2, by being of <small>type</SMALL> <small>nfs</SMALL>. If an NFS version 3 mount point was made then you would see the <small>type</SMALL> as <small>nfs3</SMALL>.</P>
+<p>After you have verified that the mount point was established properly, you can hard code it into the filesystem table. Depending on your specific flavor, use /etc/fstab or /etc/vfstab. Edit the appropriate filesystem table for your flavor to add the following entry:</P>
+<!-- CODE SNIP //-->
+<pre>
+#================================================================
+# filesystem    directory   type  options         frequency  pass
+#================================================================
+rocket:/animate  /animate   nfs2  rw,bg,hard,intr 0          0
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This entry allows the filesystem /animate on the remote system called rocket to be mounted to the local mount point called remote when the system boots up.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# mount /animate
+# df -F nfs -k
+Filesystem         Type  kbytes     use    avail  %use Mounted on
+rocket:/animate    nfs   2051936  1915648  136288  94  /animate
+</PRE>
+<!-- END CODE SNIP //-->
+<p>By issuing the <small>mount</SMALL> command with the mount point /animate, you cause <small>mount</SMALL> to read the filesystem table and mount the filesystem with the options defined in the filesystem table. Verify once again that the mount point took. Now every time you reboot or bring up the system, the mount point is established.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Vendors are aware of problems and potential problems that still exist between mounting NFS3 and NFS2 to one another. Most UNIX vendors have the same answer: upgrade to NFS3. They are trying to get everyone up to NFS3. It is very difficult to get them to do anything about any problems that exist between the two versions.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>There is currently a mixed environment of different revisions of UNIX running on the same platform. The newer versions are shipping using NFS version 3. Many system administrators, however, are still supporting systems running with NFS version 2. Some vendors are not going to NFS version 3 yet for certain reasons: one is memory restraints and the other is that not all flavors are able to support backwards compatibility. The vendors are almost being forced to choose one or the other.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>I think you will find that most of the systems that are cross-mounting NFS2 and NFS3 are doing so between servers and workstations. I have seen it in both directions. Many workstations run NFS3 with the server stuck back on NFS2; it&#146;s easier to upgrade the OS or a workstation that sells for $10,000&#150;15,000 instead of a $200,000 server with production applications used by hundreds or thousands of users. In other instances, the user is stuck behind with slow 10Base-T workstations with NFS2, and along comes a fast new 100Base-T multiport Ethernet server running NFS3.
+</P>
+<p>This might apply at the time the book is published, but it should be considered when any major event takes place that affects an entire computing environment. Companies are and will be placing a freeze on all operating systems to make them year-2000 compliant. They do not want to introduce any new problems into the equation. This makes it difficult, because while new systems are being purchased, older systems are being patched for Y2K and NFS2 cannot be upgraded to NFS3 on these systems.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+df, fstab, mount, nfs, vfstab
+</PRE>
+<!-- END CODE SNIP //-->
+<p>World Wide Web:
+</P>
+<p>RFC 1813 NFS Version 3&#151;<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc1813.html">http://www.cis.ohio-state.edu/htbin/rfc/rfc1813.html</A></P>
+<h3><a name="Heading14"></A><font color="#000077">2.7 Unmounting and Busy Devices</FONT></H3>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">2.7.1 Description</FONT></H4>
+<p>Learn to deal with mounted devices that need to be unmounted when they are busy being used by someone or have files.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Syntax:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>kill</B> PID
+<b>showmount -a</B>
+<b>unmount</B> fsname
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There are numerous ways to attempt to unmount various devices. In all cases, when there is a device that is busy and cannot be unmounted, you have to ask yourself:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Who has the control of the mounted device?
+<dd><b>&#149;</B>&nbsp;&nbsp;What is the device and what is being done?
+<dd><b>&#149;</B>&nbsp;&nbsp;Where is the device being accessed from?
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

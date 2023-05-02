@@ -1,0 +1,232 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=02//-->
+<!--PAGES=076-079//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>One of the hardest things is tracking down who or what has the device open. Mounted devices can be mounted from either a local system or from remote systems. They can even be remotely mounted from multiple systems. Systems with local mounted devices have disk drives, storage arrays, or CD-ROM drives. Systems that are remotely mounting devices are usually attaching to the same exact devices, only over the network.
+</P>
+<p>UNIX doesn&#146;t tell you which device is being used by individual users. You sometimes have to do some deductive reasoning or execute a series of commands and, through a process of elimination, you find the user or process responsible for putting the device into a busy state. Start looking locally, and then broaden your search out to the network.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Before you begin, log in as root. Do not switch to root user with the <small>su</SMALL> command. Make sure there are no open shells in the device you want to unmount. It saves much-needed time in the end.</FONT><hr>
+</BLOCKQUOTE>
+<p>This example features a disk mounted /disk2. Try to unmount the device.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket # unmount /disk2
+/disk2: Resource Busy
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Then check for local processes using the device. There might be a process that is using the device. If so, you can contact the user associated with the process and have the process killed.
+</P>
+<!-- CODE //-->
+<pre>
+rocket # ps -ef
+USER       PID %CPU %MEM   SZ  RSS TT       S    START  TIME
+&#8658;COMMAND
+root       205  0.0  0.3 2464  420 ?        S 22:04:30  0:03
+&#8658;/usr/lib/lpsched
+gloriar  21960  0.0  0.9 2320 1672 pts/5    S 22:07:31  0:04
+&#8658;/disk2/bin/satan
+root       340  0.0  0.9 2320 1672 ?        S 22:07:31  0:04
+&#8658;/usr/lib/sendmail
+
+rocket # kill 21960
+</PRE>
+<!-- END CODE //-->
+<p>If that that doesn&#146;t do the trick and the number of users on the system or workstation is small, you can contact each user and make them exit the area. This is typically available only on workstations with one or two users. If this is needed on a server, especially a production server, the unmounting of the device should be scheduled. Notification to users should always be a high priority, so they are never left with any surprises.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket # w | awk &#145;{ print $1 }&#146; | finger -s
+Login    Name                  TTY Idle When       Office
+jdoe     John D.               q0  1:19 Thu 11:15
+asmith   A. Smith              q1  1:16 Wed 17:11
+johnson  H. Johnson            q3    51 Wed 18:05
+gloriar  Gloria R.             q5    02 Wed 20:00
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This one-liner collects the information from the <small>w</SMALL> command, strips out the user IDs with the <small>awk</SMALL> command, and performs a short-form <small>finger</SMALL> on each ID. This tells you by name who is on the system so you can contact them directly. If they are doing something important, the device&#146;s busyness just saved you.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket # unmount /disk2
+/disk2: Resource Busy
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If, after all this, the mount device is still busy, you must begin to search for systems that are remotely connected to the device. Using the <small>showmount</SMALL> command you can see all the remote machines that are connected to the local system. This command displays not only the remote systems but also the devices they are mounted to.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket # showmount -a
+shuttle:/disk2
+pilot:/disk2
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Flavor: Solaris
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>dfmounts</B> [ <b>-F</B> nfs ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There is a command called <small>dfmounts</SMALL> that is similar to <small>showmount</SMALL>. <small>dfmounts</SMALL> shows the local resources that are shared through a distributed filesystem, <small>FSType</SMALL>, and the list of clients that have the resource mounted.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket # dfmounts -F nfs
+RESOURCE     SERVER PATHNAME                  CLIENTS
+  -          rocket /disk2                   shuttle
+  -          rocket /local                   shuttle
+  -          rocket /disk2                     pilot
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Proceed to each of the remote systems and attempt to unmount the device. If no processes and no users are accessing the device, it unmounts without any problems.
+</P>
+<!-- CODE //-->
+<pre>
+rocket # telnet shuttle
+Login: root
+Password:
+
+shuttle # df -k
+Filesystem        Type  kbytes     use     avail  %use Mounted on
+/dev/root          xfs  2051936  1910832   141104  94  /
+rocket:/disk2      nfs    33343    16739    16604  51  /disk2
+
+shuttle # unmount rocket:/disk2
+shuttle # df -k
+Filesystem        Type  kbytes     use     avail  %use Mounted on
+/dev/root          xfs  2051936  1910832   141104  94  /
+
+shuttle # exit
+</PRE>
+<!-- END CODE //-->
+<p>While progressing through each of the remote systems, you might come to one that still does not unmount.
+</P>
+<!-- CODE //-->
+<pre>
+rocket # telnet pilot
+Login: root
+Password:
+
+shuttle # df -k
+Filesystem        Type  kbytes     use     avail  %use Mounted on
+/dev/root          xfs  2051936  1910832   141104  94  /
+rocket:/disk2      nfs    33343    16739    16604  51  /disk2
+
+shuttle # unmount rocket:/disk2
+/disk2: Resource Busy
+</PRE>
+<!-- END CODE //-->
+<p>At this point, repeat the beginning steps. Search for processes or users that might be keeping the device busy and work with them to free up the resource. It is a tedious task but the safest way.
+</P>
+<p>If you believe every path has been exhausted and you still want to unmount this device, make sure that there are no system files that reside in this area. Go through UNIX trees and watch for soft links that might have been put in place.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket #ls -al /usr | grep ^l
+lrwxrwxrwx  1 root   11 Oct 13  1996 mail -&gt; /disk2/var/mail/
+lrwxrwxrwx  1 root   11 Oct 13  1996 man -&gt; ./share/man/
+lrwxrwxrwx  1 root   15 Oct 13  1996 pub -&gt; ./share/lib/pub/
+lrwxrwxrwx  1 root   12 Oct 13  1996 spool -&gt; ../disk2/var/spool/
+lrwxrwxrwx  1 root   11 Oct 13  1996 src -&gt; ./share/src/
+lrwxrwxrwx  1 root   10 Oct 13  1996 tmp -&gt; ../disk2/var/tmp/
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this case the resource is always busy, because <small>sendmail</SMALL> always has files open on the areas of <small>spool</SMALL> and <small>mail</SMALL>. Keep your eyes open for other system applications that might be using the resource you are trying to free up.</P>
+<p>Flavor: Irix</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>umount -k</B> fsname
+</PRE>
+<!-- END CODE SNIP //-->
+<p>On the SGI systems, Irix has a <small>-k</SMALL> option that can be passed to unmount. This option enables you to tell the device, &#147;No matter what, you are unmounting this device!&#148;</P>
+<!-- CODE SNIP //-->
+<pre>
+shuttle # unmount -k rocket:/disk2
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This can easily make your phone ring by angry users, so be careful using it. I have also seen the option work about 60% of the time. When it does work, it saves time in having to reboot the system to release the device.
+</P>
+<p>There are two other alternatives to releasing the device that I know you don&#146;t want to hear, but I still have to mention them. Take the system down by halting it or reboot the system.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

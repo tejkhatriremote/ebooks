@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=03//-->
+<!--PAGES=095-098//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>When you have over 100 workstations and servers to keep an eye on, this little script can really work. Before I began using this script, I partially failed one of the many security audits I have been blessed to receive. The programmers in my environment developed applications that required running with root permissions. They always manipulated sockets and tweaked the kernel.
+</P>
+<p>They decided that it would be best to have a root level account named to the application. So an application called <small>stucco</SMALL> had a UID of root <small>0</SMALL>. The problem with these programmers, like most dangerous users, was that they neglected to tell the admins and decided on their own to manually generate the account in the password file. Unfortunately, it didn&#146;t end there. They not only generated the account, but determined for the sake of convenience that a password shouldn&#146;t be on the that account.</P>
+<p>Along came the security audit the next morning and&#151;<i>pow!</I>&#151;I failed. Great timing. I decided to put this script into place and within the next six months I caught them four more times doing the same thing. This script is quick and dirty and does the job.</P>
+<h3><a name="Heading8"></A><font color="#000077">3.4 Vulnerabilities in UNIX</FONT></H3>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">3.4.1 Description</FONT></H4>
+<p>Watch out! Certain key areas in the UNIX environment that are targets by hackers often are left vulnerable and probably always will be.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p><i>Poor system administration practices</I> Treat every system as if an intruder is waiting at your doorstep. Don&#146;t be sloppy and leave holes open for intruders to take advantage of. Don&#146;t let yourself say, &#147;I&#146;ll clean it up later.&#148; It usually doesn&#146;t take that much time. Here are some of the holes to which I am referring:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Empty passwords left open and blank in the password file. The same holds true for using the word <small>test</SMALL> and setting the users&#146; passwords to their user IDs.
+<dd><b>&#149;</B>&nbsp;&nbsp;Not cleaning up old users&#146; accounts in the password file.
+<dd><b>&#149;</B>&nbsp;&nbsp;A fully trusted disregard for root access from host to host.
+<dd><b>&#149;</B>&nbsp;&nbsp;Exporting filesystems to the world with root access.
+<dd><b>&#149;</B>&nbsp;&nbsp;Opening your console so anyone can display on it.
+<dd><b>&#149;</B>&nbsp;&nbsp;Not utilizing shadow passwords when they&#146;re available on the system.
+<dd><b>&#149;</B>&nbsp;&nbsp;Passing out the root password to those who want it.
+<dd><b>&#149;</B>&nbsp;&nbsp;Walking away from an open terminal without locking the screen or logging off the system or walking away with root in an open shell.
+<dd><b>&#149;</B>&nbsp;&nbsp;In haste, opening permissions (777) on directories to save time and not dealing with any permission problems.
+<dd><b>&#149;</B>&nbsp;&nbsp;Ignoring users for so long that they attempt to do the job themselves.
+</DL>
+<p><i>Reusable/poor passwords</I> There is no excuse to use recycled passwords or be caught with bad passwords. A lot of users are still ignorant about good passwords. If you must, recommend some to them. A little 10,000 word dictionary can still often crack many passwords. Educate users, enforce the use of good passwords, and use password-cracking software on a regular basis.</P>
+<p><i>CGI applications</I> One of the biggest holes in systems comes from CGIs. Most Web designers and programmers don&#146;t think that a system could be compromised through CGI when a Web site is designed. They are concerned about secure transactions for commerce on the Internet, but not how the computer system itself could be compromised. An insecure CGI can provide access to password files and any other system file if not locked down properly.</P>
+<p><i>Email bombs and spamming</I> Sending or receiving large quantities of unsolicited email can degrade network and host performance, fill up a disk, or waste users&#146; time. The older versions of sendmail, prior to version 8.9, do not protect against many of the following vulnerabilities:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The sender does not need to specify a valid domain for any inbound mail to your mailserver.
+<dd><b>&#149;</B>&nbsp;&nbsp;Mail can be relayed through your mailserver and create an unnecessary load on your mailserver.
+<dd><b>&#149;</B>&nbsp;&nbsp;The sender can use a valid return (Reply To) address in the domain the mail is bouncing through and also create an unnecessary load on your mailserver.
+<dd><b>&#149;</B>&nbsp;&nbsp;Inbound mail can not refuse mail if it is not fully qualified when the mailserver receives it.
+<dd><b>&#149;</B>&nbsp;&nbsp;There are no access control databases that permit or deny mail from senders or their domains.<i> </I>
+</DL>
+<p><i>Anonymous FTP server</I> If an anonymous FTP server is not properly configured, users can gain unauthorized access to information or execute arbitrary commands on the server and compromise the system. Avoid using the vendor supplied FTP package that comes with the OS you installed. WU-FTP, from Washington University, is currently the most secure FTP out on the Internet, offering extended features that don&#146;t exist in the standard version of FTP. Some of these features include</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Various classification rules can be placed on users to allow or deny access into certain areas. Restricted guest accounts can also be configured.
+<dd><b>&#149;</B>&nbsp;&nbsp;This version handles compression and archiving of files on-the-fly.
+<dd><b>&#149;</B>&nbsp;&nbsp;A message can be placed on every directory that has the ability to be accessed throughout the system.
+<dd><b>&#149;</B>&nbsp;&nbsp;Access control can be set up to allow or deny local domains within a company to have certain rights and privileges over domains coming to the site from the Internet.
+<dd><b>&#149;</B>&nbsp;&nbsp;Extra logging features over the standard version of FTP include the logging of all file transfers and commands executed.
+</DL>
+<p><i>BIND and named</I> There are three distinct problems in recent versions of BIND 4.9 and BIND 8 releases. (<i>BIND</I> stands for <i>Berkeley Internet Name Domain</I>.) The problems can enable an intruder to gain root-level access to a nameserver or disrupt normal operations to a nameserver in the following ways:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An improper or maliciously formatted inverse query on a TCP stream can crash the server or enable an attacker to gain root privileges.
+<dd><b>&#149;</B>&nbsp;&nbsp;An improperly or maliciously formatted DNS message can cause the server to read invalid memory locations. This yields garbage record data or crashes the server.
+<dd><b>&#149;</B>&nbsp;&nbsp;If a self-referential resource record is in cache on a nameserver and this record is in the cache, issuing a zone transfer request using its name causes the server to abort. The hostname cannot match the CNAME. It doesn&#146;t even matter if the hostname or target CNAME are valid domains.
+</DL>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>If you find that some of these problems exist in your environment, don&#146;t dive in and make hasty decisions in trying to correct these problems. Fixing one thing can break another. Evaluate each situation individually and take the appropriate steps to rectify the problem. Sometimes it isn&#146;t a configuration change but an entire upgrade to new software packages that&#146;s necessary.
+</P>
+<p>In the early days of the UNIX Guru Universe (UGU), I knew every level of administrator would be using the Web site and there would be more than a few, like me, who would try to hack into it. UGU is driven by a single CGI. What better Web site to hack into? After 800,000 hits and 15,000 administrators, the site was never compromised. It wasn&#146;t until fatigue set in at 3:15 in the morning, when I put an upgraded version in place and forgot to add the security model into the CGI that trouble struck. It didn&#146;t take long, fewer than 500 impressions, before I got the email from another administrator informing me that he&#146;d hacked UGU. It was really subtle, in the form of the password file. There was no malicious intent on his part; he wanted to see whether he could and let me know what needed patching. This reaffirms my belief that admins help admins, and don&#146;t destroy, punish, hurt, or abuse one another.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

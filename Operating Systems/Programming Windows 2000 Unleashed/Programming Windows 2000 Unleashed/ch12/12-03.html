@@ -1,0 +1,268 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Owner Draw and Custom Draw</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=12//-->
+<!--PAGES=388-392//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="12-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Creating the CListItem Structure</FONT></H4>
+<p>A simple list box drawn by Windows normally stores a string for each item it contains. Almost all owner-drawn list boxes and combo boxes store pointers to objects that represent the items they contain. These pointers are passed back to the controls&#146; owners as part of the structure parameter in the Owner Draw message discussed earlier.
+</P>
+<p>The OwnDraw project uses a simple structure named <small>CListItem</SMALL> to represent each item in the list box. <small>CListItem</SMALL> is just a wrapper around a <small>CString</SMALL> member variable, as shown in Listing 12.1. The structure definition for <small>CListItem</SMALL> can be found at the top of the <small>OwnDrawDlg.h</SMALL> source file.</P>
+<p><b>Listing 12.1</B> The <i>CListItem Structure</I><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+   struct CListItem
+   {
+       CString  m_str;
+       CListItem(const CString strItem): m_str(strItem)
+       {}
+   };
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Handling the Owner Draw Messages</FONT></H4>
+<p>For the OwnDraw project, ClassWizard was used to add three message-handling functions for the Owner Draw messages shown in Table 12.6.
+</P>
+<table width="100%"><td caption align="LEFT" valign="TOP" colspan="3"><b>Table 12.6</B> Owner Draw Messages Sent to the <small>COwnDrawDlg</SMALL> Class
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Message</I>
+<th width="30%" align="LEFT" valign="TOP"><i>Class</I>
+<th width="30%" align="LEFT" valign="TOP"><i>Function</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_DELETEITEM</SMALL>
+<td align="LEFT" valign="TOP"><small>COwnDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>OnDeleteItem</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_DRAWITEM</SMALL>
+<td align="LEFT" valign="TOP"><small>COwnDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>OnDrawItem</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_MEASUREITEM</SMALL>
+<td align="LEFT" valign="TOP"><small>COwnDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>OnMeasureItem</SMALL>
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Adding Items to the List Box</FONT></H4>
+<p>For the OwnDraw example, items are added to the Owner Draw list box when a user clicks the Add button. ClassWizard was used to add a message-handler function to the <small>COwnDrawDlg</SMALL> class for handling the <small>BN_CLICKED</SMALL> message from the <small>IDC_ADD</SMALL> control. The <small>OnAdd</SMALL> message handler for the Add button is provided in Listing 12.2.</P>
+<p><b>Listing 12.2</B> The Message Handler for OwnDraw&#146;s Add Button<hr></P>
+<!-- CODE //-->
+<pre>
+   void COwnDrawDlg::OnAdd()
+   {
+       UpdateData();
+       if(m_strEdit.IsEmpty() == FALSE)
+       {
+           CListItem* pItem = new CListItem(m_strEdit);
+           ASSERT(pItem);
+           m_list.AddString((LPCTSTR)pItem);
+       }
+   }
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Handling the WM_MEASUREITEM Message</FONT></H4>
+<p>As discussed earlier, the <small>WM_MEASUREITEM</SMALL> message is sent by Windows to determine the size of items in a list box. For the OwnDraw project, the list box will draw its items as if they were buttons; therefore, each item needs to be larger than the default size. As shown in Listing 12.3, the <small>OnMeasureItem</SMALL> function calls the base class implementation of <small>OnMeasureItem</SMALL> and then doubles the height of the list box item. This will provide the drawing routine with enough room to properly draw a button.</P>
+<p><b>Listing 12.3</B> Providing Measurement Information to the Owner-drawn List Box<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+   void COwnDrawDlg::OnMeasureItem(int nIDCtl,
+                              LPMEASUREITEMSTRUCT lpMeasureItemStruct)
+   {
+       CDialog::OnMeasureItem(nIDCtl, lpMeasureItemStruct);
+        <b>lpMeasureItemStruct-&gtitemHeight *= 2;</B>
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>In this project, there&#146;s only one owner-drawn item in the dialog box; if there were more, the <small>nIDCtl</SMALL> parameter would contain the resource ID of the item to be measured. You would need to check <small>nIDCtl</SMALL> to determine which control was requesting measurement information.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Handling the WM_DRAWITEM Message</FONT></H4>
+<p>The <small>OnDrawItem</SMALL> function is called whenever an item in the list box in OwnDraw needs to be repainted. The source code for <small>OnDrawItem</SMALL> is provided in Listing 12.4.</P>
+<p><b>Listing 12.4</B> Drawing the Items Contained in the Owner-drawn List Box<hr></P>
+<!-- CODE //-->
+<pre>
+   void COwnDrawDlg::OnDrawItem(int nIDCtl,
+                              LPDRAWITEMSTRUCT lpDrawItemStruct)
+   {
+       LPDRAWITEMSTRUCT pdis = lpDrawItemStruct;
+       CRect rc = pdis-&gtrcItem;
+       CDC* pdcTemp = CDC::FromHandle(pdis-&gthDC);
+       if(nIDCtl != -1)
+       {
+           CListItem* pItem = (CListItem*)pdis-&gtitemData;
+           pdcTemp-&gtSetBkMode(TRANSPARENT);
+
+           if(pdis-&gtitemState &amp ODS_SELECTED)
+           {
+               pdcTemp-&gtDrawFrameControl(rc,
+                                         DFC_BUTTON,
+                                         DFCS_BUTTONPUSH|DFCS_PUSHED);
+               // Move text down and left one pixel to simulate
+               // button press.
+               rc.OffsetRect(1,1);
+           }
+           else
+           {
+               pdcTemp-&gtDrawFrameControl(rc,
+                                         DFC_BUTTON,
+                                         DFCS_BUTTONPUSH);
+           }
+           rc.left &#43;= 5;
+           pdcTemp-&gtDrawText(pItem-&gtm_str,
+                             rc,
+                             DT_VCENTER|DT_SINGLELINE|DT_LEFT);
+       }
+       if(lpDrawItemStruct-&gtitemAction &amp ODA_FOCUS)
+       {
+           CRect rcFocus(pdis-&gtrcItem);
+           rcFocus.DeflateRect(3,3);
+           pdcTemp-&gtDrawFocusRect(rcFocus);
+       }
+   }
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p><small>COwnDrawDlg::OnDrawItem</SMALL> begins by testing the current item&#146;s index. If the index is -1, the <small>WM_DRAWITEM</SMALL> message was not sent for a particular item, but rather for the entire control. In this case, the only action taken is that a focus rectangle will be drawn around the control.</P>
+<p>If the <small>WM_DRAWITEM</SMALL> message was sent for a particular item, the <small>DrawFrameControl</SMALL> function is used to draw a button in either the normal or the pressed state. If the button is drawn as if it is pressed, the text label must be shifted down and to the left one pixel in order to match the behavior of normal Windows pushbutton controls.</P>
+<p>The focus rectangle is drawn by calling the <small>DrawFocusRect</SMALL> function. This function is also used to remove the current focus rectangle, because the rectangle is drawn using an <small>XOR</SMALL> drawing mode. For this reason, you don&#146;t need to check to see if the focus is being set or removed. If the focus rectangle is changing, just call <small>SetFocusRect</SMALL>, and the function will do the right thing.</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Handling the WM_DELETEITEM Message</FONT></H4>
+<p>The <small>OnDeleteItem</SMALL> function is called whenever an item in the list box is deleted. The source code for <small>OnDeleteItem</SMALL> is provided in Listing 12.5.</P>
+<p><b>Listing 12.5</B> Freeing Dynamic Resources Allocated for the Owner-drawn List Box<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+   void COwnDrawDlg::OnDeleteItem(int nIDCtl,
+                                LPDELETEITEMSTRUCT lpDeleteItemStruct)
+   {
+       CListItem* pItem = (CListItem*)lpDeleteItemStruct-&gtitemData;
+       delete pItem;
+       CDialog::OnDeleteItem(nIDCtl, lpDeleteItemStruct);
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>The <small>OnDeleteItem</SMALL> function casts the <small>itemData</SMALL> member to a pointer to <small>CListItem</SMALL> and then deletes that pointer. If you skip this step, memory leaks will result because the memory allocated to objects placed into the list box won&#146;t be deleted.</P>
+<p>Compile and run the OwnDraw project. An example of OwnDraw after several items have been added to the list box is shown in Figure 12.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-02.jpg',337,204 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-02.jpg',337,204)"><font color="#000077"><b>Figure 12.2</B></FONT></A>&nbsp;&nbsp;The OwnDraw project with several items in the pushbutton list box.</P>
+<h3><a name="Heading15"></A><font color="#000077">Using Custom Draw</FONT></H3>
+<p>Using the Owner Draw mechanism can be a lot of work, particularly when you&#146;re only interested in changing a small detail in the way a control is drawn. For example, if you just want to change the background color for individual items in a list box, you must take over the responsibility for drawing the entire list box.
+</P>
+<p>Fortunately, Windows 2000 includes a facility known as Custom Draw, which allows you to have control over some parts of the control&#146;s drawing process while still requiring the operating system to draw other parts of the control. For example, you may be interested in changing just the font for a particular item in a listview control, or you may want each item in a control to be drawn using a different color. In these cases, you should take advantage of Custom Draw and select new fonts or colors for individual items in your control.</P>
+<p>Here are the seven controls that can take advantage of Custom Draw:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Listview
+<dd><b>&#149;</B>&nbsp;&nbsp;Treeview
+<dd><b>&#149;</B>&nbsp;&nbsp;Toolbar
+<dd><b>&#149;</B>&nbsp;&nbsp;Rebar
+<dd><b>&#149;</B>&nbsp;&nbsp;Tooltip
+<dd><b>&#149;</B>&nbsp;&nbsp;Trackbar
+<dd><b>&#149;</B>&nbsp;&nbsp;Header
+</DL>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">The Data Structures Used by Custom Draw</FONT></H4>
+<p>There are several structures passed by the operating system to custom-drawn controls. The basic structure is <small>NMCUSTOMDRAW</SMALL>, and it&#146;s used for header, trackbar, and rebar controls. The <small>NMCUSTOMDRAW</SMALL> structure is defined like this:</P>
+<!-- CODE //-->
+<pre>
+   typedef struct tagNMCUSTOMDRAWINFO
+   {
+       NMHDR  hdr;
+       DWORD  dwDrawStage;
+       HDC    hdc;
+       RECT   rc;
+       DWORD  dwItemSpec;
+       UINT   uItemState;
+       LPARAM lItemlParam;
+   } NMCUSTOMDRAW, FAR * LPNMCUSTOMDRAW;
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="12-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

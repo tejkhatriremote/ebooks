@@ -1,0 +1,174 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=841-845//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch24/24-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 25<br>Advanced COM&#43; Services
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Scalability Through Object Pooling and Load Balancing <i>842</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Some Advanced Transaction Concepts <i>846</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Queued Components <i>854</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Distributing Information Asynchronously <i>859</I></B>
+</DL>
+<p>The purpose of this chapter is to introduce the rest of the COM&#43; material. The chapter is split into four main sections. The first section discusses improving scalability using object pooling and load balancing. In the second section, some advanced topics regarding transactions are discussed. Examples include controlling the transaction from the client context. The third section discusses the queued component&#151;a sort of asynchronous communication without the overhead of the full MSMQ implementation. Finally, the topic of event services in COM&#43; is discussed. One service that&#146;s exposed is the publish-and-subscribe mechanism.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Scalability Through Object Pooling and Load Balancing</FONT></H3>
+<p>In previous editions of MTS, object pooling was only a concept. There was no direct implementation of it. With COM&#43;, object pooling has become a reality. What is object pooling and why is it good? To answer these questions, let&#146;s go back and consider a typical production situation.
+</P>
+<p>In the diagram shown in Figure 25.1, there are many clients. However, because not all the clients are currently using the objects, just-in-time (JIT) activation connects only those clients that require attention. To use this mechanism, the objects must be stateless. This way, an object can be reused in a pool of objects.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-01.jpg',153,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-01.jpg',153,420)"><font color="#000077"><b>Figure 25.1</B></FONT></A>&nbsp;&nbsp;A sample production system.</P>
+<p>For object pooling to be supported, the only requirement is that the COM object must be stateless. An optimization is to implement <small>IObjectControl</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Implementing IObjectControl</FONT></H4>
+<p>The lifetime of a pooled object is different from that of a regular object.
+</P>
+<p>The physical lifetime is when the constructor and destructor of the class are called. The COM&#43; transaction lifetime is when the methods <small>IObjectControl::Activate</SMALL> and <small>IObjectControl::Deactivate</SMALL> are called. This is shown in Figure 25.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-02.jpg',150,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-02.jpg',150,420)"><font color="#000077"><b>Figure 25.2</B></FONT></A>&nbsp;&nbsp;Lifetimes of a pooled object.</P>
+<p>In Chapter 21, &#147;An Introduction to COM&#43; Services,&#148; you learned that the COM object&#146;s Activation tab makes it possible to specify whether or not the object can be pooled. A pool minimum and maximum size can also be specified. When the COM&#43; application is loaded, the minimum number of COM objects are instantiated. In this instance, only the constructors of the classes are loaded.
+</P>
+<p>When a client creates a pool instance object, COM&#43; services will inspect the pool for an available instance. If one exists, that instance is referenced. If none are available and the number of pooled objects is less than the maximum amount, COM&#43; services will wait for the time-out specified in the COM object property sheet. If this is exceeded, another instance of the object is created and referenced.</P>
+<p>On the reference interface, the method <small>IObjectControl::Activate</SMALL> will be called. At this point, any transaction constructor methods can be called. All COM calls are valid at this stage. Then the reference will have been JIT-activated and available to the client. Once the client is done, COM&#43; services will call <small>IObjectControl::Deactivate</SMALL>, which is the transaction destructor. Finally, the object instance is returned to the pool of available objects.</P>
+<p>Consider the situation shown in Figure 25.3.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-03.jpg',156,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-03.jpg',156,420)"><font color="#000077"><b>Figure 25.3</B></FONT></A>&nbsp;&nbsp;Pooled objects calling other pooled objects.</P>
+<p>When a pooled object calls another pooled object, it gets a specific reference. After the pooled object is done, it releases the reference. During the life of the transaction, the same type of object is requested. It will then get the same object reference until the transaction ends. If the call is to another transaction, the reference will not be to the original object. Instead, it will be to another object.
+</P>
+<p>The interface <small>IObjectControl</SMALL>, at the time of this writing, could only be implemented by Visual J&#43;&#43; and Visual C<small>&#43;&#43;</SMALL>. Visual Basic cannot be pooled because it stores information in the TLS (Thread local storage), which makes it &#147;nonpoolable.&#148;</P>
+<p>The interface <small>IObjectControl</SMALL> has three methods. The first two have already been discussed. The remaining method is <small>IObjectControl::CanBePooled</SMALL>. This method is used to define whether the object can be pooled. Returning a <small>TRUE</SMALL> indicates that pooling is allowed. A <small>FALSE</SMALL> value indicates that pooling is not allowed.</P>
+<p>If you run the Visual C<small>&#43;&#43;</SMALL> ATL Object wizard to create an MTS object, the following code is generated:</P>
+<!-- CODE //-->
+<pre>
+HRESULT CExample::Activate()
+{
+    HRESULT hr = GetObjectContext(&amp;m_spObjectContext);
+    if (SUCCEEDED(hr))
+        return S_OK;
+    return hr;
+}
+BOOL CExample::CanBePooled()
+{
+    return TRUE;
+}
+void CExample::Deactivate()
+{
+    m_spObjectContext.Release();
+}
+</PRE>
+<!-- END CODE //-->
+<p>This is a full implementation of <small>IObjectControl</SMALL>. The <small>Activate</SMALL> method retrieves the currently active transaction context. This is assigned to a <small>CComPtr&lt; IObjectContext&gt; m_spObjectContext</SMALL> variable. Using <small>m_spObjectContext</SMALL>, you can influence the outcome of the transaction regardless of the method called. If a specific method forces an ASAP deactivation, the transaction context is released in the <small>Deactivate</SMALL> method.</P>
+<p>It may seem that this interface is not very complicated. This is true, but there is one ramification that must considered. The object is alive all the time. Therefore, if the object leaks any memory, the leak will be slow but steady. In time, the server will crash or simply function very slowly. It&#146;s absolutely imperative that the object, when it&#146;s being recycled, is like being newly instantiated. What this means is that the state for a newly created object and a recycled object should be identical. For example, the following code is not good:</P>
+<!-- CODE //-->
+<pre>
+HRESULT CExample::Activate()
+{
+    HRESULT hr = GetObjectContext(&amp;m_spObjectContext);
+    if (SUCCEEDED(hr))
+        return S_OK;
+    if( didSet == false) {
+        // Do something
+        ...
+        didSet = true;
+    }
+    return hr;
+}
+void CExample::Deactivate()
+{
+    m_spObjectContext.Release();
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this example, an instance member variable, <small>didSet</SMALL>, is checked (using <small>if</SMALL>). If it has not been set, then something should occur. This sort of behavior is used so that instantiation only occurs once. The problem with this code is that it isn&#146;t undone in <small>Deactivate</SMALL>. In other words, when the object is recycled, it has the same characteristics as a newly created object.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Dynamic Load Balancing</FONT></H4>
+<p>The other way of achieving scalability is with load balancing. Using load balancing, you can consider a group of computers as one communication point. Keep in mind that this isn&#146;t clustering, because clustering ensures failover. Load balancing makes it possible to move processing tasks from a heavily utilized machine to an underutilized machine.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch24/24-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,1646 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 16 -- Microsoft</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security:</FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch15.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch15/ch15.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch17.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch17/ch17.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">16</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Microsoft</FONT></H1>
+</CENTER>
+<P>Many people dislike Bill Gates (though, oddly enough, not Paul Allen) because
+of his tremendous success. This is an invalid reason. People who do not know his
+story do not realize that Gates was a talented hacker in his youth. Since then, Gates
+has contributed much to the computing community; he just happens to have done so
+from behind a cash register. This is no crime.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>On the other hand, Gates's assertion
+	in <I>The Road Ahead</I> that we should all document our lives strikes me as a bit
+	Orwellian. In that book, Gates suggests that all good computing citizens should store
+	a complete record of their lives on computer (we should record all movements, purchases,
+	appointments, and so forth). This recorded material, he writes, could serve as an
+	alibi in the event such a citizen is accused of a crime. But if this documented life
+	becomes an accepted alibi, what happens to those who do not maintain such records?
+	In short, Gates is profoundly influencing the social construct of this nation. His
+	work may well result in a two-class society. Gates is a brilliant man who has contributed
+	much. Nonetheless, whether he is a true friend to humankind remains to be seen. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>When people in security speak of Gates's products, they sneer. It's a fact: Microsoft
+has never been a particularly secure platform, but then, these products have historically
+not needed to be secure. Nonetheless, times have changed; now there is a need. But
+if programmers at Microsoft take the next five years to hammer out some decent security
+schemes, they would be on par with the amount of time it took the UNIX community
+to do the same.</P>
+<P>Microsoft products should not be subjected to the same scrutiny as UNIX products
+because they are in a different class. Despite this fact, many security specialists
+ridicule Microsoft products. They subject such products to rigorous tests, knowing
+that the products cannot pass. Then they parade the negative results across the Net,
+&quot;proving&quot; that Microsoft's security is weak and lackluster. This is irresponsible
+and creates a good deal of public unrest.</P>
+<P>Security specialists should lament, not rejoice, when they find a hole in a Microsoft
+product. After all, such a hole simply represents one more hole in the Internet.
+Microsoft products should receive as much attention and respect as any other product.
+Moreover, security folks should educate, not ridicule, the cult following of Microsoft
+because that is the right thing to do.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Microsoft's Windows NT uses a very
+	good security model and is considered at least minimally safe. Nevertheless, although
+	NT's security model is good, it does not mean that NT is secure in the same way that
+	many versions of UNIX are secure.</P>
+	<P>Many Microsoft advocates point out that the NSA has granted Windows NT a C2 security
+	rating on the Evaluated Products List. This, they contend, is evidence that NT is
+	secure. Not true. First, C2 is the very lowest security rating on the EPL. Moreover,
+	NT's C2 rating is valid only on certain hardware (Compaq Proliant 2000 and 4000 Pentium
+	and the DECpc AXP/150 Alpha). Furthermore, NT's C2 certification assumes that a non-networked,
+	standalone workstation is being used. Thus, the NSA has effectively suggested that
+	NT is minimally secure, as long as it runs on certain hardware, has no network connectivity,
+	and is installed only as proscribed by the evaluation process. True, it was a great
+	step forward for Microsoft's marketing department to obtain any rating on the EPL
+	at all. Because most users have no idea what the EPL is, the rating sounds very impressive
+	(&quot;The National Security Agency says it's secure!&quot;). In reality, however,
+	the rating is not spectacular and is no guarantee of the security of NT. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>A Friendly Platform That's a Bit Too Friendly</B></FONT></H2>
+<P>Microsoft's security problems can be summed up in two words: user friendliness.
+No other platform (not even MacOS) has been designed so expressly for this purpose.
+Over the years, the Microsoft team has invested enormous amounts of time and research
+to deliver ease and enjoyment of use. For example, Microsoft even conducted research
+to determine from which direction light should fall on an icon. That is, it studied
+whether users would respond more favorably to a shadow on the right or the left of
+a button or other object. All developers are expected to adhere to this design convention
+(the shadow is always on the right, the light source is on the left.</P>
+<P>This ease of use comes with a cost. For example, consider the swapping scheme
+in Microsoft Windows 3.11. Swap files and disk caches are devices that greatly enhance
+overall performance (they can compensate for sparse RAM resources). When a large
+swap is present, certain elements of a program need not be loaded into memory again.
+This results in increased speed and functionality. Unfortunately, it also results
+in poor security.</P>
+<P>Any type of swapped memory system is insecure because traces of data are left
+within that swap file or swap area. (A good example is the use of encryption like
+PGP. When done through the Windows environment, the passphrase is written into the
+swap file and is therefore retrievable.)</P>
+<P>Throughout this chapter, you will see how user friendliness has inhibited the
+development of a truly secure Microsoft operating system. (NT is excluded from this
+analysis and will be discussed at the end of the chapter. NT has advanced security
+features; these were responsible for Microsoft getting its first product onto the
+Evaluated Products List.)</P>
+<P>Indeed, this is the greatest challenge facing Microsoft today. It must find a
+way to reconcile user friendliness with strong security. Until it does, Microsoft
+has no hope of seizing control of the Internet.
+<H2><FONT COLOR="#000077"><B>DOS</B></FONT></H2>
+<P>Microsoft's Disk Operating System is indisputably the most popular personal computer
+operating system in history. It is lightweight, requires little memory to operate,
+and is limited in commands. In fact, DOS 6.22 has approximately one eighth the number
+of commands offered by full-fledged UNIX.</P>
+<P>You may wonder why I would even bother to treat DOS security issues here. After
+all, the number of DOS-based machines connected to the Internet is limited. On closer
+examination, however, the relevance of DOS becomes more apparent. For example, it
+has become common for legacy Novell networks to be strung to the Internet. Many of
+these older networks (running 3.<I>x</I> or earlier) also run DOS-based applications.
+Here are just a few old favorites that you would be likely to find out there:
+
+<UL>
+	<LI>WordPerfect 5.<I>x</I>
+	<LI>WordStar
+	<LI>MTEZ
+	<LI>Telix
+	<LI>Qmodem
+	<LI>Carbon Copy
+</UL>
+
+<P>Because such networks are sometimes connected to the Internet, DOS still remains
+in the running. Indeed, Novell is not the only host example, either. Many networks
+retain at least one workstation that runs Windows for Workgroups on top of DOS.</P>
+<P>I will not exhaustively cover DOS, but there are a few issues I need to mention.
+As you might expect, many of these issues relate to physical or local security of
+DOS machines. If your network is devoid of any DOS machines, feel free to skip this
+portion of the chapter.
+<H3><FONT COLOR="#000077"><B>Beginning at the Beginning: Hardware</B></FONT></H3>
+<P>Early IBM-compatible architecture was not designed for security. Indeed, there
+are relatively few examples of such an architecture implementing reliable security
+even today. Thus, from the moment an individual stands before a machine running DOS,
+a security problem exists; that problem is not attributable to Microsoft.</P>
+<P>The next series of points are well known to users who are required to use IBM-compatible
+computers in their occupation. Much of this is therefore old hat, but I will run
+through it nevertheless. The rush to the Internet has prompted many people who never
+before had computers to get them. This section may therefore be helpful to some.
+<H4><FONT COLOR="#000077"><B>CMOS Password</B></FONT></H4>
+<P>The CMOS password option, which can be enabled on most machines (even ranging
+back to some 286 models), is completely insecure.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The CMOS password function on an
+	IBM compatible is used to protect the workstation from unauthorized users gaining
+	control at the console. The CMOS password option (if set) results in a password prompt
+	issued immediately at boot time. Indeed, when the CMOS password function is enabled,
+	the boot is arrested until the user supplies the correct password. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>For a user who needs access to the machine (and who has never been granted such
+access), the solution is to remove, short out, or otherwise disable the CMOS battery
+on the main board (see Figure 16.1).</P>
+<P><A NAME="01"></A><A HREF="01-9.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/01.htm"><B>FIGURE 16.1.</B> </A><I><BR>
+Physically disabling the CMOS password on an AT IBM compatible.</I></P>
+<P>Your network workstations can easily be compromised in this manner. However, this
+is more likely done by someone who is attempting to steal the machine, as opposed
+to trying to breach security. Internal employees would use a different method. Because
+your own employees have some level of access on the system, they can pose a serious
+security threat. Even if they do not disassemble the machine, there are ways for
+internal, trusted folks to bypass that CMOS password. And although this is a commonly
+known fact among hackers and crackers, the average LAN supervisor may not be so aware.</P>
+<P>I have seen offices, for example, where only the Novell administrator knew the
+CMOS passwords. The procedure was almost comical. The administrator came in early
+each morning and enabled all the workstations. At the end of the day, those workstations
+were shut down and the CMOS password would be active. The administrator assumed (wrongly)
+that in this manner, the network was safe from internal theft or tampering. This
+assumption was based largely on the premise that no one in the office knew the CMOS
+passwords but the administrator.</P>
+<P>In fact, there are a number of CMOS password catchers on the market. These utilities
+capture a CMOS password either while the user is already logged in or during boot.
+Up to this point, we have not yet booted the machine; we are simply looking to get
+inside. These utilities and techniques will allow us to do so:
+
+<UL>
+	<LI>Amiecod--This small utility is very reliable. It will retrieve the password last
+	used on a motherboard sporting an American Megatrends BIOS. See the following:
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('http://www.iaehv.nl/users/rvdpeet/unrelate/amidecod.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.iaehv.nl/users/rvdpeet/unrelate/amidecod.zip'" tppabs="http://www.iaehv.nl/users/rvdpeet/unrelate/amidecod.zip"><TT>http://www.iaehv.nl/users/rvdpeet/unrelate/amidecod.zip</TT></A>
+</DL>
+
+
+<UL>
+	<LI>Ami.com--Identical in functionality to the Amiecod, this tool will retrieve an
+	AMI CMOS password. See the following:
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('http://www.iaehv.nl/users/rvdpeet/unrelate/ami.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.iaehv.nl/users/rvdpeet/unrelate/ami.zip'" tppabs="http://www.iaehv.nl/users/rvdpeet/unrelate/ami.zip"><TT>http://www.iaehv.nl/users/rvdpeet/unrelate/ami.zip</TT></A>
+</DL>
+
+
+<UL>
+	<LI>Aw.com--This utility will retrieve (or recover) the password used on any board
+	sporting an Award BIOS. See the following:
+</UL>
+
+
+<DL>
+	<DD><A HREF="javascript:if(confirm('http://www.iaehv.nl/users/rvdpeet/unrelate/aw.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.iaehv.nl/users/rvdpeet/unrelate/aw.zip'" tppabs="http://www.iaehv.nl/users/rvdpeet/unrelate/aw.zip"><TT>http://www.iaehv.nl/users/rvdpeet/unrelate/aw.zip</TT></A>
+</DL>
+
+<P>Once inside, the cracker will typically want to gain further, or <I>leveraged</I>,
+access. To gain leveraged access, the cracker must obtain some information about
+the system. Specifically, on DOS machines that also run Novell and Lantastic, the
+cracker will need login IDs and passwords. To do that with some measure of stealth,
+the cracker must employ several tools, including a key-capture utility.
+<H3><FONT COLOR="#000077"><B>Key-Capture Utilities</B></FONT></H3>
+<P>Key-capture utilities are programs (usually very small) that capture any keystrokes
+that occur after a specified event. These keystrokes are recorded most commonly into
+a hidden file and a hidden directory.</P>
+<P>The technique discussed in Figure 16.2 is quite effective. The Alt+255 character
+is an extended ASCII character and therefore is invisible at a prompt. In Windows,
+it appears as a small, accented squiggle and is usually missed unless you are looking
+for it. Kids use this technique to hide games and racy photographs on their home
+and school machines.</P>
+<P><A NAME="02"></A><A HREF="02-8.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/02.htm"><B>FIGURE 16.2.</B></A> <BR>
+<I>A directory gets hidden on the disk.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Hidden files are generally created
+	using the <TT>attrib</TT> command or by the key-capture utility itself (in other
+	words, the programmer has included this feature in the software). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A number of key-capture utilities (or keystroke recorders) are available for DOS,
+including the following.
+<H4><FONT COLOR="#000077"><B>Keycopy</B></FONT></H4>
+<P>Keycopy was reportedly released for the first time in 1990, but current distributions
+report a date of 1993. The program was authored by Christopher E. BoVee. Keycopy
+is capable of capturing 200 keystrokes at a time and not just from a prompt. It also
+captures keystrokes executed in WordPerfect, MultiMate, and reportedly, Norton Editor.
+The program also sports a nice collection of command-line options that assist in
+setting the directory, the outfile, and other key elements. The author provides a
+series of keystrokes commands that can be used to kill, pause, or otherwise alter
+the behavior of the program. Using this program, crackers can capture login IDs,
+passwords, and other data. It is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ais.org/~paxton/archive/keycopy.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.ais.org/%7Epaxton/archive/keycopy.zip'" tppabs="http://www.ais.org/%7Epaxton/archive/keycopy.zip"><TT>http://www.ais.org/~paxton/archive/keycopy.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Playback 1.9</B></FONT></H4>
+<P>This product was released sometime in 1992. Its author apparently had no intention
+of it being used as a cracking utility. Rather, it was to be used for the automation
+of tedious and repetitive personal tasks. Playback records all the keystrokes of
+a task and later plays them back. Some users may remember communication packages
+that performed the same function. One of them was Qmodem. It would record keystrokes
+of logins to BBS machines or other remote servers. This became a script that could
+later be executed. Coupled with an old utility called <TT>tm</TT> that timed processes
+for execution, one could run entire download sessions automatically without ever
+being there.</P>
+<P>One of the more extraordinary features of Playback is the way it handles the timing
+of keystrokes. Everything is based on exactly the same tempo of the keystrokes recorded.
+Say, for example, that the session recorded a login procedure. Many login procedures
+require a waiting period between the moment the user enters his login ID and the
+point at which he enters his password (this waiting period sometimes relates to a
+buffer issue and sometimes simply involves a slow file server). In any event, Playback
+plays back the keystrokes <I>precisely</I> as they are recorded. Therefore, it is
+a suitable tool for simulating a real session with some remote or even local login
+program. Based on these amenities, Playback became a favorite among crackers. It
+is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.plazma.net/users/weiner/PB19C.ZIP  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.plazma.net/users/weiner/PB19C.ZIP'" tppabs="http://www.plazma.net/users/weiner/PB19C.ZIP"><TT>http://www.plazma.net/users/weiner/PB19C.ZIP</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Phantom 2</B></FONT></H4>
+<P>Phantom 2 is a tool similar to Playback, but far more comprehensive. One major
+distinction between the two is that Phantom will record your keystrokes no matter
+what program is running. Moreover, this program provides a control panel from which
+to operate. This panel allows the user to set a multitude of options. It can record
+keystrokes as well as sounds and tones. Few DOS-based keystroke recorders are as
+elaborate. Much like Playback, Phantom plays back keystrokes precisely as they are
+recorded. It is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ilf.net/~toast/files/keycopy/phantom2.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.ilf.net/%7Etoast/files/keycopy/phantom2.zip'" tppabs="http://www.ilf.net/%7Etoast/files/keycopy/phantom2.zip"><TT>http://www.ilf.net/~toast/files/keycopy/phantom2.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>DosLog 2</B></FONT></H4>
+<P>DosLog 2 is a standard key-capture utility that captures all activity at the console.
+The author reportedly wrote it because his younger brother failed to heed warnings
+about using certain programs. Using this utility is a good way to monitor your employees
+(or a good way for them to monitor you!). It is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://uiarchive.cso.uiuc.edu/pub/systems/pc/simtelnet/msdos/security/dos-log2.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://uiarchive.cso.uiuc.edu/pub/systems/pc/simtelnet/msdos/security/dos-log2.zip'" tppabs="ftp://uiarchive.cso.uiuc.edu/pub/systems/pc/simtelnet/msdos/security/dos-log2.zip"><TT>ftp://uiarchive.cso.uiuc.edu/pub/systems/pc/simtelnet/msdos/security/dos-log2.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Keytrap</B></FONT></H4>
+<P>Keytrap is an interesting utility that allows for user-specified time frames in
+regard to when it will do its work. (This is expressed in terms of minutes. Because
+you cannot exceed the number of minutes in a day, the outfile must be cleared and
+you must start again at the beginning of each business day. If you fail to clear
+out the file, it will be overwritten with a new one.) Otherwise, Keytrap is a standard
+key-capture utility with a bit less functionality than its counterparts. It is located
+here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ilf.net/~toast/files/keycopy/keytrap1.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.ilf.net/%7Etoast/files/keycopy/keytrap1.zip'" tppabs="http://www.ilf.net/%7Etoast/files/keycopy/keytrap1.zip"><TT>http://www.ilf.net/~toast/files/keycopy/keytrap1.zip</TT></A>
+</UL>
+
+<P>The main drawback of key-capture utilities is that the outfiles, though hidden,
+must be removed at some point. Some of the previously listed key-capture utilities
+will not write a file larger than X number of bytes. Therefore, the cracker must
+retrieve his bounty and start again. Nevertheless, these tools are standard in the
+average cracker's toolbox. They are old utilities, but exceedingly useful if one
+needs to crack a network that harbors at least one DOS box.</P>
+<P>At any rate, enough about techniques for cracking DOS. For a moment, I'd like
+to concentrate on preventing crackers from cracking a DOS box. There are many tools
+on the Internet designed expressly for this purpose and a majority are free for non-commercial
+use.
+<H4><FONT COLOR="#000077"><B>Secure 1.0</B></FONT></H4>
+<P>Secure 1.0 restricts directory access. That is, it prevents any unauthorized user
+from accessing a given directory. As the author is quick to point out in the documentation,
+however, Secure 1.0 does not obscure the directory's existence; it merely prevents
+unauthorized access to it. Unfortunately, the unregistered version only allows one
+directory to be so restricted, so users must choose that directory carefully. It
+is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://underground.org/tools/dos/secure10.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://underground.org/tools/dos/secure10.zip'" tppabs="http://underground.org/tools/dos/secure10.zip"><TT>http://underground.org/tools/dos/secure10.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Secure File System</B></FONT></H4>
+<P>This tool is not your average cheesy security tool for DOS. This is an excellent
+DOS security application suite. The utility applies high-level encryption to DOS
+volumes (reportedly, you can have as many as five encrypted disk volumes at one time).
+What is most extraordinary about this utility is that it has enhanced stealth features
+that prevent monitoring programs from collecting information about SFS's activity.</P>
+<P>Clearly, the author of SFS wanted to make a serious contribution to DOS security.
+Compliance with the Federal Information Processing Standard (FIPS) and several other
+key standards are built into the program. Its compatibility with a host of disk-caching
+and memory-management programs makes the program all the more mind boggling. Finally,
+the documentation on this utility is superb. See the following:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://underground.org/tools/dos/sfs/sfs110.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://underground.org/tools/dos/sfs/sfs110.zip'" tppabs="http://underground.org/tools/dos/sfs/sfs110.zip"><TT>http://underground.org/tools/dos/sfs/sfs110.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Encrypt-It</B></FONT></H4>
+<P>Encrypt-It amounts to DES encryption for DOS. This utility applies high-level
+DES encryption to a single file or a series of them via batch processing. The program
+suite also features a macro generator that accepts macros of lengths up to 1,000
+keystrokes. The main amenity of this program (besides the level of encryption it
+provides) is that it requires very little memory to run. It also contains a benchmarking
+tool through which you can determine how well a particular file is encrypted. See
+the following:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.sevenlocks.com/software/sca/eid200.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.sevenlocks.com/software/sca/eid200.zip'" tppabs="http://www.sevenlocks.com/software/sca/eid200.zip"><TT>http://www.sevenlocks.com/software/sca/eid200.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>LCK2</B></FONT></H4>
+<P>LCK2 locks the terminal while you are away. When you leave your terminal, simply
+issue the program's name at a prompt to lock the terminal. It is impervious to a
+warm reboot or interrupt keystrokes (Ctrl+Alt+Delete, as well as Ctrl+Break). Reportedly,
+the only way to defeat this program is to reset the entire machine. In network environments
+where users are strictly forbidden to restart machines, this might be useful. See
+the following:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/lck100.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/lck100.zip'" tppabs="ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/lck100.zip"><TT>ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/lck100.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Gateway2</B></FONT></H4>
+<P>This is a powerful program that password-protects a system. It supports password
+protection for 30 people. Some serious amenities include
+
+<UL>
+	<LI>Prevents Ctrl+Alt+Delete reboots
+	<LI>Prevents F5 and F8 key routines from interrupting boot
+	<LI>No local echo of passwords; instead, echo of garbage characters
+	<LI>User-defined number of retries before lockout
+</UL>
+
+<P>This utility provides some excellent protection. The problem is it relies on you
+changing the boot sequence in the CMOS. Thus, you disable the A: boot option (floppy
+seek on boot). A cracker can override this by attacking the CMOS settings. In all
+other respects, though, this is a very useful utility. Gateway2 can be found here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/gatewy12.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/gatewy12.zip'" tppabs="ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/gatewy12.zip"><TT>ftp://ftp.lib.sonoma.edu/pub/simtelnet/msdos/security/gatewy12.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Password Protect (PASSW204)</B></FONT></H4>
+<P>Similar to Gateway2, PASSW204 relies on changing the boot sequence. This utility
+loads the password routine in the <TT>config.sys</TT> file. This has some added functionality
+because it is ready for network support. One very interesting feature is that you
+can enable case sensitivity, which exponentially increases the strength of the passwords.
+See the following:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.hkstar.com/pub/simtelnet/msdos/security/passw204.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.hkstar.com/pub/simtelnet/msdos/security/passw204.zip'" tppabs="ftp://ftp.hkstar.com/pub/simtelnet/msdos/security/passw204.zip"><TT>ftp://ftp.hkstar.com/pub/simtelnet/msdos/security/passw204.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Sentry</B></FONT></H4>
+<P>You have to see it to believe it. For a shareware product, Sentry is quite complete,
+allowing even the capability to secure individual files. It also has many features
+commonly available in straight-on commercial products, including password aging and
+some support for Windows. However, it, too, depends on you to change the boot sequence
+in the BIOS. See the following:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.digital.com/pub/micro/pc/simtelnet/msdos/security/sentry57.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.digital.com/pub/micro/pc/simtelnet/msdos/security/sentry57.zip'" tppabs="ftp://ftp.digital.com/pub/micro/pc/simtelnet/msdos/security/sentry57.zip"><TT>ftp://ftp.digital.com/pub/micro/pc/simtelnet/msdos/security/sentry57.zip</TT></A>
+</UL>
+
+<P>There are literally hundreds of such programs available, so I will refrain from
+listing more of them. Instead, I will send you to a series of sites at which some
+or all can be obtained. However, know this: MS-DOS was never meant to be a secure
+system. If any of the workstations on your network are running pure DOS, you are
+vulnerable to an inside attack. From such a machine installed on a network, a cracker
+can easily grab your passwords.</P>
+<P>Also be aware that many programming tools are available to circumvent your security.
+Certain distributions of C++, for example, contain programs that allow MS-DOS users
+to monitor system processes. These tools will also monitor network activity. Such
+monitoring tools are not restricted to programming applications, either.</P>
+<P>One such application is Pcwatch. This program is designed expressly to examine
+the behavior of EXE files as they execute. Using this program, a cracker can accurately
+determine the elements of a program and where its vulnerabilities might lie (for
+example, where disk access occurs within the program, where memory swaps are performed,
+and within what address registers these events occur). It is a common utility employed
+by crackers when they need to crack a DOS file and is available here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://bauxite.apricot.co.uk/ftp/bbs/area8/pcwatch.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://bauxite.apricot.co.uk/ftp/bbs/area8/pcwatch.zip'" tppabs="http://bauxite.apricot.co.uk/ftp/bbs/area8/pcwatch.zip"><TT>http://bauxite.apricot.co.uk/ftp/bbs/area8/pcwatch.zip</TT></A>
+</UL>
+
+<P>For specific network problems, refer to the chapter that addresses your operating
+system (Novell, UNIX, AS/400, and so forth). At this stage, I want to concentrate
+more on Windows-based security issues. Thus, here are some sites at which you can
+acquire security tools for the DOS environment:
+<H4><FONT COLOR="#000077"><B>The Simtel DOS Security Index</B></FONT></H4>
+<P>The Simtel DOS Security Index page offers material about password protection,
+access restriction, and boot protection. It is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.cpdee.ufmg.br/simtel/simtel_index_security.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cpdee.ufmg.br/simtel/simtel_index_security.html'" tppabs="http://www.cpdee.ufmg.br/simtel/simtel_index_security.html"><TT>http://www.cpdee.ufmg.br/simtel/simtel_index_security.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>The CIAC DOS Security Tools Page</B></FONT></H4>
+<P>This page contains serious information about access restriction and includes one
+program that protects specific cylinders on a disk. See the following:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://ciac.llnl.gov/ciac/ToolsDOSSystem.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://ciac.llnl.gov/ciac/ToolsDOSSystem.html'" tppabs="http://ciac.llnl.gov/ciac/ToolsDOSSystem.html"><TT>http://ciac.llnl.gov/ciac/ToolsDOSSystem.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>DOS Security Tools at </B><TT>Cypher.net</TT></FONT></H4>
+<P>This page offers material about password protection, access restriction, and boot
+protection. It is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.cypher.net/tools/dossecure.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cypher.net/tools/dossecure.html'" tppabs="http://www.cypher.net/tools/dossecure.html"><TT>http://www.cypher.net/tools/dossecure.html</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>The Repository at </B><TT>Oakland.edu</TT></FONT></H4>
+<P>This site contains information about password protection, access restriction,
+and boot protection. It is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://oak.oakland.edu/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://oak.oakland.edu/'" tppabs="http://oak.oakland.edu/"><TT>http://oak.oakland.edu</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Resources at </B><TT>Shareware.org</TT></FONT></H4>
+<P>This page is the home of Integrity Master, an NCSA-certified security tool. It
+can be found here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.shareware.org/seds.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.shareware.org/seds.htm'" tppabs="http://www.shareware.org/seds.htm"><TT>http://www.shareware.org/seds.htm</TT></A>
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Windows and Windows for Workgroups</B></FONT></H2>
+<P>Basic security within Windows and Windows for Workgroups is (and always has been)
+seriously lacking. Password protection relies on the PWL files that are generated
+when a user creates his password. These files need not be decrypted or even attacked.
+They can simply be deleted. That alone makes the PWL scheme ineffective.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In certain instances (when, for
+	example, the cracker is seeking to gain access to a server), deletion will not do
+	the trick. However, deleting one password allows the cracker to at least reach the
+	local workstation, at which point he can crack other passwords. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Briefly, I want to address the encryption routine and general environment behind
+the PWL file. First, the process uses two different functions: one to encrypt and
+store the password, another to retrieve it. Those are, respectively:
+
+<UL>
+	<LI><TT>WNetCachePassword()</TT>
+	<LI><TT>WNetGetCachedPassword()</TT>
+</UL>
+
+<P>The password remains cached. A programmer on your network can write a program
+that will get the password of another user by using functions identical to <TT>WNetCachePassword()</TT>
+and <TT>WNetGetCachedPassword()</TT>. The only restriction is that the targeted user
+must be logged in at the time the program is executed (so the password can be trapped).
+The password can then be cached out to another area of memory. Having accomplished
+this, your programmer can bypass the password security scheme by using that cached
+version of the password.</P>
+<P>Likewise, you may be able to force the cached password into the swap file. Reportedly,
+this technique reveals the password. (Nonetheless, this is a cumbersome and wasteful
+method; there are other, easier ways to do it.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>One method is where multiple passwords
+	are added to the password database at high speed. You could technically use a utility
+	similar to Claymore to do this. Using this technique, you fill the available space
+	for passwords (255 of them, actually). This causes an overflow, and the routine then
+	discards older passwords. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>But again, unless the cracker is seeking access to a Windows NT server via a Windows
+for Workgroups box, this is academic. In most cases, the password files can simply
+be deleted. Because there is no default file access control (or restrictions) in
+Window for Workgroups, the PWL files do not stand a chance.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>This is vastly different from UNIX
+	or even Windows NT in real NTFS mode, where certain files are protected from read,
+	write, or execute calls from unauthorized users. For example, in UNIX, the file <TT>/etc/passwd</TT>
+	may indeed be readable (though, the system administrator ought to be using shadowing).
+	However, no one without root privileges can access or write to that file. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Windows for Workgroups, in its out-of-the-box state, provides no protection for
+those PWL files. Using a utility such as PAC.exe (or Ledbetter's find.exe), you can
+go to a prompt on a Windows for Workgroups workstation and disable all passwords
+on the network with a single command line. The process would take no more than two
+to three seconds. The command would be</P>
+<PRE><FONT COLOR="#0066FF">pac /I /s *.pwl /k
+</FONT></PRE>
+<P>or</P>
+<PRE><FONT COLOR="#0066FF">find *.pwl -v
+</FONT></PRE>
+<P>Having executed these commands, the network is yours for the asking. This problem
+has been carried into the Windows 95 distribution. As explained on the Tip of the
+Month page at Ronster's Compendium:
+
+<DL>
+	<DD>Did You Forget Your Password? If you forget your Windows 95 password, just press
+	Escape at the Password Dialog Box, bring up the MS-DOS prompt and enter <TT>DIR *.PWL</TT>
+	from your windows folder (<TT>C:\WINDOWS&gt;</TT> prompt) to find your <TT>.PWL</TT>
+	files. Delete the one with your logon ID in front of it. Restart your system and
+	enter a new password when prompted.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Check out Ronster's Compendium's<I>
+	</I>Tip of the Month page at <A HREF="javascript:if(confirm('http://199.44.114.223/rharri/tips.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://199.44.114.223/rharri/tips.htm'" tppabs="http://199.44.114.223/rharri/tips.htm"><TT>http://199.44.114.223/rharri/tips.htm</TT></A>.
+	
+<HR>
+</P>
+
+</BLOCKQUOTE>
+
+<P>This problem was not heavily publicized because Windows security was not an issue
+relevant to the Internet. However, almost immediately after Windows 95 (with rich,
+new Internet functionality) was released, the issue appeared in national magazines.
+In fact, many news stories concentrated not only on Microsoft's failure to protect
+such files, but also on the weak password scheme employed. As Eamonn Sullivan noted
+in his article &quot;Win 95 Password Caching Flawed&quot; (published in <I>PC Week</I>,
+December 8, 1995):
+
+<DL>
+	<DD>The password-caching scheme used in Windows 95 has a serious flaw that can make
+	it easy for hackers to discover network and E-mail passwords...Source code illustrating
+	the problem was distributed on the Internet last week. PC Week Labs compiled the
+	source code on a Sun Microsystems Computer Co. SPARCStation and was able to decrypt
+	several Windows 95 password files. Decrypting the files and discovering the passwords
+	took less than a second, although the source code inexplicably did not work on some
+	password files.
+</DL>
+
+<P>However, I need not cover this subject further, for there are utilities currently
+available that will crack PWL files. Here is one:
+<H4><FONT COLOR="#000077"><B>Glide</B></FONT></H4>
+<P>Glide cracks PWL files. It comes with the CPP file for those interested in examining
+it. The cracking party enters the filename (PWL) and the username associated with
+it. This utility is quite effective (it works at a command prompt in a shell window
+or at a DOS prompt). It can be found online here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.iaehv.nl/users/rvdpeet/unrelate/glide.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.iaehv.nl/users/rvdpeet/unrelate/glide.zip'" tppabs="http://www.iaehv.nl/users/rvdpeet/unrelate/glide.zip"><TT>http://www.iaehv.nl/users/rvdpeet/unrelate/glide.zip</TT></A>
+</UL>
+
+<P>With respect to Internet security, Microsoft Windows and Windows 3.11 are not
+so relevant. This is because the majority of implementations of the TCP/IP stack
+on these two systems do not include server software. Thus, someone connecting to
+the Net via TCPMAN, for example, is really nothing but a dead IP address from a cracker's
+point of view. There are no outbound services running and therefore there is nothing
+to connect to. That situation changes, however, if server software is loaded. Following
+is one utility that can assist in strengthening that rather weak state of security.
+<H4><FONT COLOR="#000077"><B>KDeskTop (Keep Out)</B></FONT></H4>
+<P>KDeskTop protects your desktop in Windows. One interesting feature is that it
+disables your ability to execute a warm reboot from the Windows environment. It provides
+password protection for your Windows desktop (on boot into the Windows environment,
+this program issues a login prompt). It can be found here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.anaplastic.com/kdesk.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='http://www.anaplastic.com/kdesk.zip'" tppabs="http://www.anaplastic.com/kdesk.zip"><TT>http://www.anaplastic.com/kdesk.zip</TT></A>
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Windows 95</B></FONT></H2>
+<P>Windows 95 harbors many of the same security flaws that Windows and Windows for
+Workgroups do. For example, even though Microsoft has provided a new system of managing
+the password process, the password problem is still an issue. Although Microsoft
+hints that its new system will improve security, it does not. The password protection
+scheme is no more robust than the one in Windows for Workgroups.</P>
+<P>Reportedly, the way to password-protect a Windows 95 workstation is to set the
+properties so that password caching is disabled and to enable user customization
+of desktop preferences. The process takes no time at all:
+
+<DL>
+	<DD><B>1. </B>Open the Control Panel and choose the Network option.<BR>
+	<BR>
+	<B>2. </B>If the Primary Network Logon option is not already set to Windows Logon,
+	you should set it to this option (see Figure 16.3).
+</DL>
+
+<P><A NAME="03"></A><A HREF="03-8.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/03.htm"><B>FIGURE 16.3.</B></A> <I><BR>
+Set Primary Network Logon to Windows Logon.</I>
+
+<DL>
+	<DD><B>3. </B>Change the password and desktop settings. This is accomplished by opening
+	the Control Panel and going to the Passwords Properties window (see Figure 16.4).
+</DL>
+
+<P><A NAME="04"></A><A HREF="04-8.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/04.htm"><B>FIGURE 16.4.</B> </A><I><BR>
+By default, Windows 95 sets the user profiles so that all users utilize the same
+preferences and desktop settings. This must be changed.</I>
+
+<DL>
+	<DD><B>4. </B>At the Password tab window, change the settings so that you can specify
+	your own desktop preferences (see Figure 16.5).
+</DL>
+
+<P><A NAME="05"></A><A HREF="05-8.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/05.htm"><B>FIGURE 16.5.</B> </A><I><BR>
+Select the option that allows users to specify their own preferences and desktop
+settings.</I>
+
+<DL>
+	<DD><B>5. </B>Reboot the machine. You have just completed a process that many specialists
+	suggest will effectively password-protect your machine. But will it? Hardly.
+</DL>
+
+<P>If a cracker were to breeze through your department and see such a machine so
+configured, it would take him less than two minutes to undermine this scheme. His
+steps would be as follows:
+
+<DL>
+	<DD><B>1. </B>Turn the machine off.<BR>
+	<BR>
+	<B>2. </B>Turn it back on and allow it to go through the initial boot phase (that
+	is, let the machine continue until it recognizes the drives and until the Windows
+	95 screen comes up).<BR>
+	<BR>
+	<B>3. </B>While the Windows 95 screen is still visible, the cracker executes a warm
+	reboot procedure (this must occur while Windows 95 is attempting to load the initial
+	system and drivers).<BR>
+	<BR>
+	<B>4. </B>When the machine reboots, it will not load Windows 95. Instead, it will
+	display a screen that offers to start the machine in several different modes, including
+	safe mode and command-line mode.<BR>
+	<BR>
+	<B>5. </B>The cracker chooses safe mode and proceeds to the Registry editor (by executing
+	<TT>regedit</TT>). Once in the Registry editor, the cracker can do anything he likes
+	(including disabling the options you set in the procedure outlined previously).
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>One excellent way to bypass the password
+	security on networked boxes, particularly security schemes set with the Policy editor,
+	is to simply pull the plug (remove the Ethernet card temporarily or unplug it from
+	the machine). When Windows reboots, you will encounter errors, and you may be forced
+	to go into safe mode (much depends on whether you are using third-party drivers on
+	the box). In any event, in safe mode or normal mode, you can proceed to kill all
+	the password protection. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Many Microsoft security models are fragile. Consider Microsoft Access, the standard
+package for building business databases. Access uses a language called Access Basic.
+It is an extremely powerful package, often used to create multiuser databases. The
+newer versions of Access are incredibly fluid in the manipulation of data.</P>
+<P>Access performs authentication based on an internal security identifier (SID).
+This SID is derived from running the username and the personal identifier (PID) through
+an algorithm (these variables are used as the keys). The extraordinary thing is that
+if, in the creation of a new account, a cracker issues the same username and PID
+as the target, the resulting SID will be identical. Why didn't techs at Microsoft
+base this process on using the time and as a random number generator? This at least
+would create a digital value that would be reasonably unusual. In any event, this
+is academic. All legacy databases created in Microsoft Access 1.0 are vulnerable
+to another attack that is so simple, I will not print it here. Many businesses rely
+on such legacy databases, and I do not see how revealing that method will contribute
+to security. The problem has never been fixed by Microsoft and never will be. However,
+programmers are well aware of this flaw.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Hints about the flaw: The &quot;unique&quot;
+	SID created at setup for the Admins is written to disk 1 of the distribution. Also,
+	anyone with another version of <TT>SYSTEM.MDA</TT> can access restricted files. Lastly,
+	and perhaps most importantly, the SID of any user can be read and manually altered,
+	allowing any user to inherit the privileges of any user. Did you create any databases
+	while having Admin rights? If so, anyone can completely seize control of your Access
+	database.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>If you are interested
+	in this flaw, check out <A HREF="javascript:if(confirm('ftp://ftp.zcu.cz/mirrors/winsite/win3/misc/acc-sec.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.zcu.cz/mirrors/winsite/win3/misc/acc-sec.zip'" tppabs="ftp://ftp.zcu.cz/mirrors/winsite/win3/misc/acc-sec.zip"><TT>ftp://ftp.zcu.cz/mirrors/winsite/win3/misc/acc-sec.zip</TT></A>
+	for more information.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>It is interesting to note that in
+	the retail version of Windows 95, very few instances of the word <I>security</I>
+	occur in the help files. Indeed, these references refer to whether the software on
+	your machine is legal. Microsoft appears to have little interest in the security
+	of 95, except in terms of whether you have stolen it from them. This is in complete
+	contrast to Windows NT. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>No doubt about it. Out-of-the-box security for Windows 95 sucks. What can be done
+about it? Well, many imaginative software authors have been put to the task. Some
+of their innovations are...well...interesting.
+<H4><FONT COLOR="#000077"><B>CyberWatch</B></FONT></H4>
+<P>CyberWatch is probably the most extreme solution I have encountered yet. This
+software operates in conjunction with video cameras attached to the machine. The
+software recognizes only those faces that are registered in its face database. The
+machine actually looks at you to determine whether you are an authorized user. The
+company claims that the technology on which CyberWatch is based is neural net material.</P>
+<P>Although it is an interesting proposed solution to the problem, be assured that
+given 10 minutes alone with a machine so configured, the talented cracker could bypass
+the entire authentication procedure. Thus, this technology is most useful in offices
+or other places where such access is unlikely to occur (or where individuals are
+forbidden to turn off or reboot machines). CyberWatch can be found here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.miros.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.miros.com/'" tppabs="http://www.miros.com/"><TT>http://www.miros.com</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>WP WinSafe</B></FONT></H4>
+<P>WinSafe, a promising utility, allows control of individual drives on the machine
+(see Figure 16.6). This allows you to bar unauthorized users from, say, a CD-ROM
+drive.</P>
+<P><A NAME="06"></A><A HREF="06-5.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/06.htm"><B>FIGURE 16.6.</B> </A><I><BR>
+The WinSafe drive protection properties settings.</I></P>
+<P>Of particular interest is that WinSafe protects network drives. Users can sample
+the application by checking out the available shareware application.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>The documentation suggests that
+	using the Policy editor to set the REAL Mode DOS settings could potentially conflict
+	with WinSafe. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>WinSafe is available here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://kite.ois.com.au/~wp/wpws.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://kite.ois.com.au/%7Ewp/wpws.htm'" tppabs="http://kite.ois.com.au/%7Ewp/wpws.htm"><TT>http://kite.ois.com.au/~wp/wpws.htm</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Safe Guard</B></FONT></H4>
+<P>The Safe Guard line of products (including Safe Guard Easy, Safe Guard Pro, and
+PC/DACS for DOS/Windows) offers hard disk drive encryption, protection against booting
+from a floppy, password aging, password authentication, and support for 15 users
+per machine. The encryption choices are suitable, including both DES and IDEA, as
+well as several others. Of special interest is that these products can be installed
+over a network (thereby obviating the need to make separate installations). See the
+following for more information:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.mergent.com/utimacohome.nsf/lookup/dms  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.mergent.com/utimacohome.nsf/lookup/dms'" tppabs="http://www.mergent.com/utimacohome.nsf/lookup/dms"><TT>http://www.mergent.com/utimacohome.nsf/lookup/dms</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Secure Shell</B></FONT></H4>
+<P>Secure Shell (SSH) provides safe, encrypted communication over the Internet. SSH
+is an excellent replacement for Telnet or rlogin. As of this writing, there is only
+a 16-bit version for Windows, but it runs well on any TCP/IP implementation. SSH
+is no ordinary utility. It uses IDEA and RSA encryption and is therefore extremely
+secure. It is reported that once an hour, the keys are discarded and new keys are
+made. SSH completely eliminates the possibility of third parties capturing your communication
+(for example, passwords that might otherwise be passed in clear text). SSH sessions
+cannot be overtaken or hijacked, nor can they be sniffed. The only real drawback
+is that for you to use SSH, the other end must also be using it. While you might
+think such encrypted communication would be dreadfully slow, it isn't. Enter the
+following URL to visit one of the main distribution sites for SSH:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.datafellows.com/f-secure/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.datafellows.com/f-secure/'" tppabs="http://www.datafellows.com/f-secure/"><TT>http://www.datafellows.com/f-secure/</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Formlogic Surveillance Agent</B></FONT></H4>
+<P>The Surveillance Agent is a simple but powerful tool for monitoring system processes.
+It has two modes of operation. In one, evidence of your monitoring is revealed. In
+the other, the surveillance occurs without a trace. The program is typically loaded
+into memory (this can be done in a variety of ways) and begins logging. Alternatively,
+you can specify a <I>trigger</I>, or certain event that will cause the agent to begin
+the monitoring process (for example, if someone tries to access your personal diary,
+this could trigger the agent to begin monitoring). The authors of this software were
+very thorough. For example, you can actually disguise the Agent's process as some
+other process (this is in case you have savvy crackers hanging around the workplace).
+In all, this very comprehensive tool is tailor-made to catch someone in the act and
+is probably suitable for investigating computer-assisted crime in the workplace.
+For more information see
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.rge.com/pub/systems/simtelnet/win3/security/spy1116.zip  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.rge.com/pub/systems/simtelnet/win3/security/spy1116.zip'" tppabs="ftp://ftp.rge.com/pub/systems/simtelnet/win3/security/spy1116.zip"><TT>ftp://ftp.rge.com/pub/systems/simtelnet/win3/security/spy1116.zip</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Fortres 101</B></FONT></H4>
+<P>This product is an excellent tool. As stated on the Fortres home page, the product
+can prevent:
+
+<DL>
+	<DD>users from interrupting boot process; exiting Windows; accessing a DOS prompt;
+	adding, moving, or deleting icons; altering anything about the appearance of Windows;
+	installing, copying or downloading software; running any programs not specified by
+	administrator; using low level system tools; changing printer configurations; changing
+	screen saver configurations; erasing important system files; saving files on the
+	hard disk; and even looking at files on the hard disk.
+</DL>
+
+<P>The utility is supported under both Windows 3.11 and Windows 95. The price is
+probably a deterrent for casual users, but system administrators who have labs or
+offices with multiple Windows-based machines would do well to grab this product.
+Find out more about it here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.fortres.com/f101.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.fortres.com/f101.htm'" tppabs="http://www.fortres.com/f101.htm"><TT>http://www.fortres.com/f101.htm</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>Holes</B></FONT></H3>
+<P>Following are some holes and viruses of note. Some relate specifically to Microsoft,
+while others are solely the responsibility of third-party vendors. Many of these
+holes have been fixed. However, as I have mentioned, not everyone gets the latest
+and the greatest. Many people may be running versions of software that have not been
+patched.
+<H4><FONT COLOR="#000077"><B>The Microsoft Word Macro Viruses</B></FONT></H4>
+<P>It is surprising how many Microsoft users are unaware that sophisticated macros
+can be written in the Microsoft Word environment. WordBasic, the language in which
+such macros are written, is highly functional. In Word documents alone, WordBasic
+can save a user many hours of editing. It fully supports <TT>while...if...then...else</TT>
+conditional execution of commands. This level of functionality (when coupled with
+recording of keystrokes) can automate almost any task performed in Word. For that
+reason, WordBasic qualifies as a bona fide scripting language.</P>
+<P>As you might expect, pranksters on the Net have found innovative, new uses for
+the WordBasic language. One of those uses is to create malicious macros, or <I>macro
+viruses</I>. These can be gotten from the Internet. They will infect your <TT>normal.dot</TT>,
+thereby altering (and perhaps severely retarding) your default document environment.</P>
+<P>The most well known of these macro viruses is called <I>Concept</I>. Concept infects
+not only the <TT>normal.dot</TT> file but any DOC file it can access. Reportedly,
+after the first infection (the first instance that Word is opened after initial infection),
+every document saved thereafter will also be infected. It also reportedly works on
+any platform that runs Word and has been found on at least one commercial CD-ROM
+distribution, as noted by Graham Cluley in his article &quot;Another Instance of
+Concept Macro Virus in Microsoft CD ROM&quot;:
+
+<DL>
+	<DD>We have come across another Microsoft CD ROM containing Concept, a MSWord macro
+	virus. The CD ROM is called &quot;The Microsoft Office 95 and Windows 95 Business
+	Guide.&quot; The infected file is \OFFICE95\EVIDENCE\ HELPDESK.DOC. The document's
+	date is July 28th 1995, and the file date itself is August 17 1995.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>There is a reliable military
+	site where you can acquire tools to determine whether your machine has been infected.
+	That site is located at <A HREF="javascript:if(confirm('http://www-yktn.nosc.mil/Desktop_Support/winword/concept_virus.htp  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www-yktn.nosc.mil/Desktop_Support/winword/concept_virus.htp'" tppabs="http://www-yktn.nosc.mil/Desktop_Support/winword/concept_virus.htp"><TT>http://www-yktn.nosc.mil/Desktop_Support/winword/concept_virus.htp</TT></A>.</P>
+	<P>The main tool for identifying the virus is a Word document macro. You can get
+	it at <A HREF="javascript:if(confirm('http://ded-2-nt.nosc.mil/~pub/MSOffice/Winword/virus/WVFIX.DOC  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://ded-2-nt.nosc.mil/%7Epub/MSOffice/Winword/virus/WVFIX.DOC'" tppabs="http://ded-2-nt.nosc.mil/%7Epub/MSOffice/Winword/virus/WVFIX.DOC"><TT>http://ded-2-nt.nosc.mil/~pub/MSOffice/Winword/virus/WVFIX.DOC</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>At one point, a fix was issued for this. It was called <TT>scanprot.dot</TT>,
+and its primary purpose was to scan for the Concept virus. However, this tool was
+somehow confused in the public's eyes as a utility that could identify all macro
+viruses. Microsoft finally set the record straight. Since that time, many Word macro
+viruses have cropped up. Here are just a few:
+
+<UL>
+	<LI>zenixos
+	<LI>impostor
+	<LI>nuclear.b
+	<LI>hot
+	<LI>wazzu
+</UL>
+
+<P>As you might guess, these types of viruses are becoming increasingly popular.
+They are small, require almost no memory, and are easily concealed in downloadable
+materials. These viruses do not represent a threat to Internet security, but they
+can be caught from the Internet. Most of them do little more than corrupt your documents.
+However, they are a nuisance, and you should take measures to prevent them from infecting
+your machine. One way to do this is to disable automatically executed macro support
+in Word.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>It is reported that the Microsoft
+	Word Wizard will not operate if you disable automatic macro execution. If you are
+	a frequent user of wizards, you may have to make some sacrifices.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>You can find the authoritative
+	sources for information on Word macro viruses at these locations:</P>
+	<P><A HREF="javascript:if(confirm('http://www.datafellows.com/macro/faq.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.datafellows.com/macro/faq.html'" tppabs="http://www.datafellows.com/macro/faq.html">http://www.datafellows.com/macro/faq.html</A></P>
+	<P><A HREF="javascript:if(confirm('http://gasp.berkeley.edu/virus/wordmacro.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://gasp.berkeley.edu/virus/wordmacro.html'" tppabs="http://gasp.berkeley.edu/virus/wordmacro.html">http://gasp.berkeley.edu/virus/wordmacro.html</A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<PRE></PRE>
+<H4><FONT COLOR="#000077"><B>The Microsoft FrontPage Web Server Hole</B></FONT></H4>
+<P>Microsoft FrontPage is recognized as one of the best tools for designing WWW pages.
+Coupled with Microsoft's Image Composer, FrontPage provides the average user with
+a total Web solution. Moreover, the product distribution includes a personal Web
+server. This utility serves Web pages directly from your home or office machine (without
+requiring the use of an intermediate UNIX server). Thus, files and pages can be kept
+local.</P>
+<P>Unfortunately, early versions of Microsoft's FrontPage Web server were distributed
+with a Practical Extraction and Report Language interpreter (<TT>PERL.exe</TT>).
+If this is placed in the <TT>/cgi-bin/</TT> directory, a massive security hole develops.
+It allows any remote user to execute arbitrary commands on your local machine.</P>
+<P>I would not have mentioned this here, except that older demo versions of FrontPage
+may surface in places other than the Microsoft home page. This is not unreasonable.
+There are still early versions of Microsoft Internet Explorer circulating on demo
+CD-ROMs from magazines and such.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For more information
+	about this hole, check out Microsoft's Web site at <A HREF="javascript:if(confirm('http://www.microsoft.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.microsoft.com/'" tppabs="http://www.microsoft.com/"><TT>http://www.microsoft.com</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>The O'Reilly WebSite Server Hole</B></FONT></H4>
+<P>O'Reilly's WebSite Server for Windows NT/95 version 1 had a hole. If you have
+this Web server loaded on your machine, disable the DOS CGI interface. If the DOS
+CGI interface is enabled, it allows files with a <TT>*.BAT</TT> command extension
+to be executed. Through this hole, crackers can execute arbitrary commands on your
+machine from a remote location (for example, they could effectively delete the contents
+of your hard disk drive). The fix as reported by ORA is as follows:
+
+<DL>
+	<DD>Open the server's property sheet (server admin) and select the Mapping tab. Select
+	the DOS CGI mapping list. Remove all entries. Close the property sheet.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from ORA's WebSite security alert at <A HREF="javascript:if(confirm('http://website.ora.com/devcorner/secalert1.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://website.ora.com/devcorner/secalert1.html'" tppabs="http://website.ora.com/devcorner/secalert1.html"><TT>http://website.ora.com/devcorner/secalert1.html</TT></A><TT>.
+	03/96</TT>. Also, there is a sample CGI application, <TT>win-c-sample.exe</TT>, that
+	shipped with version 1.0. This application is vulnerable to a buffer-overflow attack.
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Because no one seems
+	to give credit to the individual who discovered the buffer overflow hole, it seems
+	right that I do so. To the best of my knowledge, this hole was identified by a hacker
+	going by the handle <I>Solar Designer</I>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For more information
+	about holes in O'Reilly's WebSite Server, check out <A HREF="javascript:if(confirm('http://website.ora.com/justfacts/facts.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://website.ora.com/justfacts/facts.html'" tppabs="http://website.ora.com/justfacts/facts.html"><TT>http://website.ora.com/justfacts/facts.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>The Microsoft Internet Security Framework</B></FONT></H2>
+<P>On December 20, 1996, Microsoft unveiled a white paper titled &quot;The Microsoft
+Internet Security Framework: Technology for Secure Communication, Access Control,
+and Commerce.&quot; In this paper, the company describes various aspects of its Internet
+security plan. This new conglomeration of technologies has been dubbed the <I>MISF</I>.</P>
+<P>MISF purportedly will integrate a series of technologies into Microsoft products,
+thus making them secure for Internet use. I briefly discussed one of these technologies
+earlier in this book: the certificate signature scheme for ActiveX controls (or in
+fact, any code that you specify). It revolves around a technology called <I>Authenticode</I>,
+a system whereby developers can digitally sign their applications. It consists of
+a series of programs. By using these, the software developer ultimately earns a Software
+Publisher's Certificate (SPC), which is used to sign the application. Interestingly,
+you can sign the application in different ways: as a provider, a commercial software
+developer, or an individual.</P>
+<P>This system works effectively only if the signing party is honest. There is no
+guarantee that signed code will be safe. Thus, the system actually subjects honest,
+upright programmers to additional hassle (nonetheless, I am confident this system
+will become exceedingly popular among developers of Microsoft products). However,
+there is a darker side to this.</P>
+<P>The greatest percentage of falsely signed code (code that is malicious and has
+been signed as safe) will likely come from individuals. I suspect that many virus
+developers will adopt this system, because it represents a chance to deposit their
+code into a largely unwary community (if a control is signed, the average person
+will probably download it). Because of this, widespread use of such signatures will
+hurt the little guy. Here is why.</P>
+<P>Because the technology is new, there have been no instances of signed malicious
+code. However, as time passes and signed malicious code surfaces, the average user
+will be less likely to download software from new companies or lone software developers
+(certainly, the public will be <I>much</I> less likely to download unsigned code).
+Moreover, this system may cause even further alienation of foreign developers (more
+than once, the sense of alienation experienced by foreign developers has been blamed
+for the high number of viruses believed to have originated on foreign soil). Finally,
+there is something a bit ominous about having to provide a public key to engage in
+commerce as a software developer. What happens to the remaining folks who refuse
+to comply with the program? If they suffer in the market for lack of compliance,
+antitrust issues may develop (particularly if this becomes the only accepted method
+of okaying software).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In February 1997, members of the
+	famed German hacker group known as the Chaos Computer Club used a signed application
+	to demonstrate the weakness of the Microsoft platform and of application signing
+	generally. On national television, they used this application to gain unauthorized
+	access to a personal computer, start an instance of Quicken, connect to the victim's
+	online bank account, and transfer money from the victim's account to another. This
+	was a crushing blow to the signing model. I explain this in further detail in Chapter
+	30, &quot;Language, Extensions, and Security.&quot; 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In any event, Microsoft is at least going in the right direction. Public and private
+key encryption schemes are among the most secure today. Moreover, the new technologies
+presented within Microsoft's white paper about MISF suggest that Microsoft is quite
+serious about solutions in Internet security.
+<H2><FONT COLOR="#000077"><B>Microsoft Windows NT</B></FONT></H2>
+<P>Microsoft Windows NT has a real security model and a good one. The most important
+element of that security model concerns access control. Access control is a form
+of security most often seen in UNIX-based operating systems. It involves the control
+of who can access files, services, and directories. In certain instances, this also
+involves times during which this access can occur.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>For basic networking, Novell NetWare
+	has always been a fairly secure platform and has long supported access control. This
+	does not mean NetWare cannot be cracked (see Chapter 18, &quot;Novell&quot;). However,
+	control over file and time access has been an integral part of the Novell NetWare
+	security model. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>DAC</B></FONT></H3>
+<P>In security vernacular, DAC is generally referred to as <I>discretionary access
+control </I>(DAC). DAC involves being able to completely control which files and
+resources a user may access at a given time. For example, perhaps only a small portion
+of your staff needs to access Microsoft Excel. In the Windows NT security model,
+you can deny access to all other users who are unauthorized to use Excel.</P>
+<P>In DAC, there are different levels of control. For example, some operating systems
+or utilities offer only moderate control (perhaps one system might allow an administrator
+to block user access to directories or partitions). This type of control is not really
+suitable in large networks, where one or more directories may hold applications or
+resources that other programs need in order to execute. The Microsoft Windows platform
+is a good example of this. Most applications written for Windows sport multiple file
+dependencies. That means the application may need files from different parts of the
+system in order to function correctly.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>If you have ever had a bad installation
+	of a product intended to run in Windows, you know something about this. The application
+	so installed will, when executed, forward a series of error messages, requesting
+	files that it cannot locate. In most cases, unless the program locates those files,
+	it will not run (or if it does, it will probably GPF or exit on error). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The degree to which a DAC system can control file and directory access is referred
+to in security vernacular as <I>granularity</I>. Granularity is, quite simply, an
+index for measuring just how detailed that access control can be. If, for example,
+you can choose a directory and restrict access to five files within it to a particular
+group but also allow all users to access the remaining ten files in that directory,
+then you are dealing with fairly advanced granularity.</P>
+<P>DAC is a technology that has trickled down from defense sources. In defense environments,
+administrators must be assured that only authorized personnel can access sensitive
+data.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For a greater understanding
+	about DAC, how it evolved, and what it means in terms of national computer security,
+	you should read DoD 5200.28-STD, the <I>Department of Defense Trusted Computer System
+	Evaluation Criteria</I> (this publication is more commonly referred to as the <I>Orange
+	Book</I>). It can be found at <A HREF="javascript:if(confirm('http://www.v-one.com/newpages/obook.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.v-one.com/newpages/obook.html'" tppabs="http://www.v-one.com/newpages/obook.html"><TT>http://www.v-one.com/newpages/obook.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>DAC is based on common sense: If crackers do not have access to the files, they
+cannot crack the machine. Setting proper file permissions is the first phase of securing
+a Windows NT machine. However, in order to do it, you must enable the NTFS option
+at time of installation (alas, we must begin at the beginning).</P>
+<P>NTFS is the enhanced file system included with the NT distribution. At installation,
+you are confronted with the option of installing a FAT file system or an NTFS file
+system. There is a sharp difference between the two. The FAT file system will grant
+you some security, for you can control user access and authentication. However, for
+severely granular control (control over each file and directory), you must convert
+the partition to NTFS. This is a point often missed by new system administrators.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>CAUTION:</B></FONT><B> </B>Converting the partition to NTFS
+	provides compressive security but is not infallible. For example, a kid sporting
+	a Linux boot disk (only certain versions of Linux) can effectively bypass all of
+	the file restrictions imposed by the NTFS DAC method (I am quite sure that CS lab
+	administrators will be pleased to hear this). Also, this is not the only type of
+	boot disk that will perform this task. When a file called <TT>NTFSDOS.EXE</TT>, which
+	is being circulated on the Internet, is placed on a DOS or Windows 95 boot disk,
+	it allows a cracker to bypass all file restrictions. Until this is fixed, NT will
+	never get a higher rating than C2 on the EPL. Only those who rely solely upon Microsoft
+	press releases and bug fixes actually believe that out-of-the-box NT is secure. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>As noted, the NTFS security model is not perfect. For example, it is known that
+in certain distributions (such as 3.51), users without privileges can delete files.
+Microsoft has acknowledged this fact in an advisory. It involves any instance in
+which a user creates a file and removes all permissions from it. Technically, that
+file should still be untouchable to anyone but its author. However, for reasons not
+yet determined, the unauthorized user can delete the file. As noted in a Microsoft
+technical article titled &quot;Users Without Permissions Can Delete Files at Server,&quot;:
+
+<DL>
+	<DD>[The user] sees My.txt [the file] in the Testdir directory. All the security
+	options in File Manager are greyed out with regard to My.txt. He is unable to change
+	permissions on the file or take ownership of the file. This is expected behavior.
+	If he tries to rename the file, open it in Notepad, or type it out at a prompt, he
+	gets an Access Denied message. However, he can delete the file with no problem.
+</DL>
+
+<P>Other problems have been acknowledged. For example, it is reported that if you
+start the File Manager application in 3.51 using the Office toolbar, file permissions
+are bypassed. This appears to be inherent only in Microsoft Office 97 applications
+(specifically, Excel and Word 7.0 for Windows 95). This problem has been corrected
+in subsequent distributions of these applications. Moreover, it has been reported
+that one would need increased access authorization to exploit this hole.</P>
+<P>In general, however, Windows NT DAC is quite good. It resembles in some ways the
+DAC scheme implemented under UNIX-based operating systems. At the heart of this process
+are the theories of file ownership and privileges. Thus, whoever creates a file <I>owns</I>
+that file. The degree to which other users may examine that file depends on what
+restrictions were set forth by the administrator.</P>
+<P>Note that this does not close every local security hole and that many processes
+require files to have more liberal ownership than you might like. For example, consider
+Common Gateway Interface (CGI) scripts used to provide functionality to Web pages
+(these scripts are commonly used to generate quotes, process mail requests, and access
+databases). Such scripts must have file permissions that, at the very least, allow
+outsiders (through the Web server) to access them. Thus, the Web server must have
+at least partial ownership or privileges to execute these files.</P>
+<P>So on your drives, you might have files that can be read by some, written by others,
+and executed by still others. This presents the very first problem with regard to
+DAC: <I>it is complicated</I>. For example, on networks where permissions are set
+not only on files and directories, but also on partitions or network drives, the
+system administrator can become overwhelmed with the possibilities. For this reason,
+NT system administrators must be every bit as knowledgeable (and as obsessive) as
+UNIX system administrators.</P>
+<P>However, this is where the process of NT security starts. Before setting up a
+network, you must first determine who will need access to what. Some utilities are
+available to make the process easier.
+<H4><FONT COLOR="#000077"><B>Dump ACL</B></FONT></H4>
+<P>Dump ACL (which incidentally has a shareware version) is probably the most important
+tool for a new NT administrator. Its function is simple: It gathers all permissions
+on the box and displays them in consolidated format. By analyzing this data, a system
+administrator can quickly find misconfigurations, bad privilege schemes, and security
+holes. The analysis provided by this tool is comprehensive, treating all permissions
+and privileges on files and directories. It also reports various audit settings.
+In essence, this is a start of a great security profile, saving the administrator
+hours of work and providing the output in convenient, table format.</P>
+<P>This tool, created by Somar Software, is available at the following location:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.net-shopper.co.uk/software/nt/dmpacl/index.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.net-shopper.co.uk/software/nt/dmpacl/index.htm'" tppabs="http://www.net-shopper.co.uk/software/nt/dmpacl/index.htm"><TT>http://www.net-shopper.co.uk/software/nt/dmpacl/index.htm</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>NT RegFind</B></FONT></H4>
+<P>This program scans the NT Registry. It was originally written in the Perl programming
+language, but has since been rewritten in C. It runs through a command shell at a
+prompt. There are reports that the author will be adding a front end to this at some
+point in the future.</P>
+<P>The primary use for the program is to identify outdated objects or links within
+the Registry. These may be sources of security problems. This utility makes the search
+quick and convenient. The command line options afford the administrator an enormous
+amount of control over how the search is performed.</P>
+<P>NT RegFind can be found online at
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.net-shopper.co.uk/software/nt/regfind/index.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.net-shopper.co.uk/software/nt/regfind/index.htm'" tppabs="http://www.net-shopper.co.uk/software/nt/regfind/index.htm"><TT>http://www.net-shopper.co.uk/software/nt/regfind/index.htm</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>NTRegmon--Registry Monitor V1.3</B></FONT></H4>
+<P>NTRegmon monitors user-initiated privileged system calls. The authors have a distribution
+that includes the source. The following URL provides a very detailed explanation
+of how this service is accomplished:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ntinternals.com/ntregmon.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ntinternals.com/ntregmon.htm'" tppabs="http://www.ntinternals.com/ntregmon.htm"><TT>http://www.ntinternals.com/ntregmon.htm</TT></A>
+</UL>
+
+<P>I should note here that NT does not have the same problems with password authentication
+and encryption that Windows for Workgroups and Windows 95 have. Nonetheless, you
+should be aware that the NT password implementation is not entirely secure. For example,
+the following boasts C code to fashion a DLL file that will sniff passwords. In fact,
+the utility will sniff the username and password into plain text. That utility (or
+rather, the source for it) is located here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.hidata.com/guest/NThacks/passworddll.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.hidata.com/guest/NThacks/passworddll.htm'" tppabs="http://www.hidata.com/guest/NThacks/passworddll.htm"><TT>http://www.hidata.com/guest/NThacks/passworddll.htm</TT></A>
+</UL>
+
+<P>Moreover, NT passwords are reportedly vulnerable to brute-force attacks. Some
+utilities available to strengthen your local passwords follow.
+<H4><FONT COLOR="#000077"><B>ScanNT</B></FONT></H4>
+<P>ScanNT is a very powerful utility for checking the strength of your passwords.
+It can implement an attack that tries 10,000 keys per minute. Like most cracking
+utilities, it requires that you use a dictionary file (and one sample dictionary
+file is provided in the distribution).</P>
+<P>A demo version of this product is available at the following URL:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.omna.com/yes/AndyBaron/pk.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.omna.com/yes/AndyBaron/pk.htm'" tppabs="http://www.omna.com/yes/AndyBaron/pk.htm"><TT>http://www.omna.com/yes/AndyBaron/pk.htm</TT></A>
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You must have advanced system privileges
+	to run this application. The company that provides this software also performs password
+	recovery services for businesses. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Before I get into strictly Internet-related NT security, I should say something
+about suspicious internal activity. It is likely that most attacks will originate
+from people on your own network (those attacks might just be employees fooling around,
+or they could derive from a mole for a competitor). To keep an eye on internal security,
+there are a few utilities you should know about.
+<H4><FONT COLOR="#000077"><B>Microsoft's Systems Management Server</B></FONT></H4>
+<P>Microsoft has an excellent product called the Systems Management Server. Contained
+in this application is a program called Network Monitor (Netmon). This product, when
+used in the wrong hands, can reveal vital information trafficked over the network,
+including but not limited to passwords. This product is the equivalent of a sniffer.
+For more information, check out the following URL:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.microsoft.com/SMSMGMT/revgd/sms00.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.microsoft.com/SMSMGMT/revgd/sms00.htm'" tppabs="http://www.microsoft.com/SMSMGMT/revgd/sms00.htm"><TT>http://www.microsoft.com/SMSMGMT/revgd/sms00.htm</TT></A>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>IP-Watcher</B></FONT></H4>
+<P>IP-Watcher by Engarde, a veteran in the field of security that offers other security
+products, is the equivalent of a very powerful activity sniffer. Its most valuable
+quality is that it provides a technique of logging. It can catch internal security
+violations and record these instances. This is excellent for preparing evidence against
+unlawful activity. This tool should be restricted from unauthorized or untrusted
+users. IP-Watcher is a very powerful tool. For example, according to documentation
+provided by Engarde:
+
+<DL>
+	<DD>Passwords can be stolen for any given connection. If the password was missed,
+	an attacker could kill the connection and wait for the user to login again. Most
+	users don't find the network crashing out of the ordinary, and login again without
+	a second thought.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph,
+	excerpted from <I>IP-Watcher Risks: Quick Overview</I>, can be found online at <A
+	HREF="javascript:if(confirm('http://www.engarde.com/software/ipwatcher/risks/overview.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.engarde.com/software/ipwatcher/risks/overview.html'" tppabs="http://www.engarde.com/software/ipwatcher/risks/overview.html"><TT>http://www.engarde.com/software/ipwatcher/risks/overview.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>More information about IP-Watcher can be found online at
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.engarde.com/software/ipwatcher/watcher.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.engarde.com/software/ipwatcher/watcher.html'" tppabs="http://www.engarde.com/software/ipwatcher/watcher.html"><TT>http://www.engarde.com/software/ipwatcher/watcher.html</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>NT Vulnerabilities from the Void</B></FONT></H3>
+<P>This section examines some of the problems that you may encounter from the outside
+world. Following are ways to subvert the security of NT and effect denial-of-service
+attacks against NT. If you run a Windows NT Web server, expect bozos from the void
+to try any or all of these techniques to harass you or render your server inoperable.
+<H4><FONT COLOR="#000077"><B>Remote Hole on Port 80</B></FONT></H4>
+<P>Microsoft Windows NT 4, using Internet Information Server 2.0 or earlier, contains
+a serious bug that allows outsiders to completely mangle your Web server. To test
+whether you are vulnerable to this attack, initiate a Telnet session to port 80 and
+type the following command:</P>
+<PRE><FONT COLOR="#0066FF">GET ../..
+</FONT></PRE>
+<P>If you are vulnerable, your Web server will die and the machine will likely crash.
+Note that this bug is not evident in IIS 3.0. To fix the problem, obtain Service
+Pack 1a and Service Pack 2 from Microsoft.</P>
+<P>Port 80 is the standard port on which Web servers are normally run. To reach this
+port by Telnet, you must specify both the address of the targeted server and the
+port (see Figure 16.7).</P>
+<P><A NAME="07"></A><A HREF="07-3.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch16/07.htm"><B>FIGURE 16.7.</B></A> <BR>
+<I>Initiating a Telnet session to port 80 in Windows 95.</I>
+<H4><FONT COLOR="#000077"><B>Denial-of-Service Attacks</B></FONT></H4>
+<P>Certain distributions of NT are vulnerable to a denial-of-service attack. This
+attack will virtually kill the box. The attack involves sending the CPU of the NT
+server into 100 percent utilization. This effectively brings the machine to a grinding
+halt. The attack is implemented by a program that consists of only five lines of
+code. That program (called <I>CPUHog</I>, written by Mark Russinovich) is located
+here:
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ntinternals.com/cpuhog.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ntinternals.com/cpuhog.htm'" tppabs="http://www.ntinternals.com/cpuhog.htm"><TT>http://www.ntinternals.com/cpuhog.htm</TT></A>
+</UL>
+
+<P>The problem was covered extensively in a December 1996 article by Eamonn Sullivan
+in <I>PC Week Magazine</I>. Sullivan writes:
+
+<DL>
+	<DD>PC Week Labs was able to duplicate Russinovich's findings. When run on Windows
+	NT 4.0, for example, the only way to regain control once CpuHog was executed was
+	to reset the PC.
+</DL>
+
+<P>Mark Russinovich is a consultant with Open Systems Resources, Inc. Russinovich
+maintains a page at <A HREF="javascript:if(confirm('http://www.ntinternals.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ntinternals.com/'" tppabs="http://www.ntinternals.com/"><TT>http://www.ntinternals.com/</TT></A>.
+On that page are various utilities related to Windows NT security and system integrity,
+including one program that crashes NT boxes entirely. This utility has demonstrated
+some fairly significant weaknesses in the operating system. Russinovich and his associate,
+Bryce Cogswell, have a book coming out about Windows NT titled <I>Windows NT Internals</I>.
+I recommend it.</P>
+<P>Meanwhile, that is not the only denial-of-service attack that can be implemented
+against Windows NT. Other attacks involve simply initiating a Telnet session to certain
+ports. Naturally, these ports have to open for the attacks to be successful. However,
+I would bet that a significant percentage of system administrators fail to examine
+the higher range ports. For example, initiate a Telnet connection to port 135 or
+port 1031. After you receive a confirmation that you have contacted the port, send
+several lines of text and disconnect. If the machine has a vulnerable distribution,
+the CPU of the target will immediately jump to extreme utilization (this will incapacitate
+the target). One Perl script being circulated across the Internet automates this
+process.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Microsoft has issued a patch for
+	the problem related to port 135, but as of this writing there is no fix for port
+	1031. In fact, reports as recent as February 2, 1997, reveal that many ports are
+	vulnerable to this attack. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>For the moment, it is likely that such holes will continue to surface. Therefore,
+system administrators should enable not only packet filtering, but also deep logging.
+If your network is victimized by some malicious character in the void, you will want
+his IP address.</P>
+<P>NT Server version 4.0 is also reportedly vulnerable to a denial of DNS (domain
+name service) attack. Crackers can implement this by sending a response packet to
+the DNS server of an NT DNS server. The server receives the response packet, cannot
+process the transaction, and promptly crashes. Some sources indicate that Service
+Pack 3 will provide a fix.</P>
+<P>There is also reportedly a bug that allows a remote user to gather important information
+about an NT box. This is done using the <TT>NBTSTAT</TT> command. The user issues
+an <TT>NBTSTAT</TT>--a query on the targeted host to get that host's name. The resulting
+name is placed in the <TT>lmhosts</TT> file. Subsequent network queries about the
+host will reveal shared out directories, a list of users, and other vital network
+information (the information gathered is roughly equivalent to that in UNIX when
+utilizing the <TT>showmount</TT> command and <TT>rusers</TT>).
+<H4><FONT COLOR="#000077"><B>The SMB Problem</B></FONT></H4>
+<P>The Microsoft platform uses a protocol called the Server Message Block (SMB) protocol.
+SMB was introduced sometime in 1987. Like most protocols currently running on the
+Internet, SMB is based on the client/server model.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Hard-core documentation
+	on the internal specifications of SMB can be found at <A HREF="javascript:if(confirm('ftp://ftp.microsoft.com/developr/drg/CIFS/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.microsoft.com/developr/drg/CIFS/'" tppabs="ftp://ftp.microsoft.com/developr/drg/CIFS/"><TT>ftp://ftp.microsoft.com/developr/drg/CIFS/</TT></A>.
+	This site is the main distribution point for Microsoft's documentation on SMB. The
+	file of greatest importance for users wanting to learn the advanced technologies
+	behind SMB is called <TT>SMB-CORE.PS</TT>. This file is in PostScript, and you will
+	require a PostScript reader to view it. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>For purposes of brevity, I will not launch into an exhaustive review of SMB. Basically,
+it is a network file-sharing protocol based on the client/server model. It is used
+to share files, directories, printers, and serial communication links. It can be
+run over (and in conjunction with) a number of other protocols, including
+
+<UL>
+	<LI>TCP/IP
+	<LI>NetBIOS
+	<LI>IPX/SPX
+</UL>
+
+<P>Under certain circumstances, a talented cracker can exploit the SMB protocol to
+gain access to shared-out directories on an NT 3.5 or 3.51 box. There are two different
+aspects to this; the first involves a denial-of-service attack that is implemented
+by disabling the target host. This is accomplished in the following manner:</P>
+<P>A cracker using an SMB client package (SAMBA) sends the following message to the
+SMB server on the remote NT box:</P>
+<PRE><FONT COLOR="#0066FF">DIR..\
+</FONT></PRE>
+<P>This crashes the target. Microsoft acknowledged this problem and hastily distributed
+a fix, which you should obtain if you are running 3.5 or 3.51.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>I recommend reading the
+	Microsoft advisory on this problem; this advisory can be found online at <A HREF="javascript:if(confirm('http://www.microsoft.com/kb/articles/q140/8/18.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.microsoft.com/kb/articles/q140/8/18.htm'" tppabs="http://www.microsoft.com/kb/articles/q140/8/18.htm"><TT>http://www.microsoft.com/kb/articles/q140/8/18.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The second hole is more complex and is not likely to be penetrated by the average
+cracker. It is reported that shared-out directories can be mounted from a remote
+location using the SAMBA client. This is a complex attack, involving advanced methods
+of spoofing. As a July 1996 technical paper explains:
+
+<DL>
+	<DD>Any attacker that can inject packets into the network that appear to the server
+	to be coming from a particular client can hijack that client's connection. Once a
+	connection is set up and the client has authenticated, subsequent packets are not
+	authenticated, so the attacker can inject requests to read, write, or delete files
+	to which the client has access.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from an RFC titled &quot;Common Internet File System Protocol (CIFS/1.0),&quot;
+	by I. Heizer, P. Leach, and D. Perry. It can be found online at <A HREF="javascript:if(confirm('ftp://ietf.cnri.reston.va.us/internet-drafts/draft-heizer-cifs-v1-spec-00.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ietf.cnri.reston.va.us/internet-drafts/draft-heizer-cifs-v1-spec-00.txt'" tppabs="ftp://ietf.cnri.reston.va.us/internet-drafts/draft-heizer-cifs-v1-spec-00.txt"><TT>ftp://ietf.cnri.reston.va.us/internet-drafts/draft-heizer-cifs-v1-spec-00.txt</TT>.</A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Such an attack is extremely complex. Few crackers possess the knowledge and expertise
+to implement such a technique.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>This chapter has provided only a cursory overview of Microsoft platform security.
+However, as you progress in this book, the information offered here will serve you
+well. As I discuss other techniques of attacking remote servers, you will be able
+to apply that new information to what you have learned here. In reality, a multi-volume
+encyclopedia could be written about Microsoft security. Before you progress to the
+next chapter, I want to leave you with some resources on Microsoft security.
+<H3><FONT COLOR="#000077"><B>Resources</B></FONT></H3>
+<P><B>Microsoft Windows NT 3.5: Guidelines for Security, Audit, and Control.</B>
+Microsoft Press. ISBN: 1-55615-814-9.</P>
+<P><B>Windows NT Administration: Single Systems to Heterogeneous Networks.</B> Marshall
+Brain and Shay Woodard. Prentice Hall. ISBN: 0-13-176694-5. 1994.</P>
+<P><B>Inside the Windows NT File System.</B> Helen Custer. Microsoft Press. ISBN:
+1-55615-660-X. 1994.</P>
+<P><B>NT Server: Management and Control.</B> Kenneth L. Spencer. Prentice Hall, October
+1995. ISBN: 0-13-107046-0.</P>
+<P><B>Microsoft Windows NT TCP-IP Guide.</B> Microsoft Press. ISBN: 1-55615-601-4.
+1993.</P>
+<P><B>Managing Windows NT Server 4.</B> Howard Hilliker. New Riders. ISBN: 1-56205-576-3.</P>
+<P><B>Windows NT 4 Electronic Resource Kit.</B> Sams.net. ISBN: 0-67231-032-5.</P>
+<P><B>Inside Windows NT Server 4.</B> Drew Heywood. New Riders. ISBN: 1-56205-649-2.</P>
+<P><B>Peter Norton's Complete Guide to Windows NT 4.0 Workstation.</B> Peter Norton
+and John Paul Mueller. Sams Publishing. ISBN: 0-67230-901-7.</P>
+<P><B>&quot;A Guide to Understanding Discretionary Access Control in Trusted Systems.&quot;</B>
+Technical Report NCSC-TG-003. National Computer Security Center. 1987.</P>
+<P><B>&quot;Authentication and Discretionary Access Control.&quot;</B> Paul A. Karger.
+<I>Computers &amp; Security</I>, Number 5, pp. 314-324, 1986.</P>
+<P><B>&quot;Extended Discretionary Access Controls.&quot;</B> S. T. Vinter. <I>SympSecPr</I>,
+pp. 39-49, IEEECSP, April 1988.</P>
+<P><B>&quot;Beyond the Pale of MAC and DAC--Defining New Forms of Access Control.&quot;</B><I>
+</I>Catherine J. McCollum, Judith R. Messing, and LouAnna Notargiacomo. <I>SympSecPr</I>,
+Research in Security and Privacy, pp. 190-200, IEEECSP, May 1990.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="ch15.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch15/ch15.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch17.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch17/ch17.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

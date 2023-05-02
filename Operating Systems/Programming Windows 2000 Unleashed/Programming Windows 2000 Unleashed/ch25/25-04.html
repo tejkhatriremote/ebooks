@@ -1,0 +1,171 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=852-856//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In Figure 25.6, the first object is also called the <i>root object</I> and is responsible for creating the transaction objects. The root object can combine all the objects into one transaction. The advantage of this is that the life of the transaction is well defined. The disadvantage of this technique is that another object might potentially need to be written. (In practice, other objects are created as part of a business process.)</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-06.jpg',176,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-06.jpg',176,420)"><font color="#000077"><b>Figure 25.6</B></FONT></A>&nbsp;&nbsp;An example of using the root object to create other objects.</P>
+<p><font size="+1"><b>Creating Two COM Objects Running in the Same Transaction</B></FONT></P>
+<p>Let&#146;s consider a situation in which it&#146;s desired to control the transaction from the base client. To do this, you must use the interface <small>ITransactionContextEx</SMALL>, which is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+ITransactionContextEx : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE CreateInstance(
+            /* [in] */ REFCLSID rclsid,
+            /* [in] */ REFIID riid,
+            /* [iid_is][retval][out] */ void **pObject) = 0;
+        virtual HRESULT STDMETHODCALLTYPE Commit( void) = 0;
+        virtual HRESULT STDMETHODCALLTYPE Abort( void) = 0;
+    };
+</PRE>
+<!-- END CODE //-->
+<p>There are three methods. The first method, <small>CreateInstance</SMALL>, is similar in functionality to <small>IObjectContext::CreateInstance</SMALL>. You need to pass in the coclass (<small>REFCLSID</SMALL>) and interface ID (<small>REFIID</SMALL>), and the resulting interface pointer is returned. Here&#146;s a sample implementation:</P>
+<!-- CODE //-->
+<pre>
+#include &lt;autosvcs.h&gt;
+int main() {
+    ITransactionContextEx *ptrTransCtxt = NULL;
+
+    CoCreateInstance( CLSID_TransactionContextEx, NULL, 0,
+    &#8658;IID_ITransactionContextEx, (void **)&amp;ptxctx1);
+
+    IClient *pClient1, *pClient2;
+
+
+    ptrTransCtxt-&gt;CreateInstance( CLSID_ImplClient1, IID_IClient,
+    &#8658; (void**)&amp;pClient1);
+    ptrTransCtxt-&gt;CreateInstance( CLSID_ImplClient2, IID_IClient,
+    &#8658; (void**)&amp;pClient1);
+    pClient1-&gt;Release();
+    pClient2-&gt;Release();
+    ptrTransCtxt-&gt;Release();
+}
+</PRE>
+<!-- END CODE //-->
+<p>The first step is to instantiate the <small>ITransactionContextEx</SMALL> interface object. After the object has been instantiated, you can create two other objects (<small>IClientX pClient1, pClient2</SMALL>) using <small>CreateInstance</SMALL>. These two objects will now be running within one transaction, if the transaction attributes are correct.</P>
+<p>To understand this, look at the <small>CreateInstance</SMALL> methods a bit closer. The interface <small>IClient</SMALL> is not implemented in the same object. It&#146;s implemented in two different objects: <small>CLSID_ImplClient1</SMALL> and <small>CLSID_ImplClient2</SMALL>. If either one of these objects has the transaction attribute <small>REQUIRES_NEW</SMALL>, a new transaction is started. On the other hand, if either of these objects has no support for the transaction attribute, a transaction doesn&#146;t apply. The advantage to using this technique is that the programmer can assume that there will only be one transaction. The administrator can then decide whether this will actually happen.</P>
+<p><font size="+1"><b>Controlling the Transaction</B></FONT></P>
+<p>The other two methods of the <small>ITransactionContextEx</SMALL> interface allow the base client to control the transaction. The method <small>Commit</SMALL> is analogous to <small>SetComplete</SMALL>, and <small>Abort</SMALL> is analogous to <small>SetAbort</SMALL>. However, if a COM object within a transaction calls <small>SetAbort</SMALL> and the base client calls <small>Commit</SMALL>, the transaction will abort.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Caution:&nbsp;&nbsp;</B><p>Using this interface makes it easy to wire COM&#43; objects into one transaction. A problem can arise if the base client does not keep the duration of the transaction short. For example, the client could create multiple objects and start calling methods. Because the root object is no longer the first instantiation COM&#43; object but rather the <small>ITransactionContextEx</SMALL> interface, it&#146;s no longer in control of the transaction. This means a delayed call to <small>Commit</SMALL> will lock resources and cause scalability problems.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading10"></A><font color="#000077">Queued Components</FONT></H3>
+<p>When two components want to communicate over a network, the classical solution is to use DCOM. A DCOM call is like a regular COM call, except that it&#146;s across a network. It uses the RPC (remote procedure call) architecture. The problem with this architecture is that it tends to flood the network with traffic, because every call, if it&#146;s a property or a method call, will be routed on the network.
+</P>
+<p>Another problem with DCOM occurs when things go wrong with the server. DCOM relies on the server being active. If the requested server is not available or is disconnected abruptly, the client will hang. If the server is part of a transaction, it will be aborted. Overall, this solution has its problems.</P>
+<p>A preferred solution is to use a messaging architecture. This is preferred because of its ability to deal with failure. Using DCOM within a local area network may be okay, outside of the fact that it requires quite a bit of bandwidth. For noisy or unreliable communications, messaging is better. Using messaging, you can retry sending the data until it has been received.</P>
+<p>Figure 25.7 shows the architecture for two machines. The communications between the two machines is accomplished using MSMQ. A base client calls the order object, which, in turn, accesses the order database. During this operation, a message is generated. This entire operation involves one transaction. The message is then sent to the second machine, where it calls a shipping object, which, in turn, updates the shipping database.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-07.jpg',196,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-07.jpg',196,420)"><font color="#000077"><b>Figure 25.7</B></FONT></A>&nbsp;&nbsp;An example of messaging architecture.</P>
+<p>So what&#146;s the point of this operation if it can be solved using DCOM? The point is that by using messages, the base client can perform more operations without waiting to see the result of the shipping operation. A message is sent to the destination machine and the action is executed. This is a type of batch processing. More details on MSMQ (Microsoft Message Queue) and messaging will be given later in Chapter 29, &#147;Cluster Server.&#148;
+</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">What Are Queued Components?</FONT></H4>
+<p>Queued components are a specific type of message. Chapter 21 showed you how to define a COM&#43; application as &#147;queuable&#148; and a COM&#43; object as &#147;queued.&#148; What this means is that when the object is referenced, it can be referenced as a message.
+</P>
+<p>MSMQ is very powerful and flexible, but it requires the programmer to do the marshaling of the data. Queued components simplify this by doing the marshaling automatically for you (see Figure 25.8).</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-08.jpg',182,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-08.jpg',182,420)"><font color="#000077"><b>Figure 25.8</B></FONT></A>&nbsp;&nbsp;Transport protocol neutrality with queued components.</P>
+<p>With queued components, there&#146;s still a stub that resembles an interface on another machine. The difference lies in which protocol the stub uses to communicate to the server. One option is to use messages, which is the functionality that queued components provides. The other option is to use DCOM. But in either situation the client is just activating a COM object as shown by the following code:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Set Ship = GetObject(&#147;queue:/new:QCSamp.Ship&#148;)
+Ship.OrderNumber = 1234
+Ship.CustomerID = 789
+Ship.LineItem 10, &#147;Widget&#148;
+Ship.Process
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

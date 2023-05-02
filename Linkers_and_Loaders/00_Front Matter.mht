@@ -1,0 +1,308 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Front Matter
+Date: Wed, 11 May 2005 20:21:00 +0530
+MIME-Version: 1.0
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker00.html
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Front Matter</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Front Matter</H1><I>$Revision: 2.2 $</I> <BR><I>$Date: 1999/06/09 =
+00:48:48=20
+$</I>=20
+<P>
+<H2>Dedication</H2>To Tonia and Sarah, my women folk.=20
+<P>
+<H2>Introduction</H2>Linkers and loaders have been part of the software =
+toolkit=20
+almost as long as there have been computers, since they are the critical =
+tools=20
+that permit programs to be built from modules rather than as one big =
+monolith.=20
+<P>
+<P>As early as 1947, programmers started to use primitive loaders that =
+could=20
+take program routines stored on separate tapes and combine and relocate =
+them=20
+into one program. By the early 1960s, these loaders had evolved into=20
+full-fledged linkage editors. Since program memory remained expensive =
+and=20
+limited and computers were (by modern standards) slow, these linkers =
+contained=20
+complex features for creating complex memory overlay structures to cram =
+large=20
+programs into small memory, and for re-editing previously linked =
+programs to=20
+save the time needed to rebuild a program from scratch.=20
+<P>
+<P>During the 1970s and 1980s there was little progress in linking =
+technology.=20
+Linkers tended to become even simpler, as virtual memory moved much of =
+the job=20
+of storage management away from applications and overlays, into the =
+operating=20
+system, and as computers became faster and disks larger, it became =
+easier to=20
+recreate a linked program from scratch to replace a few modules rather =
+than to=20
+re-link just the changes. In the 1990s linkers have again become more =
+complex,=20
+adding support for modern features including dynamically linked shared =
+libraries=20
+and the unusual demands of C++. Radical new processor architectures with =
+wide=20
+instruction words and compiler-scheduled memory accesses, such as the =
+Intel=20
+IA64, will also put new demands on linkers to ensure that the complex=20
+requirements of the code are met in linked prograsm.=20
+<P>
+<H3>Who is this book for?</H3>This book is intended for several =
+overlapping=20
+audiences.=20
+<UL>
+  <LI><I>Students:</I> Courses in compiler construction and operating =
+systems=20
+  have generally given scant treatment to linking and loading, often =
+because the=20
+  linking process seemed trivial or obvious. Although this was arguably =
+true=20
+  when the languages of interest were Fortran, Pascal, and C, and =
+operating=20
+  systems didn't use memory mapping or shared libraries, it's much less =
+true=20
+  now. C++, Java, and other object-oriented languages require a much =
+more=20
+  sophisticated linking environment. Memory mapped executable program, =
+shared=20
+  libraries, and dynamic linking affect many parts of an operating =
+system, and=20
+  an operating system designer disregards linking issues at his or her =
+peril.=20
+  <LI><I>Practicing programmers</I> also need to be aware of what =
+linkers do,=20
+  again particularly for modern languages. C++ places unique demands on =
+a=20
+  linker, and large C++ programs are prone to develop hard-to-diagnose =
+bugs due=20
+  to unexpected things that happen at link time. (The best known are =
+static=20
+  constructors that run in an an order the programmer wasn't expecting.) =
+Linker=20
+  features such as shared libraries and dynamic linking offer great =
+flexibility=20
+  and power, when used appropriately,=20
+  <LI><I>Language designers and developers</I> need to be aware of what =
+linkers=20
+  do and can do as they build languages and compilers. Programming tasks =
+had=20
+  been handled hand for 30 years are automated in C++, depending on the =
+linker=20
+  to handle the details. (Consider what a programmer has to do to get =
+the=20
+  equivalent of C++ templates in C, or ensuring that the initialization =
+routines=20
+  in each of a hundred C source files are called before the body of the =
+program=20
+  starts.) Future languages will automate even more program-wide =
+bookkeeping=20
+  tasks, with more powerful linkers doing the work. Linkers will also be =
+more=20
+  involved in global program optimization, since the linker is the only =
+stage of=20
+  the compiler process that handles the entire program's code together =
+and can=20
+  do transformations that affect the entire program as a unit. =
+</LI></UL>
+<P>
+<P>(The people who write linkers also all need this book, of course. But =
+all the=20
+linker writers in the world could probably fit in one room and half of =
+them=20
+already have copies because they reviewed the manuscript.)=20
+<P>
+<H3>Chapter summaries</H3>Chapter 1, <I>Linking and Loading</I>, =
+provides a=20
+short historical overview of the linking process, and discusses the =
+stages of=20
+the linking process. It ends with a short but complete example of a =
+linker run,=20
+from input object files to runnable ``Hello, world'' program.=20
+<P>
+<P>Chapter 2, <I>Architectural Issues</I>, reviews of computer =
+architecture from=20
+the point of view of linker design. It examines the SPARC, a =
+representative=20
+reduced instruction set architecture, the IBM 360/370, an old but still =
+very=20
+viable register-memory architecture. and the Intel x86, which is in a =
+category=20
+of its own. Important architectural aspects include memory architecture, =
+program=20
+addressing architecture, and the layout of address fields in individual=20
+instructions.=20
+<P>
+<P>Chapter 3, <I>Object Files</I>, examines the internal structure of =
+object and=20
+executable files. It starts with the very simplest files, MS-DOS .COM =
+files, and=20
+goes on to examine progressively more complex files including, DOS EXE, =
+Windows=20
+COFF and PE (EXE and DLL), Unix a.out and ELF, and Intel/Microsoft OMF.=20
+<P>
+<P>Chapter 4, <I>Storage allocation</I>, covers the first stage of =
+linking,=20
+allocating storage to the segments of the linked program, with examples =
+from=20
+real linkers.=20
+<P>
+<P>Chapter 5, <I>Symbol management</I>, covers symbol binding and =
+resolution,=20
+the process in which a symbolic reference in one file to a name in a =
+second file=20
+is resolved to a machine address.=20
+<P>
+<P>Chapter 6, <I>Libraries</I>, covers object code libraries, creation =
+and use,=20
+with issues of library structure and performance.=20
+<P>
+<P>Chapter 7, <I>Relocation</I>, covers address relocation, the process =
+of=20
+adjusting the object code in a program to reflect the actual addresses =
+at which=20
+it runs. It also covers position independent code (PIC), code created in =
+a way=20
+that avoids the need for relocation, and the costs and benefits of doing =
+so.=20
+<P>
+<P>Chapter 8, <I>Loading and overlays</I>, covers the loading process, =
+getting a=20
+program from a file into the computer's memory to run. It also covers=20
+tree-structured overlays, a venerable but still effective technique to =
+conserve=20
+address space.=20
+<P>
+<P>Chapter 9, <I>Shared libraries</I>, looks at what's required to share =
+a=20
+single copy of a library's code among many different programs. This =
+chapter=20
+concentrates on static linked shared libraries.=20
+<P>
+<P>Chapter 10, <I>Dynamic Linking and Loading</I>, continues the =
+discussion of=20
+Chapter 9 to dynamically linked shared libraries. It treats two examples =
+in=20
+detail, Windows32 dynamic link libraries (DLLs), and Unix/Linux ELF =
+shared=20
+libraries.=20
+<P>
+<P>Chapter 11, <I>Advanced techniques</I>, looks at a variety of things =
+that=20
+sophisticated modern linkers do. It covers new features that C++ =
+requires,=20
+including ``name mangling'', global constructors and destructors, =
+template=20
+expansion, and duplicate code elimination. Other techniques include =
+incremental=20
+linking, link-time garbage collection, link time code generation and=20
+optimization, load time code generation, and profiling and =
+instrumentation. It=20
+concludes with an overview of the Java linking model, which is =
+considerably more=20
+semantically complex than any of the other linkers covered.=20
+<P>
+<P>Chapter 12, <I>References</I>, is an annotated bibliography.=20
+<P>
+<H3>The project</H3>Chapters 3 through 11 have a continuing project to =
+develop a=20
+small but functional linker in perl. Although perl is an unlikely =
+implementation=20
+language for a production linker, it's an excellent choice for a term =
+project.=20
+Perl handles many of the low-level programming chores that bog down =
+programming=20
+in languages like C or C++, letting the student concentrate on the =
+algorithms=20
+and data structures of the project at hand. Perl is available at no =
+charge on=20
+most current computers, including Windows 95/98 and NT, Unix, and Linux, =
+and=20
+many excellent books are available to teach perl to new users. (See the=20
+bibliography in Chapter 12 for some suggestions.)=20
+<P>
+<P>The initial project in Chapter 3 builds a linker skeleton that can =
+read and=20
+write files in a simple but complete object format, and subsequent =
+chapters add=20
+functions to the linker until the final result is a full-fledged linker =
+that=20
+supports shared libraries and produces dynamically linkable objects.=20
+<P>
+<P>Perl is quite able to handle arbitrary binary files and data =
+structures, and=20
+the project linker could if desired be adapted to handle native object =
+formats.=20
+<P>
+<H3>Acknowledgements</H3>Many, many, people generously contributed their =
+time to=20
+read and review the manuscript of this book, both the publisher's =
+reviewers and=20
+the readers of the comp.compilers usenet newsgroup who read and =
+commented on an=20
+on-line version of the manuscript. They include, in alphabetical order, =
+Mike=20
+Albaugh, Rod Bates, Gunnar Blomberg, Robert Bowdidge, Keith Breinholt, =
+Brad=20
+Brisco, Andreas Buschmann, David S. Cargo, John Carr, David Chase, Ben =
+Combee,=20
+Ralph Corderoy, Paul Curtis, Lars Duening, Phil Edwards, Oisin Feeley, =
+Mary=20
+Fernandez, Michael Lee Finney, Peter H. Froehlich, Robert Goldberg, =
+James=20
+Grosbach, Rohit Grover, Quinn Tyler Jackson, Colin Jensen, Glenn Kasten, =
+Louis=20
+Krupp, Terry Lambert, Doug Landauer, Jim Larus, Len Lattanzi, Greg =
+Lindahl,=20
+Peter Ludemann, Steven D. Majewski, John McEnerney, Larry Meadows, Jason =
+
+Merrill, Carl Montgomery, Cyril Muerillon, Sameer Nanajkar, Jacob Navia, =
+Simon=20
+Peyton-Jones, Allan Porterfield, Charles Randall, Thomas David Rivers, =
+Ken Rose,=20
+Alex Rosenberg, Raymond Roth, Timur Safin, Kenneth G Salter, Donn =
+Seeley, Aaron=20
+F. Stanton, Harlan Stenn, Mark Stone, Robert Strandh, Bjorn De Sutter, =
+Ian=20
+Taylor, Michael Trofimov, Hans Walheim, and Roger Wong.=20
+<P>
+<P>These people are responsible for most of the true statements in the =
+book. The=20
+false ones remain the author's responsiblity. (If you find any of the =
+latter,=20
+please contact me at the address below so they can be fixed in =
+subsequent=20
+printings.)=20
+<P>
+<P>I particularly thank my editors at Morgan-Kaufmann Tim Cox and Sarah =
+Luger,=20
+for putting up with my interminable delays during the writing process, =
+and=20
+pulling all the pieces of this book together.=20
+<P>
+<H3>Contact us</H3>This book has a supporting web site at=20
+<TT>http://linker.iecc.com</TT>. It includes example chapters from the =
+book,=20
+samples of perl code and object files for the project, and updates and =
+errata.=20
+<P>
+<P>You can send e-mail to the author at <TT>linker@iecc.com</TT>. The =
+author=20
+reads all the mail, but because of the volume received may not be able =
+to answer=20
+all questions promptly. </P></BODY></HTML>

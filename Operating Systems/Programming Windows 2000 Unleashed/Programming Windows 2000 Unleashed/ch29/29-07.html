@@ -1,0 +1,163 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=980-982//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><small>SetResourceStatus</SMALL> is called by the resource DLL to update the current status of a resource:</P>
+<!-- CODE SNIP //-->
+<pre>
+pSetResourceStatus(hResource,
+                   &amp;resStatus);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetResourceStatus</SMALL> function must be called to update the status of the resource in cases where the resource DLL has returned <small>ERROR_IO_PENDING</SMALL> to indicate that a function could not be completed within the 300-millisecond time limit. The <small>SetResourceStatus</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle that identifies the resource that&#146;s creating the log entry. This parameter is passed to the resource DLL as a parameter when the <small>Startup</SMALL> entry point function is called.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>RESOURCE_STATUS</SMALL> structure that contains information about the state of the resource.
+</DL>
+<p>The <small>RESOURCE_STATUS</SMALL> structure is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _RESOURCE_STATUS
+{
+    CLUSTER_RESOURCE_STATE  ResourceState;
+    DWORD                   CheckPoint;
+    DWORD                   WaitHint;
+    HANDLE                  EventHandle;
+}RESOURCE_STATUS, *PRESOURCE_STATUS;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>RESOURCE_STATUS</SMALL> structure has four member variables:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ResourceState</SMALL>. The current state of the resource. Possible values for this member are discussed in the following list.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CheckPoint</SMALL>. A counter that&#146;s initially set to zero and then incremented for each new call to <small>SetResourceStatus</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WaitHint</SMALL>. Not currently used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EventHandle</SMALL>. An event handle that will be signaled by the resource DLL if the resource fails.
+</DL>
+<p>The <small>ResourceState</SMALL> member variable is set to one of the following states:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceOnline</SMALL>. The resource is online and available.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceOffline</SMALL>. The resource is offline and unavailable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceFailed</SMALL>. The resource has failed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceOnlinePending</SMALL>. The resource DLL is in the process of bringing the resource online.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceOfflinePending</SMALL>. The resource DLL is in the process of taking the resource offline.
+</DL>
+<p>In addition to the callback functions discussed earlier, a quorum resource DLL calls a third callback function: <small>QuorumResourceLost</SMALL>. A pointer to this function is passed to a quorum resource DLL when the <small>Arbitrate</SMALL> entry point function is called. The <small>QuorumResourceLost</SMALL> function is used to notify the cluster service that the resource DLL has lost control of the quorum resource.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Cluster Administration Extension APIs</FONT></H4>
+<p>The Cluster Administrator supports extensions through COM interfaces. If you use the Visual C<small>&#43;&#43;</SMALL> 6.0 Cluster Resource Type Wizard to create your resource extension, it will handle these interfaces for you. This section describes each of the interfaces exposed by Cluster Administrator; for more details, consult the latest Platform SDK documentation.</P>
+<p><font size="+1"><b>Interfaces Exposed by Cluster Administrator Extensions</B></FONT></P>
+<p>The following interfaces are exposed by the Cluster Administrator extension and are called by Cluster Administrator:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWEExtendContextMenu</SMALL>. Adds items to a Cluster Administrator context menu.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWEExtendPropertySheet</SMALL>. Adds pages to a Cluster Administrator property sheet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWEExtendWizard</SMALL>. Adds pages to the Cluster Administrator wizards used to create groups or resources.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWEExtendWizard97</SMALL>. Adds Wizard97-style pages to a Cluster Administrator wizard.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWEInvokeCommand</SMALL>. Runs a command invoked from a context menu.
+</DL>
+<p><font size="+1"><b>Interfaces Exposed by Cluster Administrator</B></FONT></P>
+<p>The following interfaces are exposed by Cluster Administrator and are called by the extension DLL in order to gather information about a specific object or to add to the Cluster Administrator user interface:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWCContextMenuCallback</SMALL>. Called by the extension DLL to add an item to a Cluster Administrator context menu
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWCPropertySheetCallback</SMALL>. Called by the extension DLL to add pages to a Cluster Administrator property sheet
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWCWizardCallback</SMALL>. Called by the extension DLL to add pages to the Cluster Administrator wizards used to create groups or resources
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IWCWizard97Callback</SMALL>. Called by the extension DLL to add Wizard97-style pages to a Cluster Administrator wizard
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterDataInfo</SMALL>. Returns information about a cluster
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterGroupInfo</SMALL>. Returns information about a group
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterNetInterfaceInfo</SMALL>. Returns information about a network interface
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterNetworkInfo</SMALL>. Returns information about a network
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterNodeInfo</SMALL>. Returns information about a cluster node
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterObjectInfo</SMALL>. Returns information about a cluster object
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterResourceInfo</SMALL>. Returns information about a cluster resource
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IGetClusterUIInfo</SMALL>. Returns information about the Cluster Administrator user interface
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

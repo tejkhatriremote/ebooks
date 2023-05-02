@@ -1,0 +1,288 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:An Introduction to COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=21//-->
+<!--PAGES=706-710//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="21-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The class is defined as follows:
+</P>
+<!-- CODE //-->
+<pre>
+Option Explicit
+Public objConnection As clsDBConnect
+Public objRS As Recordset
+Public spParameters As adodb.Parameters
+
+Private mObjCommand As adodb.Command
+Private mStoredName As String
+
+Private Sub Class_Initialize()
+    Set objRS = New Recordset
+    Set mObjCommand = New Command
+    Set spParameters = mObjCommand.Parameters
+End Sub
+
+Private Sub Class_Terminate()
+    On Error Resume Next
+
+    If objRS.State = adStateOpen Then
+        objRS.Close
+    End If
+
+    Set spParameters = Nothing
+    Set mObjCommand = Nothing
+    Set objRS = Nothing
+    Set objConnection = Nothing
+
+End Sub
+
+Public Sub inputParameter(paramName As String, paramvalue As Variant,
+&#8658; Optional paramType As DataTypeEnum, Optional length As Long)
+
+
+
+    If paramType = 0 Then
+        paramType = adVarChar
+    End If
+    If length = 0 Then
+        Select Case paramType
+            Case adVarChar
+                length = 255
+            Case Else
+                &#145; Leave it as 0
+        End Select
+    End If
+    mObjCommand.Parameters.Append _
+        mObjCommand.CreateParameter(paramName, paramType, adParamInput,
+        &#8658; length, paramvalue)
+
+End Sub
+
+Public Sub outputParameter(paramName As String, Optional paramType As
+&#8658; DataTypeEnum, Optional length As Long)
+
+    If paramType = 0 Then
+        paramType = adVarChar
+    End If
+    If length = 0 Then
+        Select Case paramType
+            Case adVarChar
+                length = 255
+            Case Else
+                &#145; Leave it as 0
+        End Select
+    End If
+
+    mObjCommand.Parameters.Append _
+        mObjCommand.CreateParameter(paramName, paramType, adParamOutput,
+        &#8658; length, 0)
+
+End Sub
+
+Private Sub returnValue()
+    Dim prm As Parameter
+
+    Set prm = mObjCommand.CreateParameter(&#147;Return&#148;, adInteger,
+    &#8658;adParamReturnValue, , 0)
+&#145;   ORACLE HACK
+&#145;    Set prm = mObjCommand.CreateParameter(&#147;RETURN_VALUE&#148;, adNumeric,
+     &#8658; adParamReturnValue, , 0)
+&#145;    Set prm = mObjCommand.CreateParameter(&#147;RETURN_VALUE&#148;, adInteger,
+     &#8658; adParamReturnValue, , 0)
+    mObjCommand.Parameters.Append prm
+
+End Sub
+
+Public Sub Execute()
+    mObjCommand.Execute
+End Sub
+
+&#145; NOTE: Not available for Oracle
+&#145; Execute the stored procedure, a resultset is
+&#145; expected as a result of it
+&#145; All input and output parameters for this stored procedure have to be
+&#8658;set beforehand
+Public Sub ExecuteRecordset()
+    Set objRS = mObjCommand.Execute
+End Sub
+
+Public Function GetParamValue(paramName As String)
+    GetParamValue = mObjCommand.Parameters(paramName)
+End Function
+
+Public Property Get spName() As String
+    spName = mStoredName
+End Property
+
+Public Property Let spName(ByVal vData As String)
+    mStoredName = vData
+    Set mObjCommand.ActiveConnection = objConnection.objConnection
+    mObjCommand.CommandText = vData
+    mObjCommand.CommandType = adCmdStoredProc
+    Call returnValue
+End Property
+
+Public Property Get spReturnValue() As Long
+    spReturnValue = mObjCommand(0)
+End Property
+</PRE>
+<!-- END CODE //-->
+<p>In a stored procedure, there are input parameters and output parameters. The difference is that if a stored procedure parameter returns a value, it is considered an output parameter. In this class, there are explicit methods for each. In ADO, the <small>Command</SMALL> object is used to call a stored procedure or a procedure with multiple parameters. For example, the following would require a <small>Command</SMALL> object:</P>
+<!-- CODE SNIP //-->
+<pre>
+SELECT * FROM viewClients WHERE clientId=?
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The question mark represents a value that&#146;s not defined. To specify this value in a stored procedure or SQL, command parameters need to be created. When the <small>Command</SMALL> object is instantiated, a <small>Command.Parameters</SMALL> collection is created. Initially, it will be empty; to add a parameter, you call <small>Parameters.Append</SMALL>. However, it requires an object of the type <small>parameter</SMALL>. This can be done by calling</P>
+<!-- CODE SNIP //-->
+<pre>
+Command.CreateParameter( Name, Type, Direction, Size, Value)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>where
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Name</SMALL> is a string representing the name of the parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Type</SMALL> is a value specifying the type of parameter (for example, <small>adVarChar</SMALL>).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Direction</SMALL> specifies whether this parameter is an input (<small>adParamInput</SMALL>), output (<small>adParamOutput</SMALL>), input and output (<small>adParamInputOutput</SMALL>), or return value (<small>adParamReturnValue</SMALL>).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Size</SMALL> specifies the maximum size of the data type.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Value</SMALL> specifies the value for the parameter.
+</DL>
+<p>Creating the various parameters can happen in any order. However, appending them to the <small>Parameters</SMALL> collection must, in most cases, happen in a specific order. For example, there are versions of the SQL Server ODBC driver where the name of the parameter is irrelevant but the order is relevant. Or, for the Oracle driver, both the name and order are relevant. Check your documentation. The number of parameters must match the number required. If these do not match, an error will occur.</P>
+<p>Once the method <small>Command.Execute</SMALL> has been called, you can inspect the <small>Parameters</SMALL> collection to see any of the return values. In this implementation, the first parameter is a return value. It&#146;s recommended only as a way to return errors. Return parameters are only allowed in a certain range, which is dependent on the implementation of the database. Returning something out of this range will result in unpredictable behavior. If you want to return the value of the added client ID, you should add an output parameter.</P>
+<p><font size="+1"><b><i>Consuming the Class</I></B></FONT></P>
+<p>To consume the class, a specific order again must be followed:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Associate an active connection with the view by setting <small>objConnection</SMALL> with an active <small>clsDBConnect</SMALL> object.
+<dd><b>2.</B>&nbsp;&nbsp;Set the property <small>spName</SMALL>, which represents the name of the stored procedure. The <small>Commnds.CommandType</SMALL> property should be set to <small>adCmdStoredProcedure</SMALL>. This way, you don&#146;t need to create a SQL statement that executes the stored procedure.
+<dd><b>3.</B>&nbsp;&nbsp;If any parameters exist, you must add them individually, specifying their direction.
+<dd><b>4.</B>&nbsp;&nbsp;Call the <small>execute</SMALL> method. It executes the stored procedure.
+<dd><b>5.</B>&nbsp;&nbsp;Retrieve the result code using the property <small>spReturnValue</SMALL>. It can be checked for correctness.
+</DL>
+<p>A consumption of this class would look like this:
+</P>
+<!-- CODE //-->
+<pre>
+Public Function AddNew() As Boolean
+    On Error GoTo ERROR_AddNew
+
+    Dim objCtxt As ObjectContext
+    Dim objCon As New clsDBConnect
+    Dim objSP As New clsDBsp
+
+    Set objCtxt = GetObjectContext()
+    If objCon.Connect() = False Then
+        GoTo ERROR_AddNew
+    End If
+
+    Set objSP.objConnection = objCon
+    objSP.spName = &#147;addSimpleClient&#148;
+    objSP.inputParameter &#147;companyName&#148;, mvarcompanyName
+    objSP.inputParameter &#147;street&#148;, mvarstreet
+    objSP.inputParameter &#147;city&#148;, mvarstreet
+    objSP.Execute
+
+    If objSP.spReturnValue &lt&gt -100 Then
+        GoTo ERROR_AddNew
+    End If
+
+    objCtxt.SetComplete
+    AddNew = True
+    Exit Function
+
+ERROR_AddNew:
+    objCtxt.SetAbort
+    AddNew = False
+
+End Function
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="21-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="21-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=757-761//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Transaction Lifetimes for Combined COM&#43; Objects</FONT></H4>
+<p>When a COM&#43; object instantiates a new COM&#43; object using regular COM calls, such as <small>CoCreateInstance</SMALL> or <small>CreateObject</SMALL> (VB), it does not cross transaction boundaries.</P>
+<p>In Figure 22.13, the other COM&#43; object has been created using <small>CoCreateInstance</SMALL>. As a result, the COM&#43; object exists in another transaction. Because COM&#43; services only support flat transactions, the two transactions have no dependency on each other regarding the outcome of the transactions.</P>
+<p><a name="Fig13"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-13.jpg',201,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-13t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-13.jpg',201,420)"><font color="#000077"><b>Figure 22.13</B></FONT></A>&nbsp;&nbsp;Defining the root object of a transaction.</P>
+<p>There is a tie between the two COM&#43; objects. The newly created COM&#43; object is called a <i>root object</I>. A root object has special properties. When it&#146;s deactivated, it commits or aborts the transaction. Any non-root object only indicates what it thinks should be the transaction outcome. Root objects also deactivate all other COM&#43; objects within the transaction. This means that if any non-root objects are referenced, the reference will be invalid.</P>
+<p><font size="+1"><b>Using IObjectContext::CreateInstance</B></FONT></P>
+<p>In order to have the created COM&#43; object running within the same transaction, you need to use the method <small>IObjectContext::CreateInstance</SMALL>. It&#146;s not a guarantee that the object will run within the same transaction. That&#146;s dependent on how the transaction attributes are set. Here are the attributes of interest to you:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Requires a transaction</I>. If the object creating the child does not have a transaction context, it will be created for the child. If the object has a transaction context, the child will inherit the parent&#146;s context.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Supports transactions</I>. If the object creating the child does not have a transaction context, MTS will not create one. If the object has a transaction context, the child will inherit the parent&#146;s context.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Requires a new transaction</I>. Regardless of whether the object has a transaction context, MTS will create a new transaction context for the child.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Ignored/does not support transactions</I>. Either way, this COM&#43; object will not participate in the transaction or any other transaction.
+</DL>
+<p>Using these settings, let&#146;s create a scenario that involves various objects instantiated with <small>IObjectContext::CreateInstance</SMALL> as in the following list:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Requires a transaction: Object A, Object D, Object F
+<dd><b>&#149;</B>&nbsp;&nbsp;Supports transactions: Object B
+<dd><b>&#149;</B>&nbsp;&nbsp;Requires a new transaction: Object C
+<dd><b>&#149;</B>&nbsp;&nbsp;Does not support transactions: Object E
+</DL>
+<p>The root object is Object A, and it creates Objects B and C. Object B creates Object D, and Object C creates Objects E and F. The two transactions are shown in Figure 22.14.
+</P>
+<p>The two transactions are independent of each other. For the second transaction, Object B is the root object. When it&#146;s deactivated, the transaction will be committed or aborted.</P>
+<p><font size="+1"><b>Getting the Aborted Transaction Error</B></FONT></P>
+<p>In the various situations, the root object is the last object to deactivate. The transaction commit starts only if the root object calls <small>SetComplete</SMALL>, and it, in turn, returns <small>S_OK</SMALL>. At this stage, the two-phase commit starts. Now comes a problem: What happens if the transaction aborts for one reason or another? The answer is that COM&#43; services will return to the caller <small>CONTEXT_E_ABORTED</SMALL> if the transaction aborts.</P>
+<p><a name="Fig14"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-14.jpg',177,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-14t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-14.jpg',177,420)"><font color="#000077"><b>Figure 22.14</B></FONT></A>&nbsp;&nbsp;The transactions used in this example.</P>
+<p><font size="+1"><b>Which Method Do I Use?</B></FONT></P>
+<p>Which method is used? The <small>CoCreateInstance</SMALL> variety or the <small>IObjectContext</SMALL> variety? It depends on where you&#146;re creating the object. If you&#146;re the base client, your only solution is <small>CoCreateInstance</SMALL> (which you have already learned). However, when you&#146;re within the COM&#43; object, you should use <small>IObjectContext::CreateInstance</SMALL>. This way, the activity can be defined at the administrative level. This gives you the ability with scripting to build activities dynamically based on the situation.</P>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">Multi-COM Object Transaction Outcomes</FONT></H4>
+<p>When multiple COM&#43; objects are executed within one transaction, the transaction outcome methods help determine the outcome. What happens if one calls <small>SetComplete</SMALL>, another calls <small>DisableCommit</SMALL>, and so on? A scenario using Objects A, B, and C is created, as shown in Figure 22.15.</P>
+<p><a name="Fig15"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-15.jpg',192,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-15t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-15.jpg',192,420)"><font color="#000077"><b>Figure 22.15</B></FONT></A>&nbsp;&nbsp;A scenario of objects being called.</P>
+<p>Object A is called the root object of the automatic transaction. The base client instantiates Object A. This causes a COM&#43; application to start, which causes a transaction to be started. For the scope of this calling sequence, it&#146;s assumed that both Objects B and C share the same transaction.
+</P>
+<p><font size="+1"><b>Object B Calling SetAbort</B></FONT></P>
+<p>In this scenario, Object B, prior to returning control to Object A, calls <small>SetAbort</SMALL>. If Object A does not pick up this error, it will still call Object C. However, because Object B has aborted the transaction, no work will be saved, regardless what Object C does. If Object C performs a long operation, processor cycles will be wasted. Therefore, it&#146;s important to check whether all the methods worked correctly.</P>
+<p><font size="+1"><b>Object A Calling SetAbort</B></FONT></P>
+<p>In this example, the outcome of the transaction is the same because the root object calls <small>SetAbort</SMALL>. The pattern to this and the last scenario is that if any of the participating objects call <small>SetAbort</SMALL>, the transaction will be aborted, because all the objects involved must call <small>SetComplete</SMALL> in order for the transaction to be a candidate for the two-phase commit.</P>
+<p><font size="+1"><b>Object B Calling EnableCommit</B></FONT></P>
+<p>In this example, Object B calls <small>EnableCommit</SMALL>. This time, the transaction will commit, because <small>EnableCommit</SMALL> keeps the object activated and signals to the transaction context that the transactional work can be committed.</P>
+<p><font size="+1"><b>Object B Calling DisableCommit</B></FONT></P>
+<p>In this example, Object B calls <small>DisableCommit</SMALL>. This time, the transaction will abort, even though everything else concerned is ready to commit. The reason is that <small>DisableCommit</SMALL> keeps the object activated and tells the COM&#43; application that object is not ready to commit and therefore must be aborted.</P>
+<p><font size="+1"><b>Object A Calling EnableCommit/DisableCommit</B></FONT></P>
+<p>In this example, Object A calls either <small>DisableCommit</SMALL> or <small>EnableCommit</SMALL>. Both Object B and Object C have called <small>SetComplete</SMALL> to have their work committed. However, the transaction work will be considered inconsistent. After the control returns to the base client, Object A will remain activated, whereas Objects B and C will be deactivated and available for reuse. If, in a later action, <small>SetComplete</SMALL> is called, the work previously done will be a candidate for committal. If, however, <small>SetAbort</SMALL> is called, the transactional work will be aborted.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,291 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=099-103//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 3.11</B> The SkiLift Multithreaded Windows Application<hr></P>
+<!-- CODE //-->
+<pre>
+BOOL       g_fLiftStopped = FALSE;
+CSkier     g_rgSkier[8];
+HANDLE     g_hChairLift = NULL;
+HINSTANCE  g_hInstance = NULL;
+HWND       g_hWnd = NULL;
+LPCTSTR    g_szAppName = _T(&#147;SkiLift&#148;);
+
+CRITICAL_SECTION g_cs;
+    .
+    .
+    .
+    .
+void OnStart()
+{
+    HWND hWndStart = GetDlgItem(g_hWnd, IDC_STARTSTOP);
+    if(g_fLiftStopped)
+    {
+        // It&#146;s time to open the lift - perform some
+        // initializations
+        g_fLiftStopped = FALSE;
+        const int nMaxOnLift = 4;
+        const int nMaxSkiers = 8;
+        srand( (unsigned)time( NULL ) );
+        SetWindowText(hWndStart, _T(&#147;&ampStop Lift&#148;));
+        // Initialize the critical section used for the GUI,
+        // and create a semaphore with four slots used for
+        // the ski lift.
+        InitializeCriticalSection(&ampg_cs);
+        g_hChairLift = CreateSemaphore(NULL,
+                                       0,
+                                       nMaxOnLift,
+                                       _T(&#147;ChairLift&#148;));
+        // Create eight skiers, each with its own thread.
+        // Each of the skiers knows its skier number and
+        // window handle.
+        for(int n = 0; n &lt nMaxSkiers; n&#43;&#43;)
+        {
+            g_rgSkier[n].m_nID = n;
+            g_rgSkier[n].m_hWnd = g_hWnd;
+            DWORD dwThreadId;
+            HANDLE hThread;
+            hThread = CreateThread(NULL,
+                                 0,
+                                 (LPTHREAD_START_ROUTINE)SkiThread,
+                                 (void*)&ampg_rgSkier[n],
+
+                                 0,
+                                 &ampdwThreadId);
+            CloseHandle(hThread);
+        }
+        // After all of the skiers have been created, release
+        // all of the semaphore resources.
+        ReleaseSemaphore(g_hChairLift, nMaxOnLift, NULL);
+    }
+    else
+    {
+        // We are stopping the lift. Create a &#147;cleaner&#148; thread
+        // which will clean up all of the synchronization
+        // resources. The start/stop button is disabled until
+        // the cleanup process is completed.
+        DWORD dwThreadId;
+        g_fLiftStopped = TRUE;
+        EnableWindow(hWndStart, FALSE);
+        SetWindowText(hWndStart, _T(&#147;&ampStart Lift&#148;));
+        HANDLE hCleanThread;
+        hCleanThread = CreateThread(NULL,
+                                    0,
+                                    (LPTHREAD_START_ROUTINE)Cleaner,
+                                    (void*)g_hWnd,
+                                    0,
+                                    &ampdwThreadId);
+        CloseHandle(hCleanThread);
+    }
+}
+
+
+DWORD WINAPI SkiThread(PVOID pv)
+{
+    CSkier* pSkier = (CSkier*)pv;
+    while(g_fLiftStopped == FALSE)
+    {
+        WaitForLift(pSkier);
+        GetOnLift(pSkier);
+        SkiAWhile(pSkier);
+    }
+    return NO_ERROR;
+}
+
+DWORD WINAPI Cleaner(PVOID pv)
+{
+    Sleep(10000);
+    CloseHandle(g_hChairLift);
+    // Restore the start button, and clean up the
+    // status window.
+    HWND hWndStart = GetDlgItem(g_hWnd, IDC_STARTSTOP);
+    EnableWindow(hWndStart, TRUE);
+    HWND hWndLabel = GetDlgItem(g_hWnd, IDC_STATUS);
+    SetWindowText(hWndLabel, _T(&#147;&#148;));
+    DeleteCriticalSection(&ampg_cs);
+    return NO_ERROR;
+}
+
+void WaitForLift(CSkier* pSkier)
+{
+    TCHAR szMsg[256];
+    wsprintf(szMsg,
+             _T(&#147;Skier %d starts waiting in line&#148;),
+             pSkier-&gtm_nID);
+    // Update status window with information about this skier, and
+    // put a check mark in the lift line column.
+    EnterCriticalSection(&ampg_cs);
+    SetCheckBoxArray(IDC_CHECK1, IDC_CHECK8, TRUE);
+    SetDlgItemText(g_hWnd, IDC_STATUS, szMsg);
+    Sleep(100);
+    LeaveCriticalSection(&ampg_cs);
+    // Wait on the chair lift semaphore. If a resource is not yet
+    // available, the thread will block here until one is ready.
+    // If a chair is ready, it will be allocated to this thread,
+    // and execution continues in the GetOnLift function.
+    WaitForSingleObject(g_hChairLift, INFINITE);
+}
+
+void GetOnLift(CSkier* pSkier)
+{
+    TCHAR szMsg[256];
+    wsprintf(szMsg,
+             _T(&#147;Skier %d gets on lift&#148;),
+             pSkier-&gtm_nID);
+    // Update status window with information about this skier,
+    // remove a check from the lift line column, and put a check
+    // mark in the lift column.
+    EnterCriticalSection(&ampg_cs);
+    SetCheckBoxArray(IDC_CHECK1, IDC_CHECK8,  FALSE);
+    SetCheckBoxArray(IDC_CHECK9, IDC_CHECK12, TRUE);
+    SetDlgItemText(g_hWnd, IDC_STATUS, szMsg);
+    Sleep(100);
+    LeaveCriticalSection(&ampg_cs);
+    // Spend a short (fixed) amount of time on the chair lift, then
+    // return one chair lift resource. Execution continues in the
+    // SkiAWhile function.
+    Sleep(2000);
+
+    EnterCriticalSection(&ampg_cs);
+    SetCheckBoxArray(IDC_CHECK9, IDC_CHECK12,  FALSE);
+    LeaveCriticalSection(&ampg_cs);
+    ReleaseSemaphore(g_hChairLift, 1, NULL);
+}
+
+void SkiAWhile(CSkier* pSkier)
+{
+    TCHAR szMsg[256];
+    wsprintf(szMsg,
+             _T(&#147;Skier %d starts downhill&#148;),
+             pSkier-&gtm_nID);
+    // Move a skier from the lift line check boxes to the
+    // skiing checkboxes. After updating the status display, hold
+    // the status window for 100 milliseconds so it can be read.
+    EnterCriticalSection(&ampg_cs);
+    SetCheckBoxArray(IDC_CHECK13, IDC_CHECK20, TRUE);
+    SetDlgItemText(g_hWnd, IDC_STATUS, szMsg);
+    Sleep(100);
+    LeaveCriticalSection(&ampg_cs);
+    // Simulate skiing by sleeping a random amount of time
+    // between 0 and 1999 milliseconds.
+    Sleep( rand() % 2000 );
+    // Finished skiing, clear one of the skiing checkboxes.
+    EnterCriticalSection(&ampg_cs);
+    SetCheckBoxArray(IDC_CHECK13, IDC_CHECK20, FALSE);
+    LeaveCriticalSection(&ampg_cs);
+}
+
+void SetCheckBoxArray(UINT low, UINT high, BOOL fSet)
+{
+    UINT nResIndex;
+    if(fSet)
+    {
+        // We are setting a check mark, find a clear checkbox.
+        for(nResIndex = low; nResIndex &lt= high; nResIndex&#43;&#43;)
+            if(!IsDlgButtonChecked(g_hWnd, nResIndex))
+                break;
+    }
+    else
+    {
+        // Clearing a check mark
+        for(nResIndex = high; nResIndex &gt= low; nResIndex&#151;)
+            if(IsDlgButtonChecked(g_hWnd, nResIndex))
+                break;
+    }
+    CheckDlgButton(g_hWnd, nResIndex, fSet);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Listing 3.10 defines a structure named <small>CSkier</SMALL>, which represents each skier in the SkiLift project. In Listing 3.11, an array of eight <small>CSkier</SMALL> structures are used in the SkiLift project. In addition, a <small>CRITICAL_SECTION</SMALL> variable is used to synchronize control of dialog items. A semaphore handle is used to control access to the chair lift so that only four skiers are permitted to use the ski lift at any given time. Finally, a flag is used to indicate when the ski lift is running. When the ski lift is stopped, <small>g_fLiftStopped</SMALL> is set to <small>TRUE</SMALL>, and all running threads stop using the ski lift.</P>
+<p>A total of seven functions control the multithread aspects of the user interface. The <small>SkiThread</SMALL> function is used as a &#147;thread start&#148; function. This function is called by threads that represent skiers in the SkiLift project. These threads cycle through calling the <small>WaitForLift</SMALL>, <small>GetOnLift</SMALL>, and <small>SkiAWhile</SMALL> functions. The <small>SetCheckBoxArray</SMALL> function is used to check or clear checkboxes that indicate the current status of the application.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

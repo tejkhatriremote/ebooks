@@ -1,0 +1,189 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=803-806//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This source code is placed at the top of the file. The freeware component <small>ASPFserv.Download</SMALL> is instantiated and then assigned to the variable <small>currFile</SMALL>. Because of the way this component works, any HTML on the page does not get processed. The file <small>SimpleDownload.asp</SMALL> is a byte stream that represents the file being downloaded. The name of the file that&#146;s downloaded is the name of the file where the script exists, without the extension <small>.asp</SMALL>. The extension that&#146;s assigned is the MIME type or the <small>currFile.ContentType</SMALL>. In this example, the MIME type is a zip file. Therefore, the extension <small>.zip</SMALL> is added. The file that&#146;s downloaded is whatever <small>currFile.GetFile</SMALL> is retrieving. Because the file can be anywhere on the server, it can be in a place that&#146;s not open to the Web server, or it can be generated dynamically on a per-user basis. Because of the way the component works, it can be used only at the page level and not at the <small>Session</SMALL> or <small>Application</SMALL> level.</P>
+<h4 align="LEFT"><a name="Heading24"></A><font color="#000077">Sending Email</FONT></H4>
+<p>When a person registers for a conference, a confirmation is often sent via email. This does two things. It validates that the email address given is valid, and it confirms that the user is part of the conference. Another reason for sending mail is to provide the user with his or her password when it&#146;s forgotten. Many different email products are available for sending email. Consider the following source code:
+</P>
+<!-- CODE //-->
+<pre>
+var objMail, sMessageText;
+sMessageText = &#147;Hello world&#148;;
+sMessageText = sMessageText &#43; &#147;\n\rChristian Gross&#148;;
+objMail = Server.CreateObject(&#147;ABMailer.Mailman&#148;);
+Application.Lock();
+objMail.Clear();
+objMail.MailDate = &#147;12/12/1998&#148;;
+objMail.MailSubject = &#147;Sample Greeting&#148;;
+objMail.ReplyTo = &#147;me@youremail.com&#148;;
+objMail.SendTo = request(&#147;txtEmail&#148;);
+objMail.ServerAddr = &#147;mail.amberg.net&#148;;
+objMail.ServerAddr = &#147;194.2.23.98&#148;;
+objMail.ServerPort = 25
+
+objMail.MailMessage = sMessageText;
+objMail.SendMail();
+Application.Unlock();
+</PRE>
+<!-- END CODE //-->
+<p>In this example, the email to be sent is a &#147;<small>Hello World</SMALL>&#148; example. The server component is instantiated by <small>calling Server.CreateObject(&#147;ABMailer.Mailman&#148;)</SMALL>. This component is single-threaded and therefore can be accessed only by one client at a time. To synchronize mail access, <small>Application.Lock</SMALL> is called. Now the mail message is cleared and a few attributes regarding the server address, port, and email address are specified. After all these things are done, the email is sent by calling <small>objMail.SendMail</SMALL>.</P>
+<p>Sending mail is simple if only standard text is sent. However, there are other options such as sending file attachments and sending data as HTML. In such cases, the task becomes more complicated. With this added complexity, a better mail component is needed. When mail is sent, it needs a relay server, which is typically the corporate mail server. However, you should make sure the administrator of that server knows you&#146;re sending email. With the advent of spamming, many email servers now do not allow for the relaying of large amounts of email.</P>
+<h4 align="LEFT"><a name="Heading25"></A><font color="#000077">Browser Capabilities</FONT></H4>
+<p>Consider the scenario of building an international Web site. Before you start, a few questions need to be answered. For example, which languages will this Web site support? Which browsers will it support? The answers to these two questions can make building a Web site simple or complex. Will the Web site be written to support a basic functionality and therefore have limitations or will there be two Web sites written to support two different browsers/languages? There is no simple solution to these problems. However, in any solution that&#146;s implemented, the browser capabilities must be determined. By understanding what the browser is capable of, you can implement specific solutions without having intervention on behalf of the user. There are two capabilities that need to be tested: browser type and languages supported.
+</P>
+<p><font size="+1"><b>Browser Type</B></FONT></P>
+<p>When a browser accesses a Web site, it gives its identity to the server. The token is given as an HTTP header. To get it, you could use the following code:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Request.ServerVariables( &#147;HTTP_USER_AGENT&#148;)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This returns the type of browser. Here&#146;s an example:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Mozilla/4.0 (compatible; MSIE 4.01; Windows NT)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The string text starts off by defining which level of compatibility is supported&#151;in this case, Mozilla level 4.0. (<i>Mozilla</I> is the nickname given to the Netscape browser.) However, because Internet Explorer supports more features (such as DHTML), more information is needed. For example, the browser type is MSIE 4.01, and it&#146;s currently running on the Windows NT platform. Using this information, you can build a specific Web site. Also, you can extrapolate whether the browser supports frames and DHTML.</P>
+<p>Using this browser component, you can easily differentiate the major versions of browsers. Sometimes, however, smaller issues arise: Are frames supported? What about background sounds? Does the browser use Windows 16-bit code or is it a beta? Has a custom feature been introduced that changes whenever the browser changes? The point is that the details complicate the entire issue. The solution is to use a component that ships with the ASP framework. It&#146;s the browser capability component. Consider the following source code:</P>
+<!-- CODE //-->
+<pre>
+&lt%
+var bc;
+bc = Server.CreateObject(&#147;MSWC.BrowserType&#148;)
+%&gt
+&lttable border=1&gt
+&lttr&gt
+&lttd&gtBrowser&lt/td&gt
+&lttd&gt &lt%=bc.browser%&gt&lt/td&gt&lt/tr&gt
+&lttr&gt
+&lttd&gtVersion&lt/td&gt
+&lttd&gt&lt%=bc.version%&gt&lt/td&gt&lt/TR&gt
+&lttr&gt
+&lttd&gtFrames&lt/td&gt
+&lttd&gt&lt%=bc.Frames%&gt&lt/td&gt&lt/tr&gt
+&lttr&gt
+&lttd&gtTables&lt/td&gt
+&lttd&gt&lt%=bc.Tables%&gt&lt/td&gt&lt/TR&gt
+&lttr&gt
+&lttd&gtBackgroundSounds&lt/td&gt
+&lttd&gt&lt%=bc.BackgroundSounds%&gt&lt/td&gt&lt/tr&gt
+&lttr&gt
+&lttd&gtVBScript&lt/td&gt
+&lttd&gt&lt%=bc.vbscript%&gt&lt/td&gt&lt/tr&gt
+&lttr&gt
+&lttd&gtJScript&lt/td&gt
+&lttd&gt&lt%=bc.javascript%&gt&lt/td&gt&lt/tr&gt
+&lt/tr&gt
+&lttr&gt
+&lttd&gtMy property&lt/td&gt
+&lttd&gt&lt%=bc.myprop%&gt&lt/td&gt
+&lt/tr&gt
+&lt/table&gt
+</PRE>
+<!-- END CODE //-->
+<p>The server object that needs to be instantiated is <small>MSWC.BrowserType</SMALL>. This object is unique in that when it&#146;s created, it attempts to cross-reference the <small>HTTP_USER_AGENT</SMALL> value with a value within a file called <small>browscap.ini</SMALL>. For example, the following code appears in this file:</P>
+<!-- CODE SNIP //-->
+<pre>
+[Mozilla/4.0 (compatible; MSIE 4.0; Windows NT)]
+parent=IE 4.0
+platform=WinNT
+beta=False
+
+[Mozilla/4.0 (compatible; MSIE 4.*)]
+parent=IE 4.0
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

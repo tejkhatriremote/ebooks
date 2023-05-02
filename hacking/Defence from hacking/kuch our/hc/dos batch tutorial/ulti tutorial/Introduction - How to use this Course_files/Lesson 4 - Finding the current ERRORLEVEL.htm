@@ -1,0 +1,871 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw040.htm -->
+<HTML><HEAD><TITLE>Lesson 4 - Finding the current ERRORLEVEL</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=4,LnIdx="Lesson "+Ln;</SCRIPT>
+
+<SCRIPT language=JavaScript 
+src="Lesson 4 - Finding the current ERRORLEVEL_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 4 - Finding the current ERRORLEVEL_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 4 - Finding the current ERRORLEVEL_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Image();M.src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>Use of
+<SCRIPT>cn('choice')</SCRIPT>
+ and
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ codes</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Write a script to display the current
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   for some common values </LI></UL><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Each 
+Lesson relies on your files from the previous one. It's better to use your own 
+files, but if you can't, download a copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 3";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson3.zip">end&nbsp;of&nbsp;Lesson&nbsp;3</A> 
+and click<IMG 
+src="Lesson 4 - Finding the current ERRORLEVEL_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.
+<P></P></DIV>
+<DIV class=lm>
+<P>A script to display the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>We've seen how useful a Return-code shell is when we are investigating 
+commands that set
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ return codes. However, sometimes it's better to have a script that displays the 
+current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ for you. In this Lesson, we'll use what we've learnt so far to write a simple 
+script to do this for the most common
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s.</P></DIV>
+<DIV class=lm>
+<P>Use a Return-code shell to see what's happening</P></DIV>
+<DIV class=bd>
+<P>We'll work in a Return-code shell to make it easier to develop the script. 
+Open a Return-code child shell in the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>rc</SPAN> to run our Return-code shell script. The script changes the prompt as a reminder, and the window title changes to <NOBR><SPAN CLASS=tle>BatchWindow - COMMAND</SPAN></NOBR>.','C:&#92;CSW&#62;rc<BR>Opening Return-Code shell...<BR>Return code (ERRORLEVEL):   0<BR><NOBR>WARNING: Reloaded COMMAND.COM transient</NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> <SPAN class=fs>RC.BAT</SPAN> makes 
+life easier. We've only just written it, so we remember exactly how it works, 
+don't we? However, as you use your Batch knowledge to automate tasks, it's easy 
+to forget the details of how you did it. Remember that (unlike an executable 
+program) you can always glance through a script to remind yourself what it 
+does.</P></DIV>
+<DIV class=lm>
+<P>A simple way to set a particular current level</P></DIV>
+<DIV class=bd>
+<P>When you give
+<SCRIPT>cn('choice')</SCRIPT>
+ a list of possible replies, it returns an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ equal to the position of the actual reply. So, if we make our list of replies 
+<SPAN class=fs>123456789</SPAN>, then
+<SCRIPT>cn('choice')</SCRIPT>
+ will set the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ to whichever number (from <SPAN class=fs>1</SPAN> to <NOBR><SPAN 
+class=fs>9</SPAN>)</NOBR> we reply with.</P>
+<P>Try this now, use <NOBR><SPAN class=qfs>choice /c:123456789</SPAN></NOBR> and 
+reply, say <SPAN class=ky>&nbsp;5&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command <SPAN CLASS=qfx>choice /c:123456789</SPAN>, then reply <SPAN CLASS=ky>&nbsp;5&nbsp;</SPAN> and the return-code is the number you replied with.','RCode C:&#92;CSW>choice /c:123456789<BR>[1,2,3,4,5,6,7,8,9]?5<BR><NOBR>Return code (ERRORLEVEL):   5 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> This command is an easy way to set a 
+particular (small) current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Setting a variable to the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ value</P></DIV>
+<DIV class=bd>
+<P>Now, instead of using our
+<SCRIPT>cn('IF')</SCRIPT>
+
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ (<SPAN class=br>greater-than-or-equal-to</SPAN>) test to
+<SCRIPT>cn('ECHO')</SCRIPT>
+ a message, we'll use it to
+<SCRIPT>cn('SET')</SCRIPT>
+ a variable. We know that the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is <SPAN class=fs>5</SPAN>, so let's put its value in a variable we'll call 
+<SPAN class=fs>ERR</SPAN> (to keep its name short).</P>
+<P>We'll add the
+<SCRIPT>cn('SET')</SCRIPT>
+ command to the test, so that it's executed only if the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is <SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>5</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Set the <SPAN CLASS=fs>ERR</SPAN> variable like this. Since the test is true the <SPAN CLASS=bb>SET</SPAN> command is executed and the variable is set.','<NOBR>RCode C:&#92;CSW>if errorlevel 5 set err=5 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Check that the variable was set with an echo command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>echo.%err%</SPAN> to expand the variable and check it was set. We could equally well just type the command <SPAN CLASS=qfx>set</SPAN> on its own, and get a list of all current variables. Try it, if you wish (as the most recent change, <SPAN CLASS=fs>ERR</SPAN> will be at the end of the list).','RCode C:&#92;CSW>echo.%err%<BR>5<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>We know the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is <SPAN class=fs>5</SPAN>. Our test set the <SPAN class=fs>ERR</SPAN> variable 
+correctly.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=fs>4</SPAN> will test true, since <SPAN 
+class=fs>5</SPAN>(=actual) greater than <SPAN class=fs>4</SPAN></P></DIV>
+<DIV class=bd>
+<P>But now repeat the test, setting the variable again. However, this time we'll 
+test for <SPAN class=fs>4</SPAN> and set our variable to <SPAN class=fs>4</SPAN> 
+if the test is true
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Set the <SPAN CLASS=fs>ERR</SPAN> variable like this. The test for <SPAN CLASS=fs>4</SPAN> will be true, since the current <SPAN CLASS=bb>ERRORLEVEL</SPAN> is <SPAN CLASS=br>greater-than-or-equal-to</SPAN> <SPAN CLASS=fs>4</SPAN> (since it&#39;s <NOBR><SPAN CLASS=fs>5</SPAN>)</NOBR>. That means the <SPAN CLASS=bb>SET</SPAN> command will be executed (and so set <SPAN CLASS=fs>ERR</SPAN> wrongly, but don&#39;t worry, read on).','<NOBR>RCode C:&#92;CSW>if errorlevel 4 set err=4 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Again, check that the variable was set with an echo command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>echo.%err%</SPAN> to check the variable was set (or use <SPAN CLASS=qfx>set</SPAN> on its own to list all current variables).','RCode C:&#92;CSW>echo.%err%<BR>4<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Our <SPAN class=fs>ERR</SPAN> variable was
+<SCRIPT>cn('SET')</SCRIPT>
+ incorrectly</P></DIV>
+<DIV class=bd>
+<P>We know the current level is <SPAN class=fs>5</SPAN>, not <SPAN 
+class=fs>4</SPAN>, but since our test (as you now know) checked for <SPAN 
+class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>4</SPAN> (and the 
+current level, <SPAN class=fs>5</SPAN>, is greater), the test was true, and our
+<SCRIPT>cn('SET')</SCRIPT>
+ command was executed. You expected that, didn't you? We'll soon see how to make 
+the tests in the correct order, so this doesn't happen.</P></DIV>
+<DIV class=lm>
+<P>If the test is false, our
+<SCRIPT>cn('SET')</SCRIPT>
+ isn't executed</P></DIV>
+<DIV class=bd>
+<P>If we try to set our variable with a test for <SPAN class=fs>6</SPAN> nothing 
+will happen, because the current level, <SPAN class=fs>5</SPAN>, is <B>not</B> 
+<SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>6</SPAN>. Let's 
+check. We'll test for <SPAN class=fs>6</SPAN>, trying to set our variable <SPAN 
+class=fs>ERR</SPAN> to <SPAN class=fs>6</SPAN> in the test line
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Try to set the <SPAN CLASS=fs>ERR</SPAN> variable like this. This time the test is false, so the <SPAN CLASS=bb>SET</SPAN> command won&#39;t be executed and so <SPAN CLASS=fs>ERR</SPAN> won&#39;t change (as we&#39;ll confirm in the next Exercise).','<NOBR>RCode C:&#92;CSW>if errorlevel 6 set err=6 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the variable</P></DIV>
+<DIV class=bd>
+<P>Now, check what happened to the variable with
+<SCRIPT>cn('ECHO')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>echo.%err%</SPAN> to expand the variable again, and confirm it remained set to the old value of <SPAN CLASS=fs>4</SPAN>. The <NOBR><SPAN CLASS=fs>IF ERRORLEVEL 6</SPAN></NOBR> condition in the previous Exercise wasn&#39;t true, so the <NOBR><SPAN CLASS=qfx>set err=6</SPAN></NOBR> command that we added to it was never used.','RCode C:&#92;CSW>echo.%err%<BR>4<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>This time it didn't change</P></DIV>
+<DIV class=bd>
+<P>Nothing happened, our variable is still set to <SPAN class=fs>4</SPAN>, 
+exactly as we last left it. You should have a good idea of how the <NOBR>
+<SCRIPT>cn('IF')</SCRIPT>
++
+<SCRIPT>cn('SET')</SCRIPT>
+</NOBR> combined command line works now. With care, we can use this <NOBR>
+<SCRIPT>cn('IF')</SCRIPT>
++
+<SCRIPT>cn('SET')</SCRIPT>
+</NOBR> combination to set a variable to the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Testing
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s in numerical order</P></DIV>
+<DIV class=bd>
+<P>We know the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ in the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> is <SPAN 
+class=fs>5</SPAN> (since that's how we last set it with
+<SCRIPT>cn('choice')</SCRIPT>
+ , and the Return-code shell tells us if anything we do changes it).</P>
+<P>Let's review the <NOBR>
+<SCRIPT>cn('IF')</SCRIPT>
++
+<SCRIPT>cn('SET')</SCRIPT>
+</NOBR> tests we did: 
+<UL>
+  <LI>We checked (but not first) for <SPAN 
+  class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>4</SPAN> and set <SPAN 
+  class=fs>ERR=4</SPAN> in the test line. Since the test was true, our variable 
+  was set. 
+  <LI>We checked (first of all) for <SPAN 
+  class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>5</SPAN> and set <SPAN 
+  class=fs>ERR=5</SPAN> in the test line. Since the test was true, our variable 
+  was set then, too. 
+  <LI>We checked (last of all) for <SPAN 
+  class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>6</SPAN> and tried to 
+  set <SPAN class=fs>ERR=6</SPAN> in the test line. Since the test was false, 
+  our variable was <B>not</B> changed. </LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>We didn't test in order</P></DIV>
+<DIV class=bd>
+<P>However, we <B>didn't</B> do those tests in the order <SPAN 
+class=fs>4</SPAN>, <SPAN class=fs>5</SPAN>, <SPAN class=fs>6</SPAN> (we checked 
+<SPAN class=fs>5</SPAN>, then <SPAN class=fs>4</SPAN>, then <NOBR><SPAN 
+class=fs>6</SPAN>)</NOBR>.</P></DIV>
+<DIV class=lm>
+<P>If we test in order, the variable is set correctly</P></DIV>
+<DIV class=bd>
+<P>If we had done the tests in strict ascending numerical order, then our 
+variable would first have been set to <SPAN class=fs>4</SPAN>, then changed to 
+<SPAN class=fs>5</SPAN> (which is the correct answer in this case). The <NOBR>
+<SCRIPT>cn('IF')</SCRIPT>
++
+<SCRIPT>cn('SET')</SCRIPT>
+</NOBR> test for <SPAN class=fs>6</SPAN> won't change <SPAN class=fs>ERR</SPAN> 
+when the right answer is <SPAN class=fs>5</SPAN> (nor would any other tests for 
+numbers even higher than <NOBR><SPAN class=fs>6</SPAN>)</NOBR>. So testing in 
+ascending order would leave <SPAN class=fs>ERR</SPAN> set to the right 
+answer.</P></DIV>
+<DIV class=lm>
+<P>Repeat the tests in ascending order</P></DIV>
+<DIV class=bd>
+<P>Repeat the three tests. This time, we'll do them in ascending order. First 
+try the <NOBR>
+<SCRIPT>cn('IF')</SCRIPT>
++
+<SCRIPT>cn('SET')</SCRIPT>
+</NOBR> test combination for <SPAN class=fs>4</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Set the <SPAN CLASS=fs>ERR</SPAN> variable like this. The test is true, so <SPAN CLASS=fs>ERR</SPAN> will be set to <SPAN CLASS=fs>4</SPAN> (as we&#39;ll confirm in the next Exercise).','<NOBR>RCode C:&#92;CSW>if errorlevel 4 set err=4 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Again, check that the variable was set with an
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>echo.%err%</SPAN> to check the variable was set (or use <SPAN CLASS=qfx>set</SPAN> on its own to list all current variables).','RCode C:&#92;CSW>echo.%err%<BR>4<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('IF')</SCRIPT>
+ +
+<SCRIPT>cn('SET')</SCRIPT>
+ for <SPAN class=fs>5</SPAN></P></DIV>
+<DIV class=bd>
+<P>Now set <SPAN class=fs>ERR</SPAN> = <SPAN class=fs>5</SPAN> if the current 
+level is <SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>5</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Set the <SPAN CLASS=fs>ERR</SPAN> variable like this. Again the test is true, so <SPAN CLASS=fs>ERR</SPAN> will be changed to <SPAN CLASS=fs>5</SPAN>.','<NOBR>RCode C:&#92;CSW>if errorlevel 5 set err=5 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Again, check that the variable was set with an
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>echo.%err%</SPAN> to check the variable was set (or use <SPAN CLASS=qfx>set</SPAN> on its own to list all current variables).','RCode C:&#92;CSW>echo.%err%<BR>5<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('IF')</SCRIPT>
+ +
+<SCRIPT>cn('SET')</SCRIPT>
+ for <SPAN class=fs>6</SPAN></P></DIV>
+<DIV class=bd>
+<P>Now we'll try to set <SPAN class=fs>ERR</SPAN> = <SPAN class=fs>6</SPAN> if 
+the current level is <SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN 
+class=fs>6</SPAN>. We know it's not, so nothing will happen this time
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Try to set the <SPAN CLASS=fs>ERR</SPAN> variable like this. This time the test is false (since the current <SPAN CLASS=bb>ERRORLEVEL</SPAN> is still <NOBR><SPAN CLASS=fs>5</SPAN>)</NOBR>, so <SPAN CLASS=fs>ERR</SPAN> isn&#39;t changed, but is left set to the correct answer.','<NOBR>RCode C:&#92;CSW>if errorlevel 6 set err=6 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Check what's in the variable with an
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>echo.%err%</SPAN> to expand the variable again. This time the variable hasn&#39;t changed. Again, using <SPAN CLASS=qfx>set</SPAN> on its own is a quicker way to check <B>all</B> current variables&#39; contents, but it writes a lot of screen clutter.','RCode C:&#92;CSW>echo.%err%<BR>5<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Now <SPAN class=fs>ERR</SPAN> is left set to the right answer</P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('IF')</SCRIPT>
+ +
+<SCRIPT>cn('SET')</SCRIPT>
+ test for <SPAN class=fs>6</SPAN> was false, so it didn't change the variable. 
+We tested in strict ascending order, so the variable <SPAN class=fs>ERR</SPAN> 
+is left correctly set to the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ . This is the technique we'll use in our script.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+script:</SPAN><BR>A simple script to display current level</P></DIV>
+<DIV class=bd>
+<P><BR>We'll write a script that uses the
+<SCRIPT>cn('IF')</SCRIPT>
+ +
+<SCRIPT>cn('SET')</SCRIPT>
+ combination in ascending order. All attempts to set the variable up to and 
+including the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ succeed; but all the subsequent attempts to set it any higher fail. Which 
+leaves the variable set correctly. </P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> It's possible to write a script that 
+loops through all the possible values (<SPAN class=fs>0</SPAN> to <SPAN 
+class=fs>255</SPAN>), but that's much more than we need. Most of the time, we're 
+interested only in the first half a dozen or so possible values. Apart from 
+those, it's useful to know when <SPAN class=fs>255</SPAN> is set. This usually 
+(not always) means there was an error in a command.</P></DIV>
+<DIV class=lm>
+<P>Now
+<SCRIPT>cn('start')</SCRIPT>
+ a new file</P></DIV>
+<DIV class=bd>
+<P>We'll just write a simple script to do these few tests. We'll test for a 
+possible current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ from <SPAN class=fs>1</SPAN> to <SPAN class=fs>6</SPAN>, and we'll be careful 
+to test the possibilities in ascending numerical order. Start <B>Notepad</B> 
+from the command line, as usual, and call the script <SPAN 
+class=fs>LEVEL.BAT</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /min notepad LEVEL.BAT</SPAN> in the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN>. Click <SPAN CLASS=qu>Yes</SPAN> or press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> when <B>Notepad</B> asks if you want to create a new file.','<NOBR>RCode C:&#92;CSW>start /min notepad LEVEL.BAT</NOBR><BR>Return code (ERRORLEVEL):   0<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> <B>Notepad</B> doesn't return any 
+informative
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ , even if we use the <NOBR><SPAN class=fs>/w</SPAN>(=wait)</NOBR> switch of
+<SCRIPT>cn('start')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Type the script</P></DIV>
+<DIV class=bd>
+<P>Type this script in <B>Notepad</B>. It's a trifle repetitive, so you could 
+just type the first line, and repeat it with cut-and-paste, then alter the test 
+values. However, typing the commands the long way would be more help in learning 
+the syntax – you choose
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Click the <B>Notepad</B> button on the Taskbar. Position its window in the bottom left of the screen. Type this script, then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>. Leave <B>Notepad</B> open.','@ECHO OFF<BR>IF ERRORLEVEL 1 SET ERR=1<BR>IF ERRORLEVEL 2 SET ERR=2<BR>IF ERRORLEVEL 3 SET ERR=3<BR>IF ERRORLEVEL 4 SET ERR=4<BR>IF ERRORLEVEL 5 SET ERR=5<BR>IF ERRORLEVEL 6 SET ERR=6<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Leave <B>Notepad</B> open</P></DIV>
+<DIV class=bd>
+<P>As usual, leave <B>Notepad</B> open to make it easy to add more lines. You 
+remembered to press <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> at the end of the 
+last line, and click <SPAN class=qu>File</SPAN>, <SPAN 
+class=qu>Save</SPAN>?</P></DIV>
+<DIV class=lm>
+<P>Set a level to check the script</P></DIV>
+<DIV class=bd>
+<P>Now, let's set an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ so we can test the script. Set it using a
+<SCRIPT>cn('choice')</SCRIPT>
+ command line like this one: reply <SPAN class=ky>&nbsp;3&nbsp;</SPAN> to set 
+the return code to that level
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command <SPAN CLASS=qfx>choice /c:123</SPAN>, then reply <SPAN CLASS=ky>&nbsp;3&nbsp;</SPAN> and the return code is set to <SPAN CLASS=fx>3</SPAN> (because <SPAN CLASS=ky>&nbsp;3&nbsp;</SPAN> was 3rd in the <SPAN CLASS=fs>choice</SPAN> list).','RCode C:&#92;CSW>choice /c:123<BR>[1,2,3]?3<BR><NOBR>Return code (ERRORLEVEL):   3 </NOBR><BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Our variable is still <SPAN class=fs>5</SPAN></P></DIV>
+<DIV class=bd>
+<P>Remember that we left our <SPAN class=fs>ERR</SPAN> variable set to <SPAN 
+class=fs>5</SPAN>. We've done nothing to change it yet, so it will still be set 
+that way. Let's just check that it is
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>echo.%err%</SPAN> to check the variable (or use <SPAN CLASS=qfx>set</SPAN> on its own to list all current variables). Remember to use <SPAN CLASS=qfx>cls</SPAN> from time to time to clear away working clutter from the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> display.','RCode C:&#92;CSW>echo.%err%<BR>5<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Run <SPAN class=fs>LEVEL.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>Now run the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Just type <SPAN CLASS=qfx>level</SPAN> to run the <SPAN CLASS=fs>LEVEL.BAT</SPAN> script (you can type <SPAN CLASS=qfx>level.bat</SPAN> to run the script, but the full form is needed only to avoid accidentally running a program file with the name <SPAN CLASS=fx>level.com</SPAN> or <SPAN CLASS=fx>level.exe</SPAN> that happened to be in the same folder).','RCode C:&#92;CSW>level<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Now, check to see if the variable <SPAN class=fs>ERR</SPAN> was reset 
+correctly by the script. The script should have reset it to <SPAN 
+class=fs>3</SPAN>, because that's the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ . Use an echo command again to check the script worked
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>echo.%err%</SPAN> to check the variable was reset (or use <SPAN CLASS=qfx>set</SPAN> on its own to list all current variables). We can see that <SPAN CLASS=fs>ERR</SPAN> was correctly set by our <SPAN CLASS=fs>LEVEL.BAT</SPAN> script.','RCode C:&#92;CSW>echo.%err%<BR>3<BR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Build the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ check in the script</P></DIV>
+<DIV class=bd>
+<P>It's probably already occurred to you that it would be much easier to make 
+the script show the value, instead of always typing a separate
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command afterwards. All we have to do is put the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command in the script, too.</P>
+<P>We'll display a message and expand the <SPAN class=fs>ERR</SPAN> variable 
+like this:</P>
+<P><NOBR><SPAN class=np>ECHO. The current errorlevel is %ERR%</SPAN></NOBR></P>
+<P>Put this line at the end. Indent the text of the message with a <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN> after the <SPAN class=qfs>ECHO.</SPAN> as 
+above, since this helps make messages stand out.</P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Remember to press <SPAN 
+class=ky>&nbsp;Return&nbsp;</SPAN> at the end of the line. It's easy to forget 
+to do this when adding a new final line. If you don't end the final line of a 
+script with a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN>, Windows adds a spurious 
+blank line to the display when the script finishes (this doesn't matter much 
+here, but it can upset some more complex displays).</P>
+<P>Add the new line
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the new line, press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> at the end. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save the change.','<SPAN CLASS=dtn>IF ERRORLEVEL 6 SET ERR=6</SPAN><BR><NOBR>ECHO. The current errorlevel is %ERR% </NOBR><BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the script</P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> to save 
+the changes, so run the script again
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('In the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN>, type <SPAN CLASS=qfx>level</SPAN> to run the <SPAN CLASS=fs>LEVEL.BAT</SPAN> script and it now finds and reports the current <SPAN CLASS=bb>ERRORLEVEL</SPAN>.','RCode C:&#92;CSW>level<BR><NOBR> The current errorlevel is 3</NOBR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Now the script finds the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ and reports it with a neat message, all in one operation.</P></DIV>
+<DIV class=lm>
+<P>
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+zero test</P></DIV>
+<DIV class=bd>
+<P>The script tool isn't finished yet. We still need to: 
+<UL>
+  <LI>do something if the
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   is zero 
+  <LI>do something about
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   s <SPAN class=fs>7</SPAN> to <SPAN class=fs>254</SPAN> 
+  <LI>add a check for <SPAN class=fs>255</SPAN></LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>A test for <SPAN class=fs>0</SPAN> is always true, so we don't test</P></DIV>
+<DIV class=bd>
+<P>We need to handle the case when the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is zero (which it will be most of the time). You'll notice we didn't have an 
+initial zero test line in our script, such as this:</P>
+<P><NOBR><SPAN class=cld title="This syntax is not recommended">IF ERRORLEVEL 0 
+SET ERR=0&nbsp;</SPAN></NOBR></P>
+<P>Since a test for zero is a test for <SPAN 
+class=br>greater-than-or-equal-to</SPAN> zero, and we can only have values from 
+<SPAN class=fs>0</SPAN> to <SPAN class=fs>255</SPAN>, a test for zero is always 
+true. So a test for zero is redundant and not worth the effort of typing it. 
+Instead of an initial zero test, we can simply put:</P>
+<P><SPAN class=np>SET ERR=0</SPAN></P>
+<P>Then if the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is greater than zero, the next lines will change <SPAN class=fs>ERR</SPAN>. If 
+the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ <B>is</B> zero, <SPAN class=fs>ERR</SPAN> will be left correctly set to zero. 
+This line will <B>initialise</B> our variable.</P></DIV>
+<DIV class=lm>
+<P>Add the initialising line</P></DIV>
+<DIV class=bd>
+<P>Let's add that line to the script. It must go <SPAN class=br>before</SPAN> 
+our six tests for the higher values, so that it doesn't overwrite any changes 
+they make to <SPAN class=fs>ERR</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line to set <SPAN CLASS=fs>ERR</SPAN> to zero, as shown. This ensures our variable <SPAN CLASS=fs>ERR</SPAN> is initialised before the tests in ascending order are carried out.','<SPAN CLASS=dtn>@ECHO OFF</SPAN><BR>SET ERR=0<BR><SPAN CLASS=dtn>IF ERRORLEVEL 1 SET ERR=1</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Testing for a zero
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ properly</P></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Remember, to test whether or not the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ is exactly zero, we use an <SPAN class=qfs>IF NOT</SPAN> test for <SPAN 
+class=fs>1</SPAN> such as:</P>
+<P><SPAN class=np>IF NOT ERRORLEVEL 1 ECHO. The errorlevel is exactly 
+zero</SPAN></P>
+<P>If the current level isn't zero, it must be <SPAN 
+class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>1</SPAN>. Conversely, if 
+it's <B>NOT</B> <SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN 
+class=fs>1</SPAN>, it must be zero. So that line tests for exact zero. We won't 
+need it in our <SPAN class=fs>LEVEL.BAT</SPAN> script tool, but it's useful to 
+remember.</P></DIV>
+<DIV class=lm>
+<P>
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+<SPAN class=fs>255</SPAN> test</P></DIV>
+<DIV class=bd>
+<P>There are no values above <SPAN class=fs>255</SPAN> in Windows 95/98/ME, so a 
+test for <SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN 
+class=fs>255</SPAN> is also a test for exact equality. Add that as our last test
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the test for <SPAN CLASS=fs>255</SPAN> as shown. Effectively, this is a test for exact equality, since there are no values above <SPAN CLASS=fs>255</SPAN>. In fact, if you write a test for <SPAN CLASS=fs>256</SPAN>, Windows treats as a test for <SPAN CLASS=fs>0</SPAN>. In general, any test you write for a number above <SPAN CLASS=fs>255</SPAN> is treated as a test for the remainder on division by <SPAN CLASS=fs>256</SPAN> (so testing for <SPAN CLASS=fs>257</SPAN> is the same as testing for <SPAN CLASS=fs>1</SPAN> and so on).','<SPAN CLASS=dtn>IF ERRORLEVEL 6 SET ERR=6</SPAN><BR>IF ERRORLEVEL 255 SET ERR=255<BR><NOBR><SPAN CLASS=dtn>ECHO. The current errorlevel is %ERR% </SPAN></NOBR>');</SCRIPT>
+
+<DIV class=lm>
+<P>All the values in between</P></DIV>
+<DIV class=bd>
+<P>As we said, we aren't bothered about all the
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s in between for our present purposes. We'll just dismiss them with one test. 
+If we test for <SPAN class=fs>7</SPAN>, and use it to:</P>
+<P><SPAN class=np>SET ERR=7 (or more)</SPAN></P>
+<P>that will tell us all we need. Remember that environment variables hold only 
+simple text strings, so we can perfectly well load message text instead of 
+numeric characters.</P></DIV>
+<DIV class=lm>
+<P>Catch-all-the-rest test</P></DIV>
+<DIV class=bd>
+<P>The test to catch all the rest goes after <SPAN class=fs>6</SPAN> but before 
+<SPAN class=fs>255</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the catch-all test for the remaining possibilities. We&#39;ll rarely be interested in the exact values for these mid-range return codes.','<SPAN CLASS=dtn>IF ERRORLEVEL 6 SET ERR=6</SPAN><BR><NOBR>IF ERRORLEVEL 7 SET ERR=7 (or more) </NOBR><BR><SPAN CLASS=dtn>IF ERRORLEVEL 255 SET ERR=255</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Clean up our variable</P></DIV>
+<DIV class=bd>
+<P>One last touch to complete our script: once the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ line has displayed the text in our variable, <SPAN class=fs>ERR</SPAN>, we 
+don't need the variable set anymore. It's simply taking up memory in the DVM 
+environment. We'll add a final command to clear the variable. Remember that we 
+clear a variable by setting it to nothing
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add <SPAN CLASS=qfx>SET ERR=</SPAN> to clear the variable. Be sure <SPAN CLASS=br>not</SPAN> to add a <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> after the <SPAN CLASS=ky>&nbsp;=&nbsp;</SPAN> or the variable isn&#39;t cleared properly. Press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> at the end of the line since it&#39;s the final line. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save the script.','<NOBR><SPAN CLASS=dtn>ECHO. The current errorlevel is %ERR% </SPAN></NOBR><BR>SET ERR=<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Avoid
+<SCRIPT>cn('SET')</SCRIPT>
+ ing any accidental <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s</P></DIV>
+<DIV class=bd>
+<P>When you clear a variable, it's important not to add an accidental <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN> after the <SPAN class=ky>&nbsp;=&nbsp;</SPAN>, 
+or the variable is
+<SCRIPT>cn('SET')</SCRIPT>
+ to contain a <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>. Also, make sure you 
+pressed <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> at the end of the last line. 
+You don't need any trailing blank lines, just make sure the final line of a 
+script always ends with a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN>.</P>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>, so now we 
+can test the script more thoroughly.</P></DIV>
+<DIV class=lm>
+<P>Review what we've written</P></DIV>
+<DIV class=bd>
+<P>Before we test <SPAN class=fs>LEVEL.BAT</SPAN>, let's review what the full 
+script now looks like. Use this Exercise to confirm you have followed all the 
+steps correctly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Just use this Exercise to confirm your script syntax is correct and no lines are missing.','@ECHO OFF<BR>SET ERR=0<BR>IF ERRORLEVEL 1 SET ERR=1<BR>IF ERRORLEVEL 2 SET ERR=2<BR>IF ERRORLEVEL 3 SET ERR=3<BR>IF ERRORLEVEL 4 SET ERR=4<BR>IF ERRORLEVEL 5 SET ERR=5<BR>IF ERRORLEVEL 6 SET ERR=6<BR>IF ERRORLEVEL 7 SET ERR=7 (or more)<BR>IF ERRORLEVEL 255 SET ERR=255<BR><NOBR>ECHO. The current errorlevel is %ERR% </NOBR><BR>SET ERR=<BR>&nbsp;');</SCRIPT>
+
+<DIV class=lm>
+<P>Test that the script handles zero properly</P></DIV>
+<DIV class=bd>
+<P>Remember that we can clear the current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ to zero with a blank Single-use shell command that just opens and immediately 
+closes a child shell. The child shell does nothing, but opening and closing it 
+clears the parent(=us)
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ .</P>
+<P>The syntax is <NOBR><SPAN class=qfs>command /c</SPAN></NOBR>. So let's use 
+that, then check with our script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>command /c</SPAN> to clear the current <SPAN CLASS=bb>ERRORLEVEL</SPAN>, then run the script with the command <SPAN CLASS=qfx>level</SPAN>.','RCode C:&#92;CSW>command /c<BR><NOBR>Return code (ERRORLEVEL):   0</NOBR><BR><BR>RCode C:&#92;CSW>level<BR> The current errorlevel is 0<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Our script handles zero properly.</P></DIV>
+<DIV class=lm>
+<P>Test that the script handles <SPAN class=fs>255</SPAN> properly</P></DIV>
+<DIV class=bd>
+<P>We've seen that a bad
+<SCRIPT>cn('choice')</SCRIPT>
+ command (such as <NOBR><SPAN class=qfs>choice /x</SPAN>)</NOBR> returns <SPAN 
+class=fs>255</SPAN>. Use that, then check with our script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /x</SPAN> which we know returns <SPAN CLASS=fs>255</SPAN>, then run the script with <SPAN CLASS=qfx>level</SPAN> to check it correctly reports the maximum value.','RCode C:&#92;CSW>choice /x<BR>Invalid switch on command line. Expected form:<BR><NOBR>    CHOICE [/C[:]choices] [/N] [/S] [/T[:]c,nn] [text]</NOBR><BR><BR>Return code (ERRORLEVEL): 255<BR><BR>RCode C:&#92;CSW>level<BR> The current errorlevel is 255<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Silencing messages with <SPAN class=fs>&gt;NUL</SPAN></P></DIV>
+<DIV class=bd>
+<P>You can silence the warning message by redirecting to
+<SCRIPT>cn('NUL')</SCRIPT>
+ – spelt with only one <SPAN class=ky>&nbsp;L&nbsp;</SPAN>. We'll cover 
+redirection properly in a later Lesson, but we'll sneak in this use now.</P>
+<P>To redirect to
+<SCRIPT>cn('NUL')</SCRIPT>
+ , you use <SPAN class=qfs>&gt;NUL</SPAN>. Add this to the previous invalid
+<SCRIPT>cn('choice')</SCRIPT>
+ command, it will prevent all that screen clutter
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>choice /x&gt;NUL</SPAN> (spell it with only one <NOBR><SPAN CLASS=ky>&nbsp;L&nbsp;</SPAN>)</NOBR>. This is a common way of suppressing spurious messages (but it doesn&#39;t work for all messages). Run the script with <SPAN CLASS=qfx>level</SPAN> again to check once more that <SPAN CLASS=fs>255</SPAN> is correctly handled.','RCode C:&#92;CSW>choice /x&gt;NUL<BR>Return code (ERRORLEVEL): 255<BR><BR>RCode C:&#92;CSW>level<BR> The current errorlevel is 255<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with a few intermediate values</P></DIV>
+<DIV class=bd>
+<P>Earlier, we used a simple
+<SCRIPT>cn('choice')</SCRIPT>
+ command to set an
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ of your choice. We'll use it to test the script tool properly, for example try 
+<SPAN class=ky>&nbsp;6&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:123456789</SPAN>, respond <SPAN CLASS=ky>&nbsp;6&nbsp;</SPAN>, then run <SPAN CLASS=qfx>level</SPAN> again to confirm it reports the new value correctly (obviously, you could leave off the <SPAN CLASS=fs>789</SPAN> from the choice list if you&#39;re only using the command as a way to return <SPAN CLASS=fs>6</SPAN>).','RCode C:&#92;CSW>choice /c:123456789<BR>[1,2,3,4,5,6,7,8,9]?6<BR><NOBR>Return code (ERRORLEVEL):   6 </NOBR><BR><BR>RCode C:&#92;CSW>level<BR> The current errorlevel is 6<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Set
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ <SPAN class=fs>1</SPAN></P></DIV>
+<DIV class=bd>
+<P>Now try setting, say, <SPAN class=ky>&nbsp;1&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:123456789</SPAN>, respond <SPAN CLASS=ky>&nbsp;1&nbsp;</SPAN>, then run <SPAN CLASS=qfx>level</SPAN> again to confirm it reports the new value correctly.','RCode C:&#92;CSW>choice /c:123456789<BR>[1,2,3,4,5,6,7,8,9]?1<BR><NOBR>Return code (ERRORLEVEL):   1 </NOBR><BR><BR>RCode C:&#92;CSW>level<BR> The current errorlevel is 1<BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Set
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ <SPAN class=fs>8</SPAN></P></DIV>
+<DIV class=bd>
+<P>Lastly, try a higher level that we're not really interested in, say, <SPAN 
+class=ky>&nbsp;8&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:123456789</SPAN>, respond <SPAN CLASS=ky>&nbsp;8&nbsp;</SPAN>, then run <SPAN CLASS=qfx>level</SPAN> again to confirm it reports the catch-all message correctly.','RCode C:&#92;CSW>choice /c:123456789<BR>[1,2,3,4,5,6,7,8,9]?8<BR>Return code (ERRORLEVEL):   8 <BR><BR>RCode C:&#92;CSW>level<BR><NOBR> The current errorlevel is 7 (or more)</NOBR><BR>RCode C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>The simple <SPAN class=fs>LEVEL.BAT</SPAN> script works as we intended, and 
+it's taught us some useful things about
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ s that will help with building menus.</P></DIV>
+<DIV class=lm>
+<P>Check the script in a normal shell</P></DIV>
+<DIV class=bd>
+<P>We've finished using the Return-code shell. <SPAN class=fs>LEVEL.BAT</SPAN> 
+will tell us all we need to know for now. Exit the shell now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>exit</SPAN>. The <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> title bar changes back to <NOBR><SPAN CLASS=tle>&nbsp;BatchWindow&nbsp;</SPAN></NOBR> to show that the Return-code shell has closed, and the parent prompt returns.','RCode C:&#92;CSW>exit<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Repeat a few tests in the normal shell</P></DIV>
+<DIV class=bd>
+<P>Try the script in a normal shell where we don't see the automatic report from 
+Windows. Set
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ <SPAN class=ky>&nbsp;1&nbsp;</SPAN> and check with the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:123456789</SPAN>, respond <SPAN CLASS=ky>&nbsp;1&nbsp;</SPAN>, then run <SPAN CLASS=qfx>level</SPAN> again to confirm it correctly reports <SPAN CLASS=fs>1</SPAN>.','C:&#92;CSW>choice /c:123456789<BR>[1,2,3,4,5,6,7,8,9]?1<BR><BR>C:&#92;CSW>level<BR> The current errorlevel is 1<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Set
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ 5</P></DIV>
+<DIV class=bd>
+<P>Set level <SPAN class=ky>&nbsp;5&nbsp;</SPAN> and check with the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>choice /c:123456789</SPAN>, respond <SPAN CLASS=ky>&nbsp;5&nbsp;</SPAN>, then run <SPAN CLASS=qfx>level</SPAN> again to confirm it correctly reports <SPAN CLASS=fs>5</SPAN>.','C:&#92;CSW>choice /c:123456789<BR>[1,2,3,4,5,6,7,8,9]?5<BR><BR>C:&#92;CSW>level<BR> The current errorlevel is 5<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Our simple <SPAN class=fs>LEVEL.BAT</SPAN> script tool enables us to see the 
+current
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Review of <SPAN class=fs>LEVEL.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>We'll finish off by discussing the logic of our <SPAN 
+class=fs>LEVEL.BAT</SPAN> script tool, to make sure it's clear in your mind. 
+This is the script we've just written, and a reminder of how it works:</P>
+<DIV class=nb>@ECHO OFF<BR>SET ERR=0<BR>IF ERRORLEVEL 1 SET ERR=1<BR>IF 
+ERRORLEVEL 2 SET ERR=2<BR>IF ERRORLEVEL 3 SET ERR=3<BR>IF ERRORLEVEL 4 SET 
+ERR=4<BR>IF ERRORLEVEL 5 SET ERR=5<BR>IF ERRORLEVEL 6 SET ERR=6<BR><NOBR>IF 
+ERRORLEVEL 7 SET ERR=7 (or more)&nbsp;</NOBR><BR>IF ERRORLEVEL 255 SET 
+ERR=255<BR><NOBR>ECHO. The current errorlevel is %ERR%</NOBR><BR>SET 
+ERR=<BR>&nbsp;</DIV></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>
+<UL>
+  <LI>the <SPAN class=fs>ERR</SPAN> variable is set to zero first, whatever the 
+  actual
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   is 
+  <LI>if the actual
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   is <SPAN class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>1</SPAN>, 
+  <SPAN class=fs>ERR</SPAN> is set to <SPAN class=fs>1</SPAN> <BR>(otherwise, 
+  the actual level must be zero and <SPAN class=fs>ERR</SPAN> is left at zero, 
+  correctly) 
+  <LI>we repeat with <B>rising</B> tests for levels <SPAN 
+  class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>2</SPAN> through <SPAN 
+  class=fs>6</SPAN> 
+  <LI><SPAN class=fs>ERR</SPAN> is raised each time, unless and until the tests 
+  start to fail, neatly leaving <SPAN class=fs>ERR</SPAN> set to the actual
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   by the last test that succeeded 
+  <LI>we conclude the rising tests with one for <SPAN 
+  class=br>greater-than-or-equal-to</SPAN> <SPAN class=fs>7</SPAN> 
+  <LI>if we pass the test for <SPAN class=fs>7</SPAN>, the actual
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   must be <SPAN class=fs>7</SPAN> or more, we're not interested, so we simply 
+  set a message: <NOBR><SPAN class=qfs>7 (or more)</SPAN></NOBR> 
+  <LI>if we pass at <SPAN class=fs>255</SPAN>, it must be the answer (it can't 
+  be higher), so <SPAN class=fs>ERR</SPAN> is set to <SPAN class=fs>255</SPAN> 
+  <LI>finally we
+  <SCRIPT>cn('ECHO')</SCRIPT>
+   the result and clean up after ourselves by clearing the variable</LI></UL>
+<P></P></DIV>
+<DIV class=lm>
+<P>Further tests for other values are rarely needed</P></DIV>
+<DIV class=bd>
+<P>The overall effect is that <SPAN class=fs>ERR</SPAN> is set correctly, and 
+the result displayed. We could include more consecutive tests, to resolve more 
+individual values, but there is rarely any need. In a later Lesson, we'll see 
+how to add tests for further values more efficiently.</P></DIV>
+<DIV class=lm>
+<P>Remember: the
+<SCRIPT>cn('IF')</SCRIPT>
+ test is an <SPAN class=br>inequality</SPAN> test</P></DIV>
+<DIV class=bd>
+<P>Because the
+<SCRIPT>cn('IF')</SCRIPT>
+
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ test is for an actual level <SPAN class=br>greater-than-or-equal-to</SPAN> the 
+tested number, it's important to test values in the <SPAN class=br>correct 
+order</SPAN>. This is not always ascending order, as we shall soon see in the 
+next Lesson.</P></DIV>
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","What command could you use to return a <SPAN CLASS=fs>choice</SPAN> of <SPAN CLASS=fs>ERRORLEVEL</SPAN>s from <SPAN CLASS=fs>1</SPAN> to <SPAN CLASS=fs>9</SPAN>?","<NOBR><SPAN CLASS=cl>choice /c:123456789</SPAN></NOBR> and then press <SPAN CLASS=ky>&nbsp;8&nbsp;</SPAN>, for example, for <SPAN CLASS=bb>ERRORLEVEL</SPAN> <SPAN CLASS=bp>8</SPAN>.","If you used <NOBR><SPAN CLASS=cl>choice /c:1234567890&nbsp;</SPAN></NOBR> and pressed the Zero key, what value of <SPAN CLASS=fs>ERRORLEVEL</SPAN> would be returned?","<SPAN CLASS=bp>10</SPAN>, because the Zero is <SPAN CLASS=bp>10</SPAN>th in the list. It&#39;s the <SPAN CLASS=bp>position</SPAN> of the reply key in the <SPAN CLASS=fx>/c:</SPAN> list that decides the value <SPAN CLASS=bb>choice</SPAN> returns.","If the current <SPAN CLASS=fs>ERRORLEVEL</SPAN> is <SPAN CLASS=fs>8</SPAN>, what does <NOBR><SPAN CLASS=cl>IF ERRORLEVEL 6 SET ERR=6</SPAN></NOBR> <SPAN CLASS=fs>SET</SPAN> as the value of the variable <SPAN CLASS=fs>ERR</SPAN>?","<SPAN CLASS=bp>6</SPAN>, because the <NOBR><SPAN CLASS=cl>SET ERR=6</SPAN></NOBR> command is executed (since the <SPAN CLASS=bb>IF</SPAN> test is for <SPAN CLASS=br>greater-than-or-equal-to</SPAN> <SPAN CLASS=bp>6</SPAN>, which is true).","If the current <SPAN CLASS=fs>ERRORLEVEL</SPAN> is <SPAN CLASS=fs>6</SPAN>, what does <NOBR><SPAN CLASS=cl>IF ERRORLEVEL 8 SET ERR=8</SPAN></NOBR> <SPAN CLASS=fs>SET</SPAN> as the value of the variable <SPAN CLASS=fs>ERR</SPAN>?","It doesn&#39;t <SPAN CLASS=bb>SET</SPAN> <SPAN CLASS=fs>ERR</SPAN> at all, since the <SPAN CLASS=bb>IF</SPAN> test is false. <SPAN CLASS=fs>ERR</SPAN> remains whatever it was.","What&#39;s the highest <SPAN CLASS=fs>ERRORLEVEL</SPAN> value you can have in Windows 95/98/ME?","<SPAN CLASS=bp>255 </SPAN> because the <SPAN CLASS=bb>ERRORLEVEL</SPAN> is stored in a single 8-bit byte, with maximum value <SPAN CLASS=fx>11111111</SPAN> binary = <SPAN CLASS=fs>255</SPAN> decimal.","<SPAN CLASS=cl>&#62;NULL</SPAN> or <SPAN CLASS=cl>&#62;NUL</SPAN>? Which one is the correct spelling to suppress unwanted messages?","<NOBR><SPAN CLASS=cl>&#62;NUL</SPAN></NOBR> with only <SPAN CLASS=bp>one</SPAN> <SPAN CLASS=ky>&nbsp;L&nbsp;</SPAN> (the wrong spelling creates a spurious disk file called <SPAN CLASS=fs>NULL</SPAN> containing the message. We&#39;ll learn more about using <SPAN CLASS=fx>&#62;</SPAN> to create files in Lesson 7).");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>In this Lesson we have learnt how to: 
+<UL>
+  <LI>Set an
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   from <SPAN class=fs>1</SPAN> to <SPAN class=fs>9</SPAN> with <SPAN 
+  class=qfs>choice /c:123456789</SPAN> 
+  <LI>Use sequential tests to set a variable to the current
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   
+  <LI>Write a simple script tool to tell us the current
+  <SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+   
+  <LI>Check the script tool results in a Return-code shell 
+  <LI>Suppress spurious messages with the <SPAN class=fs>&gt;</SPAN>
+  <SCRIPT>cn('NUL')</SCRIPT>
+   syntax </LI></UL>The <A 
+onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson4">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw050.htm">next&nbsp;Lesson</A>, where 
+we'll start to build a more complex script tool. It will have a menu so we can 
+choose what it does. See you then.
+<P></P></DIV></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

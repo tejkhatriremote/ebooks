@@ -1,0 +1,249 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=118-122//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This is where inserting <small>echo</SMALL> statements prior to the execution of a command or daemon can be a great benefit. Knowing what is about to be executed can provide the answers to what you are looking for. Look at the excerpts from the /etc/rc and /etc/rc.local files:</P>
+<!-- CODE //-->
+<pre>
+if [ -f /usr/etc/inetd ]; then
+        inetd;                  echo -n &#145; inetd&#146;
+fi
+if [ -f /usr/lib/lpd ]; then
+        rm -f /dev/printer /var/spool/lpd.lock
+        /usr/lib/lpd;           echo -n &#145; printer&#146;
+fi
+
+if [ -f /usr/etc/in.named -a -f /etc/named.boot ]; then
+        in.named;               echo -n &#145; named&#146;
+fi
+
+if [ -f /usr/etc/biod ]; then
+        biod 4;                 echo -n &#145; biod&#146;
+fi
+</PRE>
+<!-- END CODE //-->
+<p>Additions can be made to these excerpts so that you know what is starting before it actually gets executed by the system:
+</P>
+<!-- CODE //-->
+<pre>
+if [ -f /usr/etc/inetd ]; then
+<b>echo -n &#145;Starting inetd: &#145;</B>
+        inetd;                  echo &#145; inetd <b>started.&#146;</B>
+Fi
+if [ -f /usr/lib/lpd ]; then
+        rm -f /dev/printer /var/spool/lpd.lock
+         <b>echo -n &#145;Starting lpd:&#146;</B>
+        /usr/lib/lpd;           echo &#145; printers <b>started.&#146;</B>
+fi
+
+if [ -f /usr/etc/in.named -a -f /etc/named.boot ]; then
+        <b>echo -n &#145;Starting DNS: &#145;</B>
+         in.named;               echo &#145; named <b>started.&#146;</B>
+fi
+
+if [ -f /usr/etc/biod ]; then
+        <b>echo -n &#145;Starting Biod: &#145;</B>
+        biod 4;                 echo &#145; biod <b>started.&#146;</B>
+fi
+</PRE>
+<!-- END CODE //-->
+<p><font size="+1"><b>Example Two: The rc &#147;S&#148; Scripts</B></FONT></P>
+<p>Flavor: AT&ampT
+</P>
+<p>When your system boots to a multiuser state and executes the <small>/etc/rc2</SMALL> script, it is a simple task to modify the startup script to expand on the information that is sent to the console. A simple <small>echo</SMALL> statement is the only necessary addition to the <small>/etc/rc2</SMALL> script.</P>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/rc2
+</PRE>
+<!-- END CODE SNIP //-->
+<!-- CODE //-->
+<pre>
+# Execute all package initialization scripts
+# (i.e.: mount the filesystems, start the daemons, etc)
+#
+if [ -d /etc/rc2.d ]
+then
+   for f in /etc/rc2.d/S*
+   {
+     if [ -s ${f} ]
+     then
+         <b>echo $f</B>
+        /sbin/sh ${f} start
+     fi
+   }
+fi
+</PRE>
+<!-- END CODE //-->
+<p>In this excerpt from the <small>/etc/rc2</SMALL> script, if the directory /etc/rc2.d exists, progress through the directory, echo the name of each script that starts with a <small>S</SMALL> to the console, and execute.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>More information is always better. When it comes to troubleshooting a system that won&#146;t boot up all the way, the more information that can be learned during the bootup process, the more quickly you can find the problem.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Most workstations come up within two to five minutes. The boot process on workstations is faster than their multiprocessing server counterparts, and often quicker to diagnose problems. In most cases you would never need to turn on the expanded monitoring as described. Many users who come from the MS-DOS world are often intimidated by the flooding of messages that echo to the console when it is turned on. They usually comment on the intensity and slowness of the boot process over MS-DOS and Windows when monitoring of this type takes place.
+</P>
+<p>This is really a time saver at the server level. Breaking out of a server that is hanging at boot time is especially dangerous when you don&#146;t know at what point or where the system hung. Having the system echo more information is not for the user&#146;s benefit; it is for yours. So activate it and let it all scroll by.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rc, rc2, rc.boot, rc.local
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading4"></A><font color="#000077">4.2 Starting with a Fresh Install</FONT></H3>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">4.2.1 Description</FONT></H4>
+<p>All monitoring needs a base point from which to start. After your system is built or rebuilt and is ready to go into production start taking snapshots of the system. If you wait and the users get into the system, you never really have a base set of figures to work from and judge whether the system is overloaded. No two systems exhibit the same set of numbers. You can see this when various systems are compared with the <small>upload</SMALL> command. They all result in different numbers.</P>
+<p>Platform: HP&#151;K460, 500MB memory, 2 CPUs, multiple databases applications, 62 users</P>
+<!-- CODE SNIP //-->
+<pre>
+BASE:         7:35am  up 1 day,  2:52,   1 user,
+&#8658; load average: 0.53, 0.29, 0.14
+PRODUCTION:  10:17am  up 13 days,  3:06,  62 user,
+&#8658; load average: 2.53, 2.29, 2.14
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Platform: Linux&#151;P166, 64MB memory, 1 CPU, Web Server, 3 users
+</P>
+<!-- CODE SNIP //-->
+<pre>
+BASE:         6:40am  up 1 day, 5:12,  1 user,
+&#8658; load average: 0.00, 0.00, 0.00
+PRODUCTION:  11:04am  up 2 days, 10:09,  3 user,
+&#8658; load average: 0.23, 0.28, 0.31
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Platform: SGI&#151;Onxy2, 1GB memory, 16 CPUs, render server, 17 users
+</P>
+<!-- CODE SNIP //-->
+<pre>
+BASE:         7:26am  up 18:23,  1 users,
+&#8658; load average: 0.01, 0.02, 0.02
+PRODUCTION:   16:10pm  up 4 days 12:42,  17 users,
+&#8658; load average: 4.06, 4.02, 4.03
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Platform: SCO&#151;P150, 64MB memory, 1 CPU, database application, 5 users
+</P>
+<!-- CODE SNIP //-->
+<pre>
+BASE:         7:28am  up 1 day, 14:57,  1 users,
+&#8658; load average: 0.03, 0.01, 0.01
+PRODUCTION:   17:35pm up 2 days, 13:15,  5 users,
+&#8658; load average: 0.44, 0.32, 0.42
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Platform: Sun Sparc 20, 192MB memory, 1 CPU, Web server, 15 users
+</P>
+<!-- CODE SNIP //-->
+<pre>
+BASE:         7:27am  up 1 day(s), 14:59,  1 users,
+&#8658; load average: 0.04, 0.05, 0.04
+PRODUCTION:   15:20pm  up 4 day(s), 15:22, 15 users,
+&#8658; load average: 1.43, 1.43, 1.62
+</PRE>
+<!-- END CODE SNIP //-->
+<p>These are values taken from various platforms when the systems were first built, with no users and in a nice, quiet, idle state. The second set of load averages are with the systems in a full production state, but not overloaded. You can see how different the values are. Your values are different too, because many combinations of applications and system configurations can be set up and running.
+</P>
+<p>When the system has users on it, you see a growth in the values. Monitor these values and compare them to disk I/O and memory usage (with <small>vmstat</SMALL> and <small>sar</SMALL> commands). These are the values you need to keep an eye on and monitor.</P>
+<p>If and when the system does peak and begins to slow down, the <small>uptime</SMALL> load average numbers should increase in size. Still keep in mind that an overloaded system showing a load average of <small>4</SMALL> on one system, might be underused with the same value of <small>4</SMALL> on another system, as seen in the preceding examples. When the system does peak and you have a base number to judge from, you can better understand when the system on its way to being overloaded or underused.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Monitoring the performance level of a production system is taken seriously in my world, as it should be in all worlds. If you know what the load average of your system is when it peaks and slows the system down, you can monitor the system with a very simplified script.
+</P>
+<p><font size="+1"><b>Example One</B></FONT></P>
+<p>Flavor: AT&ampT
+</P>
+<p>Shell: sh</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>uptime</B>
+<b>cut</B> [<b>-d</B> char] [<b>-f</B> value]
+<b>ps</B> [<b>-o</B> options]
+<b>Mail</B> [<b>-s</B> string] <b>address</B>
+<b>sleep</B> <i>value</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

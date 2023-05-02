@@ -1,0 +1,272 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-04//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In addition to <small>WriteFile</SMALL>, Windows 2000 also offers the <small>WriteFileEx</SMALL> function, which is used exclusively for asynchronous file output. The <small>WriteFileEx</SMALL> function is discussed in the section titled &#147;Using File-Completion Routines.&#148;</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Reading from Files</FONT></H4>
+<p>You use the <small>ReadFile</SMALL> function to read data from files. Listing 4.3 shows you how to use the <small>ReadFile</SMALL> function.</P>
+<p><b>Listing 4.3</B> Using <small>ReadFile</SMALL> to Read Data from a File</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#define BUFFERSIZE = 0x1000;
+BYTE buffer[BUFFERSIZE];
+DWORD dwRead;
+do{
+    BOOL fRead = ReadFile(hReadFile,
+                          buffer,
+                          BUFFERSIZE,
+                          &ampdwRead,
+                          NULL);
+    if(fRead == FALSE)
+    {
+         // Handle error
+    }
+    else if(fRead &amp&amp dwRead)
+    {
+        // use data from file
+    }
+    else
+    {
+        // end of file detected
+    }
+}
+while(dwRead == BUFFERSIZE);
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p><small>ReadFile</SMALL> has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The file handle to be read from
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a buffer that will receive the transferred data
+<dd><b>&#149;</B>&nbsp;&nbsp;The maximum number of bytes to be read
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that will contain the number of bytes actually read after <small>ReadFile</SMALL> returns
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional <small>OVERLAPPED</SMALL> structure used for asynchronous read requests. (This parameter is discussed later in this chapter.)
+</DL>
+<p>In addition to <small>ReadFile</SMALL>, Windows 2000 also offers the <small>ReadFileEx</SMALL> function, which is used exclusively for asynchronous file output. The <small>ReadFileEx</SMALL> function is discussed later in the section titled &#147;Using File-Completion Routines.&#148;</P>
+<p>The console mode program shown in Listing 4.4 is an example of opening a file and reading its contents. After prompting a user for a pathname, the file is opened and its contents are displayed in the Console window.</P>
+<p><b>Listing 4.4</B> Reading a File Using <small>ReadFile</SMALL> Under Windows 2000</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+#define BUFFERSIZE 0x1000
+void DisplayError(LPCTSTR pszTitle);
+
+int _tmain(int argc, TCHAR* argv[])
+{
+    // Get path name to file from user, and open
+    // file as read-only.
+    TCHAR   szFile[_MAX_PATH];
+    HANDLE  hReadFile;
+
+    _tprintf(_T(&#147;File name:&#148;));
+    _getts(szFile);
+
+    hReadFile = CreateFile(szFile,
+                           GENERIC_READ,
+                           0,
+                           (LPSECURITY_ATTRIBUTES)NULL,
+                           OPEN_EXISTING,
+                           FILE_ATTRIBUTE_NORMAL,
+                           (HANDLE)NULL);
+    if(hReadFile == INVALID_HANDLE_VALUE)
+    {
+        DisplayError(argv[0]);
+    }
+    else
+    {
+        // Read the file, one 4K chunk at a time, and display it
+        // on the console.
+        BYTE  buffer[BUFFERSIZE];
+        DWORD dwRead;
+        do{
+            BOOL fRead = ReadFile(hReadFile,
+                                  buffer,
+                                  BUFFERSIZE,
+                                  &ampdwRead,
+                                  NULL);
+            if(fRead == FALSE)
+            {
+                // Handle error
+                DisplayError(argv[0]);
+                break;
+            }
+            else if(dwRead == 0)
+            {
+                // Display eof
+                _tprintf(_T(&#147;\nEOF detected\n&#148;));
+                break;
+            }
+            else
+            {
+                // display data
+                DWORD ndx;
+                for(ndx = 0; ndx &lt dwRead; ndx&#43;&#43;)
+                {
+                    _tprintf(_T(&#147;%c [%#2.2hx]\t&#148;),
+                             buffer[ndx],
+                             (USHORT)buffer[ndx]);
+                }
+            }
+        }while(dwRead == BUFFERSIZE);
+    }
+    CloseHandle(hReadFile);
+    return 1;
+}
+/*
+ * Displays an error message describing the last system error
+ * message, along with a title passed as a parameter.
+ */
+void DisplayError(LPCTSTR pszTitle)
+{
+    LPVOID pv;
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  GetLastError(),
+                  MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),
+                  (LPTSTR)&amppv,
+                  0,
+                  NULL);
+    MessageBox(NULL, pv, pszTitle, MB_ICONHAND);
+    LocalFree(pv);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h3><a name="Heading10"></A><font color="#000077">Searching for Files</FONT></H3>
+<p>Windows 2000 also allows you to search for files and directories located in the file system. Using these functions, you can perform powerful searches that can locate files and directories based on portions of their names or attributes.
+</P>
+<p>Obviously, locating a specific file is much easier if you know its exact name and location, but there are times when a file search is useful. Some examples of applications that might need to search for a file are</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A utility that allows a user to search for a misplaced file.
+<dd><b>&#149;</B>&nbsp;&nbsp;A program that searches for all instances of a particular type of file (files that have the TXT file extension, for example).
+<dd><b>&#149;</B>&nbsp;&nbsp;A utility that looks for files that haven&#146;t been updated for a long period of time.
+</DL>
+<p>The Windows 2000 file-searching functions can be used to solve each of these problems.
+</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Using FindFirstFile, FindNextFile, and FindClose</FONT></H4>
+<p>Three basic functions are used to locate files in a Windows 2000 application:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindFirstFile</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindNextFile</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FindClose</SMALL>
+</DL>
+<p><small>FindFirstFile</SMALL> is used to find the first occurrence of a file that matches a particular search string. The function takes two parameters: the search pattern used to perform the search and the address of a structure that receives the search result. The function returns a handle that can be used to continue the search:</P>
+<!-- CODE SNIP //-->
+<pre>
+WIN32_FIND_DATA wfd;
+HANDLE hSearch = FindFirstFile(_T(&#147;C:\\*.*&#148;), &ampwfd);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the search is successful, a valid handle is returned that can be used to continue the search. Information about the first file that matched the search string is placed into the <small>WIN32_FIND_DATA</SMALL> structure that was passed as a parameter.</P>
+<p><small>FindNextFile</SMALL> is used to continue a search that was started with <small>FindFirstFile</SMALL>. The function takes two parameters: the handle returned from <small>FindFirstFile</SMALL> and the address of a <small>WIN32_FIND_DATA</SMALL> structure that will be filled if the search is successful. The function returns nonzero if the search succeeded or <small>FALSE</SMALL> otherwise:</P>
+<!-- CODE SNIP //-->
+<pre>
+if(FindNextFile(hSearch, &ampwfd) != FALSE)
+    _tprintf(_T(&#147;%s\n&#148;),wfd.cFileName);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>FindClose</SMALL> is used to close a handle that was opened using <small>FindFirstFile</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+FindClose(hSearch);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

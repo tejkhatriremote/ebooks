@@ -1,0 +1,293 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Owner Draw and Custom Draw</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=12//-->
+<!--PAGES=400-405//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="12-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch13/13-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 12.7 contains the modified <small>CustDrawDlg.h</SMALL> header file (about half of the file has been removed for clarity). Lines that have been added are shown in bold type.</P>
+<p><b>Listing 12.7</B> The <small>CCustDrawDlg.h</SMALL> File with Changes in Bold<hr></P>
+<!-- CODE //-->
+<pre>
+   class CCustDrawDlg : public CDialog
+   {
+   // Construction
+   public:
+       CCustDrawDlg(CWnd* pParent = NULL);   // standard constructor
+
+   // Dialog Data
+       .
+       .
+       .
+
+   // Implementation
+   protected:
+       HICON m_hIcon;
+       <b>CFont m_hStdFont;</B>
+       <b>CFont m_hItalicFont;</B>
+       // Generated message map functions
+       //{{AFX_MSG(CCustDrawDlg)
+       virtual BOOL OnInitDialog();
+       afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+       afx_msg void OnPaint();
+       afx_msg HCURSOR OnQueryDragIcon();
+       afx_msg void OnAdd();
+       afx_msg void OnGetdispinfoList(NMHDR* pNMHDR, LRESULT* pResult);
+       afx_msg void OnDeleteitemList(NMHDR* pNMHDR, LRESULT* pResult);
+       //}}AFX_MSG
+       <b>afx_msg void OnCustDrawList(NMHDR* pNMHDR, LRESULT* pResult);</B>
+       DECLARE_MESSAGE_MAP()
+   };
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The CustDraw dialog box is initialized in the <small>CCustDrawDlg::OnInitDialog</SMALL> member function. As shown in Listing 12.8, the listview control is initialized and the <small>CFont</SMALL> member variables are created in this function. Some parts of <small>CCustDrawDlg::OnInitDialog</SMALL> have been omitted for clarity. The complete listing can be found on the CD-ROM accompanying this book.</P>
+<p><b>Listing 12.8</B> Initializing Dialog Box Member Variables in <small>OnInitDialog</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+   BOOL CCustDrawDlg::OnInitDialog()
+   {
+       CDialog::OnInitDialog();
+       .
+       .
+       .
+       // TODO: Add extra initialization here
+       <b>LV_COLUMN listColumn;
+       TCHAR*    rgszColumns[] = { _T(&#147;Name&#148;),
+                                   _T(&#147;City&#148;),
+                                   _T(&#147;Cost&#148;)};
+       listColumn.mask = LVCF_FMT|LVCF_WIDTH|LVCF_TEXT|LVCF_SUBITEM;
+       listColumn.fmt = LVCFMT_LEFT;
+       listColumn.cx = 60;
+       for(int nColumn = 0; nColumn &lt 3; nColumn<small>&#43;&#43;</SMALL>)
+       {
+           listColumn.iSubItem = nColumn;
+           listColumn.pszText = rgszColumns[nColumn];
+           m_list.InsertColumn(nColumn, &amplistColumn);
+       }
+
+       CDC* pDC = GetDC();
+       int cyFont = -MulDiv(8, pDC-&gtGetDeviceCaps(LOGPIXELSY), 72);
+       m_hItalicFont.CreateFont(cyFont, 0, 0, 0, FW_THIN, TRUE,
+                                FALSE, FALSE, 0, 0, 0, 0, 0,
+                                _T(&#147;Arial&#148;));
+
+       m_hStdFont.CreateFont(cyFont, 0, 0, 0, FW_THIN, FALSE,
+                                 FALSE, FALSE, 0, 0, 0, 0, 0,
+                                _T(&#147;Arial&#148;));</B>
+       return TRUE;
+   }
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The implementations of the message-handling functions for CustDraw added earlier in the chapter are provided in Listing 12.9. In the <small>OnAdd</SMALL> function, <small>CHotel</SMALL> items are created dynamically and added to the listview control. Text items are not immediately added to the listview control; instead, they are assigned a value of <small>LPSTR_TEXTCALLBACK</SMALL>, which will cause the control to request the text information only as needed. In the <small>OnGetdispinfoList</SMALL> function, text strings are provided to the listview. The <small>OnDeleteitemList</SMALL> function casts the <small>lParam</SMALL> member to a pointer to <small>CHotel</SMALL> and then deletes that pointer to prevent memory leaks.</P>
+<p><b>Listing 12.9</B> Message-handling Functions Used by CustDraw<hr></P>
+<!-- CODE //-->
+<pre>
+   void CCustDrawDlg::OnAdd()
+   {
+       <b>UpdateData();
+       CHotel* pHotel = new CHotel(m_strItemLabel,
+                                   m_strCity,
+                                   m_strCost,
+                                   m_colorOption);
+
+       LV_ITEM listItem;
+       listItem.mask = LVIF_TEXT|LVIF_PARAM;
+       listItem.iSubItem = 0;
+       listItem.iItem = m_list.GetItemCount();
+       listItem.pszText = LPSTR_TEXTCALLBACK;
+       listItem.cchTextMax = 80;
+       listItem.lParam = (LPARAM)pHotel;
+
+       m_list.InsertItem(&amplistItem);
+       m_list.SetItemText(listItem.iItem,1, LPSTR_TEXTCALLBACK);
+       m_list.SetItemText(listItem.iItem, 2, LPSTR_TEXTCALLBACK);</B>
+   }
+
+   void CCustDrawDlg::OnGetdispinfoList(NMHDR* pNMHDR,
+                                        LRESULT* pResult)
+   {
+       LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
+       <b>CHotel* pHotel = (CHotel*)pDispInfo-&gtitem.lParam;
+       if(pDispInfo-&gtitem.mask &amp LVIF_TEXT)
+       {
+           LPTSTR&amp pszText = pDispInfo-&gtitem.pszText;
+           switch(pDispInfo-&gtitem.iSubItem)
+           {
+           case 0:
+               pszText = (LPTSTR)(LPCTSTR)pHotel-&gtm_strName;
+               break;
+           case 1:
+               pszText = (LPTSTR)(LPCTSTR)pHotel-&gtm_strCity;
+               break;
+           case 2:
+               pszText = (LPTSTR)(LPCTSTR)pHotel-&gtm_strCost;
+               break;
+           default:
+               ASSERT(0);
+           }
+       }</B>
+       *pResult = 0;
+   }
+
+   void CCustDrawDlg::OnDeleteitemList(NMHDR* pNMHDR,
+                                       LRESULT* pResult)
+   {
+       NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+       <b>CHotel* pHotel = (CHotel*)pNMListView-&gtlParam;
+       delete pHotel;</B>
+       *pResult = 0;
+   }
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The CustDraw project&#146;s message handler for the <small>NM_CUSTOMDRAW</SMALL> message is provided in Listing 12.10. The <small>OnCustomDrawList</SMALL> function requests notifications for all drawing stages. If the drawing stage applies to a particular item, the foreground and background colors are changed to the colors specified by the item&#146;s <small>CHotel</SMALL> color option. When the first item in each row is drawn, the italic font is selected into the device context. For other subitems, the nonitalic font is selected into the device context.</P>
+<p><b>Listing 12.10</B> The Message Handler for the <small>NM_CUSTOMDRAW</SMALL> Message<hr></P>
+<!-- CODE //-->
+<pre>
+   void CCustDrawDlg::OnCustDrawList(NMHDR* pNMHDR, LRESULT* pResult)
+   {
+       LPNMLVCUSTOMDRAW pDraw = (LPNMLVCUSTOMDRAW)pNMHDR;
+       // Ask for everything, just for tracing purposes.
+       *pResult = CDRF_NOTIFYITEMDRAW|
+                  CDRF_NOTIFYPOSTPAINT|
+                  CDRF_NOTIFYPOSTERASE;
+
+       // Determine the drawing stage.
+       DWORD dwDrawStage = pDraw-&gtnmcd.dwDrawStage;
+       if(dwDrawStage &amp CDDS_ITEM)
+       {
+
+
+           CHotel* pHotel = (CHotel*)pDraw-&gtnmcd.lItemlParam;
+
+           switch(pHotel-&gtm_nColorOpt)
+           {
+               case 0: // Red
+               pDraw-&gtclrTextBk = RGB(255,0,0);
+               pDraw-&gtclrText = RGB(0,0,0);
+               break;
+
+               case 1: // Green
+               pDraw-&gtclrTextBk = RGB(0,255,0);
+               pDraw-&gtclrText = RGB(0,0,0);
+               break;
+
+               case 2: // Blue
+               pDraw-&gtclrTextBk = RGB(0,0,255);
+               pDraw-&gtclrText = RGB(255,255,255);
+               break;
+           }
+           // Change font, depending on item level.
+           if((dwDrawStage &amp CDDS_SUBITEM)&amp&amp(pDraw-&gtiSubItem == 0))
+           {
+               SelectObject(pDraw-&gtnmcd.hdc,
+                            (HFONT)m_hItalicFont.m_hObject);
+               *pResult |= CDRF_NEWFONT;
+           }
+           else if((dwDrawStage &amp CDDS_SUBITEM)&amp&amp
+                   (pDraw-&gtiSubItem == 1 || pDraw-&gtiSubItem == 2))
+           {
+               SelectObject(pDraw-&gtnmcd.hdc,
+                            (HFONT)m_hStdFont.m_hObject);
+               *pResult |= CDRF_NEWFONT;
+           }
+       }
+
+   }
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Build and run the CustDraw project. Figure 12.4 shows the CustDraw project with several items in the listview control.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-04.jpg',374,347 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-04.jpg',374,347)"><font color="#000077"><b>Figure 12.4</B></FONT></A>&nbsp;&nbsp;The CustDraw project after several items have been added.</P>
+<h3><a name="Heading18"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed two methods that you can use to add extra functionality to your controls. Owner draw enables you to customize menus, buttons, list boxes, and other types of controls. Custom draw is offered for some of the newer Windows common controls, and it enables you to modify a small part of how the control is drawn without requiring you to take responsibility for drawing the complete control.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="12-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch13/13-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

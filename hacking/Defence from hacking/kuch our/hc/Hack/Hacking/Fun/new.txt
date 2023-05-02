@@ -1,0 +1,799 @@
+ 
+Untold Windows Tips and Secrets
+
+By Ankit Fadia ankit@bol.net.in
+
+Welcome to another Hacking Truths Manual. This time I have a collection of Tips and Tricks which no body normally knows, the secrets which Microsoft is afraid to tell the people, the information which you will seldom find all gathered up and arranged in a single file. To fully reap this Manual you need to have a basic understanding of the Windows Registry, as almost all the Tricks and Tips involve this file.
+
+****************
+
+Important Note: Before you read on, you need to keep one thing in mind. Whenever you make changes to the Windows Registry you need to Refresh it before the changes take place. Simply press F5 to refresh the registry and enable the changes. If this does not work Restart your system
+
+****************
+
+Exiting Windows the Cool and Quick Way
+
+Normally it takes a hell lot of time just Shutting down Windows, you have to move your mouse to the Start Button, click on it, move it again over Shut Down, click, then move it over the necessary option and click, then move the cursor over the OK button and once again (you guessed it) click.This whole process can be shortened by creating shortcuts on the Desktop which will shut down Windows at the click of a button. Start by creating a new shortcut( right click and select New> Shortcut). Then in the command line box, type (without the quotes.)
+
+'C:\windows\rundll.exe user.exe,exitwindowsexec'
+
+This Shortcut on clicking will restart Windows immediately without any Warning. To create a Shortcut to Restarting Windows, type the following in the Command Line box:
+
+'c:\windows\rundll.exe user.exe,exitwindows'
+
+This Shortcut on clicking will shut down Windows immediately without any Warning.
+
+Next -- a fun shutdown trick to play on your friends --->>
+
+
+
+--------------------------------------------------------------------------------
+ 
+ 
+Ban Shutdowns : A Trick to Play on Friends (or Lamers)
+
+This is a neat trick you can play on that lamer that has a huge ego, in this section I teach you, how to disable the Shut Down option in the Shut Down Dialog Box. This trick involves editing the registry, so please make backups. Launch regedit.exe and go to :
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+In the right pane look for the NoClose Key. If it is not already there then create it by right clicking in the right pane and selecting New > String Value.(Name it NoCloseKey ) Now once you see the NoCloseKey in the right pane, right click on it and select Modify. Then Type 1 in the Value Data Box.
+
+Doing the above on a Win98 system disables the Shut Down option in the Shut Down Dialog Box. But on a Win95 machine if the value of NoCloseKey is set to 1 then click on the Start > Shut Down button displays the following error message:
+
+This operation has been cancelled due to restrictions in effect on this computer. Please contact your system administrator.
+
+You can enable the shut down option by changing the value of NoCloseKey to 0 or simply deleting the particular entry i.e. deleting NoCloseKey.
+
+Instead of performing the above difficult to remember process, simply save the following with an extension of .reg and add it's contents to the registry by double clicking on it.
+
+REGEDIT4
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+
+"NoClose"="1"
+
+Disabling Display of Drives in My Computer
+
+This is yet another trick you can play on your geek friend. To disable the display of local or networked drives when you click My Computer go to :
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+Now in the right pane create a new DWORD item and name it NoDrives. Now modify it's value and set it to 3FFFFFF (Hexadecimal) Now press F5 to refresh. When you click on My Computer, no drives will be shown. To enable display of drives in My Computer, simply delete this DWORD item. It's .reg file is as follows:
+
+REGEDIT4
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+
+"NoDrives"=dword:03ffffff
+
+Take Over the Screen Saver
+
+To activate and deactivate the screen saver whenever you want, goto the following registry key:
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ScreenSavers
+
+Now add a new string value and name it Mouse Corners. Edit this new value to -Y-N. Press F5 to refresh the registry. Voila! Now you can activate your screensaver by simply placing the mouse cursor at the top right corner of the screen and if you take the mouse to the bottom left corner of the screen, the screensaver will deactivate.
+
+Next: Pop up a Banner Each Time Windows Boots--->>
+___________________________________________________________________________
+Pop up a Banner Each Time Windows Boots
+
+To pop a banner which can contain any message you want to display just before a user is going to log on, go to the key:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WinLogon
+
+Now create a new string Value in the right pane named LegalNoticeCaption and enter the value that you want to see in the Menu Bar. Now create yet another new string value and name it: LegalNoticeText. Modify it and insert the message you want to display each time Windows boots. This can be effectively used to display the company's private policy each time the user logs on to his NT box. It's .reg file would be:
+
+REGEDIT4
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Winlogon]
+"LegalNoticeCaption"="Caption here."
+
+Delete the Tips of the Day to save 5KB
+
+Windows 95 had these tips of the day which appeared on a system running a newly installed Windows OS. These tips of the day are stored in the Windows Registry and consume 5K of space. For those of you who are really concerned about how much free space your hard disk has, I have the perfect trick.
+To save 5K go to the following key in Regedit:
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\Tips
+
+Now simply delete these tricks by selecting and pressing the DEL key.
+
+Next: How to change default locations --->>
+
+
+
+--------------------------------------------------------------------------------
+Change Default Locations
+
+To change the default drive or path where Windows will look for its installation files, go to the key:
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Setup\SourcePath
+
+Now you can edit as you wish.
+
+Secure your Desktop Icons and Settings
+
+You can save your desktop settings and secure it from your nerdy friend by playing with the registry. Simply launch the Registry Editor go to:
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+In the right pane create a new DWORD Value named NoSaveSettings and modify it's value to 1. Refresh and restart for the settings to get saved.
+
+CLSID Folders Explained
+
+Don't you just hate those stubborn stupid icons that refuse to leave the desktop, like the Network Neighborhood icon. I am sure you want to know how you can delete them. You may say, that is really simple, simply right click on the concerned icon and select Delete. Well not exactly, you see when you right click on these special folders( see entire list below)neither the rename nor the delete option does not appear. To delete these folders, there are two methods, the first one is using the System Policy Editor(Poledit in the Windows installation CD)and the second is using the Registry.
+
+Before we go on, you need to understand what CLSID values are. These folders, like the Control Panel, Inbox, The Microsoft Network, Dial Up Networking etc are system folders. Each system folder has a unique CLSID key or the Class ID which is a 16-byte value which identifies an individual object that points to a corresponding key in the registry.
+
+To delete these system Folders from the desktop simply go to the following registry key:
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\Namespace
+{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+To delete an icon simply delete the 16 byte CLSID value within "NameSpace".
+
+More on CLSID --->>
+
+
+
+--------------------------------------------------------------------------------
+ 
+The following are the CLSID values of the most commonly used icons:
+
+My Briefcase:{85BBD920-42AO-1069-A2E4-08002B30309D}
+
+Desktop: {00021400-0000-0000-C000-0000000000046}
+
+Control Panel:{21EC2020-3AEA-1069-A2DD-08002B30309D}
+
+Dial-Up-Networking:{992CFFA0-F557-101A-88EC-00DD01CCC48}
+
+Fonts: {BD84B380-8CA2-1069-AB1D-08000948534}
+
+Inbox :{00020D76-0000-0000-C000-000000000046}
+
+My Computer :{20D04FE0-3AEA-1069-A2D8-08002B30309D}
+
+Network Neighborhood: {208D2C60-3AEA-1069-A2D7-O8002B30309D}
+
+Printers :{2227A280-3AEA-1069-A2DE-O8002B30309D}
+
+Recycle Bin :{645FF040-5081-101B-9F08-00AA002F954E}
+
+The Microsoft Network: {00028B00-0000-0000-C000-000000000046}
+
+History: {FF393560-C2A7-11CF-BFF4-444553540000}
+
+Winzip :{E0D79300-84BE-11CE-9641-444553540000}
+
+For example, to delete the Recycle Bin, first note down it's CLSID value, which is:
+
+645FF040-5081-101B-9F08-00AA002F954E.
+
+Now go to the Namespace key in the registry and delete the 
+corresponding key.
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\
+explorer\Desktop\NameSpace\{645FF040-5081-101B-9F08-00AA002F954E}
+
+Similarly to delete the History folder, delete the following key:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\
+explorer\Desktop\NameSpace\{FBF23B42-E3F0-101B-8488-00AA003E56F8}
+
+Sometimes, you may need to play a trick on your brother or friend, well this one teaches you how to hide all icons from the Desktop. Go to the following registry key:
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+In the right pane create a new DWORD value by the name: NoDesktop and set its value to: 1. Reboot and you will find no icons on the desktop.
+
+How to Customize Right Click Menus for Special Folders --->>
+
+
+
+--------------------------------------------------------------------------------
+ 
+ 
+How to Customize Right Click Menus for Special Folders
+
+Till now you simply learnt how to delete the special system folders by deleting a registry key, but the hack would have been better if there was a way of adding the DELETE and RENAME option to the right click context menus of these special folders. You can actually change the right click context menu of any system folder and add any of the following options: RENAME, DELETE, CUT, COPY, PASTE and lots more.
+
+This hack too requires you to know the CLSID value of the system folder whose menu you want to customize. In this section, I have taken up Recycle Bin as the folder whose context menu I am going to edit.
+
+First launch the registry editor and open the following registry key:
+
+HKEY_CLASSES_ROOT\CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\ShellFolder.
+
+In case you want to edit some other folder like say the FONTS folder, then you will open the following key:
+
+HKEY_CLASSES_ROOT\CLSID\{CLSID VALUE HERE}\ShellFolder.
+
+In the right pane there will be a DWORD value names attributes. Now consider the following options:
+
+1.To add the Rename option to the menu, change the value of Attributes to
+
+50 01 00 20
+
+2. To add the Delete option to the menu, change the value of Attributes to
+
+60 01 00 20
+
+3. To add both the Rename & Delete options to the menu, change the value of Attributes to
+
+70,01,00,20
+
+4. Add Copy to the menu, change Attributes to
+
+41 01 00 20
+
+5. Add Cut to the menu, change Attributes to
+
+42 01 00 20
+
+More--->>
+
+
+
+--------------------------------------------------------------------------------
+6. Add Copy & Cut to the menu, change Attributes to
+
+43 01 00 20
+
+7. Add Paste to the menu, change Attributes to
+
+44 01 00 20
+
+8. Add Copy & Paste to the menu, change Attributes to
+
+45 01 00 20
+
+9. Add Cut & Paste to the menu, change Attributes to
+
+46 01 00 20
+
+10. Add all Cut, Copy & Paste to the menu, change Attributes to
+
+47 01 00 20
+
+11. We want to add only the Rename option to the right click context menu of the Recycle Bin, so change the value of attributes to:
+
+50 01 00 20
+
+Press F5 to refresh and then after rebooting you will find that when you right click on the Recycle Bin a RENAME option pops up too.
+
+12. To reset the default Windows options change the value of Attributes back to
+
+40 01 00 20
+
+The Registry File which one can create for the above process would be something like the below:
+
+REGEDIT4
+[HKEY_CLASSES_ROOT\CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\Shell-Folder]
+"Attributes"=hex:50,01,00,20
+
+How to Make a Shortcut to Modem Properties
+
+To access say the Modem Properties in the Control Panel Folder, the normal procedure is: Click on Start, Click on Settings> Control Panel and then wait for the Control Panel window to pop up and then ultimately click on the Modems icon.
+
+Wouldn't it be lovely if you could shorten the process to: Click on Start> Control Panel>Modems. Yes you can add the Control Panel and also all other Special System Folders directly to the first level Start Menu. First collect the CLSID value of the folder you want to add to the start menu. I want to add Control Panel hence the CLSID value is:
+
+21EC2020-3AEA-1069-A2DD-08002B30309D
+
+Now right click on the Start Button and select Open. Now create a new folder and name it:
+
+Control Panel.{21EC2020-3AEA-1069-A2DD-08002B30309D}
+
+NOTE: Do not forget the period after the 'l' in Panel. Similarly all system folders can be added to the Start Menu.(except My Briefcase, I think)
+
+How to delete System Options from the Start Menu--->>
+
+
+
+--------------------------------------------------------------------------------
+Hiding Control Panel Applets (Windows 9x/Me) Popular 
+Category: Home > Tips and Tricks 
+This tweak allows you to show or hide any of the applets found in the Windows Control Panel. 
+
+Open CONTROL.INI (usually found in the C:\WINDOWS) and add the following lines under the "[don't load]" subsection. If the "[don't load]" section doesn't already exist then create it be adding it on a new line at the end of the file. 
+
+For each control panel applet to be hidden add a new line with text in the format "applet.cpl=no" (e.g. fax.cpl=no). 
+
+Exit the registry and restart Windows for the change to take effect. 
+
+ 
+---------------------------------------------
+Deleting System Options from the Start Menu
+
+You can actually remove the Find and Run options from the start menu by performing a simple registry hack. Again like always launch the registry editor and scroll down to the below key:
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+Right-click on the right pane and select New, DWORD Value. Name it NoFind.(To remove the RUN option name it NoRun). Double-click the newly create DWORD to edit it's value and enter 1 as its value. This will disable the FIND option of the Start Menu and will also disable the default Shortcut key(F3 for Find.)
+
+To restore the Run or find command modify the value of the DWORD to 0 or simply Delete the DWORD value.
+
+Fed Up of the boring Old Yellow Folder Icons?[Drive Icons Included]
+
+NOTE: This trick hasn't been tried on Win98.
+You can easily change the boring yellow folder icons to your own personalized icons. Simply create a text file and copy the following lines into it:
+
+[.ShellClassInfo]
+ICONFILE=Drive:\Path\Icon_name.extension
+
+Save this text file by the name, desktop.ini in the folder, whose icon you want to change. Now to prevent this file from getting deleted change it's attributes to Hidden and Read Only by using the ATTRIB command.
+
+To change the icon of a drive, create a text file containing the following lines:
+
+[Autorun]
+ICON=Drive:\Path\Icon_name.extension
+
+Save this file in the root of the drive whose icon you want to change and name it autorun.inf. For Example, if you want to change the icon of a floppy, SAVE THE icon in a:\icon_name.ico One can also create a kewl icon for the Hard Disk and create a text file [autorun.inf] and store it in "c:\".
+
+Next: Securing Windows NT--->>
+
+
+--------------------------------
+Securing Windows NT: How to Hide the Last Logged on User Name
+
+By default, NT 4.0 displays the last person who logged onto the system. This can be considered to be a security threat, especially in the case of those who choose their password to be same as their Username. To disable this bug which actually is a feature, go to the following key in the registry editor:
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\WindowsNT\CurrentVersion\Winlogon
+
+Click and select the ReportBookOK item and create a new string value called DontDisplayLastUserName. Modify it and set its value to 1.
+
+As a system administrator, you can ensure that the passwords chosen by the users are not too lame or too easy to guess. NT has this lovely utility called the User Manager which allows the administrator to set the age limit of the password which forces the users to change the password after a certain number of days. You can also set the minimum length of passwords and prevent users to use passwords which already have been used earlier and also enable account lockouts which will deactivate an account after a specified number of failed login attempts.
+
+When you log on to Win NT, you should disable Password Caching, this ensures Single NT Domain login and also prevents secondary Windows Logon screen.
+
+Simply copy the following lines to a plain text ASCII editor like: Notepad and save it with an extension, .reg
+
+**********DISABLE.reg**********
+REGEDIT4
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Network]
+"DisablePwdCaching"=dword:00000001
+**********DISABLE.reg**********
+
+To Enable Password Caching use the following .reg file:
+
+**********Enable.reg***********
+REGEDIT4
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Network]
+"DisablePwdCaching"=dword:00000000
+*********Enable.reg************
+
+Next: Cleaning the Recent Documents Menu--->>
+
+
+
+--------------------------------------------------------------------------------
+Cleaning the Recent Documents Menu and the RUN MRU
+
+The Recent Docs menu can be easily disabled by editing the Registry. To do this go to the following Key:
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+
+Now in the right pane, create a new DWORD value by the name: NoRecentDocsMenu and set it's value to 1. Restart Explorer to save the changes.
+
+You can also clear the RUN MRU history. All the listings are stored in the key:
+
+HKEY_USERS\.Default\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
+
+You can delete individual listings or the entire listing. To delete History of Find listings find and delete:
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Doc Find Spec MRU
+
+Customizing the Right Click Context Menu of the Start Menu
+
+When you right click on the start menu, only 3 options pop up: Open, Explore, and Find. You can add your own programs to this pop up menu( which comes up when we right click on it.) Open Regedit and go to the following registry key:
+
+HKEY_CLASSES_ROOT\Directory\Shell
+
+Right click on the shell and create a new Sub Key (You can create a new SubKey by right clicking on the Shell Key and selecting New > Key.). Type in the name of the application you want to add to the start menu. I want to add Notepad to the Start Menu and hence I name this new sub key, Notepad. Now right click on the new registry key that you just created and create yet another new key named Command. Enter the full path of the application, in this case Notepad in the default value of Command in the right pane. So I Modify the value of the default string value and enter the full pathname of Notepad: c:\wndows\notepad.exe.
+
+Now press F5 to refresh. Now if you right click on the Start Button you will find a new addition to the Pop Up Menu called Notepad. Clicking on it will launch Notepad.
+
+We can not only add but also remove the existing options in this pop up box. To delete the Find option, go to the following registry key:
+
+HKEY_CLASSES_ROOT\Directory\Shell\Find
+
+Delete Find. DO NOT delete Open else you will not be able to open any folders in the Start Menu like Programs, Accessories etc.
+
+Next: How to make BMP thumbnail icons--->>
+
+
+--------------------------------------------
+You can actually change the default BMP icon to a thumbnail version of the actual BMP file. To do this imply go to HKCU\Paint.Picture\Default. In the right pane change the value of default to %1. Please note however that this will slow down the display rate in explorer if there are too many BMP thumbnails to display. You can use other icons too, simply enter the pathname.To restore back to the normal change the vale of default back to: C:\Progra~1\Access~1\MSPAINT.EXE,1.
+
+Customizing The Shortcut Arrow
+
+All shortcuts have a tiny black arrow attached to it's icon to distinguish from normal files. This arrow can sometimes be pretty annoying and as a Hacker should know how to change each and everything, here goes another trick. Launch the Registry Editor and go to:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\explorer\Shell Icons
+
+Now, on the right pane is a list of icons ( we found out that on some systems, Windows 98 especially, the right pane is blank. Don't worry, just add the value as required ). Find the value 29. If it isn't there, just add it. The value of this string should be C:\Windows\system\shell32.dll, 29 ( which means the 30th icon in shell32.dll - the first one begins with 0 ). Now, we need blank icon to do this. Just create one with white as the whole icon. Go here to learn how to create an icon. Once done just change the value to C:\xxx.ico, 0 where "xxx" is the full path of the icon file and "0" is the icon in it.
+
+Now for some fun. If the blank icon is a bit boring, change it again. You will find that under shell32.dll there is a gear icon, a shared folder ( the hand ) and much more. Experiment for yourself!
+
+Next: Internet Explorer Tricks and Tips--->>
+
+
+
+--------------------------------------------------------------------------------
+Internet Explorer Tricks and Tips: Resizable Full Screen Toolbar
+
+The Full Screen option increases the viewable area and makes surfing more enjoyable but sometimes we need the Toolbar but also need to have extra viewing area. Now this hack teaches you how to change the size of the Internet Explorer toolbar. This registry hack is a bit complicated as it involves Binary values, so to make it simple, I have included the following registry file which will enable the resizable option of the Internet Explorer toolbar which was present in the beta version of IE.
+
+REGEDIT4
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Toolbar]
+"Theater"=hex:0c,00,00,00,4c,00,00,00,74,00,00,00,18,00,00,00,1b,00,00,00,5c,\
+00,00,00,01,00,00,00,e0,00,00,00,a0,0f,00,00,05,00,00,00,22,00,00,00,26,00,\
+00,00,02,00,00,00,21,00,00,00,a0,0f,00,00,04,00,00,00,01,00,00,00,a0,0f,00,\
+00,03,00,00,00,08,00,00,00,00,00,00,00
+
+*******************
+HACKING TRUTH: Internet Explorer 5 displays the friendly version of HTTP errors like NOT FOUND etc . They are aimed at making things easier for newbies. If you would rather prefer to see the proper error pages for the web server you're using, go to Tools, Internet Options and select the Advanced tab. Then scroll down and uncheck the Show friendly http errors box.
+
+Making the Internet Explorer & the Explorer Toolbars Fancy
+
+The Internet Explorer toolbar looks pretty simple. Want to make it fancy and kewl? Why not add a background image to it. To do this kewl hack launch the Windows Registry Editor and go to the following key:
+
+HKEY_CURRENT_USER\SOFTWARE\Microsoft\ Internet Explorer\Toolbar\
+
+Now in the right pane create a new String Value and name it BackBitmap and modify it's value to the path of the Bitmap you want to dress it up with by rightclicking on it and choosing Modify. When you reboot the Internet Explorer and the Windows Explorer toolbars will have a new look.
+
+Next: Change Internet Explorer's caption--->>
+
+
+
+--------------------------------------------------------------------------------
+Change Internet Explorer's Caption
+
+Don't like the caption of Internet Explorer caption? Want to change it? Open the registry editor and go to
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main
+
+In the right pane create a new String Value names Window Title (Note the space between Window and Title). Right click on this newly created String Value and select Modify. Type in the new caption you want to be displayed. Restart for the settings to take place. 
+Now let's move on to some Outlook Express Tricks.
+
+Colorful Background
+
+Don't like the boring background colors of Outlook Express? To change it launch the Windows Registry Editor and scroll down to
+
+HKEY_CURRENT_USER\Software\Microsoft\Internet Mail And News
+
+On the left pane, click on ColorCycle or select Edit and Modify in the menu. Now change the value to 1. Close and restart. Now, launch Outlook Express and whenever you open up a New Message, hold down ctrl-shift and tap the z key to scroll to change the background color. Repeat the keystroke to cycle through the colors.
+
+Looking for more Windows fun? See also:
+
+Windows fun in Meinel's upcoming book Mostly Harmless Hacking
+
+Ankit Fadia
+ankit@bol.net.in
+To read everything you ever dreamt of written by Ankit Fadia ankit@bol.net.in , join his mailing list by sending an email to: programmingforhackers-subscribe@egroups.com
+
+
+
+--------------------------------------------------
+Telnet: the Number One Hacker Tool
+
+by Carolyn Meinel
+
+In this Guide you will learn:
+
+What is telnet? 
+How to telnet 
+How to get telnet accounts 
+Why you might not want to telnet 
+How to install a telnet server on your home Windows computer 
+How to turn off a telnet server on your home Linux computer 
+How to explore computers using telnet 
+Why not use a portscanner instead? 
+How to break into web sites using telnet 
+"Where do I type that command?" People ask that all the time when they read my early Guides to (mostly) Harmless Hacking. I wrote those guides back when the Internet was in its infancy and almost everyone in cyberspace used telnet. However, nowadays you might never even hear about telnet, much less use it, unless you are a hacker. So if you are still wondering about telnet, today is your lucky day.
+
+What Is Telnet?
+
+Telnet is a protocol that is most commonly used to log into a remote computer. It also is the single most powerful hacking tool on the planet. With just a telnet client program, you can:
+
+send email 
+download source code from web sites 
+send unexpected input to webservers that can give you amazing and sometimes illegal results 
+give arbitrary input to many other services on Internet host computers 
+probe the services offered by servers, routers and even people's home computers. 
+How to Telnet
+
+Don't know how to telnet? Click the easy telnet links at http://happyhacker.org/wargame/ and land in the middle of a real hacker wargame! This should work regardless of your computer operating system -- if you have an up to date browser, if your online service provider gives you a true Internet connection, and if your computer is able to telnet at all.
+
+Did those links get you into a telnet session? Were you able to login to a remote computer? If yes, congratulations.
+
+If not, how can you fix the problem? If no telnet program appeared on your monitor when you clicked these links, perhaps your browser is too ancient to allow telnet. Try installing the latest Netscape browser (http://www.netscape.com). Or, perhaps your operating system does not include a telnet program. In that case, install or reinstall Windows 95 or 98. If you own a Mac, get the superb Mac OS X or Linux PPC (http://www.linuxppc.com).
+
+If a telnet program came up and failed to connect, possibly the computer you were trying to telnet into was down or just plain no longer in existence. Or, you may be using America Online (or a similar extremely poor online service). If so, your simplest solution may be to get a better online service provider. Determined to hack using AOL? See http://happyhacker.org/aol.shtml for some ways to make AOL give you a true Internet connection.
+
+OK, so you've managed to telnet for the first time. Presumably you don't want to limit yourself to telnet links on web sites. How do you telnet anywhere you want to go?
+
+If you have Linux or any other type of Unix (BSD, SCO, Solaris, Sun OS, Irix, Ultrix, etc.) telneting is easy. Just bring up "console" or "shell" (or whatever your GUI calls the command line interface). At the prompt type:
+
+telnet <hostname or IP address>
+
+More --->>
+
+
+-----------------------------
+More on Telnet: the Number One Hacker Tool
+
+Windows 2000 works pretty much like Unix. See Figure 1 for an example of a Win 2000 telnet login. Not shown on the screen was the command "telnet 10.0.0.10", which I gave at the Command (MS-DOS) prompt.
+Figure 1: Telnet using Windows 2000
+
+If you have Windows 95, 98 or NT, to telnet, bring up the MS-DOS prompt (Start --> Programs --> MS-DOS). 
+
+Click "connect" then "remote system…". In the host name box place the host name or IP address of the computer to which you wish to telnet. Leave the Port and Term Type boxes alone for now.
+
+Here is a really important point. Every day people email me complaining that some computer won't let them telnet into it. They ask what they are doing wrong. They aren't doing anything wrong:
+
+Maybe the computer they are trying to reach no longer exists. 
+Maybe the computer they are trying to reach doesn't allow telnet logins. For example, whois.internic.net no longer allows telnet logins 
+Maybe a firewall is blocking them. 
+Or maybe they make a telnet connection and the remote computer asks for a user name and password they don't have. Then they email me asking for how to get a login name and password that will work. 
+Newbie note: The owners or administrators of any Internet host computer decide who gets user names and passwords. Believe it or not, about once a week someone emails me asking what user name and password their own online service provider has assigned them for a telnet login. That's why I'm telling people the obvious -- if you want to telnet into any computer, and you don't have a user name and password, you must ask the owner, administrator of tech support for that system for a user name and password. If they won't give that to you, they don't want you to have it!
+
+You can go to jail warning: If you guess the user name and password, or use a computer breakin technique to get or create them, or if someone other than an owner or administrator or a legitimate user on that system gives you a user name and password, it is against the law to use them. Many computer criminals give out user names and passwords that they obtained illegally.
+
+More --->>
+
+
+
+--------------------------------------------------------------------------------
+How to Get Telnet Accounts
+
+OK, so you want to get legal user names and passwords so you can telnet into other computers. Here are some of the best ways:
+
+See http://happyhacker.org/links2.shtml#shells for organizations that will give you free shell accounts. You can telnet into these. 
+Ask Internet Service Providers for shell accounts. Some offer them, although most don't. 
+Set up a telnet server on your own computer (see instructions below). Yes, once you are running a telnet server, you can telnet from your computer back into your computer. Simply give the command "telnet 127.0.0.1". 
+Make friends with people who run Internet computers with telnet servers. 
+Why you May Not Want to Telnet
+
+If you love your shell account server, don't ever, ever telnet or ftp into it. I recommend Ssh or Openssh for logging into remote computers? The telnet (and ftp) protocol is a "clear text" transmission. That means that computer on the same LAN as either You or your destination computer, or any computer on any LAN or network path through which your connection passes can steal your login name, password or anything else that goes across your connection. Ssh and OpenSsh encrypt all communications so no one can snoop on you.
+
+How to Install a Telnet Server on your Windows Computer
+
+Usually you can't telnet into a Windows home computer. The reason is, they aren't running telnet servers. Here's how to get a telnet server on your home Windows computers so your friends and you can telnet in and play.
+
+For Windows NT, the Options Pack includes a primitive telnet server.
+
+For Windows 95/98/NT and 2000, you also can install shareware or commercial telnet servers. Check out http://www.winfiles.com, or do a web search.
+
+Of course installing a telnet server makes your computer vulnerable to all sorts of trouble from hackers. It's your funeral, don't come crying top me if a telnet visitor destroys your computer.
+
+More --->>
+
+
+
+--------------------------------------------------------------------------------
+ 
+More on Telnet: the Number One Hacker Tool
+
+How to Turn off a Telnet Server on your Unix-type Computer
+
+If you go online with Linux or other Unix-type computer, a telnet server is the easiest way to ensure you get destroyed by a malicious hacker. Here's how to prevent this. On most of these, the file /etc/inetd.conf launches most of your servers. Edit the file to put a "#" in front of the line that has telnet in it and either reboot your computer or kill and restart inetd.
+
+If your computer doesn't use inetd to launch services, you should be able to find telnetd under /etc/init.d.
+
+Install ssh instead and only use that to log into your shell account.
+
+How to Explore Computers Using Telnet
+
+Even if a computer doesn't have a telnet server, there are lots of fun and even legal things to do to it using telnet. The easiest thing to do is extract "banners" from a victim computer. A banner is a message a computer will often give when you telnet to a port that is running an Internet server of some sort.
+
+For example, most mail sending servers use port 25. To telnet to port 25 from Win 2000 or a Unix shell, simply type:
+
+telnet <hostname or IP address> 25
+
+Windows 95, 98 and NT make it a tiny bit harder. Figure 2 shows how:
+
+
+
+
+More --->>
+
+
+
+--------------------------------------------------------------------------------
+ 
+ 
+If the victim computer is running a mail server, you will see something that looks like this:
+
+
+
+Whoa, look at that! The victim computer told us what operating system (Windows NT) and mail server (Mercur) it runs!
+
+More --->>
+
+
+-----------------------------------------------------
+More on Telnet: the Number One Hacker Tool
+
+A quick search of the Bugtraq archives at http://www.securityfocus.com revealed horrid things a criminal could do to that Mercur mail server. Since I think it is more fun to be nice, I told someone at the company using this mail server about the problems. He invited me to vacation at his beautiful Swiss home, where he and his wife keep horses and take long trail rides in the Alps. Golly, that is much more fun than breaking into a computer!
+
+Right about now some elite ueberhaxorz are probably reading this and saying "What a lamer Meinel is! We can do the same thing by running nmap."
+
+They are right, you can learn the same things by running a port scanning program such as nmap (available at http://www.insecure.org). However, I am quite careful about under what circumstances I run any port scanner. In order to get information on what programs are running on what ports, you must run a port scanner in a mode that will probably convince the owner of the victim computer that you are a criminal. He or she may persuade your online service provider to cancel your account.
+
+The other reason to analyze computers using telnet is that you learn more. It's the difference between eating at McDonalds and learning how to cook.
+
+How to Break into Web Sites Using Telnet
+
+You don't have to use a web browser to access files on a web site. All you need to do is:
+
+telnet <victimcomputer> 80
+
+Or specify port 80 in a Windows telnet.
+
+If you are using Windows 95/98/NT, whenever you are NOT logging into a telnet account, you should enable local echo. Otherwise whatever you type in (unless you are in a telnet account) will not show on the screen. To enable local echo, click Terminal --> Preferences --> Local Echo.
+
+More --->>
+
+
+
+--------------------------------------------------------------------------------
+More on Telnet: the Number One Hacker Tool
+
+So how do you send stuff back to the webserver? Try this:
+
+GET / HTTP/1.0
+<your command here>
+
+What kinds of commands can you send? The book Hackproofing Your Network (by Ryan Russell of Securityfocus.com and Stance Cunningham) suggests a fun and harmless hack. Create and store a bogus cookie in the location on your web browser that stores cookies. (Find it by searching for the file "cookies.txt".) Name your bogus cookie something like "MyBogusCookie." Then telnet to the victim webserver and give something like this command:
+
+GET / HTTP/1.0
+User-Agent: HaveABogusCookieThisIsAJoke 123.4
+Cookie: /; MyBogusCookie
+
+The Überhacker! -- How to Break into Computers book details a number of serious attacks you can perform through sending funny input to a webserver. Basically, you need to learn how to write shell programs, and then find ways to get them to be run by the webserver. I'm not going to explain them here, however. These attacks, when carried out against a vulnerable webserver, are so easy that little kids could do them, and I don't want to be responsible for their behavior. It's much harder for little kids to get a hold of Russell's and my books than it is for them to read this GTMHH on the Happy Hacker website.
+
+So are you dying to know what to send a webserver in order to break into it, without having to buy a book? Here are some hints. How to do this will depend on what webserver it is, what operating system it runs on, whether its security weaknesses have been fixed, and whether the web designer has used things such as Common Gateway Interface (CGI) or Server Side Includes (SSIs) that have weaknesses in them.
+
+You will have to research these issues at Web sites that archive vulnerabilities and exploits such as http://www.securityfocus.com and http://packestorm.securify.com. You will need to study web site programming (HTML -- hypertext markup language, CGI and SSIs) and shell programming. You will need to learn webserver commands (documented at http://www.w3.org/hypertext/WWW/markup/Markup.html). You will have to use your brain and be persistent.
+
+But at least if you come across a telnet exploit, now you know the answer to the question "where do I type that command?"
+
+___________________________________________________
+Where are those back issues of GTMHHs and Happy Hacker Digests? Check out the official Happy Hacker Web page at http://www.happyhacker.org. 
+We are against computer crime. We support good, old-fashioned hacking of the kind that led to the creation of the Internet and a new era of freedom of information. But we hate computer crime. So don't email us about any crimes you may have committed! 
+
+Copyright 2000 Carolyn Meinel. You may forward, print out or post this GUIDE TO (mostly) HARMLESS HACKING on your Web site as long as you leave this notice at the end. 
+
+
+
+--------------------------------------------------------------------------------
+ How to Warp Windows -- and Live!
+
+Since I'm supposed to be some sort of a super hacker, if I'm going to use Windows, I'd better make my version of Windows different -- muhahaha! DIFFERENT!!! from everyone else's Windows. I mean, let's do much more than merely changing the bootup and shutdown screens. More than just using those settings in Control Panel. We're talking about stuff you will not find in the computer manuals (except this one).
+
+How about making Windows march to your own instructions instead of what the folks at that giant corporation in Redmond want? Figure 1 below shows an example of what you can do to your Windows:
+ 
+
+  
+  
+ Figure 1: Meinel's Windows desktop. How many things are funny on this page?
+
+So what's the trick? It's really amazingly easy: put a hex on your computer. To be exact, your Windows computer contains a program that will let you hex edit any program, to customize any program the way you want it to look.
+
+More on hex editing--->>
+ 
+
+--------------------------------------------------------------------------------
+
+Put a hex on your computer, continued...
+  
+ The magical key to doing awesome things to any program or even your operating system is a program called "edit.com." One way is run it from when your computer is in DOS mode (hit F8 while booting). You can run also run edit under Windows from the the DOS prompt with the command "edit <insert name of victim program here". You can also run it with Start --> Run or a number of other places you can find that spawn a Windows shell and then type "edit <insert name of the victim program here>". 
+
+
+
+
+ Figure 2: The edit program, brought up in Windows.
+
+More on hex editing--->>
+
+
+--------------------------------------------------------------------------------
+ 
+
+Put a hex on your computer, continued...
+
+
+  
+You can seriously mess up your computer warning: If you edit the wrong things in a program, it won't run at all. Be sure to make a backup of any program you run before editing it.
+
+Evil genius tip: your can hex edit compiled Linux (or any other kind of) programs. However, most Linux programs come with source code. So you can easily rewrite the source code and then compile the program -- much easier than hex editing binaries!
+
+The edit program works differently depending on whether you bring it up after rebooting your computer into DOS mode (hit F8 while booting). Which way should you use? For editing any system files such as explorer.exe, it is easier if you boot into DOS mode first. The only way you can save those system files with your changes is under this mode. Also, the only way I can figure out to tell edit to wrap the lines (the /70 in the command tells edit to make the lines 70 characters long so I can easily see everything) is from DOS mode bootup.
+
+On the other hand, if you bring up your victim program in edit from the MSDOS prompt inside Windows, you can use the search and replace functions. And some programs will show up with the lines wrapped anyhow. Then, if you are editing a crucial system file, simply save it under a different name, reboot in DOS mode and rename it to the victim program.
+
+How to Edit Explorer.exe -- the heart of Windows--->>
+--------------------------------------------------------------
+How to Customize Your Windows Operating System
+
+The doorway to your Windows operating system is the program explorer.exe, in the Windows directory. For this example, we show explorer.exe brought up under Windows in edit.
+ 
+
+
+
+
+ Figure 3: Explorer.exe brought up in edit under Windows.
+
+See those words such as "S t a r t "? Notice how there is a space between each letter? Those are the sorts of things you can hex edit without killing the program.
+
+More hex editing--->>
+ 
+
+-------------------------------------------------------
+More hex editing...
+
+There is a crucial trick to hex editing programs without killing them. Let's say you want to change the name of your "Control Panel" to something else, say "Hacker Toolz". For this to work, you must not change the total length of the program, or it won't be able to find crucial instructions once they have been moved by changing the program size. In this case, you count 24 characters (include the spaces between letters and between words) in "Control Panel". If you place 24 characters of your own choosing in their place, the program will still run.
+
+If you want things to look pretty, leave those spaces between the letter so they don't get all mashed together. To underline any character, replace another character with an "&".
+
+ 
+
+
+
+
+ Figure 4: Editing Explorer.exe, the gateway to your operating system.
+
+More how to torture and deface your very own operating system--->>
+ 
+
+--------------------------------------------------
+More hex editing...
+
+When you are done, be sure to save it with a different file name than explorer.exe, or else with the same name but in a different folder (directory).
+
+Now comes the scary part. Will you kill your operating sytem when you replace explorer.exe with yoru own version? Or will you end up with an ubercool desktop?
+
+First, make sure you have a copy of the original explorer.exe saved somewhere. The ideal place is on your Windows Rescue or repair disk. If you have a decent antivirus program, or use Partion Magic, you should have a rescue disk already. If not, shame on you!
+
+OK, OK, when you bought that Windows computer, the salespeople thought you were just an ordinary luser and wouldn't know what to do with a rescue disk if you had one. They thought that if anything ever went seriously wrong with Windows, you would take the computer to a repair shop and pay them $100 to reformat your hard drive and reinstall Windows. Seriously, that's how they "fix" most problems.
+
+Here's the ordinary way to repair Windows gone bad. In expert installation mode, it gives you the opriton to create a rescue floppy disk. Then you boot with it and fix things from DOS as best as you can. In that case of a badly hexed explorer.exe, you would just replace it with a clean copy of explorer.exe.
+
+Another ordinary way to fix things is to reboot in DOS mode by hititng F8 on booting. DOS will work fine even if explorer.exe is dead.
+
+Yet another ordinary way is to boot to the Windows 98 installation CD-ROM. If you can't boot to it, try hitting delete on booting, then choose "Bios Features Setup," then highlight "boot sequence" by using the arrow key. Next press the page up key until you hit an entry that starts with "CDROM". The hit escape, F10, and choose "Y".
+
+Evil genius tip: My way is to keep several custom boot disks I have filled with cool tools such as a disk editor that even lets you directly edit the master boot record. I use MSDOS 6.2 for one of them, and Linux for the other, with a program that lets it read and write FAT16, FAT32 and NTFS file systems. It is the ubertool for breaking in at the console!
+
+More hex editing--->>
+
+
+
+--------------------------------------------------------------------------------
+More hex editing...
+
+
+The Windows 98 installation disk will detect that you already have Windows installed, and will give you the choice of reinstallation. This option usually will not harm anything you already had installed.
+
+If you use a rescue disk, generally it will have some sort of help function, or in the case of an antivirus program it may have saved copies of ally your crucial system files and will repair then automatically. all you have to do is get a DOS prompt and copy your saved original version of explorer.exe (or whatever program you munged up) over the version that doesn't work any more. Then reboot and voila, everything is OK.
+
+Followiing is yet another version of Windows that I played with. Use your imagination, it's way easy to do, yet will impress the heck out of your friends!
+
+You can get punched in the nose, expelled form school and busted warning: Yes, teenage hackers love to alter school computers to make insulting references to teachers. If you don't own the computer, you don't have the right to hex edit programs on it. Sorry.
+
+Want to learn more about hex editing programs, and other fascinating hacker tricks and programming techniques? Join Ankit Fadia's mailing list.
+
+Happy hacking, folks! You have my permission to copy these hexediting pages and post them on your own web site, as long as you provide a link to HappyHacker.org.
+ 
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+ 
+
+
+ 
+
+ 
+

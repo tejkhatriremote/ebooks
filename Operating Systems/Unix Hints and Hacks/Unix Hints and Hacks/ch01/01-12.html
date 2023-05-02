@@ -1,0 +1,145 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Topics in Administration</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=01//-->
+<!--PAGES=054-057//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch02/02-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading34"></A><font color="#000077">1.17 Bringing a System Down</FONT></H3>
+<h4 align="LEFT"><a name="Heading35"></A><font color="#000077">1.17.1 Description</FONT></H4>
+<p>There are seven ways to bring down a system, but in the end you really have only two choices: You can do it gracefully or you can do it the hard way!
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Why not always use a graceful method? Well, naturally you would want to try to bring any system down in a graceful manner. But not all UNIX systems allow a clean shutdown all the time. Sometimes while the system is processing through a clean shutdown procedure it hangs. Some circumstances lead to bringing the system down in a hard way. Here is a small list of reasons that can lead you to bring the system down in a not-so-graceful way:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;While the system is coming down the network processes hang and the NFS mount points fail to unmount.
+<dd><b>&#149;</B>&nbsp;&nbsp;No matter how many times you initiate a command (<small>shutdown, halt, telinit</SMALL>, and so on) to take down the system, nothing happens.
+<dd><b>&#149;</B>&nbsp;&nbsp;All access to the system is frozen and you cannot open a shell in the console or connect remotely from over the network.
+<dd><b>&#149;</B>&nbsp;&nbsp;A runaway process uses up all the CPU and the load average is so high that no commands can be issued.
+<dd><b>&#149;</B>&nbsp;&nbsp;On occasion, the process table fills up and a process or command cannot be forked to bring the system down.
+</DL>
+<p>You really should do two things before you initiate any command to bring down your system: verify the hostname of the system you want to shut down and <small>sync</SMALL> your disk!</P>
+<p>In a networked UNIX environment with multiple shells to remote systems, make sure you&#146;re on the right system by using the <small>hostname</SMALL> command. It takes only a second. If you support 50&#150;100 systems, the odds are that you will shut down the wrong system at least once a year. It will happen when you are tired or not paying attention.</P>
+<p>When you <small>sync</SMALL> the disks, you flush all modified inodes, data block cache, and superblock cache to disks. Running <small>sync</SMALL> before the system is brought down minimizes the amount of damage that could occur if the system were to crash or have to be taken down in a hard way.</P>
+<!-- CODE SNIP //-->
+<pre>
+# hostname
+rocket
+
+# sync
+# sync
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Verify the correct host to shutdown.
+</P>
+<p>Line 4: The first <small>sync</SMALL> begins flushing operation of inodes and cache, but it might not be finished by the time it returns a shell prompt.</P>
+<p>Line 5: This <small>sync</SMALL> does not start until the previous <small>sync</SMALL> has completed. This guarantees that all data is flushed.</P>
+<p>Always run <small>sync</SMALL> twice if you really want to be sure that everything has been flushed. A daemon called <small>update</SMALL> will get started at boot time to automatically run <small>sync</SMALL> every 30 seconds. This doesn&#146;t mean that you don&#146;t have to run the <small>sync</SMALL> command. It takes less than a second for there to be inconsistencies in the filesystem. The <small>update</SMALL> daemon can be somewhat of an insurance daemon. If the system crashes, <small>update</SMALL> might have had enough time to <small>sync</SMALL> the disks.</P>
+<p>Bringing down a system depends on the system itself. Only you can determine which method is right for the system in your environment. Workstations typically do not have applications that contain a large amount of open files, such as database servers. Larger servers are susceptible to major problems if a system crash were to occur. Here is a list of ways a system can be taken down, from safe and graceful to hard crash:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>shutdown</B> This is the cleanest, safest, and best way to shut down any workstation or server if you need to halt, reboot, or change the init state. It warns the users that a shutdown of the system is imminent. It even closes up special files and exits out of applications gracefully. You can define these in the shutdown script <small>rc0</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>halt</B> This command <small>sync</SMALL>s the disks by writing out any information pending and then stops any nonessential processes. It places a shutdown record into the accounting file and logs the shutdown of the system to the system log daemon. It does not execute the shutdown script <small>rc0</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>reboot</B> Like the <small>halt</SMALL> command, this <small>sync</SMALL>s the disks and stops any nonessential processes, too. However, <small>reboot</SMALL> restarts the kernel that is loaded into memory by the PROM monitor.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>fasthalt</B> and <b>fastboot</B> These commands are identical to the <small>halt</SMALL> and <small>reboot</SMALL> commands. The only difference is that when the system comes back up, a check of the filesystems (<small>fsck</SMALL>) doesn&#146;t get run.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>telinit</B> On systems that utilize multilevel <small>init</SMALL> functions, you can use the <small>telinit</SMALL> command to direct <small>init</SMALL> to go to a specific run level. It follows the same procedures as shutdown; the only difference is that it does not notify users that the system is going down. It begins the shutdown process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Power button, switch, or key</B> The button on the outside of some systems performs differently among different vendors. With some systems, it merely acts as an on/off switch. On other systems pushing the button attempts to <small>sync</SMALL> the disks, shut down the system, and initiate either a <small>halt</SMALL> or a <small>reboot</SMALL> sequence. There are even some systems where pushing the button once attempts to safely halt the system and pushing the button again powers the system off even if the disks did not get a chance to <small>sync</SMALL>. Some vendors today have configured the hardware to sense a key switch and attempt at the minimum to <small>sync</SMALL> the disks before powering the system off.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Power cord</B> <i>Avoid at all cost</I>. On the rarest occasions it will be necessary to pull the power cord. Every vendor and every system administrator will tell you not to do it! But there are times when it is inevitable and must be done. You should never run into this situation on a server, only at the workstation level.
+</DL>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p><small>shutdown</SMALL> This command should always be on any server with multiple users and sensitive applications that need to be shutdown gracefully.</P>
+<p><small>halt</SMALL> Typically, this command is used on single user workstations and standalone systems. It is used rarely on servers with multiple users.</P>
+<p><small>reboot</SMALL> This is generally used on an individual workstation by the user. This command is also often used remotely over a network on a user&#146;s workstation when the UNIX administrator is confident that the system will boot up without any incidents.</P>
+<p><small>Fasthalt</SMALL> and <small>fastboot</SMALL> These commands are good to use on highly utilized systems when there is a system that needs rebooting in the least amount of time. Candidates are any system that provides a service such as mail, news, DNS, or NIS. Database servers are not good candidates for these commands. This command is good for large fileservers with over 50GB of space. If the filesystem is corrupted and doesn&#146;t mount when the server comes up, you can always run a filesystem check on the corrupted area, but the rest of the system would be up and running.</P>
+<p><small>telinit</SMALL> If all the other commands fail, this should be the next in line to try. The odds are that this command will not work, though, because it is similar in function to <small>shutdown</SMALL>.</P>
+<p>Power button, switch, or keyIf bringing the system down through the software doesn&#146;t work, there is no alternative but to hit the power button, flip the key, or hit the power switch.</P>
+<p>Power cordUsually this is kicked by a user or someone working around a workstation and the infamous call comes in: &#147;All of a sudden, my computer has no power!&#148; Most vendors have designed their systems so administrators will never have to deal with this situation. However, I still see one or two workstations where pulling out the power cord was necessary, but never any server-level systems.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+fasthalt, halt, hostname, reboot, shutdown, sync, telinit
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch02/02-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

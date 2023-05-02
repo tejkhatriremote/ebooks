@@ -1,0 +1,162 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=727-731//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch21/21-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 22<br>Building Components for COM&#43; Services
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>A Good Component Service Component <i>728</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Writing Transactional Components <i>734</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using COM Compiler Support <i>749</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Working with Multiple COM&#43; Objects <i>757</I></B>
+</DL>
+<p>In this chapter, the topic of building Component Service components is expanded. This chapter starts out with a description of what a good component is. The various options of how to build good components are explored. Then, a more sophisticated transaction component is built using Visual C<small>&#43;&#43;</SMALL>. The focus of the example is to outline the interaction of the component with the transaction context and show how to influence the transaction context. Then, the interaction of various transaction combinations and how they affect the ongoing transaction will be explored.</P>
+<h3><a name="Heading2"></A><font color="#000077">A Good Component Service Component</FONT></H3>
+<p>In the preceding chapter, the COM&#43; component was written to get the database connection at the method call level and then release it at the end of the method call. This operation in a traditional environment will cost processing time, because retrieving a database connection requires time. With COM&#43;, it&#146;s done on purpose, because COM&#43; supports the concept of stateless objects.
+</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Lifetimes/Statelessness</FONT></H4>
+<p>When I first used MTS, before COM&#43;, I learned the concept of <i>lifetimes</I>. I considered what they&#146;re trying to achieve. There&#146;s a reason why lifetimes are so critical. To fully understand the concept of a lifetime, you need to take a step back and consider how things are done traditionally.</P>
+<p><font size="+1"><b>A Bit of Legacy</B></FONT></P>
+<p>Let&#146;s imagine that there are no COM&#43; services. The tools we&#146;ll use are traditional tools, and some parts are from other vendors. Consider the following system shown in Figure 22.1.
+</P>
+<p>In this example is an object called <small>Client</SMALL>. <small>User</SMALL> represents some data used when the client logs onto the Web site. In its simplest form, <small>User</SMALL> only contains information such as name, email, and password. However, <small>Client</SMALL> can be more complicated and contain other data such as address, conferences attended, and so on. The question now is when the client logs on, how is the <small>User</SMALL> object instantiated? In a pure object-oriented (OO) context, the answer is that the data is transferred from an object-oriented database to memory and then kept there while it&#146;s being used.</P>
+<p>This seems correct, because using a SQL approach, the data would have to be converted from SQL database format into a native format. With an OO database, this is not necessary, and it makes our lives simpler. However, there are some big flaws.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-01.jpg',224,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-01.jpg',224,420)"><font color="#000077"><b>Figure 22.1</B></FONT></A>&nbsp;&nbsp;Sample Web architecture.</P>
+<p>First, the data is loaded into memory. When another client logs in and retrieves the same data as the first client, what does the other client get? Is it a handle to instance in memory or does it create a new object instantiation? Another question: What happens in the situation of concurrency? Let&#146;s walk through both cases.
+</P>
+<p>In the case of getting a handle to the existing object in memory, there are concurrency issues that the programmer of the object must handle. What happens if client 1 modifies an address and then client 2 modifies the address again? Who writes the correct address?</P>
+<p>In the case of creating a new copy, there are no concurrency problems, because each client has a copy of the data. However, the extra copy of data requires extra resources. Instantiating the object requires extra processing cycles. What&#146;s more, if either client changes the object, the other client will not see the changes, because each client will instantiate the object for the lifetime of the application.</P>
+<p>For either situation, the object is kept in memory. Now imagine that the object is changed and the machine crashes. During this long period of time, the data may or may not have been written to the resource. However, a crash will erase all the data, so all the steps must be redone.</P>
+<p>For all these problems, code can be written to solve them. However, this type of code is not simple to write, nor is it simple to debug. The extra programming is not good because the developer is forced to write system code. <i>System code</I> is code that has nothing to do with the solution but provides a framework for the application code. System code might involve writing a transaction monitor or a directory service on top of a transaction monitor. Software vendors usually do this type of programming.</P>
+<p>The type of programming that you&#146;ll want to do is application programming. <i>Application programming</I> is when you solve a specific business problem. It&#146;s also called <i>vertical application programmingm</I>.</P>
+<p><font size="+1"><b>State of the System</B></FONT></P>
+<p>Before I show how COM&#43; solves these problems, let&#146;s look at the problem of maintaining state and handling errors on our own. The following source code contains an error:
+</P>
+<!-- CODE //-->
+<pre>
+   class TestState {
+   public:
+       TestState() { }
+       ~TestState() { }
+
+       int someMethod( int param) {
+           try {
+               m_value = param &#43; 1;
+
+               return anotherMethod( param);
+           } catch( ...) {
+               return 0;
+           }
+       }
+       void anotherMethod( int param) {
+           //...
+       }
+   private:
+       int m_value;
+   };
+</PRE>
+<!-- END CODE //-->
+<p>Did you find it? The error is the assignment of <small>m_value</SMALL>. This is incorrect because the method <small>anotherMethod</SMALL> could throw an exception. If this happens, the value <small>m_value</SMALL> has already been set. The exception would then have to set the value of <small>m_value</SMALL> to the old value. This is difficult because the old value has not been kept. Very often, keeping the old value is not possible because the new value is required to perform the calculation.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Stateless Objects</FONT></H4>
+<p>The problem we have is managing data and keeping it consistent. A transaction system will do this, but a certain programming style is associated with it&#151;stateless programming.
+</P>
+<p>A stateless architecture works very well if the resources are able to understand caching. The theoretical problem with stateless programming is that the data must always be fetched from the hard disk, which costs time. Also, a stateless object must instantiate the resources, which again costs time.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Stateless programming is when the object being called does not have a previous state from which to reference the next action. The caller provides this information. It&#146;s as if the called object were called for the first time.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>However, these arguments are moot if the resource understands caching properly. For example, if a call is made 20 times to the same record, a good resource will cache the data. This makes the lookup much faster. A smart cache acts like an on-demand resource loader. It decides when data needs to be loaded, discarded, or saved for later reuse. A good cache mechanism follows the ACID method and ensures that the data is correct.
+</P>
+<p>What about the cache coherence problem? This is solved by the resource, not by the application programmer. This forces a separation of the application programmer and the system programmer. This separation results in better code.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch21/21-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,162 @@
+{\rtf1\ansi\ansicpg1252\uc1 \deff0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}
+{\f56\froman\fcharset238\fprq2 Times New Roman CE;}{\f57\froman\fcharset204\fprq2 Times New Roman Cyr;}{\f59\froman\fcharset161\fprq2 Times New Roman Greek;}{\f60\froman\fcharset162\fprq2 Times New Roman Tur;}
+{\f61\froman\fcharset186\fprq2 Times New Roman Baltic;}{\f68\fmodern\fcharset238\fprq1 Courier New CE;}{\f69\fmodern\fcharset204\fprq1 Courier New Cyr;}{\f71\fmodern\fcharset161\fprq1 Courier New Greek;}{\f72\fmodern\fcharset162\fprq1 Courier New Tur;}
+{\f73\fmodern\fcharset186\fprq1 Courier New Baltic;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;
+\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\nowidctlpar\widctlpar\adjustright \fs20\lang3081\cgrid 
+\snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}}{\info{\author Intern}{\operator Intern}{\creatim\yr1999\mo6\dy3\hr17\min30}{\revtim\yr1999\mo6\dy3\hr17\min31}{\version2}{\edmins0}{\nofpages3}{\nofwords1042}{\nofchars5944}{\*\company Intern}
+{\nofcharsws7299}{\vern71}}\widowctrl\ftnbj\aenddoc\hyphcaps0\viewkind4\viewscale100 \fet0\sectd \linex0\headery709\footery709\colsx709\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2
+\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6
+\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang
+{\pntxtb (}{\pntxta )}}\pard\plain \nowidctlpar\adjustright \fs20\lang3081\cgrid {\b\f2\fs28\ul\cf2\lang1043\cgrid0 Tutor2:
+\par }{\lang1043\cgrid0 
+\par In this tutorial we are going to start taking a look at registration possibilities... 
+\par We will again be looking at another program I coded. 
+\par }{\b\ul\lang1043\cgrid0 Step 1 : Run the program
+\par }{\lang1043\cgrid0     You will see a nice dino :-) Nothing says you are unregistered ... or tells you you are registered...
+\par Well .. check out the help menu, ah... a register option :-) Select it ... and you will see another 
+\par dialog box pop up ... In this one you can enter your name and serial ....
+\par Do so, enter  your name and a random serial and press ok... hmmm.. it tells you that you entered 
+\par a wrong serial .... It also asks you to reenter it please ....
+\par 
+\par }\pard \nowidctlpar\tx8520\adjustright {\b\ul\lang1043\cgrid0 Step 2: Disassemble the program.
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0     When you disassemble this program, and look in the string references, (Refs->String Data References)
+\par you will see a few strings about registration... Some of em you already have seen... The one that complains 
+\par about a wrong serial name combination... But you see that there is a possibility to get a Thank you message :-)
+\par 
+\par Double click on the "you entered an invalid serial" string ... and you will land right in the middle of the 
+\par registration routine of the program.
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\lang1043\cgrid0 
+\par }{\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }{\f2\fs16\lang1043\cgrid0  }{\f2\fs16\cf11\lang1043\cgrid0 ADDRESS}{\f2\fs16\lang1043\cgrid0  }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE \tab \tab    }{\f2\fs16\cf10\lang1043\cgrid0  ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 
+\par :004013B7    \tab 55          \tab \tab \tab         push ebp
+\par :004013B8 \tab 89E5\tab \tab \tab         mov ebp, esp
+\par :004013BA \tab 833D0020400000\tab \tab         cmp dword ptr [00402000], 00000000
+\par :004013C1 \tab 7416                    \tab \tab         je 004013D9
+\par :004013C3 \tab 6A40  \tab \tab \tab         push 00000040
+\par 
+\par }{\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"Registered"
+\par                                   |
+\par }{\lang1043\cgrid0 :004013C5 \tab 68E8404000              \tab         push 004040E8
+\par 
+\par }{\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"Thank you for registering ..."
+\par                                   |
+\par }{\lang1043\cgrid0 :004013CA \tab 68F3404000 \tab   \tab         push 004040F3
+\par :004013CF \tab FF7508\tab \tab                         push [ebp+08]
+\par 
+\par }{\cf9\lang1043\cgrid0 * Reference To: USER32.MessageBoxA, Ord:018Ah
+\par                                   |
+\par }{\lang1043\cgrid0 :004013D2 \tab E821030000\tab \tab    Call 004016F8
+\par :004013D7 \tab EB14 \tab \tab                    jmp 004013ED
+\par 
+\par }{\cf9\lang1043\cgrid0 * Referenced by a (U)nconditional or (C)onditional Jump at Address:
+\par |:004013C1(C)
+\par |
+\par }{\lang1043\cgrid0 :004013D9 \tab 6A10                    \tab \tab push 00000010
+\par 
+\par }{\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"Error in Entry "
+\par                                   |
+\par }{\lang1043\cgrid0 :004013DB \tab 686E404000              \tab push 0040406E
+\par 
+\par }{\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"You entered an invalid serial "
+\par                                         ->"/ name combination ...please check "
+\par                                         ->"your entry thoroughly and try "
+\par                                         ->"to reenter"
+\par                                   |
+\par }{\lang1043\cgrid0 :004013E0 \tab 687E404000                            push 0040407E
+\par :004013E5 \tab FF7508                  \tab \tab push [ebp+08]
+\par 
+\par }{\cf9\lang1043\cgrid0 * Reference To: USER32.MessageBoxA, Ord:018Ah
+\par                                   |
+\par }{\lang1043\cgrid0 :004013E8 \tab E80B030000              \tab Call 004016F8
+\par 
+\par }{\cf9\lang1043\cgrid0 * Referenced by a (U)nconditional or (C)onditional Jump at Address:
+\par |:004013D7(U)
+\par |
+\par }{\lang1043\cgrid0 :004013ED \tab 5D                  \tab     \tab pop ebp
+\par :004013EE \tab C3                   \tab   \tab ret
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 
+\par 
+\par If you quickly look at this piece of disassembly, you will easily understand what 
+\par is going on ... A part of this code is able to tell you that you are registered, and thanks you for it.
+\par The other part can tell you that you entered a wrong number / name combination. 
+\par In some pseudo-code it would look like this : 
+\par 
+\par If correctserial then tell em thank you
+\par else tell em wrong serial
+\par 
+\par The c-code looked as following :
+\par 
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \nowidctlpar\adjustright {\b\lang1043\cgrid0 void}{\lang1043\cgrid0  DoFakeCheckRoutine(}{\b\lang1043\cgrid0 HWND}{\lang1043\cgrid0  hDlg)
+\par }{\b\lang1043\cgrid0 \{
+\par }{\lang1043\cgrid0   }{\b\lang1043\cgrid0 if}{\lang1043\cgrid0  (registered ) }{\b\lang1043\cgrid0 MessageBox}{\lang1043\cgrid0 (hDlg, "Thank you for registering ...\\r\\n"
+\par \tab \tab \tab                "We will be thankfull to you for the rest of our lives !",\\
+\par \tab \tab \tab    \tab "Registered", MB_ICONINFORMATION);
+\par \tab }{\b\lang1043\cgrid0 else}{\lang1043\cgrid0  }{\b\lang1043\cgrid0 MessageBox}{\lang1043\cgrid0 (hDlg,     "You entered an invalid serial / name combination ..."
+\par \tab \tab \tab \tab "please check your entry thoroughly and try to reenter",
+\par \tab \tab \tab \tab "Error in Entry ", MB_ICONERROR );
+\par }{\b\lang1043\cgrid0 \}
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 
+\par 
+\par No big deal right ? the thing is we have to find the place where the decision is made... That is luckily 
+\par not that different either ...
+\par 
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par ADDRESS}{\f2\fs16\lang1043\cgrid0  \tab }{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab \tab }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 :004013BA \tab 833D0020400000\tab \tab         \tab cmp dword ptr [00402000], 00000000
+\par :004013C1 \tab 7416                    \tab \tab         \tab je 004013D9
+\par :004013C3 \tab 6A40  \tab \tab \tab         \tab push 00000040
+\par 
+\par }{\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"Registered"
+\par                                   |
+\par }{\lang1043\cgrid0 :004013C5 \tab 68E8404000              \tab         \tab push 004040E8
+\par 
+\par }{\cf9\lang1043\cgrid0 * Possible StringData Ref from Data Obj ->"Thank you for registering ..."
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 
+\par The je 004013D9 at address 4013C1 is the instruction that controls the flow of the program. If you manipulate 
+\par this instruction, you will have control over the code :-)
+\par And now in simple English : If you make sure the processor never executes the je instruction, you will be registered :-)
+\par to prevent this je instruction from occuring, the best way is to nop it.
+\par 
+\par }{\b\ul\lang1043\cgrid0 Step 3: Open the program in Hiew and Patch it:
+\par }{\lang1043\cgrid0     Drag and drop a copy of your tutor2.exe on top of hiew, so that it opens in hiew. Now go stand on address 
+\par 4013C1 in w32dasm. Look at the statusbar. It says : data @L004013C1 @Offset 00007C1h in File Tutorial2.exe
+\par Switch over to Hiew. Get into decode mode by pressing Enter twice. Now press F5 and enter 7C1 and you will land 
+\par right on top of the je instruction.
+\par Modify the je instruction by first pressing F3 then F2 and then reassembling 2 NOP instructions. Press Esc once and then F9 to save your changes. Verify that your changes are correct ... Hiew should look like this : 
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par ADDRESS}{\f2\fs16\lang1043\cgrid0 :}{\f2\fs16\cf12\lang1043\cgrid0 MACHINE CODE\tab \tab \tab }{\f2\fs16\cf10\lang1043\cgrid0 ASSEMBLER INSTRUCTIONS
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 
+\par 000013C1: 90                           \tab \tab \tab nop
+\par 000013C2: 90                           \tab \tab \tab nop
+\par 000013C3: 6A40                         \tab \tab \tab push      040
+\par 000013C5: 68E8404000                  \tab \tab \tab push      0004040E8
+\par 000013CA: 68F3404000                   \tab \tab \tab push      0004040F3
+\par 000013CF: FF7508                       \tab \tab \tab push      d,[ebp][00008]
+\par 000013D2: E821030000                   \tab \tab \tab call     .0000016F8   -------- (1)
+\par 000013D7: EB14                         \tab \tab \tab jmps     .0000013ED   -------- (2)
+\par }\pard \ri-17\nowidctlpar\adjustright {\f2\fs16\cf11\lang1043\cgrid0 ////////////////////// Code snip ///////////////////////////
+\par }\pard \nowidctlpar\adjustright {\lang1043\cgrid0 Then press F10 to exit hiew. 
+\par 
+\par }{\b\ul\lang1043\cgrid0 Step 4: Verify your crack:
+\par }{\lang1043\cgrid0 
+\par     Run the program and go through help -> register and enter any name and serial ... and press enter ...
+\par Look what happens :-)) And enjoy your power ... Enjoy the power to control !
+\par 
+\par 
+\par }{\b\ul\lang1043\cgrid0 Extra:
+\par }{\lang1043\cgrid0     Do you think these first two programs I coded and we cracked are too easy ? They are nothing compared to real life programs ?? 
+\par Believe me, if you have understood the last two tutorials, and successfully followed every step, you can crack 60% of 
+\par all shareware applications availble on the internet ... All you need is : a little practice ...
+\par Don't you believe me ? Read the Next tutorials... We will be cracking a few shareware apps... And you will see that they are very much like the first two apps we cracked :-)
+\par 
+\par 
+\par 
+\par 
+\par 
+\par 
+\par }}

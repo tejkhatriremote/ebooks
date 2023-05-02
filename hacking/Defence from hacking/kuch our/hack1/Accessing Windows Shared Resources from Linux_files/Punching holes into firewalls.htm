@@ -1,0 +1,358 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0031)http://sebsauvage.net/punching/ -->
+<HTML><HEAD><TITLE>Punching holes into firewalls</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<STYLE type=text/css>BODY {
+	FONT-SIZE: 10pt; FONT-FAMILY: Verdana,Arial,Helvetica,sans-serif
+}
+H1 {
+	FONT-SIZE: 2em
+}
+H2 {
+	FONT-SIZE: 1.4em
+}
+.t {
+	FONT-SIZE: 10pt; FONT-FAMILY: Verdana,Arial,Helvetica,sans-serif
+}
+.c {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-FAMILY: "Courier New",Courier,mono
+}
+.sm {
+	FONT-SIZE: 8pt; COLOR: #999999; FONT-FAMILY: Verdana,Arial,Helvetica,sans-serif
+}
+.small {
+	FONT-SIZE: 8pt; FONT-FAMILY: Verdana,Arial,Helvetica,sans-serif
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff>
+<H1>Punching holes into firewalls</H1>
+<P>or "Why firewalls shouldn't be considered a ultimate weapon for network 
+security"<BR>or "Secure TCP-into-HTTP tunnelling guide"</P>
+<TABLE cellSpacing=0 cellPadding=3 width="100%" border=1>
+  <TBODY>
+  <TR>
+    <TD class=t>
+      <P>This document is located at <A 
+      href="http://sebsauvage.net/punching/index.html">http://sebsauvage.net/punching/index.html<BR></A>This 
+      document explains how to securely tunnel any TCP-based protocol (SMTP, 
+      POP3, telnet...) in simple HTTP requests.</P>
+      <P>It is heavily inspired from <A 
+      href="http://proxytunnel.sourceforge.net/papers/muppet-200204.html">http://proxytunnel.sourceforge.net/papers/muppet-200204.html</A>, 
+      although it does not use the same tools and does not cover outside to 
+      inside data flows (backward tunnels).</P></TD></TR></TBODY></TABLE>
+<P>&nbsp;</P>
+<H2>Introduction</H2>
+<P>Firewalls are heavily used to secure private networks (home or corporate). 
+Usually, they are used to protect the network from:</P>
+<UL>
+  <LI>intrusions from outsiders 
+  <LI>misuse from insiders</LI></UL>
+<P>In a TCP/IP environment, the typical corporate firewall configuration is to 
+block <B>everything</B> (both incoming and outgoing), and give access to the 
+internet only through a HTTP proxy. The proxy usually has filtering capabilities 
+(censors URLs and file types), and access to the proxy often requires 
+credentials (login/password). This gives greater contol to the network 
+administrator over what and who is going in and out of the network.</P>
+<P><B>Still, this should not considered a ultimate weapon, and network 
+administrators should not rely on the firewalls <I>only</I>.</B></P>
+<P>Encapsulation is the <I>basis</I> of networking. For example, HTTP is 
+encapsulated by TCP, TCP is encapsulated by IP, and IP is often encapsulated in 
+PPP or Ethernet.<BR>Encapsulating protocols in an unsual way is often reffered 
+as <I>tunnelling</I>.</P>
+<P>As soon as you let a single protocol out, tunelling allows to let anything go 
+through this protocol, and thus through the firewall.</P>
+<P>&nbsp;</P>
+<P>This paper demonstrates how to encapsulate any TCP-based protocol (SMTP, 
+POP3, NNTP, telnet...) into HTTP, thus bypassing the firewall 
+protection/censorship (depending on your point of view)</P>
+<P>A word of warning:</P>
+<TABLE cellSpacing=0 cellPadding=3 width="100%" bgColor=#ffff00 border=1>
+  <TBODY>
+  <TR>
+    <TD><B class=t><FONT color=#ff0000>In many countries and corporate 
+      environments, bypassing a firewall is forbidden and exposes you to 
+      sanctions, redundancy, legal proceedings and - in some countries - death 
+      penalty.<BR>You are warned.</FONT></B></TD></TR></TBODY></TABLE>
+<P>Nevertheless, in some countries this kind of firewall/proxy bypassing is the 
+only way to ensure free speech (such as China or United Arab Emirates where the 
+government severly censors the internet and where firewall bypassing is a 
+national sport.)</P>
+<P>Now you known what you're doing, let's move on.</P>
+<HR>
+
+<H2>The problem</H2>
+<P>Say you want to fetch your mail from your ISP mail server. You usually simply 
+connect to port 110 on the POP server of your ISP.</P>
+<P align=center><IMG height=132 alt="Figure 1 : Using POP3 to fetch mail" 
+src="Punching holes into firewalls_files/punch1.gif" width=423></P>
+<P>&nbsp;</P>
+<P>Trouble: there is a Big Bad firewall which blocks everything.</P>
+<P align=center><IMG height=273 alt="Figure 2 : The firewall blocks POP3" 
+src="Punching holes into firewalls_files/punch2.gif" width=493></P>
+<P>Well... it does not exactly block <I>everything</I>: it lets HTTP out through 
+a proxy.<BR>Let's encapsulate our POP3 connection into HTTP.</P>
+<HR>
+
+<H2>The tools</H2>
+<P>We need:</P>
+<UL>
+  <LI>A <B>computer</B> on the internet which has unrestricted access to the 
+  internet, such as a home ADSL computer. 
+  <LI><B>GNU HTTP Tunnel</B> (<A 
+  href="http://www.nocrew.org/software/httptunnel.html">http://www.nocrew.org/software/httptunnel.html</A>). 
+  It encapsulates TCP into HTTP requests. 
+  <LI><B>SSH</B> is a secure shell (<A 
+  href="http://www.openssh.com/">http://www.openssh.com/</A>). It provides 
+  secure (and compressed) channels between two hosts using SSL. Besides 
+  providing a shell (like telnet), it also provides file copy (scp) and TCP port 
+  forwarding (tunnelling). We will use the port forwarding feature.</LI></UL>
+<P>&nbsp;</P>
+<P><B><I>Why not use GNU HTTP Tunnel alone&nbsp;?</I></B></P>
+<P>In principle, only HTTP Tunnel is necessary. But this is not desirable:</P>
+<UL>
+  <LI>the tunnel is public: anyone can use your tunnel. Your could be held 
+  liable for what anybody has done with your tunnel. 
+  <LI>the tunnel is cleartext: anyone can spy on your connection. Your passwords 
+  (SMTP, POP3, telnet...) are transmitted in clear text. 
+  <LI>the tunnel is not protected: anyone can alter the datastream. 
+  <LI>you have to run a new instance of the HTTP Tunnel client <B>and</B> the 
+  server for <B>each</B> new tunnel you want to set up.</LI></UL>
+<P>This is where ssh come in. ssh provides:</P>
+<UL>
+  <LI>authentication (only authorised users can use the tunnel) 
+  <LI>privacy (no one can spy on what's going through the tunnel) 
+  <LI>integrity (no one can tamper data going through the tunnel) 
+  <LI>easy tunnel set-up (you can create a new tunnel with a single ssh command 
+  on the client side).</LI></UL>
+<P>These tools are available on Unix/Linux and Windows environments.</P>
+<P>&nbsp;</P>
+<H2>The whole chain</H2>
+<P>Let's see how this works. Here is the full chain:</P>
+<P align=center><IMG height=312 alt="Figure 3 : The whole chain" 
+src="Punching holes into firewalls_files/punch3.gif" width=721></P>
+<P align=left>&nbsp;</P>
+<P align=left>Technically speaking, once this chain is established, connecting 
+to OfficeComputer:800 is identical to connecting to pop3server:110.<BR>The mail 
+client will not see the difference.</P>
+<UL>
+  <LI>On the office computer: 
+  <UL>
+    <LI>TCP data sent to port 800 is encrypted by ssh, which forwards data to 
+    port 900. 
+    <LI>ssh stream sent to port 900 is chunked in individual HTTP requests by 
+    the HTTP Tunnel client and sent to the home computer through the proxy. 
+  </LI></UL>
+  <LI>On the home computer: 
+  <UL>
+    <LI>the HTTP Tunnel server receives HTTP requests, decapsulates and 
+    re-assembles the ssh stream and forwards it to port 22 (to the ssh server). 
+    <LI>the ssh server decrypts the datastream and forwards it to the pop3server 
+    on port 110.</LI></UL></LI></UL>
+<P align=left>As TCP is a bi-directionnaly datastream, once established, the TCP 
+connection can pass data back and forth through the HTTP proxy.</P>
+<P align=left><B>The administrator of the HTTP proxy cannot see which protocol 
+is used, which server is contacted </B>(except the home computer)<B>, nor the 
+nature of transmitted data.</B></P>
+<P align=left>&nbsp;</P>
+<H2 align=left>Setting up the tunnel</H2>
+<P>To create the tunnel as in our example above:</P>
+<TABLE borderColor=#cccccc cellSpacing=0 cellPadding=3 border=0>
+  <TBODY>
+  <TR>
+    <TD class=t bgColor=#8ad9ff colSpan=2><B>On the home computer 
+    (server):</B></TD></TR>
+  <TR vAlign=top bgColor=#ebebeb>
+    <TD class=c noWrap>sshd</TD>
+    <TD class=sm>(start the ssh server)</TD></TR>
+  <TR vAlign=top bgColor=#ebebeb>
+    <TD class=c noWrap 
+      bgColor=#ebebeb>hts&nbsp;80&nbsp;--forward-port&nbsp;localhost:22</TD>
+    <TD class=sm>(start the HTTP Tunnel server)</TD></TR>
+  <TR vAlign=top>
+    <TD class=t bgColor=#8ad9ff colSpan=2><B>On the office computer 
+      (client):</B></TD></TR>
+  <TR vAlign=top bgColor=#ebebeb>
+    <TD class=c noWrap>htc&nbsp;--forward-port&nbsp;900&nbsp;--proxy 
+      HttpProxy:3128 HomeComputer:80</TD>
+    <TD class=sm>(start the HTTP Tunnel client)<SPAN class=c></SPAN></TD></TR>
+  <TR vAlign=top bgColor=#ebebeb>
+    <TD class=c 
+      noWrap>ssh&nbsp;-L&nbsp;800:pop3server:113&nbsp;sshlogin@localhost&nbsp;-p&nbsp;900</TD>
+    <TD class=sm>(start the ssh client)<SPAN class=c></SPAN><SPAN 
+      class=c></SPAN></TD></TR>
+  <TR vAlign=top bgColor=#ebebeb>
+    <TD class=t>Then read your email with your mail program at 
+localhost:800</TD>
+    <TD>&nbsp;</TD></TR></TBODY></TABLE>
+<P>Notes:</P>
+<UL>
+  <LI>If your proxy requires authentication, add <SPAN 
+  class=c>--proxy-authorization&nbsp;login:password</SPAN> to the <SPAN 
+  class=c>htc</SPAN> command line. 
+  <LI><SPAN class=c>sshlogin</SPAN> is your ssh login name on the ssh server on 
+  the Home computer. 
+  <LI>You can set up as many additionnal tunnels as you want with:<BR><SPAN 
+  class=c>ssh&nbsp;-L&nbsp;localport:destinationServer:destinationPort&nbsp;sshlogin@localhost&nbsp;-p&nbsp;900 
+  </SPAN><BR>(<SPAN class=c>localport</SPAN> is the local port you want to map 
+  to a destination server outside the firewall (<SPAN 
+  class=c>destinationServer:destinationPort</SPAN>)).</LI></UL>
+<P>Drawbacks of this solution:</P>
+<UL>
+  <LI>it does not work for UDP-based protocols (NFS, chat...). 
+  <LI>it does not work for programs which act as server (most games, chat, 
+  peer-to-peer...) 
+  <LI>HTTP encapsulations and proxy delays can add some latency.</LI></UL>
+<P>Good point of this solution:</P>
+<UL>
+  <LI>Setting up the server is easy. 
+  <LI>By using ports above 1024, setting up the client does not require 
+  administratror (root) privileges. 
+  <LI>Multiple users can use the server to create multiple tunnels to any 
+  destination. Each user has its own private tunnels. 
+  <LI>This tunnel can secure communications even if the proxy does not accept to 
+  proxy HTTPS. 
+  <LI>This tunnel does not require the HTTP proxy to accept the CONNECT command. 
+
+  <LI>This tunnel can work on proxies which are not capable of - or forbid - 
+  proxying of HTTPS (port 443). 
+  <LI>With Linux Live CDs like <A 
+  href="http://www.knoppix.org/"><I>Knoppix</I></A> this can be a great solution 
+  for cybercafés: Live Linux CD ensures there is no lurking keylogger or troyan, 
+  and the tunnel ensures that the cybercafé owner, a troyaned computer or the 
+  government cannot sniff your passwords, spy on your data or censor websites. I 
+  especially think of China here.</LI></UL>
+<HR>
+
+<H2>Conlusion</H2>
+<P>As you can see, setting up such tunnels does not requires advanced skills, 
+especially with the recent Linux distributions which come with pre-installed and 
+pre-configured ssh servers.</P>
+<P>With a little more skills, it is possible to tunnel just about everything 
+into everything. For example, it is possible to tunnel PPP into HTTP, providing 
+a full IP-stack tunnelling, including ICMP (ping...), DNS and servers (backward 
+tunnels).<BR>Opensource and commercial VPN solutions also come into mind.<BR>See 
+references for programs and papers about firewall bypassing below.</P>
+<P>Security is not only a matter of firewall configuration, it must be seen at a 
+larger scale. Do not rely on the firewall alone.</P>
+<P>Censorship bypassing should not be only considered as a terrorist or hacker 
+weapon, but also as tools for privacy, free speech, democraty and human rights 
+protection (Please read papers written by PGP-author Philip Zimmerman, they are 
+very instructive).</P>
+<HR>
+
+<H2>References</H2>
+<P>Articles and software about tunnelling and firewall/proxy/censorship 
+bypassing:</P>
+<UL>
+  <LI><B>ProxyTunnel : </B><A 
+  href="http://proxytunnel.sourceforge.net/">http://proxytunnel.sourceforge.net/</A><BR><SPAN 
+  class=small>TCP-into-HTTP(S) tunneling program ; requires the HTTP proxy to 
+  accept the CONNECT command.</SPAN> 
+  <LI><B><I>SSH Tunnelling howto : </I></B><A 
+  href="http://proxytunnel.sourceforge.net/papers/muppet-200204.html">http://proxytunnel.sourceforge.net/papers/muppet-200204.html</A><BR><SPAN 
+  class=small>Instructions for TCP-into-HTTP tunnelling using SSH and 
+  ProxyTunnel.</SPAN> 
+  <LI><B><I>Bypassing internet censorship : </I></B><A 
+  href="http://www.zensur.freerk.com/">http://www.zensur.freerk.com/</A><B><I><BR></I></B><SPAN 
+  class=small>Ways to bypass censorship, using various technics</SPAN>. 
+  <LI><B><I>How to Bypass Most Firewall Restrictions and Access the Internet 
+  Privately</I></B> : <A 
+  href="http://www.buzzsurf.com/surfatwork/">http://www.buzzsurf.com/surfatwork/</A><BR><SPAN 
+  class=small>Document on firewalls bypassing and tunnelling.</SPAN> 
+  <LI><B><I>Breaking Firewalls with OpenSSH and PuTTY</I></B> : <A 
+  href="http://souptonuts.sourceforge.net/sshtips.htm">http://souptonuts.sourceforge.net/sshtips.htm</A><BR><SPAN 
+  class=small>Using putty and OpenSSH when the firewall allows port 22 
+  in.</SPAN><BR>
+  <LI><B>The ennemy within: Firewalls and backdoors :</B> <A 
+  href="http://www.securityfocus.com/infocus/1701">http://www.securityfocus.com/infocus/1701</A><BR><SPAN 
+  class=small>Article about firewalls and security.</SPAN><B><BR></B>
+  <LI><B>GNU HTTP Tunnel : </B><A 
+  href="http://www.nocrew.org/software/httptunnel.html">http://www.nocrew.org/software/httptunnel.html</A><BR><SPAN 
+  class=small>Opensource TCP-into-HTTP tunnelling.</SPAN> 
+  <LI><B>PlugDaemon : </B><A 
+  href="http://www.taronga.com/plugdaemon/">http://www.taronga.com/plugdaemon/</A><BR><SPAN 
+  class=small>TCP port forwarder with HTTPS proxy support.</SPAN><BR>
+  <LI><B>OpenSSH : </B><A 
+  href="http://www.openssh.com/">http://www.openssh.com/</A><BR><SPAN 
+  class=small>Opensource ssh client and server.</SPAN> 
+  <LI><B>OpenSSH for Windows</B>: <A 
+  href="http://sshwindows.sourceforge.net/">http://sshwindows.sourceforge.net/<BR></A><SPAN 
+  class=small>Windows version of OpenSSH. (The server only works under 2000/XP, 
+  but a 9x version is planned.)</SPAN> 
+  <LI><B>OpenVPN : </B><A 
+  href="http://openvpn.sourceforge.net/">http://openvpn.sourceforge.net/</A><B><BR></B><SPAN 
+  class=small>Excellent, secure and flexible opensource Virtual Private 
+  Networking and tunnelling program. Also provides HTTP encapsulation and 
+  supports HTTP proxies.</SPAN><BR>
+  <LI><B>1st April RFC 3093</B>: <A 
+  href="http://ietf.org/rfc/rfc3093.txt">http://ietf.org/rfc/rfc3093.txt</A><BR><SPAN 
+  class=small>So-called Firewall Enhancement Protocol (FEP).</SPAN> 
+  <LI><B>DesProxy : </B><A 
+  href="http://desproxy.sourceforge.net/">http://desproxy.sourceforge.net/</A><B><BR></B><SPAN 
+  class=small>Allows to make direct TCP connections through HTTP proxy which 
+  accept the CONNECT command. Does not require external server as in our 
+  solution above.</SPAN><B><BR></B>
+  <LI><B>TransConnect</B>: <A 
+  href="http://transconnect.sourceforge.net/">http://transconnect.sourceforge.net/</A><BR><SPAN 
+  class=small>Uses the CONNECT proxy HTTP command to make direct connections to 
+  the internet.</SPAN> 
+  <LI><B>HTTP Bridge</B>: <A 
+  href="http://httpbridge.sourceforge.net/">http://httpbridge.sourceforge.net/</A><BR><SPAN 
+  class=small>A CGI-based secure HTTP proxy written in Java. Requires 
+  Tomcat.<BR></SPAN>
+  <LI><B>HTTP Proxy Lib</B>: <A 
+  href="http://httppc.sourceforge.net/">http://httppc.sourceforge.net/</A><BR><SPAN 
+  class=small>A library to add TCP-into-HTTP capability to your programs.</SPAN> 
+
+  <LI><B>STunnel</B>: <A 
+  href="http://stunnel.mirt.net/">http://stunnel.mirt.net/</A><BR><SPAN 
+  class=small>Generic TCP-into-SSL wrapper.</SPAN> 
+  <LI><B>STunnel</B>: <A 
+  href="http://www.stunnel.org/">http://www.stunnel.org/</A><BR><SPAN 
+  class=small>Generic TCP-into-SSL wrapper.</SPAN> 
+  <LI><B>SSLProxy</B>: <A 
+  href="http://www.obdev.at/products/ssl-proxy/">http://www.obdev.at/products/ssl-proxy/</A><BR><SPAN 
+  class=small>Generic TCP-into-SSL wrapper.</SPAN> 
+  <LI><B>TLSWrap</B> : <A 
+  href="http://tlswrap.sunsite.dk/">http://tlswrap.sunsite.dk/</A><BR><SPAN 
+  class=small>TLS/SSL wrapper/proxy for FTP.</SPAN> 
+  <LI><B>HTTP Tunnel : </B><A 
+  href="http://www.http-tunnel.com/">http://www.http-tunnel.com/</A><BR><SPAN 
+  class=small>Commercial TCP-into-HTTP and UDP-into-HTTP tunnelling service (not 
+  encrytped&nbsp;!)</SPAN> 
+  <LI><B>HTTPort :</B> <A 
+  href="http://www.htthost.com/">http://www.htthost.com/</A><BR><SPAN 
+  class=small>Commercial TCP-into-HTTP tunnelling service (encrypted).</SPAN> 
+  <LI><B>Zebedee :</B> <A 
+  href="http://www.winton.org.uk/zebedee/">http://www.winton.org.uk/zebedee/</A><BR><SPAN 
+  class=small>Opensource cross-plateform TCP/UDP-into-SSL tunnel.</SPAN> 
+  <LI><B>Socks2HTTP :</B> <A 
+  href="http://www.totalrc.net/">http://www.totalrc.net/</A><BR><SPAN 
+  class=small>Commercial Socks proxy which tunnels TCP and UDP into HTTP.</SPAN> 
+
+  <LI><B>SSL Explorer :</B> <A 
+  href="http://www.sshtools.com/products/enterprise/ssl-explorer/ssl-explorer.jsp">http://www.sshtools.com/products/enterprise/ssl-explorer/ssl-explorer.jsp</A><BR><SPAN 
+  class=small>TCP-into-HTTPS tunnelling and more. The clients only requires a 
+  Java-enabled browser.</SPAN><BR>
+  <LI><B>Tunnelier :</B> <A 
+  href="http://www.bitvise.com/tunnelier.html">http://www.bitvise.com/tunnelier.html</A><BR><SPAN 
+  class=small>Commercial (free for personal use) SSH client for Windows with 
+  easy tunnelling features, graphical SFTP client, FTP-to-SFTP bridge, 
+  etc.</SPAN><BR>
+  <LI><B>nph-proxy : </B><A 
+  href="http://www.jmarshall.com/tools/cgiproxy/">http://www.jmarshall.com/tools/cgiproxy/</A><BR><SPAN 
+  class=small>Free CGI-based HTTP proxy, capable of HTTPS proxying and URL 
+  obfuscation. Perl source code provided.</SPAN> 
+  <LI>For more information, see: 
+  <UL>
+    <LI><A 
+    href="http://directory.google.com/Top/Computers/Security/Internet/Privacy/">http://directory.google.com/Top/Computers/Security/Internet/Privacy/</A> 
+
+    <LI><A 
+    href="http://directory.google.com/Top/Computers/Security/Virtual_Private_Networks/">http://directory.google.com/Top/Computers/Security/Virtual_Private_Networks/</A></LI></UL>
+  <LI>Tunnelling projects on SourceForge.net: <A 
+  href="http://sourceforge.net/search/?words=tunnel">http://sourceforge.net/search/?words=tunnel</A></LI></UL>
+<HR>
+</BODY></HTML>

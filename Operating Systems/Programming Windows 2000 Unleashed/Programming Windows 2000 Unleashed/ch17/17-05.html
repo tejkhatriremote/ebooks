@@ -1,0 +1,304 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=537-542//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Here are the aggregation options for the COM object:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Yes</I>. The COM object may be aggregated by another COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>No</I>. Aggregation of the COM object is not allowed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Only</I>. The COM object must be aggregated by another COM object.
+</DL>
+<p>Given an object named <i>Latte</I>, the ATL Object Wizard will create the following files:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Latte.cpp</SMALL>. Contains the implementation of the <small>CLatte</SMALL> class. This file is initially empty.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Latte.h</SMALL>. Contains the header file for the <small>CLatte</SMALL> class.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Latte.rgs</SMALL>. The script file used to insert information about <small>CLatte</SMALL> into the Registry.
+</DL>
+<p>The ATL Object Wizard will also modify the following files:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Espresso.cpp</SMALL>. Modified to add <small>CLSID_Latte</SMALL> to the module&#146;s object map.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Espresso.idl</SMALL>. Modified to add the new <small>ILatte</SMALL> interface.
+</DL>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Merging the Proxy/Stub Code with Your DLL</FONT></H4>
+<p>If your COM component uses custom interfaces, you must supply a DLL that contains marshaling proxy and stub code. Normally, you compile a separate proxy/stub DLL that must be distributed with your COM component.
+</P>
+<p>As discussed earlier in this chapter, the ATL COM Wizard provides an option to allow the proxy/stub DLL to be merged in the server. If you select this option, the <small>dlldatax.c</SMALL> and <small>dlldatax.h</SMALL> files are added to your project. However, they will not be included in the build&#151;if you want to merge the proxy/stub into your DLL, you must follow these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Go to the File tab in the project window and right-click the <small>dlldatax.c</SMALL> file. Select Settings from the pop-up menu. The Project Settings dialog box will be displayed.
+<dd><b>2.</B>&nbsp;&nbsp;In the General tab in the Project Settings dialog box, clear the check box labeled Exclude File from Build. Keep the dialog box open.
+<dd><b>3.</B>&nbsp;&nbsp;Repeat this procedure for the <small>dlldatax.h</SMALL> header file.
+<dd><b>4.</B>&nbsp;&nbsp;Keep the dialog box open and click on the C<small>&#43;&#43;</SMALL> tab.
+<dd><b>5.</B>&nbsp;&nbsp;Choose the Precompiled Headers category from the drop-down list and select the Not Using Precompiled Headers radio button.
+<dd><b>6.</B>&nbsp;&nbsp;Choose the Preprocessor category and add <small>_MERGE_PROXYSTUB</SMALL> as a preprocessor definition. Make sure that this new symbol is separated from the previous symbol by a comma.
+<dd><b>7.</B>&nbsp;&nbsp;Click the OK button to close the dialog box.
+</DL>
+<p>When the project is built, the DLL that contains the COM object will also contain the code required for proxy/stub marshaling.
+</P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">A Custom COM Object Example</FONT></H4>
+<p>As an example of how custom COM objects are created with ATL, the CD-ROM that accompanies the book includes SysInfo, a custom COM object that is a wrapper around the Win32 <small>GetSystemInfo</SMALL> function.</P>
+<p>The SysInfo project creates an EXE module that includes a simple object named <small>SystemInfo</SMALL>. The values used in the Names property sheet for the <small>SystemInfo</SMALL> object are listed in Table 17.1.</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 17.1</B> Names Property Sheet Values for the <small>SystemInfo</SMALL> Object
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Field</I>
+<th align="LEFT" valign="TOP"><i>Name</I>
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Short Name
+<td align="LEFT" valign="TOP"><small>SystemInfo</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Class
+<td align="LEFT" valign="TOP"><small>CSystemInfo</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">.H File
+<td align="LEFT" valign="TOP"><small>SystemInfo.h</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">.CPP File
+<td align="LEFT" valign="TOP"><small>SystemInfo.cpp</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">CoClass
+<td align="LEFT" valign="TOP"><small>SystemInfo</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Interface
+<td align="LEFT" valign="TOP"><small>ISystemInfo</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Type
+<td align="LEFT" valign="TOP"><small>SystemInfo Class</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Prog ID
+<td align="LEFT" valign="TOP"><small>SysInfo.SystemInfo</SMALL>
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+</TABLE>
+<p>The values used in the Attributes property sheet for the <small>SystemInfo</SMALL> object are listed in Table 17.2.</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 17.2</B> Names Property Sheet Values for the <small>SystemInfo</SMALL> Object
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Field</I>
+<th align="LEFT" valign="TOP"><i>Name</I>
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Threading Model
+<td align="LEFT" valign="TOP">Both
+<tr>
+<td align="LEFT" valign="TOP">Interface
+<td align="LEFT" valign="TOP">Custom
+<tr>
+<td align="LEFT" valign="TOP">Aggregation
+<td align="LEFT" valign="TOP">Yes
+<tr>
+<td align="LEFT" valign="TOP">ISupportErrorInfo
+<td align="LEFT" valign="TOP">Unchecked
+<tr>
+<td align="LEFT" valign="TOP">Connection Points
+<td align="LEFT" valign="TOP">Unchecked
+<tr>
+<td align="LEFT" valign="TOP">Free Threaded Marshaler
+<td align="LEFT" valign="TOP">Unchecked
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+</TABLE>
+<p><font size="+1"><b>Defining the ISystemInfo Interface</B></FONT></P>
+<p>The <small>ISystemInfo</SMALL> interface has a number of methods, as shown in the IDL provided in Listing 17.2. Lines that were added to the wizard-generated code are shown in bold.</P>
+<p><b>Listing 17.2</B> The <small>ISystemInfo</SMALL> Interface Definition<hr></P>
+<!-- CODE //-->
+<pre>
+import &#147;oaidl.idl&#148;;
+import &#147;ocidl.idl&#148;;
+<b>typedef enum tagProcessorType
+{
+   Intel386 = 0,
+   Intel486,
+   IntelPentium,
+   IntelPentiumPro,
+   MipsR4000,
+   Alpha21064,
+   Alpha21066,
+   Alpha21164,
+   PPC601,
+   PPC603,
+   PPC604,
+   PPC603plus,
+   PPC604plus,
+   PPC620,
+}ProcessorType;</B>
+[
+    object,
+    uuid(96848BCE-A68F-11D2-B886-00104B36573E),
+
+    helpstring(&#147;ISystemInfo Interface&#148;),
+    pointer_default(unique)
+]
+interface ISystemInfo : IUnknown
+{
+   <b>HRESULT GetPageSize([out]unsigned long* pdwPageSize);
+   HRESULT GetProcessorType([out]ProcessorType* pType);
+   HRESULT GetAddressSpaceBounds([out]unsigned long* pdwLowAddr,
+                                 [out]unsigned long* pdwHighAddr);
+   HRESULT GetProcessorCount([out]short* pCount);
+   HRESULT GetProcessorMask([out]long* pMask);
+   HRESULT GetProcessorRevisionString([out]BSTR* strRevision);
+   HRESULT GetVmAllocationGranularity([out]unsigned long* pdwSize);</B>
+};
+
+[
+    uuid(96848BC2-A68F-11D2-B886-00104B36573E),
+    version(1.0),
+    helpstring(&#147;SysInfo 1.0 Type Library&#148;)
+]
+library SYSINFOLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+
+    [
+        uuid(96848BCF-A68F-11D2-B886-00104B36573E),
+        helpstring(&#147;SystemInfo Class&#148;)
+    ]
+    coclass SystemInfo
+    {
+        [default] interface ISystemInfo;
+    };
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>ProcessorType</SMALL> enumeration defined above the interface definition is used to specify the type of processor used by the system.</P>
+<p><font size="+1"><b>Modifications to the SystemInfo Definition</B></FONT></P>
+<p>The definition for the <small>SystemInfo</SMALL> object is found in the <small>SystemInfo.h</SMALL> header file (see Listing 17.3). Modifications to this file are shown in bold.</P>
+<p><b>Listing 17.3</B> The <small>SystemInfo</SMALL> COM Object Definition<hr></P>
+<!-- CODE //-->
+<pre>
+class ATL_NO_VTABLE CSystemInfo :
+    public CComObjectRootEx&ltCComMultiThreadModel&gt,
+    public CComCoClass&ltCSystemInfo, &ampCLSID_SystemInfo&gt,
+    public ISystemInfo
+{
+public:
+    CSystemInfo()
+    {
+    }
+
+DECLARE_REGISTRY_RESOURCEID(IDR_SYSTEMINFO)
+
+DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+BEGIN_COM_MAP(CSystemInfo)
+    COM_INTERFACE_ENTRY(ISystemInfo)
+END_COM_MAP()
+
+   <b>HRESULT FinalConstruct();</B>
+
+// ISystemInfo
+public:
+   <b>STDMETHOD(GetVmAllocationGranularity)(unsigned long* pdwSize);
+   STDMETHOD(GetProcessorRevisionString)(BSTR* strRevision);
+   STDMETHOD(GetProcessorMask)(long* pMask);
+   STDMETHOD(GetProcessorCount)(short* pCount);
+   STDMETHOD(GetAddressSpaceBounds)(unsigned long* pdwLowAddr,
+                                  unsigned long* pdwHighAddr);
+   STDMETHOD(GetProcessorType)(ProcessorType* pType);
+   STDMETHOD(GetPageSize)(unsigned long* pdwPageSize);
+protected:
+   SYSTEM_INFO m_info;</B>
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>FinalConstruct</SMALL> method declared in Listing 17.3 is called by the framework after the COM object has been completed constructed. This enables you to perform initialization work, such as calling virtual functions, that isn&#146;t safe in a constructor.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

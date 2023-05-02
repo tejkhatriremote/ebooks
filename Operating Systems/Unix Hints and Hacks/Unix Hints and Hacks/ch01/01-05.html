@@ -1,0 +1,201 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Topics in Administration</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=01//-->
+<!--PAGES=025-028//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Using <small>fuser</SMALL> is simple, to the point, and very efficient. It can be time consuming to pick from hundreds of processes on larger servers that might or might not relate to the process you are trying to kill or gather information on. This single command quickly gathers information and kills the PID, if necessary, on request. It is a very useful command for an administrator.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>I have become accustomed to using this command for killing predetermined processes. I have several scripts similar to the one described in place to kill off various user applications, X sessions, and shells, among other things. On a remote system defined as a trusted host, it is nice to be able to execute a remote shell and kill processes quickly without having to log in to the remote machine. To the user it appears as though you have killed processes without even logging in to the system: it&#146;s magic to them!
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+fuser, kill, ps
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading14"></A><font color="#000077">1.7 Swap on-the-Fly</FONT></H3>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">1.7.1 Description</FONT></H4>
+<p>If you find that, after you have installed UNIX on your system, you still need more swap space, it is an easy thing to accomplish. Create a swap file and make it active.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: AT&T, some BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>mkfile</B> size[m] <i>filename</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The main command for adding swap on the fly is <small>mkfile</SMALL>. This command is simple to use, so adding swap on the fly is easy. After you determine that you need more swap and you have found an underutilized disk that can help balance the disk I/O, you&#146;re ready.</P>
+<!-- CODE SNIP //-->
+<pre>
+# mkfile 200m /disk2/swap_200MB
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This <small>mkfile</SMALL> command creates a 200MB swap file in the /disk2 partition. The only step left is to turn the swap file into active swap for the system. Depending on your flavor of UNIX, this is achieved in the following ways:</P>
+<p>Flavors: Irix and Solaris</P>
+<!-- CODE SNIP //-->
+<pre>
+# swap -a /disk2/swap_200MB
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Flavors: HP-UX, SunOS
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# swapon -a /disk2/swap_200MB
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This uses the swap only for the length of time that the system is up. If you reboot or shut down the system for any reason, the swap file is still there, but it is no longer active. The <small>swap</SMALL> or <small>swapon</SMALL> command must be executed again.</P>
+<p>To hardcode the swap file into the system so that it is always activated when the system comes up, place an entry in the filesystem table by editing the filesystem table on your system. This file will be called /etc/fstab or /etc/vfstab.</P>
+<p>Add the following line to the filesystem table:</P>
+<!-- CODE SNIP //-->
+<pre>
+/disk2/swap_200M    swap    swap   rw 0   0
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>It used to be that the fastest disk I/O was only on the system drive. With the speed of today&#146;s SCSI buses and fiber channels, creating the device swap only on the system disk is not really necessary anymore. It is now easy to put swap anywhere on a system, but with that comes the necessity to balance the disk I/O to get the maximum amount of performance out of the system.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Sometimes a user calls complaining that the applications they are running take up too much of the system&#146;s resources. If this happens and you determine that lack of swap space is the problem, let the user know how concerned you are and that you want to fix it on the spot. By adding more swap on-the-fly for the user while you have him on the phone, it looks like you&#146;re pulling some kind usable space out of thin air. This simple feat can make you look pretty good in the user&#146;s eyes.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+fstab, mkfile, swap, swapon, vfstab
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading16"></A><font color="#000077">1.8 Keep It Up with nohup</FONT></H3>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">1.8.1 Description</FONT></H4>
+<p>To keep processes running after you log out, use the <small>nohup</SMALL> command. This command will be immune to any hang-ups and quits.</P>
+<p><font size="+1"><b>Example One: Basic nohup Command Use</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>nohup</B> <i>command arguments</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To use this command, have <small>nohup</SMALL> precede the command that you don&#146;t want to die when you exit the shell of system. While this process is running, the shell, desktop, or windowing system can be exited without any harm to the command that is passed through <small>nohup</SMALL>. The only thing that would end this process is a kill signal, an error in the process, or a reboot of the system.</P>
+<p>On some flavors of UNIX running in certain shells, <small>nohup</SMALL> creates a file that sends any output passed to standard out from the process that was executed within <small>nohup</SMALL>. The file is called nohup.out and is located in the current directory (where the command was initiated).</P>
+<p>Later versions of UNIX have adapted the <small>nohup</SMALL> command when you send a process into the background. Irix and Solaris are two flavors that have incorporated this method. Even though <small>nohup</SMALL> is no longer needed, these flavors have grandfathered the command for those who still use it in their scripts and routines.</P>
+<!-- CODE SNIP //-->
+<pre>
+$ <b>nohup</B> tar -cvf /dev/tape /home &amp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This example runs in background and transfers all the files located in /home, in .tar format, to the local tape (your tape device might differ). The file nohup.out potentially creates a list of the files that are being transferred to the tape.
+</P>
+<p>Using <small>nohup</SMALL> with other commands to which processes can be passed helps to ease administrative tasks. These next two examples show you how <small>nice</SMALL> and <small>rsh</SMALL> can be passed to create one long command.</P>
+<p><font size="+1"><b>Example Two: Low priority nohup</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Shells: All</P>
+<!-- CODE SNIP //-->
+<pre>
+$ nohup nice /usr/local/bin/build_report.sh
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you&#146;re afraid that a process might take up too much CPU time, <small>nohup</SMALL> can be joined with other commands (such as <small>nice</SMALL>) to ease the load on the system. In this example, build_report might be a CPU intensive script that overloads the system (building various reports) if not run in a <small>nice</SMALL> state.</P>
+<p><font size="+1"><b>Example Three: Multiple Command, Multiple System nohup</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Shells: All</P>
+<!-- CODE SNIP //-->
+<pre>
+$ nohup rsh rocket &#145;(find / -print)&#146; &gt; /tmp/foo.txt &amp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Listing the files of a large server can take a while. In this example, while you are logged off the system the command opens a shell on a remote system, finds all the files on that system, and outputs a list in a file on the local system (where <small>nohup</SMALL> was initiated).</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>In the early years of UNIX, there was no graphical interface and no way to perform a screen lock. A user or operator did not have to remain logged in to a system until it was shut down. For security reasons and so that an operator didn&#146;t have to waste time hanging around for a job to finish, <small>nohup</SMALL> was the perfect tool. It also allowed many administrators to go home after a long shift at work!</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

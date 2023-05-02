@@ -1,0 +1,158 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=982-985//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Registering a Cluster Administration Extension</B></FONT></P>
+<p>There are four registration functions that must be exported by a Cluster Administrator extension DLL. These four interfaces are automatically created by the Visual C<small>&#43;&#43;</SMALL> 6.0 Cluster Resource Type Wizard:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllRegisterCluAdminExtension</SMALL>. Registers the extension in the cluster database
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllUnregisterCluAdminExtension</SMALL>. Removes the extension from the cluster database
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllRegisterServer</SMALL>. Registers the extension&#146;s COM interfaces
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DllUnregisterServer</SMALL>. Unregisters the extension&#146;s COM interfaces
+</DL>
+<p>To register your extension DLL manually, use the <small>regcladm</SMALL> command. <small>regcladm</SMALL> automatically calls the proper registration functions inside the extension DLL. Here&#146;s how you invoke <small>regcladm</SMALL> from a DOS command line:</P>
+<!-- CODE SNIP //-->
+<pre>
+regcladm &lt;DLL path&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To specify a particular cluster, use the <small>/C</SMALL> switch:</P>
+<!-- CODE SNIP //-->
+<pre>
+regcladm /CZaphod &lt;DLL path&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To unregister the DLL, use the <small>/U</SMALL> switch:</P>
+<!-- CODE SNIP //-->
+<pre>
+regcladm /U &lt;DLL path&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading10"></A><font color="#000077">A Cluster-aware Example</FONT></H3>
+<p>As an example of how you can create applications that use MSCS, the CD-ROM that accompanies the book includes a set of sample projects that are based on the named pipe examples from Chapter 26, &#147;Pipes&#148;:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;ClusterQuote. A new version of the BardServ project that was developed in Chapter 26. ClusterQuote stores the name of the named pipe in the cluster database and returns status information to the resource DLL.
+<dd><b>&#149;</B>&nbsp;&nbsp;QuoteClient. A new version of the named pipe client developed in Chapter 26. QuoteClient allows you to specify the computer name and the name of the named pipe, instead of hard-coding these values.
+<dd><b>&#149;</B>&nbsp;&nbsp;HiAvQuote. A resource DLL for the ClusterQuote executable developed using the Visual C<small>&#43;&#43;</SMALL> Cluster Resource Type Wizard.
+<dd><b>&#149;</B>&nbsp;&nbsp;HiAvQuoteEx. A Cluster Administrator extension developed using the Visual C<small>&#43;&#43;</SMALL> Cluster Resource Type Wizard.
+</DL>
+<p>The complete source code for these projects is located on the CD-ROM that accompanies this book.
+</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">The ClusterQuote Project</FONT></H4>
+<p>ClusterQuote is a console mode project that&#146;s similar to the BardServ project created in Chapter 26. In Chapter 26, BardServ was created to demonstrate a simple application that acted as a named pipe server. As with BardServ, clients connect to an instance of ClusterQuote and request a quote to be delivered over a named pipe.
+</P>
+<p>ClusterQuote has a few enhancements over BardServ:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A client can request the current status of ClusterQuote by sending the string &#147;Status&#148; to the server. If ClusterQuote is running, it will respond with &#147;Okay&#148;. This interaction will be used by the resource DLL to test the status of the server.
+<dd><b>&#149;</B>&nbsp;&nbsp;A client can shut down an instance of ClusterQuote by sending the string &#147;Terminate&#148; to the server.
+<dd><b>&#149;</B>&nbsp;&nbsp;ClusterQuote is not hard-coded to use a particular pipe name. It uses a command-line argument as the pipe name when creating a named pipe. The resource DLL will retrieve a private property from the cluster database and pass this value to ClusterQuote as a command-line parameter.
+</DL>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">The QuoteClient Project</FONT></H4>
+<p>QuoteClient is a dialog box&#150;based MFC project that&#146;s similar to the NPClient project presented in Chapter 26. Like NPClient, QuoteClient connects to a named pipe and requests a quote from the server (in this case, an instance of ClusterQuote).
+</P>
+<p>QuoteClient works just like NPClient, with a few new features:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A user of QuoteClient can specify the name of the remote computer as well as the named pipe that QuoteClient will connect to.
+<dd><b>&#149;</B>&nbsp;&nbsp;A user of QuoteClient can request a status message from the server by clicking the Status button.
+<dd><b>&#149;</B>&nbsp;&nbsp;A user of QuoteClient can request that the server shut down by clicking the Terminate button.
+</DL>
+<p>An example of QuoteClient running is provided in Figure 29.3.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-03.jpg',674,478 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-03.jpg',674,478)"><font color="#000077"><b>Figure 29.3</B></FONT></A>&nbsp;&nbsp;QuoteClient is used to connect to an instance of ClusterQuote.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">The High Availability Quote Cluster Resource Type</FONT></H4>
+<p>Although it&#146;s theoretically possible to create a cluster resource type by hand, it&#146;s much easier to use the Cluster Resource Type Wizard that&#146;s included with Visual C<small>&#43;&#43;</SMALL> 6.0. This wizard will generate nearly complete projects for a resource DLL and a Cluster Administrator extension based on your input on two wizard pages.</P>
+<p><font size="+1"><b>Using Cluster Resource Type Wizard</B></FONT></P>
+<p>The High Availability Quotes resource type was created using the Visual C<small>&#43;&#43;</SMALL> Cluster Resource Type Wizard. Start by selecting the Cluster Resource Type Wizard from the Visual C<small>&#43;&#43;</SMALL> Projects tab in the New dialog box. The first page of the Cluster Resource Type Wizard is shown in Figure 29.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-04.jpg',476,384 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch29/images/29-04.jpg',476,384)"><font color="#000077"><b>Figure 29.4</B></FONT></A>&nbsp;&nbsp;The initial Cluster Resource Type Wizard page.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

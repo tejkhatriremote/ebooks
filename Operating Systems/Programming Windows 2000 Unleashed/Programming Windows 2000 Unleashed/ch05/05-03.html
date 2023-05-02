@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Structured Exception Handling</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=05//-->
+<!--PAGES=168-171//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>An example of an exception filter function that tests for access violations and divide-by-zero exceptions is shown in Listing 5.9.
+</P>
+<p><b>Listing 5.9</B> An Example of an Exception Filter Function<hr></P>
+<!-- CODE //-->
+<pre>
+   int ExceptionFilter(int nException)
+   {
+       int nReturn;
+       switch(nException)
+       {
+       case EXCEPTION_ACCESS_VIOLATION:
+           nReturn = EXCEPTION_EXECUTE_HANDLER;
+           break;
+
+       case EXCEPTION_INT_DIVIDE_BY_ZERO:
+           nReturn = EXCEPTION_EXECUTE_HANDLER;
+           break;
+
+       default:
+           nReturn = EXCEPTION_CONTINUE_SEARCH;
+       }
+       return nReturn;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><font size="+1"><b>Understanding the Exception Record Information</B></FONT></P>
+<p>In addition to the exception code, you can to determine a wide range of information about the exception currently being handled. You can use the <small>GetExceptionInformation</SMALL> function to return all the information you could ever need about an exception.</P>
+<p>You can call the <small>GetExceptionInformation</SMALL> function only from within the exception filter expression. The return value from <small>GetExceptionInformation</SMALL> is a pointer to an <small>EXCEPTION_POINTERS</SMALL> structure. This value usually is passed to a filter function that returns a value to be used by the exception filter expression.</P>
+<p>The <small>EXCEPTION_POINTERS</SMALL> structure is defined like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   typedef struct _EXCEPTION_POINTERS {
+       PEXCEPTION_RECORD ExceptionRecord;
+       PCONTEXT          ContextRecord;
+   } EXCEPTION_POINTERS;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>EXCEPTION_POINTERS</SMALL> structure contains two pointers:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExceptionRecord</SMALL>. A pointer to an <small>EXCEPTION_RECORD</SMALL> structure. This structure contains information about the exception currently being handled.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ContextRecord</SMALL>. A pointer to a <small>CONTEXT</SMALL> structure, which contains information about the CPU state. This structure is dependent on the CPU. Intel and PowerPC CPUs, for example, generate <small>CONTEXT</SMALL> structures with different semantics.
+</DL>
+<p>The <small>EXCEPTION_RECORD</SMALL> structure is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   typedef struct _EXCEPTION_RECORD {
+       DWORD ExceptionCode;
+       DWORD ExceptionFlags;
+       struct _EXCEPTION_RECORD *ExceptionRecord;
+       PVOID ExceptionAddress;
+       DWORD NumberParameters;
+       DWORD ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
+   } EXCEPTION_RECORD;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>EXCEPTION_RECORD</SMALL> structure has the following members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExceptionCode</SMALL>. Indicates the reason the exception occurred. Possible values for the exception code are discussed in the next section.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExceptionFlags</SMALL>. Indicates whether the exception is &#147;continuable.&#148; If this flag is 0, the exception is continuable. If this flag is <small>EXCEPTION_NONCONTINUABLE</SMALL>, the exception cannot be continued. If you attempt to resume after a &#147;noncontinuable&#148; exception, an <small>EXCEPTION_NONCONTINUABLE_EXCEPTION</SMALL> is raised.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExceptionRecord</SMALL>. Points to another <small>EXCEPTION_RECORD</SMALL> structure that is chained to this record. This typically is done in case of nested exceptions.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExceptionAddress</SMALL>. Indicates the address where the exception occurred.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>NumberParameters</SMALL>. Contains the number of elements in the <small>ExceptionInformation</SMALL> array.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExceptionInformation</SMALL>. An array of 32-bit values that describe the exception. Only one exception from Windows 2000 uses this array. If the exception code is <small>EXCEPTION_ACCESS_VIOLATION</SMALL>, the first element of the array indicates whether a read or write operation caused the exception. A value of 0 indicates a read, and a value of 1 indicates a write.
+</DL>
+<p>The <small>CONTEXT</SMALL> structure is defined as different structures for each type of processor that Windows 2000 runs on. Different versions of this structure exist for MIPS, Alpha, Intel, and PowerPC processors. If you&#146;re interested in the actual structure, you can find all four definitions in the <small>winnt.h</SMALL> header file.</P>
+<p>In practice, the <small>CONTEXT</SMALL> structure rarely is used. It&#146;s so processor dependent that using it requires an in-depth knowledge of the CPU on which your application is actually running. The different versions of the <small>CONTEXT</SMALL> structure are very long&#151;they serve to document the state of the processor when the exception was raised.</P>
+<p><font size="+1"><b>Using Exception Codes</B></FONT></P>
+<p>The following list of exception codes can be raised by Windows 2000 while your application is executing:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_ACCESS_VIOLATION</SMALL>. Indicates that the thread attempted to read from or write to a virtual address without the appropriate access.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_BREAKPOINT</SMALL>. Indicates that a debugging breakpoint was encountered while executing the program. This exception is only useful to debuggers.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_DATATYPE_MISALIGNMENT</SMALL>. Raised when a thread attempts to read or write misaligned data. On some non-Intel processors, data must be properly aligned. For example, a long integer may be required to be aligned on an even address boundary. Because Windows 2000 automatically fixes alignment errors for you (although at a large performance cost), you won&#146;t see this exception.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_SINGLE_STEP</SMALL>. Indicates that a trace trap or other single-instruction mechanism signaled that one instruction was executed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_ARRAY_BOUNDS_EXCEEDED</SMALL>. Thrown when a thread attempts to access an array element that&#146;s out of bounds when using hardware that supports bounds checking.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_DENORMAL_OPERAND</SMALL>. Indicates that one of the operands in a floating-point operation is too small to represent as a standard floating-point value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_DIVIDE_BY_ZERO</SMALL>. Indicates that the thread attempted to divide a floating-point value by a floating-point divisor of zero.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_INEXACT_RESULT</SMALL>. Indicates that the result of a floating-point operation cannot be represented exactly as a decimal fraction.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_INVALID_OPERATION</SMALL>. Indicates that a floating-point exception (other than the types listed here) has occurred.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_OVERFLOW</SMALL>. Indicates that the exponent of a floating-point operation is greater than the magnitude allowed by the corresponding type.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_STACK_CHECK</SMALL>. Indicates that the stack overflowed or underflowed due to a floating-point operation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_FLT_UNDERFLOW</SMALL>. Indicates that the exponent of a floating-point operation is less than the magnitude allowed by the corresponding type.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_INT_DIVIDE_BY_ZERO</SMALL>. Indicates that the thread attempted to divide an integer value by 0.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_INT_OVERFLOW</SMALL>. Indicates that the result of an integer operation caused an overflow in the result register. The processor&#146;s &#147;carry flag&#148; will contain the most significant bit of the result.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_PRIV_INSTRUCTION</SMALL>. Indicates that the thread attempted to execute an instruction for which the operation is not allowed in the current machine mode.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EXCEPTION_NONCONTINUABLE_EXCEPTION</SMALL>. Indicates that the thread attempted to continue execution after a noncontinuable exception occurred.
+</DL>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Handling Floating-Point Exceptions</FONT></H4>
+<p>By default, floating-point exceptions are not raised. Instead, predefined error values, such as <small>NAN</SMALL> and <small>INFINITY</SMALL>, are returned when error cases are detected. To enable floating-point exceptions, you must use the <small>_controlfp</SMALL> function. The following code, for example, enables <small>EXCEPTION_FLT_DIVIDE_BY_ZERO</SMALL> exceptions:</P>
+<!-- CODE SNIP //-->
+<pre>
+   int n = _controlfp(0,0);
+   n &amp= ~EM_ZERODIVIDE;
+   _controlfp(n, MCW_EM);
+</PRE>
+<!-- END CODE SNIP //-->
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>There&#146;s also a <small>_control87</SMALL> function, which is much like <small>_controlfp</SMALL>, except it&#146;s specific to the Intel x86 processor. If you&#146;re writing portable code, you should use <small>_controlfp</SMALL> instead of <small>_control87</SMALL>.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

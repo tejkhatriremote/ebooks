@@ -1,0 +1,223 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=074-078//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This code fragment shows two different functions that write to the same variable, <small>g_nRequestsOutstanding</SMALL>. If two (or more) threads attempt to change the value of a variable at the same time, the variable will be corrupted. There are actually two different types of failure scenarios:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;On multiprocessor machines, it&#146;s very easy for a multithreaded process to have two threads executing simultaneously. If your code does not employ synchronization techniques for controlling access to variables accessed by multiple threads, it will definitely fail.
+<dd><b>&#149;</B>&nbsp;&nbsp;On single-processor machines, multiple threads in a process cannot run at the same time. However, it&#146;s possible for a thread to be interrupted at any point during the execution of your program. If it&#146;s interrupted while executing the several instructions required to write to a variable, another thread may write to the variable while the first thread is waiting to run.
+</DL>
+<p>Listing 3.5 contains an example of a program that is not thread safe. The BadCount console mode application can be found on the CD-ROM that accompanies this book. BadCount creates two threads that attempt to increment a global variable to 50,000 by splitting the work between the two threads.
+</P>
+<p><b>Listing 3.5</B> The BadCount Program Shows the Wrong Way to Share Global Data<hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * BadCount.c - unsynchronized access to a global variable through
+ * two threads. Compile with the Multi-threaded runtime library.
+ */
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+/* Global counter */
+int  g_nTheCounter = 0;
+void IncCounter();
+
+DWORD WINAPI threadFunc(LPVOID);
+int _tmain()
+{
+    DWORD dwThreadId;
+    /* Create worker thread for half the work */
+    HANDLE hThread = CreateThread(NULL,
+                                  0,
+                                  threadFunc,
+                                  NULL,
+                                  0,
+                                  &ampdwThreadId);
+    if(!hThread) return 0;
+    /*
+     * Increment global variable 25,000 times, then wait for
+     * the worker thread to finish executing.
+     */
+    IncCounter();
+    WaitForSingleObject(hThread, INFINITE);
+    /*
+     * Display the value of the global variable, after it has
+     * been incremented 50,000 times.
+     */
+    _tprintf(_T(&#147;The value of the global counter is %d\n&#148;),
+             g_nTheCounter);
+    return 0;
+}
+
+/*
+ *  Worker thread function - increments the global variable
+ *  25,000 times, and exits.
+ */
+DWORD WINAPI threadFunc(LPVOID lpv)
+{
+    IncCounter();
+    return NO_ERROR;
+}
+/*
+ * Common function used by both threads to increment the global
+ * counter variable.
+ */
+void IncCounter()
+{
+    int n;
+    for(n = 0; n &lt 25000; &#43;&#43;n)
+    {
+        &#43;&#43;g_nTheCounter;
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>How bad is BadCount? It depends on the machine. On my SMP machine, an IBM 704 with dual Pentium Pro CPUs, the reported count at the end of the program is usually around 30,000 or so. However, on another workstation I have with a single Alpha CPU, the result is usually the expected value of 50,000. The problem still appears on the single-CPU system, it just happens rarely. These differing results illustrate a few points about multithreading:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Just because a program runs on your machine doesn&#146;t mean that it isn&#146;t broken.
+<dd><b>&#149;</B>&nbsp;&nbsp;SMP machines are great testing tools.
+<dd><b>&#149;</B>&nbsp;&nbsp;Synchronization problems can be very difficult to track down.
+</DL>
+<p>Any operating system that supports multiple threads of execution must provide some way for you to handle these synchronization issues. What makes Windows 2000 unique is its large number of management options. Windows 2000 is chockfull of methods to help you manage threads and processes. These methods are discussed in detail in the section titled &#147;Synchronization,&#148; later in this chapter.
+</P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">When to Create a Thread</FONT></H4>
+<p>Several problems are easily solved by splitting an application into two or more threads. Your application is probably a good candidate for multithreading if it meets one of the following criteria:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It spends a lot of time testing to check for completed I/O.
+<dd><b>&#149;</B>&nbsp;&nbsp;It has a number of &#147;background&#148; tasks to perform asynchronously.
+<dd><b>&#149;</B>&nbsp;&nbsp;It has other tasks that can be performed independently without much synchronization.
+</DL>
+<p>Using multiple threads tends to make applications with these properties easier to program. However, it&#146;s easy to go overboard when using threads for the first time. Consider the next section.
+</P>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">When Not to Create a Thread</FONT></H4>
+<p>Some types of applications are not good candidates for becoming multithreaded. Your application may not be a great candidate for multithreading if it meets one of the following criteria:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It&#146;s basically monolithic.
+<dd><b>&#149;</B>&nbsp;&nbsp;It doesn&#146;t consume existing computing resources.
+<dd><b>&#149;</B>&nbsp;&nbsp;It has complex synchronization issues.
+<dd><b>&#149;</B>&nbsp;&nbsp;It has many dependencies between tasks.
+</DL>
+<p>Remember, adding multiple threads to your application may solve some of your problems, but it will create new issues, such as synchronization, thread and object lifetime, and increased complexity during testing. Also, remember this: Your program will not, in most cases, run any faster on a single CPU machine. In fact, it will often run slower.
+</P>
+<h3><a name="Heading19"></A><font color="#000077">Synchronization</FONT></H3>
+<p>As discussed earlier, when two or more threads use a common variable, problems can result. If multiple threads attempt to read a variable, there&#146;s no problem. If, however, one thread attempts to modify a common variable, access to that variable must be synchronized.
+</P>
+<p>A <i>synchronization primitive</I> is an object that helps you manage a multithread application. Five basic types of synchronization primitives are available in Windows 2000:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Events</I> are objects created by you and are used to signal that a variable or routine is available for access.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Critical sections</I> are areas of code that can be accessed by a single thread at any given time.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Mutexes</I> are Windows 2000 objects used to ensure that only a single thread has access to a protected variable or code.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Semaphores</I> are similar to mutexes but behave like counters, allowing a specified number of threads access to a protected variable or code.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>API-level atomic operations</I> are provided by Windows 2000 to enable you to increment, decrement, or exchange the contents of a variable in a single operation.
+</DL>
+<p>Each of these synchronization primitives is useful in certain situations. Each is discussed in the next few sections.
+</P>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Using Win32 Interlocked Operations</FONT></H4>
+<p>The simplest synchronization primitives are used to manipulate or test the value of one or two variables. The Win32 API includes seven functions that are guaranteed to be atomic and thread safe, even in the presence of multiple CPUs:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedIncrement</SMALL> increments a 32-bit variable and returns the new value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedDecrement</SMALL> decrements a 32-bit variable and returns the new value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedExchange</SMALL> changes the value of a 32-bit variable to a new value and returns the previous value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedExchangeAdd</SMALL> increments the value of a 32-bit variable by a specified amount and returns the previous value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedExchangePointer</SMALL> changes the value of a 32-bit variable to a new value and returns the previous value. In 64-bit versions of Windows 2000, the parameters will be 64 bits.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedCompareExchange</SMALL> conditionally sets the value of a 32-bit variable to a new value and returns the initial value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InterlockedCompareExchangePointer</SMALL> conditionally sets the value of a 32-bit variable to a new value and returns the initial value. In 64-bit versions of Windows 2000, the parameters will be 64 bits.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

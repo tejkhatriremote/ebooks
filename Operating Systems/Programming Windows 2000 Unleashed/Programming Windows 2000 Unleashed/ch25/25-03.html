@@ -1,0 +1,203 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=849-852//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Defining IObjectContextInfo</B></FONT></P>
+<p>The only interface that will be discussed here is <small>IObjectContextInfo</SMALL>. This interface is an extension of the <small>IObjectContext</SMALL> interface and is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+IObjectContextInfo : public IUnknown
+    {
+    public:
+        virtual BOOL STDMETHODCALLTYPE IsInTransaction( void) = 0;
+        virtual BOOL STDMETHODCALLTYPE IsSecurityEnabled( void) = 0;
+        virtual HRESULT STDMETHODCALLTYPE IsCallerInRole(
+            /* [in] */ BSTR bstrRole,
+            /* [retval][out] */ BOOL __RPC_FAR *pfInRole) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetTransaction(
+            IUnknown __RPC_FAR *__RPC_FAR *pptrans) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetTransactionId(
+            /* [out] */ GUID __RPC_FAR *pGuid) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetActivityId(
+            /* [out] */ GUID __RPC_FAR *pGUID) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetContextId(
+            /* [out] */ GUID __RPC_FAR *pGuid) = 0;
+};
+</PRE>
+<!-- END CODE //-->
+<p>This interface may seem similar because the first three methods are identical to <small>IObjectContext</SMALL>. The one that&#146;s different is the <small>GetTransaction</SMALL> method. Calling this method will return an interface pointer to the <small>ITransaction</SMALL> interface, which is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+ITransaction : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Commit(
+            /* [in] */ BOOL fRetaining,
+            /* [in] */ DWORD grfTC,
+            /* [in] */ DWORD grfRM) = 0;
+virtual HRESULT STDMETHODCALLTYPE Abort(
+            /* [unique][in] */ BOID __RPC_FAR *pboidReason,
+            /* [in] */ BOOL fRetaining,
+            /* [in] */ BOOL fAsync) = 0;
+virtual HRESULT STDMETHODCALLTYPE GetTransactionInfo(
+            /* [out] */ XACTTRANSINFO __RPC_FAR *pinfo) = 0;
+};
+</PRE>
+<!-- END CODE //-->
+<p>This is not a new interface. Instead, it&#146;s an interface used in OLE DB. Using this interface, you can control the transaction without having the JIT effect on the COM&#43; object. This provides the ability to fine-tune the transaction. Note, though, that the parameters to the methods are a bit more complicated. The <small>Commit</SMALL> method&#146;s parameters are defined in the following sections.</P>
+<p><b><small>Retaining</SMALL></B></P>
+<p>This flag defines whether you can work on the rowset after a commit or abort. This flag is combined with the OLE DB property <small>DBPROP_COMMITPRESERVE</SMALL>. This property defines whether a rowset is available after a commit or abort. When a commit or abort is called, a <small>DBPROP_COMMITPRESERVE VARIANT_TRUE</SMALL> value allows further operations on the currently selected rowset. A <small>VARIANT_FALSE</SMALL> value indicates that the rowset should be considered invalid. In this situation, any references to a rowset should be released, because they contain no data. Combining the flag and property, you get the following side effects on the data and transaction:</P>
+<table width="100%"><th width="25%" align="LEFT" valign="BOTTOM"><small>DBPROP_</SMALL><br><small>COMMIT</SMALL><br>PRESERVE
+<th width="25%" align="LEFT" valign="BOTTOM"><small>fRetaining</SMALL>
+<th width="25%" align="LEFT" valign="BOTTOM"><i>Rowset State<br>After Commit</I>
+<th width="25%" align="LEFT" valign="BOTTOM"><i>Resulting<br> Transaction<br>Mode of Session</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>FALSE</SMALL>
+<td align="LEFT" valign="TOP"><small>FALSE</SMALL>
+<td align="LEFT" valign="TOP">Not available
+<td align="LEFT" valign="TOP">Autocommit
+<tr>
+<td align="LEFT" valign="TOP"><small>FALSE</SMALL>
+<td align="LEFT" valign="TOP"><small>TRUE</SMALL>
+<td align="LEFT" valign="TOP">Not available
+<td align="LEFT" valign="TOP">Manual
+<tr>
+<td align="LEFT" valign="TOP"><small>TRUE</SMALL>
+<td align="LEFT" valign="TOP"><small>FALSE</SMALL>
+<td align="LEFT" valign="TOP">Available
+<td align="LEFT" valign="TOP">Autocommit
+<tr>
+<td align="LEFT" valign="TOP"><small>TRUE</SMALL>
+<td align="LEFT" valign="TOP"><small>TRUE</SMALL>
+<td align="LEFT" valign="TOP">Available
+<td align="LEFT" valign="TOP">Manual
+</TABLE>
+<p><b><small>grfTC</SMALL></B></P>
+<p>When the <small>grfTC</SMALL> method is called, the two-phase commit is started. You can perform an <i>asynchronous commit</I>, meaning that the method returns immediately. You can also wait for the result of the two-phase commit. The following values can be used:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>XACTTC_ASYNC</SMALL>. The method initiates the two-phase commit and returns immediately.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>XACTTC_ASYNC_PHASEONE</SMALL>. The method waits for the first phase of the two-phase commit to complete.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>XACTTC_ASYNC_PHASETWO</SMALL>. The method waits for the second phase of the two-phase commit to complete.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>XACTTC_SYNC</SMALL>. Same value as <small>XACTTC_ASYNC_PHASETWO</SMALL>.
+</DL>
+<p>The last parameter must be zero. Depending on which phase the method returns, you can determine whether or not the commit was successful.
+</P>
+<p><b><small>Abort</SMALL></B></P>
+<p>This method is similar in functionality to <small>Commit</SMALL>. Its parameters are defined as follows:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pBoidReason</SMALL>. A BOID that tells the system why the transaction was aborted. <small>NULL</SMALL> can be passed in as a value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>fRetaining</SMALL>. Identical to the <small>fRetaining</SMALL> parameter of the <small>Commit</SMALL> method.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>fAsync</SMALL>. If this value is set to <small>TRUE</SMALL>, the <small>Abort</SMALL> method is asynchronous and returns immediately.
+</DL>
+<p><b><small>GetTransactionInfo</SMALL></B></P>
+<p>The last method, <small>GetTransactionInfo</SMALL>, retrieves the properties of the currently running context. An example is the isolation level of the transaction.</P>
+<p><font size="+1"><b>Retrieving IObjectContextInfo</B></FONT></P>
+<p>In order to retrieve the <small>IObjectContextInfo</SMALL> interface, you must call the method <small>GetObjectContext</SMALL>. It returns an interface pointer to <small>IObjectContext</SMALL>. Performing a QI on this interface returns the interface for <small>IObjectContextInfo</SMALL>. Here&#146;s a sample implementation:</P>
+<!-- CODE SNIP //-->
+<pre>
+    IObjectContext * pObjectContext = NULL;
+    hr = GetObjectContext(&amp;pObjectContext);
+    IObjectContextInfo    * pObjTx = NULL;
+    pObjectContext-&gt;QueryInterface(IID_IObjectContextInfo,
+    &#8658;(void **)&amp;pObjTx);
+</PRE>
+<!-- END CODE SNIP //-->
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Controlling Transactions from the Client</FONT></H4>
+<p>Instantiating a COM&#43; object is as simple as creating another COM object. However, there may be times when it&#146;s desirable to create multiple COM objects and bind them into one transaction. This cannot be done from the base client, as is. An additional interface needs to be used. The problem is that the base client does not have a transaction context associated with it.
+</P>
+<p>As shown in Figure 25.5, when standard COM object instantiation routines are used, there will be two transactions. Each transaction does not know about the other.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-05.jpg',184,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-05.jpg',184,420)"><font color="#000077"><b>Figure 25.5</B></FONT></A>&nbsp;&nbsp;An example of a base client instantiating two COM&#43; objects.</P>
+<p>One way to combine various objects within one transaction is to create a helper object that creates the objects.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

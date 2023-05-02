@@ -1,0 +1,153 @@
+Backdoors
+
+By Christopher Klaus 8/4/97
+
+
+Since the early days of intruders breaking into computers, they have tried
+to develop techniques or backdoors that allow them to get back into the
+system.   In this paper, it will be focused on many of the common backdoors
+and possible ways to check for them.  Most of focus will be on Unix
+backdoors with some discussion on future Windows NT backdoors.  This will
+describe the complexity of the issues in trying to determine the methods
+that intruders use and the basis for administrators understanding on how
+they might be able to stop the intruders from getting back in.  When an
+administrator understands how difficult it would be to stop intruder once
+they are in, the appreciation of being proactive to block the intruder from
+ever getting in becomes better understood.  This is intended to cover many
+of the popular commonly used backdoors by beginner and advanced intruders.
+ This is not intended to cover every possible way to create a backdoor as
+the possibilities are limitless.
+
+The backdoor for most intruders provide two or three main functions:
+
+Be able to get back into a machine even if the administrator tries to
+secure it, e.g., changing all the passwords.
+
+Be able to get back into the machine with the least amount of visibility.
+ Most backdoors provide a way to avoid being logged and many times the
+machine can appear to have no one online even while an intruder is using
+it.
+
+Be able to get back into the machine with the least amount of time.  Most
+intruders want to easily get back into the machine without having to do all
+the work of exploiting a hole to gain access.
+
+In some cases, if the intruder may think the administrator may detect any
+installed backdoor, they will resort to using the vulnerability repeatedly
+to get on a machine as the only backdoor.   Thus not touching anything that
+may tip off the administrator.   Therefore in some cases, the
+vulnerabilities on a machine remain the only unnoticed backdoor.
+
+
+Password Cracking Backdoor
+
+One of the first and oldest methods of intruders used to gain not only
+access to a Unix machine but backdoors was to run a password cracker.  This
+uncovers weak passworded accounts.  All these new accounts are now possible
+backdoors into a machine even if the system administrator locks out the
+intruder's current account.  Many times, the intruder will look for unused
+accounts with easy passwords and change the password to something
+difficult.  When the administrator looked for all the weak passworded
+accounts, the accounts with modified passwords will not appear.  Thus the
+administrator will not be able to easily determine which accounts to lock
+out.
+
+Rhosts + + Backdoor
+
+On networked Unix machines, services like Rsh and Rlogin used a simple
+authentication method based on hostnames that appear in rhosts.  A user
+could easily configure which machines not to require a password to log
+into.  An intruder that gained access to someone's rhosts file could put a
+"+ +" in the file and that would allow anyone from anywhere to log into
+that account without a password.  Many intruders use this method especially
+when NFS is exporting home directories to the world.   These accounts
+become backdoors for intruders to get back into the system.  Many intruders
+prefer using Rsh over Rlogin because it is many times lacking any logging
+capability.  Many administrators check for "+ +" therefore an intruder may
+actually put in a hostname and username from another compromised account on
+the network, making it less obvious to spot.
+
+Checksum and Timestamp Backdoors
+
+Early on, many intruders replaced binaries with their own trojan versions.
+ Many system administrators relied on time-stamping and the system checksum
+programs, e.g., Unix's sum program, to try to determine when a binary file
+has been modified.  Intruders have developed technology that will recreate
+ the same time-stamp for the trojan file as the original file.  This is
+accomplished by setting the system clock time back to the original file's
+time and then adjusting the trojan file's time to the system clock.  Once
+the binary trojan file has the exact same time as the original, the system
+clock is reset to the current time.  The sum program relies on a CRC
+checksum and is easily spoofed.  Intruders have developed programs that
+would modify the trojan binary to have the necessary original checksum,
+thus fooling the administrators.  MD5 checksums is the recommended choice
+to use today by most vendors.  MD5 is based on an algorithm that no one has
+yet to date proven can be spoofed.
+
+Login Backdoor
+
+On Unix, the login program is the software that usually does the password
+authentication when someone telnets to the machine.  Intruders grabbed the
+source code to login.c and modified it that when login compared the user's
+password with the stored password, it would first check for a backdoor
+password. If the user typed in the backdoor password, it would allow you to
+log in regardless of what the administrator sets the passwords to.  Thus
+this allowed the intruder to log into any account, even root.   The
+password backdoor would spawn access before the user actually logged in and
+appeared in utmp and wtmp.  Therefore an intruder could be logged in and
+have shell access without it appearing anyone is on that machine as that
+account.  Administrators started noticing these backdoors especially if
+they did a "strings" command to find what text was in the login program.
+ Many times the backdoor password would show up. The intruders then
+encrypted or hid the backdoor password better so it would not appear by
+just doing strings.  Many of the administrators can detect these backdoors
+with MD5 checksums.
+
+Telnetd Backdoor
+
+When a user telnets to the machine, inetd service listens on the port and
+receive the connection and then passes it to in.telnetd, that then runs
+login.  Some intruders knew the administrator was checking the login
+program for tampering, so they modified in.telnetd.  Within in.telnetd, it
+does several checks from the user for things like what kind of terminal the
+user was using.  Typically, the terminal setting might be Xterm or VT100.
+ An intruder could backdoor it so that when the terminal was set to
+"letmein", it would spawn a shell without requiring any authentication.
+  Intruders have backdoored some services so that any connection from a
+specific source port can spawn a shell.
+
+Services Backdoor
+
+Almost every network service has at one time been backdoored by an
+intruder.  Backdoored versions of finger, rsh, rexec, rlogin, ftp, even
+inetd, etc., have been floating around forever.  There are programs that
+are nothing more than a shell connected to a TCP port with maybe a backdoor
+password to gain access.  These programs sometimes replace a service like
+uucp that never gets used or they get added to the inetd.conf file as a new
+service.  Administrators should be very wary of what services are running
+and analyze the original services by MD5 checksums.
+
+Cronjob backdoor
+
+Cronjob on Unix schedules when certain programs should be run.  An intruder
+could add a backdoor shell program to run between 1 AM and 2 AM.  So for 1
+hour every night, the intruder could gain access.  Intruders have also
+looked at legitimate programs that typically run in cronjob and built
+backdoors into those programs as well.
+
+Library backdoors
+
+Almost every UNIX system uses shared libraries.  The shared libraries are
+intended to reuse many of the same routines thus cutting down on the size
+of programs.  Some intruders have backdoored some of the routines like
+crypt.c and _crypt.c.  Programs like login.c would use the crypt() routine
+and if a backdoor password was used it would spawn a shell.  Therefore,
+even if the administrator was checking the MD5 of the login program, it was
+still spawning a backdoor routine and many administrators were not checking
+the libraries as a possible source of backdoors.
+
+One problem for many intruders was that some administrators started MD5
+checksums of almost everything.  One method intruders used to get around
+that is to backdoor the open() and file access routines.  The backdoor
+routines were configured to read the original files, but execute the trojan
+backdoors.  Therefore, when the MD5 checksum program was reading th

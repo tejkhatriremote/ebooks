@@ -1,0 +1,149 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Fixing Windows 2000 Professional When It Breaks</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=29//-->
+<!--PAGES=923-925//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="920-923.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="925-928.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using the Debug Version of <i>ntdetect</I>
+</B></FONT></P>
+<p>If you can&#146;t get past the <tt>ntdetect</TT> stage, some kind of hardware conflict may exist on your system. Fortunately, you can use a &#147;verbose&#148; version of <tt>ntdetect</TT> to see in excruciating detail exactly what <tt>ntdetect</TT> sees as it examines your system.</P>
+<p>The &#147;verbose&#148; version of <tt>ntdetect.com</TT> is called <tt>ntdetect.chk</TT> and it&#146;s on the Windows 2000 CD-ROM in <tt>Support\Debug\I386\ntdetect.chk</TT>. Of course, you&#146;ll have to rename the file after you copy it from the CD-ROM, and you should copy the file into the root directory of your drive C&#151;that&#146;s drive C, even if you don&#146;t have Windows 2000 installed on drive C.</P>
+<p>Two caveats are worth mentioning here. First, we hope it&#146;s obvious, but back up the old <tt>ntdetect.com</TT> before overwriting it. Second, you may not be able to get to drive C to install <tt>ntdetect.com</TT> in the first place. If that&#146;s the case, simply <tt>diskcopy</TT> the Windows 2000 Setup floppy (the first floppy you use to install Windows 2000), copy the debug version of <tt>ntdetect.com</TT> to that floppy, and then try to boot from it. That copy of <tt>ntdetect</TT> will run, and you&#146;ll get some clue about what&#146;s going wrong.</P>
+<p><font size="+1"><b>Building the Registry</B></FONT></P>
+<p>After <tt>ntdetect</TT> has run without trouble, it builds the HARDWARE hive of the Registry, the part you see in <tt>HKEY_LOCAL_MACHINE\HARDWARE</TT>. Remember that part of the Registry isn&#146;t stored on disk; it&#146;s built every time you turn on your computer.</P>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Step Three: <i>ntoskrnl</I>
+</FONT></H4>
+<p>Next, the Windows 2000 Kernel loads, along with the Hardware Abstraction Layer (<tt>hal.dll</TT>), the part of Windows 2000 that enables the operating system to be hardware independent. The Kernel loads in four phases:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The Kernel load phase
+<dd><b>&#149;</B>&nbsp;&nbsp;The Kernel initialization phase
+<dd><b>&#149;</B>&nbsp;&nbsp;The services load phase
+<dd><b>&#149;</B>&nbsp;&nbsp;The Windows subsystem start phase
+</DL>
+<p><font size="+1"><b>The Kernel Load Phase</B></FONT></P>
+<p>The first part of a Kernel load is the hal load and the initial ntoskrnl load. Then the SYSTEM hive, which lives normally in <tt>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services</TT>, is read because the system must determine which device drivers to load and in what order. You know this phase is occurring when the screen clears and you see dots. Each dot represents a service or a driver that is loading.</P>
+<p>A look at Services will show names such as 8514a, Abiosdisk, Atd, Aha1542x, and so on. Each driver has a value entry named Start, which tells Windows 2000 when to load that particular service or driver. The five possible values are</P>
+<dl>
+<dd><b>Start=0</B>&nbsp;&nbsp;Load it now, in the Kernel load phase. These are the services or drivers represented by the dots.
+<dd><b>Start=1</B>&nbsp;&nbsp;Load it in the next phase, the Kernel initialization phase.
+<dd><b>Start=2</B>&nbsp;&nbsp;Indicates that this service has been set in the Control Panel/Services applet to Automatic.
+<dd><b>Start=3</B>&nbsp;&nbsp;Indicates that this service has been set to Manual in the Control Panel.
+<dd><b>Start=4</B>&nbsp;&nbsp;Indicates that the service has been set to Disabled in the Control Panel.
+</DL>
+<p><font size="+1"><b>The Kernel Initialization Phase</B></FONT></P>
+<p>Next, the Kernel initializes. You know you&#146;re here because the screen turns blue and goes to a 50-line mode, and you&#146;ll see the Windows 2000 boot wallpaper, indicating the progress of the boot.
+</P>
+<p>After the Kernel&#146;s internal variables initialize, the Kernel again scans the CurrentControlSet for drivers with a start value of 1, and those drivers are loaded and initialized. A dot is displayed on the screen for each successfully loaded driver&#151;recall they&#146;re the ones with values of Start=1.</P>
+<p>A new CurrentControlSet gets built in anticipation that the boot will be successful, but it&#146;s not saved yet because NT doesn&#146;t know whether this will be a Last Known Good set. A program called <tt>autochk.exe</TT>, which is a program like <tt>chkdsk</TT>, runs to ensure that the file system is intact. The virtual memory pagefiles are also set up.</P>
+<p><font size="+1"><b>The Services Load Phase</B></FONT></P>
+<p>The Services Manager, a program called <tt>smss.exe</TT>, loads at this point, and it loads the Win32 subsystem as well as any services with values of Start=2. The CurrentControlSet gets written to the SYSTEM hive.</P>
+<p><font size="+1"><b>The Windows Subsystem Start Phase</B></FONT></P>
+<p>The Win32 subsystem initializes and starts any services that are supposed to start upon boot. This is the last step before the logon dialog box appears.
+</P>
+<p>Win32 starts up <tt>winlogon.exe</TT>, which looks in <tt>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\Current Version\Winlogin</TT> for the value System, where it finds the names of necessary subsystems.</P>
+<p>Finally, the logon process occurs, which displays the Press Ctrl&#43;Alt&#43;Del to Log On to Windows2000 window on your screen. If you get that far, your configuration is good. Now you&#146;re booted, right? Wrong. Windows 2000 is still loading drivers and services for as much as several minutes after you&#146;ve logged on. If you boot the computer, log on, and immediately try to access the Registry, you will get a message stating that the Registration database is locked. This is Windows 2000&#146;s way of saying &#147;I&#146;m busy&#133; give me a minute.&#148;</P>
+<p>When you have successfully logged on (that is to say, you were authenticated by Windows 2000), the Clone Control Set (a copy of the currently running system configuration) is copied to the Last Known Good configuration. At this point, you can no longer use the Last Known Good configuration to undo a problem with Windows 2000.</P>
+<h3><a name="Heading20"></A><font color="#000077">Using Windows 2000 Debug Tools</FONT></H3>
+<p>Suppose all else fails, and you&#146;re faced with either a persistent lockup or a reliable blue screen. You should then turn to two fairly techie tools, the Kernel Debugger and the Dump Analyzer.
+</P>
+<p>We programmers use these tools to look into how Windows 2000 is working (or, usually, <i>not</I> working). We&#146;re not debugging our own code, however; we&#146;re mainly looking for clues about what&#146;s crashing the system and for printed records of how the crash occurred so that we can report it to Microsoft (if it&#146;s a Windows 2000 problem) or to a driver author (if a device driver crashed Windows 2000).</P>
+<p>This section doesn&#146;t provide all the details involved in tracking down a Windows 2000 problem; probably nobody knows how to do that except for a man named Dave Cutler. But what it <i>does</I> do is provide a handy reference guide to using the Kernel Debugger and the Dump Analyzer&#151;the printed documentation on this is rather skimpy&#151;and that&#146;ll get you started.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="920-923.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="925-928.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

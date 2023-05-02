@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=453-457//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="14-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Functions Included in IDispatch</FONT></H4>
+<p>The <small>IDispatch</SMALL> interface includes four functions and is implemented by any COM object that supports Automation. Here&#146;s a somewhat simplified version of the <small>IDispatch</SMALL> interface:</P>
+<!-- CODE //-->
+<pre>
+interface IDispatch : public IUnknown
+{
+public:
+    HRESULT GetTypeInfoCount(UINT *pctinfo);
+    HRESULT GetTypeInfo(UINT itinfo,
+                        LCID lcid,
+                        ITypeInfo **pptinfo);
+    HRESULT GetIDsOfNames(REFIID riid,
+                          LPOLESTR *rgszNames,
+                          UINT cNames,
+                          LCID lcid,
+                          DISPID *rgdispid );
+    HRESULT Invoke(DISPID dispidMember,
+                   REFIID riid,
+                   LCID lcid,
+                   WORD wFlags,
+                   DISPPARAMS *pdispparams,
+                   VARIANT *pvarResult,
+                   EXCEPINFO *pexcepinfo,
+                   UINT *puArgErr);
+};
+</PRE>
+<!-- END CODE //-->
+<p>Depending on how you use the <small>IDispatch</SMALL> interface, you may implement some or all of these functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetTypeInfo</SMALL> is used to get a pointer to an <small>ITypeInfo</SMALL> interface, which is used to determine the Automation support provided by an Automation server.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetTypeInfoCount</SMALL> is used to get the number of <small>ITypeInfo</SMALL> interfaces (either zero or one) supported by an Automation server.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetIDsOfNames</SMALL> converts method, property, and parameter names into dispatch IDs (or <small>DISPID</SMALL>s). A <small>DISPID</SMALL> is an index to a name that&#146;s used in calls to <small>IDispatch</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Invoke</SMALL> is used to gain access to the properties and methods exposed by the Automation server.
+</DL>
+<p>The heart of the <small>IDispatch</SMALL> interface is the <small>Invoke</SMALL> function. <small>Invoke</SMALL> is called by an Automation controller in order to call the programmable interfaces exposed by the Automation server. As I demonstrate later, the MFC library hides much of the complexity of <small>IDispatch</SMALL> from you (although this ease of use comes at a price).</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">IDispatch Interfaces Versus Function Tables</FONT></H4>
+<p>The COM interface is based on C<small>&#43;&#43;</SMALL> virtual function tables. A <i>virtual function table</I> is an array of pointers to actual functions, as shown in Figure 14.3.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-03.jpg',270,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-03.jpg',270,420)"><font color="#000077"><b>Figure 14.3</B></FONT></A>&nbsp;&nbsp;COM interfaces use the same in-memory layout as C<small>&#43;&#43;</SMALL> virtual function tables.
+</P>
+<p>In this figure, the <small>CFoo</SMALL> object derives from the <small>ISailBoat</SMALL> interface. When a client asks for the <small>ISailBoat</SMALL> interface via the <small>QueryInterface</SMALL> function, the base address of the <small>ISailBoat</SMALL> function table array is returned, allowing the client to calculate the address of any function supported by <small>ISailBoat</SMALL>.</P>
+<p>In the previous chapter, you implemented the <small>IShellExtInit</SMALL> and <small>IContextMenu</SMALL> interfaces for the CppExt project. By deriving the <small>CCppShellExt</SMALL> class from the <small>IContextMenu</SMALL> and <small>IShellExtInit</SMALL> interfaces, you guaranteed that the function tables for CppExt COM objects were arranged as the client expected.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>From this discussion, it should be clear that you cannot rearrange the order of functions in an interface. If the order, signature, or semantics of an interface change, you must change the IID for the interface.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>When you create interfaces that are accessed through virtual function tables, you&#146;re using <i>vtable binding</I> (sometimes called <i>early binding</I>). This sort of binding to required functions has very little overhead, because each function call has just one level of indirection between the client and server in the optimum case.</P>
+<p>If you&#146;re using C or C<small>&#43;&#43;</SMALL>, vtable binding is the preferred way for your clients to connect to servers because it&#146;s very simple to write the required code. However, some types of programming environments don&#146;t support passing around function addresses. Early versions of Visual Basic, as well as most scripting languages, fit into this category. For these clients, there&#146;s a requirement for a different way for clients to bind to functions supplied by COM servers.</P>
+<p><small>IDispatch</SMALL> and Automation allow scripting languages to work with a single interface towards a server. Instead of using pointers to functions and querying for multiple interfaces, an Automation client works with just one interface: <small>IDispatch</SMALL>.</P>
+<p>As discussed in the previous section, the <small>IDispatch</SMALL> interface includes a function, <small>GetIDsOfNames</SMALL>, that enables a client to retrieve an index known as a <small>DISPID</SMALL> that is based on the name of the function. The client can then request the function to be invoked by passing its <small>DISPID</SMALL> to the <small>Invoke</SMALL> function. By tying these two functions together, the client can call functions by name rather than determining addresses. Although this is a lot of work, the scripting engine can hide the required mechanics as an implementation detail. All of this is done to allow users of script languages to use COM objects without worrying about the details of <small>AddRef</SMALL>, <small>Release</SMALL>, and interface pointers.</P>
+<h3><a name="Heading7"></A><font color="#000077">Creating an Automation Server Using MFC</FONT></H3>
+<p>As an example of an Automation server, the CD-ROM that accompanies this book includes an MFC-based project named AutoBub. AutoBub can be run as a standalone application or driven by an Automation controller. AutoBub is an SDI application that displays bubbles in its main view, as shown in Figure 14.4.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-04.jpg',601,454 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-04.jpg',601,454)"><font color="#000077"><b>Figure 14.4</B></FONT></A>&nbsp;&nbsp;AutoBub running as a standalone application.</P>
+<p>The AutoBub project was created in two steps. First, the AutoBub project was created as a standalone application; then Automation was added.
+</P>
+<p>You can compile and run the project &#147;as is&#148; from the CD-ROM, or you can follow along as the steps are described in the following sections. To get started, use AppWizard to create an SDI application named AutoBub. As you step through the AppWizard pages, select the Automation Support check box on page 3, as shown in Figure 14.5. This step is necessary for any MFC AppWizard project that will expose an Automation interface.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-05.jpg',477,384 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-05.jpg',477,384)"><font color="#000077"><b>Figure 14.5</B></FONT></A>&nbsp;&nbsp;Selecting Automation Support using AppWizard.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Modifying the Automation Options</FONT></H4>
+<p>The AutoBub project has some slight modifications to the default Automation settings offered by AppWizard. On AppWizard page 4, click the Advanced button. This displays the Advanced Options dialog box shown in Figure 14.6. Notice that some of the fields have been truncated by AppWizard&#151;instead of &#147;AutoBub,&#148; &#147;AutoBu&#148; is displayed. Change the File New Name value to AutoBub and the File Type Name value to AutoBub.Document, as shown in Figure 14.6.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-06.jpg',335,387 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-06.jpg',335,387)"><font color="#000077"><b>Figure 14.6</B></FONT></A>&nbsp;&nbsp;Changing the advanced options for AutoBub.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="14-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

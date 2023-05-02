@@ -1,0 +1,204 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=233-236//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Manipulating Process and Thread Access Tokens</B></FONT></P>
+<p>Several Windows 2000 functions are used to interact with access tokens. Here are four commonly used functions:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OpenProcessToken</SMALL>. Returns an access token handle
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OpenThreadToken</SMALL>. Returns an impersonation token handle that identifies a client
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetTokenInformation</SMALL>. Returns security information stored in the access token
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetTokenInformation</SMALL>. Modifies security information stored in the access token
+</DL>
+<p><font size="+1"><b>Modifying Token Privileges</B></FONT></P>
+<p>Various Win32 and Windows 2000 functions require that the caller have certain privileges enabled. If the access token of the calling process does not possess the required set of privileges, the function call will be rejected by the operating system.
+</P>
+<p>Two functions are used to modify the privileges of an access token:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LookupPrivilegeValue</SMALL>. Returns a locally unique identifier (<small>LUID</SMALL>) that&#146;s used to identify a specific privilege
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>AdjustTokenPrivileges</SMALL>. Enables or disables privileges in an access token
+</DL>
+<p>For example, some security functions require that the calling process have the <small>SE_SECURITY_NAME</SMALL> privilege. Although a user in an administrator group may enable this privilege, it&#146;s not normally enabled by default; the calling process must adjust its access token. Listing 7.1 contains an example of a function that enables or disables the <small>SE_SECURITY_NAME</SMALL> privilege for the calling process.</P>
+<p><b>Listing 7.1</B> A Function That Adjusts the <small>SE_SECURITY_NAME</SMALL> Privilege on a Process Token</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Enables or disables the SE_SECURITY_NAME privilege for the
+ * current process. This privilege must be explicitly enabled
+ * in order to access some security information. Returns FALSE
+ * if the privilege was adjusted, or TRUE otherwise.
+ */
+BOOL EnableSecurityNamePrivilege(BOOL fEnable)
+{
+    HANDLE hProcess = GetCurrentProcess();
+    HANDLE hToken;
+
+    if(!OpenProcessToken(hProcess, TOKEN_ALL_ACCESS, &amphToken))
+        return FALSE;
+
+    TOKEN_PRIVILEGES tpNew;
+    BOOL fLookup = LookupPrivilegeValue(NULL,
+                                        SE_SECURITY_NAME,
+                                         &amptpNew.Privileges[0].Luid);
+    if(!fLookup)
+        return FALSE;
+
+    if(fEnable)
+        tpNew.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+    else
+        tpNew.Privileges[0].Attributes = 0;
+    tpNew.PrivilegeCount = 1;
+
+    BOOL fAdjusted = AdjustTokenPrivileges(hToken,
+                                           FALSE,
+                                           &amptpNew,
+                                           0,
+                                           NULL,
+                                           NULL);
+    if(!fAdjusted)
+         return FALSE;
+    return TRUE;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 7.1, the <small>EnableSecurityNamePrivilege</SMALL> function begins by obtaining a pseudohandle for the current process by calling <small>GetCurrentProcess</SMALL>. Next, calling <small>OpenProcessToken</SMALL> retrieves a handle to the process access token.</P>
+<p>The <small>LookupPrivilegeValue</SMALL> function is then called to determine the <small>LUID</SMALL> used to identify the <small>SE_SECURITY_NAME</SMALL> privilege. This <small>LUID</SMALL> is passed to the <small>AdjustTokenPrivileges</SMALL> function in order to enable or disable the <small>SE_SECURITY_NAME</SMALL> privilege for the process&#146;s access token.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Understanding the Security Identifier</FONT></H4>
+<p>The security identifier structure, or <small>SID</SMALL>, is used to uniquely identify a user or group in a Windows 2000 domain. In general, you should not manipulate a <small>SID</SMALL> directly; however, it is instructive to take a look at a <small>SID</SMALL> in order to get some understanding about how it&#146;s put together.</P>
+<p>A security identifier contains the following items:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The revision level of the <small>SID</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The 48-bit identifier for the Windows 2000 domain that issued the <small>SID</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A list of subauthority or relative identifiers (<small>RID</SMALL>s) that uniquely identify the <small>SID</SMALL>. This list is guaranteed to be unique within a Windows 2000 domain.
+</DL>
+<p>A <small>SID</SMALL> will always uniquely identify a user or group. In the event that two users or groups have identical rights, the list of <small>RID</SMALL>s is guaranteed to be unique.</P>
+<p><font size="+1"><b>Converting SIDs to Strings</B></FONT></P>
+<p>The <small>SID</SMALL> is stored as a binary value that shouldn&#146;t be examined directly. You can, however, convert the <small>SID</SMALL> into a format that&#146;s easily displayed with the <small>ConvertSidToStringSid</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fConverted = ConvertSidToStringSid(pSid, ppszSidString);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ConvertSidToStringSid</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the <small>SID</SMALL> to be converted.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a string buffer that will be allocated and filled with the string representation of the <small>SID</SMALL>. This buffer must be freed using the <small>LocalFree</SMALL> function.
+</DL>
+<p>The string representation of a <small>SID</SMALL> follows a specific format, known as <i>S-R-I-S</I>. Each <small>SID</SMALL> string is composed of four or more elements:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>S</I>. The letter S
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>R</I>. A number that represents the revision level
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>I</I>. An identifier for the authority that issued the <small>SID</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>S</I>. One or more subauthority values or relative identifiers
+</DL>
+<p>As an example of a <small>SID</SMALL>, here&#146;s the current value of the <small>mickeyw</SMALL> security identifier in the <small>codevtech.com</SMALL> domain:</P>
+<!-- CODE SNIP //-->
+<pre>
+S-1-5-21-854245398-515967899-1417001333-1105
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ConvertStringSidToSid</SMALL> function is used to convert a <small>SID</SMALL> from a string format into its native binary format:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fConverted = ConvertStringSidToSid(pszSidString,
+                                        &amppSid);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ConvertStringSidToSid</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the <small>SID</SMALL>, in string form, to be converted.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to a <small>SID</SMALL> that will be allocated and filled with the binary form of the <small>SID</SMALL>. This buffer must be freed using the <small>LocalFree</SMALL> function.
+</DL>
+<p>A <i>well-known</I> <small>SID</SMALL> is a security identifier that specifies a commonly used, generic user or group. Well-known <small>SID</SMALL>s include the Everyone group, the Local Administrators group, and the Local System group.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

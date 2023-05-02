@@ -1,0 +1,235 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=046-051//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Creating a Heap</B></FONT></P>
+<p>To create a dynamic heap, you use the <small>HeapCreate</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HANDLE hHeap = HeapCreate(HEAP_GENERATE_EXCEPTIONS,
+                             0&#215;01000,
+                             0);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>HeapCreate</SMALL> function has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Options for the dynamic heap. In this case, <small>HEAP_GENERATE_EXCEPTIONS</SMALL> is used.
+<dd><b>&#149;</B>&nbsp;&nbsp;The initial size for the heap, which is rounded up to the next page boundary. In this case, 4KB is allocated for the heap.
+<dd><b>&#149;</B>&nbsp;&nbsp;The maximum size for the heap. In this case, 0 is used, which indicates that the heap is limited only by the amount of virtual memory that can be committed by Windows 2000.
+</DL>
+<p>You can use two option flags when a dynamic heap is created:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HEAP_GENERATE_EXCEPTIONS</SMALL>. Specifies that the heap should generate Win32 structured exceptions instead of returning <small>NULL</SMALL> in error conditions.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HEAP_NO_SERIALIZE</SMALL>. Specifies that the heap should not synchronize access. This flag should be used with care because unsynchronized access to a heap by multiple threads corrupts the heap. Use this flag only if you&#146;re sure that two threads will not attempt to manipulate the heap at the same time.
+</DL>
+<p><font size="+1"><b>Allocating from a Heap</B></FONT></P>
+<p>The <small>HeapAlloc</SMALL> function is used to allocate memory from a heap. You can use this function with default or dynamic heaps, because the first parameter is a heap handle that specifies the heap used to allocate the memory. <small>HeapAlloc</SMALL> returns a pointer to the memory allocated from the heap, as shown in this code:</P>
+<!-- CODE SNIP //-->
+<pre>
+   TCHAR pszName = HeapAlloc(hHeap,
+                             HEAP_GENERATE_EXCEPTIONS,
+                             cName);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>HeapAlloc</SMALL> function has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the heap that&#146;s servicing the allocation request.
+<dd><b>&#149;</B>&nbsp;&nbsp;Optional flags used to specify how the memory is allocated. In this example, <small>HEAP_GENERATE_EXCEPTIONS</SMALL> is used. Other values for this parameter follow.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the requested memory allocation.
+</DL>
+<p>Three heap-allocation flags are used for <small>HeapAlloc</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HEAP_GENERATE_EXCEPTIONS</SMALL>. Specifies that Windows 2000 should use exceptions to indicate error conditions instead of returning <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HEAP_NO_SERIALIZE</SMALL>. Indicates that the heap does not need to synchronize this call to the heap with other heap-management functions. This flag should be avoided unless you can guarantee that multiple threads will not access the heap at the same time.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HEAP_ZERO_MEMORY</SMALL>. Tells the heap to initialize the contents of the allocated memory to 0.
+</DL>
+<p>As with <small>HeapCreate</SMALL>, you can pass a value of 0 to indicate that no flags are used, or you can combine two or more flags together if more than one option is needed.</P>
+<p><font size="+1"><b>Freeing Heap Memory</B></FONT></P>
+<p>To release a block of memory allocated with <small>HeapAlloc</SMALL>, use the <small>HeapFree</SMALL> function. <small>HeapFree</SMALL> takes only three parameters: the heap handle, an optional flag, and a pointer to the memory to be freed. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+   BOOL fFreed = HeapFree(hHeap, 0, pszName);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The second parameter passed to <small>HeapFree</SMALL> can be 0, as in this example, or <small>HEAP_NO_SERIALIZE</SMALL>. As in the previously discussed heap functions, you should use this flag only if you&#146;re certain that only one thread will attempt to manage the heap at any given time.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Using Private Heaps in C&#43;&#43; Classes</FONT></H4>
+<p>As an example of how you can use dynamic heaps to manage private memory heaps in C<small>&#43;&#43;</SMALL> programs, the CD-ROM included with this book includes a console mode project named PrivHeap. The PrivHeap application creates a simple linked list using C<small>&#43;&#43;</SMALL> classes that manage their own private heaps so that the main application doesn&#146;t need to perform any memory management.</P>
+<p>As shown in Figure 2.7, two classes are used to implement the linked list used by PrivHeap. The <small>CVMListNode</SMALL> class is a <i>payload</I> class that&#146;s stored in the linked list. The <small>CVMList</SMALL> class maintains a link to one <small>CVMListNode</SMALL> object and a link to the next <small>CVMList</SMALL> object in the list.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-07.jpg',500,247 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-07.jpg',500,247)"><font color="#000077"><b>Figure 2.7</B></FONT></A>&nbsp;&nbsp;The relationship between CVMList and CVMListNode objects.</P>
+<p>The <small>CVMList</SMALL> and <small>CVMListNode</SMALL> objects are different sizes. If you create a database that allocates and frees these objects at random for a long period of time, the heap becomes fragmented, as shown in Figure 2.8.</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-08.jpg',371,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-08.jpg',371,420)"><font color="#000077"><b>Figure 2.8</B></FONT></A>&nbsp;&nbsp;Fragmentation of heap memory.</P>
+<p>By allowing each class to manage a private dynamic heap in which the allocations are always the same size, fragmentation is avoided.
+</P>
+<p>The C<small>&#43;&#43;</SMALL> language allows a class to provide an implementation of the <small>new</SMALL> operator, which allows a class to control how memory is allocated before the constructor is called. The classes used in PrivHeap include specialized versions of the <small>new</SMALL> operator and follow this basic scheme:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If a private heap is not created, create one and initialize a reference counter
+<dd><b>&#149;</B>&nbsp;&nbsp;Allocate the number of requested bytes from the heap
+<dd><b>&#149;</B>&nbsp;&nbsp;Increment the reference counter
+</DL>
+<p>In addition, the C<small>&#43;&#43;</SMALL> language allows a class to define how memory is released by implementing an <small>operator delete</SMALL> function. The classes used in PrivHeap use the following method for <small>operator delete</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Release the requested memory block to the heap
+<dd><b>&#149;</B>&nbsp;&nbsp;Decrement the reference counter
+<dd><b>&#149;</B>&nbsp;&nbsp;If the reference counter is 0, destroy the heap
+</DL>
+<p><font size="+1"><b>Using the CVMListNode Class</B></FONT></P>
+<p>The <small>CVMListNode</SMALL> class is very simple; it only stores one integer as its data. Most of the work done by the class concerns memory management. Listing 2.9 shows the <small>CVMListNode</SMALL> class declaration. You can find this class on the CD-ROM as <small>listnode.h</SMALL> in the PrivHeap project directory.</P>
+<p><b>Listing 2.9</B> The <small>CVMListNode</SMALL> Class Declaration<hr></P>
+<!-- CODE //-->
+<pre>
+   class CVMListNode
+   {
+       int             m_n;
+       static HANDLE   m_hHeap;
+       static int      m_nRef;
+   public:
+       CVMListNode() {};
+       CVMListNode(int n) : m_n(n) {};
+       virtual ~CVMListNode() {};
+       void* operator new(size_t s);
+       void  operator delete(void* p);
+       virtual int Get() const { return m_n; };
+       virtual void Set(int n){ m_n = n; };
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 2.10 provides the implementation of the <small>CVMListNode</SMALL> class. This file is located on the accompanying CD-ROM as <small>listnode.cpp</SMALL> in the project directory.</P>
+<p><b>Listing 2.10</B> The Implementation of the <small>CVMListNode</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+   #include &ltwindows.h&gt
+   #include &lttchar.h&gt
+   #include &#147;listnode.h&#148;
+   #ifndef UNICODE
+       #include &ltstdio.h&gt
+   #endif
+   HANDLE CVMListNode::m_hHeap = NULL;
+   int    CVMListNode::m_nRef = 0;
+   void* CVMListNode::operator new(size_t size)
+   {
+       void* p;
+       if(m_hHeap == NULL)
+       {
+           SYSTEM_INFO inf;
+           GetSystemInfo(&ampinf);
+           m_hHeap = HeapCreate(0, inf.dwAllocationGranularity ,0);
+           _tprintf(_T(&#147;List Node: Private heap allocated&#148;));
+       }
+       if((p = HeapAlloc(m_hHeap, 0, size)) != NULL)
+       {
+           m_nRef<small>&#43;&#43;</SMALL>;
+           _tprintf(_T(&#147;List Node: Allocated %d bytes\n&#148;, size));
+       }
+       return p;
+   }
+   void CVMListNode::operator delete(void* p)
+   {
+       if(HeapFree(m_hHeap, 0, p) != FALSE)
+       {
+           m_nRef--;
+           _tprintf(_T(&#147;List Node: Released one chunk\n&#148;));
+       }
+       if(m_nRef == 0)
+       {
+           HeapDestroy(m_hHeap);
+           m_hHeap = NULL;
+           _tprintf(_T(&#147;List Node: Heap destroyed\n&#148;));
+       }
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

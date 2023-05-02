@@ -1,0 +1,215 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Fixing Windows 2000 Professional When It Breaks</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=29//-->
+<!--PAGES=944-947//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="941-944.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="947-950.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b><i>!irpzone full</I></B></FONT></P>
+<p>The <tt>!irpzone full</TT> command provides a list of all pending Interrupt Request Packets (IRP) on the target computer. An IRP is a data structure that device drivers and other processes use to communicate. Output for this program may look like this:</P>
+<!-- CODE //-->
+<pre>
+   kd&gt; !irpzone full
+   Small Irp region
+   Could not allocate 3952 bytes for region
+   Large Irp region
+   Irp is from zone and active with 2 stacks 2 is current
+    No Mdl System buffer = ff6b8b88 Thread ff6b8020: Irp stack trace.
+    cmd flg cl Device File  Completion-Context
+    0 0 0 ff6b8b88 00000000 00000000-00000000
+       ff6b8b88: is not a device object
+      Args: 00000000 00000000 ff6e6808 00000104
+    &gt; 3 0 1 ff6d0e70 ff6b8e08 00000000-00000000 pending
+          \FileSystem\Npfs
+             Args: 00000104 00000000 00000000 00000000
+</PRE>
+<!-- END CODE //-->
+<p>You may find this information useful if the trap analysis (which you can find in the <tt>memory.txt</TT> file) indicates a problem with an IRP that has gone bad. Usually, the IRP listing has a number of entries in both the large and small IRP lists.</P>
+<p><font size="+1"><b><i>!process 0 0</I></B></FONT></P>
+<p>Using the <tt>!process 0 0</TT> command enables you to view all active processes and their headers. Its output looks like the following:</P>
+<!-- CODE SNIP //-->
+<pre>
+   kd&gt; !process 0 0
+   **** NT ACTIVE PROCESS DUMP ****
+   PROCESS ff6ef7a0 Cid: 0002 Peb: 00000000 ParentCid: 0000
+    DirBase: 00030000 ObjectTable: ff714488 TableSize: 62.
+    Image: System
+   PROCESS ff6d5de0 Cid: 0011 Peb: 7ffdf000 ParentCid: 0002
+    DirBase: 007bd000 ObjectTable: ff6d6248 TableSize: 46.
+    Image: smss.exe
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The information that is helpful to know here is
+</P>
+<dl>
+<dt><b>Process ID</B>
+<dd>This is the 8-digit hex number following the word <i>process</I>. The system uses this number to track the process.
+<dt><b>Image</B>
+<dd>The name of the program that owns the process.
+</DL>
+
+<p><font size="+1"><b><i>!process 0 7</I></B></FONT></P>
+<p>This command is similar to the <tt>!process 0 0</TT> command, but instead of giving a brief summary, it lists all information about the process. This is usually a substantial listing because each system is running a large number of processes and each process usually has one or more threads. Also, if the stack from a thread resides in Kernel memory, it will also be listed. Output will usually look like this:</P>
+<!-- CODE //-->
+<pre>
+   kd&gt; !process 0 7
+   **** NT ACTIVE PROCESS DUMP ****
+   PROCESS ff6ef7a0 Cid: 0002 Peb: 00000000 ParentCid: 0000
+    DirBase: 00030000 ObjectTable: ff714488 TableSize: 62.
+    Image: System
+    VadRoot ff6eed68 Clone 0 Private 5. Modified 338. Locked 0.
+    FF6EF95C MutantState Signalled OwningThread 0
+    Token        e1000730
+    ElapsedTime      13:43:40.0594
+    UserTime       0:00:00.0000
+    KernelTime      0:00:39.0236
+    QuotaPoolUsage[PagedPool]   0
+    QuotaPoolUsage[NonPagedPool]  0
+    Working Set Sizes (now,min,max) (53, 30, 145)
+    PeakWorkingSetSize    125
+    VirtualSize      0 Mb
+    PeakVirtualSize     0 Mb
+    PageFaultCount     630
+    MemoryPriority     BACKGROUND
+    BasePriority      8
+    CommitCharge      9
+     THREAD ff6ef520 Cid 2.1 Teb: 00000000 Win32Thread: 80148260 WAIT:
+       (WrFreePage) KernelMode Non-Alertable
+       80148980 SynchronizationEvent
+     Not impersonating
+     Owning Process ff6ef7a0
+     WaitTime (seconds)  9123
+     Context Switch Count 192
+     UserTime     0:00:00.0000
+     KernelTime    0:00:32.0707
+     Start Address ntoskrnl!Phase1Initialization (0x801b9016)
+     Stack Init fdc14000 Current fdc13cfc Base fdc14000 Limit fdc11000 Call 0
+     Priority 0 BasePriority 0 PriorityDecrement 0 DecrementCount 0
+     ChildEBP RetAddr Args to Child
+     fdc13d14 8011500c c0502000 0000053d 00000000
+       ntoskrnl!KiSwapThread&#43;0xc5
+     fdc13d38 801274b2 80148980 00000008 00000000
+       ntoskrnl!KeWaitForSingleObject&#43;0x1b8
+</PRE>
+<!-- END CODE //-->
+<p>You may find the following information important:
+</P>
+<dl>
+<dt><b>UserTime</B>
+<dd>The length of time the process has been running in User mode.
+<dt><b>KernelTime</B>
+<dd>The length of time the process has been running in Kernel mode.
+<br>If either the UserTime or KernelTime values seem very high, the process may be consuming an exceptional amount of system resources.
+<dt><b>Working Set Sizes</B>
+<dd>The working set size in pages. A very large value for this entry may indicate that a process is leaking memory or consuming a large amount of system resources.
+<dt><b>QuotaPoolUsage</B>
+<dd>The paged and nonpaged pool used by the process. If the nonpaged pool used by a process is excessive, you may have found your memory leak.
+</DL>
+
+<p>Not only that, you&#146;ll find that the thread information also has a list of threads that have locks on resources. This is given right after the thread header. In the output above, the thread has a lock on one resource (a SynchronizationEvent at address <tt>80148260</TT>). By comparing this address and the list of locks shown in the <tt>!locks</TT> output, you should be able to find which threads have exclusive locks on resources.</P>
+<p><font size="+1"><b><i>!process</I></B></FONT></P>
+<p>The <tt>!process</TT> command displays information on the currently running process on the target computer. You will see that the output looks exactly like that of the <tt>!process 0 7</TT> command, with the exception that it is for only one process and that no thread information is given.</P>
+<p><font size="+1"><b><i>!thread</I></B></FONT></P>
+<p>This command behaves in much the same way as the <tt>!process</TT>, except that the thread information is given instead.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Even though the <tt>!process 0 7</TT> command will give information on both processes and threads, the result can be 10&#150;15 pages of output. Thus, trying to find the currently running process and threads can be difficult. Use <tt>!process</TT> and <tt>!thread</TT> instead.<hr></FONT>
+</BLOCKQUOTE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="941-944.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="947-950.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

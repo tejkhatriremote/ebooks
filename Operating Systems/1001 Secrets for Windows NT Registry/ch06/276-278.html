@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:Performance</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=6//-->
+<!--PAGES=276-278//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="273-275.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="279-282.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading3"></A><font color="#000077">Memory Performance</FONT></H3>
+<p><big>W</BIG>hen you think of memory performance, fast SRAMs and multilevel caching come to mind. Although these hardware components play a critical role in the latency and throughput of a computer&#146;s memory subsystem, tweaking the Registry obviously cannot upgrade your machine&#146;s hardware. So in this section, improving memory performance means improving the way NT uses physical and virtual memory. You know you&#146;re experiencing memory problems that you can fix with registry entries, rather than additional hardware, when you get &#147;not enough memory to complete task&#133;&#148; messages in the system Event Log or on the display monitor.</P>
+<p><b>VI-5</B> <big>T</BIG>he file system cache grows and shrinks as the applications&#146; memory demands change. However, at system startup, the cache&#146;s minimum, maximum, and &#147;ideal&#148; sizes are calibrated based on the Registry value you set below.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\Session Manager\<br>Memory Management
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>LargeSystemCache
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>This value controls the size of the system&#146;s file system cache. A value of 0 indicates a small cache, which is the default setting for Workstation, while 1 indicates a large cache, which is the default setting for Server. Servers usually perform some file sharing and therefore require a larger cache.
+</P>
+<p><b>VI-6</B> <big>N</BIG>T categorizes memory as either paged or nonpaged. Paged memory holds data that can temporarily be moved from physical memory to the system&#146;s paging file if space is needed for different data in physical memory. Nonpaged memory stores data that must be present in physical memory at all times. NT allocates a portion of physical memory for nonpaged memory when the system starts up, and this allocation can&#146;t grow. If drivers or NT exhaust this storage, the system may become unstable or operations may start to fail. Modifying these two registry entries lets you override the defaults set for the paged and nonpaged pools.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\Session Manager\<br>Memory Management
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>NonPagedPoolSize
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>&lt;number in bytes &gt;
+</TABLE>
+<p>This value is the number of bytes of physical memory you want to allocate for nonpaged memory. To monitor your memory, use Performance Monitor to watch the percentage of committed memory that&#146;s used. If more than 80 percent of memory is used consistently, you should increase this value. Likewise, if the system&#146;s nonpaged memory usage is low, reducing the amount allocated for it increases system performance.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>VI-7</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\Session Manager\<br>Memory Management
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>PagedPoolSize
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>&lt;number in bytes &gt;
+</TABLE>
+<p>This value is the number of bytes in the paged memory pool. It overrides the system&#146;s default calculation, which is roughly equal to the physical memory on Workstation and a minimum of 50 MB on Server. Paged pool is different from virtual memory size &#151; the paged pool is space reserved in the system&#146;s virtual memory map for NT and device drivers to allocate pageable data.
+</P>
+<p>You can monitor the amount of paged pool the system uses with the Performance Monitor, which also shows the maximum allocation possible. If the amount of memory used is consistently more than 80 percent, you should use this setting to override the default.</P>
+<h3><a name="Heading4"></A><font color="#000077">Networking Performance</FONT></H3>
+<p><big>T</BIG>he registry gives you lots of control over Windows NT&#146;s various networking components. Because your system may not run every networking service, you should identify which components are active so that you can target them when evaluating networking performance with tools like Performance Monitor.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">General Networking</FONT></H4>
+<p><b>VI-8</B> <big>T</BIG>his value controls the order in which your network redirectors are used. If you have more than one network redirector, such as Lanmanager Workstation or Client Services for NetWare, loaded on your system, you should consider changing this entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\NetworkProvider
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Order
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>&lt;redirector name,redirector name,redirector name&gt;
+</TABLE>
+<p>In this value, you set the order in which the WNet API uses your network providers. When the WNet API is called, it processes requests by sending them to each network provider in the order listed. If it gets back a response that the provider doesn&#146;t process that type of request, the API calls the next provider listed. Thus, if most of your system&#146;s activity relates to accessing NetWare shares, you should move the NetWare provider name to the start of the list. This small modification can improve performance significantly.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="273-275.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="279-282.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

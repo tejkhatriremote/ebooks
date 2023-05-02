@@ -1,0 +1,181 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=786-790//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Defining a Global Key</FONT></H4>
+<p>Moving from activity to activity creates a context, called a <i>global key</I>. A global key can be a simple number or a complex COM object. Using a number is fine because it&#146;s very small and lightweight. The number could be a key within the database.</P>
+<p>If you use a COM object, you should assume that the COM object will live for a long time. It should not support deactivation because that would invalidate the global key. The COM object should have a small memory footprint because thousands of instances of the COM object could potentially be created.</P>
+<p>When looking for a global key, you should use the most efficient one. For many online applications, you would typically use the email address. This is usually unique and easy to debug. However, don&#146;t think that only <i>one</I> global key is necessarily needed. There can be multiple keys, depending on the task being done.</P>
+<p><font size="+1"><b>A Global Key Example</B></FONT></P>
+<p>Here&#146;s an example of defining a global key (in this case, the user ID):
+</P>
+<!-- CODE SNIP //-->
+<pre>
+function Session_onStart() {
+Session(&#147;userId&#148;) = -1;
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This global key is a numeric value, because within the database, the value is used to identify the user. Notice that ID is set to <small>-1</SMALL>, which indicates that the user is invalid.</P>
+<p><font size="+1"><b>Global Keys and Web Farms</B></FONT></P>
+<p>When developing Web applications that run on a Web farm, you cannot maintain a global key. When a user accesses a Web site, the Web farm redirects the request to a server that can process it the quickest. The point of a Web farm is to load-balance the Web request. You cannot perform load balancing using a <small>Session</SMALL> object, because the <small>Session</SMALL> object information is specific to a Web server. Therefore, when in a Web farm, the user must always be redirected to the correct Web server.</P>
+<p>If, however, load balancing is desired, the solution is to store the key on the client side using cookies. For example, the following solution could be used:</P>
+<!-- CODE SNIP //-->
+<pre>
+function Session_OnStart() {
+Response.Cookies(&#147;userid&#148;) = 111;
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here, the key is stored in a cookie. It&#146;s important that the information stored in the cookie is not critical information, because it&#146;s stored as clear text. If it&#146;s important that the information not be readable, you can use encryption to store the information. If you want to store binary information within a cookie, the buffer should be UUEncoded. <i>UUEncoding</I> is the process of converting a binary buffer into an ASCII buffer. To read this cookie, you would use the following ASP code:</P>
+<!-- CODE SNIP //-->
+<pre>
+&ltp&gtKey is (&lt%=Request.Cookies(&#147;userid&#148;)%&gt)&lt/p&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Grouping of Activities</B></FONT></P>
+<p>The ability to define activities on an abstract level is desirable. The objective is to define them in terms of ASP applications. Within ASP, there are three possible groupings:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>ASP application</I>. A complete set of pages will be grouped as an ASP application. Within the application are subfolders (pages that define one activity). A typical activity would be information, because it doesn&#146;t need a context.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Subfolder</I>. ASP applications cannot share session variables; therefore, multiple tasks must be placed within one subfolder. Creating a subfolder can do this. It&#146;s not advisable that you put all your tasks into the root application folder because this could complicate the maintenance of the various tasks as well as make them harder to understand.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Naming</I>. Two different naming techniques are followed. The first is used when all Web pages have been put into a directory that represents the activity. Typically, in an input/output type activity, there&#146;s a form and the processing of that form. Here&#146;s an example:
+<!-- CODE SNIP //-->
+<pre>
+form: myForm.asp
+processing of the form: processingTheForm.asp
+</PRE>
+<!-- END CODE SNIP //-->
+<br>This is okay, but it introduces a problem when there are 10 files within the directory. Which form processes which page? Opening the page and checking the form tag could show you the answer, but this is an extra step, which can become tedious. Here&#146;s a better solution:
+<!-- CODE SNIP //-->
+<pre>
+form: myForm.asp
+processing of the form: myFormProc. asp
+</PRE>
+<!-- END CODE SNIP //-->
+<dd><b>&#149;</B>&nbsp;&nbsp;This situation is easy to understand because of <small>Proc</SMALL> added at the end of the filename. <small>Proc</SMALL> is added because in Project view, the two files will be located next to each other.
+<dd><b>&#149;</B>&nbsp;&nbsp;When a form can be displayed in multiple ways, this should be added to <small>myForm.asp</SMALL> as a big <small>if</SMALL> statement. If, however, this appears to be messy, then <small>myFormProc</SMALL> has to be labeled as something meaningful. The <small>Proc</SMALL> at the end should remain.
+<dd><b>&#149;</B>&nbsp;&nbsp;In the second scenario, multiple tasks are placed within one directory. The naming of pages within the same task should carry the same prefix. Again, using this method, the files appear as one group within the Project view of Visual InterDev.
+</DL>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Enforcing Order</FONT></H4>
+<p>The big problem with Web pages is that any Web page can be referenced. This means an activity can be started without a context. The solution to this problem is to enforce order by using application-flow restrictions. Order can be enforced in various ways, as shown in Figure 23.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-05.jpg',207,120 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-05.jpg',207,120)"><font color="#000077"><b>Figure 23.5</B></FONT></A>&nbsp;&nbsp;Various application-order techniques.</P>
+<p>These four different redirections make it possible to return to the client-specific content, even though they did not request it formally. This makes it possible to enforce the order.
+</P>
+<p><font size="+1"><b>Automatic Client-side Redirection</B></FONT></P>
+<p>The simplest method of redirection is to use client-side redirection, which is started by the server. In the example of the main operations activity, being logged on is a dependency. The sample main operations page (<small>MainOperationDefault.asp</SMALL>) would look like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&lt%    if( Session(&#147;userId&#148;) == -1) {
+          Response.Redirect( &#147;../Logon/Default.asp&#148;);
+   }%&gt
+&ltHTML&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the user ID is <small>-1</SMALL>, the user is redirected using <small>Response.Redirect</SMALL> to the <small>../logon/default.asp</SMALL> page. In this example, the logon activity has been added as a subfolder to the main project. The double dot indicates relative notation, which assumes that all other activities are &#147;subprojects&#148; of the main project. The advantage of doing this is that the activity can be reused.</P>
+<p>This may seem like a server-side redirection, but, in fact, it&#146;s a client-side redirection. This is illustrated in Figure 23.6.</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-06.jpg',199,90 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-06.jpg',199,90)"><font color="#000077"><b>Figure 23.6</B></FONT></A>&nbsp;&nbsp;A server causing a client-side redirection.</P>
+<p>The steps are as follows:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;An HTTP request is made by the client.
+<dd><b>2.</B>&nbsp;&nbsp;The HTTP request is converted into an ASP request.
+<dd><b>3.</B>&nbsp;&nbsp;ASP realizes that order is not enforced and sends back a client redirection in the form of a URL, which is propagated to the client.
+<dd><b>4.</B>&nbsp;&nbsp;The client browser comprehends this and automatically issues another request using the returned URL.
+<br>Again the request is converted into an ASP request.
+<dd><b>5.</B>&nbsp;&nbsp;Content is sent back to the client.
+</DL>
+<p>The <small>Response.Redirect</SMALL> method sends an HTTP redirect, which causes another client connection to be established. This type of redirection costs more bandwidth because it requires a second connection. The advantage is that the redirection can be to any location.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

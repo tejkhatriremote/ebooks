@@ -1,0 +1,797 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch21.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch23.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 22</A>
+	<UL>
+		<LI><A HREF="#Heading2">Object Basics</A>
+		<UL>
+			<LI><A HREF="#Heading3">The System Objects</A>
+			<LI><A HREF="#Heading4">Program Objects</A>
+			<LI><A HREF="#Heading5">Using Collections and Object Arrays</A>
+			<LI><A HREF="#Heading6">Listing 22.1. Creating</A>
+			<LI><A HREF="#Heading7">and managing a collection.</A>
+			<LI><A HREF="#Heading8">Introduction to OLE Automation</A>
+			<LI><A HREF="#Heading9">Listing 22.2. OLE automation</A>
+			<LI><A HREF="#Heading10">code that uses Word to create a Word document.</A>
+			<UL>
+				<LI><A HREF="#Heading11">Figure 22.1.</A>
+			</UL>
+			<LI><A HREF="#Heading12">Summary</A>
+			<LI><A HREF="#Heading13">Q&amp;A</A>
+			<LI><A HREF="#Heading14">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading15">Quiz</A>
+				<LI><A HREF="#Heading16">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 22</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Object Basics</FONT></H2>
+<P>Considering that Visual Basic is not a true object-oriented language (due to Visual
+Basic's lack of inheritance features), Visual Basic sure uses a lot of objects! Everything
+seems to be an object in Visual Basic, including forms, windows, toolbox tools, and
+ActiveX controls.</P>
+<P>This lesson discusses several of the more advanced programming topics that surround
+objects. By the time you finish this lesson, you will better understand how objects
+fit into the Visual Basic environment.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>How to access the system objects
+	<P>
+	<LI>What distinguishes a class from an object
+	<P>
+	<LI>When to shortcut code with <TT>With-End</TT> blocks
+	<P>
+	<LI>How to create your own collections
+	<P>
+	<LI>Why OLE automation gives your application tremendous power
+	<P>
+	<LI>How to make Word work from inside Visual Basic
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">The System Objects</FONT></H3>
+<P>You've worked with several Visual Basic objects already. The <TT>Printer</TT>
+object is an object you use with a <TT>Print</TT> method to send output to the printer,
+as in the following statement:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print Tab(15); &quot;Company Balance Sheet&quot;
+</FONT></PRE>
+<P>In addition, you've seen the <TT>Debug</TT> object when printing to the Immediate
+window like this:</P>
+<PRE><FONT COLOR="#0066FF">Debug.Print &quot;intVar is &quot;; intVar
+</FONT></PRE>
+<P>In both cases, the object represents an item outside your application's scope.
+The printer and the Immediate window are not your application's; therefore, Visual
+Basic uses objects to represent them. The <TT>Printer</TT> object does not reference
+any particular printer; rather, the <TT>Printer</TT> object references the current
+Windows printer. The <TT>Debug</TT> object represents the Immediate window.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A system object is an object
+defined by Visual Basic that lies outside your program's immediate scope.</P>
+<P>The <TT>Printer</TT> and the <TT>Debug</TT> objects are system objects predefined
+by the Visual Basic system. Although a command button on your form is an object,
+the command button is not a system object because the object did not really exist
+(only its pattern existed on the Toolbox window) before you placed the command button
+on the form.</P>
+<P>Table 22.1 lists all the predefined system objects your applications can work
+with.</P>
+<CENTER>
+<P><B>Table 22.1. The system objects and their methods. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Object</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Methods</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>App</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Your current application</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The method called <TT>EXEName</TT> returns the application's filename. <TT>Path</TT>
+			returns the application's path. <TT>Title</TT> returns the primary startup form's
+			title bar text. <TT>Previnstance</TT> returns <TT>True</TT> or <TT>False</TT> to
+			indicate whether another instance (copy) of the application is currently running.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ClipBoard</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The Windows Clipboard</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The method <TT>Clear</TT> erases the Clipboard. <TT>GetData</TT> returns the graphic
+			image stored on the Clipboard. <TT>GetFormat</TT> returns the format of the Clipboard
+			object. <TT>GetText</TT> returns the text on the Clipboard. <TT>SetData</TT> copies
+			a graphic image to the Clipboard. <TT>SetText</TT> copies text to the Clipboard.
+			<TT>SelStart</TT>, <TT>SelLength</TT>, and <TT>SelText</TT> perform the Clipboard's
+			selection operations.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Debug</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The Immediate window</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The method <TT>Print</TT> copies information, at runtime, to the Immediate window
+			(only possible in non-<TT>.EXE</TT> Visual Basic programs you run from Visual Basic's
+			development environment).</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Printer</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The system printer</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Provides printer support.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Screen</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The user's screen</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontCount</TT> returns the number of fonts the current screen supports. <TT>Fonts</TT>
+			contains a list of all of the screen's possible font names. <TT>Height</TT> returns
+			the twip height of the screen area. <TT>MousePointer</TT> holds (or determines if
+			you specify a new one) the shape of the mouse cursor. <TT>TwipsPerPixelX</TT> returns
+			the number of possible horizontal twips. <TT>TwipsPerPixelY</TT> returns the number
+			of possible vertical twips. <TT>Width</TT> returns the width, in twips, of the screen.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>Use these objects and methods to return information about the objects. For example,
+you could append the current application pathname to a string variable like this:</P>
+<PRE><FONT COLOR="#0066FF">strFullName = Application.Path &amp; &quot;Afile.dat&quot;
+</FONT></PRE>
+<P>Although you won't use the system objects in every application, they do come in
+handy when you're performing interaction with the Windows Clipboard or the screen.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>The <TT>Screen</TT>
+	object's measurements differ depending on the video card, resolution, and monitor
+	your user uses. Therefore, the <TT>Screen</TT> object, available at runtime, represents
+	the entire Windows Desktop. If you want to center a form in the middle of the user's
+	screen, you could place these statements at the beginning of the <TT>Form_Load()</TT>
+	event procedure:</P>
+	<PRE><FONT COLOR="#0066FF">frmName.Left = (Screen.Width - frmName.Width) / 2
+frmName.Top = (Screen.Height - frmName.Height) / 2</FONT></PRE>
+	<P>
+<HR>
+
+
+</BLOCKQUOTE>
+
+<PRE></PRE>
+<CENTER>
+<H3><A NAME="Heading4"></A><FONT COLOR="#000077">Program Objects</FONT></H3>
+</CENTER>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A class is a packaged object,
+with behaviors and properties, that describes members of the class.</P>
+<P>Objects that you create with your application are objects that are members of
+a particular class. For example, an option button class defines properties, events,
+and methods that all members of the option button class support. In other words,
+even though your application may contain five option buttons, and even though all
+five of those option buttons differ in one or more of their properties (such as <TT>Caption</TT>),
+they are all members of the same class. A command button can never be a member of
+the option button class because a command button's properties, events, and methods
+differ from an option button's.</P>
+<P>You can test for membership within any given class. The class forms a hierarchy
+and all members of the class take on the class properties, events, and methods. One
+of the reasons for a class test is that you can pass to procedures not only variables,
+but also controls. The following procedure receives a command button as its only
+argument:</P>
+<PRE><FONT COLOR="#0066FF">Public Sub GetIt(cmdClick As CommandButton)
+</FONT></PRE>
+<P>Some procedures can be multipurpose. In other words, a procedure might change
+the <TT>BackColor</TT> property of whatever object you pass to that procedure. Use
+the <TT>As Object</TT> argument declaration as follows to make the procedure multipurpose:</P>
+<PRE><FONT COLOR="#0066FF">Public Sub ChangeColor(objOnForm As Object)
+</FONT></PRE>
+<P>You've not seen the <TT>Object</TT> keyword until now, but you can declare not
+only arguments as <TT>Object</TT> data types, but variables as well, like this:</P>
+<PRE><FONT COLOR="#0066FF">Dim objAnything As Object
+</FONT></PRE>
+<P>The <TT>objAnything</TT> variable can now represent an object.</P>
+<P>Your application's code can create any object needed at runtime. In other words,
+you could declare an array of five option buttons like this:</P>
+<PRE><FONT COLOR="#0066FF">Dim ctlOpButtons(1 To 5) As New OptionButton
+</FONT></PRE>
+<P>The <TT>New</TT> keyword tells Visual Basic to create five new option buttons.
+If you want to base a new object on an existing object, you only need to change the
+properties that differ in the new object from the old one. The following statement
+declares a new form based on an existing form named <TT>frmAcctsPay</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Dim frmNewForm As New frmAcctsPay
+</FONT></PRE>
+<P>Notice that if you place an existing control name after the <TT>New</TT> statement,
+Visual Basic declares a new object based on an existing one. If you use a control's
+class name (such as <TT>CommandButton</TT>, <TT>Form</TT>, <TT>OptionButton</TT>,
+or <TT>Label</TT>), Visual Basic declares a new control with all default property
+values (except for the <TT>Name</TT> property, which you set with the <TT>Dim</TT>
+as you declare the control). You the can specify the property values that you want
+for your new object.</P>
+<P>Use the <TT>If TypeOf-Is</TT> programming block to test for an object's data type.
+The following <TT>If</TT> generates <TT>True</TT> if the object stored in <TT>objAnything</TT>
+is a text box:</P>
+<PRE><FONT COLOR="#0066FF">If TypeOf objAnything Is TextBox Then
+</FONT></PRE>
+<P>In addition to being a keyword command, Visual Basic supports the <TT>TypeOf()</TT>
+function that returns the object type of its argument.</P>
+<P>Knowing about an object's class lets Visual Basic accept the following code that
+contains a <TT>With</TT> keyword block:</P>
+<PRE><FONT COLOR="#0066FF">With lblTitle
+   .Caption = &quot;Accounts Payable&quot;
+   .Alignment = vbRightJustify
+   .Font.Size = 15
+   .Font.Bold = True
+   .Left = 25
+   .Right = 0
+   .Width = 1000
+End With
+</FONT></PRE>
+<P>If you must set more than two or three properties in code, use <TT>With</TT>,
+which<TT> </TT>tells Visual Basic that all objects without an object qualifier are
+label objects. Without the <TT>With</TT> keyword, you would have to type the object's
+name all through the assignments, like this:</P>
+<PRE><FONT COLOR="#0066FF">lblTitle.Caption = &quot;Accounts Payable&quot;
+lblTitle.Alignment = vbRightJustify
+lblTitle.Font.Size = 15
+lblTitle.Font.Bold = True
+lblTitle.Left = 25
+lblTitle.Right = 0
+lblTitle.Width = 1000
+</FONT></PRE>
+<CENTER>
+<H3><A NAME="Heading5"></A><FONT COLOR="#000077">Using Collections and Object Arrays</FONT></H3>
+</CENTER>
+<P>In earlier lessons you learned about control arrays that you can declare. By declaring
+an array of five Option Button controls, for example, that all have the same name,
+you can set property values for one, and all the others gain the same properties.
+Your application will distinguish between the controls by the control array subscript.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A collection is a set of
+all objects of the same data type.</P>
+<P>In addition to the control arrays, you can work with collections. A collection
+differs from an array because your application may contain three command button arrays
+but only one <TT>Controls</TT> collection. The <TT>Controls</TT> collection refers
+to every control used in your application.</P>
+<P>Table 22.2 describes common Visual Basic collections.</P>
+<CENTER>
+<P><B>Table 22.2. Some of the collections you can manage. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Collection</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Controls</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">All controls within your application.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Forms</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">All forms within your application.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Printers</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">All printers connected to your system.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>The collections support several methods that you can use to manage the collection.
+Table 22.3 lists some of those methods.</P>
+<CENTER>
+<P><B>Table 22.3. Some methods you can apply to collections. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Method</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Add</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Adds items to collections.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Count</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Returns the number of items in a collection.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Remove</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Deletes items from a collection.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Item</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">References a collection element.</TD>
+	</TR>
+</TABLE>
+
+</CENTER>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You can create
+	your own collections, and some of Table 22.3's methods are more useful to you, when
+	you work with your own collections than when you work with the supplied collections.
+	For example, you'd never add an item to the <TT>Printers</TT> collection because
+	Windows defines that collection from your system's installed printer list. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Suppose that you want to display all controls on the form, even some that might
+be hidden from other procedures that executed previously. Although you could set
+each control's <TT>Visible</TT> property to <TT>True</TT>, the following loop makes
+for an easier display of the controls:</P>
+<PRE><FONT COLOR="#0066FF">For intCtr = 0 to Controls.Count-1
+   Controls(intCtr).Visible = True
+Next intCtr
+</FONT></PRE>
+<P>The <TT>For Each</TT> statement makes the loop even simpler. The zero-based collection
+subscript requires that you loop through the <TT>Count-1</TT> subscript, which is
+a little confusing. Substitute <TT>For Each</TT> to clarify things and to let Visual
+Basic take care of the subscripting like this:</P>
+<PRE><FONT COLOR="#0066FF">Dim ctlControl As Control
+For Each ctlControl In Controls
+   ctlControl.Visible = True
+Next ctlControl
+</FONT></PRE>
+<P>Notice that you must declare a control variable so that the <TT>For Each</TT>
+statement has a place to load each control in the collection.</P>
+<P>Suppose that you add forms to that same application and you want to make all controls
+visible on all the forms. The <TT>Forms</TT> collection makes such a task simple
+if you use the following nested loop:</P>
+<PRE><FONT COLOR="#0066FF">Dim ctlControl As Control
+Dim frmMyForms As Form
+For Each frmMyForms In Forms
+   For Each ctlControl In Controls
+      ctlControls.Visible = True
+   Next ctlControl
+Next frmMyForms
+</FONT></PRE>
+<P>If you want to create your own collections, you'll be able to work with them just
+as you work with the supplied collections. You'll have to declare and manage the
+collection yourself, but once you build a collection, you can operate on all the
+collection items more easily than if they were separate or part of a control array.</P>
+<P>Given that the <TT>Collection</TT> keyword is itself a defined object, you can
+declare a collection like this:</P>
+<PRE><FONT COLOR="#0066FF">Public colNewCollect As New Collection
+</FONT></PRE>
+<P>If you do not use <TT>Dim</TT>, but use either <TT>Private</TT> or <TT>Public</TT>
+to declare collections, declare the collections in the <TT>general</TT> section of
+a module so that the <TT>Public</TT> or <TT>Private</TT> keyword determines the scope
+(either project- or module-level availability).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>The previous
+	<TT>Public</TT> statement declares a new collection class but does not declare any
+	specific members of that collection. To use a collection object, you must not define
+	the specific items to go in the collection. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>If you use <TT>Dim</TT> and declare a new collection inside a procedure, only
+that procedure has access to the collection. Often, such a local collection is wanted,
+but be aware that other procedures cannot use the collection.</P>
+<P>Once you define the collection in the <TT>general</TT> section, you then can create
+the collection's specific instances. Listing 22.1 declares collection members and
+shows you how to use the methods to add and manage the collection.
+<CENTER>
+<H3><A NAME="Heading6"></A><FONT COLOR="#000077">Listing 22.1. Creating and managing
+a collection.</FONT></H3>
+</CENTER>
+<PRE><FONT COLOR="#0066FF">Dim colPeople As New Collection
+Dim intCtr As Integer
+Dim m As Integer    ` MsgBox() return (not used)
+
+colPeople.Add &quot;George&quot;
+colPeople.Add &quot;Sandra&quot;
+colPeople.Add &quot;William&quot;
+colPeople.Add &quot;Sue&quot;
+colPeople.Add &quot;Terry&quot;
+
+` Print the collection
+For intCtr = 1 to colPeople.Count
+   m = MsgBox(&quot;The next name is &quot;; &amp; colPeople(intCtr) )
+Next intCtr
+
+` Add another person if you wish
+` As you can see, you don't need to
+` concern yourself with running past a
+` maximum subscript value as you
+` would with arrays.
+colPeople.Add &quot;Kay&quot;
+
+` The following should display 6 people
+m = MsgBox(&quot;There are &quot;; Str(colPeople.Count); &amp; _
+<TT>&quot; in the collection.&quot;).</TT> </FONT></PRE>
+<P><BR>
+Here is the output from this code:</P>
+<PRE><FONT COLOR="#0066FF">The next name is George
+The next name is Sandra
+The next name is William
+The next name is Sue
+The next name is Terry
+The next name is Kay
+There are 6 in the collection.
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>As you
+	can see, a collection's index value begins at 1, not zero, as is the case for arrays
+	and control arrays. The mixture of starting subscripts provides yet another reason
+	for using <TT>For Each</TT> to step through such items. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The previous discussion shows how you can use the <TT>Add</TT> method to add new
+items to the collection. You don't have to worry about a maximum subscript. The problem,
+however, is that with <TT>Add</TT>'s default method format, you cannot add new collection
+items except to the end of the collection. In addition, you cannot remove specific
+items, except for the final collection item, from the collection with <TT>Remove.</TT></P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A named argument is an argument
+known by its name and not by its specific position without an argument list.</P>
+<P><TT>Add</TT> supports a named argument called <TT>Before</TT> that lets you insert
+new items into a collection before an existing item. In effect, Visual Basic shifts
+all the subsequent items down in the list. If you want to add a new name to the beginning
+of the <TT>People</TT> collection, code the following:</P>
+<PRE><FONT COLOR="#0066FF">People.Add &quot;Robert&quot;, Before:=1
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Do not
+	use a regular assignment statement when assigning named argument values, but use
+	the special <TT>:=</TT> named argument assignment operator. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The collection now looks like this:</P>
+<PRE><FONT COLOR="#0066FF">Robert
+The next name is George
+Sandra
+William
+Sue
+Terry
+Kay
+</FONT></PRE>
+<P>If you want to remove the third name, you can do so like this:</P>
+<PRE><FONT COLOR="#0066FF">People.Remove 3   ` Deletes the 3rd item
+</FONT></PRE>
+<CENTER>
+<H3><A NAME="Heading8"></A><FONT COLOR="#000077">Introduction to OLE Automation</FONT></H3>
+</CENTER>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>OLE automation refers to
+the capability of one application to declare and use ActiveX objects that are actually
+created by other applications.</P>
+<P>As you learned in Hour 21, &quot;Visual Basic and ActiveX,&quot; the overall distinction
+between OLE and ActiveX is getting blurred. Nevertheless, OLE and ActiveX do work
+well together to support OLE automation. Although this section only scratches the
+OLE automation surface, you'll probably be surprised at what OLE automation can accomplish.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>More and more
+	programmers are calling OLE automation active automation due to ActiveX's impact
+	on OLE automation. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Suppose that your application needed to create data files for Excel or Word. Using
+normal file access routines you learned in Hour 15, &quot;Visual Basic Database Basics,&quot;
+makes such file creation extremely tedious and bug-prone. How can you find the data
+format required by Word?</P>
+<P>With OLE automation your Visual Basic application can actually borrow Excel or
+Word and, behind the user's back without ever showing the other application, make
+Excel or Word (or any other OLE automation-compatible application) create the data
+file for you. When finished, the data file will reside on the disk and no traces
+of the other application will be left. Your user will believe your application created
+the data file.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Your development
+	computer must have a copy of the OLE automation's application before you can test
+	your application. Also, your user must have a copy of the OLE automation application.
+	Without Word, for example, you cannot use OLE automation to create a Word document.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>To create a Word data file using OLE automation, you must first create an object
+variable that can reference the Word OLE automation application. Declare such an
+object variable like this:</P>
+<PRE><FONT COLOR="#0066FF">Public objWordApp As Object
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Always use a global
+	variable for OLE automation objects. The variable references a completely different
+	application outside your application's workspace. Therefore, the variable is truly
+	global to your application's other variables. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><TT>objWordApp</TT> is an object variable that represents the entire Word OLE
+automation application. The rest of the code will use this application's reference
+object variable to perform the data-generation task. Nothing about <TT>objWordApp</TT>
+lets Visual Basic know that the object is the Word application, so the following
+statement will link the option button variable to Word:</P>
+<PRE><FONT COLOR="#0066FF">Set objWordApp = CreateObject(&quot;Word.Application.8&quot;)
+</FONT></PRE>
+<P>The <TT>8</TT> is a property that uses Office 97's Word instead of earlier versions.
+Before Office 97, which technically contains Word version 8, Word used a language
+called WordBasic for its automation language. Word 8 uses Visual Basic, which is
+sometimes called Visual Basic for Applications.</P>
+<P>Notice that this is not a normal assignment statement. The <TT>Set</TT> keyword
+tells Visual Basic not to store a value in <TT>objWordApp</TT> because the Word application
+is not a value that you could put into a variable. <TT>Set</TT> tells Visual Basic
+to reference the Word application. <TT>objWordApp</TT> works like a link to Word.
+Visual Basic will, through OLE automation, transfer functions you apply to <TT>objWordApp</TT>
+to the Word application. The <TT>CreateObject()</TT> function actually starts Word
+(in the background) and prepares the OLE automation link.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>If Word
+	is already running, <TT>CreateObject()</TT> starts another copy of Word. If you want
+	to use the currently running Word, use <TT>GetObject()</TT> instead of <TT>CreateObject()</TT>
+	to borrow the running copy of Word. You can test to see if Word is already running
+	like this:</P>
+	<PRE><FONT COLOR="#0066FF">Set objWordApp = GetObject(&quot;&quot;, &quot;Word.Application.8&quot;)
+If objWordApp Is Nothing Then   ` True if not running
+   Set objWordApp = CreateObject(&quot;Word.Application.8&quot;)
+End If</FONT></PRE>
+	<P>
+<HR>
+</P>
+	<PRE></PRE>
+
+</BLOCKQUOTE>
+
+<PRE></PRE>
+<P>The null string at the beginning of <TT>GetObject()</TT>is necessary. If you want
+to open an existing Word document and work on that document inside Visual Basic,
+you'll insert the path and filename to that document as the first argument. If you
+want to use Word to create a new document, leave the null string for the first argument.</P>
+<P>Keep in mind that OLE automation is fairly extensive and that you can, through
+your Visual Basic application, make Word do anything you could do at the keyboard
+with Word. Therefore, the OLE automation can trigger Word's menus, format text, and
+save files. You'll apply methods, most of which match Word's menus, to perform these
+tasks.</P>
+<P>Listing 22.2 shows you a complete code set you could use to create a Word document
+named <TT>MyWord.Doc</TT>.
+<CENTER>
+<H3><A NAME="Heading9"></A><FONT COLOR="#000077">Listing 22.2. OLE automation code
+that uses Word to create a Word document.</FONT></H3>
+</CENTER>
+<PRE><FONT COLOR="#0066FF">` Create a Word document and add text to it
+Set objWordApp = GetObject(&quot;&quot;, &quot;Word.Application.8&quot;)
+If objWordApp Is Nothing Then   ` True if not running
+   Set objWordApp = CreateObject(&quot;Word.Application.8&quot;)
+</FONT></PRE>
+<PRE><FONT COLOR="#0066FF">
+End If
+</FONT></PRE>
+<PRE><FONT COLOR="#0066FF">
+` Add a document to the collection
+objWordApp.Documents.Add
+
+` The title will have a blank line after it
+` Move the cursor to the next line (simulate the
+` user pressing Enter) by sending the vbCrLf named
+` literal to the document
+objWordApp.Documents(1).Content.Font.Size = 28
+objWordApp.Documents(1).Content.Font.Bold = True
+objWordApp.Documents(1).Content.InsertAfter _
+      Text:=&quot;Why go to Italy?&quot; &amp; vbCrLf &amp; vbCrLf
+
+` The body of the document is next
+objWordApp.Documents(1).Range.InsertAfter Text:= _
+    &quot;Italy sells the best ice cream in the world.&quot; &amp; vbCrLf
+objWordApp.Documents(1).Range.InsertAfter Text:= _
+    &quot;Italy has the best architecture in the world.&quot; &amp; vbCrLf
+objWordApp.Documents(1).Range.InsertAfter Text:= _
+    &quot;(Oh, and did I mention the ice cream?)&quot;
+
+`Save the document
+objWordApp.Documents(1).SaveAs &quot;c:\MyWord.Doc&quot;
+` Close the Word document
+objWordApp.Documents(1).Close
+` Quit the Word application
+<TT>objWordApp.Quit</TT></FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Listing
+	22.2 contains a lot of strange-looking properties, events, and methods such as <TT>InsertAfter</TT>
+	and <TT>Range</TT>. These are Word-based Visual Basic objects and properties, events,
+	and methods. Although you've not seen most of these properties, events, and methods
+	before, you can probably make a good guess as to what each statement does. (No range
+	is set up by the code, so <TT>Range</TT> refers to the cursor's current position
+	in the document.) 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>After running Listing 22.2 (perhaps from an event procedure you tie to a command
+button), you can open Word and load the <TT>MyWord.Doc</TT> document created from
+Listing 22.2. You'll see that the document is fully Word compatible; it should be
+because Word created it from your application's OLE automation commands. Figure 22.1
+shows a Word screen with the document open.<BR>
+<BR>
+<A NAME="Heading11"></A><A HREF="../art/ch22/22cce01.jpg"><FONT COLOR="#000077">Figure
+22.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Word document that Visual Basic
+created with OLE automation.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You must be
+	intimately familiar with the OLE automation application before you can work with
+	that application through Visual Basic objects. Often the other application offers
+	online OLE automation support information so you can use that application in an OLE
+	automation setting. You can get help with Word's OLE automation language by starting
+	Visual Basic for Applications from Word's Tools menu and viewing the help files there.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H3><A NAME="Heading12"></A><FONT COLOR="#000077">Summary</FONT></H3>
+</CENTER>
+<P>You now understand more about objects and how to access objects from within Visual
+Basic. In programming terms, an object is a packaged set of properties and code,
+and that's exactly what Visual Basic objects such as controls are. You set a control's
+properties and run methods to manipulate those objects. The object model gives you
+the ability to pass controls and other objects, test an object's type, and create
+your own collections that often make programming easier than arrays.</P>
+<P>The next hour explains how to prepare your application for distribution now that
+you've learned how to write powerful applications.
+<CENTER>
+<H3><A NAME="Heading13"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+</CENTER>
+
+<DL>
+	<DD><B>Q Why are collections better than arrays?<BR>
+	<BR>
+	A</B> Collections are not better than arrays in all cases. For example, if you need
+	to keep track of 100 integer temperature values, keep those values in an integer
+	array. The array is efficient and you can work with the array using loops as you
+	are used to doing. A collection is nice when you don't know how many items will appear
+	in the group, especially when those items are objects such as controls and not simply
+	regular data types. The collection can grow to any size and the methods you use on
+	the collection make for simple programming because you don't have to keep track of
+	the highest item in the collection yourself.<BR>
+	<B><BR>
+	Q What is the real difference between OLE and OLE automation?<BR>
+	<BR>
+	A </B>OLE lets users edit objects from other applications inside a Form window. The
+	cross-application platforms that OLE provides lets you embed a <TT>Paint</TT> object
+	in your application without having to code drawing methods that perform as <TT>Paint</TT>'s
+	perform. Before OLE automation, however, regular OLE did not give your Visual Basic
+	application the capability to control the serving application. Applications that
+	support OLE automation can now expose all their internal properties, events, and
+	methods (if they're not OLE automation compatible, they will have no properties,
+	events, or methods) to applications such as Visual Basic. Visual Basic, therefore,
+	can make Access manipulate database tables or make Excel manipulate a named range
+	in a worksheet. Although you must do some extra work on the front end to code the
+	OLE automation, your applications become much more powerful because they borrow technology
+	from these other applications.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading14"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+</CENTER>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<CENTER>
+<H4><A NAME="Heading15"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1. </B>What are three system objects?<BR>
+	<B><BR>
+	2.</B> What is the difference between a class and an object?<BR>
+	<B><BR>
+	3. </B>What happens when you use the <TT>New</TT> keyword inside an object declaration?<BR>
+	<B><BR>
+	4. </B>True or false: <TT>TypeOf</TT> is both a statement and a function.<BR>
+	<B><BR>
+	5.</B> True or false: You can pass objects such as controls and forms as arguments
+	to procedures.<BR>
+	<B><BR>
+	6.</B> What is the index value for a collection's first item?<BR>
+	<B><BR>
+	7. </B>How can you insert a new item at the beginning of a collection?<BR>
+	<B><BR>
+	8.</B> Which OLE automation function should you use to initiate OLE automation when
+	the OLE automation application is already running on the machine?<BR>
+	<B><BR>
+	9.</B> What is the new term being used more frequently for OLE automation?<BR>
+	<B><BR>
+	10.</B> True or false: As long as you know the OLE automation language, you don't
+	need the OLE automation application installed on your machine to use OLE automation
+	with that application.
+</DL>
+
+<CENTER>
+<H4><A NAME="Heading16"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Write a procedure that decreases the font size of all controls on all
+	forms by 50%. Use a system object to accomplish the change.<BR>
+	<B><BR>
+	2.</B> If you use Word, Excel, or any other OLE automation-compatible application
+	(as all the Office 97 products are), start that application and search the online
+	help for information on that application's properties, events, and methods used in
+	OLE automation. The more you know about that application's internals, the more easily
+	you can integrate that application and borrow its power for your own applications.
+	If the application is an Office 97 application, search the online help for the Visual
+	Basic help to see how to start Visual Basic. (Visual Basic is often called Visual
+	Basic for Applications in applications' help files. Visual Basic for Applications
+	[or VBA] is the same language as Visual Basic.) Start the application's Visual Basic
+	editor to see a development environment that looks like Visual Basic's own development
+	environment. Open the application's Object Browser to receive an Explorer-like view
+	of that application's properties, events, and methods. Search the Object Browser's
+	online help for extensive OLE automation help.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch21.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch23.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

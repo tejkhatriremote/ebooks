@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=517-520//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="16-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch17/17-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 16.7</B> Sharing Marshaled Interface Pointers in <small>AptMarshal.cpp</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * AptMarshal.cpp
+ * Demonstrates the right way to share interface pointers between
+ * apartments.
+ */
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltwchar.h&gt
+#include &ltobjbase.h&gt
+
+#include &#147;exesta.h&#148;
+
+DWORD WINAPI ThreadFunc(LPVOID lpv);
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+
+IStream* g_pStream = NULL;
+
+int wmain()
+{
+    /* Initialize the main STA */
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if(FAILED(hr))
+    {
+        MessageBox(NULL, L&#148;CoInitFailed&#148;, L&#148;main&#148;, MB_ICONHAND);
+        return 0;
+    }
+
+    /* Get a pointer to the ITestFunc interface */
+    ITestFunc* pTestFunc = NULL;
+    hr = CoCreateInstance(CLSID_TestFunc,
+                          NULL,
+                          CLSCTx_ALL,
+                          IID_ITestFunc,
+                          (void**)&amppTestFunc);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoCreateFailed&#148;, hr);
+        return 0;
+    }
+
+    hr = pTestFunc-&gtMakeRoundTrip();
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Method call failed in main STA&#148;, hr);
+        return 0;
+    }
+
+    /* Serialize the interface pointer into a stream */
+    hr = CoMarshalInterThreadInterfaceInStream(IID_ITestFunc,
+                                               pTestFunc,
+                                               &ampg_pStream);
+    if(SUCCEEDED(hr))
+    {
+        /* Spin up a second thread. */
+        DWORD threadID;
+        HANDLE hThread = CreateThread(NULL,
+                                      0,
+                                      ThreadFunc,
+                                      NULL,
+                                      0,
+                                      &ampthreadID);
+
+        /* Wait for the second thread to complete */
+        WaitForSingleObject(hThread, INFINITE);
+        CloseHandle(hThread);
+    }
+    else
+    {
+        HandleError(L&#148;Marshaling failed&#148;, hr);
+    }
+
+    pTestFunc-&gtRelease();
+    CoUninitialize();
+    return 0;
+}
+
+/*
+ * The thread function initializes the second STA, and uses the
+ * serialized interface pointer from the first STA. The call is
+ * accepted by the proxy.
+ */
+DWORD WINAPI ThreadFunc(LPVOID lpv)
+{
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoInit for 2nd STA failed&#148;, hr);
+        return 0;
+    }
+
+    /* Pull the interface pointer out of the stream */
+    ITestFunc* pTestFunc = NULL;
+    hr = CoGetInterfaceAndReleaseStream(g_pStream,
+                                        IID_ITestFunc,
+                                        (void**)&amppTestFunc);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Unmarshal failed&#148;, hr);
+        return 0;
+    }
+
+    hr = pTestFunc-&gtMakeRoundTrip();
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Method call in 2nd STA failed&#148;, hr);
+        return 0;
+    }
+
+    pTestFunc-&gtRelease();
+    CoUninitialize();
+    return 0;
+}
+/*
+ * Display an error message using the system error string.
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amplpMsgBuf,
+                  0,
+                  NULL);
+    MessageBox(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The source code for <small>AptMarshal.cpp</SMALL> in Listing 16.7 looks a great deal like the source code for <small>AptClient.cpp</SMALL> in Listing 16.6. The only difference between the two projects is the way the interface pointer is passed between threads.</P>
+<p>Instead of using a global <small>ITestFunc</SMALL> interface pointer, Listing 16.7 uses a global <small>IStream</SMALL> interface pointer. The <small>IStream</SMALL> interface pointer is set when the first thread calls the <small>CoMarshalInterThreadInterfaceInStream</SMALL> function. The second thread then uses <small>CoGetInterfaceAndReleaseStream</SMALL> to pull the interface pointer from the <small>IStream</SMALL>.</P>
+<h3><a name="Heading15"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed the COM threading model and how multithreaded apartments (MTAs) and single-threaded apartments (STAs) function. Every thread and component must select an apartment to live in; this selection can impact performance and robustness. There are also rules defining how threads running in different apartments may share interface pointers&#151;the pointer must be marshaled by writing it out to a stream, which can then be shared between apartments.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="16-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch17/17-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

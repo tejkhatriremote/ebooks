@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=02//-->
+<!--PAGES=067-069//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Now when you go to the mounted filesystem, the original files vanish and are replaced with new files. They really aren&#146;t though. They are merely hidden underneath the remote mount point and are still there.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# umount missile:/configs
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To be able to see the original hidden files again, use the <small>unmount</SMALL> command and the NFS mount is removed exposing the directory tree as it truly is.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>On most UNIX platforms, NFS mount points have to be only a directory on the local drive. It does not matter whether the directory contains data or not. It needs to have only a directory off of which it can create the mount point.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>I run into this at least once a year. The funny thing is that every year it is caused by the same exact thing: Images. Gigabytes of images that do not adhere to standard company policy. I shouldn&#146;t have to go into any more detail about the images, because we&#146;ve probably all found images that don&#146;t meet company policy.
+</P>
+<p>This little hack has been exposed in two ways so far. By either the system drive crashing from lack of disk space, or the user requesting help to clean up the disks. In every case, the disks were full. It gets frustrating when you aren&#146;t expecting this hack.</P>
+<p>After you remove all the files that you can without causing damage to the operating system, you use the <small>df</SMALL> command and find that you haven&#146;t even made a dent in the amount file space being used. This is the time when you need to make sure that the results of the <small>df</SMALL> command match the results of the <small>du</SMALL> command. If they don&#146;t match, immediately unmount all the NFS mounted filesystems. If you have the ability to go into single user, this is also advisable; check your <small>df</SMALL> and <small>du</SMALL> commands again. Be careful when you use <small>du</SMALL>, because it follows NFS mount points and can add to the confusion.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+df, du, mount, umount
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading8"></A><font color="#000077">2.4 Remote Network Configurations</FONT></H3>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">2.4.1 Description</FONT></H4>
+<p>Avoid configuring the network from a remote machine at all cost. Believe it or not, there are times when you need to.
+</P>
+<p>Think about it. If you are in a remote system and you diagnose that something is not quite configured correctly with the network, you change the network configuration and, the next thing you know, your remote connections are closed.</P>
+<p>You just took the system off the network. Don&#146;t attempt to make changes to the network interface or any configurations to the network if at all possible while logged in over the network. But if you must, here are some things that might help you.</P>
+<p><font size="+1"><b>Example One: Using the ifconfig Command</B></FONT></P>
+<p>Flavors: Most all AT&ampT and BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>ifconfig</B> <i>interface</I> [<b>up|down</B>] <i>Ipaddress</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ifconfig</SMALL> command is the worst command to use while remotely logged in to a computer. This command controls how the network interface is configured. The following are ways that this command can bring a system off the network.</P>
+<!-- CODE SNIP //-->
+<pre>
+# ifconfig le0
+le0: flags=63&lt;UP,BROADCAST,NOTRAILERS,RUNNING&gt;
+       inet 139.102.9.16 netmask ffffff00 broadcast 139.102.9.255
+
+# ifconfig le0 down
+# ifconfig le0 139.102.9.21
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the <small>down</SMALL> argument is passed to the <small>ifconfig</SMALL> command, the interface is shut down and no traffic is transmitted to or received from the network interface card. If a new IP address is set without bringing down the network interface first, the system drops off the network.</P>
+<p>If the IP address needs to be changed on a system and you are coming in from over the network, there is one possible way to change it. Shut down the interface, change the IP address, and bring the interface up. Here is the catch. Do it all in one command.</P>
+<!-- CODE SNIP //-->
+<pre>
+# (ifconfig le0 down; ifconfig le0 139.102.9.21;
+&#8658;ifconfig le0 up) &amp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When you execute this command, you lose connection to the system. This is all right, because all you have to do is <small>telnet</SMALL> back in to the system under the new IP address.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>If an IP address can wait to be changed, make the change to the /etc/hosts table and reboot the system at the user&#146;s convenience.</FONT><hr>
+</BLOCKQUOTE>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/hosts
+#139.102.9.16    xinu     xinu.ugu.com
+139.102.9.21    xinu     xinu.ugu.com
+# reboot
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Two: Changing the Gateway</B></FONT></P>
+<p>Syntax:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>route -f</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Another taboo is flushing the route tables, default router, or gateway information, if you are connecting to the system across a router or through a gateway. Flushing the tables only leaves you disconnected from the remote machine.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# route -f
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Three: Changes to NIS/YP</B></FONT></P>
+<p>When working on changes dealing with NIS/YP on a remote system, be very careful. Do not log in to the remote system using an account that is in NIS. If you do, exit and log in again as a local user such as guest; then switch to a single user account that is local to the remote system, if your system is enabled for a superuser account to login. Always use accounts that are local to the remote box.
+</P>
+<p>If you are logged in to the remote system with an account that is in NIS, the second you manipulate or kill NIS with the <small>ypbind</SMALL> daemons, you lose access to the remote system. Also, you should make sure that any users log off who are logged in with NIS accounts. This enables you to make your changes, without worrying about any processes possibly going into a zombie state.</P>
+<p>By always using local accounts on the remote machines, you are not affected by the changes you are making to NIS.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

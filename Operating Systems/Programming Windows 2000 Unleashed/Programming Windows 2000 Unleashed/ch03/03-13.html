@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=103-106//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-14.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>Cleaner</SMALL> function is used to clean up the application before exiting.</P>
+<p>Compile and run the SkiLift application. Click the Start Lift button. Eight checkmarks appear in the left column, representing eight skiers waiting in line for a ski lift. Four of the checkmarks immediately move to the center column, representing four skiers who enter the ski lift. When these skiers reach the top of the mountain, four more skiers enter the ski lift.</P>
+<p>Each skier thread takes a random amount of time to reenter the ski lift line. After a few cycles of the lift line, the load balances out; however, the ski lift will always tend to be a bottleneck, just as in real life.</P>
+<h3><a name="Heading30"></A><font color="#000077">Using Job Objects</FONT></H3>
+<p>Windows 2000 introduces a new process-control primitive known as a <i>job object</I>. A job object is a collection of one or more processes that can be managed as a single entity. As you&#146;ll see in an example, you can set quotas for total execution time and processor time, as well as control scheduling options for the job object. You can also set processor affinity, control how processes in the job may interact with the Clipboard, and define security parameters for the job object.</P>
+<p>Each job object is created by calling the <small>CreateJobObject</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hJobs = CreateJobObject(NULL, _T(&#147;MyJobObject&#148;));
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>CreateJobObject</SMALL> has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTE</SMALL> structure, which can be <small>NULL</SMALL> if you don&#146;t want child processes to inherit the job object.
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the job object. This name can&#146;t duplicate any other kernel objects, such as events, mutexes, semaphores, file-mapping objects, and waitable timers.
+</DL>
+<p>After you&#146;ve created a job object, other processes can obtain a handle to the job object through the <small>OpenJobObject</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hJobs = OpenJobObject(MAXIMUM_ALLOWED, FALSE, _T(&#147;MyJobObject&#148;));
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>OpenJobObject</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The desired level of access toward the job object. In this case, <small>MAXIMUM_ACCESS</SMALL> requests full access rights. Other possible values are listed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies whether the job object handle should be inheritable by child processes.
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the job object.
+</DL>
+<p>Here are the possible access levels when a job object is being opened:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MAXIMUM_ALLOWED</SMALL> requests the full access rights that are valid for the caller.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JOB_OBJECT_ASSIGN_PROCESS</SMALL> requests rights to allow the caller to assign processes to the job object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JOB_OBJECT_SET_ATTRIBUTES</SMALL> requests rights to allow the caller to set attributes for the job object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JOB_OBJECT_QUERY</SMALL> requests rights to allow the caller to query job object attributes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JOB_OBJECT_TERMINATE</SMALL> requests rights to allow the caller to terminate the job object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JOB_OBJECT_SET_SECURITY_ATTRIBUTES</SMALL> requests rights to allow the caller to assign security attributes for the job object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JOB_OBJECT_ALL_ACCESS</SMALL> requests full access rights to the job object.
+</DL>
+<p>Processes are assigned to a job object after it&#146;s created with the <small>AssignProcessToJobObject</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fAssigned = AssignProcessToJobObject(hJob, hProcess);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>AssignProcessToJobObject</SMALL> has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the job object
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process to be added to the job object
+</DL>
+<h4 align="LEFT"><a name="Heading31"></A><font color="#000077">Controlling Job Object Attributes</FONT></H4>
+<p>Each job object has a large number of attributes that you can control. All attributes for job objects are set via the <small>SetInformationJobObject</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fSet = SetInformationJobObject(g_hJobs,
+                                    JobObjectBasicLimitInformation,
+                                    &ampjbli,
+                                    sizeof(jbli));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetInformationJobObject</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the job object.
+<dd><b>&#149;</B>&nbsp;&nbsp;An enumerated value that indicates which of five different sets of job object attributes you would like to change (options for this value are discussed later).
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a structure that contains attribute information for the job object. This structure is one of seven different types, as discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the structure passed as the third parameter.
+</DL>
+<p>There are five different sets of job object information that can be changed; each of these sets is represented by a specific enumerated value that&#146;s passed as the second parameter in <small>SetInformationJobObject</SMALL>. Each of the five information types also has a specific structure that must be filled in and passed as the third parameter:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JobObjectAssociateCompletionPortInformation</SMALL>. Attribute information about associating the job object with an I/O completion port is passed in a <small>JOBOBJECT_ASSOCIATE_COMPLETION_PORT</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JobObjectBasicLimitInformation</SMALL>. Attribute information about quotas, processor affinity, and scheduling is passed in a <small>JOBOBJECT_BASIC_LIMIT_INFORMATION</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JobObjectBasicUIRestrictions</SMALL>. Attribute information about Clipboard use, access to user handles, and the ability to call certain Windows API functions is passed in a <small>JOBOBJECT_BASIC_UI_RESTRICTIONS</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JobObjectEndOfJobTimeInformation</SMALL>. Attribute information about the actions to be taken when the job object exceeds its time limit is passed in a <small>JOBOBJECT_END_OF_JOB_TIME_INFORMATION</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>JobObjectSecurityLimitInformation</SMALL>. Attribute information about security limitations is passed in a <small>JOBOBJECT_SECURITY_LIMIT_INFORMATION</SMALL> structure.
+</DL>
+<h4 align="LEFT"><a name="Heading32"></A><font color="#000077">A Job Object Example</FONT></H4>
+<p>As an example of using job objects in Windows 2000, a project named JobObj can be found on the CD-ROM. JobObj is a console mode application that creates a job object containing Solitaire and FreeCell. JobObj receives feedback about the status of the job object through an I/O completion port.
+</P>
+<p>The source code for the main source file in the JobObj project is provided in Listing 3.12.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-14.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

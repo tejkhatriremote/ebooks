@@ -1,0 +1,246 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Displays and Emulations</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=07//-->
+<!--PAGES=281-286//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch08/08-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>After permission is granted to a remote host, the application on the remote host needs to know where to display the X Window application. There are two ways to display an X application to a remote host that has granted permissions, by either passing it through the application as an argument or hard-coding it into your environment variables.
+</P>
+<p>If you do not intend to display all your applications and windows over on a remote system or back to the local host you logged in from, you can pass the display parameter to the application. Use a small unobtrusive program such as xclock to test that everything works okay.</P>
+<!-- CODE SNIP //-->
+<pre>
+planet 1% xclock <b>-display rocket:0</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This tells the remote host <small>planet</SMALL> that the <small>xclock</SMALL> program will be displayed over on the host <small>rocket</SMALL>. If you see yourself working on the remote system extensively, you can set the <small>DISPLAY</SMALL> environment variable with the <small>setenv</SMALL> command and continue to work as if you were working locally on the remote system.</P>
+<!-- CODE SNIP //-->
+<pre>
+planet 2% setenv DISPLAY rocket:0
+planet 3% env | grep DISPLAY
+DISPLAY=rocket:0
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After the global <small>DISPLAY</SMALL> variable is set, any X application executed from the shell will be sent directly to the host that was defined to be displayed on. No other arguments need to be passed to the application.</P>
+<!-- CODE SNIP //-->
+<pre>
+planet 4% xclock &amp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>I know...you&#146;re saying this is all good and routine, but I don&#146;t want to keep typing <small>setenv</SMALL> or attaching the <small>-display </SMALL>parameter to all the programs that I run. There are some simple ways to set this up so you don&#146;t have to. Here are some things you can try:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If you always plan to display everything back to one host, you can set the DISPLAY variable in your .cshrc file on all the remote hosts you plan on logging.
+<!-- CODE SNIP //-->
+<pre>
+setenv DISPLAY <i>localhost</I>:0
+</PRE>
+<!-- END CODE SNIP //-->
+<dd><b>&#149;</B>&nbsp;&nbsp;You can set up aliases in your .cshrc file for all the potential machines you plan on displaying X applications back from. Then no matter which hosts you might be logged in to, you will always be able to set the display.
+<!-- CODE SNIP //-->
+<pre>
+alias setrocket      &#145;setenv DISPLAY rocket:0&#146;
+alias setmoon        &#145;setenv DISPLAY moon:0&#146;
+alias setpluto       &#145;setenv DISPLAY pluto:0&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<dd><b>&#149;</B>&nbsp;&nbsp;Execute a remote shell that displays back an xterm window. When any applications within that window are executed, it automatically displays back on the local host.
+<!-- CODE SNIP //-->
+<pre>
+% rsh <i>remotehost</I> -n /usr/bin/X11/xterm -display
+&#8658;$DISPLAY
+</PRE>
+<!-- END CODE SNIP //-->
+</DL>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>With the capability for displaying applications from a remote host to your local host, the need for traveling to each system to run specific applications can be eliminated, saving valuable time and energy.
+</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>Displaying an application to another desktop is a dream come true for UNIX administrators. Those who support large corporations, campuses, and remote locations can work over the local network and even the wide area network in some cases. Think of the possibilities!
+</P>
+<p>When users call, you can display their applications and then re-create the problem on your desktop. You can install and test software from your desk without physically going to the remote system. A great timesaver is being able to run the same GUI command on many remote systems without going to each and every system in your environment.</P>
+<p>Displaying applications over a network is not problem free. There are certain things you have to look out for that can cause you problems. You have to know your network, application, and the various hardware that is involved in making this work.</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Network speeds&#151;If the network bandwidth is too slow, the remote application being displayed can run extremely slow and sluggish at times.
+<dd><b>&#149;</B>&nbsp;&nbsp;Application&#151;If the application is excessively large and memory intensive, expect possible slow response times. Many third-party applications are designed to run locally to a system.
+<dd><b>&#149;</B>&nbsp;&nbsp;Hardware&#151;There can be a bottleneck in the execution of the application on the local host if the local or the remote system is overused when trying to display the application over the network. The lack of memory, swap, or speed in the network card can cause problems when an application is displayed to a host over a network.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Before you use this technique in production, obtain evaluation software from vendors and test whether the application meets your needs if you plan to display it to a host over the network in a production environment.
+</FONT><hr>
+</BLOCKQUOTE>
+<p>There are those who attempt to license a single host and display the application back to the rest of the systems in the environment. This is a good thought at first, but in most cases these applications run unbelievably slowly over the network to the point where they are useless. When this is discovered too late, someone has to go back to management and ask for more money.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>rsh, xclock, xhost, xterm</SMALL></P>
+<h3><a name="Heading26"></A><font color="#000077">7.13 ASCII Table in UNIX</FONT></H3>
+<h4 align="LEFT"><a name="Heading27"></A><font color="#000077">7.13.1 Description</FONT></H4>
+<p>The ASCII table is little used, but when you need to find the table, it is among the hardest things to locate. You now never have to look any further. It actually exists in the man pages of your system.
+</P>
+<p>Flavors: AT&ampT, some BSD.</P>
+<p>Syntax:</P>
+<!-- CODE //-->
+<pre>
+man ascii
+
+       Oct   Dec   Hex   Char           Oct   Dec   Hex   Char
+------------------------------------------------------------
+       000   0     00    NUL &#145;\0&#146;       100   64    40    @
+       001   1     01    SOH            101   65    41    A
+       002   2     02    STX            102   66    42    B
+       003   3     03    ETX            103   67    43    C
+       004   4     04    EOT            104   68    44    D
+       005   5     05    ENQ            105   69    45    E
+       006   6     06    ACK            106   70    46    F
+       007   7     07    BEL &#145;\a&#146;       107   71    47    G
+       010   8     08    BS  &#145;\b&#146;       110   72    48    H
+       011   9     09    HT  &#145;\t&#146;       111   73    49    I
+       012   10    0A    LF  &#145;\n&#146;       112   74    4A    J
+       013   11    0B    VT  &#145;\v&#146;       113   75    4B    K
+       014   12    0C    FF  &#145;\f&#146;       114   76    4C    L
+       015   13    0D    CR  &#145;\r&#146;       115   77    4D    M
+       016   14    0E    SO             116   78    4E    N
+       017   15    0F    SI             117   79    4F    O
+       020   16    10    DLE            120   80    50    P
+       021   17    11    DC1            121   81    51    Q
+       022   18    12    DC2            122   82    52    R
+       023   19    13    DC3            123   83    53    S
+       024   20    14    DC4            124   84    54    T
+       025   21    15    NAK            125   85    55   U
+       026   22    16    SYN            126   86    56    V
+       027   23    17    ETB            127   87    57    W
+       030   24    18    CAN            130   88    58    X
+       031   25    19    EM             131   89    59    Y
+       032   26    1A    SUB            132   90    5A    Z
+       033   27    1B    ESC            133   91    5B    [
+       034   28    1C    FS             134   92    5C    \
+       035   29    1D    GS             135   93    5D    ]
+       036   30    1E    RS             136   94    5E    ^
+       037   31    1F    US             137   95    5F    _
+       040   32    20    SPACE          140   96    60    &#145;
+       041   33    21    !              141   97    61    a
+       042   34    22    &#147;              142   98    62    b
+       043   35    23    #              143   99    63    c
+       044   36    24    $              144   100   64    d
+       045   37    25    %              145   101   65    e
+       046   38    26    &amp              146   102   66    f
+       047   39    27    &#145;              147   103   67    g
+       050   40    28    (              150   104   68    h
+       051   41    29    )              151   105   69    i
+       052   42    2A    *              152   106   6A    j
+       053   43    2B    &#43;              153   107   6B    k
+       054   44    2C    ,              154   108   6C    l
+       055   45    2D    -              155   109   6D    m
+       056   46    2E    .              156   110   6E    n
+       057   47    2F    /              157   111   6F    o
+       060   48    30    0              160   112   70    p
+       061   49    31    1              161   113   71    q
+       062   50    32    2              162   114   72    r
+       063   51    33    3              163   115   73    s
+       064   52    34    4              164   116   74    t
+       065   53    35    5              165   117   75    u
+       066   54    36    6              166   118   76    v
+       067   55    37    7              167   119   77    w
+       070   56    38    8              170   120   78    x
+       071   57    39    9              171   121   79    y
+       072   58    3A    :              172   122   7A    z
+       073   59    3B    ;              173   123   7B    {
+       074   60    3C    &lt              174   124   7C    |
+       075   61    3D    =              175   125   7D    }
+       076   62    3E    &gt              176   126   7E    ~
+       077   63    3F    ?              177   127   7F    DEL
+</PRE>
+<!-- END CODE //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>I have always felt that the table should be available. It is one of those things that you might need only once a year, but when the time comes, you frantically search the Web or all through your programming books and can never find it. The last time I ever saw the table in print form was in a Pascal book I had back in the &#145;80s from college. It is nice to pull an old book off the shelves from time to time if you can remember where you put it.
+</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>You will most likely need to reference the table for mapping a key to be used in a program. There will be times when a co-worker comes to you because, in many cases, you are the guru and if you don&#146;t know what the hex equivalent for a linefeed is off the top of your head, you should be able to reference it in a hurry.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man Page:
+</P>
+<p><small>ascii</SMALL></P>
+<p>World Wide Web:</P>
+<p>ASCII Symbol Table&#151;<a href="http://www.bbsinc.com/symbol.html">http://www.bbsinc.com/symbol.html</A></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch08/08-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

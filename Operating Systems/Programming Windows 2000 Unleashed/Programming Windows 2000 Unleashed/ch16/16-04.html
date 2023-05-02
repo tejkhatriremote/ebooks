@@ -1,0 +1,276 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=506-511//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="16-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In Figure 16.6, method calls from the client to the COM object are serialized by the operating system through a window procedure. Obviously, this mechanism is going to be much less efficient than the STA-to-STA communication shown in Figure 16.5.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-06.jpg',445,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-06.jpg',445,420)"><font color="#000077"><b>Figure 16.6</B></FONT></A>&nbsp;&nbsp;Communicating between incompatible apartments requires a proxy.</P>
+<p><font size="+1"><b>An Example of Cross-apartment Communication</B></FONT></P>
+<p>The InProcSta project included on the CD-ROM accompanying this book creates instances of the <small>TestFunc</SMALL> in-process COM object. These COM objects expose a dual interface named <small>ITestFunc</SMALL>. <small>ITestFunc</SMALL> includes one function, <small>MakeRoundTrip</SMALL>, in addition to the <small>IUnknown</SMALL> interfaces. The interface definition for <small>ITestFunc</SMALL> is provided in Listing 16.3.</P>
+<p><b>Listing 16.3</B> Interface Definition for the <small>ITestFunc</SMALL> Interface<hr></P>
+<!-- CODE //-->
+<pre>
+    [
+        object,
+        uuid(EF13866E-7FFB-11D2-B868-00104B36573E),
+        dual,
+        helpstring(&#147;ITestFunc Interface&#148;),
+        pointer_default(unique)
+    ]
+    interface ITestFunc : IDispatch
+    {
+        [id(1), helpstring(&#147;Test func&#148;)] HRESULT MakeRoundTrip();
+
+    };
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>The examples in this chapter use ATL, the Active Template Library. If you&#146;re not familiar with ATL or IDL, don&#146;t worry&#151;you don&#146;t need to be an ATL expert to understand these examples. Building custom COM objects using ATL is discussed in detail in Chapter 17.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The implementation of the <small>ITestFunc</SMALL> interface is very simple. As shown in Listing 16.4, the <small>MakeRoundTrip</SMALL> function simply returns <small>S_OK</SMALL> to the caller. All this example does is help calculate the overhead for a simple function from the client to the COM object.</P>
+<p><b>Listing 16.4</B> The Implementation of the <small>MakeRoundTrip</SMALL> Method Call<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+STDMETHODIMP CTestFunc::MakeRoundTrip()
+{
+    return S_OK;
+
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>As part of the building procedure for InProcSta, the ATL project will automatically register the projects, class, and interfaces. Before continuing to the next step, build the InProcSta project on your machine so that the <small>TestFunc</SMALL> component is properly registered.</P>
+<p>In order to test the efficiency of calling the <small>TestFunc</SMALL> COM object from STA and MTA threads, the CD-ROM includes two versions of the ComTest project. The first version is provided in Listing 16.5 and can be found in the <small>StaClient</SMALL> subdirectory. This version of ComTest initializes the main thread as an STA thread. A similar version of ComTest that creates an MTA can be found in the <small>MtaClient</SMALL> subdirectory. The only difference between the two projects is the thread model passed as a parameter in <small>CoInitializeEx</SMALL>.</P>
+<p><b>Listing 16.5</B> A Simple Console Mode Client That Makes an STA-to-STA Call to <small>MakeRoundTrip</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * COMTest.cpp
+ *
+ * A simple console-mode client used to perform some
+ * measurements comparing the relative costs of calling
+ * COM objects in different types of apartments.
+ *
+ */
+
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltwchar.h&gt
+#include &ltobjbase.h&gt
+
+#include &#147;inprocsta.h&#148;
+
+double GetElapsedTime();
+void   StartTimer();
+void   StopTimer();
+void   HandleError(LPCWSTR strTitle, HRESULT hr);
+
+int wmain()
+{
+    /* Initialize COM library */
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoInitFailed&#148;, hr);
+        return 0;
+    }
+    /*
+     * Create an instance of the test object, and get a pointer
+     * to its ITestFunc interface.
+     */
+    ITestFunc* pTestFunc = NULL;
+    hr = CoCreateInstance(CLSID_TestFunc,
+                          NULL,
+                          CLSCTx_ALL,
+                          IID_ITestFunc,
+                          (void**)&amppTestFunc);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoCreateFailed&#148;, hr);
+        return 0;
+    }
+    /*
+     * Call the interface a few times to get the function-call
+     * cost for this type of Apartment/Apartment interaction.
+     */
+    StartTimer();
+    for(int i = 0; i &lt 1000000; i++)
+    {
+        pTestFunc-&gtMakeRoundTrip();
+    }
+    StopTimer();
+    double elapsed = GetElapsedTime();
+    wprintf(L&#148;Elapsed time = %6.3f seconds&#148;, elapsed);
+    /* Release the interface and the COM library. */
+    pTestFunc-&gtRelease();
+    CoUninitialize();
+    return 0;
+}
+
+/*
+ * Timer routines
+ */
+#include &lttime.h&gt
+#include &ltsys/timeb.h&gt
+
+_timeb startTime, endTime;
+void StartTimer()
+{
+    _ftime(&ampstartTime);
+}
+
+void StopTimer()
+{
+    _ftime(&ampendTime);
+}
+
+double GetElapsedTime()
+{
+    double msecs = endTime.millitm - startTime.millitm;
+    double secs = difftime(endTime.time, startTime.time);
+    return secs + (msecs/1000);
+}
+
+/*
+ * Error handling routine
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amplpMsgBuf,
+                  0,
+                  NULL);
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Both versions of ComTest create an instance of the <small>TestFunc</SMALL> class and retrieve a pointer to its <small>ITestFunc</SMALL> interface. The <small>MakeRoundTrip</SMALL> method is called one million times.</P>
+<p>Build all three projects in release mode and then run them on your machine. On one of my machines, an IBM 704 server with dual Pentium Pro processors, I get the average execution times shown in Table 16.1.</P>
+<table width="100%"><caption align="LEFT" colspan="3"><b>Table 16.1</B> Average Execution Times for ComTest
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="30%" align="LEFT" valign="TOP"><i>Client</I>
+<th width="35%" align="LEFT" valign="TOP"><i>COM Class</I>
+<th width="35%" align="LEFT" valign="TOP"><i>Time (Seconds)</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">MTA
+<td align="LEFT" valign="TOP">In-process STA
+<td align="LEFT" valign="TOP">142.23
+<tr>
+<td align="LEFT" valign="TOP">STA
+<td align="LEFT" valign="TOP">In-process STA
+<td align="LEFT" valign="TOP">0.047
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>In order to generate this table, the tests were run three times and averaged. The tests were run with Windows 2000 Beta 2; the times for your configuration will probably be different. No matter what type of machine you have, you&#146;ll get results that show a great difference in the overhead for function calls across apartments.
+</P>
+<p>These results show that your application will potentially take a large performance hit if you make method calls across apartments. Of course, most applications don&#146;t spend all their time calling across apartments, but it&#146;s a good idea to be aware of the fact that you&#146;ll incur some extra overhead when calling between STA and MTA apartments.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="16-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

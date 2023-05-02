@@ -1,0 +1,783 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 28 -- Spoofing Attacks</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch27.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch27/ch27.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch29.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch29/ch29.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">28</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Spoofing Attacks</FONT></H1>
+</CENTER>
+<P>There has never been more controversy about a cracking technique than the controversy
+surrounding IP spoofing. IP spoofing is the most talked about and least understood
+method of gaining unauthorized entry to a computer system. For example, a well publicized
+spoofing case occurred in December, 1994. John Markoff, in his article that appeared
+in <I>The New York Times</I> titled &quot;New Form of Attack on Computers Linked
+to Internet is Uncovered,&quot; reported:
+
+<DL>
+	<DD>The first known attack using the new technique took place on Christmas day against
+	the computer of a well-known computer security expert at the San Diego Supercomputer
+	Center. An individual or group of unknown intruders took over his computer for more
+	than a day and electronically stole a large number of security programs he had developed.
+</DL>
+
+<P>That report was not entirely accurate. The IP spoofing technique was not &quot;new,&quot;
+nor was it &quot;uncovered.&quot; Rather, it has been known for more than a decade
+that IP spoofing was possible. To my knowledge, the first paper written on this subject
+was published in February 1985. That paper was titled &quot;A Weakness in the 4.2BSD
+UNIX TCP/IP Software,&quot; and it was written by Robert Morris, an engineer at AT&amp;T
+Bell Laboratories in Murray Hill, New Jersey.
+<H2><FONT COLOR="#000077"><B>IP Spoofing</B></FONT></H2>
+<P>Because I want to relay information about IP spoofing as accurately as possible,
+I will approach the subject in a slow and deliberate fashion. If you already know
+a bit about the technique, you would be wise to skip ahead to the section titled
+&quot;Point of Vulnerability: The R Services.&quot;</P>
+<P>I should immediately make three points about IP spoofing:
+
+<UL>
+	<LI>Few platforms are vulnerable to this technique.<BR>
+	<BR>
+	
+	<LI>The technique is quite complex and is not commonly understood, even by talented
+	crackers. It is therefore rare.<BR>
+	<BR>
+	
+	<LI>IP spoofing is very easily prevented.
+</UL>
+
+<H3><FONT COLOR="#000077"><B>What Is a Spoofing Attack?</B></FONT></H3>
+<P>A spoofing attack involves nothing more than forging one's source address. It
+is the act of using one machine to impersonate another. To understand how this occurs,
+you must know a bit about authentication.</P>
+<P>Every user has encountered some form of authentication. This encounter most often
+occurs while connecting to a network. That network could be located in the user's
+home, his office, or, as in this case, the Internet. The better portion of authentication
+routines known to the average user occur at the application level. That is, these
+methods of authentication are entirely visible to the user. The typical example is
+when a user is confronted with a password prompt on FTP or Telnet. The user enters
+a username and a password; these are authenticated, and the user gains access to
+the resource.</P>
+<P>On the Internet, application-level authentication routines are the minority. Each
+second, authentication routines that are totally invisible to the user occur. The
+difference between these routines and application-level authentication routines is
+fundamental. In application-level authentication, a machine challenges the user;
+a machine requests that the user identify himself. In contrast, non-application-level
+authentication routines occur between machines. One machine demands some form of
+identification from another. Until this identification is produced and validated,
+no transactions occur between the machines engaged in the challenge-response dialog.</P>
+<P>Such machine-to-machine dialogs always occur automatically (that is, they occur
+without human intervention). In the IP spoofing attack, the cracker attempts to capitalize
+on the automated nature of the dialog between machines. Thus, the IP spoofing attack
+is an extraordinary method of gaining access because in it, the cracker never uses
+a username or password.</P>
+<P>This, for many people, is difficult to grasp. Consequently, reports of IP spoofing
+have needlessly caused much fear and paranoia on the Internet.
+<H3><FONT COLOR="#000077"><B>Who Can Be Spoofed?</B></FONT></H3>
+<P>The IP spoofing attack is unique in that it can only be implemented against a
+certain class of machines running true TCP/IP. <I>True TCP/IP</I> is any fully fledged
+implementation of TCP/IP, or one that--in its out-of-the-box state--encompasses all
+available ports and services within the TCP/IP suite. By this, I am referring almost
+exclusively to those machines running certain versions of UNIX (only a handful are
+easily spoofed). PC machines running DOS, Windows, or Windows 95 are not included
+in this group. Neither are Macintoshes running MacOS. (It is theoretically possible
+that Macs running A/UX and PCs running Linux could be vulnerable, given the right
+circumstances.)</P>
+<P>I cannot guarantee that other configurations or services will not later be proven
+vulnerable to IP spoofing, but for the moment the list of vulnerable services is
+short indeed:
+
+<UL>
+	<LI>Any configuration using Sun RPC calls<BR>
+	<BR>
+	
+	<LI>Any network service that utilizes IP address authentication<BR>
+	<BR>
+	
+	<LI>The X Window System from MIT<BR>
+	<BR>
+	
+	<LI>The R services
+</UL>
+
+<P><I>Sun RPC</I> refers to Sun Microsystems' standard of Remote Procedure Calls,
+which are methods of issuing system calls that work transparently over networks (that
+is, of executing commands over remote machines or networks).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The RFC that addresses
+	RPC, titled &quot;RPC: Remote Procedure Call Protocol Specification,&quot; can be
+	found at <A HREF="javascript:if(confirm('http://www.pasteur.fr/other/computer/RFC/10xx/1057  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pasteur.fr/other/computer/RFC/10xx/1057'" tppabs="http://www.pasteur.fr/other/computer/RFC/10xx/1057"><TT>http://www.pasteur.fr/other/computer/RFC/10xx/1057</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>IP address authentication uses the IP address as an index. That is, the target
+machine authenticates a session between itself and other machines by examining the
+IP address of the requesting machine. There are different forms of IP authentication,
+and most of them are vulnerable to attack. A good discussion about this appears in
+a classic paper written by Steve M. Bellovin titled &quot;Security Problems in the
+TCP/IP Protocol Suite&quot;:
+
+<DL>
+	<DD>If available, the easiest mechanism to abuse is IP source routing. Assume that
+	the target host uses the reverse of the source route provided in a TCP open request
+	for return traffic...The attacker can then pick any IP source address desired, including
+	that of a trusted machine on the target's local network.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Security Problems
+	in the TCP/IP Protocol Suite&quot; by Steve M. Bellovin can be found on the Web at
+	<A HREF="javascript:if(confirm('ftp://ftp.research.att.com/dist/internet_security/ipext.ps.Z  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.research.att.com/dist/internet_security/ipext.ps.Z'" tppabs="ftp://ftp.research.att.com/dist/internet_security/ipext.ps.Z"><TT>ftp://ftp.research.att.com/dist/internet_security/ipext.ps.Z</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Point of Vulnerability: The R Services</B></FONT></H3>
+<P>In the UNIX environment, the R services are rlogin and rsh. The <I>r</I> represents
+the word <I>remote</I>. These two programs are designed to provide users with remote
+access to other machines on the Internet. Although these programs may be compared
+to programs of a similar ilk (for example, people often liken rlogin to Telnet),
+these programs (or services) are unique:
+
+<UL>
+	<LI>rlogin provides a means to remotely log in to another machine. It is similar
+	to Telnet. Today, rlogin is generally restricted to local use. Few networks support
+	long-distance remote rlogin sessions because rlogin has been deemed a security problem.<BR>
+	<BR>
+	
+	<LI>rsh allows you to start an instance of the shell on a remote machine. It can
+	be used to execute commands on a remote host. For example, in a completely unrestricted
+	network environment, you could print the password file of a remote machine to the
+	local one by issuing the command <TT>rsh our_target.com cat /etc/passwd &gt;&gt;
+	our_target.com_passwd</TT>. rsh, as you might expect, is a huge security hole and
+	it is usually disabled.
+</UL>
+
+<P>The R services are vulnerable to IP spoofing attacks.
+<H3><FONT COLOR="#000077"><B>How Spoofing Attacks Work</B></FONT></H3>
+<P>Spoofing attacks differ from random scanning and other techniques used to ascertain
+holes in the system. Spoofing attacks occur only <I>after</I> a particular machine
+has been identified as vulnerable. By the time the cracker is ready to conduct a
+spoofing attack, he or she knows the target network is vulnerable and which machine
+is to be attacked.
+<H4><FONT COLOR="#000077"><B>Trust Relationships and Spoofing Generally</B></FONT></H4>
+<P>Nearly all forms of spoofing (and there are types other than IP spoofing) rely
+on trust relationships within the target network. By trust, I don't mean human or
+application-layer trust. Instead, I refer to trust between machines.</P>
+<P>Chapter 18, &quot;Novell,&quot; briefly discusses spoofing of a hardware address
+on an Ethernet network. This is accomplished by redefining the network address of
+the workstation used to perform the spoof. In Novell networks, this is commonly accomplished
+by redefining this value in the <TT>NET.CFG</TT> file, which contains parameters
+that are loaded upon boot and connection to the network. <TT>NET.CFG</TT> includes
+many options for altering the configuration by hand (which is useful, because conventional
+configurations sometimes fail to come out correctly). To sidestep possible problems
+with factory configurations, changes may be made directly to the interface using
+this file. Options include number of buffers, what protocols are to be bound to the
+card, port number, MDA values, and the node address.</P>
+<P>Hardware address spoofing is, to a certain extent, also dependent upon the card.
+Cards that do not allow for software-driven settings of the hardware address are
+generally useless in this regard. You might be able to report an address, but in
+most instances, the technique does not actually work. Older cards support software-driven
+alteration of the address, usually with a jumper setting. (This is done by shorting
+out the jumper pins on the card.) A good example is the old Western Digital Ethernet
+card. Newer cards are more likely to automatically allow software-driven changes,
+whereas IRQ settings may still be a jumper issue. It is likely, however, that in
+the near future, Ethernet cards may not have jumpers at all due to the fact that
+plug-and-play technology has emerged.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Jumpers are small plastic sheaths
+	that slip over pins on a computer card (this card could be an Ethernet card, a motherboard,
+	a modem, or a hard disk drive controller). These plastic jumpers are typically used
+	to set addresses on such cards. The manufacturer of the card generally includes a
+	manual on their product which shows the locations of jumpers on the board. Such manuals
+	also usually describe different ways of configuring your jumpers. A jumper <I>pin
+	set</I> consists of two pins. If these pins are covered by a plastic jumper sheath,
+	they are deemed to be shorted out. Shorting out different jumpers alters the configuration
+	of the card. Jumper pin sets are typically arranged in a row on the board. For example,
+	a modem that has jumpers to assign IRQ addresses will probably have four or five
+	jumper pin sets. By covering various combinations of these pin sets with plastic
+	jumper sheaths, you can change the IRQ from three to four, five, seven, and so forth.
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>CAUTION:</B></FONT><B> </B>Never use MAC addresses as an
+	index for authentication. Mac addresses on most modern cards can be changed easily
+	using existing software or quickly hacked code. It is argued that MAC address spoofing
+	is difficult because when two machines have the same MAC address on the same segment,
+	communication failures and crashes result. Note, however, that this is not always
+	true. This generally happens when both are trying to reach the same resource or when
+	the active protocol is IPX (NetWare). In a passive state, these could co-exist, particularly
+	in a TCP/IP environment. Nonetheless, there is no guarantee that the packets will
+	arrive in a pristine state. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>This type of spoofing works because each machine on a given network segment trusts
+its pals on that same segment. Barring the installation of a hub that hardwire-routes
+packets to each machine, at least a few trust relationships between machines will
+exist within a segment. Most commonly, those machines know each other because their
+addresses are listed within some database on each machine. In IP-based networks,
+this is done using the IP address--I hope--or with the hostname. (Using hostnames
+is a potential security problem in itself. Whenever possible, hard numeric addresses
+should be used.)</P>
+<P>Machines within a network segment that are aware of the addresses of their pals
+are referred to as machines that <I>trust</I> each other. When such a trust relationship
+exists, these machines may remotely execute commands for each other with no more
+authentication than is required to identify the source address.</P>
+<P>Crackers can determine trust relationships between machines using a wide range
+of commands or, more commonly, using scanners. One can, for example, scan a host
+and easily determine whether the R services are running. Whatever method is used,
+the cracker will attempt to map the trust relationships within the target network.
+<H3><FONT COLOR="#000077"><B>Anatomy of an IP Spoofing Attack</B></FONT></H3>
+<P>Let's begin our analysis at a point after the cracker has determined the levels
+of trust within the network. An overview of one segment of our mock target network,
+called <I>Nexus</I>, is shown in Figure 28.1.</P>
+<P><A NAME="01"></A><A HREF="01-16.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/01.htm"><B>FIGURE 28.1.</B></A> <I><BR>
+Overview of Nexus segment.</I></P>
+<P>As you can see, this segment has two trust relationships: Nexus 1 trusts Nexus
+2, and Nexus 2 trusts Nexus 3. To gain access to Nexus, then, the cracker has two
+choices:
+
+<UL>
+	<LI>He can spoof either Nexus 1 or Nexus 3, claiming to be Nexus 2<BR>
+	<BR>
+	
+	<LI>He can spoof Nexus 2, claiming to be either Nexus 1 or Nexus 3
+</UL>
+
+<P>The cracker decides to spoof Nexus 2, claiming to be Nexus 3. Thus, his first
+task is to attack Nexus 3 and temporarily incapacitate it.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>It is not always necessary to incapacitate
+	the machine from which you are claiming to originate. On Ethernet networks in particular,
+	however, you may have to. If you do not, you may cause the network to hang. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Step One: Putting Nexus 3 to Sleep</B></FONT></H4>
+<P>To temporarily incapacitate Nexus 3, the cracker must time out (hang or temporarily
+render inoperable) that machine on the targeted port (the port that would normally
+respond to requests about to be issued).</P>
+<P>Normally, when a request is issued from Nexus 3 to Nexus 2, Nexus 2 replies to
+Nexus 3 on a given port. That response generates a response from Nexus 3. The cracker,
+however, does not want Nexus 3 to respond because he wants to respond with his own
+packets, posing as Nexus 3.</P>
+<P>The technique used to time out Nexus 3 is not particularly important as long as
+it is successful. The majority of such attacks are accomplished by generating a laundry
+list of TCP SYN packets, or requests for a connection. These are generated from a
+bogus address and forwarded to Nexus 3, which tries to respond to them. You may remember
+that in Chapter 4, I discussed what happens when a flurry of connection requests
+are received by a machine that cannot resolve the connection. This is one common
+element of a denial-of-service attack, or the technique known as<I> syn_flooding</I>.</P>
+<P>The cumulative effect of the flooding times out Nexus 3. That is, Nexus 3 attempts
+to resolve all the connection requests it received, one at a time. The machine's
+queue is flooded. It cannot respond to additional packets until the queue is at least
+partially cleared. Therefore--at least on that port--Nexus 3 is temporarily <I>down</I>,
+or unreachable; it will not respond to requests sent by Nexus 2.
+<H4><FONT COLOR="#000077"><B>Step Two: Discovering Nexus 2's Sequence Number</B></FONT></H4>
+<P>The next step of the process is fairly simple. The cracker sends a series of connection
+requests to Nexus 2, which responds with a series of packets indicating receipt of
+the cracker's connection requests. Contained within these response packets is the
+key to the spoofing technique.</P>
+<P>Nexus 2 generates a series of <I>sequence numbers</I>. Chapter 6, &quot;A Brief
+Primer on TCP/IP,&quot; mentioned that sequence numbers are used in TCP/IP to mark
+and measure the status of a session. An articled titled &quot;Sequence Number Attacks&quot;
+by Rik Farrow articulates the construct of the sequence number system. Farrow explains:
+
+<DL>
+	<DD>The sequence number is used to acknowledge receipt of data. At the beginning
+	of a TCP connection, the client sends a TCP packet with an initial sequence number,
+	but no acknowledgment (there can't be one yet). If there is a server application
+	running at the other end of the connection, the server sends back a TCP packet with
+	its own initial sequence number, and an acknowledgment: the initial sequence number
+	from the client's packet plus one. When the client system receives this packet, it
+	must send back its own acknowledgment: the server's initial sequence number plus
+	one. Thus, it takes three packets to establish a TCP connection...
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find &quot;Sequence Number
+	Attacks&quot; by Rik Farrow online at <A HREF="javascript:if(confirm('http://www.wcmh.com/uworld/archives/95/security/001.txt.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.wcmh.com/uworld/archives/95/security/001.txt.html'" tppabs="http://www.wcmh.com/uworld/archives/95/security/001.txt.html"><TT>http://www.wcmh.com/uworld/archives/95/security/001.txt.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Each side must adhere to the sequence number scheme. If not, there is no way to
+reliably transfer data across the network. As articulated by Robert Morris in his
+article titled &quot;A Weakness in the 4.2BSD UNIX TCP/IP Software&quot;:
+
+<DL>
+	<DD>4.2BSD maintains a global initial sequence number, which is incremented by 128
+	each second and by 64 after each connection is started; each new connection starts
+	off with this number. When a SYN packet with a forged source is sent from a host,
+	the destination host will send the reply to the presumed source host, not the forging
+	host. The forging host must discover or guess what the sequence number in that lost
+	packet was, in order to acknowledge it and put the destination TCP port in the <TT>ESTABLISHED</TT>
+	state.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find Morris's article
+	online at <A HREF="javascript:if(confirm('ftp://ftp.research.att.com/dist/internet_security/117.ps.Z  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.research.att.com/dist/internet_security/117.ps.Z'" tppabs="ftp://ftp.research.att.com/dist/internet_security/117.ps.Z"><TT>ftp://ftp.research.att.com/dist/internet_security/117.ps.Z</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>This procedure begins with reading the sequence numbers forwarded by Nexus 2.
+By analyzing these, the cracker can see how Nexus 2 is incrementing them. There must
+be a pattern, because this incremental process is based on an algorithm. The key
+is identifying by what values these numbers are incremented. When the cracker knows
+the standard pattern Nexus 2 is using to increment these numbers, the most difficult
+phase of the attack can begin.
+<H4><FONT COLOR="#000077"><B>Driving Blind</B></FONT></H4>
+<P>Having obtained the pattern, the cracker generates another connection request
+to Nexus 2, claiming to hail from Nexus 3. Nexus 2 responds to Nexus 3 as it normally
+would, generating a sequence number for the connection. However, because Nexus 3
+is temporarily incapacitated, it does not answer. Instead, the cracker answers.</P>
+<P>This is the most difficult part of the attack. Here, the cracker must guess (based
+on his observations of the sequence scheme) what sequence number Nexus 2 expects.
+In other words, the cracker wants to throw the connection into an <TT>ESTABLISHED</TT>
+state. To do so, he must respond with the correct sequence number. But while the
+connection exchange is live, he cannot see the sequence numbers being forwarded by
+Nexus 2. Therefore, the cracker must send his requests blind.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The cracker cannot see the sequence
+	numbers because Nexus 2 is sending them (and they are being routed) to Nexus 3, the
+	actual, intended recipient. These are routed to Nexus 3 because Nexus 3 is the owner
+	of the actual IP address. The cracker, in contrast, only purports to have Nexus 3's
+	IP. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>If the cracker correctly guesses the sequence number, a connection is established
+between Nexus 2 and the cracker's machine. For all purposes, Nexus 2 now believes
+the cracker is hailing from Nexus 3. What remains is fairly simple.
+<H4><FONT COLOR="#000077"><B>Opening a More Suitable Hole</B></FONT></H4>
+<P>During the time the connection is established, the cracker must create a more
+suitable hole through which to compromise the system (he should not be forced to
+spoof each time he wants to connect). He therefore fashions a custom hole. Actual
+cases suggest that the easiest method is to re-write the <TT>.rhosts</TT> file so
+that Nexus 2 will accept connections from any source without requiring additional
+authentication.</P>
+<P>The cracker can now shut down all connections and reconnect. He is now able to
+log in without a password and has run of the system.
+<H3><FONT COLOR="#000077"><B>How Common Are Spoofing Attacks?</B></FONT></H3>
+<P>Spoofing attacks are rare, but they do occur. Consider this Defense Data Network
+advisory from July, 1995:
+
+<DL>
+	<DD>ASSIST has received information about numerous recent IP spoofing attacks directed
+	against Internet sites internationally. A large number of the systems targeted in
+	the IP spoofing attacks are name servers, routers, and other network operation systems,
+	and the attacks have been largely successful.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To view the DDN bulletin
+	online, visit <A HREF="javascript:if(confirm('ftp://nic.ddn.mil/scc/sec-9532.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://nic.ddn.mil/scc/sec-9532.txt'" tppabs="ftp://nic.ddn.mil/scc/sec-9532.txt"><TT>ftp://nic.ddn.mil/scc/sec-9532.txt</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The attack documented by John Markoff in <I>The New York Times</I> occurred over
+the Christmas holiday of 1994. By mid-1995, the attack had been discussed in cracker
+circles across the Internet. After it was demonstrated that the Morris attack technique
+was actually possible, crackers quickly learned and implemented IP spoofing worldwide.
+In fact, source code for pre-fabbed spoofing utilities was posted at sites across
+the Net. A fad was established.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>One of these individuals
+	posted to a well-known security list with the subject line &quot;Introducing in the
+	Left Corner: Some Spoofing Code.&quot; The posting was a brief description of a paper
+	(and accompanying code) available on the author's Web site. It is still available
+	today. It can be found at <A HREF="javascript:if(confirm('http://main.succeed.net/~coder/spoofit/spoofit.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://main.succeed.net/%7Ecoder/spoofit/spoofit.html'" tppabs="http://main.succeed.net/%7Ecoder/spoofit/spoofit.html"><TT>http://main.succeed.net/~coder/spoofit/spoofit.html</TT></A>.<BR>
+	Because this is not owned by the user, and because it is located in a foreign country,
+	I advise you to save it to your local disk. The spoofing code is good. The author
+	also offers code to hijack Telnet sessions and a general-purpose C program to kill
+	TCP connections on your subnet. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Even though the word is out on spoofing, the technique is still quite rare. This
+is because, again, crackers require particular tools and skills. For example, this
+technique cannot--to my knowledge--be implemented on a non-UNIX operating system.
+However, I cannot guarantee that this situation will remain. Before long, someone
+will introduce a Windows-based auto-spoofer written in Visual C++ or some other implementation
+of C/C++. I suspect that these will be available within a year. For the moment, the
+technique remains a UNIX thing and therefore, poses all the same obstacles (root
+access, knowledge of C, technical prowess to manipulate the kernel, and so forth)
+as other UNIX-based cracking techniques.</P>
+<P>Spoofing is sometimes purposely performed by system administrators. This type
+of spoofing, however, varies considerably from typical IP spoofing. It is referred
+to as <I>LAN spoofing</I> or <I>WAN spoofing</I>. These techniques are used primarily
+to hold together disparate strings of a WAN (see Figure 28.2).</P>
+<P><A NAME="02"></A><A HREF="02-12.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/02.htm"><B>FIGURE 28.2.</B></A> <I><BR>
+LAN and WAN spoofing in action.</I></P>
+<P>In many WAN environments, networks of widely varying design are attached to a
+series of WAN servers, nodes, or devices. For each time a message is trafficked over
+these lines, a toll is generally incurred. This can be expensive, depending largely
+on the type and speed of the connection. One thing is obvious: The best arrangement
+is one in which none of the nodes pays for the connection unless data is being trafficked
+across it (it seems wasteful to pay merely for the connection to exist).</P>
+<P>To avoid needless charges, some engineers implement a form of spoofing whereby
+WAN interfaces answer keep alive requests from remote LAN servers rather than actually
+routing those requests within the overall WAN network. Thus, the remote LAN assumes
+it is being answered by the remote WAN, but this is not actually true.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Jeffery Fritz, a telecommunications
+	engineer for West Virginia University, wrote a consuming article about this type
+	of technique to save money in Wide Area Network environments. That article, titled
+	&quot;Network Spoofing: Is Your WAN on the Wane? LAN Spoofing May Help Solve Some
+	of Your Woes,&quot; can be viewed online at <A HREF="javascript:if(confirm('http://www.byte.com/art/9412/sec13/art4.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.byte.com/art/9412/sec13/art4.htm'" tppabs="http://www.byte.com/art/9412/sec13/art4.htm"><TT>http://www.byte.com/art/9412/sec13/art4.htm</TT></A>.
+	Fritz also wrote the book <I>Sensible ISDN Data Applications</I>, published by West
+	Virginia University Press. This book is a must read for ISDN users. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>This is a very popular technique and is now incorporated into many routers and
+routing software. One good example is Lightning's MultiCom Software Release 2.0.
+White paper documentation on it explains:
+
+<DL>
+	<DD>The Novell SPX/IPX router contains an advanced spoofing algorithm, which keeps
+	the ISDN line closed when no useful data transits, even while remote users are connected
+	to a server. Spoofing consists [sic] to simulate the traffic, so that the server
+	and the remote client both have the impression of being connected without ISDN channels
+	open.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The white paper on Lightning's
+	MultiCom Software Release 2.0 can be found online at <A HREF="javascript:if(confirm('http://www.lightning.ch/products/software/ipx/details.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.lightning.ch/products/software/ipx/details.html'" tppabs="http://www.lightning.ch/products/software/ipx/details.html"><TT>http://www.lightning.ch/products/software/ipx/details.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>There are other router products that perform this function. One is the Ethernet
+Router IN-3010/15.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For further information
+	about the Ethernet Router IN-3010/15, visit <A HREF="javascript:if(confirm('http://www.craycom.co.uk/prodinfo/inetwork/fsin301x.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.craycom.co.uk/prodinfo/inetwork/fsin301x.htm'" tppabs="http://www.craycom.co.uk/prodinfo/inetwork/fsin301x.htm"><TT>http://www.craycom.co.uk/prodinfo/inetwork/fsin301x.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>What Can Be Done to Prevent IP Spoofing Attacks?</B></FONT></H3>
+<P>IP spoofing attacks can be thwarted by configuring your network to reject packets
+from the Net that claim to originate from a local address (that is, reject packets
+that purport to have an address of a workstation on your internal network). This
+is most commonly done with a router.</P>
+<P>Routers work by applying filters on incoming packets; for example, they can block
+particular types of packets from reaching your network. Several companies specialize
+in these devices:
+
+<UL>
+	<LI>Proteon <A HREF="javascript:if(confirm('http://pbs.mcp.com/ebooks/1575212684/ch28/(http:/www.proteon.com/  \n\nThis file was not retrieved by Teleport Pro, because the server reports that this file cannot be found.  \n\nDo you want to open it from the server?'))window.location='http://pbs.mcp.com/ebooks/1575212684/ch28/%28http:/www.proteon.com/'" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/%28http:/www.proteon.com/">(<TT>http://www.proteon.com/</TT></A>)
+	<LI>Cisco Systems (<A HREF="javascript:if(confirm('http://www.cisco.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cisco.com/'" tppabs="http://www.cisco.com/"><TT>http://www.cisco.com/</TT></A>)
+	<LI>Alantec (<A HREF="javascript:if(confirm('http://www.alantec.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.alantec.com/'" tppabs="http://www.alantec.com/"><TT>http://www.alantec.com/</TT></A>)
+	<LI>Livingston (<A HREF="javascript:if(confirm('http://www.livingston.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.livingston.com/'" tppabs="http://www.livingston.com/"><TT>http://www.livingston.com/</TT></A>)
+	<LI>Cayman Systems (<A HREF="javascript:if(confirm('http://www.cayman.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cayman.com/'" tppabs="http://www.cayman.com/"><TT>http://www.cayman.com/</TT></A>)
+	<LI>Telebit (<A HREF="javascript:if(confirm('http://www.telebit.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.telebit.com/'" tppabs="http://www.telebit.com/"><TT>http://www.telebit.com/</TT></A>)
+	<LI>ACC (<A HREF="javascript:if(confirm('http://www.acc.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.acc.com/'" tppabs="http://www.acc.com/"><TT>http://www.acc.com/</TT></A>)
+	<LI>Baynetworks-Wellfleet (<A HREF="javascript:if(confirm('http://www.baynetworks.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.baynetworks.com/'" tppabs="http://www.baynetworks.com/"><TT>http://www.baynetworks.com/</TT></A>)
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Although routers are a solution
+	to the general spoofing problem, they too operate by examining the source address.
+	Thus, they can only protect against incoming packets that purport to originate from
+	within your internal network. If your network (for some inexplicable reason) trusts
+	foreign hosts, routers will not protect against a spoofing attack that purports to
+	originate from those hosts. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Certain security products can also test for your vulnerability to IP spoofing.
+Internet Security Systems (ISS), located online at <TT>http://iss.net</TT>, is a
+company that offers such products. In fact, ISS offers a trial version that can be
+used on a single local host. These tools are quite advanced.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>CAUTION:</B></FONT><B> </B>If you are running a firewall,
+	this does not automatically protect you from spoofing attacks. If you allow internal
+	addresses to access through the outside portion of the firewall, you are vulnerable!
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>At least one authoritative source suggests that prevention can also be realized
+through monitoring your network. This starts with identifying packets that purport
+to originate within your network, but attempt to gain entrance at the firewall or
+first network interface that they encounter on your wire:
+
+<DL>
+	<DD>There are several classes of packets that you could watch for. The most basic
+	is any TCP packet where the network portion (Class A, B, or C or a prefix and length
+	as specified by the Classless Inter-Domain Routing (CIDR) specification) of the source
+	and destination addresses are the same but neither are from your local network. These
+	packets would not normally go outside the source network unless there is a routing
+	problem, worthy of additional investigation, or the packets actually originated outside
+	your network. The latter may occur with Mobile IP testing, but an attacker spoofing
+	the source address is a more likely cause.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from Defense Information System Network Security Bulletin #95-29. This
+	bulletin can be found online at <A HREF="javascript:if(confirm('ftp://nic.ddn.mil/scc/sec-9532.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://nic.ddn.mil/scc/sec-9532.txt'" tppabs="ftp://nic.ddn.mil/scc/sec-9532.txt"><TT>ftp://nic.ddn.mil/scc/sec-9532.txt</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Other Strange and Offbeat Spoofing Attacks</B></FONT></H3>
+<P>Other forms of spoofing, such as DNS spoofing, exist. DNS spoofing occurs when
+a DNS machine has been compromised by a cracker. The likelihood of this happening
+is slim, but if it happens, widespread exposure could result. The rarity of these
+attacks should not be taken as a comforting indicator. Earlier in this chapter, I
+cited a DDN advisory that documented a rash of widespread attacks against DNS machines.
+Moreover, an important CIAC advisory addresses this issue:
+
+<DL>
+	<DD>Although you might be willing to accept the risks associated with using these
+	services for now, you need to consider the impact that spoofed DNS information may
+	have...It is possible for intruders to spoof BIND into providing incorrect name data.
+	Some systems and programs depend on this information for authentication, so it is
+	possible to spoof those systems and gain unauthorized access.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from the CIAC advisory titled &quot;Domain Name Service Vulnerabilities.&quot;
+	It can be found online at <A HREF="javascript:if(confirm('http://ciac.llnl.gov/ciac/bulletins/g-14.shtml  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://ciac.llnl.gov/ciac/bulletins/g-14.shtml'" tppabs="http://ciac.llnl.gov/ciac/bulletins/g-14.shtml"><TT>http://ciac.llnl.gov/ciac/bulletins/g-14.shtml</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>DNS spoofing is fairly difficult to accomplish, even if a cracker has compromised
+a DNS server. One reason is that the cracker may not be able to accurately guess
+what address DNS client users are going to request. Arguably, the cracker could assume
+a popular address that is likely to appear (<A HREF="javascript:if(confirm('http://www.altavista.digital.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.altavista.digital.com/'" tppabs="http://www.altavista.digital.com/"><TT>www.altavista.digital.com</TT></A>,
+for example) or he could simply replace all address translations with the arbitrary
+address of his choice. However, this technique would be uncovered very quickly.</P>
+<P>Could a cracker implement such an attack wholesale, by replacing all translations
+with his own address and still get away with it? Could he, for example, pull from
+the victim's environment the address that the user really wanted? If so, what would
+prevent a cracker from intercepting every outgoing transmission, temporarily routing
+it to his machine, and routing it to the legitimate destination later? Is it possible
+via DNS spoofing to splice yourself into all connections without being discovered?
+Probably not for more than several minutes, but how many minutes are enough?</P>
+<P>In any event, in DNS spoofing, the cracker compromises the DNS server and explicitly
+alters the hostname-IP address tables. These changes are written into the translation
+table databases on the DNS server. Thus, when a client requests a lookup, he or she
+is given a bogus address; this address would be the IP address of a machine completely
+under the cracker's control.</P>
+<P>You may be wondering why DNS attacks exist. After all, if a cracker has already
+compromised the name server on a network, what more can be gained by directing DNS
+queries to the cracker's own machine? The answer lies primarily in degrees of compromise.
+Compromising the name server of a network does not equal compromising the entire
+network. However, one can use the system to compromise the entire network, depending
+on how talented the cracker is and how lax security is on the target network. For
+example, is it possible to convince a client that the cracker's machine is really
+the client's local mail server?</P>
+<P>One interesting document that addresses a possible new technique of DNS spoofing
+is &quot;Java Security: From HotJava to Netscape and Beyond,&quot; by Drew Dean,
+Edward W. Felten, and Dan S. Wallach. The paper discusses a technique where a Java
+applet makes repeated calls to the attacker's machine, which is in effect a cracked
+DNS server. In this way, it is ultimately possible to redirect DNS lookups from the
+default name server to a remote untrusted one. From there, the attacker might conceivably
+compromise the client machine or network.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Java Security:
+	From HotJava to Netscape and Beyond&quot; is located online at <A HREF="javascript:if(confirm('http://www.cs.princeton.edu/sip/pub/oakland-paper-96.pdf  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cs.princeton.edu/sip/pub/oakland-paper-96.pdf'" tppabs="http://www.cs.princeton.edu/sip/pub/oakland-paper-96.pdf"><TT>http://www.cs.princeton.edu/sip/pub/oakland-paper-96.pdf</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>DNS spoofing is fairly easy to detect, however. If you suspect one of the DNS
+servers, poll the other authoritative DNS servers on the network. Unless the originally
+affected server has been compromised for some time, evidence will immediately surface
+that it has been cracked. Other authoritative servers will report results that vary
+from those given by the cracked DNS server.</P>
+<P>Polling may not be sufficient if the originally cracked server has been compromised
+for an extended period. Bogus address-hostname tables may have been passed to other
+DNS servers on the network. If you are noticing abnormalities in name resolution,
+you may want to employ a script utility called <I>DOC</I> (domain obscenity control).
+As articulated in the utility's documentation:
+
+<DL>
+	<DD>DOC (domain obscenity control) is a program which diagnoses misbehaving domains
+	by sending queries off to the appropriate domain name servers and performing a series
+	of analyses on the output of these queries.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>DOC is available online
+	at <A HREF="javascript:if(confirm('ftp://coast.cs.purdue.edu/pub/tools/unix/doc.2.0.tar.Z  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://coast.cs.purdue.edu/pub/tools/unix/doc.2.0.tar.Z'" tppabs="ftp://coast.cs.purdue.edu/pub/tools/unix/doc.2.0.tar.Z"><TT>ftp://coast.cs.purdue.edu/pub/tools/unix/doc.2.0.tar.Z</TT></A>.
+	Other techniques to defeat DNS spoofing attacks include the use of reverse DNS schemes.
+	Under these schemes, sometimes referred to as tests of your forwards, the service
+	attempts to reconcile the forward lookup with the reverse. This technique may have
+	limited value, though. With all likelihood, the cracker has altered both the forward
+	and reverse tables. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Spoofing is popular now. What remains is for the technique to become standardized.
+Eventually, this will happen. You can expect point-and-click spoofing programs to
+hit the circuit within a year or so.</P>
+<P>If you now have or are planning to establish a permanent connection to the Internet,
+discuss methods of preventing purportedly internal addresses from entering your network
+from the void with your router provider (or your chief network engineer). I say this
+for one reason: Spoofing attacks will become the rage very soon.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="ch27.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch27/ch27.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch29.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch29/ch29.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A><BR>
+<BR>
+<BR>
+
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

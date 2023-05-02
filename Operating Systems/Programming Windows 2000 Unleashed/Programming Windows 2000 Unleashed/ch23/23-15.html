@@ -1,0 +1,259 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=813-816//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-14.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-16.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>An ASP Helper Object</B></FONT></P>
+<p>Here&#146;s a helper object that simplifies the access to the ASP object model:
+</P>
+<!-- CODE //-->
+<pre>
+class ASPObjReference
+{
+public:
+    enum {
+        get_Server        = 0x0001,
+        get_Response    = 0x0002,
+        get_Request       = 0x0004,
+        get_Session       = 0x0008,
+        get_Application   = 0x0010,
+        get_All        = 0xFFFF
+    };
+
+    IRequest*            Request(){ _
+            ASSERT(m_piRequest!=NULL);
+            return m_piRequest; }
+    IResponse*            Response(){ _
+            ASSERT(m_piResponse!=NULL);
+            return m_piResponse; }
+    ISessionObject*        Session(){ _
+            ASSERT(m_piSession!=NULL);
+            return m_piSession; }
+    IServer*            Server(){ _
+            ASSERT(m_piServer!=NULL);
+            return m_piServer; }
+    IApplicationObject*    Application(){ _
+            ASSERT(m_piApplication!=NULL);
+            return m_piApplication; }
+
+    HRESULT Init( DWORD dwFlags) {
+        try {
+            IObjectContextPtr pObjContext;
+
+            _com_util::CheckError( GetObjectContext( &amppObjContext));
+
+            IGetContextPropertiesPtr pProps;
+
+            pProps = pObjContext;
+
+            _bstr_t bstrObj;
+
+            if( dwFlags &amp get_Request) {
+
+            bstrObj = &#147;Request&#148;;
+            GetServerObject( pProps, bstrObj,
+                     IID_IRequest, (void**)&ampm_piRequest);
+        }
+        if( dwFlags &amp get_Response) {
+            bstrObj = &#147;Response&#148;;
+            GetServerObject( pProps, bstrObj,
+                    IID_IResponse, (void**)&ampm_piResponse );
+        }
+        if( dwFlags &amp get_Session) {
+            bstrObj = &#147;Session&#148;;
+            GetServerObject( pProps, bstrObj,
+                    IID_ISessionObject, (void**)&ampm_piSession );
+        }
+        if(dwFlags &amp get_Server) {
+            bstrObj = &#147;Server&#148;;
+            GetServerObject( pProps, bstrObj,
+                    IID_IServer, (void**)&ampm_piServer );
+        }
+        if(dwFlags &amp get_Application) {
+            bstrObj = &#147;Application&#148;;
+            GetServerObject( pProps, bstrObj,
+                    IID_IApplicationObject, (void**)&ampm_piApplication
+);
+         }
+     } catch( _com_error err) {
+         return err.Error();
+     }
+     return S_OK;
+ }
+ static void GetServerObject( IGetContextProperties*
+     pProps, BSTR bstrObjName,
+     const IID&amp iid, void **ppObj) {
+
+     _ASSERT( pProps );
+     _ASSERT( bstrObjName );
+     _ASSERT( ppObj );
+     if ( pProps &amp&amp bstrObjName &amp&amp ppObj ) {
+         *ppObj = NULL;
+         _variant_t vt;
+         _com_util::CheckError( pProps-&gtGetProperty(
+                 bstrObjName, &ampvt));
+         if( V_VT( &ampvt) == VT_DISPATCH) {
+             IDispatch* pDispatch = V_DISPATCH(&ampvt);
+             if ( pDispatch ) {
+                 _com_util::CheckError(
+                 pDispatch-&gtQueryInterface( iid, ppObj));
+             }
+         }
+     }
+     return;
+}
+
+private:
+    CComPtr&ltIRequest&gt    m_piRequest; //Request Object
+    CComPtr&ltIResponse&gt    m_piResponse; //Response Object
+    CComPtr&ltISessionObject&gt    m_piSession; //Session Object
+    CComPtr&ltIServer&gt   m_piServer; //Server Object
+    CComPtr&ltIApplicationObject&gt m_piApplication;//Application Object
+};
+</PRE>
+<!-- END CODE //-->
+<p>Here, the main concept is to first retrieve the <small>IObjectContext</SMALL> interface using the method <small>GetObjectContext</SMALL>. This interface can then be queried using <small>QueryInterface</SMALL> for the interface <small>IGetContextProperties</SMALL>. Since I am using smart pointers, this querying is done automatically. The purpose of this interface is to allow for the access of various COM&#43; services available from the context as properties (for example, <small>IGetContextProperties::GetProperty</SMALL>). It&#146;s important that you understand that this method will not always return an interface, because if the context is not running within an ASP execution, the property will not exist. It&#146;s a purely dynamic situation. Therefore, error checking is not optional. With respect to the preceding source code, the property retrieval is performed in the static method <small>GetServerObject</SMALL>.</P>
+<p><font size="+1"><b>Using the ASP Object Model</B></FONT></P>
+<p>Here&#146;s an implementation of this helper object:
+</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CASPWrapper::generate(long iterations)
+{
+    try {
+        m_refASP.Init( ASPObjReference::get_Response);
+
+        ASPCOMPONENTLib::ICounterPtr ptr( &#147;ASPComponent.Counter.1&#148;);
+
+        long c1;
+        char buffer[ 512];
+
+        ptr-&gtreset();
+        m_refASP.Response()-&gtWrite( _variant_t( &#147;&lttable&gt&#148;));
+        for( c1 = 0; c1 &lt iterations; c1 &#43;&#43;) {
+            sprintf( buffer, &#147;&lttr&gt&lttd&gtIteration
+%ld&lt/td&gt&lttd&gt%ld&lt/td&gt&lt/tr&gt&#148;,
+                   c1, ptr-&gtgetValue());
+            m_refASP.Response()-&gtWrite( _variant_t( buffer));
+        }
+        m_refASP.Response()-&gtWrite( _variant_t( &#147;&lt/table&gt&#148;));
+
+    } catch( _com_error err) {
+        return err.Error();
+    }
+    return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this example, the method <small>generate</SMALL> has as a parameter the number of iterations that will be generated. Notice that the entire code is encapsulated within an exception. This way, if anything goes wrong, it will be caught. The first step is to retrieve the context using <small>m_refASP.Init</SMALL>. Then, the next step is to instantiate the <small>ICounter</SMALL> object.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B><p>It might seem more effective to embed the ASP code within the original <small>ICounter</SMALL> interface. However, the problem with this is that <small>ICounter</SMALL> may not be used within an ASP context. By adding the ASP code directly to the <small>ICounter</SMALL> interface, the component must be used within an ASP context.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The next step is to call the <small>ICounter::Reset</SMALL> method to reset the sequence. Then, some data is written to the stream using <small>Response.Write</SMALL>. The ASP objects accept only variant data; therefore, all data must be converted to this type. This can easily be done using the COM compiler support class <small>_variant_t</SMALL>. This method is used multiple times to write all the HTML content to the stream.</P>
+<p>The last step is to create an ASP page, as follows:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+&ltOBJECT RUNAT=server PROGID=ASPComponent.ASPWrapper.1
+        id=objASPCounter&gt &lt/OBJECT&gt
+&lt%objASPCounter.generate(10);%&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>This time, the ASP code is much simpler, and it generates the table for you automatically. As a designer, you can now focus on building the application and the user interface. The downside is that whatever the COM object generates cannot be easily modified. Therefore, if the table is not to your liking, you may need to recompile the COM object. However, because the ASP COM object is a wrapper to the underlying object, you can use the underlying object directly, bypassing the ASP object.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-14.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-16.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

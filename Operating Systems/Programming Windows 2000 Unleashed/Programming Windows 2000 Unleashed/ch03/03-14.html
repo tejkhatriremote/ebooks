@@ -1,0 +1,282 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=106-110//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-13.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch04/04-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 3.12</B> <small>Main.cpp</SMALL>&#151;The Main Source File for the JobObj Project<hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x500
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+HANDLE CreateSolitaireProcess(void);
+HANDLE CreateFreecellProcess(void);
+void AssociateJobAndCompletionPort(void);
+void SetJobLimits(void);
+
+HANDLE      g_hCompletionPort;
+OVERLAPPED  g_ov;
+HANDLE      g_hJobs = NULL;
+
+int _tmain()
+{
+    g_hJobs = CreateJobObject(NULL, _T(&#147;Unleashed JobObj&#148;));
+    AssociateJobAndCompletionPort();
+    SetJobLimits();
+
+    HANDLE hSolitaire = CreateSolitaireProcess();
+    HANDLE hFreecell = CreateFreecellProcess();
+
+    DWORD dwCurrentProcesses = 0;
+    AssignProcessToJobObject(g_hJobs, hSolitaire);
+    AssignProcessToJobObject(g_hJobs, hFreecell);
+
+    /* Display messages for completion events.*/
+    bool done = false;
+    while(!done)
+    {
+        DWORD dwMsgId, dwKey;
+        LPOVERLAPPED pov;
+        LPCTSTR psz;
+        GetQueuedCompletionStatus(g_hCompletionPort,
+                                  &ampdwMsgId,
+                                  &ampdwKey,
+                                  &amppov,
+                                  INFINITE);
+        switch(dwMsgId)
+        {
+            case JOB_OBJECT_MSG_END_OF_JOB_TIME:
+                psz = _T(&#147;JOB_OBJECT_MSG_END_OF_JOB_TIME&#148;);
+            break;
+            case JOB_OBJECT_MSG_END_OF_PROCESS_TIME:
+                psz = _T(&#147;JOB_OBJECT_MSG_END_OF_PROCESS_TIME&#148;);
+            break;
+            case JOB_OBJECT_MSG_ACTIVE_PROCESS_LIMIT:
+                psz = _T(&#147;JOB_OBJECT_MSG_ACTIVE_PROCESS_LIMIT&#148;);
+            break;
+            case JOB_OBJECT_MSG_ACTIVE_PROCESS_ZERO:
+                psz = _T(&#147;JOB_OBJECT_MSG_ACTIVE_PROCESS_ZERO&#148;);
+                done = true;
+            break;
+            case JOB_OBJECT_MSG_NEW_PROCESS:
+                psz = _T(&#147;JOB_OBJECT_MSG_NEW_PROCESS&#148;);
+                dwCurrentProcesses&#43;&#43;;
+            break;
+            case JOB_OBJECT_MSG_EXIT_PROCESS:
+                psz = _T(&#147;JOB_OBJECT_MSG_EXIT_PROCESS&#148;);
+                dwCurrentProcesses&#151;;
+                if(!dwCurrentProcesses) done = true;
+            break;
+        }
+        _tprintf(_T(&#147;Job completion message - %s\n&#148;), psz);
+    }
+    CloseHandle(g_hJobs);
+    CloseHandle(g_hCompletionPort);
+    MessageBox(NULL, _T(&#147;Finished&#148;), _T(&#147;JobObj&#148;), MB_OK);
+    return 0;
+}
+
+/*
+ * Creates a process for the Solitaire game, and returns
+ * the process handle.
+ */
+HANDLE CreateSolitaireProcess(void)
+{
+    TCHAR   lpszSolitairePath[_MAX_PATH];
+    PROCESS_INFORMATION pi;
+    STARTUPINFO         si;
+
+    ZeroMemory(&ampsi, sizeof(STARTUPINFO));
+    si.cb = sizeof(STARTUPINFO);
+
+    GetSystemDirectory(lpszSolitairePath, _MAX_PATH);
+
+    lstrcat(lpszSolitairePath, _T(&#147;\\SOL.EXE&#148;));
+
+    CreateProcess(lpszSolitairePath,
+                  NULL,
+                  NULL,
+                  NULL,
+                  FALSE,
+                  0,
+                  NULL,
+                  NULL,
+                  &ampsi,
+                  &amppi);
+    return pi.hProcess;
+}
+
+/*
+ * Creates a process for the FreeCell game, and returns
+ * the process handle.
+ */
+HANDLE CreateFreecellProcess(void)
+{
+    TCHAR   lpszFreecellPath[_MAX_PATH];
+    PROCESS_INFORMATION pi;
+    STARTUPINFO         si;
+
+    ZeroMemory(&ampsi, sizeof(STARTUPINFO));
+    si.cb = sizeof(STARTUPINFO);
+
+    GetSystemDirectory(lpszFreecellPath, _MAX_PATH);
+    lstrcat(lpszFreecellPath, _T(&#147;\\FREECELL.EXE&#148;));
+
+    CreateProcess(lpszFreecellPath,
+                  NULL,
+                  NULL,
+                  NULL,
+                  FALSE,
+                  0,
+                  NULL,
+                  NULL,
+                  &ampsi,
+                  &amppi);
+    return pi.hProcess;
+}
+
+/*
+ * Associate the job object handle with an I/O completion port, and
+ * set an end of job action to post a notification to the
+ * completion port.
+ */
+void AssociateJobAndCompletionPort(void)
+{
+    JOBOBJECT_ASSOCIATE_COMPLETION_PORT jacp;
+    g_hCompletionPort= CreateIoCompletionPort(INVALID_HANDLE_VALUE,
+                                              NULL,
+                                              0x42,
+                                              0);
+    jacp.CompletionKey = NULL;
+    jacp.CompletionPort = g_hCompletionPort;
+
+    ZeroMemory(&ampg_ov, sizeof(OVERLAPPED));
+    SetInformationJobObject(g_hJobs,
+                       JobObjectAssociateCompletionPortInformation,
+                       &ampjacp,
+                       sizeof(jacp));
+    JOBOBJECT_END_OF_JOB_TIME_INFORMATION  jeot;    jeot.EndOfJobTimeAction = JOB_OBJECT_POST_AT_END_OF_JOB;
+    SetInformationJobObject(g_hJobs,
+                            JobObjectEndOfJobTimeInformation,
+                            &ampjeot,
+                            sizeof(jeot));
+}
+
+/*
+ * Set a (very small) time limit for the processes in the job
+ * object. In this case, 500,000 nano-seconds, which is about
+ * two minutes in dog-years.
+ */
+void SetJobLimits(void)
+{
+    JOBOBJECT_BASIC_LIMIT_INFORMATION jbli;
+    ZeroMemory(&ampjbli, sizeof(jbli));
+
+    jbli.PerJobUserTimeLimit.QuadPart = 500000;
+    jbli.LimitFlags = JOB_OBJECT_LIMIT_JOB_TIME;
+
+    BOOL f0 = SetInformationJobObject(g_hJobs,
+                            JobObjectBasicLimitInformation,
+                            &ampjbli,
+                            sizeof(jbli));
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Compile and run the JobObj application from a command prompt. The job object will launch the Solitaire and FreeCell applications. As the processes are started, information messages will be displayed in the console window. You&#146;ll also see messages when the job object&#146;s time limit expires, as well as when the Solitaire or FreeCell processes are terminated.</P>
+<h3><a name="Heading33"></A><font color="#000077">Summary</FONT></H3>
+<p>This section discussed thread, synchronization, and security primitives. It also covered the methods used to create and manage threads and processes, as well as the pros and cons of creating multithreaded applications.
+</P>
+<p>Finally, a few sample projects were used to demonstrate how threads and synchronization primitives are used together to create Windows 2000 applications.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-13.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch04/04-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

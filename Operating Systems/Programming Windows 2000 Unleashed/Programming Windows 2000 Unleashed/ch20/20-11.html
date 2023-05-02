@@ -1,0 +1,185 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=674-678//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch21/21-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In the function shown in Listing 20.12, the current settings for the proxy&#146;s security blanket are retrieved before new values are set. You must always retrieve the existing values for the security blanket unless you intend to set each parameter to a specific and possibly new value.
+</P>
+<p>COM also includes three helper functions that enable you to manipulate the client side of the security blanket without dealing with the <small>IClientSecurity</SMALL> interface pointer:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoSetProxyBlanket</SMALL>, which can be used instead of <small>IClientSecurity::SetBlanket</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoQueryProxyBlanket</SMALL>, which can be used instead of <small>IClientSecurity::QueryBlanket</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoCopyProxy</SMALL>, which can be used instead of <small>IClientSecurity::CopyProxy</SMALL>
+</DL>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Managing Server-side Security</FONT></H4>
+<p>COM also includes <small>IServerSecurity</SMALL>, an interface that can be used by a COM server to manage security on the server side. This interface is useful when a COM process needs to manage security more interactively than what&#146;s possible using the programmatic methods discussed earlier.</P>
+<p>A simplified version of the <small>IServerSecurity</SMALL> interface is provided in Listing 20.13.</P>
+<p><b>Listing 20.13</B> The <small>IServerSecurity</SMALL> Interface</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+interface IServerSecurity : public IUnknown
+{
+public:
+    HRESULT QueryBlanket(DWORD*    pAuthnSvc,
+                         DWORD*    pAuthzSvc,
+                         OLECHAR** pServerPrincName,
+                         DWORD*    pAuthnLevel,
+                         DWORD*    pImpLevel,
+                         void**    pPrivs,
+                         DWORD*    pCapabilities);
+    HRESULT ImpersonateClient(void);
+    HRESULT RevertToSelf(void);
+    BOOL    IsImpersonating(void);
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>IServerSecurity</SMALL> interface has four member functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>QueryBlanket</SMALL>. Enables the server to retrieve security blanket information about the client.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ImpersonateClient</SMALL>. Called by the server to impersonate the client. This only works if the client allows itself to be impersonated by the server.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RevertToSelf</SMALL>. Called by the server while impersonating a client. This function causes the server to revert back to its normal security settings.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IsImpersonating</SMALL>. Returns <small>TRUE</SMALL> if the current thread is impersonating the client. Returns <small>FALSE</SMALL> otherwise. This is one of the few COM methods that does not return an <small>HRESULT</SMALL>.
+</DL>
+<p>To retrieve a pointer to the <small>IServerSecurity</SMALL> interface, the server must call the <small>CoGetCallContext</SMALL> function.</P>
+<p>COM also includes three helper functions that enable you to manage security on the server side without dealing with the <small>IServerSecurity</SMALL> interface pointer:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoQueryClientBlanket</SMALL>, which can be used instead of <small>IServerSecurity::QueryBlanket</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoImpersonateClient</SMALL>, which can be used instead of <small>IServerSecurity::ImpersonateClient</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoRevertToSelf</SMALL>, which can be used instead of <small>IServerSecurity::RevertToSelf</SMALL>
+</DL>
+<h3><a name="Heading15"></A><font color="#000077">Using the DCOM Configuration Utility</FONT></H3>
+<p>The DCOM configuration utility, known as <i>DCOM Config</I>, is shipped with every Windows 2000 system and is used to declaratively configure DCOM Registry entries that control security and other attributes used by DCOM. DCOM Config allows you access to security and protocol defaults for the following items:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The entire computer
+<dd><b>&#149;</B>&nbsp;&nbsp;A particular process
+</DL>
+<p>DCOM Config is launched from a DOS prompt by typing the following:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+DcomCnfg
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you use DCOM, you&#146;ll be launching DCOM Config quite a bit, so you should consider adding a shortcut to <small>C:\Winnt\DcomCnfg.exe</SMALL> to your Visual C<small>&#43;&#43;</SMALL> tools menu.</P>
+<p>Keep in mind that any system-wide settings configured with DCOM Config will be overridden by settings made for a specific AppID with DCOM Config. Also, any attributes set programmatically with <small>CoInitializeSecurity</SMALL> will override system-wide and AppID-specific configuration settings.</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Using DCOM Config to Set Systemwide Attributes</FONT></H4>
+<p>When initially launched, DCOM Config presents a list of registered AppIDs, as shown in Figure 20.4. The Applications tab is used to select individual AppIDs to be configured.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-04.jpg',403,447 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-04.jpg',403,447)"><font color="#000077"><b>Figure 20.4</B></FONT></A>&nbsp;&nbsp;The Applications tab from the DCOM configuration utility.</P>
+<p>DCOM Config has three additional tabs that are used to control different types of systemwide settings:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Default Properties.</I> From here, you can enable or disable DCOM for the entire machine and set default authentication and impersonation levels. Items on this page control Registry settings found under the <small>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Ole</SMALL> Registry key.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Default Security.</I> From here, you can set default launch, access, and configuration permissions for processes that do not call <small>CoInitializeSecurity</SMALL> or provide their own AppID-specific setting.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Default Protocols.</I> From here, you can define allowed network protocols and their relative priorities.
+</DL>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Using DCOM Config to Set Attributes for a Specific AppID</FONT></H4>
+<p>Applications that have specific configuration needs can be managed by double-clicking on the process name in the Applications tab or by clicking the Properties pushbutton. DCOM Config will display a property sheet that&#146;s used to configure AppID-specific attributes for the process. The General tab is initially displayed, as shown in Figure 20.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-05.jpg',404,448 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-05.jpg',404,448)"><font color="#000077"><b>Figure 20.5</B></FONT></A>&nbsp;&nbsp;The General tab from the DCOM configuration utility.</P>
+<p>Here are the five categories of settings that can be configured for each AppID by DCOM Config:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>General.</I> From here, you can display information about the location of the application and change the authentication level.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Location.</I> From here, you can define the location where the COM process should execute.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Security.</I> From here, you can override the systemwide default security settings.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Identity.</I> From here, you can define the account that the application will run under.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Endpoints.</I> From here, you can define the network protocol and endpoints that the application will use.
+</DL>
+<p>Each of the AppID-specific settings made using DCOM Config will override settings made on a systemwide basis. In a similar way, any programmatic settings made by the application will override AppID-specific settings.
+</P>
+<h3><a name="Heading18"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed DCOM and many of the issues that must be addressed when using COM in a distributed environment. This chapter covered location transparency as well as the enhancements made to COM to make it possible to use COM components transparently across machine boundaries. This chapter also discussed security and how security attributes can be set in a declarative way in the Registry or programmatically through <small>CoInitializeSecurity</SMALL> and other functions and interfaces. The chapter also discussed the DCOM configuration utility, DCOM Config, which can be used to modify DCOM settings in the System Registry.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch21/21-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

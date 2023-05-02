@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=421-425//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Several rules define how an object must behave with respect to its implementation of <small>QueryInterface</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;For successful calls, the interface reference count must be incremented before the new interface pointer is returned to the caller.
+<dd><b>&#149;</B>&nbsp;&nbsp;For one instance of an object, the same pointer value must be consistently returned for a given interface. If you ask for the <small>IFoo</SMALL> interface and get a certain pointer value, any future <small>QueryInterface</SMALL> calls for <small>IFoo</SMALL> on the same object&#146;s interface must return the same value.
+<dd><b>&#149;</B>&nbsp;&nbsp;Objects are not allowed to grow new interfaces. If <small>QueryObject</SMALL> fails once, it&#146;s expected to fail consistently. Likewise, if <small>QueryInterface</SMALL> is successful, it must consistently return a pointer to the requested interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;There must not be a &#147;maze&#148; in the interface hierarchy. If a <small>QueryInterface</SMALL> call returns a pointer to a new interface, it must be possible to call <small>QueryInterface</SMALL> to return to the previous interface. Similarly, it must be possible to traverse interfaces by obtaining a pointer to interface A, interface B, interface C, and then back to interface A.
+</DL>
+<p><font size="+1"><b>Handling Return Values</B></FONT></P>
+<p>The return value from <small>QueryInterface</SMALL>, like most COM interfaces and functions, returns an <small>HRESULT</SMALL>. This is a structured 32-bit value that includes more than just the usual pass/fail information returned from a return code. An <small>HRESULT</SMALL> is structured very much like a Win32 error code, as shown in Figure 13.10.</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-10.jpg',500,291 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-10.jpg',500,291)"><font color="#000077"><b>Figure 13.10</B></FONT></A>&nbsp;&nbsp;The format for an <small>HRESULT</SMALL> return code.
+</P>
+<p>It&#146;s possible for a function to return several different flavors of success and failure. In order to determine whether a function has succeeded, you must use the <small>SUCCEEDED</SMALL> and <small>FAILED</SMALL> macros, as shown in Listing 13.4.</P>
+<p><b>Listing 13.4</B> Using the <small>SUCCEEDED</SMALL> and <small>FAILED</SMALL> Macros<hr></P>
+<!-- CODE //-->
+<pre>
+HRESULT hr = pObj-&gtGetData(&ampfetc, &ampstg);
+if(FAILED(hr))
+{
+    // Handle failed condition
+}
+hr = pObj-&gtDoSomethingElse();
+if(SUCCEEDED(hr))
+{
+    // Handle successful return
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Creating an Object</FONT></H4>
+<p>A client creates an instance of a COM object by calling <small>CoCreateInstance</SMALL> and passing a CLSID for the object to be created, as shown in Listing 13.5.</P>
+<p><b>Listing 13.5</B> Creating an Object Using <small>CoCreateInstance</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+IFoo* pFoo = 0;
+HRESULT hr = CoCreateInstance(CLSID_FooBar,
+                              NULL,
+                              CLSCTX_INPROC_SERVER,
+                              IID_IFoo,
+                              &amppFoo );
+if(FAILED(hr))
+{
+    // Handle error
+}
+// Use pFoo
+.
+.
+.
+
+pFoo-&gtRelease();
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 13.5, a <small>FooBar</SMALL> object is created (identified by <small>CLSID_FooBar</SMALL>) via a call to <small>CoCreateInstance</SMALL>. If the object is created successfully, a pointer to the <small>IFoo</SMALL> interface is returned.</P>
+<p>Several steps are involved in creating a COM object. All COM objects are created by one of three types of servers:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;In-process servers are implemented in a DLL and run in the client&#146;s address space.
+<dd><b>&#149;</B>&nbsp;&nbsp;Local servers are EXEs and, like all EXEs, run in their own address space on the same machine as the client.
+<dd><b>&#149;</B>&nbsp;&nbsp;Remote servers are EXEs that run on a machine out on the network.
+</DL>
+<p><font size="+1"><b>Working with Class Objects</B></FONT></P>
+<p>Every COM object is associated with a special object known as a <i>class object</I>. The class object, also known as a <i>class factory</I>, is responsible for creating instances of the COM object. Every class object is responsible for creating a single CLSID; if you&#146;re creating servers for several CLSIDs, you must have a separate class object for each one.</P>
+<p>All COM objects are implemented via class objects associated with the COM object&#146;s CLSID. This allows COM objects to be created in a standard way by clients, who only need to learn to deal with a single interface. Class objects are required to implement the <small>IClassFactory</SMALL> interface, as shown in Figure 13.11.</P>
+<p><a name="Fig11"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-11.jpg',500,418 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-11t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-11.jpg',500,418)"><font color="#000077"><b>Figure 13.11</B></FONT></A>&nbsp;&nbsp;A class object implements the <small>IClassFactory</SMALL> interface.
+</P>
+<p>The <small>IClassFactory</SMALL> interface adds two functions to the standard <small>IUnknown</SMALL> interface:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CreateInstance</SMALL> returns an interface pointer to a logically new instance of the COM object referred to by the CLSID.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LockServer</SMALL> requests that the class object stay resident in memory and not unload itself.
+</DL>
+<p>An example of a class object&#146;s <small>CreateInstance</SMALL> function is provided in Listing 13.6.</P>
+<p><b>Listing 13.6</B> An Example of a Class Factory <small>CreateInstance</SMALL> Function<hr></P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CClassFactory::CreateInstance(LPUNKNOWN punk,
+                                           REFIID riid,
+                                           LPVOID* ppv )
+{
+    *ppv = NULL;
+    // Aggregation not supported by this object.
+    if(punk != NULL)
+        return ResultFromScode(CLASS_E_NOAGGREGATION);
+
+    CCFoo* pFoo = new CFoo;
+    if(pFoo == NULL)
+        return ResultFromScode( E_OUTOFMEMORY );
+
+    return pFoo-&gtQueryInterface(riid, ppv);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 13.6, the <small>CreateInstance</SMALL> function for this particular class factory creates a <small>CFoo</SMALL> object and performs an initial <small>QueryInterface</SMALL> on the new object prior to returning the interface pointer back to the caller.</P>
+<p>Each time it&#146;s called, the Windows 2000 <small>CoCreateInstance</SMALL> function creates an instance of the class object for the CLSID internally. You can perform the same steps yourself by first calling the <small>CoGetClassObject</SMALL> API function to retrieve a pointer to the class object. After you have a pointer to the <small>IClassFactory</SMALL> interface on the class object, you can easily create one or more COM object instances by calling the <small>CreateInstance</SMALL> function, as shown in Listing 13.7.</P>
+<p><b>Listing 13.7</B> Creating Instances of COM Objects by Using a Class Object<hr></P>
+<!-- CODE //-->
+<pre>
+HRESULT MyCoCreateInstance(REFCLSID  rclsid,
+                           LPUNKNOWN pUnkOuter,
+                           DWORD     dwClsContext,
+                           REFIID    riid,
+                           LPVOID*   ppv)
+{
+    IClassFactory *pcf = NULL;
+    HRESULT hr = CoGetClassObject(rclsid,
+                                  dwClsContext,
+                                  NULL,
+                                  IID_IClassFactory,
+                                  (void **)&amppcf);
+    if(FAILED(hr))
+        return hr;
+    // Create an instance of rclsid, and return the
+    // riid interface in ppvObj
+    hr = pcf-&gtCreateInstance(pUnkOuter, riid, ppvObj);
+    pcf-&gtRelease();
+    return hr;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>If you&#146;re creating more than a single instance of a COM object, it&#146;s more efficient to create the multiple instances using a class object than to call <small>CoCreateInstance</SMALL> for each instance.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

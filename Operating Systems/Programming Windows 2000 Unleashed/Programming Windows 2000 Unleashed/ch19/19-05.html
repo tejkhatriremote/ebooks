@@ -1,0 +1,245 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Asynchronous COM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=19//-->
+<!--PAGES=638-641//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="19-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch20/20-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">The Asynchronous Test Client</FONT></H4>
+<p>The AsyncClient subdirectory contains the AsyncClient project, a Win32 console-mode project that makes asynchronous calls to the AsyncTest COM server. The source code used for AsyncClient is provided in L isting 19.12.
+</P>
+<p><b>Listing 19.12</B> An Asynchronous Test Driver for the <small>IShop</SMALL> Interface<hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * AsyncClient - main.cpp
+ *
+ * Tests asynchronous versions of the IShop interface.
+ */
+
+#define _WIN32_WINNT 0&#215;0500
+#include &lt;windows.h&gt;
+#include &lt;wchar.h&gt;
+
+#include &#147;asynctest.h&#148;
+#include &#147;asynctest_i.c&#148;
+
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+
+int wmain()
+{
+    IUnknown* punk = NULL;
+    ICallFactory* pCallFactory = NULL;
+    AsyncIShop* pShopAsync = NULL;
+    ISynchronize* pSynchro = NULL;
+    BSTR bstr;
+
+    // Initialize COM library
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#147;CoInitFailed&#148;, hr);
+        return 0;
+    }
+
+    // Use SEH to ensure that interface reference are cleaned up.
+    __try
+    {
+        // Create an instance of the COM object.
+        hr = CoCreateInstance(CLSID_Shop,
+                              NULL,
+                              CLSCTX_ALL,
+                              IID_IUnknown,
+                              (void**)&amp;punk);
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;CoCreate Failed&#148;, hr);
+            __leave;
+        }
+
+        // Get a pointer to the proxy&#146;s call factory.
+        hr = punk-&gt;QueryInterface(&amp;pCallFactory);
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;QIF for call factory failed&#148;, hr);
+            __leave;
+        }
+
+        // Create a call object.
+        hr = pCallFactory-&gt;CreateCall(IID_AsyncIShop,
+                                      NULL,
+                                      IID_AsyncIShop,
+                                      (IUnknown**)&amp;pShopAsync);
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;CreateCall Failed&#148;, hr);
+            __leave;
+        }
+
+        // Query the call object for ISynchronize.
+        hr = pShopAsync-&gt;QueryInterface(&amp;pSynchro);
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;QIF for ISynchronize Failed&#148;, hr);
+            __leave;
+        }
+
+        // Start the asynchronous function call.
+        hr = pShopAsync-&gt;Begin_FindSalesClerk();
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;Async Begin Failed&#148;, hr);
+            __leave;
+        }
+        wprintf(L&#147;Call to sales clerk started asynchronously\n&#148;);
+
+        //
+        // Simulate doing other work by sleeping for
+        // few seconds.
+        //
+        Sleep(2000);
+
+        // Wait for method call to complete.
+        hr = pSynchro-&gt;Wait(COWAIT_WAITALL, INFINITE);
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;ISynchronize::Wait Failed&#148;, hr);
+            __leave;
+        }
+
+        // Complete the function call, and recover parameters.
+        hr = pShopAsync-&gt;Finish_FindSalesClerk(&amp;bstr);
+        if(FAILED(hr))
+        {
+            HandleError(L&#147;Completion Failed&#148;, hr);
+            return 0;
+        }
+        wprintf(L&#147;The sales clerk&#146;s name is %s\n&#148;, bstr);
+    }
+    __finally
+    {
+        SysFreeString(bstr);
+        punk-&gt;Release();
+        pCallFactory-&gt;Release();
+        pShopAsync-&gt;Release();
+        pSynchro-&gt;Release();
+        CoUninitialize();
+    }
+    return 0;
+}
+
+/*
+ * Error handling routine
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amp;lpMsgBuf,
+                  0,
+                  NULL);
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The SyncClient directory also includes copies of the <small>AsyncTest_i.c</SMALL> and <small>AsyncTest.h</SMALL> files from the AsyncProxy project directory. You must use the files that were created after the <small>async_uuid</SMALL> attribute was added to the <small>IShop</SMALL> interface.</P>
+<p>Build and run the AsyncClient project. Now if you use a debugger to step through the client code, you&#146;ll see that the call to <small>Begin_FindSalesClerk</SMALL> immediately returns to the caller. After the call to <small>ISynchronize::Wait</SMALL> returns, the <small>[out]</SMALL> parameters from the interface are collected using <small>Finish_FindSalesClerk</SMALL>.</P>
+<h3><a name="Heading13"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter has discussed the new support for asynchronous COM method calls introduced in Windows 2000. The new interfaces and components associated with asynchronous COM, such as call objects and the <small>ICallFactory</SMALL> interface, were discussed. An example that demonstrated using asynchronous method calls was also presented.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="19-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch20/20-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

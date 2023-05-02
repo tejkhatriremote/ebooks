@@ -1,0 +1,284 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-12//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch05/05-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Six flags can be used as filter values:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_NOTIFY_CHANGE_FILE_NAME</SMALL>. A filename in the directory has changed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_NOTIFY_CHANGE_DIR_NAME</SMALL>. A directory name has changed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_NOTIFY_CHANGE_ATTRIBUTES</SMALL>. A file or directory attribute has changed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_NOTIFY_CHANGE_SIZE</SMALL>. The size of a file has changed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_NOTIFY_CHANGE_LAST_WRITE</SMALL>. The last-write date for a file has changed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FILE_NOTIFY_CHANGE_SECURITY</SMALL>. A file security descriptor has changed.
+</DL>
+<p>If <small>FindFirstFileNotification</SMALL> fails, it returns <small>INVALID_HANDLE_VALUE</SMALL>. If it succeeds, it returns a handle that will be signaled when the notification occurs. If you&#146;re not familiar with <small>WaitForSingleObject</SMALL> and <small>WaitForMultipleObjects</SMALL>, it&#146;s enough for now to know that they allow you enter a low-cost wait state to wait for a handle to change its state to signaled:</P>
+<!-- CODE SNIP //-->
+<pre>
+WaitForSingleObject(hNotify, INFINITE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>WaitForMultipleObjects</SMALL> is used in a similar way, except that it allows you to wait for an array of handles. These functions are discussed in gory detail in Chapter 9, &#147;Threads and Processes.&#148;</P>
+<p>After you&#146;re notified about a change in the file system and you return from the wait function, you&#146;ll not automatically be notified about future changes unless you call <small>FindNextChangeNotification</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fNotify = FindNextChangeNotification(hNotify);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>FindNextChangeNotification</SMALL> resets the file change notification handle so that you&#146;ll be notified after the next change.</P>
+<p>After you&#146;re finished using a file change notification handle, you must release it by calling <small>FindCloseChangeNotification</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fClosed = FindCloseChangeNotification(hNotify);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The FileChange project builds a console-based application that watches for changes on the C:\ drive and all of its subdirectories. The complete source code for FileChange is provided in Listing 4.17.
+</P>
+<p><b>Listing 4.17</B> A Console Mode Application That Displays Changes to the C:\ File System</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ *  FileChange.c
+ *
+ *  Demonstrates file system change notification functions.
+ *
+ *  This example is from Programming Windows 2000 Unleashed
+ *  by Mickey Williams.
+ */
+
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+#include &#147;FileChange.h&#148;
+
+/*
+ * Define a table that contains all of the file notifications
+ * and descriptions.
+ */
+FN_ATTRIBUTES g_ntfyTable[NOTIFICATION_COUNT] =
+{
+    FILE_NOTIFY_CHANGE_FILE_NAME,
+    _T(&#147;A file name has changed\n&#148;),
+
+    FILE_NOTIFY_CHANGE_DIR_NAME,
+    _T(&#147;A directory name has changed\n&#148;),
+
+    FILE_NOTIFY_CHANGE_ATTRIBUTES,
+    _T(&#147;A file or directory attribute has changed\n&#148;),
+
+    FILE_NOTIFY_CHANGE_SIZE,
+    _T(&#147;The size of a file has changed\n&#148;),
+
+    FILE_NOTIFY_CHANGE_LAST_WRITE,
+    _T(&#147;The last-write date for a file has changed\n&#148;),
+
+    FILE_NOTIFY_CHANGE_SECURITY,
+    _T(&#147;A file security descriptor has changed\n&#148;)
+};
+
+HANDLE g_hndlTable[NOTIFICATION_COUNT];
+TCHAR  g_szRootDir[] = _T(&#147;C:\\&#148;);
+BOOL   g_fSubdirs = TRUE;
+
+/*
+ * Main program loop - initialize the change notification
+ * handles, and hang in a loop waiting for notifications
+ * to be signaled.
+ */
+int _tmain(int argc, TCHAR* argv[])
+{
+   __try
+    {
+        int ndx;
+        ZeroMemory(g_hndlTable, sizeof(g_hndlTable));
+        for(ndx = 0; ndx &lt NOTIFICATION_COUNT; ndx&#43;&#43;)
+        {
+            SetFirstNotification(ndx);
+        }
+        while(1)
+        {
+            DWORD dwWait;
+            dwWait = WaitForMultipleObjects(NOTIFICATION_COUNT,
+                                                  g_hndlTable,
+                                                  FALSE,
+                                                  INFINITE);
+            if(dwWait != WAIT_FAILED)
+            {
+                int ndx = dwWait - WAIT_OBJECT_0;
+                OnFileNotification(ndx);
+                SetNextNotification(ndx);
+            }
+        }
+    }
+    __finally
+    {
+        FreeNotifications();
+    }
+    return 0;
+}
+/*
+ * Subscribe to file notifications for a particular filter type.
+ * The index to the filter type is passed as a parameter.
+ * g_szRootDir contains the root directory for the notification,
+ * and g_fSubdirs is TRUE if subdirectories are to be included
+ * in the notification.
+ */
+void SetFirstNotification(int ndx)
+{
+
+    g_hndlTable[ndx] = FindFirstChangeNotification(
+                           g_szRootDir,
+                           g_fSubdirs,
+                           g_ntfyTable[ndx].dwFilter);
+    if(g_hndlTable[ndx] == INVALID_HANDLE_VALUE)
+    {
+        DisplayError(_T(&#147;SetFirstNotification: Invalid Handle&#148;));
+    }
+}
+/*
+ * Re-subscribe to file notifications for a particular filter
+ * type by passing the handle to FindNextChangeNotification.
+ */
+void SetNextNotification(int ndx)
+{
+    BOOL fNotify = FindNextChangeNotification(g_hndlTable[ndx]);
+    if(fNotify == FALSE)
+    {
+        DisplayError(_T(&#147;SetNextNotification: FindNext failed&#148;));
+    }
+}
+/*
+ * Release handles used for file change notifications.
+ */
+void FreeNotifications(void)
+{
+    int ndx;
+    for(ndx = 0; ndx &lt NOTIFICATION_COUNT; ndx&#43;&#43;)
+        FindCloseChangeNotification(g_hndlTable[ndx]);
+}
+/*
+ * Prints the description for a particular index in the file
+ * change notification table.
+ */
+void OnFileNotification(int ndx)
+{
+    _tprintf(g_ntfyTable[ndx].szDesc);
+}
+/*
+ * Displays an error message describing the last system error
+ * message, along with a title passed as a parameter.
+ */
+void DisplayError(LPCTSTR pszTitle)
+{
+    LPVOID pv;
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  GetLastError(),
+                  MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),
+                  (LPTSTR)&amppv,
+                  0,
+                  NULL);
+    MessageBox(NULL, pv, pszTitle, MB_ICONHAND);
+    LocalFree(pv);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Compile and run the FileChange project. If you move files on the C:\ drive, the changes will be displayed in the console window.</P>
+<h3><a name="Heading25"></A><font color="#000077">Summary</FONT></H3>
+<p>In this chapter, you learned how files are manipulated in Windows 2000 applications. You learned about creating, moving, and copying files. The functions used to search for files were also discussed. In addition, this chapter discussed file change notifications, which you can use to be notified when part of the file system is changed.
+</P>
+<p>Synchronous and asynchronous file input and output was discussed, along with an MFC-based example that demonstrated how asynchronous I/O can be used as a method to improve program performance.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch05/05-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

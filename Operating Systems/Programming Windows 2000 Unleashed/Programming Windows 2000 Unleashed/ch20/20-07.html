@@ -1,0 +1,226 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=661-664//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 20.4</B> The <small>IAccessControl</SMALL> Interface</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+interface IAccessControl : public IUnknown
+{
+public:
+    HRESULT GrantAccessRights(PACTRL_ACCESSW pAccessList);
+
+    HRESULT SetAccessRights(PACTRL_ACCESSW pAccessList);
+
+    HRESULT SetOwner(PTRUSTEEW pOwner, PTRUSTEEW pGroup);
+
+    HRESULT RevokeAccessRights(LPWSTR lpProperty,
+                               ULONG cTrustees,
+                               TRUSTEEW prgTrustees[]);
+
+    HRESULT GetAllAccessRights(LPWSTR lpProperty,
+                   PACTRL_ACCESSW_ALLOCATE_ALL_NODES* ppAccessList,
+                   PTRUSTEEW* ppOwner,
+                   PTRUSTEEW* ppGroup);
+
+    HRESULT IsAccessAllowed(PTRUSTEEW pTrustee,
+                            LPWSTR lpProperty,
+                            ACCESS_RIGHTS AccessRights,
+                            BOOL* pfAccessAllowed);
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>IAccessControl</SMALL> interface has six methods:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GrantAccessRights</SMALL>. Merges a new <small>ACTRL_ACCESS</SMALL> list with the existing access rights on the object. <small>ACTRL_ACCESS</SMALL> lists were discussed in Chapter 7.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetAccessRights</SMALL>. Defines a new set of access rights using a new <small>ACTRL_ACCESS</SMALL> list.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetOwner</SMALL>. Sets an item&#146;s owner or group.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RevokeAccessRights</SMALL>. Removes any explicit entries for the list of trustees.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetAllAccessRights</SMALL>. Gets theentire list of access rights, the owner, the group, or a combination of the three for the object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IsAccessAllowed</SMALL>. Determines whether the trustee has allowed access to a named property.
+</DL>
+<p>An example of using <small>IAccessControl</SMALL> to control security for a process is shown in Listing 20.5.</P>
+<p><b>Listing 20.5</B> Using <small>IAccessControl</SMALL> to Provide Security Attributes to <small>CoInitializeSecurity</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+const IID IID_IAccessControl = {0&#215;EEDD23E0,0&#215;8410,0&#215;11CE,
+                        {0&#215;A1,0&#215;C3,0&#215;08,0&#215;00,0&#215;2B,0&#215;2B,0&#215;8D,0&#215;8F}};
+
+IAccessControl* pAccessCtrl = NULL;
+HRESULT hrSec = CoCreateInstance(CLSID_DCOMAccessControl,
+                                 NULL,
+                                 CLSCTX_INPROC_SERVER,
+                                 IID_IAccessControl,
+                                 (void**)&amppAccessCtrl);
+
+if(SUCCEEDED(hrSec))
+{
+    // Define two access entries - one for the system account,
+    // and one for codevtech\\mickeyw.
+    ACTRL_ACCESS_ENTRY ae[2];
+    ZeroMemory(&ampae, sizeof(ae));
+
+    ae[0].fAccessFlags = ACTRL_ACCESS_ALLOWED;
+    ae[0].Access = COM_RIGHTS_EXECUTE;
+    ae[0].Inheritance = NO_INHERITANCE;
+
+    ae[0].Trustee.MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE;
+    ae[0].Trustee.TrusteeForm = TRUSTEE_IS_NAME;
+
+    ae[0].Trustee.TrusteeType = TRUSTEE_IS_USER;
+    ae[0].Trustee.ptstrName = L&#148;CODEVTECH\\mickeyw&#148;;
+
+    ae[1].fAccessFlags = ACTRL_ACCESS_ALLOWED;
+    ae[1].Access = COM_RIGHTS_EXECUTE;
+    ae[1].Inheritance = NO_INHERITANCE;
+
+    ae[1].Trustee.MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE;
+    ae[1].Trustee.TrusteeForm = TRUSTEE_IS_NAME;
+
+    ae[1].Trustee.TrusteeType = TRUSTEE_IS_USER;
+    ae[1].Trustee.ptstrName = L&#148;NT Authority\\System&#148;;
+
+
+    ACTRL_ACCESS_ENTRY_LIST accessEntryList;
+    accessEntryList.cEntries = 2;
+    accessEntryList.pAccessList = ae;
+
+    ACTRL_PROPERTY_ENTRY propEntry;
+    propEntry.fListFlags = 0;//ACTRL_ACCESS_PROTECTED;
+    propEntry.lpProperty = NULL;
+    propEntry.pAccessEntryList = &ampaccessEntryList;
+
+    ACTRL_ACCESS access;
+    access.cEntries = 1;
+    access.pPropertyAccessList = &amppropEntry;
+
+    hrSec = pAccessCtrl-&gtSetAccessRights(&ampaccess);
+
+    if(SUCCEEDED(hrSec))
+    {
+        hrSec = CoInitializeSecurity(pAccessCtrl,
+                                     -1,
+                                     0,
+                                     NULL,
+                                     RPC_C_AUTHN_LEVEL_CONNECT,
+                                     RPC_C_IMP_LEVEL_IDENTIFY,
+                                     NULL,
+                                     EOAC_ACCESS_CONTROL,
+                                     0);
+    }
+    pAccessCtrl-&gtRelease();
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 20.5 begins by creating an instance of the system-supplied <small>CLSID_DCOMAccessControl</SMALL> class. This COM class is supplied by the operating system and provides a default implementation of <small>IAccessSecurity</SMALL> that&#146;s sufficient for most needs. Most of the remaining code creates an <small>ACCESS_ENTRY</SMALL> structure that grants access to two principals&#151;the author and the built-in System account&#151;and then uses the structure to initialize the security instance.</P>
+<p>The call to <small>CoInitializeSecurity</SMALL> passes the pointer to <small>IAccessControl</SMALL> as the first parameter. To indicate that the first parameter is an <small>IAccessControl</SMALL> parameter, you need to set the eighth parameter to <small>EOAC_ACCESS_CONTROL</SMALL>. If other capability flags are needed, they must be <small>OR</SMALL>&#146;ed with <small>EOAC_ACCESS_CONTROL</SMALL>.</P>
+<p><font size="+1"><b>Using SECURITY_DESCRIPTOR to Define Security Attributes</B></FONT></P>
+<p>As discussed in Chapter 7, securable objects in Windows 2000 are associated with a <small>SECURITY_DESCRIPTOR</SMALL> structure. This structure contains security attributes such as the object&#146;s owner, and two access-control lists, or <small>ACL</SMALL>s, that describe how users and groups interact with the object. One <small>ACL</SMALL>, known as the Discretionary Access Control List, or <small>DACL</SMALL>, contains entries that allow or deny access to the object. An <small>ACCESS_ALLOWED_ACE</SMALL> is an entry that grants access to a particular user or group, and an <small>ACCESS_DENIED_ACE</SMALL> is an entry that denies access to a particular user or group. Another type of <small>ACL</SMALL> is the System Access Control List, or <small>SACL</SMALL>, which identifies users and groups that cause a security event to be generated.</P>
+<p>If you&#146;re comfortable using Win32 security descriptors, you may prefer to use <small>CoInitializeSecurity</SMALL> with a <small>SECURITY_DESCRIPTOR</SMALL> structure. There are two ways to use a Win32 security descriptor with <small>CoInitializeSecurity</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Use the Win32 structures directly.
+<dd><b>&#149;</B>&nbsp;&nbsp;Use the ATL <small>CSecurityDescriptor</SMALL> class.
+</DL>
+<p>This section provides examples of both methods.
+</P>
+<p>Even if you&#146;re accustomed to using Win32 security, two idiosyncrasies of COM security might trip you up:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The system account must be given access to the COM object. If the system account doesn&#146;t have access to your object, you may see all sorts of odd problems, such as out-of-memory errors.
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>SECURITY_DESCRIPTOR</SMALL> structure must have process-owner and process-group SIDs defined. You generally don&#146;t need to do this for most Win32 security functions, but COM requires it.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

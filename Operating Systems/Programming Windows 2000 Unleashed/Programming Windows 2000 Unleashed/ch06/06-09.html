@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=217-221//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Calling 32-bit Functions with CallProc32W and CallProcEx32W</B></FONT></P>
+<p>The call to the 32-bit function is performed by calling the <small>CallProc32W</SMALL> or <small>CallProcEx32W</SMALL> function. These two functions are similar, differing only in their calling convention and parameter order.</P>
+<p>The Client16 sample program uses the <small>CallProc32W</SMALL> function. Later in the next section, you&#146;ll see that the Client16 sample program defines <small>CallProc32W</SMALL> as this:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD FAR PASCAL CallProc32W(DWORD, LPVOID fnProcAddress,
+                             DWORD dwBitMask, DWORD nParams);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>As defined here, <small>CallProc32W</SMALL> has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A parameter passed to the 32-bit function.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the 32-bit function, which is determined by calling <small>GetProcAddress32W</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A bitmask that specifies the information about the 32-bit function. (This parameter is discussed in more detail later.)
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of parameters passed to the 32-bit function.
+</DL>
+<p>The <small>CallProc32W</SMALL> function can have up to 32 parameters. Due to limitations of the <small>PASCAL</SMALL> calling convention, you cannot use a variable number of parameters with <small>CallProc32W</SMALL>. You must declare it once, and use that number of arguments throughout your application.</P>
+<p>The bitmask passed as the third parameter is used to indicate which parameters are pointers that require conversion from segmented 16:16 values to flat 0:32 values. This parameter is zero when no conversion is required. In Client16, this parameter is always zero&#151;when a pointer is passed, the conversion is performed using <small>GetVDMPointer32W</SMALL>. The first bit in the bitmask must be set if the last parameter requires conversion; the second bit is set for the next-to-last parameter, and so on.</P>
+<p>The final parameter is the number of parameters to be passed to the 32-bit function. If the 32-bit function you&#146;re thunking to uses the <small>cdecl</SMALL> calling convention, you must combine the symbol <small>CPEX_DEST_CDECL</SMALL> with the number of parameters, using the C/C<small>&#43;&#43;</SMALL> &#147;or&#148; function, <small>|</SMALL>, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwParams = 2|CPEX_DEST_CDECL;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In a real application, the functions you call will likely use a varying number of parameters. One option is to use <small>CallProcEx32W</SMALL>, which uses the <small>cdecl</SMALL> calling convention:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwRet = CallProcEx32W(2, 0, pFunc, nSetVal1, nSetVal2);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The parameters passed to <small>CallProcEx32W</SMALL> are used exactly like <small>CallProc32W</SMALL>, except that they appear in reverse order:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of parameters passed to the 32-bit function, optionally combined with the <small>CPEX_DEST_CDECL</SMALL> symbol if the 32-bit function uses the <small>cdecl</SMALL> calling convention.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address conversion bitmask, which is reversed when compared to <small>CallProc32W</SMALL>. The first bit in the bitmask refers to the first parameter, the second bit refers to the second parameter, and so on.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the 32-bit function.
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more parameters to be passed to the 32-bit function.
+</DL>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">A Generic Thunking Example</FONT></H4>
+<p>To illustrate how generic thunks are used in Windows 2000, two sample projects have been included on the CD-ROM accompanying the book:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Client16</I>. A 16-bit project built with Visual C<small>&#43;&#43;</SMALL> 1.52
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Dll32</I>. A 32-bit DLL project
+</DL>
+<p>The Client16 application uses generic thunks to call functions located in the 32-bit DLL.
+</P>
+<p><font size="+1"><b>The Client16 Project</B></FONT></P>
+<p>The Client16 project is based on the Generic project from the 16-bit Windows SDK. Client16 has menu items that generate function calls via generic thunks into the Dll32 32-bit DLL, which will be built later in this chapter.
+</P>
+<p>To conserve space, the majority of the source code is not presented here. Only the relevant parts of the source files are shown in the listings for these two projects.</P>
+<p>The main window procedure for Client16 is provided in Listing 6.18. When <small>WM_CREATE</SMALL> is sent to Client16, the 32-bit DLL is loaded by calling <small>LoadLibraryEx32W</SMALL>. When <small>WM_DESTROY</SMALL> is received, the DLL is unloaded with <small>FreeLibrary32W</SMALL>.</P>
+<p><b>Listing 6.18</B> The Main Window Procedure for Client16</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+long CALLBACK __export MainWndProc(HWND   hWnd,
+                                   UINT   message,
+                                   WPARAM wParam,
+                                   LPARAM lParam)
+{
+    switch(message)
+    {
+        case WM_COMMAND:
+            return OnCommand(hWnd, message, wParam, lParam);
+
+        case WM_CREATE:
+            g_hDll = LoadLibraryEx32W(&#147;dll32.dll&#148;, 0L, 0L);
+            return 0;
+
+        case WM_DESTROY:
+            FreeLibrary32W(g_hDll);
+            PostQuitMessage(0);
+            break;
+
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0L;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>As discussed earlier, four menu commands are translated into function calls to the 32-bit DLL. The menu resource portion of the RC file for Client16 is shown in Listing 6.19.</P>
+<p><b>Listing 6.19</B> The Menu Resource Used by Client16</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+GENERICMENU MENU DISCARDABLE
+BEGIN
+    POPUP &#147;&ampFile&#148;
+    BEGIN
+        MENUITEM &#147;E&ampxit&#148;,              ID_FILE_EXIT
+    END
+    POPUP &#147;&ampTest&#148;
+    BEGIN
+        MENUITEM &#147;GetPascalVar&#148;,       ID_TEST_GETPASCALVAR
+        MENUITEM &#147;SetPascalVar&#148;,       ID_TEST_SETPASCALVAR
+        MENUITEM &#147;GetPascalVarRet&#148;,    ID_TEST_GETPASCALVARRET
+        MENUITEM &#147;SetPascalVarRet&#148;,    ID_TEST_SETPASCALVARRET
+    END
+    POPUP &#147;&ampHelp&#148;
+    BEGIN
+        MENUITEM &#147;&ampAbout Client 16...&#148;,  IDM_ABOUT
+    END
+
+END
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Command handling for each menu item is distributed in the <small>OnCommand</SMALL> function, which is provided in Listing 6.20.</P>
+<p><b>Listing 6.20</B> Command Handling Used by Client16</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+long __pascal OnCommand(HWND   hWnd,
+                        UINT   message,
+                        WPARAM wParam,
+                        LPARAM lParam)
+{
+    switch(wParam)
+    {
+        case IDM_ABOUT:
+            DialogBox(hInst, &#147;AboutBox&#148;, hWnd, About);
+            break;
+
+        case ID_TEST_GETPASCALVAR:
+            CallDllGetVal(hWnd, &#147;16-bit client&#148;);
+            break;
+
+        case ID_TEST_SETPASCALVAR:
+            CallDllSetVal(hWnd, &#147;16-bit client&#148;);
+            break;
+
+        case ID_TEST_GETPASCALVARRET:
+            CallDllGetValRet(hWnd, &#147;16-bit client&#148;);
+            break;
+
+        case ID_TEST_SETPASCALVARRET:
+            CallDllSetValRet(hWnd, &#147;16-bit client&#148;);
+            break;
+
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0L;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

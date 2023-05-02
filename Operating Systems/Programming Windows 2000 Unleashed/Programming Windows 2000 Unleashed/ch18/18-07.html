@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=592-596//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The connection point class will contain member functions that can be used to generate events that will be sent to the container. Every event will have a function of the form
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Fire_OnMyEvent()
+</PRE>
+<!-- END CODE SNIP //-->
+<p>where <small>OnMyEvent</SMALL> is actually the name of the event to be fired. For example, the IDL fragment earlier in this section had the following event:</P>
+<!-- CODE SNIP //-->
+<pre>
+[id(1), helpstring(&#147;method OnMyEvent&#148;)] HRESULT OnMyEvent();
+[id(2), helpstring(&#147;method OnTheRoad&#148;)] HRESULT OnTheRoad();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>These events would result in these two functions:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+class CProxy_ITestButtonEvents
+{
+public:
+    HRESULT Fire_OnMyEvent()
+    HRESULT Fire_OnTheRoad()
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The new connection point class is added to the multiple inheritance list for the control. This allows you to fire any event directly:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+if(waterLevelRising &amp&amp pumpRunning)
+    Fire_SailboatSinking();
+</PRE>
+<!-- END CODE SNIP //-->
+<h4 align="LEFT"><a name="Heading23"></A><font color="#000077">Adding Message and Event Handlers</FONT></H4>
+<p>There are two ways to add handlers for messages and events to an ATL project. The graphical way is to right-click the ATL object&#146;s C<small>&#43;&#43;</SMALL> class icon in ClassView and select Add Windows Message Handler from the pop-up menu. A dialog box will be displayed, as shown in Figure 18.13.</P>
+<p><a name="Fig13"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-13.jpg',481,422 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-13t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-13.jpg',481,422)"><font color="#000077"><b>Figure 18.13</B></FONT></A>&nbsp;&nbsp;The New Windows Message and Event Handlers dialog box.</P>
+<p>You can easily add handlers for Windows messages by selecting a message from the left column and clicking the Add Handler button.
+</P>
+<p>Another option is to manually add the handlers to the class message map using the <small>MESSAGE_HANDLER</SMALL> macro:</P>
+<!-- CODE SNIP //-->
+<pre>
+MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>MESSAGE_HANDLER</SMALL> macro has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The Windows message to be handled
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the member function that will handle the message
+</DL>
+<p>If you&#146;re handling notification events from a <small>WM_COMMAND</SMALL> message, you must use the <small>COMMAND_CODE_HANDLER</SMALL> macro:</P>
+<!-- CODE SNIP //-->
+<pre>
+COMMAND_CODE_HANDLER(LBN_DBLCLICK, OnLbDblClicked)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>COMMAND_CODE_HANDLER</SMALL> macro also has two parameters;</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The notification message sent in <small>WM_COMMAND</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the member function that will handle the message
+</DL>
+<p>Either of these macros can be used inside the message map, which begins with the <small>BEGIN_MSG_MAP</SMALL> macro and ends with the <small>END_MSG_MAP</SMALL> macro, as shown in Listing 18.9.</P>
+<p><b>Listing 18.9</B> A Typical ATL Message Map<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+BEGIN_MSG_MAP(CMyButton)
+    MESSAGE_HANDLER(WM_CREATE, OnCreate)
+    COMMAND_CODE_HANDLER(BN_CLICKED, OnClicked)
+    CHAIN_MSG_MAP(CComControl&ltCTestButton&gt)
+ALT_MSG_MAP(1)
+    // Alternate window message handling
+END_MSG_MAP()
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>Note that the message map in Listing 18.9 also contains an <small>ALT_MAP</SMALL> macro. This marks the beginning of an alternate message map that can be used to handle messages from another window within a single message map.</P>
+<h3><a name="Heading24"></A><font color="#000077">An ActiveX Control Built with ATL</FONT></H3>
+<p>This book&#146;s CD-ROM includes PopButton, an ATL-based ActiveX control that superclasses the standard Windows pushbutton. When an instance of PopButton is placed on a dialog box or Visual Basic form, it looks like a label. Figure 18.14 shows several PopButtons on a Visual Basic form.
+</P>
+<p><a name="Fig14"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-14.jpg',273,206 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-14t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-14.jpg',273,206)"><font color="#000077"><b>Figure 18.14</B></FONT></A>&nbsp;&nbsp;The PopButton initially looks like a label.</P>
+<p>When the mouse passes over a PopButton, the control&#146;s edges are redrawn so that it looks like a pushbutton, as shown in Figure 18.15.
+</P>
+<p><a name="Fig15"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-15.jpg',273,206 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-15t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-15.jpg',273,206)"><font color="#000077"><b>Figure 18.15</B></FONT></A>&nbsp;&nbsp;The PopButton control looks like a button when the mouse hovers over it.</P>
+<h4 align="LEFT"><a name="Heading25"></A><font color="#000077">The Basic Design of PopButton</FONT></H4>
+<p>PopButton is based on a standard Windows pushbutton, with one major difference: The button is flat until the mouse moves over it. In order for the control to be drawn properly, PopButton must be able to perform the following tasks:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Detect when the mouse is clicked over the control.
+<dd><b>&#149;</B>&nbsp;&nbsp;Track the current state of the button (flat, up, or down).
+<dd><b>&#149;</B>&nbsp;&nbsp;Track the current focus state of the control so that the focus rectangle can be drawn correctly.
+</DL>
+<p>In addition, PopButton must use a set of stock properties that a user of the button might want to adjust:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Background Color
+<dd><b>&#149;</B>&nbsp;&nbsp;Foreground Color
+<dd><b>&#149;</B>&nbsp;&nbsp;Tab Stop
+<dd><b>&#149;</B>&nbsp;&nbsp;Caption
+</DL>
+<p>Two events are sent from the PopButton control to its container:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnClicked</SMALL> is sent when the PopButton control is clicked. This event is sent if the user clicks the button using the mouse or selects the button using the keyboard.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnHover</SMALL> is sent when the PopButton control enters a raised, or &#147;hover,&#148; state. This event notifies the container that the mouse is hovering over the control and allows the container to update a status bar or provide some other type of feedback.
+</DL>
+<p><font size="+1"><b>Messages Handled by PopButton</B></FONT></P>
+<p>PopButton handles messages sent by the operating system, as well as one message sent by the underlying button control. The button control must handle the following Windows messages:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_MOUSEMOVE</SMALL>. Sent as the mouse passes over the control
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_SETFOCUS</SMALL>. Sent just before the control receives input focus
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_KILLFOCUS</SMALL>. Sent just before the control loses input focus
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_LBUTTONDOWN</SMALL>. Sent when the user presses down on the primary mouse button over the control
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_LBUTTONUP</SMALL>. Sent when the user releases the primary mouse button over the control
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_ERASEBKGND</SMALL>. Sent just before the control is painted by Windows
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_MOUSELEAVE</SMALL>. Sent as the mouse moves away from the control&#146;s window
+</DL>
+<p>In addition, the control handles one notification message sent by the pushbutton control:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BN_CLICKED</SMALL>. Sent when the user successfully clicks the button control
+</DL>
+<p>As you might expect, the <small>BN_CLICKED</SMALL> message is sent when the user clicks the button with a mouse. The message is also sent if the user selects the button using the keyboard.</P>
+<p><font size="+1"><b>Handling the Raised and Flat Button States</B></FONT></P>
+<p>The <small>WM_MOUSEMOVE</SMALL> and <small>WM_MOUSELEAVE</SMALL> messages are used together in order to control the raised appearance of the PopButton. As discussed earlier, the button is initially drawn flat, as shown previously in Figure 18.14.</P>
+<p>When a <small>WM_MOUSEMOVE</SMALL> message is received by the control, the control redraws itself in the raised state, as shown previously in Figure 18.15.</P>
+<p>After the control has been drawn in the raised state, the control must handle two cases:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When the user clicks the control
+<dd><b>&#149;</B>&nbsp;&nbsp;When the user moves the mouse away from the control
+</DL>
+<p>The first case is easily handled and is discussed in the next section. However, if the mouse is moved away from the control, no event is sent to the control&#146;s window! In order to detect the departure of the mouse, the Win32 <small>TrackMouseEvent</SMALL> function is called when the mouse initially moves over the control&#146;s window. When the mouse is moved away from the control, a <small>WM_MOUSELEAVE</SMALL> message is received by the control, and the button is returned to its flat state.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

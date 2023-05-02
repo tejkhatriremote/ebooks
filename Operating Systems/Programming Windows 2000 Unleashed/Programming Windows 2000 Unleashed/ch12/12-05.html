@@ -1,0 +1,265 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Owner Draw and Custom Draw</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=12//-->
+<!--PAGES=397-400//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="12-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In addition to the <small>NMCUSTOMDRAW</SMALL> structure, <small>NMTVCUSTOMDRAW</SMALL> contains three other members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrText</SMALL>. If you want to change the color of the item, you must set this member to the color of the item&#146;s text. Don&#146;t try to change the color through the <small>NMCUSTOMDRAW</SMALL>&#146;s device context member&#151;it won&#146;t work.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrTextBk</SMALL>. If you want to change the background color of the item, you must set this member to the desired color. As is the case with the text color, don&#146;t try to change the color through the <small>NMCUSTOMDRAW</SMALL>&#146;s device context member.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>iLevel</SMALL>. Indicates the indentation level of the item.
+</DL>
+<p><font size="+1"><b>Understanding Drawing Stages</B></FONT></P>
+<p>Every control is drawn in several passes (or <i>drawing stages</I>). The current drawing stage is provided in the <small>NMCUSTOMCONTROL</SMALL> structure&#146;s <small>dwDrawingStage</SMALL> member variable. You should not write your code so that it depends on messages coming in a particular order; however, there is a logical progression to the Custom Draw messages that will be sent to your control:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The first Custom Draw notification message will have a <small>CDDS_PREPAINT</SMALL> draw stage. Every control type that supports Custom Draw receives this notification message. The default processing for Custom Draw returns <small>CDRF_DODEFAULT</SMALL>, which causes the control to perform default processing. Your Custom Draw notification handler must return a different return value (possible return values are discussed later in this section).
+<dd><b>&#149;</B>&nbsp;&nbsp;The last Custom Draw notification message typically has a <small>CDDS_POSTPAINT</SMALL> draw stage.
+<dd><b>&#149;</B>&nbsp;&nbsp;Between these two messages, individual items may receive messages that they are being erased and painted, with <small>CDDS_PRE</SMALL><i>xxx</I> messages always appearing prior to <small>CDDS_POST</SMALL><i>xxx</I> messages. There&#146;s no guarantee as to the order in which multiple items may receive Custom Draw notification messages.
+</DL>
+<p>If you&#146;re using Custom Draw with a treeview or listview control, do not attempt to use the <small>iSubItem</SMALL> member if the <small>CDDS_SUBITEM</SMALL> flag is not set. The <small>iSubItem</SMALL> member is invalid without this flag.</P>
+<p>In response to the Custom Draw notification message, you must provide a return value to the operating system. Windows will use this value to determine which, if any, Custom Draw notification messages should be sent to your control for this drawing cycle. The return value must be a combination of one or more of the following flags:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDRF_DODEFAULT</SMALL>. The control should continue to perform default processing. No further Custom Draw notifications will be sent for this item.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDRF_NOTIFYITEMDRAW</SMALL>. The control should notify the parent when an item is drawn.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDRF_NOTIFYPOSTPAINT</SMALL>. The control should send a notification message after the entire control has been painted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDRF_SKIPDEFAULT</SMALL>. The control should not do any further processing at all.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDRF_NEWFONT</SMALL>. The parent&#146;s Custom Draw function has selected a new font into the device context.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDRF_NOTIFYSUBITEMDRAW</SMALL>. The control should notify the parent when a subitem is drawn. This flag has the same value as the <small>CDRF_NOTIFYITEMDRAW</SMALL> flag; therefore, it&#146;s not necessary to combine them together.
+</DL>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">CustDraw: A Custom Draw Example Using MFC</FONT></H4>
+<p>As an example of how you can use Custom Draw to modify the appearance of common controls, the CD-ROM accompanying this book includes CustDraw, a dialog box-based MFC project. The dialog box used by CustDraw is shown in Figure 12.3.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-03.jpg',374,349 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch12/images/12-03.jpg',374,349)"><font color="#000077"><b>Figure 12.3</B></FONT></A>&nbsp;&nbsp;The dialog box used by the CustDraw project.</P>
+<p>The dialog box used by CustDraw contains the controls listed in Table 12.7 (in tab order).
+</P>
+<table width="100%"><td caption align="LEFT" colspan="3"><b>Table 12.7</B> Controls Used in the CustDraw Dialog Box
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="40%" align="LEFT" valign="TOP"><i>Resource ID</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Attributes</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Listview
+<td align="LEFT" valign="TOP"><small>IDC_LIST</SMALL>
+<td align="LEFT" valign="TOP">Report view
+<tr>
+<td align="LEFT" valign="TOP">Red radio button
+<td align="LEFT" valign="TOP"><small>IDC_COLOR_OPT</SMALL>
+<td align="LEFT" valign="TOP">Group
+<tr>
+<td align="LEFT" valign="TOP">Green radio button
+<td align="LEFT" valign="TOP"><small>IDC_COLOR_OPT2</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Blue radio button
+<td align="LEFT" valign="TOP"><small>IDC_COLOR_OPT3</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Name edit
+<td align="LEFT" valign="TOP"><small>IDC_NAME</SMALL>
+<td align="LEFT" valign="TOP">Group
+<tr>
+<td align="LEFT" valign="TOP">City edit
+<td align="LEFT" valign="TOP"><small>IDC_CITY</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Cost edit
+<td align="LEFT" valign="TOP"><small>IDC_COST</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Add pushbutton
+<td align="LEFT" valign="TOP"><small>IDC_ADD</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>ClassWizard was used to associate member variables with the controls in the CustDraw dialog box, as shown in Table 12.8.
+</P>
+<table width="100%"><td caption align="LEFT" colspan="4" colspan="4"><b>Table 12.8</B> Member Variables Associated with Controls in CustDraw
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th width="25%" align="LEFT" valign="TOP"><i>Control ID</I>
+<th width="25%" align="LEFT" valign="TOP"><i>Class</I>
+<th width="25%" align="LEFT" valign="TOP"><i>Member Variable</I>
+<th width="25%" align="LEFT" valign="TOP"><i>Type</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_LIST</SMALL>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_list</SMALL>
+<td align="LEFT" valign="TOP"><small>CListCtrl</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_NAME</SMALL>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_strItemLabel</SMALL>
+<td align="LEFT" valign="TOP"><small>CString</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_CITY</SMALL>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_strCity</SMALL>
+<td align="LEFT" valign="TOP"><small>CString</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_COST</SMALL>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_strCost</SMALL>
+<td align="LEFT" valign="TOP"><small>CString</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_COLOR_OPT</SMALL>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>m_colorOption</SMALL>
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>ClassWizard was also used to add message handlers for the three messages listed in Table 12.9.
+</P>
+<table width="100%"><td caption align="LEFT" valign="TOP" colspan="4"><b>Table 12.9</B> Additional CustDraw Controls with Message Handlers
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th width="25%" align="LEFT" valign="TOP">Class
+<th width="25%" align="LEFT" valign="TOP">Object ID
+<th width="25%" align="LEFT" valign="TOP">Message
+<th width="25%" align="LEFT" valign="TOP">Function
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>IDC_ADD</SMALL>
+<td align="LEFT" valign="TOP"><small>BN_CLICKED</SMALL>
+<td align="LEFT" valign="TOP"><small>OnAdd</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>IDC_LIST</SMALL>
+<td align="LEFT" valign="TOP"><small>LVN_DELETEITEM</SMALL>
+<td align="LEFT" valign="TOP"><small>OnDeleteitemList</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>CCustDrawDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>IDC_LIST</SMALL>
+<td align="LEFT" valign="TOP"><small>LVN_GETDISPINFO</SMALL>
+<td align="LEFT" valign="TOP"><small>OnGetdispinfoList</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>The CustDraw project uses a structure named <small>CHotel</SMALL> to represent each item in the listview control. <small>CHotel</SMALL> has member variables that track the name, city, and cost for a hotel, as shown in Listing 12.6. The structure definition for <small>CHotel</SMALL> can be found at the top of the <small>CustDrawDlg.h</SMALL> source file.</P>
+<p><b>Listing 12.6</B> The <small>CHotel</SMALL> Structure Contains Simple Hotel Information<hr></P>
+<!-- CODE //-->
+<pre>
+   struct CHotel
+   {
+       int     m_nColorOpt;
+       CString m_strName;
+       CString m_strCost;
+       CString m_strCity;
+       CHotel(CString strName, CString strCity, CString strCost, int nColor):
+           m_strName(strName),
+           m_strCost(strCost),
+           m_strCity(strCity),
+           m_nColorOpt(nColor)
+       {}
+
+   };
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Three manual additions were made to the <small>CCustDrawDlg</SMALL> class declaration:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>CFont</SMALL> member variable used for drawing normal text was added.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>CFont</SMALL> member variable used for drawing italic text was added.
+<dd><b>&#149;</B>&nbsp;&nbsp;A message handler for the Custom Draw notification message was added.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="12-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

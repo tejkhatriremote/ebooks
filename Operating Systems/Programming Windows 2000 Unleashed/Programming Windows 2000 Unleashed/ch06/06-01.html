@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=183-187//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch05/05-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 6<br>Dynamic Link Libraries
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Understanding Libraries <i>184</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Creating and Using Dynamic Link Libraries <i>187</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Generic Thunks <i>214</I></B>
+</DL>
+<p>In this chapter, you&#146;ll learn about dynamic link libraries (DLLs) and how you can use them to write programs for Windows 2000. Different approaches for writing and using DLLs are presented, and several examples are provided, including examples that demonstrate how to use DLLs when programming with C<small>&#43;&#43;</SMALL> classes that are shared across a DLL boundary. This chapter also discusses thunking&#151;a topic that&#146;s useful when you&#146;re moving a 16-bit application to Windows 2000.</P>
+<h3><a name="Heading2"></A><font color="#000077">Understanding Libraries</FONT></H3>
+<p>Simply put, a <i>library</I> is a file that contains functions or other resources available for use in applications. These resources are usually general-purpose, allowing many different applications to share the same code or resources easily.</P>
+<p>Libraries used in Windows applications come in two basic flavors: <i>static link libraries</I> and <i>dynamic link libraries</I>. Figure 6.1 illustrates the difference between these two types.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-01.jpg',333,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-01.jpg',333,420)"><font color="#000077"><b>Figure 6.1</B></FONT></A>&nbsp;&nbsp;Calling a function in a static link library versus calling a function in a dynamic link library.</P>
+<p>Static link libraries are groups of reusable functions that are linked with a Windows 2000 application. The static link library is part of the application&#146;s executable file and is not shared with other applications that may be using the same functions. Static linking is very easy to implement, and it&#146;s very easy to distribute an application that uses static link libraries. However, updating a static link library requires that the program be relinked with the updated library.
+</P>
+<p>DLLs are often used for common functions used by several applications simultaneously. For example, the runtime code for the Microsoft Foundation Classes (MFC) is contained in a DLL. The first MFC-based application started by Windows 2000 loads the DLL. Once the MFC library DLL is loaded by Windows 2000, launching another application that uses the DLL proceeds much more quickly.</P>
+<p>Only one instance of a DLL is actually loaded at any particular time. If a DLL is already loaded and in use by another process, the DLL is simply mapped into the address space of the new process that depends on it. A DLL can be easily updated without modifying the programs that depend on it, as long as the interfaces supported by the DLL are not changed.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Examining Static Link Libraries</FONT></H4>
+<p><i>Static link libraries</I> normally are reserved for relatively small, stable function libraries such as the standard C library, which provides functions such as <small>strlen</SMALL> and <small>mktime</SMALL>. Static link libraries are often used for small libraries due to the cost of creating and maintaining a DLL. A static link library is easy to create and maintain, and it&#146;s a good distribution choice for a small library that&#146;s not likely to be updated.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Examining Dynamic Link Libraries</FONT></H4>
+<p><i>Dynamic link libraries</I> are executable files that contain functions, data, or resources available to other applications. As the name suggests, a DLL is loaded when needed&#151;at load time or while an application is running. This is in contrast to static linking, in which a library is added to an executable when it&#146;s compiled and linked.</P>
+<p>Dynamic link libraries are useful when functions or other resources may be used by multiple processes on a single machine. The contents of each DLL loaded by an application are mapped into the calling application&#146;s process address space and linked as the DLL is loaded. A good example of a DLL used in Windows 2000 is <small>MFC42.dll</SMALL>, which is used by C<small>&#43;&#43;</SMALL> programs built using the Microsoft Foundation Classes. Most of the MFC code in a typical MFC-based application actually is located in this DLL. Because <small>MFC42.dll</SMALL> is a shared DLL, many MFC applications can use it simultaneously.</P>
+<p>If an application needs a DLL that is already loaded, two things happen:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It maps the DLL into the address space of the new process.
+<dd><b>&#149;</B>&nbsp;&nbsp;It increases a reference counter kept by Windows 2000 for this DLL. If this counter drops to 0, Windows 2000 unloads the DLL.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>The path to a DLL is part of its identity. As Windows 2000 loads a DLL, it uses the path to decide if the DLL is currently loaded. If multiple copies of a DLL are located on your machine, it&#146;s possible for each copy to be loaded separately by the operating system.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Unlike 16-bit versions of Windows, under Windows 2000, a DLL is loaded in the address space of the calling process instead of a global address space. This protects the DLL from faulty applications, because only the calling process has access to the DLL. It also changes the way in which DLLs are used, however. If you&#146;re accustomed to using DLLs in 16-bit versions of Windows, you&#146;ll need to make some changes in the way you use DLLs in your applications.
+</P>
+<p>The biggest change in the way that DLLs are used is that, by default, all data in a DLL is mapped into the address space of the calling process, as shown in Figure 6.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-02.jpg',208,267 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-02.jpg',208,267)"><font color="#000077"><b>Figure 6.2</B></FONT></A>&nbsp;&nbsp;DLLs use data in the context of the process that loaded the DLL.</P>
+<p>This means the process that loaded the DLL gets its own copy of global data. Any heap memory allocation made by the DLL is made in the context of the process that loaded the DLL and is &#147;owned&#148; by that process. In addition, the DLL uses the process&#146;s stack (unlike 16-bit Windows, in which each DLL allocates a private stack).
+</P>
+<p>Later in this chapter, you&#146;ll learn some methods for sharing variables in a DLL.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Looking at the Advantages of Using DLLs</FONT></H4>
+<p>Most nontrivial Windows 2000 applications use one or more DLLs. There are four main advantages to using DLLs in a Windows 2000 application:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Executable code size can be reduced, because several applications can use the same library.
+<dd><b>&#149;</B>&nbsp;&nbsp;A central code base isolated in a library is more economical to develop than similar functions used in multiple projects. Reusing code contained in DLLs can look very attractive when several projects need similar functionality.
+<dd><b>&#149;</B>&nbsp;&nbsp;Large projects can be broken up into smaller, easier-to-manage subprojects.
+<dd><b>&#149;</B>&nbsp;&nbsp;DLLs make it easy to implement new functions: You just release a new version of the DLL. As long as the existing interface doesn&#146;t change, you can add new functions without recompiling existing clients.
+</DL>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Looking at the Disadvantages of Using DLLs</FONT></H4>
+<p>The advantages of using DLLs don&#146;t come without a price. You should consider a few issues before you break your project into hundreds of tiny DLLs:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Using DLLs results in more deliverables. Your main EXE may be smaller, but now you need to track more than one binary file.
+<dd><b>&#149;</B>&nbsp;&nbsp;DLLs increase project complexity. DLLs must be released and maintained throughout the development and testing processes. These intraproject dependencies grow exponentially with the number of DLLs if you don&#146;t plan your project carefully.
+<dd><b>&#149;</B>&nbsp;&nbsp;You must deal with version issues with a DLL. Because a DLL is a compiled product, you should use version resources to mark your DLLs. This is discussed later, in the section titled &#147;Using Version Control with DLLs.&#148;
+</DL>
+<p>If any of these issues apply to your project, you should consider using static libraries.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch05/05-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

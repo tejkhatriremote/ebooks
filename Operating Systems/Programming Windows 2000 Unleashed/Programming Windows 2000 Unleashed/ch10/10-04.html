@@ -1,0 +1,171 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Controlling Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=10//-->
+<!--PAGES=327-330//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="10-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Here are the eight messages that can be sent to the <small>CPlApplet</SMALL> function:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_INIT</SMALL> is sent to the applet&#146;s DLL when it&#146;s initially loaded. It will not be sent again, unless the DLL is unloaded and <small>CPL_EXIT</SMALL> is received by the applet. The applet should perform any global initializations required and return a nonzero value if the initialization is successful.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_GETCOUNT</SMALL> is sent after <small>CPL_INIT</SMALL> is successfully processed by the applet&#146;s DLL. The DLL must return the number of applets supported by the DLL.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_INQUIRE</SMALL> is sent once for each applet to collect information about the applet, such as its description and icon. The applet number is passed as the first <small>LPARAM</SMALL>; the second <small>LPARAM</SMALL> is a pointer to a <small>CPLINFO</SMALL> structure that must be filled in. Normally, Windows 2000 will attempt to cache information provided in response to this message. If your applet needs to change its visual identity based on its current status, process <small>CPL_NEWINQUIRE</SMALL> instead of this message. The applet must return zero if this message is processed successfully.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_NEWINQUIRE</SMALL> is similar to <small>CPL_INQUIRE</SMALL>, except that the second <small>LPARAM</SMALL> points to a <small>NEWCPLINFO</SMALL> structure. The data returned in response to this message is not cached. If your applet&#146;s visuals are static, handle <small>CPL_INQUIRE</SMALL> instead of this message. The applet&#146;s message-handling function must return zero if it processes this message.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_DBLCLK</SMALL> is sent when a user is launching the Control Panel applet. The applet number is passed as the first <small>LPARAM</SMALL>. The second <small>LPARAM</SMALL> contains the <small>lData</SMALL> value that was stored in the <small>CPLINFO</SMALL> or <small>NEWCPLINFO</SMALL> structure. In response to this message, the applet&#146;s message-handling function should display the applet&#146;s dialog box.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_STARTWPARAMS</SMALL> is similar to <small>CPL_DBLCLK</SMALL>, except that the second <small>LPARAM</SMALL> contains a help string that specifies additional information about how the applet should be launched.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_STOP</SMALL> is sent once for each applet. You can use this notification to free any dialog box resources that are allocated for the applet specified in the first <small>LPARAM</SMALL>. You should return zero if this message is successfully processed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPL_STOP</SMALL> is sent once for the entire DLL, just before the DLL is unloaded. You must free any global resources that have been allocated for the DLL. You should return zero if this message is processed successfully.
+</DL>
+<p>You must fill the <small>CPLINFO</SMALL> structure in response to the <small>CPL_INQUIRE</SMALL> message. The <small>CPLINFO</SMALL> structure is defined like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct tagCPLINFO
+{
+    int idIcon;
+    int idName;
+    int idInfo;
+    LONG lData;
+} CPLINFO;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The data members inside <small>CPLINFO</SMALL> are used to store information about the applet:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>idIcon</SMALL> is the resource identifier for the applet&#146;s icon.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>idName</SMALL> is the resource identifier for a string table entry that contains the name of the applet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>idInfo</SMALL> is the resource identifier for a string table entry that contains a description for the applet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>lData</SMALL> is a 32-bit variable that you can use to store information. This value is returned to you as part of the <small>CPL_DBLCLK</SMALL> and <small>CPL_STARTWPARAMS</SMALL> messages.
+</DL>
+<p>If you process the <small>CPL_NEWINQUIRE</SMALL> message, you must fill in the contents of a <small>NEWCPLINFO</SMALL> structure. This structure is similar to the <small>CPLINFO</SMALL> structure:</P>
+<!-- CODE //-->
+<pre>
+typedef struct tagNEWCPLINFO {
+    DWORD dwSize;
+    DWORD dwFlags;
+    DWORD dwHelpContext;
+    LONG  lData;
+    HICON hIcon;
+    TCHAR  szName[32];
+    TCHAR  szInfo[64];
+    TCHAR  szHelpFile[128];
+} NEWCPLINFO;
+</PRE>
+<!-- END CODE //-->
+<p>As with the previous structure, the data members inside <small>NEWCPLINFO</SMALL> are used to store information about the applet:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwSize</SMALL> must be set to <small>sizeof(NEWCPLINFO)</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwFlags</SMALL> is not used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwHelpContext</SMALL> is not used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>lData</SMALL> is a 32-bit variable that you can use to store information. This value is returned to you as part of the <small>CPL_DBLCLK</SMALL> and <small>CPL_STARTWPARAMS</SMALL> messages.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hIcon</SMALL> is a handle to an icon that the Control Panel will use to represent the applet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>szName</SMALL> is a string that contains the name of the applet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>szInfo</SMALL> is a string that contains a description for the applet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>szHelpFile</SMALL> is not used.
+</DL>
+<p>In the next section, you&#146;ll see an example of a Control Panel applet that controls a sample service.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">CtlFileSpy: A Control Panel Applet for FileSpy</FONT></H4>
+<p>As an example of how a Control Panel applet can be used to control a service, the CD-ROM includes the CtlFileSpy project. CtlFileSpy is a Control Panel applet that sets parameters used by the FileSpy service.
+</P>
+<p>A total of 10 files is included in the CtlFileSpy project:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CtlFileSpy.rc</SMALL> is the resource file used by CtlFileSpy.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Resource.h</SMALL> is a header that contains resource symbol declarations.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CplMain.c</SMALL> is a somewhat generic source file for Control Panel applets. Most of the source code in this file can be reused in other applets.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CplMain.h</SMALL> contains declarations for <small>CplMain.c</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FileSpy.c</SMALL> is a source file that contains functions and data specific to this applet. You can use this source file as a skeleton for other applets.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FileSpy.h</SMALL> contains declarations for <small>FileSpy.c</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Reg.c</SMALL> is used to interact with the system Registry. This file is identical to the <small>Reg.c</SMALL> file used in the service presented earlier in this chapter; therefore, it isn&#146;t provided here.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Reg.h</SMALL> contains declarations for <small>Reg.c</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FileSpy.def</SMALL> is the module definition file for the applet.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FileSpy.ico</SMALL> is the icon displayed in the Control Panel.
+</DL>
+<p>The dialog box used by CtlFileSpy is shown in Figure 10.1.
+</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-01.jpg',356,360 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-01.jpg',356,360)"><font color="#000077"><b>Figure 10.1</B></FONT></A>&nbsp;&nbsp;The main dialog box used by the CtlFileSpy applet.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="10-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

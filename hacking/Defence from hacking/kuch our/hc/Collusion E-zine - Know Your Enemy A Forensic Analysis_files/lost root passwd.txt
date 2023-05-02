@@ -1,0 +1,48 @@
+Lost root password (Linux)
+
+
+More Articles
+
+I have a very good memory. I remember most of my client's passwords (there are a few I forget regularly for no reason that I can understand, but I really do know most), I remember telephone numbers, and of course I know my own passwords. That last isn't as easy as it might sound, because I have quite a few different systems and each has its own password, but though I might use the wrong one now and then, I'll get it on the second or third try.
+
+Well, not this time. A while back I installed Fedora on a system here, and today I wanted to look at something and .. what was the root password? Hmm, not that.. how about? .. nope, well it must be.. darn!
+
+I had no idea. Fortunately, it wasn't a boot password, so I did have access to the system. Without that, I would have had to dig up the CD's (who knows where they are) and do a recovery that way, or download something from Tom's Root and Boot Site. I had access to the Grub loader, so I had it easy.
+
+If you've lost your root password, you might be able to do it this way. However, some systems are protected with boot loader passwords that won't let you do that without THAT password. If the boot loader is password protected, you need to boot from other media - for newer systems, the install CD probably has the recovery tools for that.
+
+
+
+But let's try it the easy way first. The first thing to try is to boot to single user mode. This MIGHT not work for you, because your system might be configured to still ask for a root password to get to single user mode. If that's the case, we'll use another trick that replaces init with /bin/bash.
+
+First, try single user. If you don't see either a LILO or GRUB boot screen, try hitting CTRL-X to get one. If it's LILO, just type "linux single" and that should do it (assuming that "linux" is the lilo label). If GRUB, hit 'e", then select the "kernel" line, hit "e" again, and add " single" (or just " 1") to the end of the line. Press ENTER, and then "b" to boot.
+
+You should get a fairly normal looking boot sequence except that it terminates a little early at a bash prompt. If you get a "Give root password for system maintenance", this isn't going to work, so see the "init" version below.
+
+If you do get the prompt, the / filesystem may not be mounted rw (although "mount" may say it is). Do
+
+mount -o remount,rw /
+If that doesn't work (it might not), just type "mount" to find out where "/" is mounted. Let's say it is on /dev/sda2. You'd then type:
+
+mount -o remount,rw /dev/sda2
+If you can do this, just type "passwd" once you are in and change it to whatever you like. Or just edit /etc/shadow to remove the password field: move to just beyond the first ":" and remove everything up to the next ":". With vi, that would be "/:" to move to the first ":", space bar once, then "d/:" and ENTER. You'll get a warning about changing a read-only file; that's normal. Before you do this, /etc/shadow might look like:
+
+root:$1$8NFmV6tr$rT.INHxDBWn1VvU5gjGzi/:12209:0:99999:7:-1:-1:1074970543
+bin:*:12187:0:99999:7:::
+daemon:*:12187:0:99999:7:::
+adm:*:12187:0:99999:7:::
+and after, the first few lines should be:
+
+root::12209:0:99999:7:-1:-1:1074970543
+bin:*:12187:0:99999:7:::
+daemon:*:12187:0:99999:7:::
+adm:*:12187:0:99999:7:::
+You'll need to force the write: with vi, ":wq!". (If that still doesn't work, you needed to do the -o remount,rw, see above).
+
+Another trick is to add "init=/bin/bash" (LILO "linux init=/bin/bash" or add it to the Grub "kernel" line). This will dump you to a bash prompt much earlier than single user mode, and a lot less has been initialized, mounted, etc. You'll definitely need the "-o remount,rw" here. Also note that other filesystems aren't mounted at all, so you may need to mount them manually if you need them. Look in /etc/fstab for the device names.
+
+See also
+http://aplawrence.com/Bofcusm/861.html
+http://aplawrence.com/Bofcusm/872.html
+http://aplawrence.com/Bofcusm/873.html
+

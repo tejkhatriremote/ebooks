@@ -1,0 +1,234 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:OLE Drag and Drop</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=15//-->
+<!--PAGES=489-493//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="15-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch16/16-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><small>DropTarg.cpp</SMALL> includes the <small>fmtetc.h</SMALL> file, which is the <small>CFormatEtc</SMALL> class provided earlier in Listing 15.2. <small>DropTarg.cpp</SMALL> defines six functions:</P>
+<dl>
+<dd>&#149; <small>CTreeDropTarget</SMALL>. The constructor for the <small>CTreeDropTarget</SMALL> class.
+<dd>&#149; <small>SetParent</SMALL>. Sets a pointer to the <small>CTreeCtrl</SMALL> object that owns this particular instance of <small>CTreeDropTarget</SMALL>. This pointer is used to add items to the tree control after a successful drop.
+<dd>&#149; <small>SetDragItem</SMALL>. Caches the current item involved in a drag and drop. Unless steps are taken to prevent it, the user can drag an item and drop it on itself. This operation has no purpose and is usually the result of an error. This function is called by the <small>CTreeCtrl</SMALL> object associated with this drop target when a drag is started. If a drop is attempted over the item that started a drag and drop, it is ignored.
+<dd>&#149; <small>OnDragEnter</SMALL>. Calls the <small>OnDragOver</SMALL> function.
+<dd>&#149; <small>OnDragOver</SMALL>. Determines the type of feedback returned to the user. In this case, <small>DROPEFFECT_MOVE</SMALL> is returned when the cursor is over a valid target, unless the Ctrl key is pressed, in which case <small>DROPEFFECT_COPY</SMALL> is returned.
+<dd>&#149; <small>OnDrop</SMALL>. Manages the actual drop event. If a &#147;drop to self&#148; is attempted, the drop attempt is ignored. If a valid drop is attempted, the data is fetched from the OLE Clipboard and inserted into the tree control associated with this drop target.
+</DL>
+<p>The <small>CDragTree</SMALL> class needs a few minor modifications, as shown in bold type in Listing 15.8. First, the <small>DropTarg.h</SMALL> header file must be included. Next, two member variables must be added: a <small>CTreeDropTarget</SMALL> member variable and a <small>COleDataSource</SMALL> member variable. In addition, a new member function named <small>Register</SMALL> is added to the class.</P>
+<p><b>Listing 15.8</B> Modifications (in Bold) to the <small>CDragTree</SMALL> Class Declaration<hr></P>
+<!-- CODE //-->
+<pre>
+<b>#include &#147;DropTarg.h&#148;</B>
+class CDragTree : public CTreeCtrl
+{
+.
+.
+.
+// Operations
+public:
+    <b>void Register();</B>
+// Implementation
+protected:
+    <b>CTreeDropTarget m_dropTarget;
+    COleDataSource  m_dragSource;</B>
+.
+.
+.
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 15.9 provides the implementation of the <small>CDragTree</SMALL> class. This listing includes only new functions or functions that require modifications. The constructor provided by ClassWizard is not included, for example, because it is not changed.</P>
+<p><b>Listing 15.9</B> Member Functions Added to the <small>CDragTree</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+// Handle the start of a drag. Since the tree control detects that
+// the drag has actually begun, it isn&#146;t necessary to detect the
+// mouse drag. The text of the drag item is placed onto the OLE
+// Clipboard, and DoDragDrop is called. The handle of the item that
+// is dragged is passed to m_dropTarget to prevent tree items being
+// dropped on themselves.
+void CDragTree::OnBegindrag(NMHDR* pNMHDR, LRESULT* pResult)
+{
+    NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+    // Only nodes without children are eligible for dragging
+    HTREEITEM hDragItem = pNMTreeView-&gt;itemNew.hItem;
+    if(ItemHasChildren(hDragItem) == FALSE)
+    {
+        CString strItem = GetItemText(hDragItem);
+        if(strItem.IsEmpty() == FALSE)
+        {
+            HGLOBAL hGlobal = GlobalAlloc(GMEM_SHARE,
+                              strItem.GetLength() &#43; 1);
+            LPSTR   pszGlobal = (LPSTR)GlobalLock(hGlobal);
+            ASSERT(pszGlobal);
+            lstrcpy(pszGlobal, strItem);
+            GlobalUnlock(hGlobal);
+            m_dragSource.CacheGlobalData(CF_TEXT, hGlobal);
+            m_dropTarget.SetDragItem(hDragItem);
+            DROPEFFECT  de;
+            de = m_dragSource.DoDragDrop(DROPEFFECT_COPY|
+                                         DROPEFFECT_MOVE);
+            // The drop is over - delete the drag item if
+            // necessary, and reset the drop target.
+            if(de == DROPEFFECT_MOVE)
+                DeleteItem(hDragItem);
+            m_dropTarget.SetDragItem(NULL);
+            SelectDropTarget(NULL);
+        }
+    }
+    *pResult = 0;
+}
+//
+// Register the tree control window as a drop target, and
+// pass a pointer to this window, so that the drop target
+// can pass messages back to us.
+void CDragTree::Register()
+{
+    m_dropTarget.Register(this);
+    m_dropTarget.SetParent(this);
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Two functions are added to <small>DragTree.cpp</SMALL>:</P>
+<dl>
+<dd>&#149; <small>OnBegindrag</SMALL>. Handles the notification message sent after a user begins a drag in the tree control. If the drag item has no children, the text label associated with that item is placed on the OLE Clipboard through <small>m_dragSource</SMALL> and the <small>COleSource</SMALL> object, and a drag and drop is started.
+<dd>&#149; <small>Register</SMALL>. Called by the window that contains the <small>CDragTree</SMALL> object&#151;for example, a dialog box or view. Calling this function registers the tree control as an OLE drop target.
+</DL>
+<p>Listing 15.10 contains modifications to the <small>COleTreeDlg</SMALL> class, with the changed lines shown in bold. Two lines must be added to the <small>COleTreeDlg::OnInitDialog</SMALL> function. The <small>Register</SMALL> function is called for each tree view control. In addition, the function body must be supplied for the <small>OnAdd</SMALL> function. This function is called after the user clicks the Add button in the main dialog box. The function checks to make sure that a string has been entered by the user and then inserts the item at the root level.</P>
+<p><b>Listing 15.10</B> Message-Handling Functions Added to the <small>COleTreeDlg</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+BOOL COleTreeDlg::OnInitDialog()
+{
+    CDialog::OnInitDialog();
+   .
+   .
+   .
+   // TODO: Add extra initialization here
+  <b>AfxOleInit();
+  m_treeLeft.Register();
+  m_treeRight.Register();</B>
+  return TRUE;  // return TRUE  unless you set the focus to a control
+}
+void COleTreeDlg::OnAdd()
+{
+   <b>UpdateData();
+   if(m_strEdit.IsEmpty() == FALSE)
+   {
+        HTREEITEM hItem = m_treeRight.InsertItem(m_strEdit);
+        ASSERT(hItem);
+        m_treeRight.SelectItem(hItem);
+    }</B>
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>An <small>#include</SMALL> directive must be added at the top of the <small>OleTreeDlg.h</SMALL> file, just before the declaration of the <small>COleTreeDlg</SMALL> class:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &#147;DragTree.h&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Before compiling the OleTree project, include the MFC OLE support by adding <small>afxole.h</SMALL> to the <small>stdafx.h</SMALL> header file, just after the existing <small>#include</SMALL> directives:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &lt;afxole.h&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Compile and run the OleTree project. Add a few items to the tree control and then experiment by dragging items between the tree controls. Note that only leaf nodes can be moved. Figure 15.4 shows the OleTree main dialog box after several items have been added to the tree controls.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-04.jpg',392,235 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-04.jpg',392,235)"><font color="#000077"><b>Figure 15.4</B></FONT></A>&nbsp;&nbsp;The OleTree main dialog box after several drag-and-drop operations.</P>
+<p>You also can experiment with drag and drops to and from other applications that support OLE drag and drop, such as Microsoft Word.
+</P>
+<h3><a name="Heading12"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discusses data transfer using OLE uniform data transfer, the OLE Clipboard, and OLE drag and drop. You learned about the MFC classes used to implement OLE drag and drop, and you also looked at a sample project that adds drag-and-drop capability to a pair of tree controls.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="15-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch16/16-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

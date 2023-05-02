@@ -1,0 +1,155 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=03//-->
+<!--PAGES=087-091//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch02/02-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 3<br>Security
+</FONT></H2>
+<dl>
+<dd><b>3.1 Delegating root to Multiple Admins</B>
+<dd><b>3.2 The Full Path to Superuser</B>
+<dd><b>3.3 Monitoring root in the Password File</B>
+<dd><b>3.4 Vulnerabilities in UNIX</B>
+<dd><b>3.5 Permissions Levels</B>
+<dd><b>3.6 Protect root at All Costs</B>
+<dd><b>3.7 File Collecting</B>
+<dd><b>3.8 File Encryption</B>
+<dd><b>3.9 Clear and Lock</B>
+<dd><b>3.10 Power Tools</B>
+</DL>
+<p>The best security administrators are usually current or former UNIX administrators. UNIX administrators need to be paranoid by nature, because few, if any, virus protection programs are available. The only proactive steps you can take are to continuously monitor the system, stay paranoid, and keep up-to-date with the latest security advisories.
+</P>
+<p>It is often said that UNIX administrators get the blame if a system is compromised. Check with your management and verify what exactly you are responsible for if a system is compromised. Get it in writing if possible. Some corporations risk hundreds of thousands of dollars. If your resources are stretched thin, management is aware that there is a problem, and they are not working to rectify the situation, you should not be held responsible. The manager is often responsible for everything and might try to pass the blame to you if an intruder gets into a system. This, of course, all depends on each individual environment. If you work in a high security area, you might have to take full responsibility for the systems; it comes with the territory.</P>
+<p>Monitoring often comes at a price. Keeping an eye on system files that are modified and removed takes up processing time and can slow systems down. It also takes up a lot of disk space and can be boring work, but it&#146;s work that has to be finished.</P>
+<p>Learning the system, the files, and the files&#146; permissions comes in time. An intuition of what files belong and don&#146;t belong in various directories becomes second nature.</P>
+<p>System administrators need to stay up on all the latest advisories and vulnerabilities taking place in the security industry. The CERT Coordination Center (CERT/CC), at <a href="http://www.cert.org">http://www.cert.org</A>, maintains a listing of all current and old security advisories for UNIX. CERT/CC is an excellent contact for security intrusion resources and works with various government agencies. If your systems are compromised, CERT/CC can help you determine where to go, what the next step is, and how to get to the right people.</P>
+<h3><a name="Heading2"></A><font color="#000077">3.1 Delegating root to Multiple Admins</FONT></H3>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">3.1.1 Description</FONT></H4>
+<p>If multiple admins need root, here is one way to control and regulate root access.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>As you know, root access is the basis of all security on a UNIX system. After root is compromised, the system is open for the taking by hackers. The only other concern to watch out for is the user who thinks he knows what he&#146;s doing.</P>
+<p>There comes a time when multiple admins, vendors, or dangerous users request root on the same system. Although one or two might really need it, others within this group or a department can usually justify having it.</P>
+<p>Yes, I know, how could I give root to a user and even give root privileges to vendors? Unfortunately, not everyone can have the perfect UNIX environment. Sometimes users and even vendors get to have root access. A large-scale computing environment in which certain types of users&#151;such as programmers, DBAs, and vendors&#151;work in the office alongside UNIX administrators often contains users with some type of root access. With this method, you can at least track their sessions.</P>
+<p>So why not set up one of those root access control programs, such as <small>sudo</SMALL>? For those that don&#146;t know, <small>sudo</SMALL> allows specific user accounts to run certain predefined executable files with full root permissions and access. Users always find a reason for not using these programs:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;There are too many scripts and batch files and it would be an administrative nightmare for you. Translation: <i>I don&#146;t want to and I will make it harder for you if you make me</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;I don&#146;t want to bother you and take up what little precious time you have. Translation: <i>This is the easy solution to make your life easy and get me off your back.</I>
+<dd><b>&#149;</B>&nbsp;&nbsp;It&#146;s easier for all those involved. Translation: <i>Let&#146;s take the easy way out.</I>
+<dd><b>&#149;</B>&nbsp;&nbsp;I cannot function in my job without it. Translation: <i>I&#146;m lazy and it&#146;s too inconvenient.</I>
+</DL>
+<p>You know that the more people who share a single password on a system, the less secure the password is. So provide each administrator with her own root account. Here&#146;s how it works. In the password file, entries similar to these are made:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+root:NqM5kgsU0o./6:0:0:root:/root:/bin/tcsh
+root-kw:4S55m/bx1PNLY:0:0:root for Kirk W.:/root:/bin/tcsh
+root-jd:4tK8yr/3.UWtI:0:0:root for John D.:/root:/bin/tcsh
+root-gr:WgDvjlaLlsgQA:0:0:root for Gloria R.:/root:/bin/tcsh
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Notice that there are four root entries, each having the UID (<small>0</SMALL>) and GID (<small>0</SMALL>) of <small>root</SMALL>. Because the UID and GID of each entry is the same as the account root, they all inherit the same access, permissions, and powers of being a superuser with root access.</P>
+<p>The first account in the password file, root is reserved for the primary UNIX administrators who work on the system. You should limit the account to a strict set of circumstances that you always enforce if this is to succeed. Some instances of using this root account would be</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Booting a system into a single user state and requiring a root password for working in this state
+<dd><b>&#149;</B>&nbsp;&nbsp;Installing the system base software and third-party software that installs and authenticates only under the true root account
+<dd><b>&#149;</B>&nbsp;&nbsp;If troubleshooting network issues, the root account is always local to the system and it is your best chance of accessing the system when it is having network problems in a multiuser state
+<dd><b>&#149;</B>&nbsp;&nbsp;When diagnosing problems that can be done only from the root account
+</DL>
+<p>The additional root accounts are designated by the word <i>root</I>, a dash, and the initials of the administrator, user, vendor, or person who needs root level permissions.</P>
+<p>When the user logs in to a system with an account named <small>root-xx</SMALL>, the accounting immediately logs the entry into the /var/adm/wtmp file for the last logs. If you stumble on some weird oddities within a system, you can find out who was last in with root privileges.</P>
+<p>These root accounts should be used for all other superuser access to the system. Use these accounts to change permissions, mount filesystems, run <small>fsck</SMALL>, or build device files.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The goal is keep root as secure as possible. This is one way to delegate root and track those who use it.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>On more than one occasion, phone calls open with, &#147;Did somebody do something to my computer?&#148; Then you check the last logs only to find that a programmer was in the system as root prior to the user. In the end, there is usually an apologetic programmer who loaded some software or patches or started a process that inadvertently spawned massive I/O operations or ate up all the CPU time.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>passwd</SMALL>(4)</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch02/02-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,151 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=441-443//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch14/14-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Save the contents from Listings 13.10, 13.11, and 13.12 as <small>CppExt.cpp</SMALL> and add this file to the CppExt project. After compiling the CppExt project, you&#146;re ready to register the extension and copy the DLL into the Windows 2000 system directory, which is covered in the next section.</P>
+<p><font size="+1"><b>Registering the Shell Extension</B></FONT></P>
+<p>Like all in-process servers, a shell extension must be registered before it is used. All in-process servers must be registered in the <small>HKEY_CLASSES_ROOT\CLSID</SMALL> key. The simplest way to implement these changes is to create a Registry file that will be merged into the system Registry.</P>
+<p>Create a new key for the CLSID used by the shell extension and give it a string value with an easy-to-read name&#151;in this case, <small>C<small>&#43;&#43;</SMALL> Line Counter</SMALL>. Under this key, add an <small>InProcServer32</SMALL> key that marks this class as an in-process server. The value associated with this key is the name of the DLL that implements the server&#151;in this case, <small>CppExt.dll</SMALL>. You must also add a <small>ThreadingModel</SMALL> key, which is always set to <small>Apartment</SMALL> for shell extensions, as shown in Listing 13.13.</P>
+<p><b>Listing 13.13</B> Registry File Entries Required for a Thread-safe In-process Server<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_CLASSES_ROOT\CLSID\&ltGUID&gt]
+   @=&#147;C<small>&#43;&#43;</SMALL> Line Counter&#148;
+[HKEY_CLASSES_ROOT\CLSID\&ltGUID&gt\InProcServer32]
+   @=&#147;CppExt.dll&#148;
+     &#147;ThreadingModel&#148;=&#147;Apartment&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>As in earlier examples, substitute the proper GUID for <small>&ltGUID&gt</SMALL> in this Registry file fragment.</P>
+<p>It&#146;s possible to register a context menu handler for all files or for a single file extension. For CppExt, the <small>.cpp</SMALL> file extension was used, as shown in Listing 13.14.</P>
+<p><b>Listing 13.14</B> Registry File Entries Required for a Context Menu Handler<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_CLASSES_ROOT\.cpp]
+   @=&#147;cpp_auto_file&#148;
+[HKEY_CLASSES_ROOT\cpp_auto_file]
+   @=&#147;C<small>&#43;&#43;</SMALL> File&#148;
+[HKEY_CLASSES_ROOT\cpp_auto_file\shellex\ContextMenuHandlers]
+   @=&#147;CppLineCounter&#148;
+[HKEY_CLASSES_ROOT\cpp_auto_file\shellex\ContextMenuHandlers
+&#8658;\CppLineCounter]   @=&#147;{d3d834c0-9a3b-11cf-82a0-00608cca2a2a}&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>In addition, when registering a shell extension for Windows 2000, you must add the CLSID for the shell extension under the following key:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\
+&#8658;\Shell Extensions\Approved
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>The <small>CppExt.reg</SMALL> Registry file provided on the accompanying CD-ROM contains all the entries required to register a context menu shell extension on Windows 2000. To merge this file with your current Registry, right-click the file in Explorer and choose Merge from the context menu.</P>
+<p><font size="+1"><b>Debugging a Shell Extension</B></FONT></P>
+<p>Debugging an extension to the Windows 2000 shell requires a few steps you might not be accustomed to using. You restart your machine, close the shell, and reload the shell into the Visual C<small>&#43;&#43;</SMALL> debugger. The steps involved are similar to the steps used to debug any DLL:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Close all running applications and folders.
+<dd><b>2.</B>&nbsp;&nbsp;Restart Windows 2000.
+<dd><b>3.</B>&nbsp;&nbsp;Open Visual C<small>&#43;&#43;</SMALL> and ensure that it&#146;s the only open application.
+<dd><b>4.</B>&nbsp;&nbsp;Close the shell by following the usual steps to shut down Windows 2000. This time, however, click the OK button in the confirmation dialog box while pressing Ctrl&#43;Alt&#43;Shift.
+<dd><b>5.</B>&nbsp;&nbsp;After the shell shuts down, open the Project Settings dialog box.
+<dd><b>6.</B>&nbsp;&nbsp;Click the Debug tab and enter the path to the Windows 2000 Explorer in the Executable for Debug Session edit control. The path normally is something like <small>C:\WINNT\EXPLORER.EXE</SMALL>.
+<dd><b>7.</B>&nbsp;&nbsp;Close the dialog box.
+</DL>
+<p>After completing these steps, start a debug session. The shell restarts and runs inside the Developer Studio debugger. You&#146;ll be able to set breakpoints and step through the code in your shell extension.
+</P>
+<h3><a name="Heading21"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter presented an overview of basic COM and OLE concepts and provided examples showing how you can use COM and OLE to interact with the Windows 2000 shell.
+</P>
+<p>The next chapter, &#147;Automation,&#148; discusses how you can easily create interactive components that can be controlled from programming languages and scripts. You&#146;ll also see some examples of the COM support that&#146;s built into Microsoft tools such as Visual C<small>&#43;&#43;</SMALL>, Visual Basic, and Visual J<small>&#43;&#43;</SMALL>.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch14/14-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

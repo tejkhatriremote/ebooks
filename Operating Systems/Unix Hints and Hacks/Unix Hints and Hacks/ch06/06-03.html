@@ -1,0 +1,219 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=203-206//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The first <small>tar</SMALL> command creates (<small>cf</SMALL>) an archive of joedee and places it into a buffer, instead of creating a file or writing it off to a tape. While the data is in the buffered area (<small>-</SMALL>), it is sent to the remote host. When the data arrives at the remote host, the command changes to the directory /home and begins to extract (<small>xfB</SMALL>) the contents of the archive from the buffer where it resides.</P>
+<p>A lowercase <small>v</SMALL> option makes the <small>tar</SMALL> command verbose the output of the data as the file is being archived (<small>cvf</SMALL>) or extracted (<small>xvf</SMALL>). If there are a large number of files to copy you might want to use the <small>v</SMALL> option on one of <small>tar</SMALL> commands but not both. Otherwise you end up with a lot of extraneous output. When deciding which verbose option to use, I like to apply the verbose to the extraction process. This helps to verify that the files are reaching their target destination. If you are on a slow network, the output of all the data can actually slow the copy process down by sending the resulting output of the process to STDOUT. If this is the case don&#146;t use the verbose option at all. There are other ways to monitor the data being copied that will be discussed later in this section.</P>
+<p>The capital letter <small>B</SMALL> is used to apply a blocking factor for the data as it crosses through pipes, networks, or other channels where record blocking can not be maintained. If this is not applied, a result could be a loss in data packets and the command will halt its processing of the command.</P>
+<!-- CODE SNIP //-->
+<pre>
+# tar cf - joedee | rsh planet &#145;( cd /home; tar xf - )&#146;
+/home
+tar: tape blocksize error
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In most cases, if the <small>B</SMALL> is left off, a tape blocksize error occurs and the copy will halt.</P>
+<p><font size="+1"><b>Example Three: Remote Copy over NFS</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>cp -pr</B> [source] [destination]
+<b>tar -cfB</B> [source] [destination] | (cd [dir]; tar -cvfB [source] )
+<b>find</B> <i>dir</I> <b>-print | cpio -pudv</B> <i>destination</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Although it is faster to copy files directly from one system to another when the two system are trusted, it is easier, but quite a bit slower, to copy files over NFS from the local system. It is necessary to have write permissions granted to a working account through the NFS mount point that is being exported from the remote host.
+</P>
+<p>You can then use any <small>cp, tar</SMALL>, or <small>cpio</SMALL> to get the files over to the remote system. To do a straight copy and attempt to retain the permission while recursing down the subdirectories use the basic <small>cp</SMALL> command that was discussed in Example One in section 6.1, &#147;Copy Files with Permissions and Time Stamps.&#148;</P>
+<!-- CODE SNIP //-->
+<pre>
+# cp -pr jodee /hosts/planet/home
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>cpio</SMALL> command from Example Three in section 6.1 can be used here as well.</P>
+<!-- CODE SNIP //-->
+<pre>
+# find jodee -print | cpio -pumdv /hosts/planet/home
+</PRE>
+<!-- END CODE SNIP //-->
+<p>As you can see there are many ways to get the files over. Using <small>tar</SMALL> is yet one more way through the NFS mount point. This is the same command found in Example Two in section 6.1.</P>
+<!-- CODE SNIP //-->
+<pre>
+# tar -cf - project | (cd /disk2; tar -xvf - )
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Four: Using FTP to Copy Files</B></FONT></P>
+<p>Many environments have policies in place that keep system administrators from exporting filesystems and allowing hosts to be trusted to one another. In these cases, you might have no choice but to resort back to the old FTP protocol. FTP is fast and reliable. Some parts of FTP can be considered a security risk, though.
+</P>
+<p>The straightforward approach is to archive the data and FTP it over to the remote system. To FTP the home directory of joedee, you first <small>tar</SMALL> the files into an archive, copy the archive over to the remote system with <small>ftp</SMALL>, and then extract it into the new area.</P>
+<!-- CODE //-->
+<pre>
+# cd /home
+# tar -cf /tmp/jodee.tar joedee
+
+ftp planet
+Connected to planet
+220 planet FTP server ready.
+Name (planet:joedee): root
+331 Password required for joeedee.
+Password:
+230 User joedee logged in.
+ftp&gt cd /usr/tmp
+250 CWD command successful.
+ftp&gt bin
+ftp&gt put joedee.tar
+200 PORT command successful.
+150 Opening ASCII mode data connection for &#145;jodee.tar&#146;.
+226 Transfer complete.
+local: joedee.tar remote: joedee.tar
+2772 bytes sent in 0.014 seconds (2e&#43;02 Kbytes/s
+ftp&gt quit
+221 Goodbye.
+</PRE>
+<!-- END CODE //-->
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Access to FTP under the root account should never be allowed for security reasons. It provides complete access to the system if root is compromised. All modifications that require root access should be done from a shell and not from FTP. Place the word root in the /etc/users file to disable the root account from using FTP.
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The <small>tar</SMALL> file is copied over to the new location on the remote system planet with a normal account. It should be placed in an easily accessible area that has enough disk space for the archived file. The file can then be extracted into the new area.</P>
+<!-- CODE SNIP //-->
+<pre>
+# cd /home
+# tar xf /usr/tmp/joedee.tar .
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To help automate this process, write a script to create an archive of a directory and FTP it over to a remote system. This script can be considered dangerous and a security risk. It does require an exposed password to an account on the remote system. When the <small>ftptar</SMALL> script is executed (with permissions set to 700), two arguments are passed to it. The first is the name of the source directory followed by the name of the remote host.</P>
+<!-- CODE //-->
+<pre>
+rocket 22% vi ftptar
+
+#! /bin/sh
+tar cf $1.tar $1
+echo &#147;machine $2 login joedee password b0ssdq&#148; &gt /usr/people/
+<b>&#8658;</B>joedee/.netrc
+chmod 700 /usr/people/joedee/.netrc
+ftp $2 &lt&ltEOF
+bin
+cd /usr/tmp
+put $1.tar
+EOF
+rm -f /usr/people/joedee/.netrc
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the scripting language to use.
+</P>
+<p>Line 2: Archive the file using the name passed to it by STDIN (<small>$1</SMALL>).</P>
+<p>Line 3: Create the .netrc file in the current account&#146;s home directory that allows automating the <small>ftp</SMALL> login process. Passed to the <small>ftp</SMALL> process is the hostname passed in by STDIN (<small>$2</SMALL>), the account to access, and the password to use. (This file can be set up manually in ~/.netrc instead of in the <small>ftptar</SMALL> script, for a little more security.)</P>
+<p>Line 4: Lock down the permissions to the .netrc file. This is a must, not only for security but for <small>ftp</SMALL> to use the file.</P>
+<p>Line 5: Establish an FTP connection to the system that is passed in to STDIN ($2), and start processing the following lines through the FTP connection.</P>
+<p>Line 6: Change to binary mode for the file transfer.</P>
+<p>Line 7: Change to the temporary directory to store the archived file.</P>
+<p>Line 8: Put the file on the remote host with the filename that is passed to it by STDIN (<small>$2</SMALL>).</P>
+<p>Line 9: Exit FTP and complete the script.</P>
+<p>Line 10: Clean up and remove the .netrc files for safety.</P>
+<p>Copy the files from the home directory of joedee and onto planet. <small>ftptar</SMALL> archives the joedee directory into an archived file, <small>ftp</SMALL> the file over to planet, and put it in the directory /usr/tmp.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 23% cd /home
+rocket 24% ftptar joedee planet
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The script does not display any output. When you go to planet and look at the /usr/tmp directory, the archived file joedee.tar is created.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+planet 1% ls -al /home
+drwxr-xr-x    9 root     sys          512 Jun 16  1997 .
+drwxr-xr-x    7 root     sys          512 Nov  5 16:22 ..
+drwxr-xr-x    5 ddelmar  user         512 Jun 16  1997 ddelmar
+<b>-rw-r--r--    4 joedee   user     1255712 Nov 16 22:00 joedee.tar</B>
+drwxr-xr-x    8 kxnewm   user         512 Jul  1 13:03 kxnewm
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

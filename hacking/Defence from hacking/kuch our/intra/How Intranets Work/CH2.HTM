@@ -1,0 +1,282 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 2 -- How TCP/IP Works</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;2</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How TCP/IP Works</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowTCPIPandIPXWorkonIntranets">
+How TCP/IP and IPX Work on Intranets</A>
+<LI><A HREF="#HowtheOSIModelWorks">
+How the OSI Model Works</A>
+<LI><A HREF="#HowTCPIPPacketsAreProcessed">
+How TCP/IP Packets Are Processed</A>
+</UL>
+
+<HR>
+<P>
+As we saw in <A HREF="ch1.htm" >Chapter 1</A> an intranet is a private network built
+using the Internet's technology and communication protocols. At
+the heart of this technology-and what makes all intranet communications
+possible-are two protocols for exchanging information: The Transmission
+Control Protocol (TCP) and the Internet Protocol (IP). Together,
+these protocols are known as TCP/IP. They are separate protocols,
+not a single one, although they are tightly woven together to
+allow for the most efficient communications.
+<P>
+These two protocols perform their magic by doing something that
+seems deceptively simple. They break data into sections called
+packets, deliver those packets to the proper destinations on an
+intranet (or onto the Internet), and after they've been delivered,
+they reassemble the packets into their original form so that they
+can be viewed and used by the recipient. TCP performs the work
+of separating the data into packets and reassembling it, while
+IP is responsible for making sure that the packets are sent to
+the right destination.
+<P>
+TCP/IP is used because intranets (and the Internet) are what is
+known as <I>packet-switched</I> networks. In a packet-switched
+network, information is sent in many small packets over many different
+routes at the same time and reassembled at the receiving end.
+Because packet-switched networks can always use the most efficient
+means of delivery by tapping into unused network resources, they
+make the best use of the network's resources.
+<P>
+By contrast, the telephone system is a <I>circuit-switched</I>
+network. In a circuit-switched network, there is a single, unbroken
+connection between the sender and the receiver. Once a connection
+is made to a resource on the network (as with a telephone call),
+even if no data is being sent (such as when a call is on hold),
+that physical connection remains exclusively dedicated to that
+single connection.
+<P>
+In order for personal computers to take full advantage of intranets,
+they need to use TCP/IP protocols. Winsock functions as an intermediary
+between the personal computers and intranet (and Internet) hosts.
+For Macintoshes, the software is called Mac/TCP. Winsock is an
+application program interface (API) that handles the sending and
+receiving data to the TCP/IP systems. 
+<P>
+An intranet may not be the only network used within a corporation.
+An intranet may be connected to other corporate networks, in particular
+to NetWare-based networks. When this happens, the intranet can
+be used as a way to route data between the NetWare networks. To
+do this a NetWare network sends packets of data, and essentially
+disguises its own network protocols inside IP packets, and then
+uses IP protocols to send the data from one network to another.
+When an intranet is used like this, it is referred to as <I>IP
+tunneling</I>.
+<H2><A NAME="HowTCPIPandIPXWorkonIntranets"><FONT SIZE=5 COLOR=#FF0000>
+How TCP/IP and IPX Work on Intranets</FONT></A></H2>
+<P>
+What distinguishes an intranet from any other kind of private
+network is that it is based on TCP/IP-the same protocols that
+apply to the Internet. TCP/IP refers to two protocols that work
+together to deliver data: the Transmission Control Protocol (TCP)
+and the Internet Protocol (IP). When you send information across
+an intranet, the data is broken into small packets. The packets
+are sent independently through a series of switches called routers.
+Once all the packets arrive at their destination, they are recombined
+into their original form. The Transmission Control Protocol breaks
+the data into packets and recombines them on the receiving end.
+The Internet Protocol handles the routing of the data and makes
+sure it gets sent to the proper destination.
+<OL>
+<LI>In some companies, there may be a mix of TCP/IP-based intranets
+and networks based on other networking technology, such as NetWare.
+In that instance, the TCP/IP technology of an intranet can be
+used to send data between NetWare or other networks, using a technique
+called IP tunneling. In this instance, we'll look at data being
+sent from one NetWare network to another, via an intranet. NetWare
+networks use the IPX (Internet Packet Exchange) protocol as a
+way to deliver data-and TCP/IP networks can't recognize that protocol.
+To get around this, when an IPX packet is to be sent across an
+intranet, it is first encapsulated inside an IP packet by a NetWare
+server specifically for and dedicated to providing the IP transport
+mechanism for IPX packets.
+<LI>Data sent within an intranet must be broken up into packets
+of less than 1,500 characters each. TCP breaks the data into packets.
+As it creates each packet, it calculates and adds a checksum to
+the packet. The checksum is based on the byte values, that is,
+the precise amount of data in the packet.
+<LI>Each packet, along with the checksum, is put into separate
+IP wrappers or &quot;envelopes.&quot; These wrappers contain information
+that details exactly where on the intranet-or the Internet-the
+data is to be sent. All of the wrappers for a given piece of data
+have the same addressing information so that they can all be sent
+to the same location for reassembly.
+<LI>The packets travel between networks by intranet routers. Routers
+examine all IP wrappers and look at their addresses. These routers
+determine the most efficient path for sending each packet to its
+final destination. Since the traffic load on an intranet often
+changes, the packets may be sent along different routes, and the
+packets may arrive out of order. If the router sees the address
+is one located inside the intranet, the packet may be sent directly
+to its destination, or it may instead be sent to another router.
+If the address is located out on the Internet, it will be sent
+to another router so it can be sent across the Internet.
+<LI>As the packets arrive at their destination, TCP calculates
+a checksum for each packet. It then compares this checksum with
+the checksum that has been sent in the packet. If the checksums
+don't match, TCP knows that the data in the packet has been corrupted
+during transmission. It then discards the packet and asks that
+the original packet be retransmitted.
+<LI>TCP includes the ability to check packets and to determine
+that all the packets have been received. When all the non-corrupt
+packets are received, TCP assembles them into their original,
+unified form. The header information of the packets relays the
+sequence of how to reassemble the packets.
+<LI>An intranet treats the IP packet as it would any other, and
+routes the packet to the receiving NetWare network. On the receiving
+NetWare network, a NetWare TCP/IP server decapsulates the IP packet-it
+discards the IP packet, and reads the original IPX packet. It
+can now use the IPX protocol to deliver the data to the proper
+destination.
+</OL>
+<H2><A NAME="HowtheOSIModelWorks"><FONT SIZE=5 COLOR=#FF0000>
+How the OSI Model Works</FONT></A></H2>
+<P>
+A group called the International Standards Organization (ISO)
+has put together the Open Systems Interconnect (OSI) Reference
+Model, which is a model that describes seven layers of protocols
+for computer communications. These layers don't know or care what
+is on adjacent layers. Each layer, essentially, only sees the
+reciprocal layer on the other side. The sending application layer
+sees and talks to the application layer on the destination side.
+That conversation takes place irrespective of, for example, what
+structure exists at the physical layer, such as Ethernet or Token
+Ring. TCP combines the OSI model's application, presentation,
+and session layers into one which is also called the application
+layer.
+<UL>
+<LI>The application layer refers to application <I>interfaces</I>,
+not programs like word processing. MHS (Message Handling Service)
+is such an interface and it operates at this level of the OSI
+model. Again, this segmentation and interface approach means that
+a variety of email programs can be used on an intranet so long
+as they conform to the MHS standard at this application interface
+level.
+<LI>The presentation layer typically simply provides a standard
+interface between the application layer and the network layers.
+This type of segmentation allows for the great flexibility of
+the OSI model since applications can vary endlessly, but, as long
+as the results conform to this standard interface, the applications
+need not be concerned with any of the other layers.
+<LI>The session layer allows for the communication between sender
+and destination. These conversations avoid confusion by speaking
+in turn. A token is passed to control and to indicate which side
+is allowed to speak. This layer executes transactions, like saving
+a file. If something prevents it from completing the save, the
+session layer, which has a record of the original state, returns
+to the original state rather than allowing a corrupt or incomplete
+transaction to occur.
+<LI>The transport layer segments the data into acceptable packet
+sizes and is responsible for data integrity of packet segments.
+There are several levels of service that can be implemented at
+this layer, including segmenting and reassembly, error recovery,
+flow control, and others.
+<LI>The IP wrapper is put around the packet at the network or
+Internet layer. The header includes the source and destination
+addresses, the sequence order, and other data necessary for correct
+routing and rebuilding at the destination.
+<LI>The data-link layer frames the packets-for example, for use
+with the PPP (Point to Point). It also includes the logical link
+portion of the MAC sublayer of the IEEE 802.2, 802.3 and other
+standards.
+<LI>Ethernet and Token Ring are the two most common physical layer
+protocols. They function at the MAC (Media Access Control) level
+and move the data over the cables based on the physical address
+on each NIC (Network Interface Card). The physical layer includes
+the physical components of the IEEE 802.3 and other specifications.
+</UL>
+<H2><A NAME="HowTCPIPPacketsAreProcessed"><FONT SIZE=5 COLOR=#FF0000>
+How TCP/IP Packets Are Processed</FONT></A></H2>
+<P>
+Protocols such as TCP/IP determine how computers communicate with
+each other over networks such as the Internet. These protocols
+work in concert with each other, and are layered on top of one
+another in what is commonly referred to as a protocol stack. Each
+layer of the protocol is designed to accomplish a specific purpose
+on both the sending and receiving computers. The TCP stack combines
+the application, presentation, and the session layers into a single
+layer also called the application layer. Other than that change,
+it follows the OSI model. The illustration below shows the wrapping
+process that occurs to transmit data.
+<UL>
+<LI>The TCP application layer formats the data being sent so that
+the layer below it, the transport layer, can send the data. The
+TCP application layer performs the equivalent actions that the
+top three layers of OSI perform: the application, presentation,
+and session layers.
+<LI>The next layer down is the transport layer, which is responsible
+for transferring the data, and ensures that the data sent and
+the data received are in fact the same data-in other words, that
+there have been no errors introduced during the sending of the
+data. TCP divides the data it gets from the application layer
+into segments. It attaches a header to each segment. The header
+contains information that will be used on the receiving end to
+ensure that the data hasn't been altered en route, and that the
+segments can be properly recombined into their original form.
+<LI>The third layer prepares the data for delivery by putting
+them into IP datagrams, and determining the proper Internet address
+for those datagrams. The IP protocol works in the Internet layer,
+also called the network layer. It puts an IP wrapper with a header
+onto each segment. The IP header includes information such as
+the IP address of the sending and receiving computers, and the
+length of the datagram, and the sequence order of the datagram.
+The sequence order is added because the datagram could conceivably
+exceed the size allowed for network packets, and so would need
+to be broken into smaller packets. Including the sequence order
+will allow them to be recombined properly.
+<LI>The Internet layer checks the IP header and checks to see
+whether the packet is a&nbsp;fragment. If it is, it puts together
+fragments back into the original datagram. It strips off the IP
+header, and then sends the datagram to the transport layer.
+<LI>The transport layer looks at the remaining header to decide
+which application layer protocol-TCP or UDP-should get the data.
+Then the proper protocol strips off the header and sends the data
+to the receiving application.
+<LI>The application layer gets the data and performs, in this
+case, an HTTP request.
+<LI>The next layer down, the data link layer, uses protocols such
+as the Point-to-Point Protocol (PPP) to put the IP datagram into
+a frame. This is done by putting a header-the third header, after
+the TCP header and the IP header-and a footer around the IP datagram
+to fra-me it. Included in the frame header is a CRC check that
+checks for errors in the data as the data travels over the network.
+<LI>The data-link layer ensures that the CRC for the frame is
+right, and that the data hasn't been altered while it was sent.
+It strips off the frame header and the CRC, and sends the frame
+to the Internet layer.
+<LI>On the receiving computer, the packet travels through the
+stack, but in the opposite order from which the packet was created.
+In other words, it starts at the bottom layer, and moves its way
+up through the protocol stack. As it moves up, each layer strips
+off the header information that was added by the TCP/IP stack
+of the sending computer.
+<LI>The final layer is the physical network layer, which specifies
+the physical characteristics of the network being used to send
+data. It describes the actual hardware standards, such as the
+Ethernet specification. The layer receives the frames from the
+data link layer, and translates the IP addresses there into the
+hardware addresses required for the specific network being used.
+Finally, the layer sends the frame over the network.
+<LI>The physical network layer receives the packet. It translates
+the hardware address of the sender and receiver into IP addresses.
+Then it sends the frame up to the data link layer.
+</UL>
+<HR>
+
+<CENTER><P><A HREF="ch1.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch3.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

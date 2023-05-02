@@ -1,0 +1,212 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=051-054//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch03/03-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 2.11 shows the implementation of the <small>CVMList</SMALL> class. This file is located on the accompanying CD-ROM as <small>list.cpp</SMALL> in the project directory.</P>
+<p><b>Listing 2.11</B> The Implementation of the <small>CVMList</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+   #include &ltwindows.h&gt
+   #include &lttchar.h&gt
+   #include &#147;listnode.h&#148;
+   #include &#147;list.h&#148;
+   #ifndef UNICODE
+       #include &ltstdio.h&gt
+   #endif
+   HANDLE CVMList::m_hHeap = NULL;
+   int    CVMList::m_nRef = 0;
+   CVMList::CVMList():m_pNext(0)
+   {
+       m_pNode = new CVMListNode(0);
+   }
+   CVMList::CVMList(int n) : m_pNext(0)
+   {
+       m_pNode = new CVMListNode(n);
+   }
+   CVMList::???CVMList()
+   {
+       delete m_pNext;
+       delete m_pNode;
+   }
+   CVMList* CVMList::Insert(int n)
+   {
+       CVMList* pTemp = NULL;
+       pTemp = new CVMList(n);
+       if(m_pNext != NULL)
+       {
+           pTemp-&gtm_pNext = m_pNext-&gtm_pNext;
+       }
+       pTemp-&gtm_pNext = m_pNext;
+       m_pNext = pTemp;
+       return pTemp;
+   }
+   void* CVMList::operator new(size_t size)
+   {
+       void* p;
+       if(m_hHeap == NULL)
+       {
+           SYSTEM_INFO inf;
+           GetSystemInfo(&ampinf);
+           m_hHeap = HeapCreate(0, inf.dwAllocationGranularity ,0);
+           _tprintf(_T(&#147;List: Private heap allocated&#148;));
+       }
+       if((p = HeapAlloc(m_hHeap, 0, size)) != NULL)
+       {
+           m_nRef<small>&#43;&#43;</SMALL>;
+           _tprintf(_T(&#147;List: Allocated %d bytes\n&#148;, size));
+       }
+       return p;
+   }
+   void CVMList::operator delete(void* p)
+   {
+       if(HeapFree(m_hHeap, 0, p) != FALSE)
+       {
+           m_nRef--;
+           _tprintf(_T(&#147;List: Released one chunk\n&#148;));
+       }
+       if(m_nRef == 0)
+       {
+           HeapDestroy(m_hHeap);
+           m_hHeap = NULL;
+           _tprintf(_T(&#147;List: Heap destroyed\n&#148;));
+       }
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 2.12 shows the <small>main</SMALL> function for the PrivHeap program; you can find this on the accompanying CD-ROM as <small>main.cpp</SMALL> in the project directory.</P>
+<p><b>Listing 2.12</B> The <small>main</SMALL> Function for PrivHeap<hr></P>
+<!-- CODE //-->
+<pre>
+   #include &ltwindows.h&gt
+   #include &lttchar.h&gt
+   #include &#147;listnode.h&#148;
+   #include &#147;list.h&#148;
+   int main()
+   {
+       CVMList   listHead;
+       listHead.Insert(5);
+       listHead.Insert(3);
+       listHead.Insert(2);
+       return 0;
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In the <small>main</SMALL> function, a <small>CVMList</SMALL> object is created, and several items are added to the list. The first <small>CVMList</SMALL> object is created on the stack frame, and all other <small>CVMList</SMALL> and <small>CVMListNode</SMALL> objects are created using private dynamic heaps.</P>
+<p><font size="+1"><b>Using the CVMList Class</B></FONT></P>
+<p>The <small>CVMList</SMALL> class is a simple linked list; again, most of the work done by the class is concerned with memory management. Listing 2.13 shows the <small>CVMList</SMALL> class declaration. This class is included on the accompanying CD-ROM as <small>list.h</SMALL> in the PrivHeap project directory.</P>
+<p><b>Listing 2.13</B> The <small>CVMList</SMALL> Class Declaration<hr></P>
+<!-- CODE //-->
+<pre>
+   class CVMList
+   {
+       CVMListNode*    m_pNode;
+       CVMList*        m_pNext;
+       static HANDLE   m_hHeap;
+       static int      m_nRef;
+   public:
+       int Get() { return m_pNode-&gtGet(); }
+       CVMList* Next() {return m_pNext;}
+       void Set(int n) {m_pNode-&gtSet(n);}
+       CVMList();
+       CVMList(int n);
+       virtual ~CVMList();
+       void* operator new(size_t s);
+       void  operator delete(void* p);
+       CVMList* Insert(int n);
+   };
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h3><a name="Heading13"></A><font color="#000077">Summary</FONT></H3>
+<p>In this chapter, you looked at the virtual memory management functions used when programming for Windows 2000. You also examined an example showing how virtual memory is used to implement a sparse memory array in an application. You learned about the Windows 2000 Heap Memory API and how you can use it to create dynamic heaps in your applications. Finally, an example of using heaps to implement private memory management in C<small>&#43;&#43;</SMALL> classes was presented in a small example.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch03/03-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

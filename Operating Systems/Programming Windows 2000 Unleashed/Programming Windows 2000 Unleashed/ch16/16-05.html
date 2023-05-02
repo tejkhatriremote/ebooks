@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=511-514//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="16-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Other Types of Client/Server Calls</B></FONT></P>
+<p>A look at times for other types of inter-apartment calls shows that the biggest change in performance comes when an in-process COM object is moved from a compatible apartment to one that requires a proxy. On my machine, the performance cost is about 50 percent of the cost of moving the component out of process. Keep in mind that these times will vary on your hardware. For example, on a 533MHz Alpha workstation, the times are slightly greater, but the relative times are very close. Table 16.2 contains some timing results for inter-apartment COM method calls. Your results will vary slightly, but the relative performance should be fairly close to the results listed in the table.
+</P>
+<table width="100%"><caption align="LEFT" colspan="3"><b>Table 16.2</B> Timing Results for Different Types of Inter-apartment Calls to COM Objects
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="30%" align="LEFT" valign="TOP"><i>Client</I>
+<th width="35%" align="LEFT" valign="TOP"><i>COM Class</I>
+<th width="35%" align="LEFT" valign="TOP"><i>Time (Seconds)</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">MTA
+<td align="LEFT" valign="TOP">In-proc STA
+<td align="LEFT" valign="TOP">142.23
+<tr>
+<td align="LEFT" valign="TOP">STA
+<td align="LEFT" valign="TOP">In-proc STA
+<td align="LEFT" valign="TOP">0.047
+<tr>
+<td align="LEFT" valign="TOP">MTA
+<td align="LEFT" valign="TOP">STA executable
+<td align="LEFT" valign="TOP">260.92
+<tr>
+<td align="LEFT" valign="TOP">STA
+<td align="LEFT" valign="TOP">STA executable
+<td align="LEFT" valign="TOP">289.484
+<tr>
+<td align="LEFT" valign="TOP">MTA
+<td align="LEFT" valign="TOP">In-proc MTA
+<td align="LEFT" valign="TOP">0.047
+<tr>
+<td align="LEFT" valign="TOP">STA
+<td align="LEFT" valign="TOP">In-proc MTA
+<td align="LEFT" valign="TOP">138.49
+<tr>
+<td align="LEFT" valign="TOP">MTA
+<td align="LEFT" valign="TOP">MTA executable
+<td align="LEFT" valign="TOP">261.59
+<tr>
+<td align="LEFT" valign="TOP">STA
+<td align="LEFT" valign="TOP">MTA executable
+<td align="LEFT" valign="TOP">282.54
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<h3><a name="Heading12"></A><font color="#000077">Marshalling Between COM Apartments</FONT></H3>
+<p>The examples in the previous section discussed the case where the operating system automatically handled communication between apartments for you. This section discusses the case where you must share an interface pointer between apartments.
+</P>
+<p>Consider the case of a client that creates several threads, each of which calls <small>CoInitializeEx</SMALL> with <small>COINIT_APARTMENTTHREADED</SMALL>. As discussed earlier, each of these threads lives in a separate STA.</P>
+<p>In order to preserve thread-affinity rules, keep general order in the universe, and expand the number of examples in books about COM programming, COM interfaces may only be used inside the apartment that created the COM object. If the operating system catches you attempting to use an interface from a foreign thread, the method call will be rejected with an <small>HRESULT</SMALL> of <small>RPC_E_WRONG_THREAD</SMALL>.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Don&#146;t try to bend this rule. The operating system cannot catch every possible violation of the wrong-thread rule. For example, a thread that creates an in-process STA can actually pass its interface pointers to other threads and won&#146;t be caught by the operating system. However, if that component uses thread-local storage or isn&#146;t thread safe, the component will not work correctly.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>If you need to pass an interface pointer between apartments, you must first write the state of the interface pointer into a COM stream. The COM stream can then be passed between apartments and reconstituted into an interface pointer as needed.
+</P>
+<p>Windows 2000 provides a function, <small>CoMarshalInterThreadInterfaceInStream</SMALL>, that enables you to save the state of an interface pointer in a stream, and it returns an <small>IStream</SMALL> interface pointer to that stream:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = CoMarshalInterThreadInterfaceInStream(IID_ITestFunc,
+                                                   pTestFunc,
+                                                   &ampg_pStream);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>CoMarshalInterThreadInterfaceInStream</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The IID of the interface to be serialized.
+<dd><b>&#149;</B>&nbsp;&nbsp;The interface pointer to be serialized.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>IStream</SMALL> interface pointer that can be used to access the stream containing the serialized interface pointer. The <small>IStream</SMALL> interface pointer can safely be passed between apartments in the same process.
+</DL>
+<p>Windows 2000 also offers <small>CoGetInterfaceAndReleaseStream</SMALL>, which is used to rebuild an interface pointer, given an interface pointer to a stream:</P>
+<!-- CODE SNIP //-->
+<pre>
+ITestFunc* pTestFunc = NULL;
+HRESULT hr = CoGetInterfaceAndReleaseStream(g_pStream,
+                                            IID_ITestFunc,
+                                            (void**)&amppTestFunc);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>CoGetInterfaceAndReleaseStream</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The interface pointer to a stream that contains the serialized interface pointer.
+<dd><b>&#149;</B>&nbsp;&nbsp;The IID of the interface pointer to be retrieved.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the variable that will be filled with the retrieved interface pointer.
+</DL>
+<p>The steps required to marshal the interface pointer into a stream across the apartments are shown in Figure 16.7 and detailed in the following list:
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-07.jpg',500,170 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-07.jpg',500,170)"><font color="#000077"><b>Figure 16.7</B></FONT></A>&nbsp;&nbsp;Marshaling an interface pointer between apartments.</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The thread that owns the interface pointer must write the interface pointer&#146;s state into a COM stream by using the <small>CoMarshalInterThreadInterfaceInStream</SMALL> function.
+<dd><b>2.</B>&nbsp;&nbsp;After the state of the interface pointer has been written to the stream, the stream&#146;s interface pointer can be safely handed to any apartment in the process.
+<dd><b>3.</B>&nbsp;&nbsp;The receiving thread calls <small>CoGetInterfaceAndReleaseStream</SMALL> to rebuild a copy of the interface pointer, based on information serialized to the COM stream.
+</DL>
+<p>As a somewhat contrived example of how interface pointers are passed between threads, the CD-ROM includes three projects:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;ExeSta, an ExE COM server that exports a version of the <small>ITestFunc</SMALL> interface used earlier in the chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;AptClient, a client of ExeSta that incorrectly attempts to share an interface pointer between two apartments; the attempt is blocked by the interprocess proxy for <small>ITestFunc</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;AptMarshal, a client of ExeSta that correctly shares an <small>ITestFunc</SMALL> interface pointer between two apartments.
+</DL>
+<p>The source code for ExeSta isn&#146;t shown here&#151;it&#146;s an ATL project very similar to the InProcSta project presented earlier in the chapter (except that it&#146;s an ExE server instead of a DLL). The COM objects created by ExeSta live in an STA that&#146;s always located out of process from any of its clients.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="16-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

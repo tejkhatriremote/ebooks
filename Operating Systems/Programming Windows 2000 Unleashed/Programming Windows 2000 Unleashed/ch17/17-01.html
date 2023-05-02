@@ -1,0 +1,222 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=522-525//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch16/16-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 17<br>Custom COM Objects
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using IDL <i>522</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Creating Custom Components Using ATL <i>531</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Monikers <i>549</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Connection Points <i>554</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Custom Marshaling <i>557</I></B>
+</DL>
+<p>This chapter discusses creating custom COM objects using the ActiveX class library. Many of the issues involved with creating custom components are covered in this chapter&#151;for example, creating custom interfaces using the Interface Definition Language, using monikers, using connection points, and implementing custom marshaling. This chapter includes several examples that demonstrate how the Active Template Library can be used to easily create custom COM objects.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Using IDL</FONT></H3>
+<p>As discussed in earlier chapters, COM is a binary standard that generally tries to remain language neutral. Some languages are more &#147;COM friendly&#148; than others, but COM doesn&#146;t make many restrictions on languages, other than:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The language must be capable of calling a function indirectly, through an interface function table. This function table is commonly called a vtable, because it has the same format commonly employed by C<small>&#43;&#43;</SMALL> compilers to implement virtual functions.
+<dd><b>&#149;</B>&nbsp;&nbsp;The language must have a way of tracking reference counting, at least internally. All clients of COM objects must be capable of properly managing reference counting on any COM objects that they use. Some languages, such as Visual Basic, hide the complexity of reference counting from the programmer and manage the reference counting in the language runtime library.
+</DL>
+<p>Given these relatively small restrictions, almost all procedural languages can be made to work with COM.
+</P>
+<p>This causes a problem when you&#146;re deciding how interfaces for COM objects should be defined. There are nearly as many methods for defining interfaces as there are languages. How should two computing languages that have different philosophies&#151;such as VB and C<small>&#43;&#43;</SMALL>, for example&#151;share information about interfaces?</P>
+<p>One industry-standard method for defining interactions between clients and servers is <i>IDL</I> or <i>Interface Definition Language</I>, developed by the Open Software Foundation. If you&#146;ve developed distributed applications using Remote Procedure Call (RPC) interfaces, you&#146;ve used IDL to define your interfaces. If you have no experience with RPC, don&#146;t worry&#151;IDL has a syntax that&#146;s similar to C or C<small>&#43;&#43;</SMALL>, with extra extensions that contain necessary information for defining interfaces.</P>
+<p>Microsoft uses a version of IDL known as <i>MIDL</I>, which stands for <i>Microsoft Interface Definition Language</I>. MIDL is very much like IDL, with a few extra syntax features used to help define COM classes and interfaces. A typical MIDL source file is shown in Listing 17.1.</P>
+<p><b>Listing 17.1</B> A Typical MIDL Source File<hr></P>
+<!-- CODE //-->
+<pre>
+import &#147;oaidl.idl&#148;;
+import &#147;ocidl.idl&#148;;
+    [
+        object,
+        uuid(84697126-9A17-11D2-B883-00104B36573E),
+        dual,
+        helpstring(&#147;ISailBoat Interface&#148;),
+        pointer_default(unique)
+    ]
+    <b>interface ISailBoat : IDispatch</B>
+    {
+        [id(1)] HRESULT Tack([in] short newHeading);
+        [id(2)] HRESULT Jibe([in] short newHeading);
+        [id(3)] HRESULT LeakCash([in] long cashToLeak);
+        [id(4)] HRESULT LeakWater([in] long gallonsToLeak);
+        [id(5)] HRESULT GetPassengerWeight([out] short* pSize,
+                       [out, size_is(,*pSize)] short** rgWeight);
+    };
+
+[
+    uuid(8469711A-9A17-11D2-B883-00104B36573E),
+    version(1.0),
+    helpstring(&#147;Boat 1.0 Type Library&#148;)
+]
+
+<b>library CodevBoatLib</B>
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+
+    [
+        uuid(84697129-9A17-11D2-B883-00104B36573E),
+        helpstring(&#147;SailBoat Class&#148;)
+    ]
+    <b>coclass SailBoat</B>
+    {
+        [default] interface ISailBoat;
+    };
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The MIDL source provided in Listing 17.1 has three main sections (the first line of each section is highlighted in bold):
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The declaration of the <small>ISailBoat</SMALL> interface. This describes the attributes of the interface and specifies the signature for each function in the interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;The declaration of <small>CodevBoatLib</SMALL>, which is used to generate a type library. Type libraries are a binary representation of the IDL declaration and are discussed in the section, &#147;Using Type Libraries,&#148; later in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The declaration of the <small>SailBoat</SMALL> coclass. The component object class, or <i>coclass</I>, is declared inside the type library, and it lists the interfaces (and other objects) that are part of the <small>SailBoat</SMALL> COM class.
+</DL>
+<p>Each of these objects begins with a list of descriptive attributes enclosed in brackets, like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+[object]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Attributes are discussed in the next section.
+</P>
+<p>In addition to interfaces and coclasses, here are some other objects you may commonly see in a MIDL file:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dispinterface</SMALL>. Marks an Automation-compatible interface as being derived from <small>IDispatch</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>enum</SMALL>. Used to create an enumerated type, just as in C and C<small>&#43;&#43;</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>struct</SMALL>. Used to create an aggregated type, just as in C and C<small>&#43;&#43;</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>union</SMALL>. Used to create an aggregated type that contains one of several possible types, just as in C and C<small>&#43;&#43;</SMALL>.
+</DL>
+<p>This is only a partial list. The MIDL documentation in the Platform SDK contains a complete IDL language reference.
+</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Understanding MIDL Attributes</FONT></H4>
+<p>Elements in an IDL source file can be tagged with attributes enclosed in braces. Some of these attributes are optional&#151;you may see the attributes on one interface, but not another. Other attributes are required for all interfaces. For example, a COM interface requires the following two attributes:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>object</SMALL>. Specifies to the MIDL compiler that this is a COM interface rather than an RPC interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>uuid</SMALL>. Contains the COM IID for the interface.
+</DL>
+<p>Every COM interface will have these two attributes. The <small>ISailBoat</SMALL> interface provided in Listing 17.1 has three additional commonly used attributes:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dual</SMALL>. Specifies that the interface can be called as an Automation interface or through its function table.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>helpstring</SMALL>. Contains a description of the interface. This description is embedded into the type library, and some development tools will display this string as an aid to developers using the interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pointer_default</SMALL>. Defines the default behavior for pointers in the interface. More information about IDL pointer notation is provided in the section, &#147;Pointers and IDL,&#148; later in this chapter.
+</DL>
+<p>Here are some other common MIDL attributes:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hidden</SMALL>. Prevents the interface, coclass, or library from being displayed in a browser.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>size_is</SMALL>. Specifies the size of a dynamic array using another parameter as an argument, as in <small>size_is(nSize)</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>max_is</SMALL>. Specifies the maximum index for a dynamic array using another parameter as an argument, as in <small>max_is(nSize)</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>iid_is</SMALL>. Specifies the COM interface ID for an interface pointer passed as a parameter using another parameter as an argument, as in <small>iid_is(riid)</SMALL>.
+</DL>
+<p>Methods in the <small>ISailBoat</SMALL> interface are prefixed with a dispatch ID, an index that&#146;s required for Automation interfaces (such as <small>dual</SMALL> and <small>dispinterface</SMALL>), or any interface derived from <small>IDispatch</SMALL>. The dispatch ID is used by Automation to identify each function. Here&#146;s the syntax for a method using a dispatch ID:</P>
+<!-- CODE SNIP //-->
+<pre>
+    [id(1)] HRESULT SomeFunc();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here are two other common MIDL attributes used with methods:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>propput</SMALL>. Specifies a function that&#146;s used to set the value of a property exposed by the interface. The last parameter passed to the method must be an <small>[in]</SMALL> parameter that will be used to set the property&#146;s value. The property must have the same name as the method.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>propget</SMALL>. Specifies a method that&#146;s used to retrieve a value from a property exposed by the interface. The last parameter passed to the method must be an <small>[out,retval]</SMALL> parameter that will be used as the property&#146;s value. The property must have the same name as the method.
+</DL>
+<p>Each property can have an maximum of one method that contains <small>propput</SMALL> and one method that contains <small>propget</SMALL>.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch16/16-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

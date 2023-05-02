@@ -1,0 +1,144 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=155-159//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch04/04-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 5<br>Account Management
+</FONT></H2>
+<dl>
+<dd><b>5.1 User Account Names</B>
+<dd><b>5.2 Passwords</B>
+<dd><b>5.3 UID</B>
+<dd><b>5.4 Group IDs and /etc/group</B>
+<dd><b>5.5 GECOS Field</B>
+<dd><b>5.6 Home Directories</B>
+<dd><b>5.7 Shells and the Password File</B>
+<dd><b>5.8 Configuring an Account</B>
+<dd><b>5.9 User Account Startup Files</B>
+<dd><b>5.10 Using Aliases</B>
+<dd><b>5.11 MS-DOS Users</B>
+<dd><b>5.12 Changing Shells</B>
+<dd><b>5.13 Finding My Display</B>
+<dd><b>5.14 Copy Files to Multiple Home Directories</B>
+<dd><b>5.15 Kill an Account</B>
+<dd><b>5.16 Nulling the Root Password Without</B> <small>vi</SMALL>
+</DL>
+<p>After the system boots into a multiuser state, this is where it all starts: You cannot get into a system without an account. You all know by now that this is the way of UNIX. Other operating systems have recently adopted this capability. You also know that there are user accounts and root accounts, both with different levels of access.
+</P>
+<p>As a UNIX system administrator, you know the seven fields that make up the password file, so I won&#146;t discuss those here. (However, there is a growing problem with potential intermediate and senior administrators who, during job interviews, are not able to recite the simple seven fields of a password file. I&#146;ll discuss that in greater detail in Chapter 10, &#147;System Administration: The Occupation.&#148;) Although you might know the purpose of each field, how they are used is another story entirely. This chapter covers, among other things, the various ways the password fields can be set up and the things to watch out for.</P>
+<p>In addition, there are ways to manipulate user accounts that are unobtrusive to your user community. There are new and perhaps forgotten ways of adding, changing, disabling, and even removing accounts. This chapter covers various techniques to enhance user environments for you and your user. Other topics in this chapter talk about uses for your startup files, killing accounts, and working in various shells.</P>
+<h3><a name="Heading2"></A><font color="#000077">5.1 User Account Names</FONT></H3>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">5.1.1 Description</FONT></H4>
+<p>There are many user account names to choose from and standards to follow.
+</P>
+<p><font size="+1"><b>Example One: Cryptic Standard</B></FONT></P>
+<p>In the early days of mainframes, the first online services, and DOD projects, user account names were often cryptic and difficult to remember or use. No matter what the account name was, though, it was unique, well structured, and documented for control or security reasons. Some of these IDs took the form of
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Project titles with employee numbers&#151;<i>atlas0254</I> or <i>cargo660</I>
+<dd><b>&#149;</B>&nbsp;&nbsp;A fixed set of characters followed by a hexadecimal-based number&#151;<i>yqq2dfd</I> or <i>dls302a</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;Cryptic alphanumeric&#151;<i>a05ft3sd</I> or <i>04598277</I>.
+</DL>
+<p>These accounts never took the form or had any part of the users name within it. These are still used today, more often in highly secure environments where the risk of penetration is high.
+</P>
+<p><font size="+1"><b>Example Two: Abbreviated Usernames</B></FONT></P>
+<p>As UNIX gained in momentum, naming conventions were originally grandfathered from the mainframes and old standards. When email, bulletin boards, and other functions, protocols, and sites began emerging on the Internet, user accounts began to include the user&#146;s actual name or site name as the account name. People didn&#146;t want to hide behind a cryptic account. They wanted something easy to remember and more readable. Although the limitation of eight characters felt limiting, many users (who were the administrators) began adopting various new forms for naming conventions:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;First initial, followed by the middle initial, followed by the remaining letters of the last name to total no more than eight characters. So the name John Paul Johnston becomes <i>jpjohnst</I>. Mary Kay Lipton has the ID <i>mklipton</I>. If a person did not have a middle initial an <i>x</I> replaces the middle initial.
+<dd><b>&#149;</B>&nbsp;&nbsp;First name, middle initial, last initial, up to eight characters. Steve Allan Mitchell would have <i>steveam</I> for an account name. For small companies this worked fine, but in larger installation there is more of a chance for duplicate user IDs. Steve Adam Monroe would have the same account name, <i>steveam</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;Abbreviations&#151;UNIX is often known as the abbreviated operating system with so many of the commands being so short in name. Many admins and users alike continue to follow the pattern of UNIX and set short names for a naming standard. Some are also just looking for the speed in typing three letters for their account names. For this reason, many choose to have their initials as their account name.
+</DL>
+<p><font size="+1"><b>Example Three: Application Names</B></FONT></P>
+<p>Many names are commonly used to depict what applications are running on the system. This still holds true today. When applications are installed on a system, they often create an account specific for that application to run daemons and other routines. This is sometimes required by the vendor; other times it can be done for convenience. This can pose somewhat of a security threat to the system. For an intruder, these names can be targeted first for hacking. Passwords set on these accounts are often easy to remember because they are shared with others. If vendors do the install, they usually make the password simple and able to be cracked by a simple password-cracking program. Some applications or daemons are locked to the account name when they are executed. Check with the vendor before changing the name.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Every organization has a way of dictating the standard for user accounts. You need to be aware of all the possibilities that work best in your environment if you are the one that gets to set the standard.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>As you can see, there really is no global standard. Most companies are adopting the first initial, middle initial, and the rest of the last name as the standard user ID. It all depends on the environment. Most programming and development groups use code words or real names, some aerospace organizations still like cryptic IDs such as in the mainframe days, and the rest sometimes use some adaptations of the user&#146;s name or handles.
+</P>
+<p>In development environments where there is a lot of creative freedom in the organization, let the user choose her own name if you can. Doing so also gives off a good first impression about yourself to the user. She will perceive that you are willing to work with her and not against her in the future. If you have a structured naming standard and the user doesn&#146;t feel comfortable with the name, let her know what other IDs have been used in the past and how fortunate she really is. If she is persistent on a more friendly account name, let her know that you intend to raise the issue with your management, because she feels so strongly about this issue.</P>
+<p>Users know today that the IDs given to them are the ones they will have for the life of their position with the company, which could be many years. You might be able to compromise with the user by providing a friendly email address if you have access to the email system. The standard for the beginning of an email address would typically begin with the account ID of the user. Today, standards are starting to emerge within companies that includes the first and last names of the user separated by either a period or a underscore for the format of an email address.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch04/04-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

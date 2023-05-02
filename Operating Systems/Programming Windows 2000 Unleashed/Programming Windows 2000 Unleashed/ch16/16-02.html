@@ -1,0 +1,186 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=499-503//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="16-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In addition to the three standard <small>IUnknown</SMALL> functions, the <small>IMalloc</SMALL> interface has six member functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Alloc</SMALL>. Allocates a block of memory (similar to the CRT <small>malloc</SMALL> function).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Realloc</SMALL>. Requests that a previously allocated block of memory be resized (similar to the CRT <small>realloc</SMALL> function).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Free</SMALL>. Releases a block of memory (similar to the CRT <small>free</SMALL> function).
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetSize</SMALL>. Returns the size of a block of allocated memory. This value may be larger than the originally requested size if the task allocator has added extra bytes for optimization or alignment purposes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DidAlloc</SMALL>. Can be used to determine whether this <small>IMalloc</SMALL> interface was used to allocate a particular memory block.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HeapMinimize</SMALL>. Requests that the COM task allocator reduce the size of the heap, if possible.
+</DL>
+<p>Note that the CRT <small>calloc</SMALL> function has no equivalent. All memory retrieved from the COM task allocator may be uninitialized.</P>
+<p>A pointer to <small>IMalloc</SMALL> is retrieved by calling the <small>CoGetMalloc</SMALL> function, as shown in Listing 16.1.</P>
+<p><b>Listing 16.1</B> Allocating Memory Using the <small>IMalloc</SMALL> Interface<hr></P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CSailInfo::GetSailInfo(SailInfo* psi)
+{
+    IMalloc* pMalloc = NULL;
+    HRESULT hr = CoGetMalloc(1, &amppMalloc);
+    if(SUCCEEDED(hr))
+    {
+        psi = (SailInfo*)pMalloc-&gtAlloc(sizeof(SailInfo));
+        if(!psi)
+            return E_OUTOFMEMORY;
+        // Fill in SailInfo here...
+        // ...
+    }
+    return S_OK;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p><font size="+1"><b>Using the COM Task Allocator API Functions</B></FONT></P>
+<p>As an alternative to using the <small>IMalloc</SMALL> interface to the task allocator, you can also use API functions that provide convenient wrappers around <small>IMalloc</SMALL>. There are three task allocator API functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoTaskMemAlloc</SMALL> allocates a block of memory from the COM task allocator, just like the <small>IMalloc::Alloc</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoTaskMemFree</SMALL> frees a block of memory, just like the <small>IMalloc::Free</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoTaskMemRealloc</SMALL> changes the size of a block of memory, just like the <small>IMalloc::Realloc</SMALL> function.
+</DL>
+<p>In most cases, using the API functions is more convenient than using <small>IMalloc</SMALL> directly. Listing 16.2 provides an example of using <small>CoTaskMemAlloc</SMALL>.</P>
+<p><b>Listing 16.2</B> Allocating Memory Using the <small>CoTaskMemAlloc</SMALL> API Function<hr></P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CSailInfo::GetSailInfo(SailInfo* psi)
+{
+    psi = (SailInfo*)CoTaskMemAlloc(sizeof(SailInfo));
+    if(!psi)
+        return E_OUTOFMEMORY;
+    // Fill in SailInfo here...
+    // ...
+    return S_OK;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Don&#146;t be tempted to bypass the COM task allocator. If the COM task allocator is bypassed, data will not be marshaled correctly in the out-of-process or cross-network cases.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Using COM with Apartments</FONT></H4>
+<p>With the release of COM for 32-bit Windows, there was a need to integrate multithreading into COM. Introducing the possibility of multithreaded COM objects and clients added a new dimension to the ways that clients and objects interacted with each other.
+</P>
+<p>Because there was already a large body of existing COM programming code, the multithreading solution had to meet the following requirements:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Existing COM components that are unaware of the multithreading architecture must continue to work as expected.
+<dd><b>&#149;</B>&nbsp;&nbsp;Only clients and servers that elect to use the multithreading architecture should pay any performance penalty&#151;existing applications should not be affected.
+<dd><b>&#149;</B>&nbsp;&nbsp;The fact that a particular client or COM server is multithreaded must be an implementation detail that can be changed without affecting the interface contract.
+<dd><b>&#149;</B>&nbsp;&nbsp;A COM client must be able to use components that elect to be multithreaded, single-threaded, and legacy COM components simultaneously.
+</DL>
+<p>In order to meet these requirements, the idea of COM <i>apartments</I> was introduced. The apartment is one of the basic building blocks in COM. Apartments are neither processes nor threads; rather, they&#146;re logical compartments that contain COM objects.</P>
+<p>Every COM object lives in exactly one apartment. Once a COM object has been instantiated inside an apartment, it can never change apartments&#151;the relationship between a COM object and its apartment is static for the life of the COM object. In fact, as you&#146;ll see in Chapter 20, the DCOM wire protocol uses an apartment identifier to determine the location of a COM object.</P>
+<p>There are two types of COM apartments:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>single-threaded apartment</I>, or <i>STA</I>, which is only accessed by a single thread
+<dd><b>&#149;</B>&nbsp;&nbsp;A <i>multithreaded apartment</I>, or <i>MTA</I>, which is accessed by multiple threads
+</DL>
+<p>In addition, there&#146;s a special STA, known as the <i>main STA</I>, that&#146;s the first STA created for a process.</P>
+<p><font size="+1"><b>Understanding Single-threaded Apartments</B></FONT></P>
+<p>Single-threaded apartments are only used by one thread. Any objects that exist in an STA live a simple life&#151;assured that they will only ever be accessed by one thread for their entire lifetime. Objects that live in an STA can rely on this thread affinity and can use thread-local storage to cache information.
+</P>
+<p>When a proxy is involved, the operating system serializes calls to an STA via a message queue running through a hidden window, as shown in Figure 16.3.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-03.jpg',500,304 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch16/images/16-03.jpg',500,304)"><font color="#000077"><b>Figure 16.3</B></FONT></A>&nbsp;&nbsp;STA method requests are serialized via a message queue.</P>
+<p>As shown in Figure 16.3, each process can have multiple STAs, and each STA can contain multiple COM objects.
+</P>
+<p>As discussed earlier, the first STA created for a process is known as the <i>main STA</I>. This STA contains COM objects that do not indicate any preference for a threading model. The operating system assumes that these COM objects are not aware of the COM threading models and places them into the main STA. Life in this apartment will most closely simulate the happy-go-lucky environment experienced by COM objects before the dawn of multithreaded COM.</P>
+<p><font size="+1"><b>Understanding Multithreaded Apartments</B></FONT></P>
+<p>Multithreaded apartments are used by multiple threads. When a proxy is involved, the operating system uses a thread pool to service the COM objects in the MTA. Unlike an STA, an MTA does not make any attempt to guarantee thread affinity or serialization between the thread pool and the COM objects in the apartment. On a multiprocessor machine, multiple threads may call a COM object simultaneously.
+</P>
+<p>An MTA does not implement a hidden window in order to synchronize method callseach method call can be immediately directed to the COM object that it targets (subject to marshaling). There&#146;s a maximum of one MTA per process&#151;all MTA resident COM objects are located inside this single apartment.</P>
+<p>If your COM component or application makes use of multiple threads and implements synchronization on shared data, you may improve performance by using the MTA.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="16-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

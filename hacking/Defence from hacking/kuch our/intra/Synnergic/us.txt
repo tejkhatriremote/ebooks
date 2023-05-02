@@ -1,0 +1,466 @@
+Unix Security
+
+
+
+Overview of Security Administration
+
+Security is an aspect of the operation of your computer that must always
+be kept in mind. A machine connected to phone lines or a local network has
+the potential for intruders. Even an isolated machine is subject to idle
+browsing by its legitimate users. Consider the possible loss if a file is
+altered, destroyed, or if the wrong person sees it.
+
+Suggestions for Making Your System Secure
+
+The security of any system is ultimately the responsibility of all who
+have access to it. As the administrator of your system, you need to
+consider the following:
+
+Restrict physical access to your computer (especially if it is a small
+machine) so that someone does not simply walk off with it.
+
+Set the access permissions to directories and files so that they can be
+accessed only as needed by the owner, group or others. Publicly writeable
+directories are a security hazard. Allow them only if you have a good
+reason.
+
+Assign passwords to all logins and change them regularly. You can force
+them to be changed by implementing password aging. Do not pick obvious
+passwords: six-to-eight characters nonsense strings using letters and
+numbers are recommended over recognizable words. Remove or lock logins
+that are no longer needed.
+
+Do not keep sensitive information on a system with dial-up ports; the
+security of your system with dial-up ports is difficult to guarantee.
+
+Users who use the su command to become root, can compromise the security
+of your system by accessing files belonging to others users without their
+knowledge. For this reason, a log is kept on the use of the su(1) command.
+Check the file /var/adm/sulog to monitor use of this command.
+
+Keep in mind that login directories, user profiles, and files in /sbin,
+/usr/sbin, and /etc that writetable by others are security give-aways.
+
+Encrypt sensitive data files. The crypt(1) command together with the
+encryption capabilities of the editors (ed and vi) provide better
+protection of sensitive information. The Security Administration Utilities
+package (U.S. customers only) , must be installed be fore you can run
+crypt(1).
+
+Do not leave a logged-in terminal unattented, especially if you are logged
+in as root. If you must be away from your terminal, log off before leaving.
+
+As system administrator, use full pathnames for critical commands (for
+exmaple /usr/bin/su instead of su).
+
+Don't mount a medium (such as diskette) unless the contents are trusted.
+These file systems may contain set-user-ID or Trojan horse (undesirable
+gift) programs.
+
+Don't add packages or programs for untrusted sources. This is the most
+common way of spreading computer viruses.
+
+Logins and Passwords
+
+To log in to the UNIX system, a user must enter both login name and a
+password. Although logins are publicy known, passwords must be known only
+by their owners. To enhance the security of your system and data, ask your
+users to change their password occasionally. For a high level of security,
+users should change their passwords about every 6 weeks. System
+administration logins (such as root and sys) should be changed monthly or
+whenever a person having the root password leaves the company or is
+reassigned. Although voluntary compliance with this practice is desired,
+the UNIX operating system provides a mechanism to force compliance
+called password aging.
+
+Choosing your Password
+
+Most security breakins of computer systems involve guessing the person's
+password. While the passwd(1) command has some criteria for making sure
+the password is hard to obtain using mechanical means, a clever person
+can sometimes guess a password just by knowing something about the person
+and his/her habits.
+
+Bad choices:
+- names of family members or pets
+- car license numbers
+- telephone numbers
+- Social Security number or employee number
+- names related to a person's hobbies or interest
+- words currently popular in the media (such as slangs from TV shows),
+- seasonal themes (such as "turkey" in November or "superbowl" in January).
+- any variations on this by substitution or addition of a special character.
+
+Good choices:
+- puns
+- words in a foreign language
+- a word reversed (yekrut for turkey), or a nonsense word made up of the
+  first letter of every word in a phrase (Mhallifwwas - Mary had a little
+  lamb, its fleece was white as snow).
+- an additional non-alphabetic character in the middle of the password
+  (be careful about magic characters such as #, @, and control characters).
+- substitute a number for a similar letter (for exmaple, 0 for o, 3 for e,
+  1 for l or i).
+
+Remember that a clever code-breaker is also aware of the preceding rules.
+
+Password Aging
+
+The password aging mechanism forces users to change their passwords on a
+periodic base. Provisions are made to prevent a user from changing a new
+password before a specified interval. Password aging is selectively applied
+to logins by using the passwd(1) command. If you require more access control
+than what is provided by password aging, you can also change the
+/etc/profile to require a second access code as part of the login process.
+
+The password aging information requires setting the following parameters
+for each login:
+
+min   The minimum number of days required between password changes.
+max   The maximum number of days the password is valid.
+warn  The number of days that a warning message appears to a user
+      before the password becomes invalid.
+
+As a result of using passwd(1), the following parameters changes:
+
+lastchanged  The number of days between January 1, 1970, and the date
+             that the password was last modified.
+
+Displaying Password Information
+
+Password and aging information can be displayed using the -s option of the
+passwd command. For example, if you type
+
+passwd -s SynnerGy
+
+the following information appears if there is password aging.
+
+SynnerGy   PS   06/23/98   14   84   7
+
+If password againg is not turned on, only the first two fields appear. The six
+fields contain the following information:
+
+Login name (SynnerGy)
+
+Password status (PS). The following string may appear:
+
+      NP    No password for this login
+      LK    Login is locked
+      PS    Anything else
+
+Date the password was last changed (06/23/98).
+
+Minimum number of days after lastchanged before the user can change the
+password (14).
+
+Maximum number of days after lastchanged until the user will be forced to
+change the password (84).
+
+Number of warning days before the password must be changed (7).
+
+Thus, the information obtained for this example shows that there is a
+password for the login SynnerGy that cannot be changed before July 6 and
+that must be changed by September 15, 1998. On September 8, 1998, this
+users will see a warning message that the password will expire and should
+be changed.
+
+To display the password status aging information for all users on your
+system, use the -a option to the passwd command, instead of specifying
+individual logins:
+
+           passwd -s -a
+
+Only a privileged can use the -a option for the passwd command.
+
+Sample passwd Commands
+
+Password administration can be set up in a variety of ways to meet the
+needs of different organizations. Some examples follow:
+
+1. Change a password:
+
+          passwd login_name
+
+Because this command is run by the administrator, no prompt for the old
+password is given. Instead, as a privileged user, the administrator is
+prompted to enter the new password. The password is not displayed as it is
+typed. The command requires you to enter the password twice to assure it
+is typed accurately.
+
+2. Turn on aging, set max to 84 and min to 7 days, respectively:
+
+   passwd -x 84 -n 7 login_name
+
+3. Force a user to change the password at the next session.
+
+   passwd -f login_name
+
+4. Lock a passwd, set max to 7 and min to 10 days:
+
+   passwd -x 7 -n 10 login_name
+
+Because min is greater then max, the password is locked and cannot be
+changed but the user can still log into the system. Only root can change
+this password.
+
+5. Turn off aging by setting max to negative one:
+
+   passwd -x -1 login_name
+
+6. Warn the user starting 14 days before the password is set to expire
+   that a new password must be chosen.
+
+   passwd -w 14 login_name
+
+   Starting 14 days before max, the user will see this message:
+
+   Your password will expire in 14 days
+
+   Each day, the number will decrease until the password expires or the
+   user changes the password.
+
+Password Recovery
+
+Limiting the number of people that know the root password is an important
+part of maintaining system security. Ideally, few people will know the
+password for this privileged login. However, when fewer people know the
+root password, the chances of losing or forgetting this password will
+increase.
+
+If you cannot recover your root password, call your support hotline.
+
+File Protection
+
+Because the UNIX operating system is a multiuser system, you usually do
+not work alone in the file system. Systems users can follow pathnames to
+various directories and read and use files belonging to one another, as
+long as they have permission to do so.
+
+If you own a file, you can decide who has the right to read, write in it
+(make changes to it), or, if it is a program, to execute it. You can also
+restrict permissions for directories. When you grant execute permission
+for a directory, you allow the specified users to change the directory
+and list its contents with the ls(1) command. Only the owner or a
+privileged user can define the following:
+
+Which users have permission to access data.
+
+Which types of permission they have (that is, how they are allowed to use
+the data).
+
+File Types
+
+When you display the contents of a directory with the ls -l command, the
+first column of ouput describes the "mode" of the file. This information
+tells you not only what type of file it is, but who has permission to
+access it. This first field is 10 characters long. The first character
+defines the file type and can be one of the following types, as shown below.
+
+Type                          Symbol
+
+Text, programs, etc.            -
+Directories                     d
+Character special               c
+Block special                   b
+FIFO (named pipe) special       p
+Symbolic links                  l
+
+File Access Permissions
+
+In the first of the ls -l output, the next nine characters are interpreted
+as three sets of three bits each. The first set refers to the owner's
+permissions; the next to permissions of members in the file's group; and
+the last to all others.
+Within each set, the three characters show permission to read, to write,
+and to execute the file as a program, respectively. For a directoy,
+"execute" permission is interpreted to mean permission to search the
+directory for a specified file. The permissions are as shown below.
+
+Explanation                                       Symbol
+The file is readable.                                r
+The file is writeable.                               w
+The file is executable.                              x
+This permission is not granted.                      -
+Mandatory locking will occur during access.          l
+   (The set-group-ID bit is on and the execution
+   bit is off.)
+The set-user-ID or set-group-ID bit is on, and the   s
+   corresponding user or group execution bit is
+   also on.
+The set-user-ID bit is on and the user               S
+   execution bit is off.
+The sticky and the execution bits for other are on.  t
+The sticky bit is turned on, and the execution       T
+   bits for other is off.
+
+Explanation                                        Symbol
+
+The directory is readable.                           r
+The directory may be altered.                        w
+   (Files may be added or removed.)
+The directory may be searched. (This permission      x
+   is required to cd to the directory.)
+File removal from a writeable directory is limited   t
+   to the owner of the directory or file unless
+   the file is writeable.
+
+Setting a default umask
+
+When a file is created, its default permissions are set. These default
+settings may be changed by placing an appropriate umask(1) command (see
+below) in the system profile (/etc/profile).
+
+Level of Security       umask   Disallows
+
+Permissive              0002    w for others
+Moderate                0027    w for group, rwx for others
+Severe                  0077    rwx for group and others
+
+Set-User-ID and Set-Group-ID
+
+The set-user identification (set-UID) and set-group identification
+(set-GID) bits must be used carefully. These bits are set through the
+chmod(1) command and can be specified for any executable file. When any
+user runs an executable file that has either of the bits set, the system
+gives the user the permissions of the owner (or group) of the executable.
+
+System security can be compromised if a user copies another program onto
+a file with -rwsrwxrwx permissins. For exmaple, if the switch-user (su)
+command has the write access permission allow for others, anyone can copy
+the shell onto it and get a password-free version of su with no sulog
+entry being made. Experience has shown that people who have had root
+permissions once, tend to keep such a file around. The following paragraphs
+provide a few examples of command lines that can be used to identify the
+files with a set-UID bit. A vigilant system administrator will check the
+system for potential problems periodically and investigate any unusual
+occurrences.
+
+For more information about the set-UID and set-GID bits, see chmod(1)
+and chmod(2).
+
+Check Set-UIDs
+
+The following command line lists all set-UID programs owned by root. The
+results are saved in a file in /tmp. All mounted paths are checked by this
+command starting at /. Any surprises in the output should be investigated.
+Search time is dependent on the number of entries in the directory to be
+searched.
+
+This program can be run by sys, bin, and mail, as well.
+
+# find / -user root -perm -4000 -exec ls -ldb { } \ ; > /tmp/ckprm
+# cat /tmp/ckprm
+-r-sr-xr-x   1  root   bin  38836  Aug 10  16:16  /usr/bin/at
+-r-sr-xr-x   1  root   bin  19812  Aug 10  16:16  /usr/bin/crontab
+---s--x--x   1  root   sys  46040  Aug 10  15:18  /usr/bin/ct
+-r-sr-xr-x   1  root   sys  12092  Aug 10  01:29  /usr/lib/mv_dir
+-r-sr-xr-x   1  root   bin  33208  Aug 10  15:55  /usr/lib/lpadmin
+-r-sr-xr-x   1  root   bin  38696  Aug 10  15:55  /usr/lib/lpsched
+---s--x---   1  root   rar  45376  Aug 18  15:11  /usr/rar/bin/sh
+-r-sr-xr-x   1  root   bin  12524  Aug 11  01:27  /usr/bin/df
+-rwsr-xr-x   1  root   sys  21780  Aug 11  01:27  /usr/bin/newgrp
+-r-sr-sr-x   1  root   sys  23000  Aug 11  01:27  /usr/bin/passwd
+-r-sr-xr-x   1  root   sys  23824  Aug 11  01:27  /usr/bin/su
+#
+
+In this example, an authorized user (rar) has made a personal copy of
+/usr/bin/sh and has it made set-UID to root. This mean rar can execute
+/usr/rar/bin/sh and become the privileged user.
+
+If you want to save this output for future reference, move the file out
+of /tmp.
+
+Check Set-UIDs by File System
+
+The command line entry in the following example shows the use of the ncheck
+command to examine the /usr file system (/dev/dsk/c0d0s4, assuming a
+singledisk system with default slicing) for files. The -F tells ncheck that
+it should expect an s5 file system type. The output of the modified ncheck
+used as an argument to the ls command. In the following example, the
+complete pathnames for the files start with /usr. /usr is not part of the
+ncheck output but must be added [using sed(1)] for the ls to work. The use
+of the ls command is possible only if the file system is mounted.
+
+# ls -l 'ncheck -F s5 -s /dev/dsk/c0d0s4 | cut -f2 | sed 's:^:/usr:''
+-r-sr-xr-x   1  root   bin   72579  Mar
+ 3  07:25  /usr/bin/at
+-r-sr-xr-x   1  root   bin   33608  Mar
+ 3  07:25  /usr/bin/atq
+-r-sr-xr-x   1  root   bin   23040  Mar
+ 3  07:25  /usr/bin/atrm
+-r-sr-xr-x   1  root   bin   28424  Mar
+ 3  07:25  /usr/bin/crontab
+---s--x--x   1  root   uucp  74762  Mar
+ 6  11:15  /usr/bin/ct
+---s--x--x   1  uucp   uucp  83346  Mar
+ 6  11:15  /usr/bin/cu
+-r-sr-xr-x   1  root   bin   29370  Mar
+ 3  10:44  /usr/bin/df
+-r-xr-sr-x   1  bin    sys   11990  Mar
+14  12:34  /usr/sbin/fusage
+-r-xr-sr-x   1  bin    sys   36068  Mar
+ 3  01:37  /usr/bin/ipcs
+-r-sr-xr-x   1  root   bin   34514  Mar
+ 3  10:46  /usr/bin/login
+-r-xr-sr-x   2  bin    mail  88724  Mar
+ 3  10:46  /usr/bin/mail
+-r-xr-sr-x   1  bin    mail  85034  Mar
+ 3  10:54  /usr/bin/mailx
+-rwsr-xr-x   1  root   sys   8718   Mar
+ 3  10:44  /usr/bin/newgrp
+-r-sr-sr-x   1  root   sys   21154  Mar
+ 3  10:44  /usr/bin/passwd
+-r-sr-sr-x   1  root   bin   24202  Mar
+ 3  10:46  /usr/bin/ps
+-r-xr-sr-x   2  bin    mail  88724  Mar
+ 3  10:46  /usr/bin/rmail
+-rwsr-xr-x   1  root   sys   17526  Mar
+ 3  10:44  /usr/bin/sacadm
+-r-xr-sr-x   1  bin    sys   39508  Mar
+ 3  02:50  /usr/sbin/sadp
+-r-sr-xr-x   1  root   root  35128  Mar
+14  13:07  /usr/bin/su
+---s--x--x   1  uucp   uucp  78668  Mar
+ 6  11:15  /usr/bin/uucp
+---s--x--x   1  uucp   uucp  36628  Mar
+ 6  11:15  /usr/bin/uuglist
+---s--x--x   1  uucp   uucp  32254  Mar
+ 6  11:16  /usr/bin/uuname
+---s--x--x   1  uucp   uucp  77550  Mar
+ 6  11:16  /usr/bin/uustat
+---s--x--x   1  uucp   uucp  81424  Mar
+ 6  11:16  /usr/bin/uux
+-r-xr-sr-x   1  bin    tty   14438  Mar
+ 3  10:47  /usr/bin/write
+-r-sr-xr-x   1  root   sys   15864  Mar
+ 3  10:52  /usr/lib/mv_dir
+---s--x--x   1  root   bin   26801  Mar
+ 3  02:46  /usr/lib/pt_chmod
+-r-xr-sr-x   1
+bin    sys   16682  Mar
+ 3  02:52  /usr/lib/sa/sadc
+-r-sr-xr-x   1
+root   sys   23824  Mar
+11  01:27  /usr/rar/bin/su
+-r-xr-sr-x   1
+bin    tty   17488  Mar
+ 3  10:43  /usr/sbin/wall
+-r-xr-sr-x   1
+bin    sys   11274  Mar
+ 3  09:25  /usr/sbin/whodo
+#
+
+In this example, the /usr/rar/bin/su should be investigated.
+
+Security Audit
+
+After the system has been fully configured, the system administrator should
+perform a check for SETUID/SETGID files and devices on root and /usr using
+one of the previous procedures. The output from the check should be saved
+on some medium (for example, on a diskette) and printed in hard-copy. The
+system administrator should periodically rerun the procedure, compare its
+results with the previous output, and investigate changes such as
+additions, deletions, or changes in size or date.
+
+guidob (guidob@synnergy.net)
+Synnergy Networks (c) 1998, http://www.synnergy.net

@@ -1,0 +1,278 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 17 -- How Encryption Works </TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;17</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Encryption Works</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowEncryptionWorks">
+How Encryption Works</A>
+<LI><A HREF="#HowCryptosystemsWork">
+How Cryptosystems Work</A>
+</UL>
+
+<HR>
+<P>
+Encryption works to protect against many threats to the security
+of an intranet. There is vulnerability during data transmission
+when people capture data sent across an intranet, or from the
+intranet through the Internet. This is a particular problem when
+transmitting sensitive information. Data is also vulnerable to
+a variety of threats while stored, including unauthorized access
+and theft.
+<P>
+When information and data is <I>encrypted</I>, it is altered so
+that to anyone other than the intended recipient it will look
+like meaningless garble. Encrypted information needs to be <I>decrypted</I>
+in order to view it and understand it-that is, turned back to
+the original message by the recipient, and only by the recipient.
+<P>
+There are several terms you'll need to understand in the encryption
+process: keys, algorithm, hash function, message digest, and digital
+fingerprint. 
+<P>
+The heart of understanding how cryptosystems work is to understand
+the concept of <I>keys</I>. There are two basic kinds of encryption:
+<I>secret-key (symmetric) </I>and <I>public-key (asymmetric) cryptography</I>.
+Keys are secret values that are used by computers in concert with
+complex mathematical formulas called algorithms to encrypt and
+decrypt messages. The idea behind keys is that if someone encrypts
+a message with a key, only someone with a matching key will be
+able to decrypt it. Key size is the critical characteristic of
+encryption systems. Size is counted in bits. DES (Data Encryption
+Standard) is the most common secret key system. Both the sender
+and the receiver need to have copies of the same secret key. DES
+is used by the U.S. government and relies on a 56-bit key. This
+is the minimum size for effectiveness. DES performs 16 sequential
+calculations of substitutions on separate halves of the message
+to derive the encrypted result. DES is a symmetric process, linear
+calculation, and results in one secret key. 
+<P>
+RSA encryption, named after the MIT professors who developed it
+in 1977 (Ronald Rivest, Adi Shamir, and Leonard Adleman), differs
+from DES in both technique to derive the result and because RSA
+uses key pairs instead of one key. The key pairs of RSA are derived
+by multiplying two large (each a few hundred bits long) prime
+numbers (factorization) and additional mathematical calculations.
+The RSA algorithm is the best-known public-key system. In public-key
+cryptography, a pair of keys are involved: a <I>public key</I>
+and a <I>private key</I>. Every person has both a public key and
+a private key. An individual's public key is made freely available,
+while the private key is exclusively known to each individual.
+If the public key is used to encrypt a message, only the companion
+private key can decrypt the message. If someone wanted to send
+a message to you, for example, he or she would encrypt it with
+your public key. Only you, with your private key, would be able
+to decrypt the message and read it. Your public key could not
+decrypt it. This means that once the message is encrypted, not
+even the sender can decrypt the message. Conversely, messages
+encrypted with private keys can only be decrypted with the matching
+public key. This ensures the authenticity of the sender to the
+recipient: Only someone with the private key code can encrypt
+a message that can be decrypted with that public key.
+<P>
+You may have heard about the Clipper chip and the Skipjack method
+to program a secret key. Skipjack uses an 80-bit key, so would
+be tougher to crack than DES. The controversy over the Clipper
+chip is not about the effectiveness of Skipjack, rather it is
+the fact that the chip contains a &quot;back-door&quot; that would
+allow others (theoretically only specifically authorized government
+agents) to get at the secret key, completely defeating the reasons
+people use encryption, privacy, and security.
+<P>
+PGP (Pretty Good Privacy) is an encryption program that uses a
+128-bit key, and furthermore, it uses the RSA algorithm to encrypt
+the encryption of the 128-bit key. This means that PGP has 2<SUP>128</SUP>
+possible keys. PGP as an implementation with RSA, uses key pairs,
+also known as public and private keys.
+<P>
+When a message is run through an encryption algorithm (like RSA)
+it can also call a hash function. Algorithms are essentially the
+mathematical method used to generate the keys. The hash function
+is used as a method to ensure that a message hasn't been altered.
+For example, if a sent message was 500 words long, but arrived
+as a message 501 words long, you could tell something had changed
+in transit. Word count by itself is not sufficient for ensuring
+that a message hasn't been altered since you could have multiple
+changes that have a net result of 500 words, and there would be
+no way to tell that the 500 words contained different words than
+the original. Hash functions on messages, therefore, are more
+complex. For example, it might use the number of words and the
+number of letters as components in the calculation. Because the
+message is the basis for the algorithm's calculation the result
+is unique to the message. 
+<P>
+This process produces a number known as the message digest. For
+the purposes of this explanation, think of it as the value of
+the word count result, 500. The message digest (the 500 value)
+is then encrypted apart from the message itself, with a sender's
+private key. Because only the sender has access to this private
+key, the result is a &quot;digital fingerprint&quot;-a unique
+number that only the originator with a private key can create
+and which can only be decrypted with the companion public key.
+<P>
+Next, a new, random key is generated to encrypt the actual message
+and the digital signature. The recipient will need a copy of this
+random key in order to decrypt the message. This random key is
+the only key in the world that can decrypt the message and it
+is solely in the possession of the sender. This means the random
+key must now be sent, maintaining its secrecy, to the recipient,
+so the message can be decrypted. To allow for secure sending of
+the random key, it too is encrypted, this time with the recipient's
+public key. The encrypted random key is referred to as the digital
+envelope. Only the recipient will be able to decrypt the random
+key since it was encrypted with his or her public key-and so only
+his or her private key can decrypt it. 
+<P>
+The result of this process is an encrypted confidential message,
+an encrypted signature, and the encrypted digital envelope. When
+the recipient gets the message, he or she decrypts the digital
+envelope with the private key, which results in the random key
+used to encrypt the message. The recipient then uses the random
+key to decrypt the actual message. However, at this stage there
+is no way to check that the message hasn't been altered en route-or
+that the message is authentic; that is, sent by the person it
+claims to be sent by. The recipient now uses the sender's public
+key to decrypt his or her encrypted digital signature. The recipient
+then gets the message digest-the message's &quot;digital fingerprint.&quot;
+<P>
+By running the digital fingerprint message through the same algorithm-the
+hash function-a new message digest is generated. If authentic,
+this new message digest should match the original message digest
+precisely. If they don't match, either someone else composed the
+message, or the message was altered by someone after it was written.
+<P>
+In the process described above, a public-key system was crucial
+to the flow. Private key (or secret key) cryptosystems are not
+feasible to be used widely on the Internet or intranets for things
+such as electronic commerce. For a company to conduct business
+over the Internet or intranets with a private key system would
+mean creating millions of different private keys-one for each
+person who wanted to do business-and then figuring out some way
+to send those private keys securely over the Internet, which is
+not really possible. In secret key cryptography, only one key
+is used to encrypt and decrypt messages. With a public-key system,
+a business only needs to create a single public/private key combination.
+The business would post the public key for anyone to use to encrypt
+information-but only the business itself, with the private key,
+would be able to decrypt the data.
+<H2><A NAME="HowEncryptionWorks"><FONT SIZE=5 COLOR=#FF0000>
+How Encryption Works</FONT></A></H2>
+<P>
+One means of securing an intranet is to use encryption-altering
+data so that only someone with access to specific decryption codes
+can understand the information. Encryption is used for storing
+and sending passwords to make sure that no snoopers can understand
+them. Encryption is used as well when data is sent between intranets
+on Very Secure Private Networks (VSPNs). Encryption is also used
+to conduct commerce on the Internet to protect credit card information
+during transmission.
+<OL>
+<LI><I>Keys </I>are the heart of encryption. Keys are complex
+mathematical formulas (algorithms), that are used to encrypt and
+decrypt messages. If someone encrypts a message, only someone
+with the proper key will be able to decrypt the message. There
+are two basic key systems, secret-key and public-key cryptography.
+<LI>An algorithm is used to perform a hash function. This process
+produces a message digest unique to the message. The message digest
+is encrypted with the sender's private key which results in a
+digital fingerprint.
+<LI>Data Encryption Standard (DES) is a secret-key (symmetric)
+system; there is no public key component. Both the sender and
+the receiver know the secret code word. This method is not feasible
+for conducting business over the Internet.
+<LI>RSA is a public-key (asymmetric) system. RSA uses key pairs
+to encrypt and decrypt messages. Each person has a <I>public key,
+</I>available to anyone on a public key ring, and a <I>private
+key</I>, kept only on their computer. Data encrypted with someone's
+private key can only be decrypted with their public key; and data
+encrypted with their public key can only be decrypted with their
+private key. Therefore, RSA requires an exchange of public keys;
+this can be done without a need for secrecy since the public key
+is useless without the companion private key.
+<LI>PGP, Pretty Good Privacy, a program invented by Philip Zimmermann,
+is a popular method used to encrypt data. It uses MD5 (message-digest
+5) and RSA cryptosystems to generate the key pairs. PGP is a popular
+program that can run on UNIX, DOS, and Macintosh platforms. It
+offers some variations of functionality, like compression, that
+other cryptosystems do not. Multiple key pairs can be generated
+and placed on public and private key rings.
+</OL>
+<H2><A NAME="HowCryptosystemsWork"><FONT SIZE=5 COLOR=#FF0000>
+How Cryptosystems Work</FONT></A></H2>
+<P>
+Because of the open nature of the Internet, it is easy for people
+to intercept messages that travel across it-making it difficult
+to send confidential messages or financial data, such as credit
+card in-formation. To solve the problem, cryptosystems have been
+developed. A popular one, called RSA, uses keys to encrypt and
+decrypt messages so that only the sender and receiver can understand
+the messages. The system requires that each person have a public
+key that is made available to anyone, and a private key that they
+keep only on their computer. Data encrypted with someone's private
+key can only be decrypted with their private key. This illustration
+is an example of how a public-key system works. In it, Gabriel
+and Mia want to exchange a confidential message. They have already
+exchanged public keys. 
+<UL>
+<LI>Gabriel wants to send a confidential message over the Internet
+to Mia. Mia will need some way to decrypt the message-as well
+as a way to guarantee that the message has been actually sent
+by Gabriel, and not by an imposter. First, Gabriel runs his message
+through an algorithm called a<I> hash function.</I> This produces
+a number known as the<I> message digest.</I> The message digest
+acts as a sort of &quot;digital fingerprint&quot; that Mia will
+use to ensure that no one has altered the message.
+<LI>Gabriel now uses his private key to encrypt the message disgest.
+This produces a unique digital signature that only he, with his
+private key, could have created.
+<LI>Gabriel generates a new random key. He uses this key to encrypt
+his original message and his digital signature. Mia will need
+a copy of this random key in order to decrypt Gabriel's message.
+This random key is the only key in the world that can decrypt
+the message- and at this point only Gabriel has the key.
+<LI>Gabriel encrypts this new random key with Mia's public key.
+This encrypted random key is referred to as the<I> digital envelope.</I>
+Only Mia will be able to de-crypt the random key since it was
+encrypted with her public key-and so only her private key can
+decrypt it.
+<LI>Gabriel sends a message over the Internet to Mia that is composed
+of several parts: the encrypted confidential message, the encrypted
+digital signature, and the encrypted digtal envelope.
+<LI>Mia gets the message. She decrypts the digital envelope with
+her private key-and out of it gets the random key that Gabriel
+used to encrypt the message.
+<LI>Mia uses the random key to decrypt Gabriel's message. She
+can now read the confidential message that he sent her. She can't
+yet be sure, however, that the message hasn't been altered en
+route-or that the message was in fact sent by Gabriel.
+<LI>She now uses Gabriel's public key to decrypt his encrypted
+digital signature. When she does this, she gets his message digest-
+the message's &quot;digital fingerprint.&quot;
+<LI>Mia will use this message digest to see whether the message
+was in fact sent by Gabriel and not altered in any way. She takes
+the message that she had decrypted and runs it through the same
+algorithm-the hash function-that Gabriel ran the message through.
+This will produce a new message digest
+<LI>Mia compares the message digest that she calculated to the
+one that she got out of Gabriel's digital signature. If the two
+match precisely, she can be sure that Gabriel signed the message
+that it was not altered after he composed it. If they don't match,
+then she knows that either he didn't compose the message or that
+someone altered the message after he wrote it.
+</UL>
+<HR>
+
+<CENTER><P><A HREF="ch16.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch18.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

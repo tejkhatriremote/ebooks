@@ -1,0 +1,512 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0035)http://handsonhowto.com/smb101.html -->
+<HTML><HEAD><TITLE>Connecting Linux and MS Windows with SAMBA - A Hands-on How-to</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><LINK 
+href="Connecting Linux and MS Windows with SAMBA - A Hands-on How-to_files/bcc.css" 
+rel=stylesheet>
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY bgColor=#ffdead>
+<HR>
+
+<CENTER><A href="http://brasscannon.net/"><IMG alt=BrassCannon.net 
+src="Connecting Linux and MS Windows with SAMBA - A Hands-on How-to_files/bcnet.gif" 
+border=0></A></CENTER>
+<HR>
+
+<CENTER>
+<H1>Connecting Linux and Microsoft Windows with SAMBA</H1>
+<H2>A Hands-on How-to</H2>
+<H4>from Brass Cannon Consulting and the Brass Cannon Project</H4><I>A little 
+vague handwaving can save hours of tedious explanation...</I> </CENTER>
+<H3>What is it?</H3>
+<P>When you connect a Linux machine to the same <A 
+href="http://handsonhowto.com/lan101.html">Local Area Network</A> as a Microsoft 
+Windows machine, they will not automatically see each other. That is, the Linux 
+machine won't show up in Windows' Network Neighborhood nor will the Windows 
+disks be available under Linux. With samba you can quite easily do both.</P>
+<P>The name "samba" comes from the <EM>protocol</EM> used in Microsoft's Network 
+Neighborhood, which was originally called Server Message Block or SMB. "Samba" 
+is reverse-engineered software, developed from scratch, that allows other 
+operating systems (Unix, Linux, VMS, Macs, whatever) to connect to a Network 
+Neighborhood. (A "protocol" is just a well-defined way of doing something.)</P>
+<P>SMB is also known under the old name <STRONG>NetBIOS</STRONG>, or the new 
+buzzword <STRONG>CIFS</STRONG>, for "Common Internet File Standard."</P>
+<P>You can also use SMB to share Windows printers or other Windows services; 
+we're not going to get into that here, but CUPS (the Common Unix Printer 
+Standard) makes it pretty painless. See the <A 
+href="http://handsonhowto.com/smb101.html#ref">references</A> section for more 
+information.</P>
+<H3>What samba is not</H3>
+<P>Samba is not a way to share your Internet connection. I've documented that <A 
+href="http://handsonhowto.com/dodip.html">elsewhere</A>.</P>
+<P>Samba is not a <STRONG>safe</STRONG> way to share files over the Internet. 
+You should take serious steps to keep a Network Neighborhood connection from 
+leaking out of your LAN onto the Internet -- if you followed the recommended 
+steps when setting up <A href="http://handsonhowto.com/dodip.html">IP 
+Masquerade</A>, you will not be forwarding the SMB ports to the Internet. (This 
+is the same trick that keeps SMB from dialing your modem over and over again.) 
+It is essential to block these ports in order to protect your Windows "shares" 
+from rude strangers.</P>
+<H3>Samba is two things</H3>
+<P>As hinted above, samba is really two separate things. You can enable one part 
+without the other, so let's start with the easy part: attaching a shared Windows 
+disk, or "share," to your Linux machine.</P>
+<H4>"Mounting" a disk</H4>
+<P>"Mounting" a drive is the act of making the operating system aware that it is 
+available to be used. Think about a floppy drive -- it doesn't work if you don't 
+stick a disk in, right? Right. When you do that, the operating system (if we can 
+call Windows an operating system....) has to notice it, and then "do something" 
+about it. There is actually a little switch that the drive uses to signal the 
+motherboard that "media has been inserted." From there it's a short step to 
+<EM>doing something about it,</EM> such as "Display an updated directory listing 
+for the A: drive." </P>
+<P>But Linux doesn't have drive letters (and no, it's not limited to 26 disks 
+and disk partitions, either). Instead of a "C:" drive, Linux has a 
+<I>filesystem</I>, where all of its disks and partitions reside. The filesystem 
+has a tree structure, meaning that it starts from a "root" directory, and all 
+other devices branch out from that point.</P>
+<P>The root directory is symbolized by the single slash character, "/". You can 
+then have an unlimited number of other partitions or physical disks 
+<I>mounted</I> beneath the root. A device is mounted at a <I>mount point</I> 
+which is simply a directory; it acts as a label, a named location, so you can 
+find the new branch of the filesystem tree. To add a new disk you make sure 
+there is a directory to act as a mount point -- create one if necessary -- then 
+use the <TT>mount</TT> command.</P>
+<DIV class=aside>
+<P>See the <A href="http://handsonhowto.com/unix101.html">Unix 101</A> page for 
+more about the <TT>mount</TT> command.</P></DIV>
+<P>The root filesystem is mounted for you when Linux boots. You probably mount 
+some other partitions as well, depending on how you set up your Linux 
+installation.</P>
+<P>You have probably mounted cdrom disks or floppy disks; you can also mount 
+local hard drives. (Yes, drives, plural.) But a disk doesn't have to be 
+physically present on the Linux computer -- you can also mount network disks, 
+connected by any of a number of different protocols such as NFS (Network File 
+System), AFS (Andrew File System), even Appletalk -- or, of course, our current 
+topic of interest, SMB.</P>
+<DIV class=aside>
+<P>As a Microsoft user, you may think the need to run the mount command is 
+strange; it may seem natural that your PC "knows" when a new CD or floppy has 
+been slipped into a drive. Well, without making a big fuss, let's just say that 
+in the Unix world some of us prefer not to take those things for granted. You 
+<STRONG>can</STRONG> automate the mounting of floppies and CDs; look around for 
+information on "automount" -- but don't ask me; I don't use it.</P></DIV>
+<H4>On the Windows side...</H4>
+<P>We have to start somewhere, and in this case we're assuming that you have 
+established networking on your Windows PC. There are several "layers" of 
+networking available to you in the Network section of the Windows Control Panel, 
+but for our purposes there are two that matter. You need to enable TCP/IP 
+networking as (one of) your available protocols, and you need to turn on 
+Microsoft networking. The details vary between the different versions of 
+Windows.</P>
+<P>Of course, even if you're networking two Windows PCs, you can't connect to a 
+drive unless it has been "shared." Pick a drive in Windows Explorer and 
+right-click on it to get the context menu. One of the items on that menu will be 
+"Sharing". If there is a little "hand" icon holding up the disk, there is 
+<I>some</I> form of sharing enabled; but you ought to verify whether it is 
+read-only or read-and-write, and whether there is more than one password set on 
+the share. It makes sense to try to protect your information as much as 
+possible; don't give write access to the share if read-only access is good 
+enough.</P>
+<P>If you have more than one Windows machine, you can verify that they show up 
+in each others' <STRONG>Network Neighborhood</STRONG> and that you can connect 
+to each others' shared directories or shared disks (referred to as "shares"). If 
+that is the case, you're ready to add Linux to the mix. If not, you need to work 
+on your Windows settings a bit more -- Linux is good, but you can hardly expect 
+it to make a Windows-style connection if Windows itself can't!</P>
+<P>For what it's worth, back when I still had a Windows for Workgroups 3.11 box 
+on my LAN, I had a problem with shared machines "disappearing" from (what later 
+became) the Network Neighborhood. Someone suggested, and I confirmed, that if 
+you <STRONG>eliminate all references to the NetBEUI protocol</STRONG> in the 
+Network applet of Control Panel, you can still share Windows resources over 
+TCP/IP, and everything is much more stable. I still do it that way, and I 
+recommend it to anyone who is having a problem. Even without adding Linux to the 
+mix, my Windows LAN runs much more smoothly as a pure TCP/IP network.</P>
+<DIV class=aside>
+<P>(NetBIOS and NetBEUI are not the same thing! You need NetBIOS support to use 
+samba, or to share Win9x machines; but you do not need NetBEUI unless you want 
+to include plain MS-DOS machines in your networking plans. Even I'm not 
+<I>that</I> old-fashioned.)</P></DIV>
+<H4>Kernel support</H4>
+<P>To use samba, you must have samba support available <A 
+href="http://handsonhowto.com/ckernel.html">in your Linux kernel</A>. You have 
+two choices: compile it in, or enable the "hooks" in your kernel configuration 
+that accept <EM>loadable modules,</EM> and compile support for <TT>smbfs</TT> as 
+a module. It's just another type of filesystem as far as Linux is concerned. The 
+program that actually "mounts" the shared drive is called <TT>smbmount</TT>. The 
+syntax of the command line used by <TT>smbmount</TT> changed slightly over the 
+various versions (Microsoft has been a "moving target", what with MS Windows 95, 
+98, NT, 2000, ME, and XP... and now 2003); but it will look like one of these -- 
+and yes, two of them are the same. For the purpose of the example, 
+<TT>//winbox</TT> is the name of the Windows machine -- its Network Neighborhood 
+or NetBIOS name. /C is its shared "C:" drive, the "share name." 
+<TT>/mnt/win</TT> is the Linux mount point -- an empty directory created just as 
+a place to mount the share. If you are already using /mnt to mount another 
+device, you may need to use a different mount point. Let's say you decide to use 
+<TT>/win</TT>; to do that, create the new mount point by typing <TT>mkdir 
+/win</TT> as root. You only have to do that once, and only if it doesn't already 
+exist. In that case you'd replace '/mnt/win' with '/win' in the examples below. 
+</P><PRE>	% smbmount //winbox/c /mnt/win             # samba version 2.05 - 2.09
+	% smbmount //winbox/c -c "mount /mnt/win"  # version 2.04
+	% smbmount //winbox/c /mnt/win             # samba versions &lt; 2.04
+
+</PRE>
+<DIV class=aside>
+<P>What's with that alternate form? For a relatively short time, someone thought 
+it would be cool to use the "real" Linux <TT>mount</TT> command, and so smbmount 
+became a mere shell that called another program. It didn't last. Try the other, 
+more intuitive form of the command first. If it fails, try the alternate form -- 
+but if that one works, you should upgrade your samba package, because you have 
+an old one with many known problems.</P></DIV>
+<P>If you're running this as root, as is necessary with most commands that mount 
+filesystems, you'll need to tell <TT>smbmount</TT> what username to use on the 
+MS Windows box. I'm assuming you don't have a Windows user named "root"! So you 
+may want to export your Windows username in the variable USER <I>before</I> you 
+give the smbmount command, like so:</P><PRE>	% export USER=WINUSER
+	% smbmount //winbox/c /mnt/win
+
+</PRE>
+<P>(This assumes WINUSER is a valid login name on the machine Winbox.) You can 
+also pass the username as a parameter on the same line as the <TT>smbmount</TT> 
+command, like so:</P><PRE>	% smbmount //winbox/c /mnt/win -U=WINUSER
+</PRE>
+<P>Or you can enter it this way, which is about like putting a "kick me!" sign 
+on your own back:</P><PRE>	% smbmount //WINUSER:MYPASS@workgroup/winbox/c /mnt/win
+</PRE>
+<P>In the other formats, <TT>smbmount</TT> will ask for your Windows password. 
+In this one, it doesn't, which makes it somewhat more useful in scripts. It's 
+not such a good idea from the command line (for one thing, if you're using a 
+shell that keeps a "history" such as bash, it ends up in your command history, 
+and it's in plain text.) I recommend you use the approach that requires you to 
+key it in when prompted; it should not echo on the screen.</P>
+<P>The MS Windows disk is now mounted and is visible to Linux the same as any 
+other filesystem. You can <TT>cd /mnt/win</TT>, you can use Linux tools such as 
+<TT>ls</TT> or <TT>grep</TT>, and you can <TT>cp</TT> or <TT>mv</TT> files 
+between your Linux partitions and the MS Windows shared disk, in either 
+direction. (You can also shoot yourself in the foot with good old <TT>rm 
+-rf</TT> -- I can testify from experience that this will work quite well enough 
+to destroy a Windows installation.)</P>
+<HR>
+
+<H3>One down, one to go</H3>
+<P>Okay, we can see a Windows disk from our Linux box! What about going the 
+other way?</P>
+<P>To make our Linux machine show up in the Network Neighborhood, we have to run 
+not just one but two services. One of them is a naming service called 
+<TT>named</TT>, for "name daemon." The other is the SMB service itself, 
+<TT>smbd</TT>. These are usually handled by a single startup script, which is 
+invoked at system startup. Look for it under the /etc directory, perhaps as 
+/etc/rc3.d/S99samba, or /etc/init.d/rc.local/samba. You can also run it manually 
+by typing the full name of the script and a parameter such as "start" or 
+"stop":</P><PRE>	/etc/rc3.d/S99samba start
+</PRE>
+<P>Before you turn on samba, though, you need to look through the smbd 
+configuration file, <TT>/etc/smb.conf</TT> &nbsp; (It's a plain-text file, and 
+it is full of informative comments, so don't be intimidated by it.) You can get 
+more help by looking at the <TT>man</TT> (or manual pages) for the smb tools. To 
+get a list of the man pages available to you, the command <TT>man -k</TT> or its 
+alias, <TT>apropos</TT> is useful. ("Apropos" is just a fancy way of saying 
+"about" -- so <TT>apropos smb</TT> is just French for "tell me about smb". Try 
+<TT>apropos smb</TT> and also <TT>apropos samba</TT>. This will list all the 
+<TT>man</TT> pages that mention the string "smb" or "samba" in their one-line 
+descriptions.)</P>
+<P>You <I>can</I> configure smbd to make your Linux box look just like a 
+full-blown Windows NT domain controller. Our example will be a more modest goal: 
+to get the Linux machine to show up in our Network Neighborhood and to offer a 
+directory or two as a Windows share.</P>
+<P>With that in mind, here is a <STRONG>partial</STRONG> selection of lines from 
+a couple of my smb.conf files, with some notes in addition to the comments that 
+were part of the original file as installed by the samba distribution RPM.</P>
+<DIV class=aside>
+<P>In the examples below, the Samba team use # to mark their comments, and a 
+semicolon ; to comment out (turn off) lines of code. Using two different comment 
+markers makes it easier to turn options on and off, and not mix them up with 
+comments that are for humans only. Removing the semicolon makes that code line 
+active. </P></DIV>
+<HR>
+
+<HR>
+
+<H4>Example one - Linux notebook on a Windows 98 Workgroup</H4>
+<P><PRE># This is the main Samba configuration file. You should read the
+# smb.conf(5) manual page in order to understand the options listed
+# here. Samba has a huge number of configurable options (perhaps too
+# many!) most of which are not shown in this example.
+  workgroup = BRASSHAT
+  server string = STINGER
+  hosts allow = 192.168.32. 127.
+  security = user
+# Essential to using Samba with Windows 98 or NT 4.0:
+  encrypt passwords = yes
+# You'll need to create this file by running "smbpasswd -c someuser" --
+#    see more about that below:
+  smb passwd file = /etc/smbpasswd
+# Unix users can map to different SMB User names
+  username map = /etc/smbusers
+  local master = no
+# Windows Internet Name Serving Support Section:
+# WINS Support - Tells the NMBD component of Samba to enable its WINS Server
+;   wins support = no
+# The line above is turned off by the leading ;
+
+# DNS Proxy - tells Samba whether or not to try to resolve NetBIOS names
+# via DNS nslookups.
+  dns proxy = yes
+
+#============================ Share Definitions ==============================
+[homes]
+# Basically, give each user who has a Linux account the ability to see
+# her directory from her Windows box as a "share":
+   comment = Home Directories
+   browseable = no
+   writable = yes
+
+</PRE>
+<P></P>
+<HR>
+
+<HR>
+
+<P>That's (most of) the smb.conf I use when I'm at home. At a recent assignment, 
+though, I needed to share my notebook on a Windows NT <I>domain</I>, rather than 
+a Windows 98 <I>Workgroup</I>, and so I had to make some temporary changes to 
+support that environment:</P>
+<HR>
+
+<HR>
+
+<H4>Example two - Linux notebook on a Windows NT Domain</H4><PRE># This is the main Samba configuration file. You should read the
+# smb.conf(5) manual page yada yada yada
+#======================= Global Settings =====================================
+[global]
+
+# workgroup = NT-Domain-Name or Workgroup-Name
+   workgroup = MYCLIENT-HQ
+
+# server string is the equivalent of the NT Description field
+   server string = BRASSMAN (consultant)
+
+# Client has a complex LAN with three separate networks plus localhost:
+   hosts allow = 192.168.1. 192.168.2. 192.168.3. 127.
+
+# And to get along with the NT "Primary Domain Controller", we
+# need to set:
+   security = server
+
+# Use password server option only with security = server
+   password server = THE-PDC
+
+# You may wish to use password encryption. Please read
+# ENCRYPTION.txt, Win95.txt and WinNT.txt in the Samba documentation.
+# Do not enable this option unless you have read those documents
+  encrypt passwords = yes
+  smb passwd file = /etc/smbpasswd
+
+# Unix users can map to different SMB User names
+  username map = /etc/smbusers
+
+# Most people will find that this option gives better performance.
+# See speed.txt and the manual pages for details
+   socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+
+# Cause this host to announce itself to local subnets here
+   remote announce = 192.168.1.255 192.168.2.63
+#  Note that the second subnet is not a whole Class C!  That's legal.
+
+# Use only if you have an NT server on your network that has been
+# configured at install time to be a primary domain controller.
+;   domain controller = THE-PDC
+# I had this commented out, and things seemed to work without it.
+
+# if you enable domain logons then you may want a per-machine or
+# per user logon script
+# run a specific logon batch file per username
+   logon script = %U.bat
+
+# Windows Internet Name Serving Support Section:
+# WINS Support - Tells the NMBD component of Samba to enable its WINS Server
+;   wins support = no
+
+# WINS Server - Tells the NMBD components of Samba to be a WINS Client
+#	Note: Samba can be either a WINS Server, or a WINS Client, but NOT both
+   wins server = 192.168.1.110
+#  Above address was provided by the NT admin.
+
+</PRE>
+<P></P>
+<DIV class=aside>
+<P>The main difference between a Workgroup and a Domain, at least for our 
+purposes, is that domains have "domain controllers." You must log in to a domain 
+controller in order to join the domain.</P></DIV>
+<HR>
+
+<HR>
+
+<H4>Example three - Linux desktop in a Windows 9x environment</H4>
+<P>Finally, here's my home Linux server, where I've dropped in a mirrored pair 
+of 40GB drives and shared them as <TT>/export</TT>: </P>
+<P><PRE># This is the main Samba configuration file. You should read the
+# smb.conf(5) manual page yada yada yada
+#======================= Global Settings =====================================
+[global]
+# workgroup = NT-Domain-Name or Workgroup-Name
+    workgroup = BRASSHAT
+
+# server string is the equivalent of the NT Description field
+    server string = Howie Samba Server
+
+# Restrict connections to local machines.
+    hosts allow = 192.168.32  127.
+
+# Security mode.  Permissions based on username and password:
+    security = user
+    encrypt passwords = yes
+    smb passwd file = /etc/smbpasswd
+
+# The following allows password changing from Windows to
+# update the Linux sytsem password also.
+    unix password sync = Yes
+    passwd program = /usr/bin/passwd %u
+    passwd chat = *New*UNIX*password* %n\n *ReType*new*UNIX*password* %n\n *passwd:*all*authentication*tokens*updated*successfully*
+
+# Cause this host to announce itself to local subnets here
+remote announce = 192.168.32.31
+# Note that I am NOT USING a whole Class C - I'm using a smaller netmask 
+# of 255.255.255.224, so my broadcast address is .31, not .255.
+# See http://handsonhowto.com/lan101.html for more about netmasks!!!
+
+# DNS Proxy - tells Samba whether or not to try to resolve NetBIOS names
+# via DNS nslookups.  Easier way to handle this for a small, stable LAN
+# is by adding local machine's names and IP addresses to the file
+# /etc/lmhosts
+    dns proxy = no
+    password level = 0
+    preferred master = no
+    os level = 0
+    null passwords = no
+    dead time = 0
+    debug level = 0
+    domain master = no
+    load printers = no
+
+#============================ Share Definitions ==============================
+[Howie]
+    comment = Howie Samba server
+    available = yes
+    public = yes
+    path = /export
+    guest only = no
+    writable = yes
+    browseable = yes
+    valid users = hoser,mamacita,digger
+    only user = no
+    allow hosts = 192.168.32.2 192.168.32.3
+</PRE>
+<P></P>
+<HR>
+
+<HR>
+
+<H3>But we're not done yet!</H3>
+<P>Note the "valid users" line above. Windows has a username and password 
+scheme, which looks nothing at all like the Unix one. And unlike a certain 
+round-heeled excuse for an operating system, Unix (Linux) is not about to let 
+some stranger start messing around with its files without so much as a "Hi, how 
+are you?" What do we do about that?</P>
+<P>The answer is, we set up a separate, parallel username and password system 
+especially for smb. Before you can allow smb connections, you need to create 
+this username database with the <TT>smbpasswd</TT> program, and set 
+Windows-style passwords for the users you add to it.</P>
+<P>It's not that hard, actually:</P><PRE><P>
+  % smbpasswd -c  #  Create a new smbpasswd file -- ONE TIME ONLY!
+  % smbpasswd -a hoser
+  New SMB password: razzbat
+  Retype new SMB password: razzbat
+  Added user hoser.
+  Password changed for user hoser.
+  %
+</P>
+</PRE>
+<P>Now the Windows user named HOSER can log on to your SMB share with the 
+password RAZZBAT -- and in true Windows fashion, it doesn't care about uppercase 
+vs lowercase letters. If you make this password the same as the one you use to 
+start Windows, the Linux shares should be visible just like any other Windows 
+share. If they aren't the same, Windows should prompt you when you try to 
+connect and also offer to save the password for reuse.</P>
+<P>You only use the <TT>-c</TT> option to <B>create</B> the file -- once you 
+have created the file, don't ever use the <TT>-c</TT> option again, or it will 
+blow away your existing file and all the passwords you've added!</P>
+<P>To add a user once you have created the smbpasswd file, you will use 
+<TT>smbpasswd -a username</TT>:</P><PRE><P>
+  % smbpasswd mamacita
+  New SMB password:
+  Retype new SMB password:
+  Failed to find entry for user mamacita.
+  Failed to change password entry for mamacita
+  # D'oh!  You have to ADD mamacita with -a !
+  % smbpasswd -a mamacita
+  New SMB password:
+  Retype new SMB password:
+  Added user mamacita.
+  Password changed for user mamacita.
+  %
+</P>
+</PRE>
+<P>To change the password for an existing user, just use <TT>smbpasswd 
+username</TT>. If you have enabled the password synchronization script in your 
+smb.conf file, changing the SMB password will also update that user's Linux 
+password.</P>
+<H3>There's more! But...</H3>
+<P>Truth be told, this month (6/2002) is the first time I've ever found a need 
+to use the other nifty features offered by samba, such as the ability to share 
+printers. It turns out that CUPS (the Common Unix Printer System) and samba get 
+along quite well, and the default information in the smb.conf will share a CUPS 
+printer effectively. Configure a printer on your Linux box, but tell your 
+Windows machine that it's talking to a generic Postscript printer. Even if it 
+isn't, the GNU Ghostscript interpreter will turn Postscript input into the 
+proprietary format your printer needs. In effect, a Linux box can turn almost 
+any printer into a Postscript printer!</P>
+<P>Update, 10/2003: There have been some interesting Samba tools added to later 
+distributions -- I just poked around a bit on a Mandrake 9.1 machine which 
+includes LinNeighborhood, which happily mananged my Windows passwords and let me 
+browse a variety of Windows shares. I also told CUPS about a LaserJet 6L on a 
+nearby XP machine and it printed a test page quite painlessly. The "URI" it 
+needed was in the format "smb://user:pass@server/printer" as described above. 
+May I suggest you set up a Windows user for printing purposes only, and give 
+that name a password you won't be tempted to use elsewhere. </P>
+<P>In theory a Linux box should be able to access anything that a Windows 
+machine is willing to share. I hope that these few examples have got the basics 
+working for you, and that this success will give you the courage to dig into the 
+<TT>man</TT> files and HOW-TOs to find any other features you need or want.</P>
+<HR>
+
+<DIV class=aside><A name=ref>
+<H3>References</H3></A>
+<P>Several good articles came out just after I started assembling this page. 
+These are two of the best:</P>
+<P><I>Linux Magazine</I>, May 2001; Hertel, Christopher R., "Understanding the 
+Network Neighborhood", pp 30-37; see also <A 
+href="http://www.linux-mag.com/">http://www.linux-mag.com/</A> for Christopher's 
+earlier article <A href="http://www.linux-mag.com/1999-09/samba_01.html">Samba: 
+Linux's Stealth Weapon</A>. </P>
+<P><I>Windows 2000 Magazine</I>, April 2001 (Vol. 7 No. 5); Puryear, Dustin, 
+"Learning Samba for File Sharing", pp 93-97 - article text only available to 
+subscribers - see <A 
+href="http://www.win2000mag.com/">http://www.win2000mag.com/</A>. </P></DIV>
+<HR>
+
+<P>You are invited to <A 
+href="http://brasscannon.org/cgi-bin/yabb/YaBB.cgi">discuss this article</A> 
+with the author in the Feedback section of the Brass Cannon webboard.</P>
+<HR>
+
+<CENTER><A href="http://handsonhowto.com/"><IMG alt="Hands-On How-To Index" 
+src="Connecting Linux and MS Windows with SAMBA - A Hands-on How-to_files/cannon.gif" 
+border=0></A> </CENTER>
+<HR>
+
+<H6>
+<SCRIPT language=JavaScript>
+document.writeln("Last updated ",document.lastModified)
+</SCRIPT>
+</H6></BODY></HTML>

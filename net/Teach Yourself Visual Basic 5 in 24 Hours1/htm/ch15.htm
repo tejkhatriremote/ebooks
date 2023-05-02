@@ -1,0 +1,959 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch14.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch16.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 15</A>
+	<UL>
+		<LI><A HREF="#Heading2">Visual Basic Database Basics</A>
+		<UL>
+			<LI><A HREF="#Heading3">File Concepts</A>
+			<UL>
+				<LI><A HREF="#Heading4">Opening Files</A>
+				<LI><A HREF="#Heading5">Closing Files</A>
+				<LI><A HREF="#Heading6">Deleting Files</A>
+				<LI><A HREF="#Heading7">Writing to Files with Write#</A>
+			</UL>
+			<LI><A HREF="#Heading8">Listing 15.1. Writing</A>
+			<LI><A HREF="#Heading9">array data to a file.</A>
+			<UL>
+				<LI><A HREF="#Heading10">Inputting with Input#</A>
+				<LI><A HREF="#Heading11">Line Input# Records</A>
+			</UL>
+			<LI><A HREF="#Heading12">Introduction to Database Processing</A>
+			<UL>
+				<LI><A HREF="#Heading13">The Data Control</A>
+				<UL>
+					<LI><A HREF="#Heading14">Figure 15.1.</A>
+				</UL>
+				<LI><A HREF="#Heading15">A Simple but Powerful Application</A>
+			</UL>
+			<LI><A HREF="#Heading16">The Data Form Wizard</A>
+			<UL>
+				<LI><A HREF="#Heading17">Figure 15.2.</A>
+				<LI><A HREF="#Heading18">Figure 15.3.</A>
+			</UL>
+			<LI><A HREF="#Heading19">Summary</A>
+			<LI><A HREF="#Heading20">Q&amp;A</A>
+			<LI><A HREF="#Heading21">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading22">Quiz</A>
+				<LI><A HREF="#Heading23">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 15</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Visual Basic Database
+Basics</FONT></H2>
+<P>Rarely do Visual Basic programmers use the file-related controls that you see
+on the toolbox such as the File List Box control. More often, programmers use the
+File Open and File Save dialog boxes you can produce from the Common Dialog Box control
+(refer to Hour 12, &quot;Dialog Box Basics&quot;). The dialog box gives users the
+ability to select files and link to other networked computers and files.</P>
+<P>You must make additional file-related decisions besides which controls to use
+to select files. In addition to the controls you display for the user, you must decide
+if you want to write file-access routines yourself or use database controls that
+come with Visual Basic. The file routines are tedious and old-fashioned and difficult
+to debug; the database controls are sometimes overkill, especially if you don't use
+an external database or if your application uses only a small data file.</P>
+<P>This lesson gives you the best of both worlds. You will learn how to write file-access
+routines for small file-related data and you'll master the database control as well.
+Even if you don't work with files at the file-access level, the first part of this
+lesson prepares you for the concepts you need to use the Data control.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>What file terms you need to master
+	<P>
+	<LI>When you open and close files
+	<P>
+	<LI>How to write to a file
+	<P>
+	<LI>How to read from a file
+	<P>
+	<LI>When to use the Data control
+	<P>
+	<LI>What bound controls offer
+	<P>
+	<LI>How to use the Data Form Wizard
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">File Concepts</FONT></H3>
+<P>If you've collected data from the user and stored that data in variables and arrays,
+you can save the data to the disk for later retrieval. Also, you can access disk
+files from within Visual Basic for product inventory codes, amounts, customer balances,
+and whatever else your program needs from the long-term data file storage. Visual
+Basic supports several ways you can store and retrieve information to and from disk
+files. This section introduces several new file-related terms.</P>
+<P>Several database access controls exist that read and write the data you've put
+in databases using products such as Microsoft Access and Paradox. Even though these
+controls provide more power and ease than you can get by programming alone, you'll
+still need to understand fundamental disk access routines. Once you learn the more
+primitive disk access statements taught in the next several sections, you will more
+quickly understand the internal workings of the Data control that the last part of
+this lesson teaches.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A file is a collection of
+related data as well as programs that you buy and write, documents from your word
+processor, and data your applications write to disk.</P>
+<P>Although you already know what a file is, this lesson works with data files and
+it often helps to understand specific terminology as soon as possible. Actually,
+your application can read any file whether or not the file is a data file, but the
+file's format determines how you'll read that file, as you'll learn here. Generally,
+you'll use Visual Basic to create and access data and text files stored on the disk.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Although you
+	can use Visual Basic to write utility programs that read other kinds of files such
+	as system and program files, this book does not cover such file I/O. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A data file holds data on
+the disk.</P>
+<P>The files this lesson discusses are data files and those data files may be textual
+or stored in a database format. Every file is stored under a unique filename to its
+folder (often called a directory) and disk drive. Therefore, there can't be two or
+more files with the same filename unless the files reside in different folders or
+on different disks.</P>
+<P>Data files can take on all kinds of formats. Generally, newcomers to Visual Basic
+should stick with data files that are textual in nature. Reading and writing text
+files is rather simple using standard statements that have existed in BASIC-like
+languages for many years. Once you learn these fundamental file statements, you can
+begin to use more advanced database files to add power to your applications.</P>
+<P>Text files are readable by virtually any kind of program, and virtually any program
+can produce text files. Sometimes, text files are called ASCII files because text
+files consist of strings of ASCII characters, as opposed to binary files, which are
+only readable by special programs and system utilities.</P>
+<P>Before Visual Basic can access a file, you or the user will have to direct Visual
+Basic to the exact location on the exact disk where the file is stored. If your user
+is selecting a file, you can display the File Open dialog box to give the user the
+ability to easily change drives, folders, and filenames. When your program accesses
+a file that the user doesn't know about, such as a data file that holds temporary
+program data, your program will have to supply the drive, folder, and filename.
+<H4 ALIGN="CENTER"><A NAME="Heading4"></A><FONT COLOR="#000077">Opening Files</FONT></H4>
+<P>The <TT>Open</TT> statement performs various tasks such as locating a file, making
+sure the file exists if needed, and creating some folder entries that manage the
+file while the file is open. A Visual Basic program always has to open a file, using
+Open, before the program can read or write data to the file (unless you use the Data
+control described later in this lesson).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Think of the <TT>Open</TT>
+	statement as doing for Visual Basic what an open file drawer does for you when you
+	want to retrieve a file from a filing cabinet. The <TT>Open</TT> statement locates
+	the file and makes the file available to Visual Basic. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Here is <TT>Open</TT>'s format:</P>
+<PRE><FONT COLOR="#0066FF">Open strFileName [For Mode] As [#]intFileNumber
+</FONT></PRE>
+<P>strFileName must be a string value or string variable that holds a filename. The
+filename must reside on the default drive or folder unless you specify the full path
+to the file in strFileName. Visual Basic includes a <TT>CurDir()</TT> function that
+returns the current directory folder as a string; you can append this folder name
+or specify the full path inside the strFileName string argument.</P>
+<P>The Mode value must be a named value from Table 15.1. Visual Basic supports additional
+mode values, but this book does not cover the more advanced or esoteric Mode values.
+The Mode tells Visual Basic exactly what your program expects to do with the file
+once Visual Basic opens the file.</P>
+<CENTER>
+<P><B>Table 15.1. Open's Mode values. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Mode</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Append</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Tells Visual Basic that your program needs to write to the end of the file if it
+			already exists. If the file doesn't exist, Visual Basic creates the file so your
+			program can write data to the file.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Input</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Tells Visual Basic that your program needs to read from the file. If the file doesn't
+			exist, Visual Basic issues an error message. As long as you use a file-selection
+			frame properly, Visual Basic will never issue an error because the file-selection
+			frame forces the user to select a file or cancel the selection operation.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Output</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Tells Visual Basic that your program needs to write to the file. If the file doesn't
+			exist, Visual Basic creates it. If the file does exist, Visual Basic first erases
+			the existing file and creates a new one under the same name, thereby replacing the
+			original one.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>The pound sign (#) is optional, although most Visual Basic programmers specify
+it out of habit (some previous versions of the BASIC language required the pound
+sign). The intFileNumber value represents a number from 1 to 255 and associates the
+open file with that number. After you open a file successfully (assuming that there
+are no errors such as a disk drive door being left open), the rest of the program
+uses file I/O commands and functions to access the file. The file number stays with
+the file until you issue a <TT>Close</TT> command (see the next section) that releases
+intFileNumber and makes the number available to other files.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The file number
+	is sometimes called the file channel. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>As with all DOS and Windows file descriptions, you can specify the drive, directory,
+and filename using uppercase or lowercase characters.</P>
+<P>If your application uses multiple files, you can open more than one file simultaneously
+within a single application. Each command that accesses one of the files directs
+its activity toward a specific file using that file's intFileNumber. The following
+<TT>Open</TT> statement creates and opens a data file on the disk drive and associates
+the file to file number 1:</P>
+<PRE><FONT COLOR="#0066FF">Open &quot;d:\data\myfile.dat&quot; For Output As #1
+</FONT></PRE>
+<P>If you knew that the file already existed and you needed to add to that data file,
+you could use the <TT>Append</TT> mode to add to the file with this <TT>Open</TT>
+statement:</P>
+<PRE><FONT COLOR="#0066FF">Open &quot;d:\data\myfile.dat&quot; For Append As #1
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>As you can see,
+	the <TT>Open</TT> statement's mode prepares the file for the type of processing your
+	application will perform. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One Visual Basic program can have more than one file open at the same time. If
+the <TT>#1</TT> intFileNumber argument were in use by another file that you had opened
+earlier in the application, you could assign the open file to a different number
+like this:</P>
+<PRE><FONT COLOR="#0066FF">Open &quot;d:\data\myfile.dat&quot; For Append As #5
+</FONT></PRE>
+<P>Any currently unused intFileNumber works; you can't associate more than one file
+at a time to the same intFileNumber value.</P>
+<P>The following <TT>Open</TT> statement opens the same file for input if another
+application needs to use the data:</P>
+<PRE><FONT COLOR="#0066FF">Open &quot;d:\data\myfile.dat&quot; For Input As #2
+</FONT></PRE>
+<P>Visual Basic supplies a helpful built-in function named <TT>FreeFile()</TT> that
+accepts no arguments. <TT>FreeFile()</TT> returns the next available file number
+value. For example, if you've used <TT>#1</TT> and <TT>#2</TT> for two open files
+already in the application, without closing one of them, the next value returned
+from <TT>FreeFile()</TT> will be <TT>3</TT>. <TT>FreeFile()</TT> is most helpful
+when you write general-purpose subroutine and function procedures that need to open
+files, and the procedures may be called from more than one place in an application.
+Each calling location might open a different number of files at the time. Any procedure
+can determine the value of the next available file number like this:</P>
+<PRE><FONT COLOR="#0066FF">intFileNum = FreeFile()
+</FONT></PRE>
+<P>Subsequent <TT>Open</TT> (and <TT>Close</TT>) statements could use the file number
+returned. No matter how many files are open, the procedure will always use the next
+file number in line to open its file.</P>
+<P>The <TT>Open</TT> command associates files using file numbers with which the rest
+of the program will access the file. The three Mode values determine how Visual Basic
+uses the file. If you want to write to a file, you can't use the <TT>Input</TT> mode,
+and if you want to read from a file, you can't use <TT>Output</TT> or <TT>Append</TT>.
+<CENTER>
+<H4><A NAME="Heading5"></A><FONT COLOR="#000077">Closing Files</FONT></H4>
+</CENTER>
+<P>The <TT>Close</TT> statement performs the opposite job from <TT>Open</TT>. <TT>Close</TT>
+closes the file by writing any final data to the file, releasing the file to other
+applications, and giving the file's number back to your application in case you want
+to use that number in a subsequent <TT>Open</TT> statement. Eventually, every program
+that opens files should close those files. Use <TT>Close</TT> to close files.</P>
+<P>Here are Visual Basic's two formats for <TT>Close</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Close [[#]intFileNumber] [, ..., [#]intFileNumber]
+</FONT></PRE>
+<P>and</P>
+<PRE><FONT COLOR="#0066FF">Close
+</FONT></PRE>
+<P>The first <TT>Close</TT> format closes one or more open files, specifying the
+files by the file numbers you used to open the files. The pound sign is optional
+in front of any of the file numbers. The second form of <TT>Close</TT> closes all
+files that are currently open. <TT>Close</TT> closes any open file, no matter what
+mode you used to open the file.</P>
+<P>If you create a file by opening the file with the <TT>Output</TT> mode, and then
+close the file, you can reopen the same file in the same program in the <TT>Input</TT>
+mode to read the file.</P>
+<P>The following statement closes the two open files that were opened and attached
+to file numbers 1 and 3:</P>
+<PRE><FONT COLOR="#0066FF">Close 1, 3   ` Closes 2 files
+</FONT></PRE>
+<P>The following statement closes all files, no matter how many are open:</P>
+<PRE><FONT COLOR="#0066FF">Close   ` Closes ALL files
+</FONT></PRE>
+<CENTER>
+<H4><A NAME="Heading6"></A><FONT COLOR="#000077">Deleting Files</FONT></H4>
+</CENTER>
+<P>You can use Visual Basic's <TT>Kill</TT> command to delete one or more files.
+If you want to delete a file from within a Visual Basic program, follow <TT>Kill</TT>
+with a string that contains the filename, including an optional disk and drive path.
+For example, <TT>Kill &quot;C:\Dat\MyData.DAT&quot;</TT> erases the file named <TT>MyData.DAT</TT>
+located on drive <TT>C:</TT> within the <TT>Dat</TT> folder. <TT>Kill</TT> does not
+perform the same action as <TT>Close</TT>; <TT>Close</TT> puts the file away in a
+safe area and releases the file from its I/O link; <TT>Kill</TT> permanently erases
+the file from your disk.
+<CENTER>
+<H4><A NAME="Heading7"></A><FONT COLOR="#000077">Writing to Files with Write#</FONT></H4>
+</CENTER>
+<P>The <TT>Write#</TT> command is perhaps the easiest command to use for writing
+data to a file. <TT>Write#</TT> writes data of any data type to a file. Using corresponding
+input statements that you'll learn here, you'll be able to read data that you sent
+to a file with the <TT>Write#</TT> command.</P>
+<P><TT>Write#</TT> lets you write data of any format to any disk file opened in the
+<TT>Output</TT> or <TT>Append</TT> modes. <TT>Write#</TT> writes strings, numbers,
+constants, and variables in any and all combinations to a disk file.</P>
+<P>Here is the format of <TT>Write#</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Write #intFileNumber [, ExpressionList]
+</FONT></PRE>
+<P>intFileNumber must be a file number associated with a file opened for output.
+If you don't specify variables or values to write, <TT>Write#</TT> writes a carriage
+return and line feed character (an ASCII 13 followed by an ASCII 10) to the file,
+putting a blank line in the file. If you specify more than one value in ExpressionList,
+Visual Basic writes that data to the file using the following considerations:
+
+<UL>
+	<LI><TT>Write#</TT> separates multiple items on the same line by adding commas between
+	the values.
+	<P>
+	<LI><TT>Write#</TT> always adds a carriage return and line feed character to the
+	end of each line written.
+	<P>
+	<LI><TT>Write#</TT> adds quotation marks around all strings in the file. The quotation
+	marks make for easy reading of the strings later.
+	<P>
+	<LI><TT>Write#</TT> writes date and time values using the following format:
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">#yyyy-mm-dd hh:mm:ss#</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<UL>
+	<LI><TT>Write#</TT> writes <TT>#NULL#</TT> to the file if the data contains a null
+	value (a <TT>VarType()</TT> value of <TT>1</TT>).
+	<P>
+	<LI><TT>Write#</TT> writes logical values using the following format:
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">#True#
+#False#</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<UL>
+	<LI><TT>Write#</TT> writes nothing when the data value is empty (a <TT>VarType</TT>()
+	of <TT>0</TT>), but does separate even empty values with commas if you write more
+	than one value on a single line.
+</UL>
+
+<P>The following statement writes five values to the disk file opened on file number
+3:</P>
+<PRE><FONT COLOR="#0066FF">Write #3, intAge, blnChecked, curSal, dteEnd, strName
+</FONT></PRE>
+<P>This <TT>Write#</TT> statement writes a single line to the open disk file. The
+line might look like this:</P>
+<PRE><FONT COLOR="#0066FF">47, #True#, 17423.61, #1-5-1998 14:21:10#, &quot;Mary Sue&quot;
+</FONT></PRE>
+<P>If the application contained multiple <TT>Write#</TT> statements, or if the <TT>Write#</TT>
+statement appeared inside a loop, a new line would write to the file each time <TT>Write#</TT>
+executed.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>End the <TT>Write#</TT>
+	with a semicolon (<TT>;</TT>) if you want the next <TT>Write#</TT> to continue on
+	the same line in the data file. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>Append means to add to the
+end of something.</P>
+<P>If you open a file using the <TT>Append</TT> mode, <TT>Write#</TT> adds to the
+end of the file. If the file were open in <TT>Output</TT> mode, the first <TT>Write#</TT>
+would overwrite the file's contents and start a new file.</P>
+<P>You can write data to files from variables as well as from controls on the form.
+Wherever you've got data that needs to be written, Visual Basic's <TT>Write#</TT>
+command will write that data to a disk file that you've opened.</P>
+<P>Listing 15.1 contains a subroutine procedure that accepts four arrays of four
+different data types and writes that array data to a disk file named <TT>Values.Dat</TT>
+opened in the procedure. Notice how you can use a simple <TT>For</TT> loop to write
+large amounts of data to a data file. The fifth argument sent to the subroutine is
+assumed to contain the total number of elements defined for the arrays so that the
+procedure can properly step through the entire array.
+<CENTER>
+<H3><A NAME="Heading8"></A><FONT COLOR="#000077">Listing 15.1. Writing array data
+to a file.</FONT></H3>
+</CENTER>
+<PRE><FONT COLOR="#0066FF">
+Private Sub WriteData (CNameso As String, CBalc() As _
+   Currency, CDate() As Variant, CRegion() As Integer)
+   ` Writes array data to a file
+   Dim intCtr As Integer   ` For loop control
+   
+   ` Assumes that each array has the
+   ` same number of elements defined
+   Dim intMax As Integer
+   intMax = UBound(CNames)   ` The maximum subscript
+
+   ` Write intMax lines to the file
+   ` with four values on each line
+   Open &quot;c:\Mktg.dat&quot; For Output As #1
+   For intCtr = 1 To intMax
+      Write #1, CNames(intCtr), CBalc(intCtr), _
+                CDate(intCtr), CRegion(intCtr)
+   Next intCtr
+   Close #1
+<TT>End Sub</TT> 
+</FONT></PRE>
+<P>Here are six lines from <TT>Mktg.dat</TT> that the program in Listing 15.1 might
+write:</P>
+<PRE><FONT COLOR="#0066FF">
+&quot;Adams, H&quot;, 123.41, #1998-11-18 11:34:21#, 6
+&quot;Enyart, B&quot;, 602.99, #21:40:01#, 4
+&quot;Powers, W&quot;, 12.17, #1999-02-09#, 7
+&quot;O'Rourke, P&quot;, 8.74, #1998-05-24 14:53:10#, 0
+&quot;Grady, 0&quot;, 154.75, #1999-10-30 17:23:59#, 6
+&quot;McConnell, I&quot;, 9502.32, #1999-07-12 08:00:03#, 9
+</FONT></PRE>
+<P>The pound signs around the date and time <TT>Variant</TT> values help Visual Basic
+when you subsequently read the data values back into variant variables. As you can
+see, the date may have a missing time or the time may have a missing date. <TT>Write#</TT>
+still writes as much of the date and time as is available within that <TT>Variant</TT>
+value.
+<CENTER>
+<H4><A NAME="Heading10"></A><FONT COLOR="#000077">Inputting with Input#</FONT></H4>
+</CENTER>
+<P><TT>Input#</TT> reads data from files and stores the file data in your program's
+variables and controls. <TT>Input#</TT> is the mirror-image statement to <TT>Write#</TT>.
+You use <TT>Input#</TT> to read any data that you send to a file with <TT>Write#</TT>.
+The <TT>Input#</TT> statement reads data into a list of variables or controls. Here
+is the format of <TT>Input#</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Input #intFileNumber [, ExpressionList]
+</FONT></PRE>
+<P>Again, the bottom line to using <TT>Input#</TT> is that <TT>Input#</TT> is the
+mirror image of the <TT>Write#</TT> statement that produced the file data. When you
+write a program that must use data from a data file, locate the program's <TT>Write#</TT>
+statement that originally created the data file, and use that same format for the
+<TT>Input#</TT> statement.</P>
+<P>The following <TT>Input#</TT> statement would read one line of values written
+with Listing 15.1's <TT>Write#</TT> statement:</P>
+<PRE><FONT COLOR="#0066FF">Input #1, CNames(intCtr), CBalc(intCtr), _
+          CDate(intCtr), CRegion(intCtr)
+</FONT></PRE>
+<P><FONT COLOR="#000077"><B>New Term: </B></FONT>A record is a row in a file.</P>
+<P>When reading data from a file, you can easily cause an error by attempting to
+read more data than the file holds. For data files that hold data such as customer
+balances and employee pay values, the number of records varies because you'll add
+and remove records as transactions take place.</P>
+<P>Use the built-in <TT>Eof()</TT> function to test Visual Basic's end-of-file function
+that senses when an input reaches the end of the file. Here is the format of <TT>Eof()</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Eof(intFileNumber)
+</FONT></PRE>
+<P><TT>Eof()</TT> returns <TT>True</TT> if the most recent reading of the input file
+just reached the end of the file and returns <TT>False</TT> if the input file still
+has data left to be read. Most data input programs loop until the <TT>Eof()</TT>
+function returns <TT>True</TT>. Perhaps the best way to use <TT>Eof()</TT> is with
+a <TT>Do Until-Loop</TT> that follows this general format:</P>
+<PRE><FONT COLOR="#0066FF">
+Input #1, VariableList      ` Read first record
+Do Until (Eof (intFileNumber) = True)
+   ` Process the record just read
+   Input #1, VariableList   ` Get more data
+Loop
+</FONT></PRE>
+<P>If there are 0, 1, 10, or 400 records in the file, this format of <TT>Do Until</TT>
+will keep reading, but will stop as soon as the end of the file is reached. Many
+programmers often increment an integer counter variable inside the loop to count
+the number of records read. The counter is useful later if you're reading the file's
+data into arrays. If you read file data into arrays, be sure to dimension more than
+enough array elements to hold the maximum number of records expected.
+<CENTER>
+<H4><A NAME="Heading11"></A><FONT COLOR="#000077">Line Input# Records</FONT></H4>
+</CENTER>
+<P><TT>Line Input#</TT> reads data from open data files. Unlike <TT>Input#</TT>,
+<TT>Line Input#</TT> reads each line of data in the file into a string variable.
+You don't have to specify separate variable names after a <TT>Line Input#</TT> because
+<TT>Line Input#</TT> requires a single string value. <TT>Line Input#</TT> reads data
+from any file whose lines end with a carriage return and line feed sequence. (Most
+file records end this way.)</P>
+<P>The <TT>Line Input#</TT> command is simple to use for reading entire records into
+a single variable. Whereas <TT>Input#</TT> reads each record's values individually,
+<TT>Line Input#</TT> reads an entire record, including all data, commas, quotation
+marks, and everything else. The string receives the record's contents. Here is the
+format of <TT>Line Input#</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Line Input #intFileNumber, strVariableName
+</FONT></PRE>
+<P>No matter how many record values appear in the file associated with file number
+3, the following <TT>Line Input#</TT> statement reads an image of the record into
+the <TT>String</TT> variable named <TT>strARecord</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Line Input #3, strARecord
+</FONT></PRE>
+<CENTER>
+<H3><A NAME="Heading12"></A><FONT COLOR="#000077">Introduction to Database Processing</FONT></H3>
+</CENTER>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A database system is a program
+that organizes, manipulates, retrieves, and reports data.</P>
+<P>If you use a database for your data, you can take advantage of Visual Basic's
+Data control to access the database from within your Visual Basic applications. The
+Data control makes it easy for you to retrieve data and display values from a database
+file without using any of Visual Basic's specific file-related commands that you
+learned about in the first part of this lesson.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>An organization's
+	information is more likely stored these days in a database than in a file readable
+	by the file commands you learned about in the previous sections. Nevertheless, the
+	file commands are useful for simple files, especially text files your Visual Basic
+	application creates and manages. Also, some data files that other applications create
+	do not appear in a database format but in a record format you can read with those
+	file statements. In addition, the file concepts you learned will help you master
+	the Data control faster and appreciate the Data control more because the Data control
+	takes so much work out of your hands by automating database access. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H4><A NAME="Heading13"></A><FONT COLOR="#000077">The Data Control</FONT></H4>
+</CENTER>
+<P>If you use any of the following database applications, you'll be able to write
+a Visual Basic application that accesses the data within your database without resorting
+to the file-related commands described earlier in this lesson:
+
+<UL>
+	<LI>Microsoft Access
+	<P>
+	<LI>dBASE
+	<P>
+	<LI>Excel
+	<P>
+	<LI>FoxPro
+	<P>
+	<LI>Lotus
+	<P>
+	<LI>Paradox
+	<P>
+	<LI>Text-based data files
+</UL>
+
+<P>The Data control makes database access simple.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A field is a column of data
+inside a file.</P>
+<P>A database application manages your data in a record and field format. The database,
+however, does not necessarily store your data in records and fields in a table-like
+format, but the database makes the data appear to your program in that format. Visual
+Basic takes advantage of this format and retrieves data in the record and field format
+no matter how the database physically stores the data.</P>
+<P>One challenge when using database access is that you must often describe parts
+of the database to Visual Basic. Visual Basic cannot magically understand your database
+structure. When you place the Data control on your form, you'll have to tell the
+control the structure of your data and tell the Data control which parts of the data
+to access so that the control can properly retrieve data. For example, by setting
+appropriate property values, you must tell the Data control the name of your database,
+the table, and the fields to access.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A table is a file in a database.
+A database might contain several tables.</P>
+<P>Some databases, such as Microsoft Access, store all the related database files
+in a single global file called the database file. Inside the database, the individual
+groups of records and fields are called tables. Other database systems, such as dBASE,
+keep track of an application's files separately and each file that contains data
+in rows and fields is a database file. When you use a database such as Microsoft
+Access, as this lesson does, you must describe both the overall database and the
+individual table name within the database that the Data control is to track.</P>
+<P>This lesson does not provide you with a table of Data control property descriptions
+because too many of the descriptions are database related and too advanced for this
+discussion. You may not need to know more properties than described in the small
+data application at the end of this lesson in most cases. You will probably be surprised
+at the amount of power the Data control gives you.</P>
+<P>Figure 15.1 illustrates a Data control in use. Notice that the Data control works
+a lot like a VCR's series of buttons. You can step through the database one record
+at a time. The control itself does not display data. Instead, the control simply
+lets you regulate the access of data. You'll have to supply other controls, such
+as labels or text boxes, to display and collect data for the database. In other words,
+if you want the user to be able to move to a particular record, you'll supply a Data
+control that the user can push to get the record in the database. Then your application
+can display the data on the form using label controls.<BR>
+<BR>
+<A NAME="Heading14"></A><A HREF="../art/ch15/15cce01.jpg"><FONT COLOR="#000077">Figure
+15.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Data control sends database
+data to your application. </I><B><BR>
+<BR>
+</B><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A bound control is a control
+you can link to a database, via the Data control, that displays and updates the database
+if the user modifies the data in the bound control.</P>
+<P>The Data control is a two-way street; not only does the Data control display database
+data, but your user can modify the data that the data control displays, and the Data
+control makes sure that the changes get made to the underlying database through bound
+controls. If you don't want the user to be able to change data displayed from a Data
+control, you can use a label and not a text box to display the database data. You
+can bind several other controls to the Data controls and make the control read-only
+so that the user cannot change the underlying database.
+<CENTER>
+<H4><A NAME="Heading15"></A><FONT COLOR="#000077">A Simple but Powerful Application</FONT></H4>
+</CENTER>
+<P>Figure 15.1's text boxes are bound to the Data control on the form. Therefore,
+if the user changes the data in any text box that displays a value from the database,
+the underlying record's field value changes as well. The application is required
+to do nothing.</P>
+<P>Figure 15.1 shows an application that you are about to build. Do you want to be
+really shocked? The application will contain no code whatsoever. The entire database
+access and update can be done just with the controls on the form!
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>In most
+	database applications, code is required. If the user is to add new records and delete
+	old ones, for example, code is needed. For simple displaying and updating of existing
+	data, however, the Data control, labels, and text boxes can do all the work. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 15.1's book publisher application uses a database that comes with Visual
+Basic named <TT>Biblio.mdb</TT>. The database is a Microsoft Access database and
+contains computer book titles and publishers.</P>
+<P>Perform these steps to build Figure 15.1's application:
+
+<DL>
+	<DD><B>1.</B> Create a new project and name the form <TT>frmData</TT> and add a caption
+	that reads <TT>Database Sample</TT>. Resize the form to a <TT>Height</TT> property
+	of <TT>5775</TT> and a <TT>Width</TT> property of <TT>7170</TT>.<BR>
+	<B><BR>
+	2.</B> Add a label with these properties: <TT>Name</TT>: <TT>lblAnnounce</TT>, <TT>Alignment</TT>:
+	<TT>2-Center</TT>, <TT>BorderStyle</TT>: <TT>1-Fixed Single</TT>, <TT>Caption</TT>:
+	<TT>Computer Book Publishers</TT>, <TT>Font</TT>: <TT>Bold 14 points</TT>, <TT>Height</TT>:
+	<TT>855</TT>, <TT>Left</TT>: <TT>2160</TT>, <TT>Top</TT>: <TT>360</TT>, and <TT>Width</TT>:
+	<TT>2895</TT>.<BR>
+	<B><BR>
+	3.</B> Add five additional field labels as follows: (1) <TT>Name</TT>: <TT>lblPub</TT>,
+	<TT>Alignment</TT>: <TT>1-Right Justify</TT>, <TT>Caption</TT>: <TT>Publisher:</TT>,
+	<TT>Font</TT>: <TT>12 points</TT>, <TT>Left</TT>: <TT>720</TT>, <TT>Top</TT>: <TT>1800</TT>,
+	and <TT>Width</TT>: <TT>1215</TT>; (2) <TT>Name</TT>: <TT>lblAddress</TT>, <TT>Alignment</TT>:
+	<TT>1-Right Justify</TT>, <TT>Caption</TT>: <TT>Address:</TT>, <TT>Font</TT>: <TT>12
+	points</TT>, <TT>Left</TT>: <TT>720</TT>, <TT>Top</TT>: <TT>2400</TT>, and <TT>Width</TT>:
+	<TT>1215</TT>; (3) <TT>Name</TT>: <TT>lblCity</TT>, <TT>Alignment</TT>: <TT>1-Right
+	Justify</TT>, <TT>Caption</TT>: <TT>City:</TT>, <TT>Font</TT>: <TT>12 points</TT>,
+	<TT>Left</TT>: <TT>840</TT>, <TT>Top</TT>: <TT>3000</TT>, and <TT>Width</TT>: <TT>495</TT>;
+	(4) <TT>Name</TT>: <TT>lblState</TT>, <TT>Alignment</TT>: <TT>1-Right Justify</TT>,
+	<TT>Caption</TT>: <TT>State:</TT>, <TT>Font</TT>: <TT>12 points</TT>, <TT>Left</TT>:
+	<TT>3360</TT>, <TT>Top</TT>: <TT>3000</TT>, and <TT>Width</TT>: <TT>735</TT>; (5)
+	<TT>Name</TT>: <TT>lblZip</TT>, <TT>Alignment</TT>: <TT>1-Right Justify</TT>, <TT>Caption</TT>:
+	<TT>Zip:</TT>, <TT>Font</TT>: <TT>12 points</TT>, <TT>Left</TT>: <TT>4800</TT>, <TT>Top</TT>:
+	<TT>3000</TT>, and <TT>Width</TT>: <TT>495</TT>.<BR>
+	<B><BR>
+	4.</B> Before adding the text boxes, add the Data control. To begin with, double-click
+	the Data control to send the control to the center of the form. Change these property
+	values: <TT>Name</TT>: <TT>dtaBiblio</TT>, <TT>Caption</TT>: <TT>Click to control
+	data display</TT>, <TT>Left</TT>: <TT>1920</TT>, <TT>Top</TT>: <TT>4200</TT>, and
+	<TT>Width</TT>: <TT>3255</TT>.<BR>
+	<BR>
+	The text that appears in the center of the Data control is the caption and never
+	data. The Data control does not display data. Instead, the Data control regulates
+	the display of data and you use other fields to hold the displayed data. The text
+	boxes that you place in the next two steps will display the data. You will bind the
+	text boxes to the Data control, and the Data control will be connected to the database.
+	You must now make that connection; click the <TT>DatabaseName</TT> property and then
+	click the ellipsis that appears. Select the <TT>Biblio.mdb</TT> database from VB's
+	folder (you may have to locate the folder from the file list that appears). Now that
+	the Data control is connected to the database, you can add the text boxes.<BR>
+	<BR>
+	The database named <TT>Biblio.mdb</TT>, now connected to the <TT>dtaBiblio</TT> Data
+	control, contains several tables. Therefore, not only must you tell the Data control
+	which database to use, but you must also specify the table source for the data. Select
+	Publishers from the <TT>RecordSource</TT> property's drop-down list box. The Data
+	control will now produce records only from <TT>Biblio.mdb</TT>'s Publishers table.<BR>
+	<B><BR>
+	5.</B> Add a text box to the form with these properties: <TT>Name</TT>: <TT>txtPublisher</TT>,
+	<TT>BackColor</TT>: (select the tooltip color for a pale yellow text box), <TT>BorderStyle</TT>:
+	<TT>1-Fixed Single</TT>, <TT>Left</TT>: <TT>2040</TT>, <TT>Top</TT>: <TT>1800</TT>,
+	and <TT>Width</TT>: <TT>4215</TT>.<BR>
+	<BR>
+	Now you must inform the text box that its data source is the Data control named <TT>dtaBiblio</TT>.
+	Set the <TT>DataSource</TT> property to <TT>dtaBiblio</TT> by selecting <TT>dtaBiblio</TT>
+	from the <TT>DataSource</TT> property's pull-down list box. (<TT>dtaBiblio</TT> is
+	the only item that appears, but if the form contained additional Data controls, you
+	would have to select the proper one for the text box's data source.) The table named
+	Publishers, controlled by the Data control, contains several fields. Therefore, not
+	only must you tell the text box which Data control to connect to, but you must also
+	specify the field. Change the <TT>DataField</TT> property to <TT>Company Name</TT>.
+	<TT>Company Name</TT> is the database's field name that holds the publisher name.
+	Set <TT>Font</TT> to <TT>12</TT>.<BR>
+	<B><BR>
+	6. </B>Add the following four text box controls: (1) <TT>Name</TT>: <TT>txtAddress</TT>,
+	<TT>BackColor</TT>: <TT>ToolTip</TT> <TT>yellow</TT>, <TT>BorderStyle</TT>: <TT>1-Fixed</TT>
+	<TT>Single</TT>, <TT>DataField</TT>: <TT>Address</TT>, <TT>DataSource</TT>: <TT>dtaBiblio</TT>,
+	<TT>Font</TT> <TT>Size</TT>: <TT>12</TT>, <TT>Left</TT>: <TT>2040</TT>, <TT>Top</TT>:
+	<TT>2400</TT>, and <TT>Width</TT>: <TT>4215</TT>; (2) <TT>Name</TT>: <TT>txtCity</TT>,
+	<TT>BackColor</TT>: <TT>ToolTip</TT> <TT>yellow</TT>, <TT>BorderStyle</TT>: <TT>1-Fixed</TT>
+	<TT>Single</TT>, <TT>DataField</TT>: <TT>City</TT>, <TT>DataSource</TT>: <TT>dtaBiblio</TT>,
+	<TT>Font</TT> <TT>Size</TT>: <TT>12</TT>, <TT>Left</TT>: <TT>1440</TT>, <TT>Top</TT>:
+	<TT>3000</TT>, and <TT>Width</TT>: <TT>1815</TT>; (3) <TT>Name</TT>: <TT>txtState</TT>,
+	<TT>BackColor</TT>: <TT>ToolTip</TT> <TT>yellow</TT>, <TT>BorderStyle</TT>: <TT>1-Fixed</TT>
+	<TT>Single</TT>, <TT>DataField</TT>: <TT>State</TT>, <TT>DataSource</TT>: <TT>dtaBiblio</TT>,
+	<TT>Font Size</TT>: <TT>12</TT>, <TT>Left</TT>: <TT>4200</TT>, <TT>Top</TT>: <TT>3000</TT>,
+	and <TT>Width</TT>: <TT>555</TT>; (4) <TT>Name</TT>: <TT>txtZip</TT>, <TT>BackColor</TT>:
+	<TT>ToolTip</TT> <TT>yellow</TT>, <TT>BorderStyle</TT>: <TT>1-Fixed</TT> <TT>Single</TT>,
+	<TT>DataField</TT>: <TT>Zip</TT>, <TT>DataSource</TT>: <TT>dtaBiblio</TT>, <TT>Font</TT>
+	<TT>Size</TT>: <TT>12</TT>, <TT>Left</TT>: <TT>5400</TT>, <TT>Top</TT>: <TT>3000</TT>,
+	and <TT>Width</TT>: <TT>1055</TT>.<BR>
+	<BR>
+	<B>7.</B> Add a separating line with the Line control that has these properties:
+	<TT>X1</TT>: <TT>0</TT>, <TT>X2</TT>: <TT>7080</TT>, <TT>Y1</TT>: <TT>3720</TT>,
+	and <TT>Y2</TT>: <TT>3720</TT>.
+</DL>
+
+<P>Run the application, and you'll be looking at the first record in the database.
+Click the Data control's buttons to move through the database records. If you change
+a value, you will be changing the actual database itself because of the bound text
+box controls. Despite the fact that the application requires a lot of controls, no
+code is required due to the Data control's powerful database retrieval and update
+abilities.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Once you master
+	the Data control, you can learn Visual Basic's powerful Data control methods that,
+	with code alone, let your application step through database records, update fields,
+	and compute values from tables. In addition, the Visual Basic language supports special
+	industry-standard database instructions called SQL (pronounced &quot;see-quel&quot;)
+	that you can apply to data to select and sort information from within a database.
+	Professional and Enterprise Edition users have the ability to move beyond the Data
+	control and master the DAO (which stands for Data Access Objects), which give you
+	extended power to control database records. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H3><A NAME="Heading16"></A><FONT COLOR="#000077">The Data Form Wizard</FONT></H3>
+</CENTER>
+<P>Visual Basic comes with a tool called the Data Form Wizard that you can use to
+access a database and generate a form. The Data Form Wizard analyzes a database,
+locates the fields for you (you don't have to know the format of the database ahead
+of time), and automatically builds a form that contains an appropriate title, field
+names, Text Box controls for the fields, and the Data control you can use to move
+between the records.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>An add-in application is
+a tool that extends Visual Basic's development environment.</P>
+<P>To access the Data Form Wizard, select the Add-Ins | Data Form Wizard menu option.
+Visual Basic displays the Data Form Wizard's opening window. When you click Next,
+you see the database-selection dialog box shown in Figure 15.2.<BR>
+<BR>
+<A NAME="Heading17"></A><A HREF="../art/ch15/15cce02.jpg"><FONT COLOR="#000077">Figure
+15.2.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Data Form Wizard's database
+selection tool. </I><BR>
+<BR>
+Continue following the wizard's requests to create the form. For example, you will
+have to tell the wizard the kind of database you want to create a form. Once you
+select a database, the next dialog box asks you for the database name (which you
+can browse for) and a data source such as a table or query. Select the kind of form
+and then on the Record Source dialog box you must select a table and then copy all
+the fields you want from that table to the final form. You then can click the options
+you want and click Finish to generate the form.</P>
+<P>The form that the Data Form Wizard generates may not be as unique as the one you
+create yourself, but the form does include buttons that let the user not only change
+the database data but add and delete records as well, as Figure 15.3 shows.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You can insert
+	the Data Form Wizard's form into another application and then display the form with
+	the <TT>Show</TT> method. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P><A NAME="Heading18"></A><A HREF="../art/ch15/15cce03.jpg"><FONT COLOR="#000077">Figure
+15.3.</FONT></A><FONT COLOR="#000077"> </FONT><I>The Data Form Wizard creates a nice
+form.</I>
+<CENTER>
+<H3><A NAME="Heading19"></A><FONT COLOR="#000077">Summary</FONT></H3>
+</CENTER>
+<P>In this hour you have learned about two important aspects of files and Visual
+Basic. You have learned about regular data files that your applications can create,
+append to, and read. Also you have learned how to use the Data control and its bound
+controls such as the Text Box control to give the user a way to change the data in
+an underlying database.</P>
+<P>Although the Data control is easy to use, most programmers have access to a database.
+If you have yet to select a database product, consider Microsoft's Access because
+of its close ties to Office and Visual Basic. Using Microsoft's Access, you will
+need to do only a minimal amount of work to make Visual Basic work with your Access
+database. Access now includes Visual Basic for Applications, a VB-like language.</P>
+<P>The next hour describes how your application can access the printer to produce
+output.
+<CENTER>
+<H3><A NAME="Heading20"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+</CENTER>
+
+<DL>
+	<DD><B>Q What if I don't have a database?<BR>
+	<BR>
+	A</B> If you don't have a database and if you don't see a need for one, you may not
+	need the Data control. You can perhaps get by with the file-related statements in
+	Visual Basic's language such as <TT>Write#</TT> and <TT>Input#</TT>. If you feel
+	adventuresome, check out VB's Add-Ins | Visual Data Manager. This add-in application
+	gives you the ability to use Visual Basic to design, create, and analyze database
+	files in several formats even if you don't have a database program available. Although
+	the Visual Data Manager does not at all take the place of a full-functioned database
+	management system such as Microsoft Access, you can begin using the Data control
+	to access a database that you create with the Visual Data Manager.<BR>
+	<B><BR>
+	Q What if I don't know the fields or tables in my database?<BR>
+	<BR>
+	A</B> If you write an application that manages and updates a database that you did
+	not create and with which you are not familiar, you can still use Visual Basic because
+	the Data control and bound controls are able to interpret most database formats.
+	Therefore, once you select a database for the Data control, the Data control will
+	display a list of tables from that database when you open the Data control's RecordSource
+	drop-down list box. In addition, any bound controls, such as text boxes or labels,
+	that you connect to the Data control, will display an available list of fields which
+	you want to bind to those controls.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading21"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+</CENTER>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<CENTER>
+<H4><A NAME="Heading22"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> What is the difference between a file and a database?<BR>
+	<B><BR>
+	2.</B> What is the difference between a record and a field?<BR>
+	<B><BR>
+	3.</B> What is the difference between a table and a file?<BR>
+	<B><BR>
+	4.</B> What happens if you open an existing file in <TT>Output</TT> mode?<BR>
+	<B><BR>
+	5.</B> What happens when you write to a file in <TT>Append</TT> mode?<BR>
+	<B><BR>
+	6.</B> Which files does the following statement close?
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">Close</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD><B>7.</B> True or false: Your form must contain a different Data control for
+	every table in the database.<BR>
+	<B><BR>
+	8.</B> What advantage does a bound text box provide for the programmer who wants
+	to write an application that lets the user update a database field?<BR>
+	<B><BR>
+	9.</B> A database field is a Yes/No Access data field that can only take one of two
+	values. Which Visual Basic control would best serve to represent that field?<BR>
+	<B><BR>
+	10.</B> What's the simplest way to create a form based on a database?
+</DL>
+
+<CENTER>
+<H4><A NAME="Heading23"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Write an application that stores the titles of your five favorite friends,
+	their ages, and their phone numbers in five records in a disk file. Use <TT>Write#</TT>
+	to write each three-value record and <TT>Input#</TT> to read each record. Call the
+	data-entry and file-writing procedures from one procedure and the file-reading and
+	display procedure from another procedure.<BR>
+	<B><BR>
+	2.</B> Write a database application that displays the <TT>Biblio.mdb</TT>'s book
+	title table's first three fields. Don't let the user update the fields; you must
+	be careful what kind of controls you use to display the field data.<BR>
+	<B><BR>
+	3.</B> Use the Data Form Wizard to generate a table based on the entire <TT>Biblio.mdb</TT>'s
+	book title table. Connect the generated form to a command button's <TT>Click()</TT>
+	event on the main form so that the data form appears for the user when the user clicks
+	the command button.
+	<P ALIGN="CENTER"><BR>
+	<BR>
+	<A HREF="ch14.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch16.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

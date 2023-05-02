@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 3 -- How Bridges Work</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;3</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Bridges Work</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowBridgesWork">
+How Bridges Work</A>
+</UL>
+
+<HR>
+<P>
+An intranet-especially one in a large corporation-can be a remarkably
+complex endeavor, consisting of many networks, including departmental
+local area networks, as well as larger <I>subnetworks</I>, which
+each are in essence collections of networks.
+<P>
+Bridges connect networks. When bridges were first developed they
+could not connect incompatible networking architectures. Early
+bridges functioned at the media-access control (MAC) section of
+the data-link layer of the OSI model (discussed in <A HREF="ch2.htm" >Chapter 2</A>.
+Ethernet and Token Ring architecture differ at the MAC section
+of the data-link layer, hence their incompatibility. Newer bridges
+function at the logical-link control (LLC) portion of the data-link
+layer. As long as the communication protocol on both networks
+is the same (IPX to IPX, for example), Ethernet and Token Ring
+networks can be linked by bridges. Connecting divergent networks
+is an essential requirement for intranets.
+<P>
+Bridges are also used to connect networks indirectly by long-distance,
+usually leased, lines. Remote bridges on Ethernet networks use
+a <I>transparent</I> routing technique to handle traffic. It is
+the destination address of each packet that is read to determine
+the action to be taken. If the destination is on the same network,
+bridges ignore the packet; bridges pass only packets that need
+to go to other networks. Token Ring operates somewhat differently
+in that it uses <I>source </I>routing. In this case, the bridge
+uses a test message to calculate the best path between the source
+and the destination.
+<P>
+In order to determine whether to pass or drop a packet, bridges
+refer to a table, which is basically a list of addresses. These
+tables originally had to be built manually, causing considerable
+maintenance every time a replacement or additional NIC address
+was put on the network. This led to the development of <I>learning</I>
+bridges, that is, bridges with software algorithms that could
+build these tables automatically. Today's bridges build and maintain
+their tables by listening to cable traffic and checking packets
+for source addresses.
+<P>
+Bridges are relatively simple to set up and maintain, and they
+can operate fairly fast since they simply decide whether to pass
+or drop the packet. In the next chapter a similar but more complex
+piece of equipment, the router, is discussed. Bridges are often
+used to segment and reduce local network traffic. Routers are
+usually used for connecting entire networks and subnetworks together.
+<P>
+Bridges and routers are sometimes combined into a single product
+called a <I>brouter</I>. A brouter combines the functions of both
+bridge and router. It examines the outermost address to see if
+the data needs to be sent to another LAN over a bridge, and delivers
+information that way if possible. If, instead, it needs to be
+sent using IP technology, it will act as a router does.
+<H2><A NAME="HowBridgesWork"><FONT SIZE=5 COLOR=#FF0000>
+How Bridges Work</FONT></A></H2>
+<P>
+Bridges are hardware and software combinations that connect different
+parts of a single network, such as different sections of an intranet.
+They connect local area networks (LANs) to each other. They are
+generally not used, however, for connecting entire networks to
+each other, for example, for connecting an intranet to the Internet,
+or an intranet to an intranet, or to connect an entire subnetwork
+to an entire subnetwork. To do that, more sophisticated pieces
+of technology called routers are used. (See <A HREF="ch4.htm" >Chapter 4</A>for more
+information on how routers work.)
+<OL>
+<LI>When there is a great amount of traffic on an Ethernet local
+area network, packets can <I>collide</I> with one another, reducing
+the efficiency of the network, and slowing down network traffic.
+Packets can collide because so much of the traffic is routed among
+all the workstations on the network.
+<LI>In order to cut down on the collision rate, a single LAN can
+be subdivided into two or more LANs. For example, a single LAN
+can be subdivided into several departmental LANs. Most of the
+traffic in each departmental LAN stays within the department LAN,
+and so it needn't travel through all the workstations on all the
+LANs on the network. In this way, collisions are reduced. Bridges
+are used to link the LANs. The only traffic that needs to travel
+across bridges is traffic bound for another LAN. Any traffic within
+the LAN need not travel across a bridge.
+<LI>Each packet of data on an intranet has more information in
+it than just the IP information. It also includes addressing information
+required for other underlying network architecture, such as for
+an Ethernet network. Bridges look at this outer network addressing
+information and deliver the packet to the proper address on a
+LAN
+<LI>Bridges consult a <I>learning </I>table that has the addresses
+of all the network nodes in it. If a bridge finds that a packet
+belongs on its own LAN, it keeps the packet inside the LAN. If
+it finds that the workstation is on another LAN, it forwards the
+packet. The bridge constantly updates the l<BR>
+earning table as it monitors and routes traffic.
+<LI>Bridges can connect LANs in a variety of different ways. They
+can connect LANs using serial connections over traditional phone
+lines and modems, over ISDN lines, and over direct cable connections.
+CSU/DSU units are used to connect bridges to telephone lines for
+remote connectivity.
+<LI>Bridges and routers are sometimes combined into a single product
+called a <I>brouter.</I> A brouter handles both bridging and routing
+tasks. If the data needs to be sent only to another LAN on the
+network or subnetwork, it will act only as a bridge delivering
+the data based on the Ethernet address. If the destination is
+another network entirely, it will act as a router, examining the
+IP packets and routing the data based on the IP address.
+</OL>
+<HR>
+
+<CENTER><P><A HREF="ch2.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch4.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

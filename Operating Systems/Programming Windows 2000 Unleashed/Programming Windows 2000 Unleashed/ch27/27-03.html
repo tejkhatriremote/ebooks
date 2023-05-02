@@ -1,0 +1,225 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=913-916//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="27-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>ADsOpenObject</SMALL> function has six parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode string that contains the directory path to the object. Some examples of paths are provided later in this section.
+<dd><b>&#149;</B>&nbsp;&nbsp;A username that will be used together with the next parameter to generate credentials.
+<dd><b>&#149;</B>&nbsp;&nbsp;A password that will be used together with the previous parameter to generate credentials.
+<dd><b>&#149;</B>&nbsp;&nbsp;An authentication option that specifies how the specified user will be authenticated. Values for this parameter are discussed later in this section.
+<dd><b>&#149;</B>&nbsp;&nbsp;The interface ID that specifies the COM interface to be returned.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a COM interface pointer that will contain the requested interface pointer if the function succeeds.
+</DL>
+<p>The following values may be passed as the authentication option in a call to <small>ADsOpenObject</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADS_SECURE_AUTHENTICATION</SMALL>. Causes the WinNT ADSI provider to use NTLM authentication and the Active Directory provider to use Kerberos (or NTLM if Kerberos is not available). If the username and password parameters are <small>NULL</SMALL>, the credentials of the currently logged-on user will be used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADS_USE_ENCRYPTION</SMALL>. Specifies that ADSI must use encryption; Active Directory requires that Certificate Server be available in the network.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADS_READONLY_SERVER</SMALL>. Requires that ADSI connect to the PDC or BDC when connecting to the WinNT ADSI provider. If ADSI is using the Active Directory provider, this flag notifies ADSI that a writable server is not required.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADS_PROMPT_CREDENTIALS</SMALL>. The user credentials will be prompted for at the beginning of the authentication process, if the selected SSPI provider supplies the required user interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ADS_NO_AUTHENTICATION</SMALL>. Attempts anonymous binding to the directory provider. The WinNT ADSI provider does not support this flag.
+</DL>
+<p>The format for directory paths depends on the ADSI provider. The WinNT provider uses strings in the following format:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+WinNT://codevtech.com/Users/mickeyw
+</PRE>
+<!-- END CODE SNIP //-->
+<p>As discussed earlier, the LDAP provider used for Active Directory uses an X.500-style format:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://CN=Users,DC=codevtech,DC=com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Examples provided throughout the rest of the chapter use the <small>ADsGetObject</SMALL> function to perform serverless binding.</P>
+<p><font size="+1"><b>Using the ADSI Enumerator Helper Functions</B></FONT></P>
+<p>Although COM enumerators are quite easy to use in Visual Basic, they are somewhat difficult to use in C and C<small>&#43;&#43;</SMALL>, particularly when you&#146;re using them for the first time. ADSI provides three functions that simplify the enumeration of container objects in the directory.</P>
+<p>The <small>ADsBuildEnumerator</SMALL> function is used to create an enumerator for a specified container:</P>
+<!-- CODE SNIP //-->
+<pre>
+IEnumVARIANT*  pUserEnum = NULL;
+HRESULT hrEnum = ADsBuildEnumerator(pUsersContainer, &amppUserEnum);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ADsBuildEnumerator</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An <small>IADsContainer</SMALL> interface pointer
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>IEnumVARIANT</SMALL> interface pointer that will be set to the enumerator interface if the function succeeds
+</DL>
+<p>The <small>ADsEnumerateNext</SMALL> function is used to retrieve one or more elements from the enumeration:</P>
+<!-- CODE SNIP //-->
+<pre>
+ULONG   ulFetch = 0;
+VARIANT var;
+HRESULT hrEnum = ADsEnumerateNext(pUserEnum, 1, &ampvar, &ampulFetch);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ADsEnumerateNext</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An <small>IEnumVARIANT</SMALL> interface pointer associated with the enumerator object.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of elements requested.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of one or more variant variables that will be filled with the elements requested from the enumerator.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an unsigned long variable that will contain the number of elements returned from the enumerator. If this value is 0, no elements remain in the enumerator.
+</DL>
+<p>The <small>ADsFreeEnumerator</SMALL> function is used to free the enumerator object created earlier through a call to <small>ADsBuildEnumerator</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hrEnum = ADsFreeEnumerator(pUserEnum);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ADsFreeEnumerator</SMALL> function has one parameter: an <small>IEnumVARIANT</SMALL> interface pointer associated with the enumerator object.</P>
+<p>Examples of using the enumerator functions are provided in samples presented during the rest of this chapter.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Serverless Binding and ADSI</FONT></H4>
+<p>In the previous sections, the code fragments explicitly used the <small>codevtech.com</SMALL> domain when binding to the directory. Although this simplifies the code fragment, it&#146;s not a good programming practice, because it needlessly ties your code to a specific domain. Active Directory supports LDAP 3.0 <i>serverless binding</I>, a feature that enables you to avoid hard-coding domain or server names when managing the directory of the currently logged-on user.</P>
+<p>Active Directory supports the standard <small>rootDSE</SMALL> attribute. This attribute is not part of any directory namespace; instead, it&#146;s used to collect information about the directory. To bind to <small>rootDSE</SMALL>, use this path to bind to your default Active Directory domain controller:</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://rootDSE
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can use this path to select a specific LDAP server:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+LDAP://aServerName/rootDSE
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>rootDSE</SMALL> directory object has a number of properties that can be retrieved in order to discover information about the directory server. Here are the most useful attributes for serverless binding:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DefaultNamingContext</SMALL>. The distinguished name for the directory&#146;s domain
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SchemaNamingContext</SMALL>. The distinguished name for the directory&#146;s schema container
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ConfigurationNamingContext</SMALL>. The distinguished name for the directory&#146;s configuration container
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RootDomainNamingContext</SMALL>. The distinguished name for the root domain of the directory&#146;s forest
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DnsHostName</SMALL>. The DNS address for the directory server
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ServerName</SMALL>. The distinguished name for the server object for this directory server in the configuration container
+</DL>
+<p>Listing 27.1 contains a code fragment that illustrates serverless binding. Most code examples presented in this chapter use similar methods to avoid hard-coding the domain or server names.
+</P>
+<p><hr><b>Listing 27.1</B> Using Serverless Binding with ADSI</P>
+<!-- CODE //-->
+<pre>
+int wmain()
+{
+    WCHAR wszQuery[512] = L&#147;LDAP://CN=Users,&#148;;
+    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+
+    // Bind to the current domain controller
+    IADs*   pRoot = NULL;
+    VARIANT var;
+    HRESULT hr = ADsGetObject(L&#147;LDAP://rootDSE&#148;,
+                              IID_IADs,
+                              (void**)&amppRoot);
+    if(FAILED(hr))
+    {
+        // HandleError
+    }
+    hr = pRoot-&gtGet(L&#147;DefaultNamingContext&#148;,&ampvar);
+    if(FAILED(hr))
+    {
+        // HandleError
+    }
+    // Append DC naming context to the path.
+    wcscat(wszQuery,var.bstrVal);
+    VariantClear(&ampvar);
+    pRoot-&gtRelease();
+
+    // The wszQuery string now contains a DN for the Users
+    // node in the directory.
+
+    // Remaining code omitted...
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="27-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

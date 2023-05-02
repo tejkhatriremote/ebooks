@@ -1,0 +1,825 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 18 -- T</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="../button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="../ch17/ch17.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch19/ch19.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">18</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Novell</FONT></H1>
+</CENTER>
+<P>Whenever I am at a client's office, invariably the conversation turns toward operating
+systems. We bat around various flavors of UNIX, discuss Windows NT, and then suddenly,
+Novell emerges. From there, it is all downhill. We go from Novell to DOS 3.<I>x,</I>
+and finally, to CP/M. Most people today speak of Novell in the &quot;I remember when&quot;
+mode. Think about that for a moment. I will wager that the last time someone talked
+with you about Novell, that dreaded term &quot;legacy network&quot; was mentioned
+more than once.</P>
+<P>This is a mystery to me, largely because Novell had made innovations relevant
+to the Internet &quot;way back&quot; in 1991. Even at that time, the Novell NetWare
+platform supported TCP/IP and was Internet ready. Today, Novell is still very much
+in the running. Web servers and other baseline Internet applications continue to
+be written for the Novell platform. And, interestingly, Novell may measure out to
+be as secure as any of its counterparts.
+<H2><FONT COLOR="#000077"><B>Background</B></FONT></H2>
+<P>NetWare has been with us a long time. The first version of NetWare was released
+in 1983. To put that in perspective, consider this: MS-DOS had just emerged. Computer
+enthusiasts were dreaming about the luxury of a 286 with 640KB RAM. It was less than
+15 years ago, and when you think of it in these terms, it doesn't seem so far away.
+However, measure that 14 years against the backdrop of the computer industry (which
+has now exploded).</P>
+<P>Since that time, NetWare has undergone some major changes. And, although it is
+not really secure in its out-of-the-box state, NetWare has some substantial security
+features. Control of what services run on what port is just as incisive in Novell
+as it is in UNIX. The system is, in fact, nearly identical. For those of you who
+are considering stringing your Novell network to the Net (which is now a popular
+practice), I suggest getting some background in TCP/IP. Many excellent Ethernet administrators
+familiar with IPX are less confident about their TCP/IP knowledge. This is where
+standards really shine through and assist the administrator. TCP/IP is negotiated
+in a similar fashion on almost every platform.</P>
+<P>In NetWare, the file that governs your service is <TT>SYS:ETC\SERVICES</TT>. This
+file contains a list of services that you will be running from out of your intranet
+to the Internet at large. It is the equivalent of the <TT>/etc/services</TT> file
+in UNIX. It is from this file that you pick and choose your services, which may include
+TFTP, FTP, and Telnet. In this respect, a Novell network running TCP/IP could be
+scanned in the same fashion as a UNIX box. The <TT>SYS:ETC\SERVICES</TT> file is
+one to watch closely. Misconfigurations there can lead to security problems.</P>
+<P>The discretionary access controls in NetWare are also formidable. In fact, Novell's
+control of the system is quite granular. It extends, for instance, to time-based
+restrictions. A user's access can be restricted to certain hours of the day and certain
+days of the week. Users' passwords are subjected to aging and there are at least
+rudimentary controls to reject passwords that are either too short or those that
+have been used before.</P>
+<P>Control over directories and files is good. For example, the following controls
+can be placed on directories:
+
+<UL>
+	<LI>Delete inhibit--Files or directories marked with this attribute cannot be deleted
+	by system users.<BR>
+	<BR>
+	
+	<LI>Hidden--Files or directories marked with this attribute cannot be seen. (That
+	is, if a user is snooping through a directory, he will not discover a directory or
+	file so marked.) Also, any object marked with this attribute cannot be deleted or
+	copied.<BR>
+	<BR>
+	
+	<LI>Purge--This attribute causes a file to be purged, or obliterated from existence
+	upon deletion. In other words, when the supervisor deletes files marked with this
+	attribute (or files within a directory marked with this attribute), the files cannot
+	be restored.
+</UL>
+
+<P>The control that NetWare offers over files is even more finely structured. In
+addition to being able to apply any of these attributes to files, a Novell NetWare
+system administrator can also apply the following:
+
+<UL>
+	<LI>Read only--This restricts users from altering the files.<BR>
+	<BR>
+	
+	<LI>Execute only--Marks a file as execute-only, meaning that it cannot be copied,
+	backed up, or otherwise &quot;taken away.&quot;<BR>
+	<BR>
+	
+	<LI>Copy inhibit--Prevents Macintosh users from copying files.
+</UL>
+
+<P>These controls are impressive in an operating system. A comparative analysis of
+Novell 3.<I>x</I>, for example, and Microsoft Windows for Workgroups is instructive.
+Windows for Workgroups was an excellent platform on which to establish a network.
+However, its security capabilities were practically nonexistent. In contrast, Novell
+NetWare had advanced controls on all elements of the system.</P>
+<P>Here is an interesting bit of trivia: Using the Novell NetWare operating system,
+you can actually restrict the physical location at which a user can log in. That
+is, you can specify that John can only log in from his own station. If he proceeds
+to another computer, even just 6 feet away, he will be unable to log in. In order
+for you to do this, however, you must specify that all users are restricted in the
+same manner.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>NetWare also has provisions for
+	a hierarchy of trust. That is, you can assign managers to each section of the LAN
+	and assign a group of people to each manager. Thus, NetWare can be used to quickly
+	and efficiently map out relationships of trust and authority that closely (if not
+	precisely) parallel the actual levels of trust and responsibility between those within
+	your organization. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The Novell NetWare network environment offers fine security. (It is not perfect,
+but demonstrates advanced security techniques, even going back to Novell NetWare
+3.<I>x</I>.) Novell NetWare 4.<I>x</I> is a very strong platform and has become popular
+as a WWW server platform.</P>
+<P>The flip side of this is that we have not yet seen Novell handle the void. In
+closed network situations, Novell has proven to be an excellent networking platform.
+The levels of security it provides will foil all but the most studious cracker or
+hacker. Novell is just now getting a taste of the real outside world. It may not
+be long before we see Novell security advisories floating around the Internet. Later
+in this chapter, you will get a chance to see at least one flaw found only two months
+prior to this writing. It is a hole that could allow a remote exploit. You'll also
+learn about other exploits as we briefly look at the security of Novell.</P>
+<P>One point I should explain here is why Novell holes have not surfaced in the same
+way that UNIX holes have. The Novell NetWare environment is vastly different from
+the UNIX environment. NetWare is used primarily in business settings. Many accounting
+firms, law firms, and medical practices use NetWare as a networked platform. DOS-based
+programs run well in NetWare, so you can use it for record keeping, accounting, and
+billing.</P>
+<P>NetWare also provides an attractive enough interface, and it is surprisingly lightweight
+considering the wonderful networking job that it does. However, NetWare users and
+UNIX users are disparate. NetWare users characteristically access DOS-based programs
+through the shell. The shell provides a suitable menu interface. You simply move
+the arrow down the list of choices and fire. It is a point-and-shoot type of environment
+from that standpoint. Thus, although there are undoubtedly thousands of developers
+that may work their craft on a Novell NetWare network, the majority of NetWare users
+never really come into contact with the operating system level. To them, the underlying
+framework is largely invisible.</P>
+<P>In contrast, UNIX users regularly have contact with dozens (if not hundreds) of
+commands at the operating system level. Because UNIX is a developer's platform (with
+that development deeply rooted in the C programming language), UNIX users are more
+intimately familiar with the nature of their operating system, its flaws, and its
+virtues. On this account, hard-core analysis of the UNIX operating system is constantly
+under way. This process is not only undertaken by developers for UNIX vendors, but
+also by the people who rely on this strange operating system each day. As the general
+knowledge of an operating system increases, so does the specific knowledge regarding
+its holes.</P>
+<P>Such in-depth analysis in NetWare is confined primarily to the developers who
+created it. Their source code is proprietary and therefore, the computing community
+has no reliable way of knowing what flaws, if any, exist in the NetWare operating
+system. True, there may be fragmented efforts here and there to attack the binaries
+of that operating system, perhaps searching for buffer overflows or other, lower-level,
+problems.</P>
+<P>The future will tell us all about NetWare, though, because it has now survived
+that one giant step to the Internet. NetWare users now want their networks strung
+to the Net. And, as I said at the beginning of this chapter, Novell had provisions
+for strong TCP/IP support five years ago.</P>
+<P>Throughout this chapter, I will take a look at NetWare security. Again, the purpose
+of this book is not to cover one operating system extensively, but rather, to prepare
+the user for general Internet security. By the time you reach the last quarter of
+this book, I will be making references to all the operating systems covered up until
+that point, often not only in the same chapter, but in the same paragraph. I have
+tried to design this book so that by the time you reach that point, you will be well
+prepared.</P>
+<P>In short order, then, let's have a look at this old but revolutionary operating
+system.
+<H2><FONT COLOR="#000077"><B>NetWare Security in General</B></FONT></H2>
+<P>NetWare has always been a platform that is attacked from within. That is, those
+on the internal network are usually the enemy. A wide variety of attacks are available
+if you are within close physical proximity of a NetWare server. Here are a few:
+
+<UL>
+	<LI>Down the machine, access the disk, and alter the bindery. When this machine reboots,
+	the operating system will examine the bindery. It will determine that a valid one
+	does not exist. Based on this information, it will reconstruct a new default bindery.
+	When it does, all previous password protection will no longer exist.<BR>
+	<BR>
+	
+	<LI>Load one of several network loadable modules (NLMs) that can (at least on 3.<I>x</I>
+	and before) change, disable, or otherwise bypass the supervisor password.<BR>
+	<BR>
+	
+	<LI>Attack the <TT>Rconsole</TT> password on earlier distributions of Novell. Reportedly,
+	the algorithm used for the encryption of that password was poorly conceived. It is
+	weak and passwords so encrypted can be cracked quite easily.
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Default Passwords</B></FONT></H2>
+<P>There is never a replacement for good system administration. Do you remember the
+SGI exploit I examined at the beginning of this book? The Webforce line of computers
+had a default login for the line printer. This login ID did not require a password.
+This is referred to as a <I>passwordless account</I>. Almost every network operating
+system has at least one account that already exists that does not require a password.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>When installing Slackware versions
+	of Linux, for example, the process completes by you booting to a login prompt. The
+	first time you log in, you log in as root without a password. It is left to the user
+	to assign a password to the root account. Not all UNIX-based platforms work this
+	way. For example, when you're installing SunOS by hand, one of the last options it
+	requests is what the root password will be. Similarly, Red Hat Linux registers a
+	password before the first boot load. This policy is probably a wise idea. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In NetWare, the supervisor account is passwordless on a fresh installation and
+remains so until the supervisor assigns a password. (In other words, the operating
+system never forces a password.) Moreover, there is a <TT>GUEST</TT> account created
+at time of installation. If you do not feel that you will need this account, go into
+<TT>SYSCON</TT> and delete it immediately. However, if you envision using this account
+to provide guest access, assign a password to it immediately.
+<H2><FONT COLOR="#000077"><B>Spoofing</B></FONT></H2>
+<P>Spoofing is the act of using one machine to impersonate another by forging the
+other's &quot;identity&quot; or address. It is not a baseline skill with crackers.
+Either they know how to do it or they don't. The technique is talked about often
+because of its uniqueness. It is a method of breaking into a remote host without
+providing so much as a user ID or a password. For that reason, spoofing has developed
+a mystique on the Internet (despite the fact that spoofing was known about at Bell
+Labs more than 12 years ago).</P>
+<P>There are different forms of spoofing. Typically, when we think of spoofing, we
+have in our minds the notion of IP spoofing across the Internet. Certainly, this
+is the most popular kind of spoofing among crackers because of the press coverage
+that followed Kevin Mitnik's arrest. How-ever, there are different types of spoofing.
+Here, I am referring to hardware address spoofing.</P>
+<P>In Chapter 28, &quot;Spoofing Attacks,&quot; I address IP spoofing attacks. However,
+it will suffice here to write that in 1985, at Bell Labs, it was determined that
+spoofing was a viable procedure. A paper was posted to the Net on this subject. It
+was four pages or so, describing how such an attack might someday be implemented.</P>
+<P>Spoofing in the NetWare environment is not impossible; it is just difficult. Most
+crackers advise that you can change the hardware address in the <TT>NET.CFG</TT>
+file. However, it might not be as easy as this.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The <TT>NET.CFG</TT> file contains
+	parameters that are loaded on boot and connection to the network. This file includes
+	many options to alter the configuration by hand (which is mighty useful because conventional
+	configurations sometimes fail to &quot;come out right&quot;). To supplement this,
+	changes may be made directly to the interface using this file. Options include number
+	of buffers, what protocols are to be bound to the card, port number, MDA values,
+	and, of course, the node address. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The node address is generally hard-coded into the Ethernet card itself. If you
+have such a card lying around the office, take a look at it; the address is generally
+posted directly on the face of the card (a little sticker or perhaps even letters
+burned into the board itself). Some cards have jumpers that allow you to alternate
+the IRQ and ROM address settings. Some boards also allow you to alter the node address
+of the card via software. That is where the spoofing comes into the picture.</P>
+<P>The popular way to spoof is by altering the address in the <TT>NODE</TT> field
+in the <TT>NET.CFG</TT> file. In this scenario, you assign the node an address belonging
+to another workstation. However, severe problems could result from this if you were
+to initiate a session using the identical hardware address of a workstation also
+logged on. This could potentially crash the system, hang the machine, or cause other
+trouble on the wire.</P>
+<P>If this technique is to be truly effective, the cracker must devise a way to temporarily
+&quot;kill&quot; or anesthetize the machine from which he is claiming to originate.
+This may not be a problem, depending on the circumstances. Perhaps the other machine
+has been turned off for the night. If so, the cracker has a wide open field for experimentation.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In order for this type of attack
+	to work, <I>many </I>variables must be just right. For example, if there are any
+	network interfaces between the attacker and the target, this may not work. Say the
+	packets have to cross a hub and there is some hardwire scheme that manifests the
+	path between the target and the machine the cracker is claiming to originate from.
+	Under this scenario, the spoofing attack will fail miserably. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>This refers only to hardware address spoofing in an Ethernet setting. However,
+some Novell NetWare networks are running TCP/IP on the inside. TCP/IP spoofing from
+inside a Novell NetWare network is a different matter and much will depend on how
+much information the cracker can glean about the network.
+<H2><FONT COLOR="#000077"><B>Sniffers and Novell</B></FONT></H2>
+<P>In Chapter 12, &quot;Sniffers,&quot; I examined sniffers as one important method
+of attack against an Ethernet network. Sniffers are primarily valuable in surreptitiously
+capturing login IDs and passwords on a network.</P>
+<P>Fortunately, in most instances, such an attack will not be effective against a
+Novell NetWare network. Following version 2.0a, passwords passed during the login
+process were encrypted. Therefore, a sniffer attack would be largely a waste of time.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>An attacker could technically capture
+	encrypted passwords and transport these elsewhere, perhaps to his home or office.
+	There, he could eventually crack these using a brute-force password utility. However,
+	there are other more immediate avenues to try. Running a sniffer could be a complicated
+	process on a NetWare network. Many workstations are liable to be diskless clients,
+	leaving the cracker no place to hide his bounty. (And realistically, just how much
+	sniffed traffic can fit on a floppy that already has boot and network loading files
+	on it?) 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Any attempt to capture passwords on a Novell NetWare network would probably be
+via a keystroke capture utility. There are only a limited number of these and they
+all have to be at least on the same interface or machine as the target. Thus, securing
+each workstation for key capture utilities is a fairly straightforward process.</P>
+<P>Obviously, keystroke capture utilities won't be found on diskless clients (unless
+loaded onto the floppy), so your field of investigation is narrow. The time your
+search will consume is increased only by the hard drive size and directory structure
+depth of the workstation you are examining. You can assume that the utility is probably
+a hidden file, probably named something different from what it was originally named.
+(In other words, you will not be looking for files such as <TT>Gobbler</TT> or <TT>Sniffer</TT>.
+Crackers and hackers may <I>write</I> programs with dramatic, pulp-fiction names,
+but when they go to deploy those tools, more innocuous names are in order.)</P>
+<P>There are several ways you can search. One is by checksum/size. Another is to
+use a utility such as <TT>grep</TT>. Most of these cracking utilities contain within
+the code some string of unique text. (Frequently, crackers put a slogan, a nickname,
+or a comment within the code.) Using <TT>grep</TT>, <TT>awk</TT>, or other utilities
+with powerful regular expression search capabilities, you can attempt to identify
+such files, which may be masquerading as normal system files or documents.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Crackers suggest that keystroke
+	capture utilities be placed somewhere in the path. This allows the utility to be
+	remote, but still capture the needed data. Thus, if you were searching for such a
+	utility, you would start with all directories declared in the path statement. This
+	statement may be oddly formed, too, depending on whether the machine is a diskless
+	workstation. If it is not a diskless workstation, take a look at the <TT>autoexec.bat</TT>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>It is true that sniffers are almost pointless (too much effort and too great a
+risk) with respect to Novell NetWare passwords in versions higher than 2.0a. However,
+if your network houses older file servers, the default password encryption scheme
+must be disabled, according to <I>Novell NetWare Version 3.11 Installation Guide</I>
+(Novell, Inc.).</P>
+<P>This poses quite a different situation. Passwords on those interfaces will be
+moved across the network in clear text. This is a fact well known to crackers. Under
+such circumstances, a cracker would benefit greatly from utilizing a packet sniffer.
+If you are currently in such a situation, I suggest you attempt to transplant that
+information elsewhere and upgrade the OS or to disconnect that file server from any
+portion of a network already reasonably believed to be safe from sniffing attacks.
+<H2><FONT COLOR="#000077"><B>Cracking Tools</B></FONT></H2>
+<P>The following sections describe tools. Some were written by individuals who wanted
+to better network security. Others were written by crackers. All of them share one
+thing in common: They can be used to crack a Novell site.
+<H3><FONT COLOR="#000077"><B>Getit</B></FONT></H3>
+<P>Reportedly written by students at George Washington High School in Denver, Colorado,
+Getit is designed to capture passwords on a Novell network. The program was written
+in assembly language and is therefore quite small. This tool is triggered by any
+instance of the <TT>LOGIN.EXE</TT> application used in Novell to authenticate and
+begin a login session on a workstation. Technically, because of the way Getit works,
+it can be marginally qualified as a sniffer. It works directly at the operating system
+level, intercepting (and triggering on) calls to Interrupt 21h. It's probably the
+most well known NetWare hacking tool ever created.
+<H3><FONT COLOR="#000077"><B>Burglar</B></FONT></H3>
+<P>Burglar is a somewhat dubious utility. It can only be used where an individual
+has physical access to the NetWare file server. It is an NLM, or a loadable module.
+Most of Novell NetWare's programs executed at the server are loadable modules. (This
+includes everything from the system monitor to simple applications such as editors.)
+The utility is usually stored on a floppy disk. The attacker sometimes has to reboot
+the server. Providing that the attacker can reach the Novell server prompt (without
+encountering any password-protected programs along the way), the utility is then
+loaded into memory. This results in the establishment of an account with supervisor
+privileges. However, the utility's impact on the Novell networking community has
+probably been negligible. Rarely are file servers available for public tampering.
+<H3><FONT COLOR="#000077"><B>Spooflog</B></FONT></H3>
+<P>Spooflog is a program, written in C by Greg Miller, that can spoof a workstation
+into believing that it is communicating with the server. This is a fairly advanced
+exploit. It should be observed here that Miller is not a cracker. He provides these
+programs over the Internet for research into general network security and he has
+no affiliation with any radical or fringe group. He is simply a talented programmer
+with a very keen sense of NetWare.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Spooflog is available
+	(along with the source code) at <A HREF="http://www.users.mis.net/~gregmi/"><TT>http://www.users.mis.net/~gregmi/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Setpass</B></FONT></H3>
+<P>Another loadable module, Setpass is designed to give the user supervisor status.
+This module also requires physical access to the machine. Basically, it is a variation
+of Burglar. It works (reportedly) on Novell NetWare 3.<I>x</I> to 4.<I>x</I>.
+<H3><FONT COLOR="#000077"><B>NWPCRACK</B></FONT></H3>
+<P>NWPCRACK is a brute-force password cracker for cracking passwords on the Novell
+platform. This utility is best used from a remote location, working on passwords
+over long periods of time. As the author points out, there is a period of delay between
+password attempts and thus, brute forcing could take some time. This utility would
+probably work best if the cracker were attacking a network that he knew something
+about. (For example, if he knew something about the people who use the machine.)
+Short of that, I believe that a brute-force cracking tool for an environment like
+NetWare is probably impractical. Nevertheless, some crackers swear by it.
+<H3><FONT COLOR="#000077"><B>IPXCntrl</B></FONT></H3>
+<P>IPXCntrl is a sophisticated utility, written by Jay Hackney, that allows remote
+control of any compromised machine. For lack of a better description, the package
+comes with a client and a server, although these are not a client and server in the
+traditional sense. These are called the master and the minion, respectively. The
+master drives the minion over remote lines. In other words, this software persuades
+the network that keystrokes are coming from minion when they are actually coming
+from master. It runs as a TSR (terminate and stay resident) program.
+<H3><FONT COLOR="#000077"><B>Crack</B></FONT></H3>
+<P>Crack is a password cracker for the Novell NetWare platform. This password cracker
+is wordlist based (much like its UNIX-based namesake). It's a comprehensive tool
+that does not require NetWare to be on the local disk in order to operate effectively.
+It's a good tool for testing your passwords.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Crack is available at
+	<A HREF="http://www.mechnet.liv.ac.uk/~roy/freeware/crack.html"><TT>http://www.mechnet.liv.ac.uk/~roy/freeware/crack.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Snoop</B></FONT></H3>
+<P>Snoop is quite something. It gathers information about processes and the shell.
+It's an excellent tool for collecting information about each individual workstation
+and for watching the shell.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Snoop is available at
+	<A 
+HREF="http://www.shareware.com/code/engine/File?archive=novell-netwire&file=napi%2fcltsdk1e%2fsnoop%2eexe&size=102625"><TT>http://www.shareware.com/code/engine/File?archive=novell-netwire&amp;file=napi%2fcltsdk1e%2fsnoop%2eexe&amp;size=102625</TT></A>
+.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>LA</B></FONT></H3>
+<P>LA is identical to IPXCntrl in purpose, but not nearly so well designed. It is
+a simple utility, though, and works well.
+<H3><FONT COLOR="#000077"><B>Chknull</B></FONT></H3>
+<P>Chknull, by an unknown author, checks for null passwords and is to be used primarily
+as a tool to strengthen security by alerting the supervisor to possible problems
+stemming from such null passwords. However, like all these utilities, this is dangerous
+in the hands of a cracker.
+<H3><FONT COLOR="#000077"><B>Novelbfh.exe</B></FONT></H3>
+<P>Novelbfh.exe is a brute-force password cracker for login. It keeps guessing combinations
+of letters until it finally cracks the password.</P>
+<P>The problem with these utilities, of course, is that they take an enormous amount
+of time. Moreover, if the supervisor has enabled intruder detection, an intruder
+detection lockout (IDL) will occur. IDL works by setting a &quot;threshold,&quot;
+which is the number of times that a user can forward incorrect login attempts. Added
+to this value is the Bad Login Count Retention Time. This time period (which defaults
+to 30 minutes) is the block of time during which bad login attempts are applied to
+the IDL scheme. So if an incorrect login is received at 1:00 p.m., monitoring of
+subsequent logins on that account (relative to IDL) will continue to look for additional
+bad logins until 1:30 p.m. To compound this, the supervisor can also specify the
+length of time that the account will remain locked out. This value defaults to 15
+minutes. IDL is therefore a very viable way of preventing brute-force attacks. If
+these options are enabled, a brute-force cracker is worthless against the Novell
+NetWare platform.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you are new to security and have
+	been handed a Novell NetWare network, you will want to enable IDL if it hasn't already
+	been. Also, you should check-- at least twice a week--the audit log generated from
+	that process. (The events are logged to a file.) You can access that log (which is
+	really the equivalent of <TT>/var/adm/messages</TT> and <TT>syslog</TT> in UNIX)
+	by changing the directory to <TT>SYS:SYSTEM</TT> and entering the command <TT>PAUDIT</TT>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Denial of Service</B></FONT></H2>
+<P>As I have pointed out at several stages in this book, the denial-of-service attack
+is not much of an issue. The average denial-of-service attack typically disables
+one network service. In the worst case, such an attack may force a reboot or freeze
+a server. These actions remain more an embarrassment to the programmers who coded
+the affected application than they do a critical security issue for the target. Nevertheless,
+such activity can be irritating.</P>
+<P>One reported way to cause a denial-of-service attack on NetWare (3.<I>x</I> and
+possibly 4.<I>x</I>) is to capture a network printer and attempt to print an absurdly
+large file. This overflows the <TT>SYS</TT> volume and causes the machine to crash.
+Naturally, this would require not only physical access to an internal machine, but
+also an account there. However, in large organizations, it is entirely possible that
+malicious individuals may exist--individuals who may be secretly working for a competitor
+or just plain crackers who love to see a system go down. This is a relatively low-priority
+attack, as the machine can easily be rebooted and the problem solved.
+<H3><FONT COLOR="#000077"><B>FTP Vulnerability to Denial-of-Service Attacks</B></FONT></H3>
+<P>Certain versions of NetWare's FTP server are vulnerable to a denial-of-service
+attack. (This has been confirmed by Internet security systems and Novell, as well.
+Novell has issued a patch.) Apparently, when a brute-force attack is mounted against
+the anonymous FTP server, this activity causes an overflow and a memory leak. This
+leak ultimately consumes the remaining memory and the machine will freeze, failing
+to respond further.</P>
+<P>A brute-force attack in this case is a program that automates the process of trying
+hundreds (or sometimes thousands) of passwords on a given server.
+<H3><FONT COLOR="#000077"><B>Login Protocol of NetWare 3.12 Flawed</B></FONT></H3>
+<P>In October 1996, Greg Miller posted an advisory and an accompanying paper to the
+Net demonstrating a successful attack against the login procedure in Novell 3.12.
+The procedure involved an interruption of the login process in real-time.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>A complete explanation
+	of Miller's process is available at <A HREF="http://geek-girl.com/bugtraq/1996_3/0530.html"><TT>http://geek-girl.com/bugtraq/1996_3/0530.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The attack technique is a form of spoofing and is dependent on many things. (In
+other words, this is neither an easily implemented nor widely known technique.) The
+following are the limitations on the attack:
+
+<UL>
+	<LI>The attacker must be able to view, monitor, or somehow anticipate the login attempts
+	of legitimate users.<BR>
+	<BR>
+	
+	<LI>The targeted server must allow unsigned packets.
+</UL>
+
+<P>The process works as follows: The attacker sends a request for a login key. The
+server promptly responds with this key. The attacker then waits for a legitimate
+user to issue a similar request. When such a request occurs, and before the server
+can respond to the legitimate user, the attacker sends his login key to the legitimate
+user. The legitimate user's machine takes the bogus key as authentic and therefore
+ignores any further keys. (Thus, the legitimate user's remaining authentication will
+be based on an invalid key.) What remains is for the attacker to watch the rest of
+the exchange between the legitimate user and the server. The legitimate user's machine
+calculates a value based on a user ID sent from the server. It is this value that
+the attacker wants. The attacker can now log in as the legitimate user. (And of course,
+the legitimate user is now denied access.) It is an extraordinary hole. Duplication
+of this procedure in the void would be extremely difficult but not impossible. I
+think that at a minimum, the attacker would have to be familiar with the targeted
+server and the habits of those who routinely use it. Nevertheless, it is a hole and
+one that does allow a remote individual to gain access.</P>
+<P>These types of exploits for NetWare are rare.
+<H3><FONT COLOR="#000077"><B>Login Script Vulnerability</B></FONT></H3>
+<P>Under Novell 2.<I>x</I> and 3.<I>x</I>, if the supervisor fails to define a login
+script, a potential hole exists because crackers can place a login script into the
+supervisor's mail directory. It is unclear exactly what level of compromise this
+might lead to. Certainly, the supervisor's password can be captured. Furthermore,
+the number of parameters available to the author of a login script are many. In practice,
+it seems absurd that a supervisor would fail to create a login script, but I have
+seen some use the default. These are usually first-time administrators. This problem
+has been remedied in later versions of the software.</P>
+<P>One thing that you will readily notice about the Novell NetWare platform is that
+most of the methods used to crack it require some local, physical access. In all
+other respects, Novell NetWare is a strong platform, primarily because of its advanced
+access controls.</P>
+<P>However, my earlier point is still relevant. NetWare has not yet run the gauntlet.
+As more NetWare servers are erected on the Net, we may see a shift.
+<H2><FONT COLOR="#000077"><B>Utilities</B></FONT></H2>
+<P>The following sections describe a few utilities that are of some help in either
+securing your server or managing your network.
+<H3><FONT COLOR="#000077"><B>WSetPass 1.55</B></FONT></H3>
+<P>WSetPass 1.55 was designed by Nick Payne for system administrators to manage user
+passwords over multiple servers. It works for NetWare 2, 3, and 4.<I>x</I> passwords
+and runs on Windows 3.1<I>x</I>, Windows 95, and Windows NT 4.0. It allows you to
+mix and match servers and sync the password update across all servers in the network.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>WSetPass 1.55 is available
+	at <A HREF="http://ourworld.compuserve.com/homepages/nick_payne/wsetpass.zip"><TT>http://ourworld.compuserve.com/homepages/nick_payne/wsetpass.zip</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>WnSyscon 0.95</B></FONT></H3>
+<P>WnSyscon 0.95 is SYSCON for Windows, really. It allows you to administer your
+Novell NetWare Server from a Windows platform. You can perform all the same basic
+operations that you would if you were at the file server console. The author of WnSyscon
+0.95 is unknown.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>WnSyscon 0.95 is available
+	at <A HREF="ftp://ftp.novell.com/pub/nwc-online/ utilities/wnscn095.zip"><TT>ftp://ftp.novell.com/pub/nwc-online/
+	utilities/wnscn095.zip</TT></A>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>BindView EMS</B></FONT></H3>
+<P>BindView EMS is a powerful network management and security tool. This tool can
+effectively analyze your network for security holes and identify problem areas, disk
+usage, user rights, and even user rights inheritance. You can also examine the state
+of objects, including all attributes on files. This is a substantial package for
+network management and it is a commercial product.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>BindView EMS is available
+	at <A HREF="http://www.bindview.com:80/products/nosadmin3.html"><TT>http://www.bindview.com:80/products/nosadmin3.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>SecureConsole</B></FONT></H3>
+<P>SecureConsole is a security product from Australia that adds significant enhancements
+to your security. It is designed to protect the file console and adds greater access
+control and some deep auditing.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>SecureConsole is available
+	at <A HREF="http://www.serversystems.com/secure.htm"><TT>http://www.serversystems.com/secure.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>GETEQUIV.EXE</B></FONT></H3>
+<P>GETEQUIV.EXE is a security-related application that analyzes privilege equivalencies
+between users on the Net. (Wouldn't you be surprised to find that someone has supervisor
+equivalency?) It's a solid tool and one that quickly sums up security levels.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>GETEQUIV.EXE is available
+	at <A HREF="http://mft.ucs.ed.ac.uk/novell/techsup/freedos.htm"><TT>http://mft.ucs.ed.ac.uk/novell/techsup/freedos.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Although few people speak of Novell in the present tense, Novell has in fact made
+innovations that are relevant to the Internet. Indeed, Novell is still in the running,
+and Web servers and other Internet applications continue to be written for the Novell
+platform.
+<H3><FONT COLOR="#000077"><B>Resources</B></FONT></H3>
+<P>Here you will find resources related to Novell NetWare security. Some are books,
+some are articles, some are Web sites, and some are newsgroups. You will find that
+in the past two years, many more sources have cropped up. This is especially so now
+that NetWare sports its own Web server package, which has strong security. It stands
+in a similar light to the Webstar server, primarily because UNIX is where most of
+the security research has been done by crackers.
+<H4><FONT COLOR="#000077"><B>Publications</B></FONT></H4>
+<P>Following is a list of publications on NetWare security. You will notice that
+the majority are older. Newer treatments tend to focus on safely integrating NetWare
+networks into other systems. (As I mentioned, many legacy networks are now being
+migrated to the Internet, especially those with databases.) This is by no means an
+exhaustive list, but it will certainly help the new system administrator get started.</P>
+<P><B>Books</B></P>
+
+
+<BLOCKQUOTE>
+	<P><B>NetWare Security.</B> William Steen. New Riders Publishing. 1996.</P>
+	<P><B>Novell's Guide to Integrating NetWare and TCP/IP.</B> Drew Heywood.<I> </I>Novell
+	Press/IDG Books Worldwide. 1996.</P>
+	<P><B>NetWare Unleashed (Second Edition).</B> Rick Sant'Angelo. Sams Publishing.
+	1995.</P>
+	<P><B>A Guide to NetWare for UNIX.</B> Cathy Gunn. Prentice Hall. 1995.</P>
+	<P><B>NetWare LAN Management ToolKit.</B> Rick Segal. Sams Publishing. 1992.</P>
+	<P><B>The Complete Guide to NetWare 4.1.</B> James E. Gaskin. Sybex Publications.
+	1995.</P>
+	<P><B>Building Intranets on NT, NetWare, Solaris: An Administrator's Guide.</B> Tom
+	Rasmussen and Morgan Stern. Sybex. 1997.</P>
+	<P><B>The NetWare to Internet Connection.</B> Morgan Stern. Sybex. 1996.</P>
+	<P><B>NetWare to Internet Gateways.</B> James E. Gaskin. Prentice Hall Computer Books.
+	1996.</P>
+	<P><B>Novell's Guide to NetWare LAN Analysis.</B> Dan E. Hakes and Laura Chappell.
+	Sybex. 1994.</P>
+	<P><B>Novell's Four Principles of NDS.</B> Jeff Hughes. IDG Books Worldwide. 1996.</P>
+	<P><B>NetWare Web Development.</B> Peter Kuo. Sams Publishing. 1996.</P>
+
+</BLOCKQUOTE>
+
+<P><B>Magazines and Journals</B></P>
+
+
+<BLOCKQUOTE>
+	<P><B>The NetWare Connection.</B>
+
+</BLOCKQUOTE>
+
+
+<UL>
+	<UL>
+		<LI><A HREF="http://www.novell.com/nwc/"><TT>http://www.novell.com/nwc/</TT></A>
+	</UL>
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P><B>Inside NetWare.</B>
+
+</BLOCKQUOTE>
+
+
+<UL>
+	<UL>
+		<LI><A HREF="http://www.cobb.com/inw/index.htm"><TT>http://www.cobb.com/inw/index.htm</TT></A>
+	</UL>
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P><B>Institute of Management and Administration.</B>
+
+</BLOCKQUOTE>
+
+
+<UL>
+	<UL>
+		<LI><A HREF="http://www.ioma.com/ioma/mlc/index.html"><TT>http://www.ioma.com/ioma/mlc/index.html</TT></A>
+	</UL>
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Usenet Newsgroups</B></FONT></H4>
+<P>The following is a list of NetWare-related Usenet newsgroups:
+
+<UL>
+	<LI><A HREF="news:comp.os.netware.announce"><TT>comp.os.netware.announce</TT></A>--NetWare
+	announcements
+	<LI><A HREF="news:news:comp.os.netware.connectivity"><TT>comp.os.netware.connectivity</TT></A>--Connectivity
+	products
+	<LI><A HREF="news:comp.os.netware.misc"><TT>comp.os.netware.misc</TT></A>--General
+	NetWare topics
+	<LI><A HREF="news:comp.os.netware.security"><TT>comp.os.netware.security</TT></A>--NetWare
+	security issues
+</UL>
+
+<CENTER>
+<P>
+<HR>
+<A HREF="../ch17/ch17.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch19/ch19.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+<IMG SRC="../button/corp.gif" WIDTH="284" HEIGHT="45" ALIGN="BOTTOM" ALT="Macmillan Computer Publishing USA"
+BORDER="0"></P>
+
+<P>&#169; <A HREF="../copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

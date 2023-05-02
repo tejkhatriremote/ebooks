@@ -1,0 +1,121 @@
+Setting Up Subnets
+
+
+
+Subnets are logical subsections of a single TCP/IP network. For 
+administrative or technical reasons, many organizations choose to divide 
+one network into several subnets. Routing can get very complicated as the 
+number of networks grows. For example, a small organization might give 
+each local network a Class C number. As the organization grows, 
+administering network numbers may get out of hand. A better idea is to 
+allocate a few Class B network numbers for each major division in a 
+company: one for engineering, one for operations, and so on. Then, divide 
+each Class B network into physical networks using subnets. In this way, 
+you can isolate hosts from changes you might make to the network in remote 
+parts of the organization. 
+ 
+Subnets allow you more flexibility when assigning network addresses. The 
+Internet Protocol allows 127 Class A networks with 24-bit host fields; 
+16,383 Class B networks with 16-bit host fields; and over two million 
+Class C networks with 8-bit host fields. 
+ 
+
+-Network Masks-
+ 
+ 
+Typically, you create subnets by using a subnetting scheme called the 
+"address mask." When setting up your network, you should select a 
+network-wide "network mask". A network mask determines which bits in the 
+IP address will represent the subnet number. The remaining bits represent 
+the host within the subnet. For example, you could configure an 
+organization's internetwork as a Class B network. Then you could assign 
+each local subnet a subnet number within that network. The 16 bits could 
+be allocated as 8 for subnet and 8 for host, or 9 for subnet and 7 for host,
+and so on. Your decision would be transparent to everyone outside that 
+organization. 
+ 
+You can express network masks as a single hexadecimal number, or as four 
+octets of decimal numbers. The default is a mask of 0xFF000000 
+(255.0.0.0) for Class A networks, 0xFFFF0000 (255.255.0.0) for Class B 
+networks, and 0xFFFFFF00 (255.255.255.0) for Class C networks. You only 
+have to specify network masks explicitly when they are wider (that is, 
+have more one-bits) than the default values. One common case is a Class 
+C mask on a Class B network. A Class B network provides you with 256 
+possible subnets, each one of which can accommodate 254 possible hosts 
+(remember, 0 and 255 are not acceptable host addresses). But you may know 
+that one of your subnets will ever have more than, say, 128 hosts, while 
+you may need more then 256 subnets. In that case, you could decide to use 
+nine bits for the subnet number instead of eight, and seven for the host 
+addresses. The appropriate mask for this would be 0xFFFFFF80, 
+or 255.255.255.128 (2 to the power of 7 is 128, and 128 subtracted from 
+the possible 256 is 128). 
+ 
+Given the above scheme, and a network address of, for instance, 131.60, 
+the address for the first host of the first subnet would be 131.60.0.129. 
+ 
+/etc/netmasks File 
+ 
+The /etc/netmasks file contains the default netmasks for your system. To 
+set up the netmask, you need to create this file. Here is a sample 
+/etc/netmasks. 
+ 
+# 
+# Network masks 
+# 
+# only non-standard subnet masks need to be defined here 
+# 
+# Network       netmask 
+128.32.0.0      255.255.255.0 
+ 
+Create an entry with the network number and network mask on a separate 
+line for each network that is subnetted. 
+ 
+You can use ifconfig to override the network masks manually. For more 
+information about ifconfig, refer to the ifconfig(1M) Reference Manual 
+entry. 
+ 
+For example, consider Class B network 128.32 with an 8-bit wide subnet 
+field (and, therefore, an 8-bit wide host field). The /etc/netmasks entry 
+for this network would be 
+ 
+128.32.0.0      255.255.255.0 
+ 
+You can enter symbolic names for subnet addresses in the /etc/hosts file. 
+You can then use these subnet names instead of numbers as parameters to 
+commands. For more information about netmasks, see the netmasks(4) 
+Reference Manual entry. 
+ 
+Changing from a Nonsubnetted to a Subnetted Network 
+ 
+Follow these steps to change from an internetwork that does not use 
+subnets to one that is subnetted. 
+ 
+1.      Decide on the new subnet topology, including considerations for 
+        subnet routers and locations of hosts on the subnet. 
+ 
+2.      Assign all subnet and host addresses. 
+ 
+3.      Edit /etc/netmasks as mentioned previously. 
+ 
+4.      Edit /etc/hosts on all hosts to change host addresses. 
+ 
+Examples of Subnets 
+ 
+The following examples show network installations where subnets are 
+(and are not) in use: 
+ 
+128.32.0.0  Berkeley Class B network (subnetted)    netmask   255.255.255.0 
+36.0.0.0    Stanford Class A network (subnetted)    netmask   255.255.0.0 
+10.0.0.0    Arpanet Class A network (nonsubnetted)  netmask   255.0.0.0 
+ 
+The University of California at Berkeley is assigned the network number 
+128.32.0.0, so that any external router only needs to know one route to 
+reach Berkeley. Within the campus, a Class C subnet mask is used to give 
+each local network a subnet number, with 254 hosts on each of the 254 
+possible subnets. (Zero and all ones, that is 255, are reserved.) 
+Stanford University uses a Class A network number with a Class B network 
+mask, for 254 subnets of 65534 hosts each. The ARPANET is a Class A 
+network without subnets; therefore, the default Class A netmask is used.
+
+guidob (guidob@synnergy.net)
+Synnergy Networks (c) 1998, http://www.synnergy.net

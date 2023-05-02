@@ -1,0 +1,178 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=055-059//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch02/02-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 3<br>Threads and Processes
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Processes and Threads <i>56</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Managing Processes <i>58</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Managing Threads <i>62</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Synchronization <i>77</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Semaphores <i>93</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Semaphores and Critical Sections in an Application <i>97</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Job Objects <i>103</I></B>
+</DL>
+<p>This chapter covers how processes and threads are created and managed, as well as how they&#146;re used in developing multithreaded applications in Windows 2000.
+</P>
+<p>A major portion of this chapter is used to discuss synchronization between threads and processes. Windows 2000 provides a number of ways to efficiently synchronize your multithreaded applications, and this chapter discusses them all.</P>
+<p>As always, this chapter also includes a number of sample projects that can be found on the accompanying CD-ROM. These projects illustrate the concepts of multithreading and synchronization.</P>
+<h3><a name="Heading2"></A><font color="#000077">Processes and Threads</FONT></H3>
+<p>A process is started by Windows 2000 when an application is launched. The process owns the memory, resources, and threads of execution associated with that particular instance of running an executable program. When a process is started, a primary thread is started as well. As long as at least one thread is associated with a process, the process will continue to run.
+</P>
+<p>A thread, sometimes called a <i>thread of execution</I>, is the smallest unit of execution in Windows 2000. A thread is always associated with a process and always lives within a particular process. Although many processes have only a single thread that lasts for the life of the process, it&#146;s not unusual for a process to have many threads over its lifetime, as shown in Figure 3.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-01.jpg',500,358 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-01.jpg',500,358)"><font color="#000077"><b>Figure 3.1</B></FONT></A>&nbsp;&nbsp;A typical Windows 2000 process has many threads over its lifetime.</P>
+<p>Threads are scheduled according to their priority, and within a certain priority, in a circular (or <i>round-robin</I>) fashion. There are 31 different priority levels, as shown in Figure 3.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-02.jpg',262,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-02.jpg',262,420)"><font color="#000077"><b>Figure 3.2</B></FONT></A>&nbsp;&nbsp;Windows 2000 has 31 different priority levels available.</P>
+<p>A thread can be in one of six states:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Waiting
+<dd><b>&#149;</B>&nbsp;&nbsp;Ready
+<dd><b>&#149;</B>&nbsp;&nbsp;Running
+<dd><b>&#149;</B>&nbsp;&nbsp;Standby
+<dd><b>&#149;</B>&nbsp;&nbsp;Terminated
+<dd><b>&#149;</B>&nbsp;&nbsp;Transition
+</DL>
+<p>The last three states in the preceding list are really &#147;substates.&#148; In these substates, the thread is either waiting, as in the case of a thread in the standby state, or running, in the case of the transition state. A thread in the terminated state has finished executing, and is about to be removed from the process.
+</P>
+<p>At any given time, only one thread per system processor is in the running state. All other threads are either waiting or ready. A running thread is allowed to run until one of the following actions occur:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It exceeds its maximum allotted execution time, known as a <i>quantum</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A higher priority thread marked as waiting becomes waiting.
+<dd><b>&#149;</B>&nbsp;&nbsp;The running thread decides to wait for an event or object.
+</DL>
+<p>When a thread exceeds its time quantum, Windows 2000 marks the thread as ready and looks for the highest priority ready thread in the system. If there are other ready threads with the same priority level as the previously running thread, the next thread is marked as running, and it starts executing. In this way, threads at the same priority level are serviced in a circular (round-robin) sort of queue. If a thread is waiting for an I/O event or for some other object to be signaled, another thread is selected to run using the same scheduling process.
+</P>
+<p>In order to make Windows-based applications appear more responsive, the thread that owns the foreground window is normally boosted by two priority levels. This boost only applies if the thread is running at the usual priority class. If a thread has an idle, high, or real-time priority class, switching to the foreground does not affect its priority level.</P>
+<p>When a thread is prevented from running due to a large number of higher-priority work, it&#146;s said to be <i>starved</I>. Threads that have an extremely low priority are occasionally given a &#147;boost&#148; in their priority that enables them to be scheduled for one execution cycle. This is enough, in most cases, to guarantee that all threads get at least some chance to compete for CPU cycles.</P>
+<h3><a name="Heading3"></A><font color="#000077">Managing Processes</FONT></H3>
+<p>The most common ways to start a process are to launch it from the Windows 2000 Explorer, launch it from the Start menu, or launch it by typing the name of the program at the console command line. Windows 2000 also includes a number of functions that can be used to create and manage processes.
+</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Using the CreateProcess Function</FONT></H4>
+<p>A process can be started in many ways, such as launching it from the Windows 2000 Start menu or clicking an icon. To start a process from within another Windows 2000 application, you must call the <small>CreateProcess</SMALL> function:</P>
+<!-- CODE //-->
+<pre>
+STARTUPINFO si;
+ZeroMemory(&ampsi, sizeof(STARTUPINFO));
+si.cb = sizeof(STARTUPINFO);
+PROCESS_INFORMATION pi;
+BOOL fCreated = CreateProcess(_T(&#147;C:\\foo.exe&#148;),
+                              NULL,
+                              NULL,
+                              NULL,
+                              FALSE,
+                              CREATE_NEW_CONSOLE,
+                              NULL,
+                              _T(&#147;C:\\&#148;),
+                              &ampsi,
+                              &amppi);
+HANDLE hProcess = pi.hProcess;  // Process handle
+</PRE>
+<!-- END CODE //-->
+<p>The <small>CreateProcess</SMALL> function has 10 parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The path to the executable file that&#146;s to be started. If this parameter is <small>NULL</SMALL>, the next parameter is used to determine the filename.
+<dd><b>&#149;</B>&nbsp;&nbsp;The command line used to start the process. This parameter can be <small>NULL</SMALL> if no command-line arguments are passed to the new process.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure that specifies the security attributes for the new process. Using <small>NULL</SMALL> for this parameter causes the operating system to give the new process a default security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure that specifies the security attributes for the primary thread created by the new process. A <small>NULL</SMALL> value causes a default security descriptor to be used.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies whether the new process will inherit the handles owned by the current process&#151;in this case <small>FALSE</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies how the process will be created and its priority level&#151;in this case, the flag is <small>CREATE_NEW_CONSOLE</SMALL>. Other possible values for this flag are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an environment block used by the new process or <small>NULL</SMALL> if the new process will use the environment block of the parent process.
+<dd><b>&#149;</B>&nbsp;&nbsp;The current drive and directory for the new process or <small>NULL</SMALL> if the new process will use the same drive and current directory as the parent process.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>STARTUPINFO</SMALL> structure, which can be used to set various attributes for the new process, such as its title and window position. The <small>STARTUPINFO</SMALL> structure should be initialized as shown in the example, particularly the <small>cb</SMALL> member, which must be initialized with the size of the <small>STARTUPINFO</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>PROCESS_INFORMATION</SMALL> structure, which will be filled in by Windows 2000 while creating the new process.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch02/02-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

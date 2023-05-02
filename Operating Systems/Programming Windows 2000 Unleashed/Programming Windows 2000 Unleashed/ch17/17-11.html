@@ -1,0 +1,271 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=565-570//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch18/18-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In Listing 17.12, only one function does any real work: <small>UnmarshalInterface</SMALL>. When this function is called on the proxy, the proxy fills the contents of the local <small>m_info</SMALL> structure from an <small>IStream</SMALL> that&#146;s provided by COM. In the next section, you&#146;ll see how the COM server serializes the contents of its <small>m_info</SMALL> structure into the stream.</P>
+<p>Build the SysInfoMbv project. It should compile with no errors and automatically register the custom proxy in the System Registry. There&#146;s no need to build or register the proxy/stub DLL located in the project&#146;s directory.</P>
+<h4 align="LEFT"><a name="Heading26"></A><font color="#000077">Implementing IMarshal on the Server</FONT></H4>
+<p>The next step in implementing MBV is to implement the <small>IMarshal</SMALL> interface on the COM object. In general, a COM object that supports custom marshaling has three responsibilities:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Provide the CLSID of the custom proxy to the operating system.
+<dd><b>&#149;</B>&nbsp;&nbsp;Provide the size of the custom marshaling packet to the operating system.
+<dd><b>&#149;</B>&nbsp;&nbsp;Create a marshaling packet and serialize the packet into an <small>IStream</SMALL> that will be provided by COM and the operating system. When you&#146;re implementing MBV, the marshaling packet contains the current state of the COM object.
+</DL>
+<p>The CD-ROM includes a second version of the SysInfo project in a directory cleverly named <i>SysInfo2</I>. This version of SysInfo implements the <small>IMarshal</SMALL> interface and works in tandem with the SysInfoMbv custom proxy.</P>
+<p>The modifications made to the <small>SystemInfo.h</SMALL> header file are provided in Listing 17.13. The <small>SystemInfo</SMALL> object has been modified to support the <small>IMarshal</SMALL> interface. Modified and changed lines are shown in bold.</P>
+<p><b>Listing 17.13</B> The <small>CSystemInfo</SMALL> Class Definition After <small>IMarshal</SMALL> Support Is Added<hr></P>
+<!-- CODE //-->
+<pre>
+// SystemInfo.h : Declaration of the CSystemInfo
+
+#ifndef __SYSTEMINFO_H_
+#define __SYSTEMINFO_H_
+
+#include &#147;resource.h&#148;       // main symbols
+
+///////////////////////////////////////////////////////////////
+// CSystemInfo
+class ATL_NO_VTABLE CSystemInfo :
+    public CComObjectRootEx&ltCComMultiThreadModel&gt,
+    public CComCoClass&ltCSystemInfo, &ampCLSID_SystemInfo&gt,
+    <b>public ISystemInfo, // add a comma on this line
+    public IMarshal</B>
+{
+public:
+    CSystemInfo()
+    {
+    }
+
+DECLARE_REGISTRY_RESOURCEID(IDR_SYSTEMINFO)
+
+DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+BEGIN_COM_MAP(CSystemInfo)
+    COM_INTERFACE_ENTRY(ISystemInfo)
+    <b>COM_INTERFACE_ENTRY(IMarshal)</B>
+END_COM_MAP()
+
+    HRESULT FinalConstruct();
+
+// ISystemInfo
+public:
+    STDMETHOD(GetVmAllocationGranularity)(unsigned long* pdwSize);
+    STDMETHOD(GetProcessorRevisionString)(BSTR* strRevision);
+    STDMETHOD(GetProcessorMask)(long* pMask);
+    STDMETHOD(GetProcessorCount)(short* pCount);
+    STDMETHOD(GetAddressSpaceBounds)(unsigned long* pdwLowAddr,
+                                     unsigned long* pdwHighAddr);
+    STDMETHOD(GetProcessorType)(ProcessorType* pType);
+    STDMETHOD(GetPageSize)(unsigned long* pdwPageSize);
+
+<b>// IMarshal
+public:
+    STDMETHOD(GetUnmarshalClass)(REFIID riid, void *pv,
+                                 DWORD dwDestContext,
+                                 void *pvDestContext,
+                                 DWORD mshlflags, CLSID *pCid);
+    STDMETHOD(GetMarshalSizeMax)(REFIID riid, void *pv,
+                                 DWORD dwDestContext,
+                                 void *pvDestContext,
+                                 DWORD mshlflags, DWORD *pSize);
+    STDMETHOD(MarshalInterface)(IStream* pStm, REFIID riid,
+                                void *pv, DWORD dwDestContext,
+                                void *pvDestContext,
+                                DWORD mshlflags);
+    STDMETHOD(UnmarshalInterface)(IStream *pStm, REFIID riid,
+                                  void **ppv);
+    STDMETHOD(ReleaseMarshalData)(IStream *pStm);
+    STDMETHOD(DisconnectObject)(DWORD dwReserved);</B>
+
+protected:
+    SYSTEM_INFO m_info;
+};
+#endif //__SYSTEMINFO_H_
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The implementation file for the <small>SystemInfo</SMALL> COM object is found in <small>SystemInfo.cpp</SMALL>. Most of this file is identical to the file provided earlier in Listing 17.4. The new portion of the file that deals with the <small>IMarshal</SMALL> interface in the server is provided in Listing 17.14. The complete source file for <small>SystemInfo.cpp</SMALL> can be found on the CD-ROM. Note that the server needs to know the CLSID for the custom proxy. You can either add the include file or simply copy the definition, as done in Listing 17.14.</P>
+<p><b>Listing 17.14</B> The Implementation of the <small>SystemInfo</SMALL> COM Object After Support for <small>IMarshal</SMALL> Is Added<hr></P>
+<!-- CODE //-->
+<pre>
+// SystemInfo.cpp : Implementation of CSystemInfo
+#include &#147;stdafx.h&#148;
+#include &#147;SysInfo.h&#148;
+#include &#147;SystemInfo.h&#148;
+
+<b>const CLSID CLSID_SystemInfoMbv = {0xA1B192DC,0xA8BE,0x11D2,
+                        {0xB8,0x87,0x00,0x10,0x4B,0x36,0x57,0x3E}};</B>
+
+    .
+    .// Existing code omitted for clarity
+    .
+<b>STDMETHODIMP CSystemInfo::GetMarshalSizeMax(REFIID riid,
+                                            void *pv,
+                                            DWORD dwDestContext,
+                                            void *pvDestContext,
+                                            DWORD mshlflags,
+                                            DWORD *pSize)
+{
+    AtlTrace(L&#148;GetMarshalSizeMax\n&#148;);
+    *pSize = sizeof(SYSTEM_INFO);
+    return S_OK;
+}
+
+
+STDMETHODIMP CSystemInfo::MarshalInterface(IStream* pStm,
+                                           REFIID riid,
+                                           void *pv,
+                                           DWORD dwDestContext,
+                                           void *pvDestContext,
+                                           DWORD mshlflags)
+{
+    AtlTrace(L&#148;MarshalInterface\n&#148;);
+    return pStm-&gtWrite((void*)&ampm_info, sizeof(SYSTEM_INFO), NULL);
+}
+
+STDMETHODIMP CSystemInfo::UnmarshalInterface(IStream *pStm,
+                                             REFIID riid,
+                                             void **ppv)
+{
+    AtlTrace(L&#148;Empty - UnmarshalInterface\n&#148;);
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::ReleaseMarshalData(IStream *pStm)
+{
+    AtlTrace(L&#148;Empty - ReleaseMarshalData\n&#148;);
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::DisconnectObject(DWORD dwReserved)
+{
+    AtlTrace(L&#148;Empty - DisconnectObject\n&#148;);
+    return S_OK;
+
+}</B>
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Build the new version of the SysInfo project. It should compile successfully and register itself in the System Registry. Rerun InfoClient and InfoTimer, the two client test programs created earlier in the chapter. They should both run unmodified against the new MBV version of SysInfo&#151;the only difference being that InfoTimer will run much, much faster. The next section examines performance issues with custom marshaling.
+</P>
+<h4 align="LEFT"><a name="Heading27"></A><font color="#000077">Comparing Custom and Standard Proxy Performance</FONT></H4>
+<p>A custom MBV marshaling implementation greatly reduces the cost of making method calls to a COM server. If you&#146;re frequently calling out-of-process COM objects, and the time required for method calls is a bottleneck, you can take advantage of MBV to increase your object&#146;s performance.
+</P>
+<p>Table 17.3 compares the time reported by InfoTimer when calling SysInfo with standard marshaling versus custom marshaling. You&#146;ll recall that InfoTimer calls an <small>ISystemInfo</SMALL> interface method for one million iterations.</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 17.3</B> Timing Results of Standard and Custom Marshaling for SysInfo
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Marshaling</I>
+<th align="LEFT" valign="TOP"><i>Time (Seconds)</I>
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Standard
+<td align="LEFT" valign="TOP">266.23
+<tr>
+<td align="LEFT" valign="TOP">Custom MBV
+<td align="LEFT" valign="TOP">.109
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+</TABLE>
+<p>As you can see in Table 17.3, the difference in the timing results is dramatic. The time could be improved by reducing the amount of work required by the proxy. The current implementation of SysInfo and SysInfoMbv marshal a <small>SYSTEM_INFO</SMALL> structure. This requires the proxy to calculate a number of the responses, such as the processor enumeration and revision string. Slightly better performance could be obtained by marshaling a structure that contained data in its final form, thus reducing the work required by the proxy.</P>
+<p>All these performance gains come at a price, however. There are some situations where MBV is not appropriate. MBV has these limitations:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;MBV breaks the COM identity rule. If you have two <small>IUnknown</SMALL> interface pointers, you can compare those two pointers for equality to determine whether they refer to the same object. MBV will provide you with a new proxy (and a new <small>IUnknown</SMALL> pointer) for each apartment in your process. This is usually not a problem when you&#146;re using MBV, but you should be aware of this limitation.
+<dd><b>&#149;</B>&nbsp;&nbsp;MBV does not provide any way for the client&#146;s copy of the COM object to be updated. MBV is useful only when the state of the COM object doesn&#146;t change. If you need custom marshaling for objects that are updated, you&#146;ll need to implement RPC or some other communication method between the custom proxy and its stub in the remote process.
+<dd><b>&#149;</B>&nbsp;&nbsp;MBV does not provide any way for the client to update the COM server object. Again, if you need this facility, you&#146;ll need to implement a communication channel back to the COM server object.
+<dd><b>&#149;</B>&nbsp;&nbsp;Finally, MBV reduces only a small part of the total performance cost of your application. Unless you&#146;re making large amounts of method calls, you&#146;re unlikely to see a large performance gain.
+</DL>
+<h3><a name="Heading28"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed some of the issues involved in creating custom COM objects using the ActiveX Template Library. Examples of creating custom COM objects using ATL were presented, as was an example of implementing MBV.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch18/18-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

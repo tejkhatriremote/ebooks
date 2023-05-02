@@ -1,0 +1,191 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=739-742//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Simplifying the Interface Count</B></FONT></P>
+<p>Working with raw COM interface pointers is not all that fun. The reason is that calling <small>QueryInterface</SMALL> and decrementing the reference count must be done manually.</P>
+<p>A simpler way to use the interface is to use the included COM compiler support. The COM compiler support classes were introduced in Visual C<small>&#43;&#43;</SMALL> 5.0. Using these classes, it&#146;s much easier to write code that uses COM interface pointers. The technique is called <i>smart pointers</I>. Smart pointers are template-based classes that embed the reference counting and type conversion within the class. In the case of the COM compiler classes, they also throw exceptions. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+   try {
+       IObjectContextPtr ptrCtxt;
+
+       _com_util::CheckError( GetObjectContext( ptrCtxt));
+
+       // Some operations
+   } catch( _com_error err) {
+       return err.Error();
+   }
+</PRE>
+<!-- END CODE //-->
+<p>All the methods are embedded within an exception block. Any COM error will be caught in the exception handler. The object <small>_com_error</SMALL> is a wrapper class for the <small>HRESULT</SMALL>. To retrieve the <small>HRESULT</SMALL>, call the method <small>_com_error::Error()</SMALL>. The advantage of using exception handling is that any problems will automatically be caught. It&#146;s not necessary to write explicit <small>if</SMALL> blocks. Also, it&#146;s not possible to bypass writing <small>if</SMALL> blocks with COM, because COM or the COM objects will not always do what you want.</P>
+<p>The newest versions of the Platform SDK have already defined smart pointer typecasts for <small>IObjectContext</SMALL> (<small>IObjectContextPtr</SMALL>). The method <small>_com_util::CheckError</SMALL> checks to see whether any errors are generated when a COM method or function call is made. If an error occurs, an exception is generated.</P>
+<p><font size="+1"><b>Working with the Transaction Context</B></FONT></P>
+<p>Let&#146;s look more closely at the transaction context interface <small>IObjectContext</SMALL>. This interface allows you to control the transaction outcome within the COM&#43; object. It represents a wrapper to the transaction context. It&#146;s also specific to the object that retrieves it. This means that this interface pointer cannot be passed to another object, because it doesn&#146;t represent the right context. The full interface is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+   struct __declspec(uuid(&#147;51372ae0-cae7-11cf-be81-00aa00a2fa25&#148;))
+   IObjectContext : IUnknown
+   {
+       //
+       // Raw methods provided by interface
+       //
+
+       virtual HRESULT __stdcall CreateInstance (
+           REFGUID rclsid,
+           REFGUID riid,
+           void * * ppv ) = 0;
+       virtual HRESULT __stdcall SetComplete ( ) = 0;
+       virtual HRESULT __stdcall SetAbort ( ) = 0;
+       virtual HRESULT __stdcall EnableCommit ( ) = 0;
+       virtual HRESULT __stdcall DisableCommit ( ) = 0;
+       virtual BOOL __stdcall IsInTransaction ( ) = 0;
+       virtual BOOL __stdcall IsSecurityEnabled ( ) = 0;
+       virtual HRESULT __stdcall IsCallerInRole (
+           BSTR bstrRole,
+           BOOL * pfIsInRole ) = 0;
+   };
+</PRE>
+<!-- END CODE //-->
+<p>The interface can be broken down into three categories:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Transaction outcome</I>. This category includes <small>DisableCommit, EnableCommit, SetAbort</SMALL>, and <small>SetComplete</SMALL>. The transaction outcome methods influence how the transaction will end when the component is deactivated. The object can specify that the transaction is ready for writing or that everything went wrong and needs to stop. Also, the object can say, &#147;Wait one minute and let me do a couple more things until I&#146;m ready to decide whether everything is okay.&#148; Yet another possibility is that the object can say, &#147;I&#146;m not yet finished, but what I&#146;ve done is okay whether the transaction is aborted or committed.&#148;
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Querying</I>. This category includes <small>IsCallerInRole, IsInTransaction</SMALL>, and <small>IsSecurityEnabled</SMALL>. The querying methods allow the object to ask whether it&#146;s in the correct security role. Most of the time, for example, you won&#146;t want to let people withdraw thousands of dollars. An even better question is whether security is even enabled. The object can ask, &#147;Am I even running within a transaction context?&#148; This is critical, because if the object is not within a transaction context, aborting a transaction might not have any influence on the database it&#146;s working with.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>COM&#43; object instantiation</I>. This category includes <small>CreateInstance</SMALL>. The COM component creation method is used to create objects that will participate in the same transaction as what&#146;s currently running. This is absolutely important, because if a method call invokes an object that&#146;s not running, the same transaction context may make data durable that should not be durable.
+</DL>
+<p><font size="+1"><b>Transaction Outcome Methods</B></FONT></P>
+<p>Because you&#146;ll use the next set of functions many, many times, you should understand how they work. The easiest way to understand these functions is to think of them as light switches, as shown in Figure 22.10.
+</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-10.jpg',166,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-10.jpg',166,420)"><font color="#000077"><b>Figure 22.10</B></FONT></A>&nbsp;&nbsp;The transactional switches.</P>
+<p>The two switches are set using the four transaction outcome functions. The lookup table is defined as follows:
+</P>
+<table width="100%"><th align="LEFT" valign="TOP"><i>Method</I>
+<th align="LEFT" valign="TOP"><i>Switch: Done</I>
+<th align="LEFT" valign="TOP"><i>Switch: Consistent</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>DisableCommit</SMALL>
+<td align="LEFT" valign="TOP">Off
+<td align="LEFT" valign="TOP">Off
+<tr>
+<td align="LEFT" valign="TOP"><small>EnableCommit</SMALL>
+<td align="LEFT" valign="TOP">Off
+<td align="LEFT" valign="TOP">On
+<tr>
+<td align="LEFT" valign="TOP"><small>SetAbort</SMALL>
+<td align="LEFT" valign="TOP">On
+<td align="LEFT" valign="TOP">Off
+<tr>
+<td align="LEFT" valign="TOP"><small>SetComplete</SMALL>
+<td align="LEFT" valign="TOP">On
+<td align="LEFT" valign="TOP">On
+</TABLE>
+<p>These functions are compared to switches because during the method call, the functions can be set and reset as often as needed. They are evaluated only when the method returns control to the caller. Therefore, calling <small>SetAbort</SMALL> and then calling <small>SetComplete</SMALL> means that the last call, <small>SetComplete</SMALL>, will be acted upon.</P>
+<p><font size="+1"><b><i>Wait, I&#146;m Not Done: DisableCommit</I></B></FONT></P>
+<p>When <small>DisableCommit</SMALL> is called, the Done switch is off and the Consistent switch is off. The ramifications are that the COM object will not be deactivated for reuse. However, if a two-phase commit were to be started, it would be aborted. Also, any work that has been accomplished would be erased. The definition of this method is as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+    HRESULT IObjectContext::DisableCommit ( );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There are no parameters, but the return codes must be obeyed. An <small>S_OK</SMALL> return code indicates that the switches have been successfully set. On the other hand, a <small>CONTEXT_E_NOCONTEXT</SMALL> return code indicates that although the interface where the method has been called is valid, the object is not participating in a transaction.</P>
+<p><font size="+1"><b><i>Okay, Some Work Is Done: EnableCommit</I></B></FONT></P>
+<p>The difference for <small>EnableCommit</SMALL> is that the Consistent switch is on. As with the <small>DisableCommit</SMALL> method, the object is not yet done and cannot be deactivated. However, unlike <small>DisableCommit</SMALL>, if a two-phase commit is started, it will commit the data. If this happens, the object will be deactivated regardless of the outcome of the transaction. The definition of this method is as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HRESULT IObjectContext::EnableCommit ( );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Again, as is the case with <small>DisableCommit, S_OK</SMALL> indicates that the method call was successful. However, a return code of <small>CONTEXT_E_NOCONTEXT</SMALL> means that the object is not participating in a transaction but is running within the MTS environment.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

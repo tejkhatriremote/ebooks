@@ -1,0 +1,285 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:General System</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=1//-->
+<!--PAGES=050-053//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="047-050.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="053-056.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>I-189</B> <big>I</BIG>f you are having database problems with your primary domain controllers (PDCs), you may want them to completely synchronize every time they boot. This value lets you control the behavior of individual domain controllers. Change the Update value to Yes.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Update
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>Yes
+</TABLE>
+<p><b>I-190</B> <big>I</BIG>f you apply large-scale changes to your domain user accounts all at once, you can cause network congestion. Tuning the following parameters can help reduce that congestion.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+</TABLE>
+<p>Add the ChangeLogSize value.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">ChangeLogSize
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_SZ
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0x4000000
+</TABLE>
+<p>This value defines the size of the Change Log (%systemroot%\Netlogon.chg). The default value is 64K. Changing this value to the maximum 4 MB helps congestion on systems that are very volatile or frequently have large changes. In testing this value, we noted little impact on overall system performance.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-191</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+</TABLE>
+<p>Add the Pulse value.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">Pulse
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>300
+</TABLE>
+<p>The pulse value defines how often (in seconds) a pulse is sent to a backup domain controller (BDC) that needs to be updated with SAM or LSA changes. By default, the NetLogon service determines the optimal frequency for pulses. If you are doing lots of updates, you may need to increase this value. Frequent updates clog the network, and decreasing the value would reduce clog. However, decreasing the value means you could lose more data if your system crashes, because it&#146;s been longer since a backup. The range is 60 to 172,800. Restart the server for this value to take effect.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-192</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+</TABLE>
+<p>Add the PulseConcurrency value.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">PulseConcurrency
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>20
+</TABLE>
+<p>This value determines the maximum number of concurrent pulses the PDC sends to BDCs. This value lets you control how many BDCs are being updated at any one time, which can reduce network traffic.
+</P>
+<p><b>I-193</B> <big>T</BIG>his value determines the absolute longest interval that a BDC goes without receiving a request for update (pulse), even if the BDC is up-to-date.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+</TABLE>
+<p>Add the PulseMaximum value.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">PulseMaximum
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>7200
+</TABLE>
+<p>The default is 7200 seconds (2 hours). Reboot the machine for any changes to take effect.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-194</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+</TABLE>
+<p>Add the PulseTimeout1 value.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">PulseTimeout1
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>5
+</TABLE>
+<p>This value tells the PDC how long to wait before giving up on a BDC that has failed to respond. Once a PDC sends a pulse to a BDC, the BDC must respond within this time frame; if it doesn&#146;t, it is considered unavailable. The PDC then sends a pulse to another BDC. If this value is set very high and you have many BDCs on your network, network updates can take a long time. However, if you have a heavily congested network, setting this value too low causes the PDC to give up on the BDC prematurely. The default value is 5 seconds, and the range is 1 to 120 seconds.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-195</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+</TABLE>
+<p>Add the PulseTimeout2 value.
+</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Value Name:</B>
+<td width="70%">PulseTimeout2
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>300
+</TABLE>
+<p>This value determines how long a PDC waits for a BDC to finish replication. Even if a BDC has responded correctly to a pulse, it is still possible for BDCs to have problems during replication. If the PDC doesn&#146;t hear from the BDC in the interval specified by PulseTimeout2, the PDC determines that the BDC is having trouble. The default is 300 seconds, and the valid range is 60 to 300 seconds.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-196</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Randomize
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>When the BDC receives a pulse, it waits the number of seconds specified in the Randomize value before answering. You should keep this value small. If you tune the value in PulseTimeout1, remember to set the Randomize value smaller. If this value is not in the registry, Netlogon figures out the best value depending on server load. Restart the machine for any changes to take effect.
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>I-197</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\Netlogon\Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>ReplicationGovernor
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>100
+</TABLE>
+<p>This value sets the frequency with which the PDC transfers data to the BDC and the amount of data it sends at a time. If the replication governor is set to 50, the BDC has a replication call pending only 50 percent of the time and uses a 64K buffer instead of the 128K buffer it uses for a 100 setting. A value of 0 causes Netlogon to never replicate, which gets the databases on the PDC and BDC completely out of sync.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="047-050.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="053-056.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

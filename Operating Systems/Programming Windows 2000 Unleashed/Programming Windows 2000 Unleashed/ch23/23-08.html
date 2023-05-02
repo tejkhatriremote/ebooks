@@ -1,0 +1,245 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=790-793//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Automatic Redirection Within a Page</B></FONT></P>
+<p>In the script shown by the preceding example, the <small>Response.Redirect</SMALL> method call was placed at the top of the page. This is because content is sent as a stream back to the client. And from previous explanations, ASP script processing occurs from the top of the page to the bottom. If the method call were placed within the main script, an error would occur because the client has received some content and cannot in midstream load a new page.</P>
+<p>Does this mean you can do redirection only at the top of a script page? No, to use the <small>Response.Redirect</SMALL> method anywhere throughout the page, you will need to use the ASP buffering mechanism. Using the buffering mechanism, the stream content is buffered at the server until an explicit command sends the stream. This way it is possible to do a redirection in mid-page processing.</P>
+<p>The previous example could be rewritten as this:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&lt%Response.Buffer = true%&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+
+&lt%   if( Session( &#147;userId&#148;) == -1) {
+       Response.Redirect(&#147;../logon/default.asp&#148;);
+    }%&gt
+&lt/BODY&gt
+&lt/HTML&gt
+&lt%Response.End()%&gt
+</PRE>
+<!-- END CODE //-->
+<p>The first line sets <small>Response.Buffer</SMALL> to <small>True</SMALL>. This indicates that the stream should be buffered. Now, a <small>Response.Redirect</SMALL> can be issued in midstream.</P>
+<p>To send the content to the client, you can use either <small>Response.End</SMALL> or <small>Response.Flush</SMALL>. <small>Response.Flush</SMALL> sends the content built up so far. If <small>Response.Flush</SMALL> is called, you cannot call <small>Response.Redirect</SMALL>. <small>Response.End</SMALL> is similar to <small>Response.Flush</SMALL>, except that it ends script processing. If you want to clear the content and then rebuild it, you can use <small>Response.Clear</SMALL>. This resets the buffer.</P>
+<p><font size="+1"><b>Automatic/Informational</B></FONT></P>
+<p>Another way of automatically redirecting a Web page is to use the HTTP <small>refresh</SMALL> command, as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+&lthead&gt
+&ltmeta http-equiv=&#148;Content-Type&#148;
+      content=&#148;text/html; charset=iso-8859-1&#148;&gt
+&ltmeta name=&#148;GENERATOR&#148; content=&#148;Microsoft FrontPage
+      (Visual InterDev Edition) 2.0&#148;&gt
+&ltMETA HTTP-EQUIV=&#148;REFRESH&#148; CONTENT=&#148;5&#148; url=&#148;nextstep.asp&#148;&gt
+&lttitle&gtDocument Title&lt/title&gt
+&lt/head&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this example, the Web page is returned to the user and displayed. The <small>META</SMALL> tag defines a <small>refresh</SMALL> value of five seconds. This means that the current page is displayed for five seconds and then the page specified by the URL attribute is retrieved.</P>
+<p>This sort of mechanism is ideal for displaying messages before the real page is displayed. Examples include a thank-you message for registering a program and an informational page regarding content.</P>
+<p><font size="+1"><b>Manual</B></FONT></P>
+<p>The last sort of redirection is also the simplest. It involves using a hyperlink on a Web page that links to the next page. This type of redirection cannot be underestimated. An example would be an informational page that requires a confirmation. The confirmation would indicate that the user understands the process he or she is about to follow.
+</P>
+<p><font size="+1"><b>Automatic Server-side Redirection</B></FONT></P>
+<p>With the introduction of Windows 2000, the intrinsic IIS COM objects have been extended to include server-side redirection. Server-side redirection is better than client-side redirection because it doesn&#146;t cause another connection to be built. Here&#146;s an example:
+</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+Logon process
+&lt%    if( Session(&#147;userId&#148;) == -1) {
+        Server.Transfer( &#147;../logon/default.asp&#148;);
+
+   }%&gt
+
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>The <small>Server.Transfer</SMALL> method performs a redirection on the server side. Here are the advantages to using this method:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>Session</SMALL> and <small>Application</SMALL> information is transferred among the various applications. This means it extends beyond the boundaries of the current application.
+<dd><b>&#149;</B>&nbsp;&nbsp;This method can occur midstream in the script-processing process; therefore, you don&#146;t need to build a buffer.
+</DL>
+<p>The big disadvantage to this method is that you cannot transfer the method to a Web server outside the current server.
+</P>
+<p><font size="+1"><b>Embedding an Activity</B></FONT></P>
+<p>Sometimes redirection is not the best solution, such as when an activity needs to be embedded within another activity. To do this in IIS 5.0, you use a method called <small>Server.Execute</SMALL>. This method has the same effect as making a module call. The advantage to using this method is that you can build a page incrementally. For example, in the previous frames example, you could build frames on the server side. This would involve three different calls to <small>Server.Execute</SMALL>. It also provides absolute control regarding the context. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+&lt%@ Language=JavaScript %&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+Logon process
+&lt%    if( Session(&#147;userId&#148;) == -1) {
+        Server.Execute( &#147;../logon/default.asp&#148;);
+    }%&gt
+
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>The output here will be identical to the output in the previous example, except the page is not redirected using Server.Execute.
+</P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">Making It Simpler with JavaScript</FONT></H4>
+<p>The redirection process can be simplified in two ways. The first way is to write a COM object that manages the state and the step the task is at. The other (more interesting) way is to build a JavaScript object that manages the location and step automatically. Consider the following script:
+</P>
+<!-- CODE //-->
+<pre>
+&ltSCRIPT language=javascript runat=server&gt
+<i>function taskManager() {
+this.isOk = _isOk;
+this.writeOut = _writeOut;
+this.atDefault = _atDefault;
+this.resetState = _resetState;</I>
+
+<i>Response.Buffer = true;
+}</I>
+
+function _isOk( currStep) {
+if( this.currentTask != getLocalApp()) {
+Response.Redirect( Session(&#147;defaultPage&#148;));
+} else {
+if( (Session(&#147;currentStep&#148;) &#43; 1) == currStep) {
+return true;
+} else {
+return false;
+       }
+   }
+}
+
+function _writeOut() {
+Session(&#147;currentStep&#148;) = Session(&#147;currentStep&#148;) &#43; 1;
+Response.Flush();
+}
+
+function _atDefault() {
+Session(&#147;currentTask&#148;) = getLocalApp();
+Session(&#147;currentStep&#148;) = 0;
+}
+
+function getLocalApp() {
+var location = new String( Request.ServerVariables(&#147;URL&#148;));
+var c1, first, second;
+first = 0;
+second = 0;
+for( c1 = 0; c1 &lt location.length; c1 &#43;&#43;) {
+if( location.charAt( c1) == &#147;/&#148;) {
+second = first;
+first = c1;
+        }
+    }
+return location.substring( second &#43; 1, first);
+}
+
+function resetTask() {
+Session(&#147;currentStep&#148;) = 0;
+Session(&#147;currentTask&#148;) = &#147;&#148;;
+}
+
+&lt/script&gt
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

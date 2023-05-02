@@ -1,0 +1,201 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=296-300//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Continuing with Figure 9.4, the Service Control Manager will call the service&#146;s <small>ServiceMain</SMALL> function. This function closely resembles a <small>main</SMALL> or <small>wmain</SMALL> function&#151;it includes command-line parameter information that&#146;s created from information stored in the Service Control Manager&#146;s database. Listing 9.2 contains a minimal example of a <small>ServiceMain</SMALL> function.</P>
+<p><b>Listing 9.2</B> An Example of a Windows 2000 <small>ServiceMain</SMALL> Function<hr></P>
+<!-- CODE //-->
+<pre>
+SERVICE_STATUS_HANDLE ssh = 0L;
+VOID WINAPI MyServiceMain(DWORD argc, TCHAR* argv[])
+{
+    ssh = RegisterServiceCtrlHandler(_T(&#147;MyService&#148;),
+                                     MyCtrlHandler);
+    if(g_hSvcStatus == 0)
+    {
+        // Handle error
+        return;
+    }
+    // Notify SCM that the service is starting.
+    TellScmThatServiceIsStarting();
+    // Initialize service
+    InitService();
+    // Notify SCM that the service is running.
+    TellScmThatServiceHasStarted();
+    // Run Service
+    RunService();
+    // Notify SCM that the service is finished.
+    TellScmThatServiceHasStopped();
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Although Listing 9.2 is a contrived example, it shows the basic sequence of steps that every <small>ServiceMain</SMALL> function must follow:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The service control handler must be registered by calling the <small>RegisterServiceCtrlHandler</SMALL> function.
+<dd><b>2.</B>&nbsp;&nbsp;As soon as possible, the Service Control Manager must be notified of the current state of the service.
+<dd><b>3.</B>&nbsp;&nbsp;The service should perform any necessary initializations after notifying the Service Control Manager that it&#146;s starting. If the initialization should fail, the service <i>must</I> notify the Service Control Manager that the service has stopped. Failure to do so will result in a confused Service Control Manager, and it will be difficult to control the service from the MMC. If the initialization is successful, the service must notify the Service Control Manager that it&#146;s running.
+<dd><b>4.</B>&nbsp;&nbsp;After the initialization is complete, the service should perform its work. Normally, this involves spinning up a worker thread that performs the actual work of the service. This concludes the work required to start the service.
+</DL>
+<p><font size="+1"><b>Pausing and Continuing a Windows 2000 Service</B></FONT></P>
+<p>The pause and continue sequence for a Windows 2000 service is shown in Figure 9.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-05.jpg',230,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-05.jpg',230,420)"><font color="#000077"><b>Figure 9.5</B></FONT></A>&nbsp;&nbsp;The pause and continue sequence for a Windows 2000 service.</P>
+<p>You can notify the Service Control Manager that services will accept these requests by including <small>SERVICE_ACCEPT_PAUSE_CONTINUE</SMALL> as one of the services&#146; supported command types when calling <small>SetServiceStatus</SMALL>.</P>
+<p>Services receive pause and continue command requests in their service control handlers, which are registered with the Service Control Manager using the <small>RegisterServiceCtrlHandler</SMALL> or <small>RegisterServiceCtrlHandlerEx</SMALL> function. A partial example of a service control handler is shown in Listing 9.3.</P>
+<p><b>Listing 9.3</B> A Simplified Service Control Handler That Manages Pause and Continue Commands<hr></P>
+<!-- CODE //-->
+<pre>
+VOID WINAPI CtrlHandler(DWORD dwControl)
+{
+    switch(dwControl)
+    {
+        case SERVICE_CONTROL_PAUSE:
+            PauseTheService();
+            break;
+        case SERVICE_CONTROL_CONTINUE:
+            ResumeTheService();
+            break;
+        // other cases..
+                .
+                .
+                .
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>As shown in Listing 9.3, when the Service Control Manager wants the service to pause, it will send a <small>SERVICE_CONTROL_PAUSE</SMALL> message to the service control handler. When the Service Control Manager wants the service to continue, it sends a <small>SERVICE_CONTROL_CONTINUE</SMALL> message to the service.</P>
+<p>When the service is paused, it&#146;s expected that the service will enter a state where it seems to be stopped, but it remains loaded by the Service Control Manager. When a paused service receives a continue request, it can resume operation much faster than if it had been stopped and started.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Most services don&#146;t support pause and continue requests. If you choose to support this service, be aware that you can receive other control messages while your service is paused. For example, the computer may be shut down or the service stopped.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Stopping a Windows 2000 Service</FONT></H4>
+<p>The shutdown sequence for a Windows 2000 service is shown in Figure 9.6.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-06.jpg',219,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-06.jpg',219,420)"><font color="#000077"><b>Figure 9.6</B></FONT></A>&nbsp;&nbsp;The shutdown sequence for a Windows 2000 service.</P>
+<p>You can notify the Service Control Manager that services will accept a stop request by including <small>SERVICE_ACCEPT_STOP</SMALL> as one of the services&#146; supported command types when calling <small>SetServiceStatus</SMALL>.</P>
+<p>A service will receive stop command requests in its service control handler, which is registered with the Service Control Manager using the <small>RegisterServiceCtrlHandler</SMALL> or <small>RegisterServiceCtrlHandlerEx</SMALL> function. A partial example of a service control handler is shown in Listing 9.4.</P>
+<p><b>Listing 9.4</B> A Partial Example of a Service Control Handler<hr></P>
+<!-- CODE //-->
+<pre>
+VOID WINAPI CtrlHandler(DWORD dwControl)
+{
+    switch(dwControl)
+    {
+        case SERVICE_CONTROL_STOP:
+            StopTheService();
+            break;
+
+        // Other cases
+                .
+                .
+                .
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Figure 9.6 shows the steps that every service goes through as it is shut down:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The Service Control Manager sends a <small>SERVICE_CONTROL_STOP</SMALL> message to the service control handler.
+<dd><b>2.</B>&nbsp;&nbsp;The service acknowledges the stop request by calling the <small>SetServiceStatus</SMALL> function, with the service status set to <small>SERVICE_STOP_PENDING</SMALL>.
+<dd><b>3.</B>&nbsp;&nbsp;The service cleans up resources that it has allocated and confirms that it has stopped by calling the <small>SetServiceStatus</SMALL> function, with the service status set to <small>SERVICE_STOPPED</SMALL>.
+<dd><b>4.</B>&nbsp;&nbsp;The service exits all running threads, including the <small>ServiceMain</SMALL> function.
+</DL>
+<p>It&#146;s very important that your service shut down properly. If it doesn&#146;t manage this process correctly, it will be difficult for you to control the service using the MMC, because the Service Control Manager will not be able to determine the service&#146;s state.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,126 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Topics in Administration</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=01//-->
+<!--PAGES=009-011//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../about_author.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 1<br>Topics in Administration
+</FONT></H2>
+<dl>
+<dd><b>1.1 Collecting System Information</B>
+<dd><b>1.2 Back Up Key Files!</B>
+<dd><b>1.3 Execution on the Last Day of a Month</B>
+<dd><b>1.4 Dealing with Unwanted Daemons</B>
+<dd><b>1.5 Keeping Those Daemons Running</B>
+<dd><b>1.6</B> <small>fuser</SMALL> <b>Instead of</B> <small>ps</SMALL>
+<dd><b>1.7 Swap on-the-Fly 1.8 Keep It Up with</B> <small>nohup</SMALL>
+<dd><b>1.9 Redirecting Output to null</B>
+<dd><b>1.10 Keeping Remote Users Out</B>
+<dd><b>1.11 Rewinding Tapes Fast</B>
+<dd><b>1.12 Generating a Range of Numbers</B>
+<dd><b>1.13 Remove the ---- Dashes ----</B>
+<dd><b>1.14</B> <small>Echo</SMALL> <b>Does</B> <small>ls</SMALL>
+<dd><b>1.15 Building Large Dummy Files</B>
+<dd><b>1.16 Burning-in Disk Drives</B>
+<dd><b>1.17 Bringing a System Down</B>
+</DL>
+<p>UNIX administrators are faced with many tasks during normal, day-to-day operations. This first chapter deals with some of the tasks that most UNIX administrators wish had some simple solutions.
+</P>
+<p>High on the list is the capability to automate routine tasks, something that is vital to a system administrator. The life of an admin is a busy one, and if you have to do boring tasks over and over manually, you will burn out fast. In this chapter, you&#146;ll find examples of ways to automate day-to-day issues that can cut the time you spend on them in half. For this reason alone you should always look for ways to automate your environment as much as possible. Make sure you put in plenty of notification routines so that if something does go wrong, you&#146;ll be the first to know about it.</P>
+<p>Another troublesome issue for administrators is system tuning. However, you need to be careful: you might think you are tuning one thing when, in fact, you might be breaking another. Some of the examples that follow will deal with tuning the system in one way or another. Think before you make the changes, and remember, what might be okay for one system might not be for the other.</P>
+<p>Please keep in mind, not only for this chapter but every time you work on a system, these important questions you should ask yourself every time you are about to make a change to the system:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;<i>Do I need to test this procedure?</I> Yes! Any time it is possible to test the change on a similar system, do it! Take the time (if you can). If you don&#146;t, you might pay the price later, and I mean <i>later</I> as in 2:00-in-the-morning later. If you do not have a development system to test changes on, you are forced to schedule time on the production system. See whether management backs you on this one. They might if you can justify your actions well enough.
+<dd><b>2.</B>&nbsp;&nbsp;<i>What is my back-out plan?</I> Always have a back-out plan, no matter how simple the change is, in case it doesn&#146;t work. If the worst-case scenario takes place, know what your options are.
+<dd><b>3.</B>&nbsp;&nbsp;<i>How will the change affect the system?</I> You must always try to look at the broader scope. There are instances where a little change can be made for one application and the entire system or network of systems becomes affected. Installations of third-party applications are notorious for this.
+<dd><b>4.</B>&nbsp;&nbsp;<i>How will this change affect my environment?</I> There are times when one change can affect an entire environment. For example, running NIS/YP, exporting NFS filesystems, and modifying soft links are a few ways to affect your environment. Make sure something you do on your system doesn&#146;t affect others without their knowledge.
+<dd><b>5.</B>&nbsp;&nbsp;<i>How will the change affect my users?</I> This is one of the most important questions of all and one you really have to ask yourself. If the user is affected, your phone will be ringing nonstop.
+<dd><b>6.</B>&nbsp;&nbsp;<i>Should I notify anyone?</I> I will discuss this more in Chapter 9, &#147;Users,&#148; but be aware that notification is the key to really great support. The more people are aware, the more they will respect your abilities.
+<dd><b>7.</B>&nbsp;&nbsp;<i>What is the worst-case scenario if things go wrong?</I> This is related to my advice to have a back-out plan. You should always look at the worst-case scenario for any change and attempt to anticipate a course of action if it happens. Remember that there is always a chance of it happening when computers are involved.
+<dd><b>8.</B>&nbsp;&nbsp;<i>Am I making this change during the right time of the day?</I> This question can be answered in many different ways. Most admins like to say, &#147;No time is a good time; it has to be done!&#148;. As you all know the best time is in the evening and on weekends. If something were to go wrong, you usually have the greatest amount of time to fix the problem during this period. There is one exception to this rule though: shops that run 24&#150;7. For changes that don&#146;t take much time and where user testing is involved, first thing in the morning is best. If the first couple of users that arrive in the morning begin to see some serious problems, you can always back-out on the spot if you need to. Users love seeing you there at work before them. It makes them feel as if you&#146;ll be on top of any situation that might take place.
+<dd><b>9.</B>&nbsp;&nbsp;<i>Is there a better way?</I> In UNIX there is more than one way to complete most tasks. You should try to find out whether there is a better way to accomplish what you&#146;re trying to do. You should always be open to new ways. Keep your mind open to new fresh ideas. Don&#146;t always go on your first thought. Even if a user is rushing you do something <i>now</I> for him, take your time and look for the best method for solving the problem.
+<dd><b>10.</B>&nbsp;&nbsp;<i>Do I have time to make this change now?</I> The last thing you want to do is rush through the job. You should always make your best attempt to follow through until the end. A quick patch is okay too, but don&#146;t leave the problem finished half way. If you leave the users hanging on too long with a partial fix, your users will start to lose faith in you.
+</DL>
+<p>Try to keep these questions in your mind as you begin to make changes to the system or solve the various problems that take place throughout your day. In time, some administrators start to believe that they can dive straight into a sink-or-swim situation thinking they&#146;ll come out swimming, but then find they are sinking because they didn&#146;t ask a couple of these simple questions. Take the time and ask the questions.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../about_author.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=042-046//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>UpdateGrid</SMALL> function uses <small>VirtualQuery</SMALL> to walk through the virtual address range used by VMGrid. Each call to <small>VirtualQuery</SMALL> returns the status of a single block of virtual memory. This block may be as small as a page or as large as the entire range. <small>UpdateGrid</SMALL> calculates the grid cell that represents each 1KB chunk of memory and labels the grid with the virtual memory status.</P>
+<p>As the final step, add the <small>UpdateGrid</SMALL> and <small>CommitAt</SMALL> member functions to the <small>CVMGridDlg</SMALL> class declaration. At the same time, declare a new member variable, <small>m_pVirtualAlloc</SMALL>, which will serve as a pointer to the block of virtual memory used by VMGrid. These changes are shown in bold in Listing 2.8.</P>
+<p><b>Listing 2.8</B> Modifications (in Bold) to the <i>CVMGridDlg</I> Class Declaration<hr></P>
+<!-- CODE //-->
+<pre>
+   class CVMGridDlg : public CDialog
+   {
+       .
+       .
+       .
+   // Implementation
+   protected:
+       HICON m_hIcon;
+       <b>void UpdateGrid();
+       void CommitAt(int index);
+       TCHAR* m_pVirtualAlloc;</B>
+       .
+       .
+       .
+   };
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Compile and run the VMGrid application; then experiment by clicking different cells in the grid control. Each click commits one page&#146;s worth of cells in the grid. For Intel platforms, each click changes four cells. Figure 2.6 shows the VMGrid main dialog box after several cells have been clicked.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-06.jpg',574,261 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-06.jpg',574,261)"><font color="#000077"><b>Figure 2.6</B></FONT></A>&nbsp;&nbsp;The VMGrid application after several pages of virtual memory have been committed.</P>
+<p>Windows 2000 Advanced Server for computers equipped with Alpha processors offers a facility for accessing up to 64GB of RAM. This facility, known as the <i>Very Large Memory</I> model (or VLM), allows you to address substantially more than the 4GB addressing on other versions of Windows 2000.</P>
+<p>Here&#146;s a list of the virtual memory functions that have been expanded for use with VLM:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VirtualAllocVlm</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VirtualFreeVlm</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VirtualProtectVlm</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VirtualQueryVlm</SMALL>
+</DL>
+<p>Each of these functions is similar to other virtual memory functions, with their parameters and return values modified to work with 64-bit addresses. Each of the functions accepts a process handle to enable you to allocate VLM memory in another process.
+</P>
+<p><small>VirtualAllocVlm</SMALL> returns a 64-bit pointer to void:</P>
+<!-- CODE SNIP //-->
+<pre>
+   PVOID64 pMem = VirtualAllocVlm(hProcess,
+                                  NULL,
+                                  cAllocSize,
+                                  MEM_RESERVE,
+                                  PAGE_NOACCESS);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>VirtualAllocVlm</SMALL> has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process that the virtual memory is accessed for.
+<dd><b>&#149;</B>&nbsp;&nbsp;The base address for the range of virtual memory to be allocated. As with <small>VirtualAlloc</SMALL>, the operating system will choose a base address for you if you pass <small>NULL</SMALL> for this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The amount of memory to be allocated. Unlike <small>VirtualAlloc</SMALL>, this parameter is a <small>DWORDLONG</SMALL> (a 64-bit unsigned value).
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies the allocation type, same as with <small>VirtualAlloc</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies the protection type, same as with <small>VirtualAlloc</SMALL>.
+</DL>
+<p><small>VirtualFreeVlm</SMALL> decommits, or frees, a range of virtual VLM memory. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+   BOOL fFree = VirtualFree(hProcess,
+                            pMemBase,
+                            nAllocLimit,
+                            MEM_RELEASE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>VirtualFreeVlm</SMALL> has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process that owns the virtual memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;The base address for the range of virtual memory to be free or decommitted.
+<dd><b>&#149;</B>&nbsp;&nbsp;The amount of memory to be freed. Unlike <small>VirtualFree</SMALL>, this parameter is a <small>DWORDLONG</SMALL> (a 64-bit unsigned value).
+<dd><b>&#149;</B>&nbsp;&nbsp;The type of free operation to be performed, same as with <small>VirtualFree</SMALL>.
+</DL>
+<p><small>VirtualProtectVlm</SMALL> allows you to change the protect flags on a range of virtual VLM memory:</P>
+<!-- CODE SNIP //-->
+<pre>
+   BOOL fProtect = VirtualProtectVlm(hProcess,
+                                     pMemBase,
+                                     cProtectSize,
+                                     PAGE_READWRITE,
+                                     &ampoldProtect);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>VirtualProtectVlm</SMALL> has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process that owns the virtual memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the first address that will have its protection flag changed.
+<dd><b>&#149;</B>&nbsp;&nbsp;The amount of memory that will have its protection flag changed. Unlike <small>VirtualProtect</SMALL>, this parameter is a <small>DWORDLONG</SMALL> (a 64-bit unsigned value).
+<dd><b>&#149;</B>&nbsp;&nbsp;The new protection flag for the range of memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>DWORD</SMALL> variable that will be filled with the first virtual memory page&#146;s old protection flag.
+</DL>
+<p><small>VirtualQueryVlm</SMALL> returns the status of a range of virtual VLM memory:</P>
+<!-- CODE SNIP //-->
+<pre>
+   DWORD cQuery = VirtualQueryVlm(hProcess,
+                                  pAddr,
+                                  &ampmbi,
+                                  sizeof(mbi));
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>VirtualQueryVlm</SMALL> has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the process that owns the virtual memory.
+<dd><b>&#149;</B>&nbsp;&nbsp;The base address for the range of virtual memory to be freed or decommitted.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>MEMORY_BASIC_INFORMATION_VLM</SMALL> structure, which is similar to the <small>MEMORY_BASIC_INFORMATION</SMALL> structure used by <small>VirtualQuery</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the <small>MEMORY_BASIC_INFORMATION_VLM</SMALL> structure.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>When a range of virtual memory is allocated using the VLM APIs, the memory is never paged out. This improves performance if enough memory is present, but it can greatly decrease performance if enough physical RAM is not present.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading10"></A><font color="#000077">Using Windows 2000 Heap Functions</FONT></H3>
+<p>Unlike 16-bit versions of Windows, under Windows 2000, there is no difference between the local and global heap. When accessing the heap, you always get access to the (usually) 2GB virtual address space maintained by Windows 2000 for your application. Although many of the heap management functions available under 16-bit Windows also are available in Windows 2000, you should use the newer heap API functions introduced specifically for Win32.
+</P>
+<p>If your application allocates and frees small amounts of data, runs for a relatively short lifetime, or has only moderate demands on its performance, you&#146;ll be very happy using the default memory allocation offered by your C or C<small>&#43;&#43;</SMALL> compiler. The runtime libraries included with your compiler include memory suballocation schemes that effectively manage the heap in most cases.</P>
+<p>These built-in memory allocation schemes are created for general-purpose computing; however, you might have needs that are not addressed by the default compiler libraries. You might constantly allocate and free small objects of different sizes, for example. This often causes heap fragmentation and poor performance using most default suballocation schemes. Using the heap management API functions offered by Windows 2000 can help you solve this and many other memory-management problems.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Performing Heap Management Under Windows 2000</FONT></H4>
+<p>Windows 2000 offers a set of memory functions that allows for a higher level of memory management than the virtual memory APIs, while still allowing for a great deal of control over heap-allocated memory. The Windows 2000 heap-management APIs include functions that create, manage, and destroy private heaps.
+</P>
+<p>Every process has a default heap provided by the operating system. The handle to this heap can be retrieved via the <small>GetProcessHeap</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HANDLE hDefaultHeap = GetProcessHeap();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The only difference between this heap and a heap created dynamically is that this one is created for you based on link information embedded in your executable file. The default heap is used for C<small>&#43;&#43;</SMALL> runtime library <small>malloc</SMALL> and <small>new</SMALL> allocations. You can use this default heap or create one or more dynamic heaps.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

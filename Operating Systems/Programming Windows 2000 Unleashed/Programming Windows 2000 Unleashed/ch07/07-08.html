@@ -1,0 +1,189 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=252-255//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The proper way to use <small>BuildBadTrusteeStruct</SMALL> is to allocate a buffer that exists for the lifetime of the <small>TRUSTEE</SMALL> structure.</P>
+<p>The <small>BuildTrusteeWithSid</SMALL> function is similar to the <small>BuildTrusteeWithName</SMALL> function, except that it uses a trustee&#146;s <small>SID</SMALL> to initialize the structure:</P>
+<!-- CODE SNIP //-->
+<pre>
+TRUSTEE trustee;
+BuildTrusteeWithSid(pTrustee, psid);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>BuildTrusteeWithSid</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the <small>TRUSTEE</SMALL> structure to be initialized
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the trustee&#146;s <small>SID</SMALL>
+</DL>
+<p>The <small>SID</SMALL> passed as a parameter to <small>BuildTrusteeWithSid</SMALL> must be valid for the lifetime of the <small>TRUSTEE</SMALL> structure&#151;as is the case with the <small>BuildTrusteeWithName</SMALL> function discussed earlier, the <small>BuildTrusteeWithSid</SMALL> function does not allocate data for the <small>TRUSTEE</SMALL> member variables.</P>
+<p>Windows 2000 also provides functions that can be used to extract information from a <small>TRUSTEE</SMALL> structure, thus saving you the trouble of picking the structure apart explicitly. Each of these functions accepts a <small>TRUSTEE</SMALL> pointer as a parameter and returns the value of a <small>TRUSTEE</SMALL> member variable:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetTrusteeForm</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetTrusteeSid</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetTrusteeType</SMALL>
+</DL>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">The ACTRL_ACCESS_ENTRY Structure</FONT></H4>
+<p>The <small>ACTRL_ACCESS_ENTRY</SMALL> structure contains access control information for a specific trustee. The <small>ACTRL_ACCESS_ENTRY</SMALL> structure is similar to the <small>ACE</SMALL> structure discussed earlier in the chapter, except it has the ability to work with provider-independent security functions.</P>
+<p>The <small>ACTRL_ACCESS_ENTRY</SMALL> structure is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+typedef struct _ACTRL_ACCESS_ENTRY
+{
+    TRUSTEE         Trustee;
+    ULONG           fAccessFlags;
+    ACCESS_RIGHTS   Access;
+    ACCESS_RIGHTS   ProvSpecificAccess;
+    INHERIT_FLAGS   Inheritance;
+    LPCTSTR         lpInheritProperty;
+} ACTRL_ACCESS_ENTRY;
+</PRE>
+<!-- END CODE //-->
+<p>Here are the members of the <small>ACTRL_ACCESS_ENTRY</SMALL> structure:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Trustee</SMALL>. A <small>TRUSTEE</SMALL> structure that identifies the trustee represented by this structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>fAccessFlags</SMALL>. Contains flags that specify how access control is to be applied to the trustee. Values for this member are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Access</SMALL>. Contains one or more flags that specify the access rights controlled by the access entry. You must use the provider-independent flags, such as <small>ACTRL_FILE_WRITE</SMALL>. Commonly used flags are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ProvSpecificAccess</SMALL>. Usually set to zero but can optionally contain flags that are passed directly to the security provider.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Inheritance</SMALL>. One or more flags that specify the inheritance characteristics of the access entry. This value is set to <small>NO_INHERITANCE </SMALL>unless the secured object is stored in Active Directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>lpInheritProperty</SMALL>. A string that specifies the type of objects that can inherit the access entry (or <small>NULL</SMALL> if inheritance is not used).
+</DL>
+<p>The value of <small>fAccessFlags</SMALL> must be one of the following values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_ACCESS_ALLOWED</SMALL>. Rights are granted to the trustee.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_ACCESS_DENIED</SMALL>. Rights are denied to the trustee.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_AUDIT_FAILURE</SMALL>. Audit messages are generated for failed attempts to use the rights.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_AUDIT_SUCCESS</SMALL>. Audit messages are generated for successful attempts to use the rights.
+</DL>
+<p>The value of the <small>Access</SMALL> member variable must be taken from the provider-independent flags defined in the <small>AccCtrl.h</SMALL> header file. A complete list of values is provided in the Platform SDK online Help. Here are some common flags used with the Windows 2000 file system:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_FILE_EXECUTE</SMALL>. Controls the right to execute a binary file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_FILE_READ</SMALL>. Controls the right to read a file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_FILE_WRITE</SMALL>. Controls the right to write to a file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ACTRL_DIR_CREATE_OBJECT</SMALL>. Controls the right to create a file
+</DL>
+<p>Listing 7.8 contains a function that loads an <small>ACTRL_ACCESS_ENTRY</SMALL> structure so that any user or group name passed as a parameter has file-access rights.</P>
+<p><b>Listing 7.8</B> An Example of Filling in an <small>ACTRL_ACCESS_ENTRY</SMALL> Structure</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+VOID FillAccessEntry(PACTRL_ACCESS_ENTRY pae, LPTSTR pszName)
+{
+    ZeroMemory(pae, sizeof(ACTRL_ACCESS_ENTRY));
+    BuildTrusteeWithName(&amppae-&gtTrustee, pszName);
+
+    pae-&gtInheritance = NO_INHERITANCE;
+    pae-&gtfAccessFlags = ACTRL_ACCESS_ALLOWED;
+    pae-&gtAccess = ACTRL_FILE_WRITE|ACTRL_FILE_READ|
+                  ACTRL_FILE_EXECUTE|ACTRL_FILE_APPEND|
+                  ACTRL_FILE_READ_ATTRIB|ACTRL_FILE_WRITE_ATTRIB|
+                  ACTRL_FILE_READ_PROP|ACTRL_FILE_WRITE_PROP;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">The ACTRL_ACCESS_ENTRY_LIST Structure</FONT></H4>
+<p>The <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structure acts as a list header for <small>ACTRL_ACCESS_ENTRY</SMALL> structures. The <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> is declared as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _ACTRL_ACCESS_ENTRY_LIST
+{
+    ULONG                 cEntries;
+    PACTRL_ACCESS_ENTRY   pAccessList;
+}ACTRL_ACCESS_ENTRY_LIST;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structure has two members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>cEntries</SMALL> is the number of <small>ACTRL_ACCESS_ENTRY</SMALL> structures pointed to by <small>pAccessList</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pAccessList</SMALL> is an array of <small>ACTRL_ACCESS_ENTRY</SMALL> structures that define the access-control characteristics.
+</DL>
+<p>If you use API functions to manipulate access-control lists, you&#146;ll rarely need to manipulate an <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structure directly. However, handling the structure directly is useful if you want to deny access to an object to all users. If <small>cEntries</SMALL> is set to <small>0</SMALL> and <small>pAccessList</SMALL> is set to <small>NULL</SMALL>, access will be denied to all users and groups.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

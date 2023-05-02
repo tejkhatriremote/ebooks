@@ -1,0 +1,714 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw050.htm -->
+<HTML><HEAD><TITLE>Lesson 5 - Scripts as Useful Intermediate Tools</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=5,LnIdx="Lesson "+Ln;</SCRIPT>
+
+<SCRIPT language=JavaScript 
+src="Lesson 5 - Scripts as Useful Intermediate Tools_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 5 - Scripts as Useful Intermediate Tools_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 5 - Scripts as Useful Intermediate Tools_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT src="Lesson 5 - Scripts as Useful Intermediate Tools_files/r2.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Image();M.src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>Scripts as useful tools</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Learn to use
+  <SCRIPT>cn('comment')</SCRIPT>
+   s to explain lines of Batch code in scripts 
+  <LI>Use Commented Labels to plan the outline of a script 
+  <LI>Learn to use Batch scripts as intermediate tools to help with bigger 
+  projects 
+  <LI>Design a script tool <SPAN class=fs>BKSETUP.BAT</SPAN> that will help us 
+  test our backup script 
+  <LI>Build the outline structure of the <SPAN class=fs>BKSETUP.BAT</SPAN> 
+  script 
+  <LI>Learn to control the flow of the script with
+  <SCRIPT>cn('GOTO')</SCRIPT>
+   commands </LI></UL><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Each Lesson relies on 
+your files from the previous one. It's better to use your own files, but if you 
+can't, download a copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 4";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson4.zip">end&nbsp;of&nbsp;Lesson&nbsp;4</A> 
+and click<IMG 
+src="Lesson 5 - Scripts as Useful Intermediate Tools_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.
+<P></P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Comments and labels:</SPAN><BR>Comments in scripts</P></DIV>
+<DIV class=bd>
+<P><BR>We'll often put comments in our scripts, to remind us what each part 
+does. There are two commands that can be placed at the start of a line to 
+introduce comments: 
+<UL>
+  <LI>
+  <SCRIPT>cn('::')</SCRIPT>
+  &nbsp; (double colon) the line is ignored by Windows (this is better for 
+  comments) 
+  <LI>
+  <SCRIPT>cn('REM')</SCRIPT>
+  &nbsp; most (not all) commands that follow are ignored (best kept for special 
+  use) </LI></UL>We shall normally use the
+<SCRIPT>cn('::')</SCRIPT>
+ prefix, for example:
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><NOBR><SPAN class=np>:: Set our default test folder</SPAN></NOBR></P></DIV>
+<DIV class=lm>
+<P>Labels in scripts</P></DIV>
+<DIV class=bd>
+<P>Windows normally executes script commands in order. However, if you insert a 
+label in your script, you can jump to it from anywhere else with
+<SCRIPT>cn('GOTO')</SCRIPT>
+ (skipping over any lines in between). You can jump backwards or forwards, and 
+control the flow in a script.</P></DIV>
+<DIV class=lm>
+<P>A label begins with <SPAN class=ky>&nbsp;:&nbsp;</SPAN></P></DIV>
+<DIV class=bd>
+<P>A label begins with a single <SPAN class=ky>&nbsp;:&nbsp;</SPAN> (colon) 
+followed typically by letters or digits (though we'll use the <SPAN 
+class=ky>&nbsp;Underscore&nbsp;</SPAN> character, too). It goes on a line on its 
+own. Labels are <B>not</B> case sensitive, but we use uppercase to help them 
+stand out. A typical label is:<BR><SPAN class=np>:ADDFILES</SPAN></P></DIV>
+<DIV class=lm>
+<P>Unique over first <SPAN class=fs>8</SPAN> characters</P></DIV>
+<DIV class=bd>
+<P>Labels can be as long as you wish, <B>but</B> Windows identifies them by 
+their first <B>eight</B> characters only, not counting the <SPAN 
+class=ky>&nbsp;:&nbsp;</SPAN> so they must be <SPAN class=br>unique over their 
+first eight characters</SPAN>. If you use two equivalent labels,
+<SCRIPT>cn('GOTO')</SCRIPT>
+ finds only the one that comes first.</P></DIV>
+<DIV class=lm>
+<P>Commented labels help you to plan out scripts</P></DIV>
+<DIV class=bd>
+<P>Windows stops reading a label at the first <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN> character it meets, so you can add comments 
+after a label, and we shall often do this. For example, we can use the 
+label<BR><NOBR><SPAN class=np>:ADDFILES and make changes</SPAN></NOBR></P>
+<P>Windows will see only the <SPAN class=fs>:ADDFILES</SPAN> part, the rest is 
+simply a reminder for us.</P></DIV>
+<DIV class=lm>
+<P>Starting with the labels</P></DIV>
+<DIV class=bd>
+<P>If Windows meets a label in the normal course of executing a script, it 
+simply ignores it. Therefore you can put any labels you please into the script 
+first. Properly commented labels create an outline plan of the script, and this 
+is a good way to start.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Scripts as tools:</SPAN><BR>Help with repetitive 
+tasks</P></DIV>
+<DIV class=bd>
+<P><BR>In the last Lesson, we built a simple script tool, <SPAN 
+class=fs>LEVEL.BAT</SPAN>. As you become more skilled in writing scripts, you'll 
+find they are particularly useful tools for:
+<UL>
+  <LI>Setting up initial conditions for testing programs (or other, major 
+  scripts) 
+  <LI>Minor, repetitive tasks (such as tidying up) needed as part of another job 
+
+  <LI>Creating files or folders needed by other jobs 
+  <LI>Safely deleting files or folders, especially when this is 
+repetitive</LI></UL>To develop our backup script, we'll need a test folder as a 
+source of files to back up; we'll call it <SPAN class=fs>C:\BKTEST</SPAN>. 
+Choose another name if you wish (but don't create it yet).
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>As we work, <SPAN class=fs>C:\BKTEST</SPAN> will often need to be deleted, 
+then re-created (complete with sample files and subfolders), and have files 
+added to it. We'll start by writing a helper script to do this (we'll call it 
+<NOBR><SPAN class=fs>BKSETUP.BAT</SPAN>)</NOBR>. It will have sections similar 
+to (but simpler than) those in the final backup script, so we shall learn a 
+great deal in building it.</P></DIV>
+<DIV class=lm>
+<P>Plan of <SPAN class=fs>BKSETUP.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>Our <SPAN class=fs>BKSETUP.BAT</SPAN> script tool will have two main 
+functions: to make our test source folder afresh whenever we need; and to make a 
+standard set of changes to it.</P>
+<P>This is the plan of <SPAN class=fs>BKSETUP.BAT</SPAN>: 
+<OL>
+  <LI>Initial setups: 
+  <UL>
+    <LI type=disc>Load the test folder name <SPAN class=fs>C:\BKTEST</SPAN> in a 
+    variable 
+    <LI type=disc>Create some sample content for test files </LI></UL>
+  <LI>Main menu - user chooses an option: 
+  <UL>
+    <LI type=disc>Option: build fresh test folder 
+    <LI type=disc>Option: add files and make changes to the test folder 
+    <LI type=disc>Option: quit the script </LI></UL>
+  <LI>The script coding for each option: 
+  <UL>
+    <LI type=disc>Code to: build the test folder afresh (erasing any existing 
+    one) 
+    <UL>
+      <LI type=circle>Display a confirmation prompt before going ahead</LI></UL>
+    <LI type=disc>Code to: add files and make changes to the test folder 
+    <LI type=disc>Code to: quit the script </LI></UL>
+  <LI>Job done 
+  <UL>
+    <LI type=disc>Report task finished </LI></UL>
+  <LI>Clean up 
+  <UL>
+    <LI type=disc>Clean up variables and work files </LI></UL>
+  <LI>Error handler 
+  <UL>
+    <LI type=disc>Error message if we try to add files but the folder's missing 
+    </LI></UL>
+  <LI>End-of-file label 
+  <UL>
+    <LI type=disc>A label to mark the end of the script (not always needed) 
+  </LI></UL></LI></OL>This plan is a trifle elaborate for what is a simple task, 
+but since our eventual backup script will have a very similar layout, it will 
+make building the final script much easier.
+<P></P></DIV>
+<DIV class=lm>
+<P>Start <SPAN class=fs>BKSETUP.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>Begin a new script with <B>Notepad</B> from the command line. In the <SPAN 
+class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>,
+<SCRIPT>cn('start')</SCRIPT>
+ <B>Notepad</B> using the filename <SPAN class=fs>BKSETUP.BAT</SPAN>, like this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /min notepad BKSETUP.BAT</SPAN>  in the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN>. When <B>Notepad</B> asks if you want to create the file, click <SPAN CLASS=qu>Yes</SPAN> or press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN>. The <B>Notepad</B>  button appears on the Taskbar, but go back to the Lesson window for now.','<NOBR>C:&#92;CSW>start /min notepad BKSETUP.BAT</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>By the way, we start <B>Notepad</B> minimized (the <SPAN class=fs>/min</SPAN> 
+switch) so that the <B>Notepad</B> window doesn't immediately appear and confuse 
+the multiple windows you're using for this Course. When you're working on your 
+own, you can leave out the <SPAN class=fs>/min</SPAN> switch.</P></DIV>
+<DIV class=lm>
+<P>Type the script in <B>Notepad</B></P></DIV>
+<DIV class=bd>
+<P>Begin by setting the test foldername <SPAN class=fs>C:\BKTEST</SPAN> in a 
+variable called <SPAN class=fs>SRC</SPAN> and use a
+<SCRIPT>cn('comment')</SCRIPT>
+ to explain what the variable is for. Type the script in <B>Notepad</B>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Click the <B>Notepad</B>  button on the Taskbar. Position its window in the bottom left corner of the screen. Type the script below. Don&#39;t close <B>Notepad</B> for now.','@ECHO OFF<BR>:: Set our default test folder<BR>SET SRC=C:&#92;BKTEST<BR> ');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> We need to leave the file open in 
+<B>Notepad</B> so that we can easily add more to it</P></DIV>
+<DIV class=lm>
+<P>Label Main Menu part</P></DIV>
+<DIV class=bd>
+<P>Now let's add commented labels for the other sections, to build an outline of 
+the script. The next part of the plan was: 
+<OL>
+  <LI value=2>Main menu - user chooses an option: 
+  <UL>
+    <LI type=disc>Option: build fresh test folder 
+    <LI type=disc>Option: add files and make changes to the test folder 
+    <LI type=disc>Option: quit the script </LI></UL></LI></OL>Add a blank line after 
+the three lines you have already (for clarity in keeping sections separate) then 
+add a commented label for the Main menu section.
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Remember that the first part of the label must be unique over the first eight 
+characters after the <SPAN class=ky>&nbsp;:&nbsp;</SPAN>. and before any 
+following comment.</P>
+<P>We'll use <SPAN class=qfs>:MAINMENU</SPAN> for that part, and add a comment
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the menu label to the script, click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>, but don&#39;t close <B>Notepad</B>.','<SPAN CLASS=dtn>SET SRC=C:&#92;BKTEST</SPAN><BR><BR><NOBR>:MAINMENU choose option from menu</NOBR><BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Unique over the first <SPAN class=fs>8</SPAN> characters</P></DIV>
+<DIV class=bd>
+<P>If we needed a second main menu section later in the script (which we don't), 
+it would have be labelled something like <SPAN class=fs>:MAINMEN2</SPAN>.</P>
+<P></P>
+<P>The obvious label <SPAN class=fs><STRIKE>:MAINMENU2</STRIKE></SPAN> would 
+fail, because it's the same as <SPAN class=fs>:MAINMENU</SPAN> over its first 
+eight characters. If we used both, Windows would find only the first 
+one.</P></DIV>
+<DIV class=lm>
+<P>Label the code area for each option</P></DIV>
+<DIV class=bd>
+<P>The third part of the plan was: 
+<OL>
+  <LI value=3>The script coding for each option: 
+  <UL>
+    <LI type=disc>Code to: build the test folder afresh (erasing any existing 
+    one) 
+    <UL>
+      <LI type=circle>Display a confirmation prompt before going ahead</LI></UL>
+    <LI type=disc>Code to: add files and make changes to the test folder 
+    <LI type=disc>Code to: quit the script </LI></UL></LI></OL>We'll need a label 
+for the code area of each option, so put all three in now. Again, leave a blank 
+line between each label
+<SCRIPT>ex()</SCRIPT>
+ :
+<P></P></DIV>
+<SCRIPT>cwn('Add the three lines to the script, click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> (but keep the file open in <B>Notepad</B>).','<NOBR><SPAN CLASS=dtn>:MAINMENU choose option from menu</SPAN></NOBR><BR><BR>:BUILD fresh test folder<BR><BR>:ADDFILES and make changes<BR><BR>:QUIT no further action<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>The last four sections</P></DIV>
+<DIV class=bd>
+<P>The last four sections of the plan were: 
+<OL>
+  <LI value=4>Job done 
+  <UL>
+    <LI type=disc>Report task finished </LI></UL>
+  <LI>Clean up 
+  <UL>
+    <LI type=disc>Clean up variables and work files </LI></UL>
+  <LI>Error handler 
+  <UL>
+    <LI type=disc>Error message if we try to add files but the folder's missing 
+    </LI></UL>
+  <LI>End-of-file label 
+  <UL>
+    <LI type=disc>A label to mark the end of our scripts (not always needed) 
+    </LI></UL></LI></OL>
+<P></P></DIV>
+<DIV class=lm>
+<P>Label conventions</P></DIV>
+<DIV class=bd>
+<P>We'll need labels for each of these four sections. Because labels are 
+important for structuring your scripts, it helps to standardise them. If you do 
+this, it's easier to re-use code from old scripts in new ones.</P></DIV>
+<DIV class=lm>
+<P>Use <SPAN class=fs>:E_</SPAN> for errors</P></DIV>
+<DIV class=bd>
+<P>A convention we use is: labels for errors begin with <SPAN 
+class=ky>&nbsp;:&nbsp;</SPAN> <SPAN class=ky>&nbsp;E&nbsp;</SPAN> <SPAN 
+class=ky>&nbsp;Underscore&nbsp;</SPAN>. This is because error handling is often 
+added later (as the sort of errors that can occur become apparent); this 
+convention ensures error labels added later won't conflict with other labels. In 
+this case we'll use the label <SPAN class=fs>:E_FOLDER</SPAN> for our 
+folder-is-missing error handler.</P>
+<P>Add the four labels now, with blank lines between them. Remember to press 
+<SPAN class=ky>&nbsp;Return&nbsp;</SPAN> after the end-of-file label on the last 
+line
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the four new commented labels to the script, click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>. Remember to press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> after the last line.','<NOBR><SPAN CLASS=dtn>:QUIT no further action</SPAN></NOBR><BR><BR>:JOBDONE<BR><BR>:CLEANUP<BR><BR>:E_FOLDER folder not found<BR><BR>:EOF (end-of-file)<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Save and terminate last line properly</P></DIV>
+<DIV class=bd>
+<P>Did you remember to click <SPAN class=qfs>File</SPAN>, <SPAN 
+class=qfs>Save</SPAN> when you'd finished typing? Also remember it's important 
+to finish the last line with a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> so that 
+it's terminated properly. You don't need any further blank lines at the end of a 
+script, but a final line without a <SPAN class=ky>&nbsp;Return&nbsp;</SPAN> will 
+display a spurious blank line on screen when the script runs.</P></DIV>
+<DIV class=lm>
+<P>The outline script</P></DIV>
+<DIV class=bd>
+<P>Our outline script now looks like this. If you wish, check it against your 
+file
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('You can check your outline so far against this.','@ECHO OFF<BR>:: Set our default test folder<BR>SET SRC=C:&#92;BKTEST<BR><BR><NOBR>:MAINMENU choose option from menu</NOBR><BR><BR>:BUILD fresh test folder<BR><BR>:ADDFILES and make changes<BR><BR>:QUIT no further action<BR><BR>:JOBDONE<BR><BR>:CLEANUP<BR><BR>:E_FOLDER folder not found<BR><BR>:EOF (end-of-file)<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Only the code remains</P></DIV>
+<DIV class=bd>
+<P>Devising the plan was the hard part. All that's left is to put the code in to 
+do the job! One of the advantages of building the outline with commented labels 
+is that you don't have to write the code for the script in any particular order. 
+So we'll start with some easy bits.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Adding the code:</SPAN><BR>Use the outline to clean up as you 
+go</P></DIV>
+<DIV class=bd>
+<P><BR>With most scripts, you use several working variables and files. You have 
+to remember to write the commands to clear these away, and it's very easy to 
+forget some of them.</P>
+<P>We've created a commented label outline from the start, with a <SPAN 
+class=fs>:CLEANUP</SPAN> section ready and waiting. So, whenever we decide we 
+need a working variable or file – which will need cleaning up when the script 
+ends – we can put in the clean up command straight away. We shan't need to 
+remember to do it later.</P></DIV>
+<DIV class=lm>
+<P>Our script sets <SPAN class=fs>SRC</SPAN></P></DIV>
+<DIV class=bd>
+<P>We set the <SPAN class=fs>SRC</SPAN> variable at the start, and we shall use 
+it throughout the script. When the script finishes it won't be needed, and it 
+will be using up precious environment memory. We haven't run the script yet, so 
+<SPAN class=fs>SRC</SPAN> isn't set. Let's just check that with a
+<SCRIPT>cn('SET')</SCRIPT>
+ command to list current variables
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the <SPAN CLASS=qfx>set</SPAN> command on its own to list your current variables. Remember that your list will differ from (and may have more entries than) the standard list shown here.','C:&#92;CSW>set<BR>winbootdir=C:&#92;WINDOWS<BR>COMSPEC=C:&#92;WINDOWS&#92;COMMAND.COM<BR><NOBR>PATH=C:&#92;WINDOWS;C:&#92;WINDOWS&#92;COMMAND</NOBR><BR>TEMP=C:&#92;WINDOWS&#92;TEMP<BR>PROMPT=$p$g<BR>windir=C:&#92;WINDOWS<BR>CMDLINE=start /min notepad BKSETUP.BAT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>No <SPAN class=fs>SRC</SPAN> variable in the list. Remember, there may be 
+other variables set on your system than the standard ones we list here (some of 
+which may differ slightly from this list). For this reason, we won't show the 
+typical variables again.</P></DIV>
+<DIV class=lm>
+<P>Run the script</P></DIV>
+<DIV class=bd>
+<P>Now run the script by typing the command <SPAN class=qfs>bksetup</SPAN> in 
+the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the command <SPAN CLASS=qfx>bksetup</SPAN> in the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN>. The script sets the <SPAN CLASS=fs>SRC</SPAN> variable (the commented labels don&#39;t have any effect yet).','C:&#92;CSW>bksetup<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the variable</P></DIV>
+<DIV class=bd>
+<P>Check that <SPAN class=fs>SRC</SPAN> now appears at the end of your standard 
+variables
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the <SPAN CLASS=qfx>set</SPAN> command on its own to list current variables. Now the <SPAN CLASS=fs>SRC</SPAN> variable appears at the end of the list.','C:&#92;CSW>set<BR>  <SPAN CLASS=dtd>...your standard variables...</SPAN><BR>SRC=C:&#92;BKTEST<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Clean up <SPAN class=fs>SRC</SPAN> variable</P></DIV>
+<DIV class=bd>
+<P>We'll need <SPAN class=fs>SRC</SPAN> while our script is running, but when 
+the script finishes, it has no further use. It's merely wasting memory (until we 
+close the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>, when Windows cleans up 
+any new variables we set). The script will set the variable whenever it's 
+rerun.</P>
+<P>Since we have a <SPAN class=fs>:CLEANUP</SPAN> section waiting to be used, we 
+can put the clean up command in now. Clean up as you go along; that way, you 
+won't forget.</P>
+<P>Remember that the way to clear a variable is simply to set it to nothing: 
+<SPAN class=np>SET SRC=</SPAN><BR>but always make sure you press <SPAN 
+class=ky>&nbsp;Return&nbsp;</SPAN> immediately after the <SPAN 
+class=ky>&nbsp;=&nbsp;</SPAN> so that the variable is cleared properly (and not 
+set to a <SPAN class=ky>&nbsp;Space&nbsp;</SPAN> or <SPAN 
+class=ky>&nbsp;Tab&nbsp;</SPAN> that you may not notice).</P>
+<P>Add this command to the <SPAN class=fs>:CLEANUP</SPAN> section of our script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line <SPAN CLASS=qfx>SET SRC=</SPAN> and make sure there aren&#39;t any white space characters such as <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> or <SPAN CLASS=ky>&nbsp;Tab&nbsp;</SPAN> after the <SPAN CLASS=ky>&nbsp;=&nbsp;</SPAN> or the variable isn&#39;t cleared correctly. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:CLEANUP</SPAN><BR>SET SRC=<BR><BR><SPAN CLASS=dtn>:E_FOLDER folder not found</SPAN><BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Now <SPAN class=fs>SRC</SPAN> is cleared when the script finishes</P></DIV>
+<DIV class=bd>
+<P>With the change saved, run the script again by typing the command <SPAN 
+class=qfs>bksetup</SPAN> in the <SPAN class=tsk>&nbsp;BatchWindow&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> to run the script and the variable is set again, but now cleared as the script finishes. We&#39;ll see the effect only when we check what variables remain set .','C:&#92;CSW>bksetup<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('SET')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Check that <SPAN class=fs>SRC</SPAN> has been cleared
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the <SPAN CLASS=qfx>set</SPAN> command on its own to list current variables and confirm that <SPAN CLASS=fs>SRC</SPAN> is no longer in the list.','C:&#92;CSW>set<BR><NOBR>  <SPAN CLASS=dtd>...only your standard variables...</SPAN></NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Clear the screen
+<SCRIPT>cn('CLS')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>By the way, don't forget you can clear the DVM screen with
+<SCRIPT>cn('CLS')</SCRIPT>
+ any time there's too much clutter left from previous work. If you haven't done 
+so, do it now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>cls</SPAN> and the <SPAN CLASS=tsk>&nbsp;BatchWindow&nbsp;</SPAN> will clear as soon as you press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN>.','C:&#92;CSW&#62;cls<HR>C:&#92;CSW&#62;_<BR> ');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> The simulation shows you both before 
+and after the effect of the
+<SCRIPT>cn('CLS')</SCRIPT>
+ command.</P></DIV>
+<DIV class=lm>
+<P>So far, so good?</P></DIV>
+<DIV class=bd>
+<P>Our outline script now looks like this. Let's make sure we're clear about 
+what happens:</P></DIV>
+<SCRIPT>cwn('You can check your script against this.','@ECHO OFF<BR>:: Set our default test folder<BR>SET SRC=C:&#92;BKTEST<BR><BR><NOBR>:MAINMENU choose option from menu</NOBR><BR><BR>:BUILD fresh test folder<BR><BR>:ADDFILES and make changes<BR><BR>:QUIT no further action<BR><BR>:JOBDONE<BR><BR>:CLEANUP<BR>SET SRC=<BR><BR>:E_FOLDER folder not found<BR><BR>:EOF (end-of-file)<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Execution runs from top to bottom</P></DIV>
+<DIV class=bd>
+<P>Windows just works straight down our script (for now). At the beginning, 
+<SPAN class=fs>SRC</SPAN> is set to the foldername we'll use for our test 
+folder. As the labels are encountered, they're ignored. When the line 
+<NOBR><SPAN class=qfs>SET SRC=</SPAN></NOBR> is reached, the variable is 
+cleared. When we add code in the sections in between setting and clearing the 
+variable, this code can make use of what we've placed in <SPAN 
+class=fs>SRC</SPAN> (by expanding it with the syntax <NOBR><SPAN 
+class=fs>%SRC%</SPAN></NOBR>). But no memory is wasted when the script finishes, 
+because the script clears up after itself.</P></DIV>
+<DIV class=lm>
+<P>A title for the menu</P></DIV>
+<DIV class=bd>
+<P>We shall need a title displayed on screen when the main menu comes up. If we 
+put it in now, we can use it to see for ourselves that the variable is set while 
+the script runs. The title will go in the <SPAN class=fs>:MAINMENU</SPAN> 
+section.</P>
+<P>We'll display a menu title with the
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command. This present script is setting up a test folder to help us debug our 
+backup script (which we'll write later). We shall call the backup script <SPAN 
+class=fs>BKUP.BAT</SPAN>. So a suitable title above our menu would be:</P>
+<P><NOBR><SPAN class=cl>&nbsp;BKUP.BAT test folder is 
+C:\BKTEST</SPAN></NOBR></P>
+<P>There are three points to consider here: 
+<OL>
+  <LI>When the script runs, this title will appear first. It will look better on 
+  a clear screen. We can do this in our script with a
+  <SCRIPT>cn('CLS')</SCRIPT>
+   command in the script. It must come before we display the title.<BR>&nbsp; 
+  <LI>If we indent the title by a single <SPAN 
+  class=ky>&nbsp;Space&nbsp;</SPAN>, it will stand out better on the 
+  screen.<BR>&nbsp; 
+  <LI>We need to use the foldername <SPAN class=fs>C:\BKTEST</SPAN> in the 
+  title. We've stored the name in <SPAN class=fs>SRC</SPAN>, so we can use 
+  <NOBR><SPAN class=fs>%SRC%</SPAN></NOBR> in the title line to access 
+it</LI></OL>In other words, the lines we need in our script are:
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>
+<DIV class=nbu>CLS<BR><NOBR>ECHO. BKUP.BAT test folder is %SRC%</NOBR></DIV>
+<P></P></DIV>
+<DIV class=lm>
+<P>Add the menu title</P></DIV>
+<DIV class=bd>
+<P>We'll add those lines to our script now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the lines. Remember to leave a <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> between <SPAN CLASS=qfx>ECHO.</SPAN> and <NOBR><SPAN CLASS=qfx>BKUP.BAT</SPAN></NOBR> to indent the displayed text. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save changes.','<NOBR><SPAN CLASS=dtn>:MAINMENU choose option from menu</SPAN></NOBR><BR>CLS<BR>ECHO. BKUP.BAT test folder is %SRC%<BR><BR><SPAN CLASS=dtn>:BUILD fresh test folder</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Now check the script</P></DIV>
+<DIV class=bd>
+<P>You've saved the changes in <B>Notepad</B>, so we can check the script now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, the screen clears and you see our message (as usual, the horizontal rule just separates what you see before and after <SPAN CLASS=bb>CLS</SPAN> clears the display).','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check <SPAN class=fs>SRC</SPAN> was cleared</P></DIV>
+<DIV class=bd>
+<P>The screen was cleared, and our echo line wrote out the test foldername using 
+the <SPAN class=fs>SRC</SPAN> variable while the script was running. Now the 
+script has finished, let's check the <SPAN class=fs>SRC</SPAN> variable is clear 
+and doesn't appear in the
+<SCRIPT>cn('SET')</SCRIPT>
+ listing of current variables
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type the <SPAN CLASS=qfx>set</SPAN> command on its own to list current variables. You&#39;ll see only your usual variables listed because the script cleared the <SPAN CLASS=fs>SRC</SPAN> variable after using it.','C:&#92;CSW>set<BR>  <SPAN CLASS=dtd>...only your usual variables...</SPAN><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Always clean up afterwards</P></DIV>
+<DIV class=bd>
+<P>The variable was available to our script, but the command in our <SPAN 
+class=fs>CLEANUP</SPAN> section cleared it away after we were done with it. A 
+good script always cleans up afterwards.</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>Flow of execution:</SPAN><BR>Using
+<SCRIPT>cn('GOTO')</SCRIPT>
+ to change the flow through a script</P></DIV>
+<DIV class=bd>
+<P><BR>The commented labels have helped us plan out where sections of code will 
+go, but we're not really using them yet. Labels can be used to change the order 
+in which commands are executed. You make use of labels in combination with
+<SCRIPT>cn('GOTO')</SCRIPT>
+ commands.</P>
+<P>Let's consider the flow through out script. So far, it looks like this
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('You can check your version against this, if you wish.','@ECHO OFF<BR>:: Set our default test folder<BR>SET SRC=C:&#92;BKTEST<BR><BR>:MAINMENU choose option from menu<BR>CLS<BR><NOBR>ECHO. BKUP.BAT test folder is %SRC%</NOBR><BR><BR>:BUILD fresh test folder<BR><BR>:ADDFILES and make changes<BR><BR>:QUIT no further action<BR><BR>:JOBDONE<BR><BR>:CLEANUP<BR>SET SRC=<BR><BR>:E_FOLDER folder not found<BR><BR>:EOF (end-of-file)<BR> ');</SCRIPT>
+
+<DIV class=lm>
+<P>Normal flow is from top to bottom, then finish</P></DIV>
+<DIV class=bd>
+<P>The normal flow (the order of execution of commands) through the script is 
+from top to bottom. In the final version, there'll be a
+<SCRIPT>cn('GOTO')</SCRIPT>
+ at the end of most sections, pointing to the label of another section, sending 
+the flow of execution there (called a <B>jump</B>).</P></DIV>
+<DIV class=lm>
+<P>Fall-through</P></DIV>
+<DIV class=bd>
+<P><NOBR><B>Fall-through</B></NOBR> means allowing flow to continue with the 
+next label without an explicit jump. It's (slightly) faster than an explicit
+<SCRIPT>cn('GOTO')</SCRIPT>
+ , but may lead to errors. You might forget that a particular section <SPAN 
+class=br>must</SPAN> go to the next, and put a new section in between.</P>
+<P>At the moment, our script has fall-through everywhere!</P></DIV>
+<DIV class=lm>
+<P>Fall-through into the error handler code</P></DIV>
+<DIV class=bd>
+<P>After the <SPAN class=fs>:CLEANUP</SPAN> section has cleared our variable, 
+the flow falls through to the error handler <SPAN class=fs>:E_FOLDER</SPAN>. In 
+the finished script, this section will warn if the source folder is missing, 
+then return to the main menu. Let's put the warning error message in now.</P>
+<P>We can't put in the jump back to the main menu yet, because there's no code 
+for the menu, and we'd fall through back to the error handler again – we'd be in 
+an infinite loop! (You would have to close the DVM to stop the loop).</P>
+<P>We'll just add the error message, for now, to show the effect of incorrect 
+fall-through.</P></DIV>
+<DIV class=lm>
+<P>Adding a simple error message</P></DIV>
+<DIV class=bd>
+<P>This message will say that the folder doesn't exist. The foldername, 
+remember, will be in <SPAN class=fs>SRC</SPAN> when the script is working 
+properly, so we can use <NOBR><SPAN class=fs>%SRC%</SPAN></NOBR> to access 
+it.</P>
+<P>Use
+<SCRIPT>cn('ECHO')</SCRIPT>
+ , and indent the message with a <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>, so the 
+line we need is:</P>
+<P><SPAN class=np>ECHO. The folder %SRC% doesn't exist!</SPAN></P>
+<P>Let's put that line in our script now. It goes in the <SPAN 
+class=fs>:E_FOLDER</SPAN> section
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line to the <SPAN CLASS=fx>:E_FOLDER</SPAN> section. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save the change.','<SPAN CLASS=dtn>:E_FOLDER folder not found</SPAN><BR><NOBR>ECHO. The folder %SRC% doesn&#39;t exist! </NOBR><BR><BR><SPAN CLASS=dtn>:EOF (end-of-file)</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script again</P></DIV>
+<DIV class=bd>
+<P>You've saved the changes in <B>Notepad</B>, so check the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, after the screen clears you see.','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR> The folder  doesn&#39;t exist!<BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>We fell through to the error message</P></DIV>
+<DIV class=bd>
+<P>The flow of execution has fallen through and set off the error message. 
+Technically, it's true, since we haven't created the folder yet! But this 
+message would appear even if we had, because we always fall through to 
+it.</P></DIV>
+<DIV class=lm>
+<P>And <SPAN class=fs>SRC</SPAN> had been cleared</P></DIV>
+<DIV class=bd>
+<P>What's more, since we fell through from the <SPAN class=fs>:CLEANUP</SPAN> 
+section (after we'd cleared the variable <NOBR><SPAN 
+class=fs>SRC</SPAN>)</NOBR>, our foldername was missing from the error message. 
+The message simply isn't meant to be triggered in this way. We need to jump over 
+it.</P></DIV>
+<DIV class=lm>
+<P>Jumping to <SPAN class=fs>EOF</SPAN></P></DIV>
+<DIV class=bd>
+<P>In the final version, once the <SPAN class=fs>:CLEANUP</SPAN> section has 
+done its work, we're finished, so we can just put a jump to the end-of-file 
+label <SPAN class=fs>:EOF</SPAN>. The command line for this is:</P>
+<P><SPAN class=np>GOTO EOF (end-of-file)</SPAN></P>
+<P>There are several things to notice about this jump instruction: 
+<UL>
+  <LI>It's conventional to leave out the <SPAN class=ky>&nbsp;:&nbsp;</SPAN> at 
+  the start of a label when using it in a
+  <SCRIPT>cn('GOTO')</SCRIPT>
+   command, but
+  <SCRIPT>cn('GOTO')</SCRIPT>
+   will work either <B><SPAN class=lg>with or without</SPAN></B> the <SPAN 
+  class=ky>&nbsp;:&nbsp;</SPAN> 
+  <LI>Windows uses only the <SPAN class=fs>EOF</SPAN> to find the target label, 
+  the comment is ignored 
+  <LI>We can put the comment part in, however, to make our code more readable 
+  <LI>Comments are ignored, so the one we use here needn't match the one in the 
+  target, but in this case we'll make it match</LI></UL>
+<P></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>When we add more lines to the <SPAN class=fs>:CLEANUP</SPAN> section later, 
+they'll be added in front of this
+<SCRIPT>cn('GOTO')</SCRIPT>
+ line
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line to the <SPAN CLASS=fx>:CLEANUP</SPAN> section. It&#39;s always a good idea to code the <SPAN CLASS=fs>:CLEANUP</SPAN> section as you go along, adding the command to clear a variable or a workfile each time you decide to use a new one. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save the change.','<SPAN CLASS=dtn>:CLEANUP<BR>SET SRC=</SPAN><BR>GOTO EOF (end-of-file)<BR><BR><SPAN CLASS=dtn>:E_FOLDER folder not found</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script again</P></DIV>
+<DIV class=bd>
+<P>You've saved the changes in <B>Notepad</B>, so check the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, and this time there is no spurious error message, since the flow of logic now jumps over it.','C:&#92;CSW&#62;bksetup<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The error message is correctly skipped</P></DIV>
+<DIV class=bd>
+<P>Now the flow of execution jumps over the error message without triggering 
+it.</P>
+<P>We need to write code that will jump to the error message only if the folder 
+missing. However, this can wait until a later Lesson (when we learn how to test 
+whether or not folders exist). The next stage is to code a menu for <SPAN 
+class=fs>BKSETUP.BAT</SPAN>, so we can easily and quickly choose which function 
+it performs.</P>
+<P>That will be our task for the next Lesson.</P></DIV>
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","What prefix can you use to introduce a <SPAN CLASS=fs>comment</SPAN> in a Batch script?","Either double colon <SPAN CLASS=fx><SPAN CLASS=ob>::</SPAN></SPAN> or <SPAN CLASS=bb>REM</SPAN>+<SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>, but <SPAN CLASS=fx><SPAN CLASS=ob>::</SPAN></SPAN> is better. <SPAN CLASS=bb>REM</SPAN> comments slow down the execution of a script (slightly).","A Batch script has both these labels in it, <NOBR><SPAN CLASS=fx>:LABEL1001</SPAN></NOBR> and <NOBR><SPAN CLASS=fx>:LABEL1002</SPAN></NOBR> &#8211; what&#39;s the (potential) problem?","They share the <B>same</B> first <SPAN CLASS=fs>8</SPAN> characters, so <SPAN CLASS=bb>GOTO</SPAN> (used with either), always finds whichever one comes first in the script.","If you use <NOBR><SPAN CLASS=fs>GOTO MYLABEL</SPAN></NOBR>, what decides whether <SPAN CLASS=fs>GOTO</SPAN> then jumps further down the script, or instead jumps back up the script?","The position of the <NOBR><SPAN CLASS=fs>:MYLABEL</SPAN></NOBR> target label. <SPAN CLASS=bb>GOTO</SPAN> searches from the top of the script until it finds <NOBR><SPAN CLASS=fs>:MYLABEL</SPAN></NOBR> (if it&#39;s missing, the script halts with &#34;Label not found&#34;).","In <NOBR><SPAN CLASS=cl>start /min Notepad FILE.BAT</SPAN></NOBR> what does the <SPAN CLASS=fx>/min</SPAN> mean?","Open, or <SPAN CLASS=bb>start</SPAN>, <B>Notepad</B> as a <B>min</B>imized window (with just a Taskbar button), Use <NOBR><SPAN CLASS=cl>start /?</SPAN></NOBR> for details of <SPAN CLASS=bb>start</SPAN> switches.");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>In this Lesson we have learnt how to: 
+<UL>
+  <LI>Use
+  <SCRIPT>cn('comment')</SCRIPT>
+   s to explain the code lines in scripts 
+  <LI>Use commented labels to outline the plan of a script, within the script 
+  itself 
+  <LI>
+  <SCRIPT>cn('SET')</SCRIPT>
+  , use and clear variables holding values used in a script 
+  <LI>Control and alter the flow of logic through a script with
+  <SCRIPT>cn('GOTO')</SCRIPT>
+   commands 
+  <LI>Correctly use (and avoid) <B>fall-through</B> from one section to the next 
+  </LI></UL>The <A 
+onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson5">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw060.htm">next&nbsp;Lesson</A>, where 
+we'll design the menu for our <SPAN class=fs>BKSETUP.BAT</SPAN> script. See you 
+then.
+<P></P></DIV></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

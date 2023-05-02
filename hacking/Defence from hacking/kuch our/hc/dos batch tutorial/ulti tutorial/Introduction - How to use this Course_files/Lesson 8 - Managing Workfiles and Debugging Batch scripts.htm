@@ -1,0 +1,1046 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0041)http://www.allenware.com/icsw/icsw080.htm -->
+<HTML><HEAD><TITLE>Lesson 8 - Managing Workfiles and Debugging Batch scripts</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<SCRIPT>var rtF="../",useProfile="icsw",Ln=8,LnIdx="Lesson "+Ln;</SCRIPT>
+
+<SCRIPT language=JavaScript 
+src="Lesson 8 - Managing Workfiles and Debugging Batch scripts_files/bdm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT 
+src="Lesson 8 - Managing Workfiles and Debugging Batch scripts_files/r0.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT 
+src="Lesson 8 - Managing Workfiles and Debugging Batch scripts_files/r1.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT 
+src="Lesson 8 - Managing Workfiles and Debugging Batch scripts_files/r2.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT 
+src="Lesson 8 - Managing Workfiles and Debugging Batch scripts_files/r3.js" 
+type=text/javascript></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY onunload=clws()>
+<SCRIPT>bct();var M=new Image();M.src='ac.gif';</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=ch>
+<SCRIPT>w(LnIdx)</SCRIPT>
+</SPAN><BR>Making folders and debugging scripts</P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>dwcalc()</SCRIPT>
+</P>
+<P>In
+<SCRIPT>w(LnIdx)</SCRIPT>
+ we will: 
+<UL>
+  <LI>Practise creating and copying files 
+  <LI>Begin coding the Build option of our script tool, <SPAN 
+  class=fs>BKSETUP.BAT</SPAN> 
+  <LI>Add a confirmation sub-menu into the Build option</LI></UL><SPAN 
+class=fg>&nbsp;Note&nbsp;</SPAN> Each Lesson relies on your files from the 
+previous one. It's better to use your own files, but if you can't, download a 
+copy of files as they were at the <A 
+onmouseover='window.status="ZipFile with copies of CSW files as they were at the end of Lesson 7";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/lesson7.zip">end&nbsp;of&nbsp;Lesson&nbsp;7</A> 
+and click<IMG 
+src="Lesson 8 - Managing Workfiles and Debugging Batch scripts_files/bca.gif"><NOBR>
+<SCRIPT>cn('Single Lesson')</SCRIPT>
+</NOBR> instructions. Remember you can <NOBR>
+<SCRIPT>cn('Work Offline')</SCRIPT>
+</NOBR>if you prefer.
+<P></P></DIV>
+<DIV class=lm>
+<P>Sample file content in <SPAN class=fs>BKSETUP.BAT</SPAN></P></DIV>
+<DIV class=bd>
+<P>The first part of the plan for <SPAN class=fs>BKSETUP.BAT</SPAN> was:
+<OL>
+  <LI>Initial setups: 
+  <UL>
+    <LI type=disc>Load the test folder name <SPAN class=fs>C:\BKTEST</SPAN> in a 
+    variable 
+    <LI type=disc>Create some sample content for test files </LI></UL></LI></OL>In 
+Lesson&nbsp;7, we learnt how to create files with
+<SCRIPT>cn('redirection')</SCRIPT>
+ . We'll use this technique in <SPAN class=fs>BKSETUP.BAT</SPAN> to create 
+files. The plan is to create one small file in
+<SCRIPT>cn('TEMP')</SCRIPT>
+ . Then we copy it several times, with various names, to create a known set of 
+sample files. Then we'll have a reliable set of sample source files to help with 
+developing our backup script.
+<P></P></DIV>
+<DIV class=lm>
+<P>Open <SPAN class=fs>BKSETUP.BAT</SPAN> </P></DIV>
+<DIV class=bd>
+<P>Open the <SPAN class=fs>BKSETUP.BAT</SPAN> script in <B>Notepad</B> with
+<SCRIPT>cn('start')</SCRIPT>
+ , as usual
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>start /min notepad bksetup.bat</SPAN> After a second or two, the <B>Notepad</B> button appears on the Taskbar. Back to the Lesson window for now.','<NOBR>C:&#92;CSW>start /min notepad bksetup.bat</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Strange names are often used for temporary files</P></DIV>
+<DIV class=bd>
+<P>We must give our sample file a name. When we create a new file, we must take 
+care not to overwrite an existing file with the same name that might contain 
+valuable data. Batch script writers sometimes use peculiar names with characters 
+such as <SPAN class=ky>&nbsp;{&nbsp;</SPAN> and <SPAN 
+class=ky>&nbsp;}&nbsp;</SPAN> (which are valid, if unusual, in filenames) to 
+avoid conflicts.</P></DIV>
+<DIV class=lm>
+<P>We'll create our workfiles in the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder</P></DIV>
+<DIV class=bd>
+<P>However, since we'll create our workfiles in the special
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder, where no valuable data are stored, we shan't need <NOBR><SPAN 
+class=fs>{weird}</SPAN></NOBR> names. To find the path to the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder, we expand the corresponding system environment variable: <NOBR><SPAN 
+class=fs>%TEMP%</SPAN></NOBR>. And in Lesson&nbsp;7 we saw how to access it 
+reliably in scripts by adding the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR>, <SPAN class=ky>&nbsp;.\&nbsp;</SPAN></P>
+<P>So the path to the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder is: <NOBR><SPAN class=qfx>%TEMP%.\</SPAN></NOBR></P>
+<P>We'll start by creating a <B>s</B>mall <B>f</B>ile:<SPAN class=fs>SF</SPAN> – 
+there's no need to give it an extension. Later, we'll give each copy of it a 
+sample extension.</P></DIV>
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('ECHO')</SCRIPT>
+ with
+<SCRIPT>cn('>')</SCRIPT>
+ to create a new file</P></DIV>
+<DIV class=bd>
+<P>In the initial section of our script, put a comment to explain we're creating 
+a sample file. Then use an
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command with the
+<SCRIPT>cn('redirection')</SCRIPT>
+ operator
+<SCRIPT>cn('>')</SCRIPT>
+ to create a new file. We'll call the new file <SPAN class=fs>SF</SPAN> and 
+create it in the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Click the <B>Notepad</B> button on the Taskbar. Position its window in the bottom left corner of the screen. Add the lines below. The sample file can contain anything you please. But if you use distinctive content you&#39;ll recognise where files came from if you forget to delete them  &#8211; and even test files may as well have style!','<SPAN CLASS=dtn>:: Set our default test folder<BR>SET SRC=C:&#92;BKTEST</SPAN><BR>:: Create a sample file<BR><NOBR>ECHO.The moving finger writes; and having writ,>%TEMP%.&#92;SF </NOBR><BR><BR><SPAN CLASS=dtn>:MAINMENU choose option from menu</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('ECHO')</SCRIPT>
+ with
+<SCRIPT>cn('>>')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Add a second line with
+<SCRIPT>cn('ECHO')</SCRIPT>
+ and the append operator
+<SCRIPT>cn('>>')</SCRIPT>
+ so we append to the file we created with the previous
+<SCRIPT>cn('ECHO')</SCRIPT>
+ command line
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the second line of the quatrain (four-line verse) from the Rub&#225;iy&#225;t. Be sure to use the append <SPAN CLASS=qfx>&#62;&#62;</SPAN> operator so the line is added to the first. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:: Create a sample file<BR><NOBR>ECHO.The moving finger writes; and having writ,>%TEMP%.&#92;SF </NOBR></SPAN><BR><NOBR>ECHO.Moves on: nor all thy piety nor wit>>%TEMP%.&#92;SF</NOBR><BR><BR><SPAN CLASS=dtn>:MAINMENU choose option from menu</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Run the script to check the file is created</P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>? Let's run 
+the script, afterwards we'll check the file was created. Just select the <SPAN 
+class=fs>Quit</SPAN> option by replying <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> to run the script, simply choose <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> and the script will create the new file before finishing with the &#34;No further action&#34; message.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR><BR> No further action taken<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('TYPE')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Now use the
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command to check the file was created correctly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type %temp%.&#92;sf</SPAN> to display the file&#39;s contents. You could equally well spell out the full path to your Temporary folder rather than expand the <SPAN CLASS=bb>TEMP</SPAN> variable, but it&#39;s good practice for writing scripts to get used to expanding variables in immediate mode (being able to expand variables at the prompt in this way is a new feature that was introduced with Windows 95; prior to then, variable expansions worked only in scripts).','C:&#92;CSW>type %temp%.&#92;sf<BR>The moving finger writes; and having writ,<BR>Moves on: nor all thy piety nor wit<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Or check with
+<SCRIPT>cn('DIR')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>
+<SCRIPT>cn('DIR')</SCRIPT>
+will also confirm a file exists, but it doesn't show what it contains
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir %temp%.&#92;sf</SPAN></NOBR> and the default listing shows the file length in bytes (a line end needs two bytes: a CarriageReturn and a LineFeed). The listing also shows the file was created only a minute or two ago (your exact time may differ, of course, and your date format may not be the day/month/year shown here).','C:&#92;CSW&#62;dir %temp%.&#92;sf<BR><BR> Volume in drive C is <SPAN CLASS=dtd>YourDiskName</SPAN><BR> Volume Serial Number is <SPAN CLASS=dtd>nnnn-nnnn</SPAN><BR> Directory of C:&#92;WINDOWS&#92;TEMP<BR><BR>SF                      81  '+dtnw(0,1.5*4)+'  '+tnw(1.5*4)+' SF<BR><NOBR>         1 file(s)             81 bytes</NOBR><BR><NOBR>         0 dir(s)   <SPAN CLASS=dtd>DiskSpaceFree</SPAN> bytes free</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Notice how Windows reliably accepts 
+<NOBR><SPAN class=qfx>%temp%.\</SPAN></NOBR> as the path to a file in the
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder in any command you use. If your
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder is <SPAN class=fs>C:\WINDOWS\TEMP</SPAN>, you could use the literal 
+path, but by expanding the variable and using the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR>, your scripts will work more reliably on other Windows 95/98/ME computer 
+systems.</P></DIV>
+<DIV class=lm>
+<P>Append two more lines</P></DIV>
+<DIV class=bd>
+<P>Let's complete the quatrain from the Rubáiyát. Use
+<SCRIPT>cn('ECHO')</SCRIPT>
+ with the append operator
+<SCRIPT>cn('>>')</SCRIPT>
+ , so that the new lines are appended to the first two
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the two remaining lines below (they come from quatrain 51 of the Edward Fitzgerald translation of the Rub&#225;iy&#225;t), then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<NOBR><SPAN CLASS=dtn>ECHO.Moves on: nor all thy piety nor wit>>%TEMP%.&#92;SF</SPAN></NOBR><BR><NOBR>ECHO.Shall lure it back to cancel half a line,>>%TEMP%.&#92;SF </NOBR><BR><NOBR>ECHO.Nor all thy tears wash out a word of it.>>%TEMP%.&#92;SF</NOBR><BR><BR><SPAN CLASS=dtn>:MAINMENU choose option from menu</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the script again</P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> so run the 
+script again, just reply <SPAN class=ky>&nbsp;Q&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> to run the script, simply choose <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> as before. The new four-line version of the file will be created. Since the first line is written with the new file <SPAN CLASS=qfx>&#62;</SPAN> operator, the new version of <SPAN CLASS=fs>SF</SPAN> will overwrite the old one.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR><BR> No further action taken<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check with
+<SCRIPT>cn('TYPE')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>Now use the
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command to check the file was created correctly
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type %temp%.&#92;sf</SPAN> to display the file&#39;s contents. By the way, the <SPAN CLASS=bb>TYPE</SPAN> command is only suitable for text files, since it stops listing the file if it finds a <SPAN CLASS=ky>&nbsp;Ctrl&nbsp;Z&nbsp;</SPAN> character (which was sometimes used as a terminator marker in some older types of plain text files, but often occurs throughout non-text files).','C:&#92;CSW>type %temp%.&#92;sf<BR>The moving finger writes; and having writ,<BR>Moves on: nor all thy piety nor wit<BR>Shall lure it back to cancel half a line,<BR>Nor all thy tears wash out a word of it.<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The earlier sample file was overwritten</P></DIV>
+<DIV class=bd>
+<P>The new (four-line) sample file overwrote the previous file, because our 
+first
+<SCRIPT>cn('ECHO')</SCRIPT>
+ line, with its
+<SCRIPT>cn('>')</SCRIPT>
+ operator, always creates a new file.</P>
+<P>Now we have a sample file with style! And the syntax for writing files 
+reliably to
+<SCRIPT>cn('TEMP')</SCRIPT>
+ should be fixed properly in your mind.</P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Remember the distinction between
+<SCRIPT>cn('>')</SCRIPT>
+ (which erases any existing file and creates a new one) and
+<SCRIPT>cn('>>')</SCRIPT>
+ (which appends to any existing file, creating a new one <B>only</B> if no 
+same-name file exists already).</P></DIV>
+<DIV class=lm>
+<P>Leave
+<SCRIPT>cn('TEMP')</SCRIPT>
+ clear when the script finishes</P></DIV>
+<DIV class=bd>
+<P>It's vital to clean up any file clutter a script creates. We need to add a 
+command to clean up the sample file when the script finishes. It goes in the 
+<SPAN class=fs>:CLEANUP</SPAN> section.</P>
+<P>The command to delete a file is
+<SCRIPT>cn('DEL')</SCRIPT>
+ , so add the cleanup line now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the line to delete the <SPAN CLASS=fs>SF</SPAN> workfile as the script finishes, and click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:CLEANUP<BR>SET SRC=<BR>SET TASK=</SPAN><BR>DEL %TEMP%.&#92;SF<BR><SPAN CLASS=dtn>ECHO.<BR>GOTO EOF (end-of-file)</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Run the script to check the file is deleted</P></DIV>
+<DIV class=bd>
+<P>You clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>? Run the 
+script. This time no sample file remains after the script ends. Just select the 
+<SPAN class=fs>Quit</SPAN> option by replying <SPAN 
+class=ky>&nbsp;Q&nbsp;</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> to run the script, and choose <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN>. The workfile is created as before, but now it&#39;s deleted as the script finishes. In other code (that we have yet to add to the script), we&#39;ll make use of the workfile before this deletion occurs.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR><BR> No further action taken<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Try to
+<SCRIPT>cn('TYPE')</SCRIPT>
+ the file</P></DIV>
+<DIV class=bd>
+<P>Confirm that the file has gone with a
+<SCRIPT>cn('TYPE')</SCRIPT>
+ command
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>type %temp%.&#92;sf</SPAN> to confirm the file can&#39;t be found now (we could equally well use <NOBR><SPAN CLASS=qfx>dir %temp%.&#92;sf</SPAN></NOBR> to check the file no longer exists). Notice that <SPAN CLASS=bb>TYPE</SPAN> expands the <SPAN CLASS=bb>TEMP</SPAN> variable when it reports the &#34;not found&#34; message.','C:&#92;CSW>type %temp%.&#92;sf<BR><NOBR>File not found - C:&#92;WINDOWS&#92;TEMP.&#92;sf</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Keep your
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder clutter-free</P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder is for briefly created, transient workfiles. Our scripts will <SPAN 
+class=br>always</SPAN> delete any such workfiles before finishing. Many programs 
+(particularly during installation) also use
+<SCRIPT>cn('TEMP')</SCRIPT>
+ for temporary files, and they <B>should</B> always remove their workfile 
+clutter.</P>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Any files in your
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder now are (almost certainly) temporary workfiles left over by programs 
+that failed to clear up after they finished. We won't make this mistake. You can 
+safely delete all such leftovers from
+<SCRIPT>cn('TEMP')</SCRIPT>
+ . Windows avoids conflicts by refusing to delete (<NOBR>"access denied"</NOBR>) 
+any files that are in use at the moment.</P>
+<P>But don't get distracted with tidying up your
+<SCRIPT>cn('TEMP')</SCRIPT>
+ folder at the moment. When you've finished this Course, you can practise your 
+skills by writing a Batch script to do it for you!</P></DIV>
+<DIV class=lm>
+<P><SPAN class=rh>The Build option:</SPAN><BR>The Build option plan</P></DIV>
+<DIV class=bd>
+<P><BR>We can now code the Build option of our <SPAN class=fs>BKSETUP.BAT</SPAN> 
+script. The plan was: 
+<OL>
+  <LI value=3>The script coding for each option: 
+  <UL>
+    <LI type=disc>Code to: build the test folder afresh (erasing any existing 
+    one) 
+    <UL>
+      <LI type=circle>Display a confirmation prompt before going 
+    ahead</LI></UL></LI></UL></LI></OL>
+<P></P></DIV>
+<DIV class=lm>
+<P>The Build option will be used frequently</P></DIV>
+<DIV class=bd>
+<P>When we write the backup script, we shall constantly need to build and 
+rebuild our test source folder, to confirm our backup script is working. The 
+Build option of our script tool <SPAN class=fs>BKSETUP.BAT</SPAN> will do this 
+for us. It will ensure we always have a known set of freshly created source 
+files to backup.</P>
+<P>Before we code the Build option, we'll practise all the techniques in 
+immediate mode first.</P></DIV>
+<DIV class=lm>
+<P>Build a fresh test folder, erasing any existing one</P></DIV>
+<DIV class=bd>
+<P>We've seen how to make a folder with
+<SCRIPT>cn('MD')</SCRIPT>
+ . Our test folder will be <SPAN class=fs>C:\BKTEST</SPAN> (choose another name 
+if you have it in use for other purposes). Let's make it now
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>md C:&#92;BKTEST</SPAN></NOBR> to make our test folder (in the unlikely event you already have a folder with this name that you&#39;re using for something else, and you choose a different name, you must use that different name <B>consistently</B> wherever we use <SPAN CLASS=fs>C:&#92;BKTEST</SPAN>).','C:&#92;CSW&#62;md C:&#92;BKTEST<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Make a subfolder in the test folder</P></DIV>
+<DIV class=bd>
+<P>We'll need subfolders in <SPAN class=fs>C:\BKTEST</SPAN> and we make them in 
+the same way. Let's make a subfolder in it called <NOBR><SPAN class=qfs>Text 
+Files</SPAN></NOBR> – since this subfolder name has <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s in it, we need to enclose it in "quotes"
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>md &#34;c:&#92;bktest&#92;Text Files&#34;</SPAN></NOBR> (you need to remember to use &#34;quotes&#34; around any file or folder name that includes one or more <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s. Other file and folder names don&#39;t require this treatment, but they can be &#34;quoted&#34; as well, whenever you prefer).','C:&#92;CSW&#62;md &#34;c:&#92;bktest&#92;Text Files&#34;<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Whenever a file or folder name has 
+<SPAN class=ky>&nbsp;Space&nbsp;</SPAN>s in it, we use "quotes" around it so 
+that Windows interprets it as a single token (otherwise Windows will try to 
+break it at each <SPAN class=ky>&nbsp;Space&nbsp;</SPAN>, as if it were more 
+than one specification). In this case, only the part with the <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN> need be quoted; so this would suffice:</P>
+<P><NOBR><SPAN class=qfx>c:\bktest\"Text Files"</SPAN></NOBR> – or even – 
+<NOBR><SPAN class=qfx>c:\bktest\Text" "Files</SPAN></NOBR></P>
+<P>(where only the <SPAN class=ky>&nbsp;Space&nbsp;</SPAN> is quoted). However, 
+it's better to "quote" the entire specification, because some commands&nbsp;
+<SCRIPT>ibx('ib0')</SCRIPT>
+ give a syntax error with mixed <NOBR>"quoted"+unquoted</NOBR> 
+forms.</P></DIV><SPAN class=ib id=ib0>For example, the <SPAN 
+class=bb>attrib</SPAN> command (we meet it in a later Lesson) won't accept mixed 
+<NOBR>"quoted"+unquoted</NOBR> specifications.</SPAN> 
+<DIV class=lm>
+<P>Add a file to <SPAN class=fs>C:\BKTEST</SPAN></P></DIV>
+<DIV class=bd>
+<P>We'll need to add sample files to our test folder. We'll practise by copying 
+our <SPAN class=fs>HW.BAT</SPAN> file (any existing file would do). The command 
+to copy files is
+<SCRIPT>cn('COPY')</SCRIPT>
+ , try it
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>copy hw.bat c:&#92;bktest</SPAN></NOBR> and the <SPAN CLASS=bb>COPY</SPAN> command makes a copy of <SPAN CLASS=fs>HW.BAT</SPAN> in the new folder. In this case, the new file will have the same name as the original, which remains in place unchanged by the copy process.','C:&#92;CSW&#62;copy hw.bat c:&#92;bktest<BR>        1 file(s) copied<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Remember how to get help when you need it</P></DIV>
+<DIV class=bd>
+<P>To remind yourself later about using commands such as
+<SCRIPT>cn('COPY')</SCRIPT>
+ , remember you can: 
+<UL>
+  <LI>type <NOBR><SPAN class=cl>copy /?</SPAN></NOBR> in the <SPAN 
+  class=tsk>&nbsp;BatchWindow&nbsp;</SPAN> for brief help 
+  <LI>click the command name in a Lesson for the Course Reference window 
+</LI></UL>The Course Reference shows syntax examples and details that aren't in 
+the <SPAN class=fx>/?</SPAN> brief help, but it <SPAN class=br>doesn't</SPAN> 
+repeat information in brief help, so <B>use both</B> when you need a reminder. 
+<P></P></DIV>
+<DIV class=lm>
+<P>Now
+<SCRIPT>cn('COPY')</SCRIPT>
+ it with a new name</P></DIV>
+<DIV class=bd>
+<P>We can copy <SPAN class=fs>HW.BAT</SPAN> and give it a new name in the 
+process, making a second sample file in the test folder
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>copy hw.bat c:&#92;bktest&#92;HW.NEW</SPAN></NOBR> and this time when the file is copied to our test folder, it&#39;s given a new name <SPAN CLASS=fs>HW.NEW</SPAN> (but is otherwise identical to the original). Contrary to what you might expect, even the new file&#39;s creation date and time match the original (as you can check later with <NOBR><SPAN CLASS=qfx>dir c:&#92;bktest</SPAN></NOBR> if you wish).','C:&#92;CSW&#62;copy hw.bat c:&#92;bktest&#92;HW.NEW<BR>        1 file(s) copied<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> By changing the extension of <SPAN 
+class=fs>HW.BAT</SPAN>, we make it invalid as a Batch script. However, we're 
+simply using it as a sample file that we might want to backup, so this doesn't 
+matter.</P></DIV>
+<DIV class=lm>
+<P>Using
+<SCRIPT>cn('wildcard')</SCRIPT>
+ s with
+<SCRIPT>cn('COPY')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>We'll try one more practice
+<SCRIPT>cn('COPY')</SCRIPT>
+ operation. We'll use the <SPAN class=qfs>*.txt</SPAN>
+<SCRIPT>cn('wildcard')</SCRIPT>
+ to
+<SCRIPT>cn('COPY')</SCRIPT>
+ all our <SPAN class=fs>.TXT</SPAN> files to the <NOBR><SPAN class=qfs><SPAN 
+class=fs>C:\BKTEST\text files</SPAN></SPAN></NOBR> subfolder and rename all the 
+copies to <SPAN class=fs>.DAT</SPAN> files in the process.</P>
+<P>Remember to "quote" the destination folder, it has <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s in its name
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>copy *.txt &#34;c:&#92;bktest&#92;text files&#92;*.DAT&#34;</SPAN></NOBR> (wildcards are a powerful technique that works with many of the commands we&#39;ll use). <SPAN CLASS=bb>COPY</SPAN> lists the original filenames as it copies them to new names by replacing <SPAN CLASS=fs>TXT</SPAN> with <SPAN CLASS=fs>DAT</SPAN> for each one.','<NOBR>C:&#92;CSW&#62;copy *.txt &#34;c:&#92;bktest&#92;text files&#92;*.DAT&#34;</NOBR><BR>Greenspan.txt<BR>314159.TXT<BR>265358.TXT<BR>RhymeForPi.txt<BR>        4 file(s) copied<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> A
+<SCRIPT>cn('wildcard')</SCRIPT>
+
+<SCRIPT>cn('COPY')</SCRIPT>
+ copies the files in the order they happen to be in the folder index. Some 
+defragment utilities sort folder index entries. So, the precise order your files 
+are copied may differ from ours. The four files should all be there in the 
+report, however.</P></DIV>
+<DIV class=lm>
+<P>Use
+<SCRIPT>cn('DIR')</SCRIPT>
+ to list our test folder</P></DIV>
+<DIV class=bd>
+<P>Use
+<SCRIPT>cn('DIR')</SCRIPT>
+ to list all the items we've added to our test folder. Remember to use the <SPAN 
+class=fs>/s</SPAN> (include subfolder contents) switch
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir c:&#92;bktest /<SPAN CLASS=or>o</SPAN> /<SPAN CLASS=og>b</SPAN> /<SPAN CLASS=ob>s</SPAN></SPAN></NOBR> to list the files <SPAN CLASS=br>o</SPAN>rdered (alphabetically) in a <SPAN CLASS=bg>b</SPAN>are (no size or date stamp details) list including <SPAN CLASS=bb>s</SPAN>ubfolder contents (when you use <SPAN CLASS=fs>/<SPAN CLASS=ob>s</SPAN></SPAN> to include <SPAN CLASS=bb>s</SPAN>ubfolder contents, the bare list always includes the full file specification including the path to make it clear which folder each file is in).','C:&#92;CSW&#62;dir c:&#92;bktest /o /b /s<BR>C:&#92;BKTEST&#92;Text Files<BR>C:&#92;BKTEST&#92;HW.BAT<BR>C:&#92;BKTEST&#92;HW.NEW<BR>C:&#92;BKTEST&#92;Text Files&#92;265358.DAT<BR>C:&#92;BKTEST&#92;Text Files&#92;314159.DAT<BR>C:&#92;BKTEST&#92;Text Files&#92;Greenspan.DAT<BR>C:&#92;BKTEST&#92;Text Files&#92;RhymeForPi.DAT<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Removing an existing folder and contents</P></DIV>
+<DIV class=bd>
+<P>Our <SPAN class=fs>BKSETUP.BAT</SPAN> script will often need to build a fresh 
+test folder with sample files, just as we have. When it does so, it needs to 
+remove any existing folder (and contents).</P>
+<P>We saw in Lesson&nbsp;7 that
+<SCRIPT>cn('RD')</SCRIPT>
+ can be used to remove a folder. However, first we deleted the file it 
+contained.
+<SCRIPT>cn('RD')</SCRIPT>
+ won't remove a folder that isn't empty. Try it
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Try to use <NOBR><SPAN CLASS=qfx>rd c:&#92;bktest</SPAN></NOBR> to remove the folder. It doesn&#39;t work because the <SPAN CLASS=bb>RD</SPAN> command will only remove folders that contain neither files, nor further subfolders (it doesn&#39;t even matter whether or not the subfolders are themselves empty, their presence would still prevent <SPAN CLASS=bb>RD</SPAN> from removing their parent folder).','C:&#92;CSW&#62;rd c:&#92;bktest<BR>Invalid path, not directory,<BR>or directory not empty<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> Remember that "directory" is just 
+another term for a simple folder.</P></DIV>
+<DIV class=lm>
+<P>We need
+<SCRIPT>cn('deltree')</SCRIPT>
+ </P></DIV>
+<DIV class=bd>
+<P>The command we need is
+<SCRIPT>cn('deltree')</SCRIPT>
+ . This <SPAN class=br>extremely powerful</SPAN> command will erase a folder and 
+its contents (including any subfolders in it, and their contents, too). Always 
+use
+<SCRIPT>cn('deltree')</SCRIPT>
+ with <SPAN class=br>great care</SPAN>. It can erase huge numbers of files in 
+one operation.</P>
+<P>Use
+<SCRIPT>cn('deltree')</SCRIPT>
+ now to remove our <SPAN class=fs>C:\BKTEST</SPAN> test folder
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwdw('Carefully type <NOBR><SPAN CLASS=qfx>deltree c:&#92;bktest</SPAN></NOBR> and you&#39;ll be asked to confirm the action. Answer <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> (and press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN> key as well) to confirm <SPAN CLASS=br>only</SPAN> when you see the deletion operation is correct (otherwise answer <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN> and repeat the command correctly).','C:&#92;CSW&#62;deltree c:&#92;bktest<BR>Delete directory &#34;c:&#92;BKTEST&#34; and all its subdirectories? [yn] y<BR>Deleting c:&#92;BKTEST...<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note 1&nbsp;</SPAN> Replying to prompts sometimes 
+requires you press a <SPAN class=ky>&nbsp;Key&nbsp;</SPAN>+<SPAN 
+class=ky>&nbsp;Return&nbsp;</SPAN>, and as we'll see in later Lessons, sometimes 
+merely a <SPAN class=ky>&nbsp;Key&nbsp;</SPAN> press alone.</P>
+<P><SPAN class=fg>&nbsp;Note 2&nbsp;</SPAN> In a script, you can avoid the need 
+to confirm by adding the <SPAN class=fs>/<SPAN class=or>y</SPAN></SPAN> 
+(automatic <SPAN class=br>Y</SPAN>es) switch. This is <B>not</B> a good idea in 
+immediate mode, where the warning prompt is useful. Also, in a script we can 
+silence the <SPAN class=qu>Deleting...</SPAN> report with
+<SCRIPT>cn('redirection')</SCRIPT>
+ <SPAN class=fs>&gt;NUL</SPAN></P></DIV>
+<DIV class=lm>
+<P>No error message if folder doesn't exist</P></DIV>
+<DIV class=bd>
+<P>The
+<SCRIPT>cn('deltree')</SCRIPT>
+ command doesn't report an error if we use it to delete a folder that isn't 
+there. Try it again with <SPAN class=fs>C:\BKTEST</SPAN>, which we've already 
+removed
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Carefully type <NOBR><SPAN CLASS=qfx>deltree c:&#92;bktest</SPAN></NOBR> again. This time there is no confirmation prompt and no message because the folder no longer exists. The absence of an error message when we use <SPAN CLASS=bb>deltree</SPAN> on a non-existent folder or file is a useful feature in scripts, where we need to suppress error messages to prevent the user seeing them (a script should handle any errors itself).','C:&#92;CSW&#62;deltree c:&#92;bktest<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P><SPAN class=rh>The Build option:</SPAN><BR>Now we can write the code for this 
+option</P></DIV>
+<DIV class=bd>
+<P><BR>It's time to put all we've learnt into our <SPAN 
+class=fs>BKSETUP.BAT</SPAN> script Build option. The coding will be very similar 
+to our immediate mode practice. The main difference is that where in immediate 
+mode we used the text:</P>
+<P><SPAN class=qfx>C:\BKTEST</SPAN></P>
+<P>in our script, which has the source folder set in <SPAN class=fs>SRC</SPAN>, 
+we will normally use:</P>
+<P><NOBR><SPAN class=qfx>%SRC%</SPAN></NOBR></P></DIV>
+<DIV class=lm>
+<P>With <SPAN class=fs>SRC</SPAN> we won't use the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR></P></DIV>
+<DIV class=bd>
+<P>Now we know about the <NOBR>
+<SCRIPT>cn('emending suffix')</SCRIPT>
+</NOBR>for the foldername in
+<SCRIPT>cn('TEMP')</SCRIPT>
+ , one further question arises. Since our folder is in a variable, should we 
+always use the safe combination <SPAN class=ky>&nbsp;.\&nbsp;</SPAN> when we add 
+a further file or foldername to it, instead of just <SPAN 
+class=ky>&nbsp;\&nbsp;</SPAN>?</P>
+<P>The answer is no. We won't need the special suffix, since we're setting the 
+variable in our script. And we won't add a spurious backslash to the source 
+foldername we store.</P></DIV>
+<DIV class=lm>
+<P>We need to make the source folder</P></DIV>
+<DIV class=bd>
+<P>The Build option needs to make the source folder, <SPAN 
+class=fs>C:\BKTEST</SPAN>, and we need some sample subfolders, too. So in it, 
+we'll make a <SPAN class=qfs>DATA</SPAN> subfolder and a <SPAN class=qfs>Text 
+Files</SPAN> subfolder. The code goes in the <SPAN class=fs>:BUILD</SPAN> 
+section
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the code to make the folders. Remember to use &#34;quotes&#34; around the specification when there are one or more <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s in the foldername. Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:BUILD fresh test folder<BR>SET TASK=Build fresh test folder</SPAN><BR><BR>MD %SRC%<BR>MD %SRC%&#92;DATA<BR>MD &#34;%SRC%&#92;Text Files&#34;<BR><BR><SPAN CLASS=dtn>GOTO JOBDONE</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>The <SPAN class=fs>SRC</SPAN> variable is expanded</P></DIV>
+<DIV class=bd>
+<P>It's very important to understand how to use a variable in this way. At the 
+start of our script we set <SPAN class=fs>SRC</SPAN> to <SPAN 
+class=fs>C:\BKTEST</SPAN>, so when our script is executed, Windows expands:</P>
+<P>
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>This: </SPAN></TD>
+    <TD><SPAN class=tab>to this:</SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx><SPAN 
+      class=og>%SRC%</SPAN></SPAN></SPAN></TD>
+    <TD><SPAN class=tab><SPAN class=fx><SPAN 
+      class=og>C:\BKTEST</SPAN></SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>And so these: </SPAN></TD>
+    <TD><SPAN class=tab>are expanded to these:</SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>MD <SPAN 
+      class=og>%SRC%</SPAN></SPAN></SPAN></TD>
+    <TD><SPAN class=tab><SPAN class=fx>MD <SPAN 
+      class=og>C:\BKTEST</SPAN></SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>MD <SPAN 
+      class=og>%SRC%</SPAN>\DATA</SPAN></SPAN></TD>
+    <TD><SPAN class=tab><SPAN class=fx>MD <SPAN 
+      class=og>C:\BKTEST</SPAN>\DATA</SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab><SPAN class=fx>MD "<SPAN class=og>%SRC%</SPAN>\Text 
+      Files"&nbsp;&nbsp;</SPAN></SPAN></TD>
+    <TD><SPAN class=tab><SPAN class=fx>MD "<SPAN 
+      class=og>C:\BKTEST</SPAN>\Text 
+Files"</SPAN></SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm>
+<P>Test the script</P></DIV>
+<DIV class=bd>
+<P>You've clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN> to save 
+those lines, so let's test the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> to run the script and choose the <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> option to run our new code. Watch for error messages that warn you of any typing errors in the new lines we&#39;ve added.',' BKUP.BAT test folder is C:&#92;BKTEST<BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR> Build fresh test folder - finished<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P><SPAN class=fg>&nbsp;Note&nbsp;</SPAN> If you see any error messages, check 
+the lines just added. Remember the simple debug technique: add <NOBR><SPAN 
+class=qfs>ECHO ON</SPAN></NOBR> (on a line on its own) before any suspect lines 
+and add <NOBR><SPAN class=qfs>@ECHO OFF</SPAN></NOBR> (also on a line on its 
+own) after them. This turns on
+<SCRIPT>cn('ECHO')</SCRIPT>
+ for just those lines, and will normally show you what is wrong.</P></DIV>
+<DIV class=lm>
+<P>Did it work?</P></DIV>
+<DIV class=bd>
+<P>Were the new folders added? The easiest way to tell is to rerun the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN> to run the script and reply <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> to run the build option again. This time, because the three folders exist, you see three error messages warning you of this (the third error message is worded differently because the Windows code to handle names with <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s uses separate driver software).','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR>Directory already exists<BR>Directory already exists<BR>Unable to create directory<BR> Build fresh test folder - finished<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>The folders were already there the second time</P></DIV>
+<DIV class=bd>
+<P>The three error messages tell us two useful things: 
+<OL>
+  <LI>The folders <B>were</B> built the first time, since on the second run, we 
+  received three error messages to say they already exist (the error message for 
+  a long folder name – our <NOBR><SPAN class=qfx>Text Files</SPAN></NOBR> – is 
+  slightly different from the error message we receive when we try to make the 
+  first two
+  <SCRIPT>cn('8.3')</SCRIPT>
+   named folders) 
+  <LI>We need to use
+  <SCRIPT>cn('deltree')</SCRIPT>
+   first, to make sure any existing folders are deleted before we build the 
+  fresh ones (remember, if there are no existing folders,
+  <SCRIPT>cn('deltree')</SCRIPT>
+   doesn't give an error message, so we can simply use
+  <SCRIPT>cn('deltree')</SCRIPT>
+   first, regardless of whether there is an existing source folder or not. 
+</LI></OL>
+<P></P></DIV>
+<DIV class=lm>
+<P>Add the
+<SCRIPT>cn('deltree')</SCRIPT>
+ line</P></DIV>
+<DIV class=bd>
+<P>Add a
+<SCRIPT>cn('deltree')</SCRIPT>
+ command to remove <SPAN class=fs>C:\BKTEST</SPAN> first (this will remove all 
+its subfolders and their files, too). Use the <SPAN class=fs>/y</SPAN> switch to 
+suppress the confirmation prompt, and add
+<SCRIPT>cn('redirection')</SCRIPT>
+ <SPAN class=fs>&gt;NUL</SPAN> to suppress the deletion report
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the comment first, then add the <SPAN CLASS=bb>deltree</SPAN> line. As a safety precaution, we won&#39;t expand the <SPAN CLASS=fs>SRC</SPAN> variable for the <SPAN CLASS=bb>deltree</SPAN> command (though we could use the variable if we wished). Click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>:BUILD fresh test folder<BR>SET TASK=Build fresh test folder<BR></SPAN><BR>:: We hard-code the source folder<BR>deltree /y C:&#92;BKTEST&#62;NUL<BR><SPAN CLASS=dtn>MD %SRC%<BR>MD %SRC%&#92;DATA<BR>MD &#34;%SRC%&#92;Text Files&#34;</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>We hard-code the
+<SCRIPT>cn('deltree')</SCRIPT>
+ folder</P></DIV>
+<DIV class=bd>
+<P>Notice that we <SPAN class=br>don't</SPAN> expand our variable <SPAN 
+class=fs>SRC</SPAN> with
+<SCRIPT>cn('deltree')</SCRIPT>
+ . It would work perfectly well, but suppose we (accidentally) set our <SPAN 
+class=fs>SRC</SPAN> variable wrongly while editing the script? Perhaps to an 
+existing data folder, and then ran our script with option <SPAN 
+class=ky>&nbsp;B&nbsp;</SPAN>? The script would wreak havoc, deleting that 
+folder with all its contents (including subfolders).</P>
+<P>It may not seem a very likely accident, but <SPAN class=br>always</SPAN> play 
+safe with
+<SCRIPT>cn('deltree')</SCRIPT>
+ .</P></DIV>
+<DIV class=lm>
+<P>Test the script again</P></DIV>
+<DIV class=bd>
+<P>You've clicked <SPAN class=qu>File</SPAN>, <SPAN class=qu>Save</SPAN>, so 
+test the script again
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <SPAN CLASS=qfx>bksetup</SPAN> and choose the <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> option to build the folder afresh. This time there are no error messages because <SPAN CLASS=bb>deltree</SPAN> deletes the old folders before they&#39;re rebuilt.',' BKUP.BAT test folder is C:&#92;BKTEST<BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR> Build fresh test folder - finished<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the folders are correctly in place</P></DIV>
+<DIV class=bd>
+<P>All is now well. Let's confirm that the test folder and its two subfolders 
+are being created correctly. Use
+<SCRIPT>cn('DIR')</SCRIPT>
+ to list <SPAN class=fs>C:\BKTEST</SPAN> contents. Use the <SPAN 
+class=fs>/s</SPAN> switch although there are no actual subfolder contents to be 
+listed. Adding this switch makes
+<SCRIPT>cn('DIR')</SCRIPT>
+ include the full path specification for the two subfolders
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <NOBR><SPAN CLASS=qfx>dir c:&#92;bktest /<SPAN CLASS=or>o</SPAN> /<SPAN CLASS=og>b</SPAN> /<SPAN CLASS=ob>s</SPAN></SPAN></NOBR> to list the files <SPAN CLASS=br>o</SPAN>rdered (alphabetically) in a <SPAN CLASS=bg>b</SPAN>are (no size or date stamp details) list including <SPAN CLASS=bb>s</SPAN>ubfolder contents (and full path names). There are no files yet, and <SPAN CLASS=bb>DIR</SPAN> lists only the two subfolder names in <SPAN CLASS=fs>C:&#92;BKTEST</SPAN>.','C:&#92;CSW&#62;dir c:&#92;bktest /o /b /s<BR>C:&#92;BKTEST&#92;DATA<BR>C:&#92;BKTEST&#92;Text Files<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Nothing can possibly go wrong?</P></DIV>
+<DIV class=bd>
+<P>The <SPAN class=fs>BKSETUP.BAT</SPAN> script is just a tool for us to use 
+(while we develop our backup script). And we wouldn't unintentionally select the 
+<SPAN class=ky>&nbsp;B&nbsp;</SPAN> option, and as a result, instantly erase and 
+rebuild our test folder by mistake. No, it couldn't happen... but we'll add a 
+confirmation sub-menu anyway, just for practice.</P></DIV>
+<DIV class=lm>
+<P>Adding a confirmation sub-menu to <SPAN class=fs>:BUILD</SPAN></P></DIV>
+<DIV class=bd>
+<P>We have the task description stored in <SPAN class=fs>TASK</SPAN>, so we can 
+use that to display a confirmation question:
+<TABLE>
+  <TBODY>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>if we
+      <SCRIPT>cn('ECHO')</SCRIPT>
+       this:</SPAN></TD>
+    <TD><SPAN class=tab><SPAN class=fx>&nbsp;Really <SPAN 
+      class=og>%TASK%</SPAN>?</SPAN></SPAN></TD></TR>
+  <TR vAlign=top align=left>
+    <TD><SPAN class=tab>it's expanded to this:</SPAN></TD>
+    <TD><SPAN class=tab><SPAN class=fx>&nbsp;Really <SPAN class=og>Build fresh 
+      test folder</SPAN>?</SPAN></SPAN></TD></TR></TBODY></TABLE></P></DIV>
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>Add this line (with a comment). It goes before the
+<SCRIPT>cn('deltree')</SCRIPT>
+ operation
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add a comment first, then the question. Don&#39;t forget to indent the message with a <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> after <SPAN CLASS=qfx>ECHO.</SPAN> and also to put a <SPAN CLASS=ky>&nbsp;?&nbsp;</SPAN> after expanding <NOBR><SPAN CLASS=fx>%TASK%</SPAN></NOBR>.','<SPAN CLASS=dtn>:BUILD fresh test folder<BR>SET TASK=Build fresh test folder</SPAN><BR><BR>:: Get confirmation with a sub-menu<BR>ECHO. Really %TASK%?<BR><BR><SPAN CLASS=dtn>:: We hard-code the source folder<BR>deltree /y C:\BKTEST>NUL</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Display the options</P></DIV>
+<DIV class=bd>
+<P>We need a message to explain the two options. It's usually better to display 
+the most likely option first – <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> for Yes, in 
+this case.</P>
+<P>If we select <SPAN class=ky>&nbsp;N&nbsp;</SPAN> (for No), it's probably 
+because we hit the wrong option in the main menu, so an <SPAN 
+class=ky>&nbsp;N&nbsp;</SPAN> choice needs to take the logic flow back to the 
+main menu again.</P>
+<P>We'll also add a blank display line below the menu choices, as usual
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add these three lines to display the sub-menu options. Follow the spacing here carefully; it&#39;s worked out so that the sub-menu cues will line up with the main menu. Then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN> to save the changes.','<SPAN CLASS=dtn>ECHO. Really %TASK%?</SPAN><BR>ECHO. Yes, rebuild folder afresh..Y<BR>ECHO. No, return to main menu.....N<BR>ECHO.<BR><BR><SPAN CLASS=dtn>:: We hard-code the source folder<BR>deltree /y C:\BKTEST>NUL</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Test the script</P></DIV>
+<DIV class=bd>
+<P>The sub-menu messages should line up with the main menu display. We haven't 
+added the
+<SCRIPT>cn('choice')</SCRIPT>
+ command, so the sub-menu won't work yet. But let's test the script to check the 
+alignment of the displayed messages
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Run <NOBR><SPAN CLASS=qfx>bksetup</SPAN></NOBR> and choose <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> then confirm the alignment of the sub-menu cues (go back to the <B>Notepad</B> window and adjust the spacing if you need to, and remember to save any changes you need to make before testing them).',' BKUP.BAT test folder is C:&#92;BKTEST<BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR> Really Build fresh test folder?<BR> Yes, rebuild folder afresh..Y<BR> No, return to main menu.....N<BR><BR><NOBR> Build fresh test folder - finished</NOBR><BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Adjust the alignment</P></DIV>
+<DIV class=bd>
+<P>All the menu reply letters displayed in the sub-menu should be vertically 
+aligned with the main menu, as above. Correct alignment makes a menu easier to 
+use.</P></DIV>
+<DIV class=lm>
+<P>Add the second
+<SCRIPT>cn('choice')</SCRIPT>
+ command for sub-menu</P></DIV>
+<DIV class=bd>
+<P>We know that <SPAN class=fs>yn</SPAN> is the default reply list for
+<SCRIPT>cn('choice')</SCRIPT>
+ . We could use this default list, but it gives return code <SPAN 
+class=fs>1</SPAN> = <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> and code <SPAN 
+class=fs>2</SPAN> = <SPAN class=ky>&nbsp;N&nbsp;</SPAN>.</P>
+<P>We prefer to list our descending
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ tests in the same order as the menu display (so the script is easier to read). 
+So we need return code <NOBR><SPAN class=fs>2</SPAN> = <SPAN 
+class=ky>&nbsp;Y&nbsp;</SPAN></NOBR> and return code <NOBR><SPAN 
+class=fs>1</SPAN> = <SPAN class=ky>&nbsp;N&nbsp;</SPAN></NOBR>. Therefore, our 
+reply list must be in the order: <SPAN class=fs>/c:ny</SPAN></P>
+<P>Add the new
+<SCRIPT>cn('choice')</SCRIPT>
+ line. The sub-menu text is the same width as the main menu, so use "quotes" for 
+the <NOBR><SPAN class=qfs>Please choose </SPAN></NOBR>, and put 15 extra <SPAN 
+class=ky>&nbsp;Space&nbsp;</SPAN>s first, as before. Then add another blank 
+display line, using <SPAN class=qfs>ECHO.</SPAN>
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the two lines, and watch the alignment carefully. Remember to add a single <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN> after <NOBR><SPAN CLASS=qfx>Please choose</SPAN></NOBR> (but inside the &#34;quotes&#34;).','<SPAN CLASS=dtn>ECHO. No, return to main menu.....N<BR>ECHO.</SPAN><BR><NOBR>choice /c:ny /n &#34;               Please choose &#34; </NOBR><BR>ECHO.<BR><BR><SPAN CLASS=dtn>:: We hard-code the source folder<BR>deltree /y C:\BKTEST>NUL</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>Descending order for
+<SCRIPT>cn('ERRORLEVEL')</SCRIPT>
+ testing</P></DIV>
+<DIV class=bd>
+<P>Before we test the alignment of the choice text prompt, we'll add the
+<SCRIPT>cn('IF')</SCRIPT>
+ tests to handle the replies. We must test for <SPAN class=fs>2</SPAN> (reply 
+<NOBR><SPAN class=ky>&nbsp;Y&nbsp;</SPAN>)</NOBR> <B>first</B>. You do remember 
+the test is for whether the actual return code <SPAN class=br>is greater than or 
+equal to</SPAN> the number we test for, don't you?</P>
+<P>The reply <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> (return code <NOBR><SPAN 
+class=fs>2</SPAN>)</NOBR> will need to go straight to the
+<SCRIPT>cn('deltree')</SCRIPT>
+ line. So we'll need a new label to jump to: it will have to go on the line 
+before the
+<SCRIPT>cn('deltree')</SCRIPT>
+ command.</P>
+<P>We'll use a commented label <NOBR><SPAN class=qfs>:BUILDYES 
+confirmed</SPAN></NOBR>. Remember that in the
+<SCRIPT>cn('GOTO')</SCRIPT>
+ command we conventionally omit the colon from the target label (although you 
+can include it, if you prefer).</P></DIV>
+<DIV class=lm>
+<P>Code the final
+<SCRIPT>cn('choice')</SCRIPT>
+ option unconditionally</P></DIV>
+<DIV class=bd>
+<P>The reply <SPAN class=ky>&nbsp;N&nbsp;</SPAN> (return code <SPAN 
+class=fs>1</SPAN>) will need to go to the main menu, as we said, and we already 
+have a <SPAN class=fs>:MAINMENU</SPAN> label to jump back to. The <SPAN 
+class=ky>&nbsp;N&nbsp;</SPAN> option is rather like a quit option (it abandons 
+the Build option that was selected).</P>
+<P>So, as usual, we'll code it with an unconditional jump as we did for Quit in 
+the main menu. We know
+<SCRIPT>cn('choice')</SCRIPT>
+ must be working properly (or we wouldn't have reached this point in the 
+script), so nothing can possibly go wrong. But we'll keep to the safe-menu 
+principle anyway.</P>
+<P>Add the
+<SCRIPT>cn('IF')</SCRIPT>
+ test, the unconditional jump, and the new label
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Add the lines: (1) the <SPAN CLASS=bb>IF</SPAN> test to handle the <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> reply, (2) the unconditional jump for the <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN> reply, which takes us back the main menu, and (3) don&#39;t forget the new commented label that the jump in the <SPAN CLASS=bb>IF</SPAN> test needs. Then click <SPAN CLASS=qu>File</SPAN>, <SPAN CLASS=qu>Save</SPAN>.','<SPAN CLASS=dtn>ECHO.<BR><NOBR>choice /c:ny /n &#34;               Please choose &#34; </NOBR><BR>ECHO.</SPAN><BR>IF ERRORLEVEL 2 GOTO BUILDYES confirmed<BR>GOTO MAINMENU<BR><BR>:BUILDYES confirmed<BR><SPAN CLASS=dtn>:: We hard-code the source folder<BR>deltree /y C:\BKTEST>NUL</SPAN>');</SCRIPT>
+
+<DIV class=lm></DIV>
+<DIV class=bd>
+<P>You remembered to click <SPAN class=qu>File</SPAN>, <SPAN 
+class=qu>Save</SPAN>?</P></DIV>
+<DIV class=lm>
+<P>Review the test logic</P></DIV>
+<DIV class=bd>
+<P>Before we test the script, let's remind ourselves why we must test for <SPAN 
+class=fs>2</SPAN> (reply <NOBR><SPAN class=ky>&nbsp;Y&nbsp;</SPAN>)</NOBR> 
+<B>first</B>.</P>
+<P>Suppose we tested for <SPAN class=fs>1</SPAN> (reply <SPAN 
+class=ky>&nbsp;N&nbsp;</SPAN> given) first. Remember that a test for <SPAN 
+class=fs>1</SPAN> really means: is the actual code returned <SPAN 
+class=br>greater than or equal to</SPAN> <SPAN class=fs>1</SPAN>? If we test for 
+<SPAN class=fs>1</SPAN> first, and if the actual code were: 
+<UL>
+  <LI><SPAN class=fs>1</SPAN> (reply <SPAN class=ky>&nbsp;N&nbsp;</SPAN> given), 
+  it's <SPAN class=br>greater than or equal to</SPAN> <SPAN class=fs>1</SPAN> so 
+  go to <SPAN class=fs>:MAINMENU</SPAN> 
+  <LI><SPAN class=fs>2</SPAN> (reply <SPAN class=ky>&nbsp;Y&nbsp;</SPAN> given), 
+  it's <SPAN class=br>greater than or equal to</SPAN> <SPAN class=fs>1</SPAN>, 
+  so go to <SPAN class=fs>:MAINMENU</SPAN>, too</LI></UL>As a result, we'd never 
+get to the test for <SPAN class=fs>2</SPAN> at all. So we must test for <SPAN 
+class=fs>2</SPAN> first.
+<P></P></DIV>
+<DIV class=lm>
+<P>To check the script, first remove <SPAN class=fs>C:\BKTEST</SPAN></P></DIV>
+<DIV class=bd>
+<P>When we select the <SPAN class=ky>&nbsp;B&nbsp;</SPAN> option in the main 
+menu, we'll now see a sub-menu asking for confirmation. To check the new logic 
+thoroughly let's first use
+<SCRIPT>cn('deltree')</SCRIPT>
+ manually to remove the <SPAN class=fs>C:\BKTEST</SPAN> folder
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwdw('Carefully type <NOBR><SPAN CLASS=qfx>deltree c:&#92;bktest</SPAN></NOBR> and answer <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> (and press <SPAN CLASS=ky>&nbsp;Return&nbsp;</SPAN>, too) <SPAN CLASS=br>only</SPAN> when you see the deletion operation is correct.','C:&#92;CSW&#62;deltree c:&#92;bktest<BR>Delete directory &#34;c:&#92;BKTEST&#34; and all its subdirectories? [yn] y<BR>Deleting c:&#92;BKTEST...<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check it's gone</P></DIV>
+<DIV class=bd>
+<P>Check the <SPAN class=fs>C:\BKTEST</SPAN> folder really has gone
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>dir c:&#92;bktest&#92;*.*</SPAN> and by adding <SPAN CLASS=fx>&#92;*.*</SPAN> we make sure <SPAN CLASS=bb>DIR</SPAN> &#34;knows&#34; we mean a foldername not a file name. The check will work just as well if you omit the <SPAN CLASS=fx>&#92;*.*</SPAN> but then <SPAN CLASS=bb>DIR</SPAN> reports &#34;file not found&#34; (because it assumes you were looking for a file rather than a folder - but it would find either one if they were there).','C:&#92;CSW>dir c:&#92;bktest&#92;*.*<BR><BR> Volume in drive C is <SPAN CLASS=dtd>YourDiskName</SPAN><BR> Volume Serial Number is <SPAN CLASS=dtd>nnnn-nnnn</SPAN><BR>Path not found<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>First, we <B>won't</B> confirm the build option</P></DIV>
+<DIV class=bd>
+<P>We've saved all the changes, so now run the script. This will be the 
+sequence: 
+<UL>
+  <LI>We press <SPAN class=ky>&nbsp;B&nbsp;</SPAN> for the Build option 
+  <LI>We stop at the confirmation sub-menu 
+  <LI>We press <SPAN class=ky>&nbsp;N&nbsp;</SPAN> to abandon the Build 
+  <LI>We're returned to the main menu 
+  <LI>We press <SPAN class=ky>&nbsp;Q&nbsp;</SPAN> to quit</LI></UL>The <SPAN 
+class=tsk>&nbsp;Exercise&nbsp;</SPAN> window will remind you of the sequence
+<SCRIPT>ex()</SCRIPT>
+ :
+<P></P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, and press <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN> &#8211; you&#39;ll see the sub-menu. At the sub-menu, press <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN> and the screen clears instantly (you may not even see the <SPAN CLASS=ky>&nbsp;N&nbsp;</SPAN> reply displayed), and we return to the main menu. Once there, press <SPAN CLASS=ky>&nbsp;Q&nbsp;</SPAN> to quit.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR> Really Build fresh test folder?<BR> Yes, rebuild folder afresh..Y<BR> No, return to main menu.....N<BR><BR>               Please choose N<HR><NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose Q<BR><BR> No further action taken<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check the folder isn't there yet</P></DIV>
+<DIV class=bd>
+<P>We deleted the test folder before the test. We answered <SPAN 
+class=ky>&nbsp;N&nbsp;</SPAN> to abandon the Build option, so let's check that 
+the <SPAN class=fs>C:\BKTEST</SPAN> folder was <B>not</B> recreated
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use the command <SPAN CLASS=qfx>dir c:&#92;bktest&#92;*.*</SPAN> and it reports &#34;path not found&#34; confirming the folder is not there.','C:&#92;CSW>dir c:&#92;bktest&#92;*.*<BR><BR> Volume in drive C is <SPAN CLASS=dtd>YourDiskName</SPAN><BR> Volume Serial Number is <SPAN CLASS=dtd>nnnn-nnnn</SPAN><BR>Path not found<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Next, we <B>will</B> confirm build at the sub-menu</P></DIV>
+<DIV class=bd>
+<P>This time we'll confirm the option and build the folder. Run the script, 
+press <SPAN class=ky>&nbsp;B&nbsp;</SPAN>, then press <SPAN 
+class=ky>&nbsp;Y&nbsp;</SPAN> at the sub-menu
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Type <SPAN CLASS=qfx>bksetup</SPAN>, choose <SPAN CLASS=ky>&nbsp;B&nbsp;</SPAN>, then <SPAN CLASS=ky>&nbsp;Y&nbsp;</SPAN> at the sub-menu to confirm building the test folder.','<NOBR> BKUP.BAT test folder is C:&#92;BKTEST</NOBR><BR><BR> Build fresh test folder.....B<BR> Add files and make changes..A<BR> Quit (no further action)....Q<BR><BR>               Please choose B<BR><BR> Really Build fresh test folder?<BR> Yes, rebuild folder afresh..Y<BR> No, return to main menu.....N<BR><BR>               Please choose Y<BR><BR> Build fresh test folder - finished<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Check folders are there</P></DIV>
+<DIV class=bd>
+<P>Check the script has recreated the test folders by using
+<SCRIPT>cn('DIR')</SCRIPT>
+
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwd('Use <SPAN CLASS=qfx>dir c:&#92;bktest /<SPAN CLASS=ob>b</SPAN> /<SPAN CLASS=og>s</SPAN></SPAN> to produce a <SPAN CLASS=bb>b</SPAN>are list including <SPAN CLASS=bg>s</SPAN>ubfolder contents (we&#39;re using the subfolder switch simply to force <SPAN CLASS=bb>DIR</SPAN> to show the full pathnames, there aren&#39;t really any subfolder contents to list yet).','C:&#92;CSW>dir c:&#92;bktest /b /s<BR>C:&#92;BKTEST&#92;DATA<BR>C:&#92;BKTEST&#92;Text Files<BR><BR>C:&#92;CSW&#62;_');</SCRIPT>
+
+<DIV class=lm>
+<P>Debug any errors you see</P></DIV>
+<DIV class=bd>
+<P>If you see any error messages, check the lines we've just added. Remember the 
+simple debug technique: add <NOBR><SPAN class=qfs>ECHO ON</SPAN></NOBR> (on a 
+line on its own) before any suspect lines and add <NOBR><SPAN class=qfs>@ECHO 
+OFF</SPAN></NOBR> (also on a line on its own) after them.</P>
+<P>You can also use this <SPAN class=tsk>&nbsp;Exercise&nbsp;</SPAN> window to 
+check all the new lines we've added to the Build option of the script
+<SCRIPT>ex()</SCRIPT>
+ :</P></DIV>
+<SCRIPT>cwn('Just use this <SPAN CLASS=tsk>&nbsp;Exercise&nbsp;</SPAN> to check the new script lines added to the <SPAN CLASS=fs>:BUILD</SPAN> section.','<SPAN CLASS=dtn>SET TASK=Build fresh test folder</SPAN><BR><BR>:: Get confirmation with a sub-menu<BR>ECHO. Really %TASK%?<BR>ECHO. Yes, rebuild folder afresh..Y<BR>ECHO. No, return to main menu.....N<BR>ECHO.<BR><NOBR>choice /c:ny /n &#34;               Please choose &#34;</NOBR><BR>ECHO.<BR><NOBR>IF ERRORLEVEL 2 GOTO BUILDYES confirmed</NOBR><BR>GOTO MAINMENU<BR><BR>:BUILDYES confirmed<BR>:: We hard-code the source folder<BR>deltree /y C:&#92;BKTEST>NUL<BR>MD %SRC%<BR>MD %SRC%&#92;DATA<BR>MD &#34;%SRC%&#92;Text Files&#34;<BR><BR><SPAN CLASS=dtn>GOTO JOBDONE</SPAN>');</SCRIPT>
+
+<DIV class=lm>
+<P>That completes main logic flows</SPAN></P></DIV>
+<DIV class=bd>
+<P>The main logical flow of our script tool is complete. All that remains is to 
+add some code that will use our sample file to create the test files, and make 
+file changes. We'll work on that in the next Lesson.</P></DIV>
+<P>
+<SCRIPT>fNicsw[1]("Say each answer to yourself from memory, then click <SPAN CLASS=tsk>&nbsp;Answer&nbsp;</SPAN> to check it.","What is the purpose of the <SPAN CLASS=fs>TEMP</SPAN> folder?<BR>&nbsp;","It holds transient workfiles. The <SPAN CLASS=bb>TEMP</SPAN> variable (expanded as <NOBR><SPAN CLASS=fx>%TEMP%</SPAN></NOBR>) is its path. File remnants there can be deleted safely. Any <SPAN CLASS=bb>TEMP</SPAN> files in use are protected from deletion by the Windows file system.","<NOBR><SPAN CLASS=cl>dir /o&#62;LIST.TXT</SPAN></NOBR> writes the list to the current folder. What change would create the file in your Windows <SPAN CLASS=fs>TEMP</SPAN> folder?","<NOBR><SPAN CLASS=cl>dir /o&#62;%TEMP%&#92;LIST.TXT</SPAN></NOBR> &#8211; or better, <NOBR><SPAN CLASS=cl>dir /o&#62;%TEMP%<SPAN CLASS=hr>.&#92;</SPAN>LIST.TXT</SPAN></NOBR> where <NOBR><SPAN CLASS=fx>%TEMP%</SPAN></NOBR> expands to the <SPAN CLASS=bb>TEMP</SPAN> folder path, and <SPAN CLASS=fx><SPAN CLASS=or>.&#92;</SPAN></SPAN> is the <SPAN CLASS=bb>emending suffix</SPAN> we usually add when expanding folder name variables.","<NOBR><SPAN CLASS=cld>md c:&#92;bktest&#92;New folder</SPAN></NOBR> fails to create the subfolder <SPAN CLASS=cl>New folder</SPAN>. Why, and what is the correct syntax to use?","<NOBR><SPAN CLASS=cl>md &#34;c:&#92;bktest&#92;New folder&#34;</SPAN></NOBR> &#8211; when a file or folder name used in any command contains <SPAN CLASS=ky>&nbsp;Space&nbsp;</SPAN>s, it <SPAN CLASS=br>must</SPAN> be <B>&#34;quoted&#34;</B>.","Someone uses <NOBR><SPAN CLASS=cld>deltree /y %SRC%&#92;*.*</SPAN></NOBR> (unwisely!) in immediate mode, and the <SPAN CLASS=fs>SRC</SPAN> variable is empty. What happens?","It expands to <NOBR><SPAN CLASS=cl>deltree /y &#92;*.*</SPAN></NOBR> and since <SPAN CLASS=fx>&#92;</SPAN> is the alias for the root folder, all files and folders on the current drive are deleted, without asking for confirmation.","Instead <NOBR><SPAN CLASS=cld>deltree /y %SRC%.&#92;*.*</SPAN></NOBR> (with the <SPAN CLASS=fs>emending suffix</SPAN>) is used, and again, the <SPAN CLASS=fs>SRC</SPAN> variable is empty. What happens?","It expands to <NOBR><SPAN CLASS=cl>deltree /y .&#92;*.*</SPAN></NOBR> (<SPAN CLASS=fx>.&#92;</SPAN> is interpreted as current folder). All files and folders in the current folder are deleted, without confirmation. Not as bad as before, but still not good! <SPAN CLASS=br>Take care</SPAN> with <SPAN CLASS=bb>deltree</SPAN>.","If the current <SPAN CLASS=fs>ERRORLEVEL</SPAN> is <SPAN CLASS=fs>3</SPAN>, is the test <NOBR><SPAN CLASS=cl>IF ERRORLEVEL 2</SPAN></NOBR> true or false?","<SPAN CLASS=bp>True</SPAN>. <NOBR><SPAN CLASS=bb>IF ERRORLEVEL</SPAN></NOBR> tests for levels <SPAN CLASS=br>greater-than-or-equal-to</SPAN> the number you specify. Just checking you remember!","If the current <SPAN CLASS=fs>ERRORLEVEL</SPAN> is <SPAN CLASS=fs>2</SPAN>, is the test <NOBR><SPAN CLASS=cl>IF ERRORLEVEL 3</SPAN></NOBR> true or false?","<SPAN CLASS=bp>False</SPAN>. <NOBR><SPAN CLASS=bb>IF ERRORLEVEL</SPAN></NOBR> tests for levels <SPAN CLASS=br>greater-than-or-equal-to</SPAN> the number you specify. Double-checking you follow this!");</SCRIPT>
+</P>
+<DIV id=qBsum>
+<DIV class=lm>
+<P>What we have learnt</P></DIV>
+<DIV class=bd>
+<P>In this Lesson we have learnt how to: 
+<UL>
+  <LI>Create working files in the
+  <SCRIPT>cn('TEMP')</SCRIPT>
+   folder, using the <NOBR>
+  <SCRIPT>cn('emending suffix')</SCRIPT>
+  </NOBR>
+  <LI>Use
+  <SCRIPT>cn('COPY')</SCRIPT>
+   to copy a file to a new destination name and new folder 
+  <LI>Use
+  <SCRIPT>cn('COPY')</SCRIPT>
+   with a
+  <SCRIPT>cn('wildcard')</SCRIPT>
+   to copy multiple files in one operation 
+  <LI>Make subfolder structures with
+  <SCRIPT>cn('MD')</SCRIPT>
+   
+  <LI>Use
+  <SCRIPT>cn('ECHO')</SCRIPT>
+   <SPAN class=bb>&nbsp;ON</SPAN> and
+  <SCRIPT>cn('@')</SCRIPT>
+
+  <SCRIPT>cn('ECHO')</SCRIPT>
+   <SPAN class=bb>&nbsp;OFF</SPAN> to debug a section of problem Batch 
+  code</SCRIPT> 
+  <LI>Remove entire folder structures with
+  <SCRIPT>cn('deltree')</SCRIPT>
+   
+  <LI>Avoid a stall when
+  <SCRIPT>cn('deltree')</SCRIPT>
+   prompts for permission by using <NOBR><SPAN class=qfs>deltree 
+  /y</SPAN></NOBR> 
+  <LI>Redirect
+  <SCRIPT>cn('deltree')</SCRIPT>
+   <SPAN class=cl>Deleting...</SPAN> message to
+  <SCRIPT>cn('NUL')</SCRIPT>
+   with <SPAN class=qfs>&gt;NUL</SPAN> so we don't see it 
+  <LI>Use
+  <SCRIPT>cn('deltree')</SCRIPT>
+   safely while developing scripts, by hardcoding its target 
+  <LI>Add a confirmation sub-menu to a main menu</LI></UL>
+<P></P></DIV></DIV>
+<DIV class=lm>
+<P>Course Reference</P></DIV>
+<DIV class=bd>
+<P>Remember that the Course Reference grows, Lesson by Lesson. The
+<SCRIPT>cn('COPY')</SCRIPT>
+ command has several important uses with
+<SCRIPT>cn('device')</SCRIPT>
+ s. Now we've covered
+<SCRIPT>cn('COPY')</SCRIPT>
+ , you'll find examples of using
+<SCRIPT>cn('COPY')</SCRIPT>
+ with
+<SCRIPT>cn('device')</SCRIPT>
+ s by clicking on
+<SCRIPT>cn('device')</SCRIPT>
+ and reading the Course Reference.</P>
+<P>The <A onmouseover='window.status="Lesson Index and Syllabus";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icswidx.htm#Lesson8">Index</A> has the 
+Syllabus for the <A 
+onmouseover='window.status="Click to take the next Lesson now";return true' 
+onmouseout='window.status=""' 
+href="http://www.allenware.com/icsw/icsw090.htm">next&nbsp;Lesson</A>, where 
+we'll finish the code for the Build option. See you then.</P></DIV>
+<DIV class=ce>© Copyright 2003-
+<SCRIPT>cpynw=new Date(); document.write((''+cpynw.getFullYear()).substring(2)); </SCRIPT>
+ Allen &amp; Company. All rights reserved ©</DIV>
+<SCRIPT>calc()</SCRIPT>
+</BODY></HTML>

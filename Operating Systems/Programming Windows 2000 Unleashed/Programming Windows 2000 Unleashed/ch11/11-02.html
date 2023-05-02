@@ -1,0 +1,188 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=347-351//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="11-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">GDI Objects and Their Use</FONT></H4>
+<p>When a DC is created, it has a number of default GDI objects assigned to it, as shown in Figure 11.2. Each of the GDI objects shown in Figure 11.2 has a default value. For example, the bitmap is always a one-pixel monochrome bitmap. The pen is always a solid black pen. Before a DC can be used, it almost always needs to be massaged in some way.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-02.jpg',329,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-02.jpg',329,420)"><font color="#000077"><b>Figure 11.2</B></FONT></A>&nbsp;&nbsp;A DC is created with a set of default GDI objects.</P>
+<p>Each of these default objects can be replaced by calling <small>SelectObject</SMALL> to replace the current GDI object with a new one. When a new GDI object is selected, the current object is passed back to the caller as a return value. Failure to return a DC to its original state is a common source of memory leaks. MFC code that selects a new object should always look something like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+CBitmap* pbmpOld = dcMem.SelectObject(&ampbmpHello);
+if(pbmpOld != NULL)
+{
+    // Use the bitmap...
+    //
+    // Return the old bitmap to the DC.
+    dcMem.SelectObject(pbmpOld);
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Notice that the <small>pbmpOld</SMALL> value is checked to make sure that it isn&#146;t <small>NULL</SMALL>. If the call to <small>SelectObject</SMALL> fails, the original bitmap isn&#146;t returned. In that case, there&#146;s no need to return the original bitmap to the DC, because a new one was never selected.</P>
+<h3><a name="Heading6"></A><font color="#000077">Bitmaps</FONT></H3>
+<p>Every DC stores a handle to a bitmap as one of its attributes. As discussed earlier, this is a one-pixel monochrome bitmap that isn&#146;t useful for much; you&#146;ll almost always select a new bitmap rather than use the default bitmap.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">DDBs Versus DIBs</FONT></H4>
+<p>Bitmaps come in two basic flavors: device-independent bitmaps (DIBs) and device-dependent bitmaps (DDBs). In early versions of 16-bit Windows, only DDBs were supported. Beginning with Windows 3.0, and on all versions of Windows NT, DIBs are also supported.
+</P>
+<p>A DDB is tightly coupled to the device on which it&#146;s intended to be displayed. The memory that&#146;s used to store the bitmap is actually allocated by the device driver, and an application that needs to change the contents of the bitmap must do so indirectly&#151;a slow and inefficient process. Figure 11.3 shows how a DDB is controlled by a device driver (the application has only indirect access to the bitmap).</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-03.jpg',500,372 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-03.jpg',500,372)"><font color="#000077"><b>Figure 11.3</B></FONT></A>&nbsp;&nbsp;A device-dependent bitmap is controlled by the device driver.</P>
+<p>One of the problems with DDBs is that an application must supply bitmaps in a format supported by the device driver. The application must either store bitmaps in multiple formats, or be capable of converting a bitmap from one format into another. Either way, dealing with a DDB can be difficult and time-consuming.
+</P>
+<p><font size="+1"><b>The DIB Format</B></FONT></P>
+<p>To get around these problems, all versions of Windows since the Jurassic era (Windows 3.0) support DIBs. A DIB has a known structure that can be converted easily into a DDB whenever necessary.
+</P>
+<p>A DIB can exist in two formats: the Windows format and the OS/2 format. Because the OS/2 format is rarely used, examples in this chapter assume the DIB is in the Windows format. A DIB bitmap stored in a file consists of four sections, as shown in Figure 11.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-04.jpg',500,290 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-04.jpg',500,290)"><font color="#000077"><b>Figure 11.4</B></FONT></A>&nbsp;&nbsp;DIBs contain four data structures.</P>
+<p><font size="+1"><b>The BITMAPFILEINFO Structure</B></FONT></P>
+<p>The <small>BITMAPFILEINFO</SMALL> structure is used when a bitmap is located on a disk, and it&#146;s defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct tagBITMAPFILEHEADER {
+    WORD    bfType;
+    DWORD   bfSize;
+    WORD    bfReserved1;
+    WORD    bfReserved2;
+    DWORD   bfOffBits;
+} BITMAPFILEHEADER;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The value of <small>bfType</SMALL> is always <small>0x4D42</SMALL>, the ASCII value for the characters B and M. The value of <small>bfSize</SMALL> is supposed to be the size of the bitmap file; however, in many bitmaps, this value is incorrect due to an early SDK documentation error. The value of <small>bfOffBits</SMALL> is the distance to actual bitmap data and is rarely used. The remaining structure members are reserved and should always be set to 0.</P>
+<p>The <small>BITMAPFILEINFO</SMALL> structure is only used when the bitmap is read or stored to disk. When a DIB is manipulated in memory, the <small>BITMAPFILEINFO</SMALL> structure is often discarded. The remaining parts of the DIB structure follow the same format, whether they&#146;re located in RAM or in a disk file.</P>
+<p><font size="+1"><b>The BITMAPINFO Structure</B></FONT></P>
+<p>The actual bitmap header consists of a <small>BITMAPINFO</SMALL> structure that has the following members:</P>
+<!-- CODE SNIP //-->
+<pre>
+BITMAPINFOHEADER bmiHeader;
+RGBQUAD          bmiColors[]; // contains zero or more palette values
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>BITMAPINFO</SMALL> structure contains a <small>BITMAPINFOHEADER</SMALL> and zero or more palette values for pixels stored in the bitmap. <small>BITMAPINFOHEADER</SMALL> contains information about the dimensions, color format, and compression information for the bitmap.</P>
+<p>The <small>BITMAPINFOHEADER</SMALL> structure contains the following members:</P>
+<!-- CODE //-->
+<pre>
+   DWORD      biSize
+   LONG       biWidth
+   LONG       biHeight
+   WORD       biPlanes
+   WORD       biBitCount
+   DWORD      biCompression
+   DWORD      biSizeImage
+   LONG       biXPelsPerMeter
+   LONG       biYPelsPerMeter
+   DWORD      biClrUsed
+   DWORD      biClrImportant
+</PRE>
+<!-- END CODE //-->
+<p><small>biSize</SMALL> is the size of the bitmap structure. Due to documentation errors in the early versions of the Windows SDK, this value can&#146;t always be trusted as accurate when reading a DIB off a disk file. If you&#146;re creating a DIB, you must set this value to <small>sizeof(BITMAPINFOHEADER)</SMALL>. If you&#146;re reading the bitmap from a file, <small>biSize</SMALL> may also be set to <small>sizeof(BITMAPV4HEADER)</SMALL> or <small>sizeof(BITMAPV5HEADER)</SMALL>.</P>
+<p><small>biWidth</SMALL> and <small>biHeight</SMALL> are the bitmap dimensions in pixels. If the height is a negative number, the bitmap is a &#147;top-down&#148; bitmap (see the following note). The value of <small>biPlanes</SMALL> is the number of planes supported by the bitmap. This value is always 1 in Windows 2000.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Until recently, all bitmaps were &#147;bottom-up,&#148; meaning that the first pixel stored in the bitmap was the lower-left pixel in the displayed image. The pixels stored in a bottom-up bitmap are stored in order, with the last pixel representing the upper-right pixel in the displayed image.
+</P>
+<p>Top-down bitmaps reverse the order of the stored pixels. The first pixel in the bitmap refers to the top-left pixel in the displayed image, and the last pixel in the bitmap refers to the bottom-right pixel in the displayed image.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The value of <small>biBitCount</SMALL> is the number of bits used to represent each pixel in the bitmap. This value must be 1, 4, 8, 16, 24, or 32.</P>
+<p>The type of compression, if any, is determined by the value of <small>biCompression</SMALL>. Top-down bitmaps are never compressed. <small>biCompression</SMALL> has one of the following values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BI_RGB</SMALL> indicates that the bitmap is not compressed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BI_RLE4</SMALL> is an RLE format for bitmaps with four bits per pixel.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BI_RLE8</SMALL> is a run-length encoded (RLE) format for bitmaps with eight bits per pixel.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BI_BITFIELDS</SMALL> is used to specify that the bitmap isn&#146;t compressed, and the color table is made up of three RGB doubleword values for each pixel in the bitmap. This value is used when <small>biBitCount</SMALL> is 16 or 32.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BI_JPEG</SMALL> is used to indicate that the image is in the JPEG format. This value is only used in Windows 2000.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BI_PNG</SMALL> is used to indicate that the image is in the PNG format. This value is only used in Windows 2000.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="11-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

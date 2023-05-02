@@ -1,0 +1,807 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch09.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch11.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 10</A>
+	<UL>
+		<LI><A HREF="#Heading2">List Boxes and Data Lists</A>
+		<LI>
+		<UL>
+			<LI><A HREF="#Heading4">The List Box Control</A>
+			<UL>
+				<LI><A HREF="#Heading5">Figure 10.1.</A>
+				<LI><A HREF="#Heading6">Figure 10.2.</A>
+				<LI><A HREF="#Heading7">Figure 10.3.</A>
+				<LI><A HREF="#Heading8">Figure 10.4.</A>
+			</UL>
+			<LI><A HREF="#Heading9">Combo Boxes</A>
+			<UL>
+				<LI><A HREF="#Heading10">Figure 10.5.</A>
+			</UL>
+			<LI><A HREF="#Heading11">Data Arrays</A>
+			<UL>
+				<LI><A HREF="#Heading12">Figure 10.6.</A>
+			</UL>
+			<LI><A HREF="#Heading13">Control Arrays</A>
+			<LI><A HREF="#Heading14">Summary</A>
+			<LI><A HREF="#Heading15">Q&amp;A</A>
+			<LI><A HREF="#Heading16">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading17">Quiz</A>
+				<LI><A HREF="#Heading18">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 10</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">List Boxes and Data
+Lists</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading3"></A></H2>
+<P>Often the user will need to select from or add to a list of items such as pay
+code abbreviations or division names. Visual Basic supports two controls, the List
+Box and the Combo Box controls, that you use to display lists and from which the
+user can select items in the lists.</P>
+<P>Once you master the List controls, two additional VB programming topics are simple:
+data arrays and control arrays. You can combine the List controls and the arrays
+to work in harmony when processing lists of information, as you'll see in this lesson.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>How to add list boxes
+	<P>
+	<LI>What differences exist between list boxes and combo boxes
+	<P>
+	<LI>How to initialize lists
+	<P>
+	<LI>When to use drop-down list boxes
+	<P>
+	<LI>How to declare and use arrays
+	<P>
+	<LI>Why control arrays streamline coding
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading4"></A><FONT COLOR="#000077">The List Box Control</FONT></H3>
+<P>Figure 10.1 shows VB's Options dialog box that appears when you select Tools |
+Options and click the Editor Format tab. The dialog box illustrates a List Box control.
+You've seen list boxes throughout your work with Windows; list boxes appear on many
+forms and dialog boxes. The List Box control gives the user a choice of several values.
+The user selects an option instead of typing a value into a text box. The list box
+ensures that the user always chooses one of the available options.<BR>
+<BR>
+<A NAME="Heading5"></A><A HREF="../art/ch10/10cce01.jpg"><FONT COLOR="#000077">Figure
+10.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>The List Box control gives the user
+a choice of options.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The list box
+	displays scrollbars if the list box is not tall enough or wide enough to display
+	all its data. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>As you place the list box on the form, think about the data the list box will
+hold and try to size the list box so that it's large enough to hold the data. Of
+course, you don't always know a list box's data in advance because the data might
+come from a disk file or from the user at the keyboard, but try to make the control
+large enough to hold the data you expect. Your form's size and surrounding controls
+might limit the size of your list box, so the scrollbars often appear.</P>
+<P>Any list box can have a single or multiple columns. In many situations the single
+column makes data selection easier for your users, but they will have to scroll through
+more values to locate the item they want to find. Figure 10.2 shows a form with two
+list boxes; the first list box is a single-column list box, and the second displays
+three columns. (The <TT>Columns</TT> property determines the list box's number of
+columns.)</P>
+<P>To familiarize yourself with list boxes as quickly as possible, look over the
+property values in Table 10.1. You'll work with other properties at runtime because
+you often initialize the list box at runtime and not at design time.<BR>
+<BR>
+<A NAME="Heading6"></A><A HREF="../art/ch10/10cce02.jpg"><FONT COLOR="#000077">Figure
+10.2.</FONT></A><FONT COLOR="#000077"> </FONT><I>A list box with one column and one
+with three columns.</I></P>
+<CENTER>
+<P><B>Table 10.1. The basic list box properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>BackColor</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the list box's background color.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Columns</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the number of columns. If <TT>0</TT>, the list box scrolls vertically
+			in a single column. If <TT>1</TT> or more, the list box items appear in the number
+			of columns specified (one or more columns) and a horizontal scrollbar appears so
+			you can see all the items in the list.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ForeColor</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the list box's text color.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Height</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Indicates the height of the list box in twips.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>IntegralHeight</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the list box can display partial items, such as the upper half
+			of an item that falls toward the bottom of the list box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>List</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds, in a drop-down property list box, values that you can enter into the list
+			box at design time. You can enter only one at a time, and most programmers usually
+			prefer to initialize the list box at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>MultiSelect</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The state of the list box's selection rules. If <TT>0-None</TT> (the default), the
+			user can select only one item by clicking with the mouse or by pressing the Spacebar
+			over an item. If <TT>1-Simple</TT>, the user can select more than one item by clicking
+			with the mouse or by pressing the Spacebar over items in the list. If <TT>2-Extended</TT>,
+			the user can select multiple items using Shift+click and Shift+arrow to extend the
+			selection from a previously selected item to the current one. Ctrl+click either selects
+			or deselects an item from the list.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Sorted</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the list box values are automatically sorted. If <TT>False</TT>
+			(the default value), the values appear in the same order in which the program added
+			the items to the list.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Style</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the list box appears in its usual list format or, as shown in
+			Figure 10.3, with check boxes next to the selected items.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P><A NAME="Heading7"></A><A HREF="../art/ch10/10cce03.jpg"><FONT COLOR="#000077">Figure
+10.3.</FONT></A><FONT COLOR="#000077"> </FONT><I>You can add check boxes to list
+box items.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can add a
+	command button that operates in conjunction with the list box in many situations.
+	The user can, therefore, select a value from the list box and then click the command
+	button to inform your application of the selected value. You can also add a double-click
+	event procedure to the list box so that the user's double-click on a list box item
+	selects that item. If you set up the command button first, the double-click event
+	procedure is simple because you can trigger the command button's <TT>Click()</TT>
+	event procedure from within the double-click procedure with this one line:</P>
+	<PRE><FONT COLOR="#0066FF">cmdAccept_Click    ` Triggers the button's click event</FONT></PRE>
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD>
+<HR>
+
+</DL>
+
+<P><BR>
+Table 10.2 describes the methods available to the list box. Remember that methods
+are routines a control knows how to execute. List boxes use methods more than any
+other control you've learned about so far. The methods help the user initialize,
+add items to, and remove items from list boxes.</P>
+<CENTER>
+<P><B>Table 10.2. Common list box methods. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Method</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>AddItem</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Adds a single item to the list box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Clear</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Removes all items from the list box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>List</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">A string array that holds items from within the list box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ListCount</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The total number of list box items.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>RemoveItem</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Removes a single item from the list box.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>Perhaps the most important method is the <TT>AddItem</TT> method, which adds items
+to the list box. <TT>AddItem</TT> is to list boxes what the assignment statement
+is to variables. A method always appears between the control name and a period. For
+example, the following <TT>AddItem</TT> method sends the value of <TT>Joseph</TT>
+to a list box named <TT>lstOneCol</TT>:</P>
+<PRE><FONT COLOR="#0066FF">lstOneCol.AddItem &quot;Joseph&quot;
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The one-column
+	list box shown in Figure 10.1 is named <TT>lstOneCol</TT> and that's the name used
+	throughout the next couple examples. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You'll often initialize a list box in the <TT>Form_Load()</TT> event procedure
+that initializes the form and the form controls right before the form appears on
+the screen. The following code sends several people's names to the list boxes shown
+earlier:</P>
+<PRE><FONT COLOR="#0066FF">lstOneCol.AddItem &quot;Joseph&quot;
+lstOneCol.AddItem &quot;Michael&quot;
+lstOneCol.AddItem &quot;Stephanie&quot;
+lstOneCol.AddItem &quot;Mary Ann&quot;
+lstOneCol.AddItem &quot;Pamela&quot;
+lstOneCol.AddItem &quot;Jock&quot;
+lstOneCol.AddItem &quot;Bobby&quot;
+lstOneCol.AddItem &quot;Cliff&quot;
+lstOneCol.AddItem &quot;Jerry&quot;
+lstOneCol.AddItem &quot;Thomas&quot;
+lstOneCol.AddItem &quot;George&quot;
+lstOneCol.AddItem &quot;Robert&quot;
+</FONT></PRE>
+<P>You'll initialize both single-column and multicolumn list boxes the same way with
+<TT>AddItem</TT>. The number of columns the list box contains has no bearing on how
+you initialize the list box.<BR>
+<BR>
+Each item in a list box contains an associated subscript. The subscript is a number
+that begins at <TT>0</TT> for the first item, the second subscript is <TT>1</TT>,
+and so on. Therefore, if you apply the <TT>RemoveItem</TT> method as follows, the
+third item is removed (because of the first item's <TT>0</TT> subscript):</P>
+<PRE><FONT COLOR="#0066FF">lstOneCol.RemoveItem(2)   ` 3rd item has a subscript of 2
+</FONT></PRE>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A subscript is a value that
+distinguishes one array item from the other array items.</P>
+<P>As you remove list box items, the remaining item subscripts adjust upward accordingly.
+Therefore, if a list box contains seven items, each item has a subscript that ranges
+from <TT>0</TT> to <TT>6</TT>. If you remove the fourth item, the list box items
+will then range from <TT>0</TT> to <TT>5</TT>; the subscript <TT>5</TT> will now
+indicate the same item that the subscript <TT>6</TT> indicated before <TT>RemoveItem</TT>
+removed the fourth item.</P>
+<P>You can remove all items from the list box with <TT>Clear</TT>, like this:</P>
+<PRE><FONT COLOR="#0066FF">lstOneCol.Clear     ` Remove all items
+</FONT></PRE>
+<P>You can assign individual items from a list box that contains data using the <TT>List</TT>
+method. You must save list box values in <TT>String</TT> or <TT>Variant</TT> variables
+unless you convert the items to a numeric data type using <TT>Val()</TT> first. The
+following statements store the first and fourth list box items in two <TT>String</TT>
+variables:</P>
+<PRE><FONT COLOR="#0066FF">strVar1 = lstOneCol.List(0)
+strVar2 = lstOneCol.List(3)
+</FONT></PRE>
+<P>The <TT>List</TT> method requires a subscript so Visual Basic knows which value
+from the list to assign to the variable. The value remains in the list after the
+assignment, but now the value appears in the variable as well.</P>
+<P>You use <TT>ListCount</TT> to determine the number of items in the list box currently
+defined. The following statement stores the number of list box items in a numeric
+variable named <TT>intNum</TT>:</P>
+<PRE><FONT COLOR="#0066FF">intNum = lstOneCol.ListCount
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You use <TT>ListCount</TT>
+	to loop through an entire list box with a <TT>For-Next</TT> loop. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You use <TT>Selected</TT> to determine whether a user has selected a list box
+item. <TT>Selected</TT> returns <TT>True</TT> for one or more list box items if the
+items' <TT>MultiSelect</TT> property is set to either <TT>1-Simple</TT> or <TT>2-Extended</TT>.
+Those properties indicate that the user can select more than one item at once. Figure
+10.4 shows a list box with several items selected at the same time.<BR>
+<BR>
+<A NAME="Heading8"></A><A HREF="../art/ch10/10cce04.jpg"><FONT COLOR="#000077">Figure
+10.4.</FONT></A><FONT COLOR="#000077"> </FONT><I>A list box with a <TT>MultiSelect</TT>
+property set to <TT>1</TT> or <TT>2</TT>.</I>
+<CENTER>
+<H3><A NAME="Heading9"></A><FONT COLOR="#000077">Combo Boxes</FONT></H3>
+</CENTER>
+<P>Combo boxes work much like list boxes except that the user can add items to a
+combo box at runtime, whereas the user can only scroll and select items from a list
+box at runtime. Visual Basic supports three kinds of combo boxes, and the kind you
+select depends on the combo box you want to display on the form and on the ability
+you want the user to have. All the list box methods that you learned about in the
+previous section apply to combo boxes.</P>
+<P>Here are the three kinds of combo boxes:
+
+<UL>
+	<LI>Drop-down combo box--Takes up only a single line on the form unless the user
+	opens the combo box (by pressing the combo box's down arrow) to see additional values.
+	The user can enter additional items at the top of the drop-down combo box and select
+	items from the combo box.
+	<P>
+	<LI>Simple combo box--Displays items as if they were in a list box. The user can
+	add items to the combo box list (whereas the user cannot with a normal list box).
+	<P>
+	<LI>Drop-down list box--Does not let the user enter new items, so is similar to a
+	list box. Unlike a list box, however, the drop-down list box normally appears closed
+	to a single line until the user clicks the down arrow button to open the list box
+	to its full size. Technically, drop-down list boxes are not combo box controls but
+	work more like list boxes. The reason drop-down list boxes fall in the combo box
+	control family is that you place drop-down list boxes on forms by clicking the combo
+	box control and setting the <TT>Style</TT> combo box property.
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Think of a combo
+	box as being a combination List Box and Text Box control. The user sees items in
+	the list but then enters additional items in the text box portion of the combo box.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 10.5 shows the three kinds of combo boxes. Each combo box contains the
+names of people that you saw in Figure 10.4. The first combo box, the drop-down combo
+box, is normally closed; when the user clicks the combo box's down arrow, the combo
+box opens. The third combo box, the drop-down list box, is left unopened. If the
+user opens the drop-down list box, the user will see a list of people's names but
+will not be able to add to the names because no data entry is possible in drop-down
+list boxes.<BR>
+<BR>
+<A NAME="Heading10"></A><A HREF="../art/ch10/10cce05.jpg"><FONT COLOR="#000077">Figure
+10.5.</FONT></A><FONT COLOR="#000077"> </FONT><I>Use <TT>Style</TT> to change the
+combo box appearance.</I>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Study your form's
+	design and determine the best list control to use. If the user must enter values,
+	you should use either a drop-down combo or simple combo box. If the user only selects
+	a value from a list, use a list box if you have enough form space or use a drop-down
+	list box if you don't have a lot of room to display a full-sized list box. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Table 10.3 describes some of the combo box properties.</P>
+<CENTER>
+<P><B>Table 10.3. The fundamental combo box properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>BackColor</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The combo box's background color.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ForeColor</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The combo box's foreground text color.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Height</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The height, in twips, of the closed combo box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>IntegralHeight</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the combo box can display partial items, such as the upper half
+			of an item that falls toward the bottom of the combo box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>List</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">A drop-down property list box in which you can enter values into the combo box at
+			design time. You can enter only one at a time, and most programmers prefer to initialize
+			the combo box at runtime.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Sorted</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines whether the combo box values are automatically sorted. If <TT>False </TT>(the
+			default value), the values appear in the same order in which the program added the
+			items to the combo box.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Style</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the type of combo box your application needs. If <TT>0-DropDown Combo</TT>,
+			the combo box is a drop-down combo box. If <TT>1-Simple Combo</TT>, the combo box
+			turns into a simple combo box that remains open to the height you use at design time.
+			If <TT>2-DropDown List</TT>, the combo box turns into a drop-down list box that remains
+			closed until the user is ready to see more of the list.</TD>
+	</TR>
+</TABLE>
+
+</CENTER>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>The user's
+	entered value does not add to the Drop-down Combo Box control or to the Simple Combo
+	Box control unless you add the capability to capture the user's entry. The combo
+	box by itself, without code, cannot handle the addition of items automatically. You
+	need to write, in the combo's <TT>Change</TT> or <TT>LostFocus</TT> event procedure,
+	enough code to add the new item (that always appears in the combo's <TT>Text</TT>
+	property) to the combo box list, like this:</P>
+	<PRE><FONT COLOR="#0066FF">cboBox.AddItem cboBox.Text  ` Adds user's value to the box</FONT></PRE>
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD>
+<HR>
+
+</DL>
+
+<PRE></PRE>
+
+
+<BLOCKQUOTE>
+	<P>You can also add a command button that adds the user's entered combo box value
+	if the user clicks the command button and ignores the new value in <TT>Text</TT>.<BR>
+	<BR>
+	
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Run Visual Basic's
+	sample application named <TT>ListCombo</TT> (in the <TT>VB\Samples\Pguide</TT> folder)
+	to see the difference between a normal list box and a combo box list box. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H3><A NAME="Heading11"></A><FONT COLOR="#000077">Data Arrays</FONT></H3>
+</CENTER>
+<P>Now that you've mastered list boxes and combo boxes, you will have little trouble
+understanding data arrays. An array is nothing more than a list of variables. Regular
+non-array variables, as opposed to arrays, have separate names such as the following:</P>
+<PRE><FONT COLOR="#0066FF">curSales97     sngTaxRate     intCount     blnIsRecorded
+</FONT></PRE>
+<P>Variables in an array all have the same name. Therefore, an array that holds a
+list of 10 division sales figures might be named <TT>curDivSales</TT>. Your program
+must be capable of distinguishing between an array's variables, and with the single
+name this distinction might seem impossible. Nevertheless, as with list boxes, your
+program can distinguish between array variables by using a subscript. The subscript
+works just like an index value. The first value in the array would be subscripted
+as <TT>curDivSales(0)</TT> (subscripts start at <TT>0</TT> unless you use the <TT>Option
+Base 1</TT> statement in a <TT>general</TT> module to start the array's subscripts
+at <TT>1</TT>). The second value in the array would be <TT>curDivSales(1)</TT>, and
+so on.</P>
+<P>An array is a list of items with the same name and type.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Even without
+	<TT>Option Base 1</TT>, programmers often ignore the zero subscript and don't reference
+	it. Your programming preferences determine the starting subscript that you want to
+	use. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 10.6 illustrates how an array such as the 10-element <TT>curDivSales</TT>
+resides in memory.<BR>
+<BR>
+<A NAME="Heading12"></A><A HREF="../art/ch10/10cce06.jpg"><FONT COLOR="#000077">Figure
+10.6.</FONT></A><FONT COLOR="#000077"> </FONT><I>Distinguishing array elements with
+subscripts.</I></P>
+<P>To declare an array, you use <TT>Dim</TT> or <TT>Public</TT> just as you declare
+regular non-array variables. In the declaration, specify the number of elements the
+array is to hold. The following <TT>Dim</TT> statement declares the 10-element <TT>Currency</TT>
+array named <TT>curDivSales</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Dim curDivSales(10) As Currency
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>All elements
+	in an array must be the same data type. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Here's the great benefit that arrays give you over separate variable names: When
+you need to work with a group of variables, if you don't use an array, you must list
+each variable. Therefore, if you want to add all the divisions' sales figures and
+they are stored in separate non-array variables, you would have to code something
+like this:</P>
+<PRE><FONT COLOR="#0066FF">curTotal = curDivSales0 + curDivSales1 + curDivSales2 + _
+           curDivSales3 + curDivSales4 + curDivSales5 + _
+           curDivSales6 + curDivSales6 + curDivSales7 + _
+           curDivSales8 + curDivSales9
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>If you want to
+	break a long Code window statement into two or more lines, terminate each continued
+	line with the underscore character, as shown in the <TT>CurTotal</TT> assignment.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>An array makes stepping through and totaling the data much simpler. Here is the
+code that uses a <TT>For-Next</TT> loop to add the items in an array:</P>
+<PRE><FONT COLOR="#0066FF">curTotal = 0   ` Zero out the total
+` Step through the elements
+For intCtr = 0 To 9
+  intTotal = intTotal + curDivSales(intCtr)  ` Add elements
+Next intCtr
+` curTotal not holds the sum of all 10 values
+</FONT></PRE>
+<P>With only 10 variables, does the array make for a lot less coding than separate
+variables? With only 10 variables, the array does not seem to offer a lot of space
+advantages or coding shortcuts. What, however, if there were 1,000 variables that
+you needed to track and total? By making a simple change to the <TT>For-Next</TT>
+loop, you can easily add together all 1,000 elements, like this:</P>
+<PRE><FONT COLOR="#0066FF">curTotal = 0   ` Zero out the total
+` Step through the elements
+For intCtr = 0 To 999
+  intTotal = intTotal + curDivSales(intCtr)  ` Add elements
+Next intCtr
+` curTotal not holds the sum of all 1,000 values
+</FONT></PRE>
+<P>Again, many programmers ignore the <TT>0</TT> subscript and start the subscript
+at <TT>1</TT>, so this loop would become the following:</P>
+<PRE><FONT COLOR="#0066FF">curTotal = 0   ` Zero out the total
+` Step through the elements
+For intCtr = 1 To 1000
+  intTotal = intTotal + curDivSales(intCtr)  ` Add elements
+Next intCtr
+` curTotal not holds the sum of all 1,000 values
+</FONT></PRE>
+<P>Suppose you need to ask the user for several values, such as the names of children
+in a class. By declaring a string array, a <TT>For-Next</TT> loop makes getting the
+names simple, as you can see here:</P>
+<PRE><FONT COLOR="#0066FF">For intCtr = 1 To 10
+  strChildName(intCtr) = InputBox(&quot;What is the next child's name?&quot;)
+Next intCtr
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>Remember
+	that if you use a starting subscript of <TT>1</TT>, you must declare one more element
+	than you actually need due to the <TT>0</TT>-based subscript that you're ignoring.
+	Therefore, the previous code's <TT>strChildName</TT>'s array declaration would be
+	<TT>Dim strChildName(11) As String</TT>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H3><A NAME="Heading13"></A><FONT COLOR="#000077">Control Arrays</FONT></H3>
+</CENTER>
+<P>A control array is a list of controls with the same name. Therefore, instead of
+using four command buttons with four separate names, you can place a command button
+control array on the form, and that control array holds four command buttons. The
+control array can have a single name, and you'll distinguish the controls from each
+other with a subscript.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Use a control
+	array if several controls on your form are to look and act similar to each other,
+	such as multiple command buttons or two or more list boxes. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One of the best reasons to use a control array is that you can add the first control
+to your form and set all its properties. When you create a control array from that
+first control, all the elements in the control array take on the same property values.
+You then can change those properties that need to be changed without having to set
+every property for every control individually.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A control array is an array
+of several controls that you reference with an <TT>Index</TT> property value that
+acts as the subscript. The controls in a control array must be the same control type.</P>
+<P>Control arrays have a lot in common with data arrays. A control array has one
+name, and you distinguish all the array's controls from each other with the zero-based
+subscript. (The <TT>Index</TT> property holds the control's subscript number.) All
+the control array elements must be the same data type.</P>
+<P>As soon as you place a control on a form that has the same name as an existing
+control, Visual Basic makes sure that you want to begin a control array by issuing
+the warning message shown in Figure 10.7. The message box keeps you from accidentally
+creating a control array when you actually want to add a different control. You'll
+see Figure 10.7's message box when you copy an existing control to the Clipboard
+and paste the copy elsewhere onto the form. If you click the message box's No button,
+Visual Basic uses a default control name for the placed control.</P>
+<P>All event procedures that use controls from a control array require a special
+argument value passed to them that determines which control is being worked on. For
+example, if your application contains a single command button named <TT>cmdTotal</TT>,
+the <TT>Click()</TT> event procedure begins and ends as follows:</P>
+<PRE><FONT COLOR="#0066FF">Private Sub cmdTotal_click ()
+
+End Sub
+</FONT></PRE>
+<P>If, however, you created a control array named <TT>cmdTotal</TT>, the <TT>Click()</TT>
+event procedure begins and ends like this:</P>
+<PRE><FONT COLOR="#0066FF">Private Sub cmdTotal_click (Index As Integer)
+
+End Sub
+</FONT></PRE>
+<P>The procedure uses the <TT>Index</TT> argument as the control index number (the
+subscript) that the user clicked. Therefore, if you want to change the clicked command
+button's <TT>Caption</TT> property inside the <TT>cmdTotal_Click()</TT> procedure,
+you would do so like this:</P>
+<PRE><FONT COLOR="#0066FF">cmdTotal(Index).Caption = &quot;A new Caption value&quot;
+</FONT></PRE>
+<P>The <TT>Index</TT> value holds the command button's index the user clicked to
+generate the event procedure so you will always respond to the proper control clicked
+if you use <TT>Index</TT> after the control array name.
+<CENTER>
+<H3><A NAME="Heading14"></A><FONT COLOR="#000077">Summary</FONT></H3>
+</CENTER>
+<P>In this hour you have learned how you can add lists of items to your application.
+The first kind of list, the List Box control, lets your users select from a list
+of items that your application displays. The combo box works like a list box but
+lets the user enter new values into the list.</P>
+<P>Data and control arrays help you streamline your programs. Instead of working
+with separate variable or control names, you can work with a single name and use
+a subscript value to distinguish between the items. The code to process 10 or 100
+array items is virtually the same, as this lesson demonstrated.</P>
+<P>Hour 11, &quot;Additional Controls,&quot; teaches several new controls that you
+can add to your applications.
+<CENTER>
+<H3><A NAME="Heading15"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+</CENTER>
+
+<DL>
+	<DD><B>Q When do I use a list box and when do I use a combo box?<BR>
+	<BR>
+	A</B> A list box presents users with a list of items. The user can select from the
+	list. The user cannot add new items to the list box. If you want to present a list
+	of items to the user and let the user enter new items, use a combo box. A combo box
+	works a lot like a combination list box and text box. As users type new values into
+	the text area and then click the appropriate command button to indicate that the
+	text is ready, the new values go to the combo box's list.<BR>
+	<B><BR>
+	Q What's the difference between a combo drop-down list box and a regular list box?<BR>
+	<BR>
+	A </B>The only difference is that the drop-down list box remains closed until the
+	user opens it. Therefore, the list box does not consume a lot of form space until
+	the user is ready to see the values in the list. If your form contains lots of extra
+	room, you might want to use a regular list box so your users can see more values
+	at one time. If form space is tight, use a drop-down list box.<BR>
+	<B><BR>
+	Q Should I use <TT>0</TT> or <TT>1</TT> for the starting array subscript?<BR>
+	<BR>
+	A </B>You can use either unless you've added the <TT>Option Base 1</TT> statement
+	to a module's <TT>general</TT> section, in which case your subscripts will have to
+	begin at <TT>1</TT>. If you don't use <TT>Option Base 1</TT> and you ignore the <TT>0</TT>
+	subscript, however, make sure you declare enough array elements to hold all your
+	data. If you need 15 elements and you use <TT>1</TT> for the starting subscript,
+	you must declare 16 values to access subscripts <TT>1</TT> through <TT>15</TT>.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading16"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+</CENTER>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<CENTER>
+<H4><A NAME="Heading17"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> When do you normally initialize a list box?<BR>
+	<B><BR>
+	2.</B> What method adds new items to a list box?<BR>
+	<B><BR>
+	3.</B> Which method determines the number of items in a list box?<BR>
+	<B><BR>
+	4.</B> True or false: Visual Basic will automatically keep list box items sorted
+	if you set a certain property to <TT>True</TT>.<BR>
+	<B><BR>
+	5.</B> How many combo boxes are there?<BR>
+	<B><BR>
+	6.</B> How do you specify the type of combo box you want to add to an application?<BR>
+	<B><BR>
+	7.</B> True or false: The drop-down list box is one of the Combo Box controls, so
+	users can enter new values in the drop-down list box just as they can other Combo
+	Box controls.<BR>
+	<B><BR>
+	8.</B> What is an array?<BR>
+	<B><BR>
+	9.</B> What is the highest subscript in a 10-element array if you do not use <TT>Option
+	Base 1</TT> and you use element <TT>0</TT>?<BR>
+	<B><BR>
+	10. </B>True or false: A control array exists when two or more controls have the
+	same <TT>Name</TT> property.
+</DL>
+
+<CENTER>
+<H4><A NAME="Heading18"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Write an application that builds a list as the user enters new values.
+	(Hint: Use a Combo Box control for the list.) The list should hold the user's favorite
+	book titles. As the user enters more and more titles, the list should grow. Add a
+	command button to the form with the caption Add to; when the user clicks the command
+	button, the title just entered goes to the list. Keep the list sorted at all times.<BR>
+	<B><BR>
+	2.</B> Write an application that contains four command buttons. The command buttons
+	should be blue and have boldfaced, italicized captions that read Change Color, Change
+	Bold, Change Height, and Change Width. When the user clicks one of the command buttons,
+	the appropriate property should change inside the <TT>Click()</TT> event procedure.
+	Use a <TT>Select Case</TT> statement to determine which property should change based
+	on the event procedure's <TT>Index</TT> argument.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch09.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch11.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,1939 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Architectural Issues
+Date: Fri, 13 May 2005 09:46:38 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0019_01C557A0.A8C083E0"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker02.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Architectural Issues</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Architectural Issues</H1><I>$Revision: 2.3 $</I> <BR><I>$Date: =
+1999/06/15=20
+03:30:36 $</I>=20
+<P>
+<P>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>Linkers and loaders, along with compilers and assemblers, are=20
+      exquisitely sensitive to the architectural details, both the =
+hardware=20
+      architecture and the architecture conventions required by the =
+operating=20
+      system of their target computers. In this chapter we cover enough =
+computer=20
+      architecture to understand the jobs that linkers have to do. The=20
+      descriptions of all of the computer architectures in this chapter =
+are=20
+      deliberately incomplete and leave out the parts that don't affect =
+the=20
+      linker such as floating point and I/O.=20
+      <P>
+      <P>Two aspects of hardware architecture affect linkers: program =
+addressing=20
+      and instruction formats. One of the things that a linker does is =
+to modify=20
+      addresses and offsets both in data memory and in instructions. In =
+both=20
+      cases, the linker has to ensure that its modifications match the=20
+      addressing scheme that the computer uses; when modifying =
+instructions it=20
+      must further ensure that the modifications don't result in an =
+invalid=20
+      instruction. </P></TD></TR></TBODY></TABLE>
+<P>
+<P>At the end of the chapter, we also look at address space =
+architecture, that=20
+is, what set of addresses a program has to work with.=20
+<P>
+<H2>Application Binary Interfaces</H2>Every operating system presents an =
+
+<I>Application Binary Interface</I> (ABI) to programs that run under =
+that=20
+system. The ABI consists of programming conventions that applications =
+have to=20
+follow to run under the operating system. ABI's invariably include a set =
+of=20
+system calls and the technique to invoke the system calls, as well as =
+rules=20
+about what memory addresses a program can use and often rules about =
+usage of=20
+machine registers. From the point of view of an application, the ABI is =
+as much=20
+a part of the system architecture as the underlying hardware =
+architecture, since=20
+a program will fail equally badly if it violates the constraints of =
+either.=20
+<P>
+<P>In many cases, the linker has to do a significant part of the work =
+involved=20
+in complying with the ABI. For example, if the ABI requires that each =
+program=20
+contains a table of all of the addresses of static data used by routines =
+in the=20
+program, the linker often creates that table, by collecting address =
+information=20
+from all of the modules linked into the program. The aspect of the ABI =
+that most=20
+often affects the linker is the definition of a standard procedure call, =
+a topic=20
+we return to later in this chapter.=20
+<P>
+<H2>Memory Addresses</H2>
+<P>
+<P>Every computer includes a main memory. The main memory invariably =
+appears as=20
+an array of storage locations, with each location having a numeric =
+address. The=20
+addresses start at zero and run up to some large number determined by =
+the number=20
+of bits in an address.=20
+<P>
+<H3>Byte Order and Alignment</H3>Each storage location consists of a =
+fixed=20
+number of bits. Over the past 50 years computers have been designed with =
+storage=20
+locations consisting of as many as 64 bits and as few as 1 bit, but now =
+nearly=20
+every computer in production addresses 8 bit bytes. Since much of the =
+data that=20
+computers handle, notably program addresses, are bigger than 8 bits, the =
+
+computers can also handle 16, 32, and often 64 or 128 bit data as well, =
+with=20
+multiple adjacent bytes grouped together. On some computers, notably =
+those from=20
+IBM and Motorola, the first (numerically lowest addressed) byte in =
+multi-byte=20
+data is the most significant byte, while others, notably DEC and Intel, =
+it's the=20
+least significant byte, Figure 1. In a nod to <I>Gulliver's Travels</I> =
+the=20
+IBM/Motorola byte order scheme is known as <I>big-endian</I> while the =
+DEC/Intel=20
+scheme is <I>little-endian</I>.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-01.html"><IMG=20
+      height=3D57 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> Byte addressable memory <BR>the usual picture =
+of=20
+      memory addresses </TD></TR></TBODY></TABLE></CENTER>
+<P>The relative merits of the two schemes have provoked vehement =
+arguments over=20
+the years. In practice the major issue determining the choice of byte =
+order is=20
+compatibility with older systems, since it is considerably easier to =
+port=20
+programs and data between two machines with the same byte order than =
+between=20
+machines with different byte orders. Many recent chip designs can =
+support either=20
+byte order, with the choice made either by the way the chip is wired up, =
+by=20
+programming at system boot time, or in a few cases even selected per=20
+application. (On these switch-hitting chips, the byte order of data =
+handled by=20
+load and store instructions changes, but the byte order of constants =
+encoded in=20
+instructions doesn't. This is the sort of detail that keeps the life of =
+the=20
+linker writer interesting.)=20
+<P>
+<P>Multi-byte data must usually be <I>aligned</I> on a natural boundary. =
+That=20
+is, four byte data should be aligned on a four-byte boundary, two-byte =
+on=20
+two-byte, and so forth. Another way to think of it is that the address =
+of any N=20
+byte datum should have at least log2(N) low zero bits. On some systems =
+(Intel=20
+x86, DEC VAX, IBM 370/390), misaligned data references work at the cost =
+of=20
+reduced performance, while on others (most RISC chips), misaligned data =
+causes a=20
+program fault. Even on systems where misaligned data don't cause a =
+fault, the=20
+performance loss is usually great enough that it's worth the effort to =
+maintain=20
+alignment where possible.=20
+<P>
+<P>Many processors also have alignment requirements for program =
+instructions.=20
+Most RISC chips require that instructions be aligned on four-byte =
+boundaries.=20
+<P>
+<P>Each architecture also defines <I>registers</I>, a small set of fixed =
+length=20
+high-speed memory locations to which program instructions can refer =
+directly.=20
+The number of registers varies from one architecture to another, from as =
+few as=20
+eight in the Intel architecture to 32 in some RISC designs. Registers =
+are almost=20
+invariably the same size as a program address, that is, on a system with =
+32 bit=20
+addresses, the registers are 32 bits, and on systems with 64 bit =
+addresses, the=20
+registers are 64 bits as well.=20
+<P>
+<H2>Address formation</H2>As a computer program executes, it loads and =
+stores=20
+data to and from memory, as determined by instructions in the program. =
+The=20
+instructions are themselves stored in memory, usually a different part =
+of memory=20
+from the program's data. Instructions are logically executed in the =
+sequence=20
+they are stored, except that jump instructions specify a new place in =
+the=20
+program to start executing instructions. (Some architectures use the =
+term branch=20
+for some or all jumps, but we call them all jumps here.) Each =
+instruction that=20
+references data memory and each jump specifies the address or addresses =
+or the=20
+data to load or store, or of the instruction to jump to. All computers =
+have a=20
+variety of instruction formats and address formation rules that linkers =
+have to=20
+be able to handle as they relocate addresses in instructions.=20
+<P>
+<P>Although computer designers have come up with innumerable different =
+and=20
+complex addressing schemes over the years, most computers currently in=20
+production have a relatively simple addressing scheme. (Designers found =
+that=20
+it's hard to build a fast version of a complicated architecture, and =
+compilers=20
+rarely make good use of complicated addressing features.) We'll use =
+three=20
+architectures as examples:=20
+<UL>
+  <LI>The IBM 360/370/390 (which we'll refer to as the 370). Although =
+this is=20
+  one of the oldest architectures still in use, its relatively clean =
+design has=20
+  worn well despite 35 years of added features, and has been implemented =
+in=20
+  chips comparable in performance to modern RISCs.=20
+  <LI>SPARC V8 and V9. A popular RISC architecture, with fairly simple=20
+  addressing. V8 uses 32 bit registers and addresses, V9 adds 64 bit =
+registers=20
+  and addresses. The SPARC design is similar to other RISC architectures =
+such as=20
+  MIPS and Alpha.=20
+  <LI>The Intel 386/486/Pentium (henceforth x86). One of the most arcane =
+and=20
+  irregular architectures still in use, but undeniably the most popular. =
+
+</LI></UL>
+<P>
+<H2>Instruction formats</H2>
+<P>
+<P>Each architecture has several different instruction formats. We'll =
+only=20
+address the format details relative to program and data addressing, =
+since those=20
+are the main details that affect the linker. The 370 uses the same =
+format for=20
+data references and jumps, while the SPARC has different formats and the =
+x86 has=20
+some common formats and some different.=20
+<P>
+<P>Each instruction consists of an opcode, which determines what the =
+instruction=20
+does, and operands. An operand may be encoded in the instruction itself =
+(an=20
+<I>immediate</I> operand), or located in memory. The address of each =
+operand in=20
+memory has to be calculated somehow. Sometimes the address is contained =
+in the=20
+instruction (direct addressing.) More often the address is found in one =
+of the=20
+registers (register indirect), or calculated by adding a constant in the =
+
+instruction to the contents of a register. If the value in the register =
+is the=20
+address of a storage area, and the constant in the instruction is the =
+offset of=20
+the desired datum in the storage area, this scheme is known as =
+<I>based</I>=20
+addressing. If the roles are swapped and the register contains the =
+offset, the=20
+scheme is known as <I>indexed</I> addressing. The distinction between =
+based and=20
+indexed addressing isn't well-defined, and many architectures combine =
+them,=20
+e.g., the 370 has an addressing mode that adds together two registers =
+and a=20
+constant in the instruction, arbitrarily calling one of the registers =
+the base=20
+register and the other the index register, although the two are treated =
+the=20
+same.=20
+<P>
+<P>Other more complicated address calculation schemes are still in use, =
+but for=20
+the most part the linker doesn't have to worry about them since they =
+don't=20
+contain any fields the linker has to adjust.=20
+<P>
+<P>Some architectures use fixed length instructions, and some use =
+variable=20
+length instructions. All SPARC instructions are four bytes long, aligned =
+on four=20
+byte boundaries. IBM 370 instructions can be 2, 4, or 6 bytes long, with =
+the=20
+first two bits of the first byte determining the length and format of =
+the=20
+instruction. Intel x86 instructions can be anywhere from one byte to 14 =
+long.=20
+The encoding is quite complex, partly because the x86 was originally =
+designed=20
+for limited memory environments with a dense instruction encoding, and =
+partly=20
+because the new instructions added in the 286, 386, and later chips had =
+to be=20
+shoe-horned into unused bit patterns in the existing instruction set.=20
+Fortunately, from the point of view of a linker writer, the address and =
+offset=20
+fields that a linker has to adjust all occur on byte boundaries, so the =
+linker=20
+generally need not be concerned with the instruction encoding.=20
+<P>
+<H2>Procedure Calls and Addressability</H2>
+<P>
+<P>In the earliest computers, memories were small, and each instruction=20
+contained an address field large enough to contain the address of any =
+memory=20
+location in the computer, a scheme now called direct addressing. By the =
+early=20
+1960s, addressable memory was getting large enough that an instruction =
+set with=20
+a full address in each instruction would have large instructions that =
+took up=20
+too much of still-precious memory. To solve this problem, computer =
+architects=20
+abandoned direct addressing in some or all of the memory reference =
+instructions,=20
+using index and base registers to provide most or all of the bits used =
+in=20
+addressing. This allowed instructions to be shorter, at the cost of more =
+
+complicated programming.=20
+<P>
+<P>On architectures without direct addressing, including the IBM 370 and =
+SPARC,=20
+programs have a ``bootstrapping'' problem for data addressing. A routine =
+uses=20
+base values in registers to calculate data addresses, but the standard =
+way to=20
+get a base value into a register is to load it from a memory location =
+which is=20
+in turn addressed from another base value in a register. The bootstrap =
+problem=20
+is to get the first base value into a register at the beginning of the =
+program,=20
+and subsequently to ensure that each routine has the base values it =
+needs to=20
+address the data it uses.=20
+<P>
+<H3>Procedure calls</H3>
+<P>
+<P>Every ABI defines a standard procedure call sequence, using a =
+combination of=20
+hardware-defined call instructions and conventions about register and =
+memory=20
+use. A hardware call instruction saves the return address (the address =
+of the=20
+instruction after the call) and jumps to the procedure. On architectures =
+with a=20
+hardware stack such as the x86 the return address is pushed on the =
+stack, while=20
+on other architectures it's saved in a register, with software having =
+the=20
+responsibility to save the register in memory if necessary. =
+Architectures with a=20
+stack generally have a hardware return instruction that pops the return =
+address=20
+from the stack and jumps to that address, while other architectures use =
+a=20
+``branch to address in register'' instruction to return.=20
+<P>
+<P>Within a procedure, data addressing falls into four categories:=20
+<UL>
+  <LI>The caller can pass <I>arguments</I> to the procedure.=20
+  <LI><I>Local variables</I> are allocated withing procedure and freed =
+before=20
+  the procedure returns.=20
+  <LI><I>Local static</I> data is stored in a fixed location in memory =
+and is=20
+  private to the procedure.=20
+  <LI><I>Global static</I> data is stored in a fixed location in memory =
+and can=20
+  be referenced from many different procedures. </LI></UL>The chunk of =
+stack=20
+memory allocated for a single procedure call is known as a <I>stack =
+frame</I>.=20
+Figure 2 shows a typical stack frame.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-02.html"><IMG=20
+      height=3D98 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-02.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 2:</I> Stack frame memory layout <BR>Picture of a =
+stack=20
+      frame </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>Arguments and local variables are usually allocated on the stack. One =
+of the=20
+registers serves as a stack pointer which can be used as a base =
+register. In a=20
+common variant of this scheme, used with SPARC and x86, a separate frame =
+pointer=20
+or base pointer register is loaded from the stack pointer at the time a=20
+procedure starts. This makes it possible to push variable sized objects =
+on the=20
+stack, changing the value in the stack pointer register to a =
+hard-to-predict=20
+value, but still lets the procedure address arguments and locals at =
+fixed=20
+offsets from the frame pointer which doesn't change during a procedure's =
+
+execution. Assuming the stack grows from higher to lower addresses and =
+that the=20
+frame pointer points to the address in memory where the return address =
+is=20
+stored, arguments are at small positive offsets from the frame pointer, =
+and=20
+local variables at negative offsets. The operating system usually sets =
+the=20
+initial stack pointer register before a program starts, so the program =
+need only=20
+update the register as needed when it pushes and pops data.=20
+<P>
+<P>For local and global static data, a compiler can generate a table of =
+pointers=20
+to all of the static objects that a routine references. If one of the =
+registers=20
+contains a pointer to this table, the routine can address any desired =
+static=20
+object by loading the pointer to the object from the table using the =
+table=20
+pointer register into another register using the table pointer register =
+as a=20
+base register, then using that second register as the base register to =
+address=20
+the object. The trick, then, is to get the address of the table into the =
+first=20
+register. On SPARC, the routine can load the table address into the =
+register=20
+using a sequence of instructions with immediate operands, and on the =
+SPARC or=20
+370 the routine can use a variant of a subroutine call instruction to =
+load the=20
+program counter (the register that keeps the address of the current =
+instruction)=20
+into a base register, though for reasons we discuss later, those =
+techniques=20
+cause problems in library code. A better solution is to foist off the =
+job of=20
+loading the table pointer on the routine's caller, since the caller will =
+have=20
+its own table pointer already loaded and can get address of the called =
+routine's=20
+table from its own table.=20
+<P>
+<P>Figure 3 shows a typical routine calling sequence. Rf is the frame =
+pointer,=20
+Rt is the table pointer, and Rx is a temporary scratch register. The =
+caller=20
+saves its own table pointer in its own stack frame, then loads both the =
+address=20
+of the called routine and the called routine's pointer table into =
+registers,=20
+then makes the call. The called routine can then find all of its =
+necessary data=20
+using the table pointer in Rt, including addresses and table pointers =
+for any=20
+routines that it in turn calls.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 3 --></TD>
+    <TD><I>Figure 3:</I> Idealized calling sequence <BR>
+      <P><TT><BR>... push arguments on the stack ... <BR>store Rt -&gt; =
+xxx(Rf)=20
+      ; save caller's table pointer in caller's stack frame <BR>load Rx =
+&lt;-=20
+      MMM(Rt) ; load address of called routine into temp register =
+<BR>load Rt=20
+      &lt;- NNN(Rt) ; load called routine's table pointer <BR>call (Rx) =
+; call=20
+      routine at address in Rx <BR>load Rt &lt;- xxx(Rf) ; restore =
+caller's=20
+      table pointer=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>Several optimizations are often possible. In many cases, all of the =
+routines=20
+in a module share a single pointer table, in which case intra-module =
+calls=20
+needn't change the table pointer. The SPARC convention is that an entire =
+library=20
+shares a single table, created by the linker, so the table pointer =
+register can=20
+remain unchanged in intra-module calls. Calls within the same module can =
+usually=20
+be made using a version of the ``call'' instruction with the offset to =
+the=20
+called routine encoded in the instruction, which avoids the need to load =
+the=20
+address of the routine into a register. With both of these =
+optimizations, the=20
+calling sequence to a routine in the same module reduces to a single =
+call=20
+instruction.=20
+<P>
+<P>To return to the address bootstram quesion, how does this chain of =
+table=20
+pointers gets started? If each routine gets its table pointer loaded by =
+the=20
+preceding routine, where does the initial routine get its pointer? The =
+answer=20
+varies, but always involves special-case code. The main routine's table =
+may be=20
+stored at a fixed address, or the initial pointer value may be tagged in =
+the=20
+executable file so the operating system can load it before the program =
+starts.=20
+No matter what the technique is, it invariably needs some help from the =
+linker.=20
+<P>
+<H2>Data and instruction references</H2>
+<P>
+<P>We now look more concretely at the way that programs in our three=20
+architectures address data values.=20
+<P>
+<H3>IBM 370</H3>The 1960s vintage System/360 started with a very =
+straightforward=20
+data addressing scheme, which has become someone more complicated over =
+the years=20
+as the 360 evolved into the 370 and 390. Every instruction that =
+references data=20
+memory calculates the address by adding a 12-bit unsigned offset in the=20
+instruction to a base register and maybe an index register. There are 16 =
+general=20
+registers, each 32 bits, numbered from 0 to 15, all but one of which can =
+be used=20
+as index registers. If register 0 is specified in an address =
+calculation, the=20
+value 0 is used rather than the register contents. (Register 0 exists =
+and is=20
+usable for arithmetic, but not for addressing.) In instructions that =
+take the=20
+target address of a jump from a register, register 0 means don't jump.=20
+<P>
+<P>Figure 4 shows the major instruction formats. An RX instruction =
+contains a=20
+register operand and a single memory operand, whose address is =
+calculated by=20
+adding the offset in the instruction to a base register and index =
+register. More=20
+often than not the index register is zero so the address is just base =
+plus=20
+offset. In the RS, SI and SS formats, the 12 bit offset is added to a =
+base=20
+register. An RS instruction has one memory operand, with one or two =
+other=20
+operands being in registers. An SI instruction has one memory operand, =
+the other=20
+operand being an immediate 8 bit value in the instruction An SS =
+instruciton has=20
+two memory operands, storage to storage operations. The RR format has =
+two=20
+register operands and no memory operands at all, although some RR =
+instructions=20
+interpret one or both of the registers as pointers to memory. The 370 =
+and 390=20
+added some minor variations on these formats, but none with different =
+data=20
+addressing formats.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-04.html"><IMG=20
+      height=3D53 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-04.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 4:</I> IBM 370 instruction formats <BR>Picture of IBM=20
+      instruction formats RX, RS, SI, SS =
+</TD></TR></TBODY></TABLE></CENTER>
+<P>Instructions can directly address the lowest 4096 locations in memory =
+by=20
+specifying base register zero. This ability is essential in low-level =
+system=20
+programming but is never used in application programs, all of which use =
+base=20
+register addressing.=20
+<P>
+<P>Note that in all three instruction formats, the 12 bit address offset =
+is=20
+always stored as the low 12 bits of a 16-bit aligned halfword. This =
+makes it=20
+possible to specify fixups to address offsets in object files without =
+any=20
+reference to instruction formats, since the offset format is always the =
+same.=20
+<P>
+<P>The original 360 had 24 bit addressing, with an address in memory or =
+a=20
+register being stored in the low 24 bits of a 32 bit word, and the high =
+eight=20
+bits disregarded. The 370 extended addressing to 31 bits. Unfortunately, =
+many=20
+programs including OS/360, the most popular operating system, stored =
+flags or=20
+other data in the high byte of 32 bit address words in memory, so it =
+wasn't=20
+possible to extend the addressing to 32 bits in the obvious way and =
+still=20
+support existing object code. Instead, the system has 24 bit and 31 bit =
+modes,=20
+and at any moment a CPU interprets 24 bit addresses or 31 bit addresses. =
+A=20
+convention enforced by a combination of hardware and software states =
+that an=20
+address word with the high bit set contains a 31 bit address in the rest =
+of the=20
+word, while one with the high bit clear contains a 24 bit address. As a =
+result,=20
+a linker has to be able to handle both 24 bit and 31 bit addresses since =
+
+programs can and do switch modes depending on how long ago a particular =
+routine=20
+was written. For historical reasons, 370 linkers also handle 16 bit =
+addresses,=20
+since early small models in the 360 line often had 64K or less of main =
+memory=20
+and programs used load and store halfword instructions to manipulate =
+address=20
+values.=20
+<P>
+<P>Later models of the 370 and 390 added segmented address spaces =
+somewhat like=20
+those of the x86 series. These feature let the operating system define =
+multiple=20
+31 bit address spaces that a program can address, with extremely complex =
+rules=20
+defining access controls and address space switching. As far as I can =
+tell,=20
+there is no compiler or linker support for these features, which are =
+primarily=20
+used by high-performace database systems, so we won't address them =
+further.=20
+<P>
+<P>Instruction addressing on the 370 is also relatively straightforward. =
+In the=20
+original 360, the jumps (always referred to as branch instructions) were =
+all RR=20
+or RX format. In RR jumps, the second register operand contained the =
+jump=20
+target, register 0 meaning don't jump. In RX jumps, the memory operand =
+is the=20
+jump target. The procedure call is Branch and Link (supplanted by the =
+later=20
+Branch and Store for 31 bit addressing), which stores the return address =
+in a=20
+specified register and then jumps to the address in the second register =
+in the=20
+RR form or to the second operand address in the RX form.=20
+<P>
+<P>For jumping around within a routine, the routine has to establish=20
+``addressability'', that is, a base register that points to (or at least =
+close=20
+to) the beginning of the routine that RX instructions can use. By =
+convention,=20
+register 15 contains the address of the entry point to a routine and can =
+be used=20
+as a base register. Alternatively an RR Branch and Link or Branch and =
+Store with=20
+a second register of zero stores the address of the subsequent =
+instruction in=20
+the first operand register but doesn't jump, and can be use to set up a =
+base=20
+register if the prior register contents are unknown. Since RX =
+instructions have=20
+a 12 bit offset field, a single base register ``covers'' a 4K chunk of =
+code. If=20
+a routine is bigger than that, it has to use multiple base registers to =
+cover=20
+all of the routine's code.=20
+<P>
+<P>The 390 added relative forms of all of the jumps. In these new forms, =
+the=20
+instruction contains a signed 16 bit offset which is logically shifted =
+left one=20
+bit (since instructions are aligned on even bytes) and added to the =
+address of=20
+the instruction to get the address of the jump target. These new formats =
+use no=20
+register to compute the address, and permit jumps within +/- 64K bytes, =
+enough=20
+for intra-routine jumps in all but the largest routines.=20
+<P>
+<H3>SPARC</H3>The SPARC comes close to living up to its name as a =
+reduced=20
+instruction set processor, although as the architecture has evolved =
+through nine=20
+versions, the original simple design has grown somewhat more complex. =
+SPARC=20
+versions through V8 are 32 bit architectures. SPARC V9 expands the =
+architecture=20
+to 64 bits.=20
+<P>
+<H4>SPARC V8</H4>SPARC has four major instruction formats and 31 minor=20
+instruction formats, Figure 5, four jump formats, and two data =
+addressing modes.=20
+
+<P>
+<P>In SPARC V8, there are 31 general purpose registers, each 32 bits, =
+numbered=20
+from 1 to 31. Register 0 is a pseudo-register that always contains the =
+value=20
+zero.=20
+<P>
+<P>An unusual <I>register window</I> scheme attempts to minimize the =
+amount of=20
+register saving and restoring at procedure calls and returns. The =
+windows have=20
+little effect on linkers, so we won't discuss them further. (Register =
+windows=20
+originated in the Berkeley RISC design from which SPARC is descended.)=20
+<P>
+<P>Data references use one of two addressing modes. One mode computes =
+the=20
+address by adding the values in two registers together. (One of the =
+registers=20
+can be r0 if the other register already contains the desired address.) =
+The other=20
+mode adds a 13 bit signed offset in the instruction to a base register.=20
+<P>
+<P>SPARC assemblers and linkers support a pseudo-direct addressing =
+scheme using=20
+a two-instruction sequence. The two instructions are SETHI, which loads =
+its 22=20
+bit immediate value into the high 22 bits of a register and zeros the =
+lower 10=20
+bits, followed by OR Immediate, which ORs its 13 bit immediate value =
+into the=20
+low part of the register. The assembler and linker arrange to put the =
+high and=20
+low parts of the desired 32 bit address into the two instructions.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-05.html"><IMG=20
+      height=3D62 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-05.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 5:</I> SPARC <BR>30 bit call 22 bit branch and SETHI =
+19 bit=20
+      branch 16 bit branch (V9 only) op R+R op R+I13=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>The procedure call instruction and most conditional jump instructions =
+
+(referred to as branches in SPARC literature) use relative addressing =
+with=20
+various size branch offsets ranging from 16 to 30 bits. Whatever the =
+offset=20
+size, the jump shifts the offset two bits left, since all instructions =
+have to=20
+be at four-byte word addresses, sign extends the result to 32 or 64 =
+bits, and=20
+adds that value to the address of the jump or call instruction to get =
+the target=20
+address. The call instruction uses a 30 bit offset, which means it can =
+reach any=20
+address in a 32 bit V8 address space. Calls store the return address in =
+register=20
+15. Various kinds of jumps use a 16, 19, or 22 bit offset, which is =
+large enough=20
+to jump anywhere in any plausibly sized routine. The 16 bit format =
+breaks the=20
+offset into a two-bit high part and a fourteen-bit low part stored in =
+different=20
+parts of the instruction word, but that doesn't cause any great trouble =
+for the=20
+linker.=20
+<P>
+<P>SPARC also has a "Jump and Link" which computes the target address =
+the same=20
+way that data reference instructions do, by adding together either two =
+source=20
+registers or a source register and a constant offset. It also can store =
+the the=20
+return address in a target register.=20
+<P>
+<P>Procedure calls use Call or Jump and Link, which store the return =
+address in=20
+register 15, and jumps to the target address. Procedure return uses JMP =
+8[r15],=20
+to return two instructions after the call. (SPARC calls and jumps are =
+"delayed"=20
+and optionally execute the instruction following the jump or call before =
+
+jumping.)=20
+<P>
+<H4>SPARC V9</H4>SPARC V9 expands all of the registers to 64 bits, using =
+the low=20
+32 bits of each register for old 32 bit programs. All existing =
+instructions=20
+continue to work as before, except that register operands are now 64 =
+rather than=20
+32 bits. New load and store instructions handle 64 bit data, and new =
+branch=20
+instructions can test either the 32 or 64 bit result of a previous =
+instructions.=20
+SPARC V9 adds no new instructions for synthesizing full 64 bit =
+addresses, nor is=20
+there a new call instruction. Full addresses can be synthesized via =
+lengthy=20
+sequences that create the two 32 bit halves of the address in separate =
+registers=20
+using SETHI and OR, shift the high half 32 bits to the left, and OR the =
+two=20
+parts together. In practice 64 bit addresses are loaded from a pointer =
+table,=20
+and inter-module calls load the address of the target routine from the =
+table=20
+into a register and then use jump and link to make the call.=20
+<P>
+<H3>Intel x86</H3>The Intel x86 architecture is by far the most complex =
+of the=20
+three that we discuss. It features an asymmetrical instruction set and =
+segmented=20
+addresses. There are six 32 bit general purpose registers named EAX, =
+EBX, ECX,=20
+EDX, ESI, and EDI, as well as two registers used primarily for =
+addressing, EBP=20
+and ESP, and six specialized 16 bit segment registers CS, DS, ES, FS, =
+GS, and=20
+SS. The low half of each of the 32 bit registers can be used as 16 bit =
+registers=20
+called AX, BX, CX, DX, SI, DI, BP, and SP. and the low and high bytes of =
+each of=20
+the AX through DX registers are eight-bit registers called AL, AH, BL, =
+BH, CL,=20
+CH, DL, and DH. On the 8086, 186, and 286, many instructions required =
+its=20
+operands in specific registers, but on the 386 and later chips, most but =
+not all=20
+of the functions that required specific registers have been generalized =
+to use=20
+any register. The ESP is the hardware stack pointer, and always contains =
+the=20
+address of the current stack. The EBP pointer is usually used as a frame =
+
+register that points to the base of the current stack frame. (The =
+instruction=20
+set encourages but doesn't require this.)=20
+<P>
+<P>At any moment an x86 is running in one of three modes: real mode =
+which=20
+emulates the original 16 bit 8086, 16 bit protected mode which was added =
+on the=20
+286, or 32 bit protected mode which was added on the 386. Here we =
+primarily=20
+discuss 32 bit protected mode. Protected mode involves the x86's =
+notorious=20
+segmentation, but we'll disregard that for the moment.=20
+<P>
+<P>Most instructions that address addresses of data in memory use a =
+common=20
+instruction format, Figure 6. (The ones that don't use specific =
+architecture=20
+defined registers, e.g., the PUSH and POP instructions always use ESP to =
+address=20
+the stack.) Addresses are calculated by adding together any or all of a =
+signed=20
+1, 2, or 4 byte displacement value in the instruction, a base register =
+which can=20
+be any of the 32 bit registers, and an optional index register which can =
+be any=20
+of the 32 bit registers except ESP. The index can be logically shifted =
+left 0,=20
+1, 2, or 3 bits to make it easier to index arrays of multi-byte values.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-06.html"><IMG=20
+      height=3D55 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-06.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 6:</I> Generalized x86 instruction format <BR>one or =
+two=20
+      opcode bytes, optional mod R/M byte, optional s-i-b byte, optional =
+1, 2,=20
+      or 4 byte displacement </TD></TR></TBODY></TABLE></CENTER>
+<P>Although it's possible for a single instruction to include all of=20
+displacement, base, and index, most just use a 32 bit displacement, =
+which=20
+provides direct addressing, or a base with a one or two byte =
+displacement, which=20
+provides stack addressing and pointer dereferencing. From a linker's =
+point of=20
+view, direct addressing permits an instruction or data address to be =
+embedded=20
+anywhere in the program on any byte boundary.=20
+<P>
+<P>Conditional and unconditional jumps and subroutine calls all use =
+relative=20
+addressing. Any jump instruction can have a 1, 2, or 4 byte offset which =
+is=20
+added to the address of the instruction following the instruction to get =
+the=20
+target address. Call instructions contain either a 4 byte absolute =
+address, or=20
+else use any of the the usual addressing modes to refer to a memory =
+location=20
+containing the target address. This permits jumps and calls anywhere in =
+the=20
+current 32 bit address space. Unconditional jumps and calls also can =
+compute the=20
+target address using the full data address calculation described above, =
+most=20
+often used to jump or call to an address stored in a register. Call =
+instructions=20
+push the return address on the stack pointed to by ESP.=20
+<P>
+<P>Unconditional jumps and calls can also have a full six byte =
+segment/offset=20
+address in the instruction, or calculate the address at which the =
+segment/offset=20
+target address is stored. These call instructions push both the return =
+address=20
+and the caller's segment number, to permit intersegment calls and =
+returns.=20
+<P>
+<H2>Paging and Virtual Memory</H2>
+<P>
+<P>On most modern computers, each program can potentially address a vast =
+amount=20
+of memory, four gigabytes on a typical 32 bit machine. Few computers =
+actually=20
+have that much memory, and even the ones that do need to share it among =
+multiple=20
+programs. Paging hardware divides a program's address space into fixed =
+size=20
+<I>pages</I>, typically 2K or 4K bytes in size, and divides the physical =
+memory=20
+of the computer into <I>page frames</I> of the same size. The hardware =
+conatins=20
+<I>page tables</I> with an entry for each page in the address space, as =
+shown in=20
+Figure 7.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-07.html"><IMG=20
+      height=3D97 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-07.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 7:</I> Page mapping <BR>Picture of pages mapped =
+through a=20
+      big page table to real page frames =
+</TD></TR></TBODY></TABLE></CENTER>
+<P>A page table entry can contain the real memory page frame for the =
+page, or=20
+flag bits to mark the page ``not present.'' When an application program =
+attempts=20
+to use a page that is not present, hardware generates a <I>page =
+fault</I> which=20
+is handled by the operating system. The operating system can load a copy =
+of the=20
+contents page from disk into a free page frame, then let the application =
+
+continue. By moving pages back and forth between main memory and disk as =
+needed,=20
+the operating system can provide <I>virtual memory</I> which appears to =
+the=20
+application to be far larger than the real memory in use.=20
+<P>
+<P>Virtual memory comes at a cost, though. Individual instructions =
+execute in a=20
+fraction of a microsecond, but a page fault and consequent page in or =
+page out=20
+(transfer from disk to main memory or vice versa) takes several =
+milliseconds=20
+since it requires a disk transfer. The more page faults a program =
+generates, the=20
+slower it runs, with the worst case being <I>thrashing</I>, all page =
+faults with=20
+no useful work getting done. The fewer pages a program needs, the fewer =
+page=20
+faults it will generate. If the linker can pack related routines into a =
+single=20
+page or a small group of pages, paging performance improves.=20
+<P>
+<P>If pages can be marked as read-only, performace also improves. =
+Read-only=20
+pages don't need to be paged out since they can be reloaded from =
+wherever they=20
+came from originally. If identical pages logically appear in multiple =
+address=20
+spaces, which often happens when multiple copies of the same program are =
+
+running, a single physical page suffices for all of the address spaces.=20
+<P>
+<P>An x86 with 32 bit addressing and 4K pages would need a page table =
+with 2^20=20
+entries to map an entire address space. Since each page table entry is =
+usually=20
+four bytes, this would make the page tables an impractical 4 megabytes =
+long. As=20
+a result, paged architectures page the page tables, with upper level =
+page tables=20
+that point to the lower level page tables that point to the actual page =
+frames=20
+corresponding to virtual addresses. On the 370, each entry in the upper =
+level=20
+page table (called the segment table) maps 1MB of address space, so the =
+segment=20
+table in 31 bit address mode may contain up to 2048 entries. Each entry =
+in the=20
+segment table may be empty, in which case the entire segment is not =
+present, or=20
+may point to a lower level page table that maps the pages in that =
+segment. Each=20
+lower level page table has up to 256 entries, one for each 4K chunk of =
+address=20
+space in the segment. The x86 divides up its page tables similarly, =
+although the=20
+boundaries are different. Each upper level page table (called a page =
+directory)=20
+maps 4MB of address space, so the upper level page table contains 1024 =
+entries.=20
+Each lower level page table also contains 1024 entries to map the 1024 =
+4K pages=20
+in the 4MB of address space corresponding to that page table. The SPARC=20
+architecture defines the page size as 4K, and has three levels of page =
+tables=20
+rather than two.=20
+<P>
+<P>The two- or three-level nature of page tables are invisible to =
+applications=20
+with one important exception: the operating system can change the =
+mapping for a=20
+large chunk of the address space (1MB on the 370, 4MB on the x86, 256K =
+or 16MB=20
+on SPARC) by changing a single entry in an upper level page table, so =
+for=20
+efficiency reasons the address space is often managed in chunks of that =
+size by=20
+replacing individual second level page table entries rather than =
+reloading the=20
+whole page table on process switches.=20
+<P>
+<H3>The program address space</H3>Every application program runs in an =
+address=20
+space defined by a combination of the computer's hardware and operating =
+system.=20
+The linker or loader needs to create a runnable program that matches =
+that=20
+address space.=20
+<P>
+<P>The simplest kind of address space is that provided by PDP-11 =
+versions of=20
+Unix. The address space is 64K bytes starting at location zero. The =
+read-only=20
+code of the program is loaded at location zero, with the read-write data =
+
+following the code. The PDP-11 had 8K pages, so the data starts on the =
+8K=20
+boundary after the code. The stack grows downward, starting at 64K-1, =
+and as the=20
+stack and data grow, the respective areas were enlarged; if they met the =
+program=20
+ran out of space. Unix on the VAX, the follow-on to the PDP-11, used a =
+similar=20
+scheme. The first two bytes of every VAX Unix program were zero (a =
+register save=20
+mask saying not to save anything.) As a result, a null all-zero pointer =
+was=20
+always valid, and if a C program used a null value as a string pointer, =
+the zero=20
+byte at location zero was treated as a null string. As a result, a =
+generation of=20
+Unix programs in the 1980s contained hard-to-find bugs involving null =
+pointers,=20
+and for many years, Unix ports to other architectures provided a zero =
+byte at=20
+location zero because it was easier than finding and fixing all the null =
+pointer=20
+bugs.=20
+<P>
+<P>Unix systems put each application program in a separate address =
+space, and=20
+the operating system in an address space logically separate from the=20
+applications. Other systems put multiple programs in the same address =
+space,=20
+making the linker and particularly the loader's job more complex because =
+a=20
+program's actual load address isn't known until the program's about to =
+be run.=20
+<P>
+<P>MS-DOS on x86 systems uses no hardware protection, so the system and =
+running=20
+applications share the same address space. When the system runs a =
+program, it=20
+finds the largest chunk of free memory, which can be anywhere in the =
+address=20
+space, loads the program into it, and starts it. IBM mainframe operating =
+systems=20
+do roughly the same thing, loading a program into an available chunk of=20
+available address space. In both cases, either the program loader or in =
+some=20
+cases the program itself has to adjust to the location where the program =
+is=20
+loaded.=20
+<P>
+<P>MS Windows has an unusual loading scheme. Each program is linked to =
+load at a=20
+standard starting address, but the executable program file contains =
+relocation=20
+information. When Windows loads the program, it places the program at =
+that=20
+starting address if possible, but may load it somewhere else if the =
+preferred=20
+address isn't available.=20
+<P>
+<H3>Mapped files</H3>Virtual memory systems move data back and forth =
+between=20
+real memory and disk, paging data to disk when it doesn't fit in real =
+memory.=20
+Originally, paging all went to ``anonymous'' disk space separate from =
+the named=20
+files in the file system. Soon after the invention of paging, though, =
+designers=20
+noticed that it was possible to unify the paging system and the file =
+system by=20
+using the paging system to read and write named disk files. When a =
+program maps=20
+a file to a part of the program's address space, the operating system =
+marks all=20
+of the pages in that part of the address space not present, and uses the =
+file as=20
+the paging disk for that part of the address space, as in Figure 8. The =
+program=20
+can read the file merely by referencing that part of the address space, =
+at which=20
+point the paging system loads the necessary pages from disk.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig02-08.html"><IMG=20
+      height=3D76 =
+src=3D"http://www.iecc.com/linker/thumb-linker02-08.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 8:</I> Mapping a file <BR>Program points to set of =
+page=20
+      frames that map to disk file or local RAM =
+</TD></TR></TBODY></TABLE></CENTER>
+<P>There are three different approaches to handling writes to mapped =
+files. The=20
+simplest is to map a file read-only (RO), so that any attempts to store =
+into the=20
+mapped region fail, usually causing the program to abort. The second is =
+to map=20
+the file read-write (RW), so that changes to the memory copy of the file =
+are=20
+paged back to the disk by the time the file is unmapped. The third is to =
+map the=20
+file copy-on-write (COW, not the most felicitous acronym). This maps the =
+page=20
+read-only until the program attempts to store into the page. At that =
+time, the=20
+operating system makes a copy of the page which is then treated as a =
+private=20
+page not mapped from a file. From the program's point of view, mapping a =
+file=20
+COW is very similar to allocating a fresh area of anonymous memory and =
+reading=20
+the file's contents into that area, since changes the program makes are =
+visible=20
+to that program but not to any other program that might have mapped the =
+same=20
+file.=20
+<P>
+<H3>Shared libraries and programs</H3>
+<P>
+<P>In nearly every system that handles multiple programs simultaneously, =
+each=20
+program has a separate set of page tables, giving each program a =
+logically=20
+separate address space. This makes a system considerably more robust, =
+since=20
+buggy or malicious programs can't damage or spy on each other, but it=20
+potentially could cause performance problems. If a single program or =
+single=20
+program library is in use in more than one address space, the system can =
+save a=20
+great deal of memory if all of the address spaces share a single =
+physical copy=20
+of the program or library. This is relatively straightforward for the =
+operating=20
+system to implement -- just map the executable file into each program's =
+address=20
+space. Unrelocated code and read only data are mapped RO, writable data =
+are=20
+mapped COW. The operating system can use the same physical page frames =
+for RO=20
+and unwritten COW data in all the processes that map the file. (If the =
+code has=20
+to be relocated at load time, the relocation process changes the code =
+pages and=20
+they have to be treated as COW, not RO.)=20
+<P>
+<P>Considerable linker support is needed to make this sharing work. In =
+the=20
+executable program, the linker needs to group all of the executable code =
+into=20
+one part of the file that can be mapped RO, and the data into another =
+part that=20
+can be mapped COW. Each section has to start on a page boundary, both =
+logically=20
+in the address space and physically in the file. When several different =
+programs=20
+use a shared library, the linker needs to mark the each program so that =
+when=20
+each starts, the library is mapped into the program's address space.=20
+<P>
+<H3>Position-independent code</H3>When a program is in use in several =
+different=20
+address spaces, the operating system can usually load the program at the =
+same=20
+place in each of the address spaces in which it appears. This makes the =
+linker's=20
+job much easier, since it can bind all of the addresses in the program =
+to fixed=20
+locations, and no relocation need be done at the time the program is =
+loaded.=20
+<P>
+<P>Shared libraries complicate this situation considerably. In some =
+simple=20
+shared library designs, each library is assigned a globally unique =
+memory=20
+address either at system boot time or at the time the libraries are =
+created.=20
+This puts the each library at a fixed address, but at the cost of =
+creating a=20
+serious bottleneck to shared library administration, since the global =
+list of=20
+library memory addresses has to be maintained by the system manager.=20
+Furthermore, if a new version of a library appears that is larger than =
+the=20
+previous version and doesn't fit into the address space assigned, the =
+entire set=20
+of shared libraries and, potentially, all of the programs that reference =
+them,=20
+may need to be relinked.=20
+<P>
+<P>The alternative is to permit different programs to map a library to =
+different=20
+places in the address space. This eases library administration, but the=20
+compiler, and linker, and program loader need to cooperate so that the =
+library=20
+will work regardless of where in the address space the library appears.=20
+<P>
+<P>One simple approach is to include standard relocation information =
+with the=20
+library, and when the library is mapped into each address space, the =
+loader can=20
+fix up any relocatable addresses in the program to reflect the loaded =
+addresses.=20
+Unfortunately, the process of fixing up involves writing into the =
+library's code=20
+and data, which means that the pages will no longer be shared, if =
+they're mapped=20
+COW, or the program will crash if the pages are mapped RO.=20
+<P>
+<P>To avoid this problem, shared libraries use Position Independent Code =
+(PIC),=20
+code which will work regardless of where in memory it is loaded. All the =
+code in=20
+shared libraries is usually PIC, so the code can be mapped read-only. =
+Data pages=20
+still usually contain pointers which need relocation, but since data =
+pages are=20
+mapped COW anyway, there's little sharing lost.=20
+<P>
+<P>For the most part, PIC is pretty easy to create. All three of the=20
+architectures we discussed in this chapter use relative jumps, so that =
+jump=20
+instructions within the routines need no relocation. References to local =
+data on=20
+the stack use based addressing relative to a base register, which =
+doesn't need=20
+any relocation, either. The only challenges are calls to routines not in =
+the=20
+shared library, and references to global data. Direct data addressing =
+and the=20
+SPARC high/low register loading trick won't work, because they both =
+require=20
+run-time relocation. Fortunately, there are a variety of tricks one can =
+use to=20
+let PIC code handle inter-library calls and global data. We discuss them =
+when we=20
+cover shared libraries in detail in Chapter 9 and 10.=20
+<P>
+<H2>Intel 386 Segmentation</H2>The final topic in this chapter is the =
+notorious=20
+Intel architecture segmentation system. The x86 series is the only =
+segmented=20
+architecture still in common use, other than some legacy ex-Burroughs =
+Unisys=20
+mainframes, but since it's so popular, we have to deal with it. =
+Although, as=20
+we'll shortly discuss, 32 bit operating systems don't make any =
+significant use=20
+of segmentation, older systems and the very popular 16-bit embedded =
+versions of=20
+the x86 series use it extensively.=20
+<P>
+<P>The original 8086 was intended as a follow-on to Intel's quite =
+popular 8-bit=20
+8080 and 8085 microprocessors. The 8080 has a 16 bit address space, and =
+the 8086=20
+designers were torn between keeping the 16 bit address space, which made =
+
+translation of 8085 easier and permitted more compact code, and =
+providing a=20
+larger address space to give ``headroom'' for future applications in =
+larger=20
+programs. They compromised, by providing multiple 16 bit address spaces. =
+Each 16=20
+bit address space was known as a segment.=20
+<P>
+<P>A running x86 program has four active segments defined by the four =
+segment=20
+registers. The CS register defines the code segment, from which =
+instructions are=20
+fetched. The DS register defines the data segment, from which most data =
+are=20
+loaded and stored. The SS register defines the stack segment, used for =
+the=20
+operands of push and pop instructions, the program address values pushed =
+and=20
+popped by call and return instructions, and any data reference made =
+using the=20
+EBP or ESP as a base register. The ES register defines the extra =
+segment, used=20
+by a few string manipulation instructions. The 386 and later chips =
+define two=20
+more segment registers FS and GS. Any data reference can be directed =
+into a=20
+specific segment by using a segment override. For example, the =
+instruction MOV=20
+EAX,CS:TEMP fetches a data value from the location TEMP in code segment =
+rather=20
+than the data segment. The FS and GS segments are only used via segment=20
+overrides.=20
+<P>
+<P>The segment values need not all be different. Most programs set the =
+DS and SS=20
+values the same, so that pointers to stack variables and global =
+variables can be=20
+used interchangably. Some small programs set all four segment registers =
+the=20
+same, providing a single address space known as tiny model.=20
+<P>
+<P>On the 8086 and 186, the architecture defined a fixed mapping from =
+segment=20
+numbers to memory addresses by shifting the segment number four bits to =
+the=20
+left. Segment number 0x123 would start at memory location 0x1230 for =
+example.=20
+This simple addressing is known as real mode. Programmers often refer =
+informally=20
+to <I>paragraphs</I>, 16-byte units of memory that a segment number can =
+address.=20
+
+<P>
+<P>The 286 added a protected mode, in which the operating system can map =
+
+segments to arbitrary places in real memory and can mark segments as not =
+
+present, providing segment based virtual memory. Each segment can be =
+marked=20
+executable, readable, or read/write, providing segment-level protection. =
+The 386=20
+extended protected mode to 32 bit addressing, so that each segment can =
+be up to=20
+4GB in size rather than only 64K.=20
+<P>
+<P>With 16 bit addressing, all but the smallest programs have to handle=20
+segmented addresses. Changing the contents of a segment register is =
+quite slow,=20
+9 clock cycles on a 486 compared to 1 cycle to change the contents of a =
+general=20
+purpose register. As a result, programs and programmers to go great =
+lengths to=20
+pack code and data into as few segments as possible to avoid having to =
+change=20
+the contents of the segment registers. Linkers aid this process by =
+providing=20
+``groups'' that can collect related code or data into a single segment. =
+Code and=20
+data pointers can be either near, with an offset value but no segment =
+number, or=20
+far, with both segment and offset.=20
+<P>
+<P>Compilers can generate code for various memory models which determine =
+whether=20
+code and data addresses are near or far by default. Small model code =
+makes all=20
+pointers near and has one code and one data segment. Medium model code =
+has=20
+multiple code segments (one per program source file) using far calls, =
+but a=20
+single default data segment. Large model code has multiple code and data =
+
+segments and all pointers are far by default. Writing efficient =
+segmented code=20
+is very tricky, and has been well documented elsewhere.=20
+<P>
+<P>Segmented addressing places significant demands on the linker. Every =
+address=20
+in a program has both a segment and an offset. Object files consist of =
+multiple=20
+chunks of code which the linker packs into segments. Executable programs =
+to be=20
+run in real mode have to mark all of the segment numbers that occur in =
+the=20
+program so they can be relocated to the actual segments where the =
+program is=20
+loaded. Executable programs to be run in protected mode further have to =
+mark=20
+what data is to be loaded into what segment and the protection (code, =
+read-only=20
+data, read-write data) for each segment.=20
+<P>
+<P>Although the 386 supports all of the 16 bit segmentation features of =
+the 286,=20
+as well as 32 bit versions of all of the segmentation features, most 32 =
+bit=20
+programs don't use segmentation at all. Paging, also added in the 386, =
+provides=20
+most of the practical benefits of segmentation without the performance =
+cost and=20
+the extra complications of writing segment manipulation code. Most 386 =
+operating=20
+systems run applications in the tiny model, more often known as the =
+<I>flat</I>=20
+model since a segment on a 386 is no longer tiny. They create a single =
+code=20
+segment and a single data segment each 4GB long and mapping them both to =
+the=20
+full 32 bit paged address space. Even though the program's only using a =
+single=20
+segment, that segment can be the full size of the address space.=20
+<P>
+<P>The 386 makes it possible to use both 16 bit and 32 bit segments in =
+the same=20
+program and a few operating systems, notably Windows 95 and 98, take =
+advantage=20
+of that ability. Windows 95 and 98 run a lot of legacy Windows 3.1 code =
+in 16=20
+bit segments in a shared address space, while each new 32 bit program =
+runs in=20
+its own tiny model address space, with the 16-bit programs' address =
+space mapped=20
+in to permit calls back and forth.=20
+<P>
+<H2>Embedded architectures</H2>Linking for embedded systems poses a =
+variety of=20
+problems that rarely occur in other environments. Embedded chips have =
+limited=20
+amounts of memory and limited performance, but since an embedded program =
+may be=20
+built into chips in thousands or millions of devices, there are great =
+incentives=20
+to make programs run as fast as possible in as little memory as =
+possible. Some=20
+embedded systems use low-cost versions of general-purpose chips, such as =
+the=20
+Intel 80186, while others use specialized processors such as the =
+Motorola 56000=20
+series of digital signal processors (DSPs).=20
+<P>
+<H3>Address space quirks</H3>Embededed systems have small address spaces =
+with=20
+quirky layouts. A 64K address space can contain combinations of fast =
+on-chip ROM=20
+and RAM, slow off-chip ROM and RAM, on-chip peripherals, and off-chip=20
+peripherals. There may be several non-contiguous areas of ROM or RAM. =
+The 56000=20
+has three address spaces of 64K 24-bit words, each with combinations of =
+RAM,=20
+ROM, and peripherals.=20
+<P>
+<P>Embedded chip development uses system boards that contain the =
+processor chip=20
+along with supporting logic and chips. Frequently, different development =
+boards=20
+for the same processor will have different memory layouts. Different =
+models of=20
+chips have differing amounts of RAM and ROM, so programmers have to =
+trade off=20
+the effort to squeeze a program into a smaller memory versus the extra =
+cost of=20
+using a more expensive version of the chip with more memory.=20
+<P>
+<P>A linker for an embedded system needs a way to specify the layout of =
+the=20
+linked program in great detail, assigning particular kinds of code or =
+data, or=20
+even individual routines and variables, to specific addresses.=20
+<P>
+<H3>Non-uniform memory</H3>References to on-chip memory are faster than =
+those to=20
+off-chip, so in a system with both kinds of memory, the most =
+time-critical=20
+routines need to go in the fast memory. Sometimes it's possible to =
+squeeze all=20
+of the program's time-critical code into the fast memory at link time. =
+Other=20
+times it makes more sense to copy code or data from slow memory to fast =
+memory=20
+as needed, so several routines can share the same fast memory at =
+different=20
+times. For this trick, it's very useful to be able to tell a linker "put =
+this=20
+code at location XXXX but link it as though it's at location YYYY", so =
+the code=20
+will be correct when it's copied from XXXX in slow memory to YYYY in =
+fast memory=20
+at runtime.=20
+<P>
+<H3>Memory alignment</H3>DSPs frequently have stringent memory alignment =
+
+requirements for certain kinds of data structures. The 56000 series, for =
+
+example, has an addressing mode to handle circular buffers very =
+efficiently, so=20
+long as the base address of the buffer is aligned on a power-of-two =
+boundary at=20
+least as large as the buffer size (so a 50 word buffer would need to be =
+aligned=20
+on a 64 word boundary, for example.) The Fast Fourier Transform (FFT), =
+an=20
+extremely important calculation for signal processing, depends on =
+address bit=20
+manipulations that also require that the data on which an FFT operates =
+be=20
+power-of-two aligned. Unlike on conventional architectures, The =
+alignment=20
+requirements depend on the sizes of the data arrays, so that packing =
+them=20
+efficiently into available memory can be tricky and tedious.=20
+<P>
+<H2>Exercises</H2>1. A SPARC program contains these instructions. (These =
+aren't=20
+intended as a useful program, just as some instruction format examples.) =
+
+<P><TT><BR>Loc Hex Symbolic <BR>1000 40 00 03 00 CALL X <BR>1004 01 00 =
+00 00 NOP=20
+; no operation, for delay <BR>1008 7F FF FE ED CALL Y <BR>100C 01 00 00 =
+00 NOP=20
+<BR>1010 40 00 00 02 CALL Z <BR>1014 01 00 00 00 NOP <BR>1018 03 37 AB =
+6F SETHI=20
+r1,3648367 ; set high 22 bits of r1 <BR>101C 82 10 62 EF ORI r1,r1,751 ; =
+OR in=20
+low 10 bits of r1=20
+<P></TT>
+<P>1a. In a CALL instruction the high two bits are the instruction code, =
+and the=20
+low 30 bits a signed word (not byte) offset. What are the hex addresses =
+for X,=20
+Y, and Z?=20
+<P>
+<P>1b. What does the call to Z at location 1010 accomplish?=20
+<P>
+<P>1c. The two instructions at 1018 and 101C load a 32 bit address into =
+register=20
+1. The SETHI loads the low 22 bits of the instruction into the high 22 =
+bits of=20
+the register, and the ORI logically or's the low 13 bits of the =
+instruction into=20
+the register. What address will register 1 contain?=20
+<P>
+<P>1d. If the linker moves X to be at location 2504(hex) but doesn't =
+change the=20
+location of the code in the example, to what will it change the =
+instruction at=20
+location 1000 so it still refers to X ?=20
+<P>
+<P>2. A Pentium program contains these instructions. Don't forget that =
+the x86=20
+is little-endian.=20
+<P><TT><BR>Loc Hex Symbolic <BR>1000 E8 12 34 00 00 CALL A <BR>1005 E8 =
+?? ?? ??=20
+?? CALL B <BR>100A A1 12 34 00 00 MOV %EAX,P <BR>100F 03 05 ?? ?? ?? ?? =
+ADD=20
+%EAX,Q=20
+<P>
+<P>2a. At what location are routine A and data word P located? (Tip: On =
+the x86,=20
+relative addresses are computed relative to the byte address =
+<I>after</I> the=20
+instruction.) 2b. If routine B is located at address 0F00 and data word =
+Q is=20
+located at address 3456, what are the byte values of the ?? bytes in the =
+
+example? 3. Does a linker or loader need to ``understand'' every =
+instruction in=20
+the target architecture's instruction set? If a new model of the target =
+adds new=20
+instructions, will the linker need to be changed to support them? What =
+if it=20
+adds new addressing modes to existing instructions, like the 386 did =
+relative to=20
+the 286?=20
+<P>
+<P>4. Back in the Golden Age of computing, when programmers worked in =
+the middle=20
+of the night because that was the only time they could get computer =
+time, rather=20
+than because that's when they woke up, many computers used word rather =
+than byte=20
+addresses. The PDP-6 and 10, for example had 36 bit words and 18 bit =
+addressing,=20
+with each instruction being a word with the operand address in the low =
+half of=20
+the word. (Programs could also store addresses in the high half of a =
+data word,=20
+although there was no direct instruction set support for that.) How =
+different is=20
+linking for a word-addressed architecture compared to linking for a byte =
+
+addressed architecture?=20
+<P>
+<P>5. How hard would it be to build a retargetable linker, that is, one =
+that=20
+could be built to handle different target architectures by changing a =
+few=20
+specific parts of the source code for the linker? How about a =
+multi-target=20
+linker, that could handle code for a variety of different architectures=20
+(although not in the same linker job)? </P></TT></BODY></HTML>
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-01.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA5AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2SZyo
+yNo68lCcD6VCsodyHkTqCp2kZBFWJIkkXD5xg9HIqFAYpT5aMRgAEvx+tIgmCKy7sjBB/hpDCN2e
+Ov8Ad9qoN5qxySSSDGWIUTEHOTke9WFuJPO8to8DdtJD9OM0ATiIBRkDoe1LgB+g6/3famSO0cTs
+q7iFJA3dTURuGEihYZGyTnJxg4pgWiRtxjnHXbTcBicgHn+77U0ElAMYJXkbqFO0/j/e9qBDiAAc
+gYx/dpruqkbhwTxhCe1Up7qZbdyqIMhwpMhzwD7e1I2FkV45Q5DrsHnk57HI+hNAyWWVicRDA2Zw
+Yjk8/hUtq7sW3qNwYY+THYH+tRGNjIhdQoVCBtkPfH+FWI0ALbT1bJJYntQArZ44B49KKMcDkdP7
+1FNMkbdO0SghlHXOYye2fWkSOSRQ4kjGQDxEef1qRxGw/eEEZPVyKj2xeYf3hxgcea3+NSUQLIjx
+Oh37jvUlYm65IpUwsqbt2d+f9SQCcetBh8tfMjAwpf8A5aHJG4nngmpPMdpEDeUAG5/eE9vpQBK3
+IySBjPammUbvvd8fdNLIqsNrbSOcjdVd4XMrf6gKcYPJPHSmBaU8cehz8tKck/jn7vtSAbIgpYM2
+Dk7qTvg46/3vagRTyWRgCT98bvs5JGTzipklWJQpSTdwNxiPPFMEhjRgrQ/xdZsHrn0pHn343GAj
+cCP356/lSGLHJK1uZSSW2cKIzk1S+33P9pGJS20SKMFMdVB5/OrcQhCKrPGWVef3pNPEVstwGBQy
+luvmHOcf4UAWwcgH29KKEK7BnGf96igCO6QuIyqhyGJwVzjg1HsHlqZLfLADOI8irIYdSwAzj71L
+uAwCRggfxUAVv3A58g4548qmutvkbYXVi68iIjHI74qw/lrySM8/xUZJb5QMcdWoAikiEijJfADY
+AqF45WlICsQflJ344q2SOQcd+jUMAT14z/epgNi8xVzICGGRx0p3LMeT19PalAIHYjB703GT26/3
+vagCCHfGjJ5cmdzngDuxIqfzZB0jkJz6AdqY0qpIFJAyrHlvcD+tJHdxzSiNWG4gN97t/kUgGymS
+WJlEcgBUjI25+vWqEVlcC+WY+ZsBGMhf7oBP6VqGRBn504Bz81IHWQBlK4J6hvagCWMEIOT+lFJH
+9wdPzooAVwW+XDde2KhSBgz7ySrAAAH+dW1+9SdvwFK4yt9kQbTlyFzjJzUw+XgbucdSKceg+hob
+7g/Ci4DcYB698dKQg453dfalbt+NOf7tAiPLZ4yOD6U/GemQc+1C9f8AgJoPT8f6UXCxEyNjJUtj
+OMgUnlJv3iP5yeSAKsv938DSDr+P9KdwKjW8LJgxZ4PXFKsSpISqkHPOPpUn8I+hp6/eb/e/pQAs
+YyvVv0op8X3PxopXA//Z
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-02.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABiAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2jnBz
+jr1xSsARgAf98+1OIAH4+lI5+Ujv7A1IhpCqecHn0pBt2jgY9xTN3Zlbk4+6acFJx8v4EH0pgLlS
+Og6DtTUJKZdQDnsO2afgADj8cGq7Rs0SMjlQAPuA857/AK0CJkIJ49uxpCo3jHPU5565FVS5HQzM
+4AOAn3h6D1qWONi6O8rkkZ2kYoAsBd2STzz0zUbjYrMmSQDxzzS4Izjjg9zTJmKKHVgAODuJ9RQA
+QuZYg7BlJHQ5yKl28++feqYuFRiZJVI6AKpH+f8A69WoZ0mXchyM8jPTigZIvA6n8zRQrcc4/Oik
+BBMjFWdDITuyArEY4pjLI8TEGXc2M4OOnp9atAAc8fnSnHPI6+vtTArKshAYyyKAe+DmkVroEHy4
+yM9TK3/xNIqlP4JSAeAX/wA+n60+MyAKPJATgZL+1AEKPcm6bz0VI1GUCOTkYHXj1zSxGJYIwWdj
+sXOGalkAQTNnny85LE+vSneZMV+WJFAA+9Lj+QNMQwPbqMNIV5HDSsDSxSRPcfu5t20HP7wnqf8A
+61OWSc5zHD2/5bH/AOJojZjO3mbANowFkJ7n2FAExA9fXjNOGOfxz81IcbSMjGD/ABUDr1BwD/FQ
+AHGTz/49Rg5+9gZ9aCeCff8Ave1Ab5gOMZ/vUgAEd8fi1FNOM9R/31RRYCTIAJ4/76qMSq8jIrqW
+XqN/I4p56nOPxNVrqHPzIqZzk5Y56e2KBk5kBYDcMk8fNQDwBkfXdVVrV/NVvk2qTj526nvS/Z1x
+uSR42PdX/oeKBD2IE2G+6yqM5OO/Wq8LW3kx5uCCUUn9+f8AGnSWYk2FriY7CD8smP5Ci3mmWzhH
+kuSY15DL/jTAQPblmb7XtAOAfNH9adbtCbiTy5/MAVedwPc+gqtFKkK/MJMZx/rFXP8A49zUsAhu
+DI29wN2MCbJHA9DQBfLjPBHQ96A/UkjGD3qkqQBJGEzlQTz5x4x+NTBRj5bmTvnlT/MUAT78EncO
+vTPtRk7s54z6+1RGM4JW4kznvs9PpTreQvBGSxJIBPI9KQDjzg57etFDN0+Yjj2opgOJ4PIJ+vtQ
+cOpzj8/ahkIzhjyfb0qOTKhgGIz34ODikMdzu2lsfjSKdoAz+oqMwT8EXJbjqVHXFMCSuPmnOeMg
+KB/WgQ92xsUMQG7jFQ25VbaJTcNkRrxlf8KkYPujG9ioXpxnPrn/AD1qKFmW2RfsUp+Vf7n+NMBQ
+FVsfaXAz/Ds/wpY442llLN5nP8QU9hQMls/YX4PX936/WltyGeUeR5XzdML6D0oAQ2saq6xRouX3
+H5Rz/wDXoW2bnJU5PPyD/PerQC5Yc980EfeA7/SgBjB0Q/PgjPzEDA49KrWs7RRFJZAxUlvkHRfp
+171aIY53ZIz6D0oWMbuV4+g9KQAJFkGVLHHBooZcYwMcegoqhExbbng9fb0pGdSDuB/Sl4Ycg9e2
+PSmukZ4wf09KkoUKN3GevtTCikghcH8Kd5KDkk9e2KaF6bQQB6gc0CIZ0wplBYFVycAc1VaKaJVj
+lviuAuMRLV2VP3DfL/D3xTZIZiQybV4A+Zc9/r9aYFRFllchLrIBxgwg5/Wp4AVMiuVZgxyVUKOg
+9zUyLJlhIVKcYCrjuff6UiKiyyrsGc55HsKAECJvYbcZznNSCNQSdoNK23bgIOh7Um3GQFGB14oE
+KxOdoA69ce1L0A+UZ+ntSbVVjwOTnp7UDBwcDr/d9qQxhB44HT+7RUhHAxt6f3aKaYhSm0kAf5xS
+EADlQPwp7Y5zjr6e1N2Iwyw6e1IoQR5b7o6+lJy7AYGMelPHpgYz1xTcAEf/ABNAhj4KEFeDheF/
+CnYJUA+3akZRtXI9Oi+9OwuOmeB/DTAQqGO3ADdenvTAoMzFkHTrjr1qTA6YHX+770ilWGR3z/DQ
+IGXj5cY57UAAbsgf980NkA8dAf4aT7xYnv8A7JoAdtDMScYz/d9qRAc9B1/u044Bx2z/AHT6UA9B
+kjn0PpSAYwJI6dP7tFK27jB7ehopgSMoyOB1/pSoo29B1NFFSWgCjC8D71LtX5flHX0oorRbEPcQ
+quzoO3aq8hwTjjpRRVIgpSyODw7Dk96pSzzKFxLIOvRjRRVoQz7Tcbj+/k6f3zUq3E2X/fSf99Gi
+is2NFuOWQtzIx49av2rExjJJ+v0oorNlolfqPpRRRSGf/9k=
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-04.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA1AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD1jSNI
+tPDulRWFhE6wRnIHLEknkk/jV6N3d1IiIQ/xEc/lTo5tz7SjjBIztNEzuqgJgklRznuakkXO5ig4
+AAOcH3o2HIJPYdqhUymTazqFABLeWcfzqPznLqAwHb7hPc+/HSmIsIHO7emzB47gj1pkrPG0e1Sw
+LANheR79ah82Uj74B+X/AJZHBzjvn3q4vTOR9MUDAjCgf0qJhJ5qlVXZj5uOalIzg46Y7U0qRluD
++FAhQM8AYH096hhSQby/975fl7Zp/I7fp70/JHbOfb3pgL1yDjj/AGfeokEnmybguzjacfnUpHOQ
+B+VG0dcfpSAQFscAH/gNFKOB2/KikMbHOrPsAfcMgkqccU2TBUk4IyoxyO9H2hRK0WDuBA6dcjNE
+y7oguBkleqkjrQBW3mWcosanaOfmbGfTpTfmLqqR4JABI3cct6H2/WpViYkqCAB3CsBnP+9TcDdH
+hFOQASULevv/AJzTEJGNmwEcqQACrY64ODmlSaV2IDKuCBgxn1x1zSAgSISqKSV2gRkDk885qMNy
+wC5GQQp3YOW7c+9AFsLIAx8xM8f8szxz9abFLI6ZLqDxlTER3+tEcbbGX5AT/sn1+tRIu+Qxske8
+EjmEjoeuc0AWVbeN3BbJGQvoaeq57j8veo4MKmzA4JHCn1qX7p/HuvvQA3JBKkfpTgP8496SQAgM
+F7+nvQMY4xnn+GgBdvP3R/3zRSjA4P8AKikMb5mZCmDnIGeaZMSB1zyo5B9acXAm2EHORz+f+FNu
+BlMY7gDr60xEGfNlKhyQvU4fGfT71MfeFQqoZQFXaEJzkkdN1KI3aXZtOB1b5wP5+9KSNyIAnAAy
+VJ7n39qAHBPkVsR4yuAIyp6/WoCx3lBgIHGAVbBO761IoAkAJUnI6IwB5+tRht7yqqxfLIAQ8ZOc
+tj1oAtiIqrBmTDeiH1+tQIEeQpsRXLEZ8k9j65qVbdQjhTFk9xFgdfrUaKzZUpGCCRzAeeevWgCa
+EEL1GQxHAI6Gpj29fce9UXmaGNQAg5bPyE9Gx61LGZXUMzRkbiOIzyAfrQBOTzg4xz/DQoUcEDv2
+qCZpE5BDA56RE4/WnRMzFTuRlZSeIyPT3oEWQAew/wC+aKUAen/jtFIY3B9f85prJvVgcEcfzooo
+GRi3X6dvlJH8jSeUFxgDA47+v1oop3ECxLnkZ5Hc+tN+zoxIIGN2SDkjOfTNFFAEpgSLICrg9Rji
+meRGygmNB6YXGOaKKABreP5VKKcZOWGTyfegWsJYkRRjAJ4X3oooAVoY2JLRxkkHkrSrBGmWREU4
+I4WiilcCQZH938qKKKVwsf/Z
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-05.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA+AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD1NPDu
+nW/iG41mCxRb+ZNrXG489P4c4B4HOKvTxsZQ5LBcLyAcd/Q9elTF23kYXG7HJFQ3FwykKhTawHVQ
+R375HpSJHBF8uNWhZ2CDquQOKPKj6m0XP+4P8aaHlEZcAMwAwoGCePc0oMhhZ3O0jJwVHagBSkfO
+LbPHHyD/ABprxHHyRMjc4OOP0NNleUO5AyinsmccD396cjPLG3zYCtwQmCeh7/WmBF5EgwMHJP3t
+nPv3pRG4OCm4D1jY9/rT280J92UntjZzTYmnYgHzBzyfl4oEOVYsLugO7AyRGaX92o5Ev0CvTcSg
+I22TJ6jC8U4PKeCj4PQhV/xoGOAjHOJvyfnio5ngKsgMoZlOM7xSo0v3WVwM9WVT29jT5oztZm8t
+sA4yn/16QibGDwePoaKcoyOgP4UUhkJhglZg6rnPPTNQyeShEW0lQQRtKjnP1FWXiRiSVQ59cVB5
+SIRmZUbOQSQDimA5pIsqSoJIBB+X0qFvJkxlM7fmIG05wPr71MFj3ofOUYUY+YcjB9qZIRt2JONp
+OG+ZemPpTEMnMRmCmIllP+wN3HueacWi2rmDAyflIQY5+uKVzA0jE3AUnqCV9B6imxgeQWknVnJb
+kFeeR7ewoAcjwu+BBjgkD5PXHrSloBnfEpI6520xSiNlrhRu4TLLnrz29acfIJZWmTdnkkr6/SgA
+CxMFC28eP+A0qRxcfuEP0C1HFFb7gPNUt0HK/wCFPjigiZSrKoJBwCBzz7UAO8uMKMW36J6fWmyw
+wuhzEVxn7oX0qRmTHE4we25fT6VG5PA83IJ/vrx+lAFoYHGf5UUoJGeR+YoqQI2Vudrv64z7/So5
+I5DsZQ3GMgMfXvx0qxlSOpx360wSAHG7vgdaBlfyH/dH0QA/MfQ57UbWXGAckYBLsccfSrWMgEEj
+86b79/x9KoRDLEykmMkAA8hiOw9qYYmkCsASeSQHIyD71abbuPJ5+tMdWbOx9p57E5oAh8t3WJwn
+8WcFiMdPb2pzRSqMY/iJB3kdT9KcVcoVDsST1x05pRFN1MvfgFe2aAEXzCqBwvBBJ3H/AAprQlhw
+EXI5IPP8qeFlySzg8/3SO/1oCyEr+8I2jkY60ARrFIpDYBGemeox9KGkJBh24LqcfN7UrJKAAkuD
+7g1JGrqh3Nuz7EdqBEueT/iaKM5J4P5mipGcvZ+Jje+Nb7QX0iVFtY9wumGQ3Ttjgc8cnOK35MRu
+qpGoz0AjJ7+1WtoKZwPy96iMAkwW28EYIHvTuMjSRiQDtXCgn5SfX3piSMSRuxgZO6M+n1qy9sjb
+TtXgcfLTPs6TJgqgKnqF60XERl3Klgo6DgAk9B/jSDe+cMoOO6EGpGhTPKIT/u0jW6EthUBwQCEH
+FMCNpZFVRkDOckKTnBx605GkkUMsuAfWM5/nTxCoQAIgGD/D6nmh7ZCMbEHPOF96LhYiE0mUA5Bb
+k7T64pZGdMfvBg+kbE/oaeYcFcLGNp4+XpTjCu4Eqhzj+GgCt9ob5ec8j+BhipVeVot6qucZwS3p
+Uht4wgBjToP4aabNGjGEjX1wgobFYmUFhnd+hooAx6e3FFRcdj//2Q==
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-06.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA3AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0nwpr
+msazHfHV9GbTjDNsiDAjev49ceo4Oa3Xn5O1CQvUjAA/WpD061HMAiZGPmPJ3YpEkJvFA5TjofmX
+j9aeJgFH7vA27geD/WofvuFBUn2ORnvzipkRsctkAYxkYA/IUARG4nDMGCg56YXj/wAep8V1uBBU
+k55I246/WmTbRJnA3eu8j+VPjjjba65xx368+4zQA1mcsGztXoPu/wBTRHIwdt5Dd9oCjH61Iy+X
+hjJxnjJ6dfakizKrYk74OGz2+lMB0m5+FVx7rt9Pc0wb1Y8TfmnrT3jlErbJPl9N2PT2pHWVuhwf
++uh/wpAPEhAGYX2/Vf8AGm7mYcRMPqV9PrSQiR1GZGHYgEH19qeIz3lcH6j/AAoARJA2SVwc4wcU
+VIqBS3zkknJz9PpRUjHgbhjn9aCuSAM/maUD5cikyV/OmIAiouAMAemaYzAL3/WlJJOMdTxTQvqO
+n+FMQpZV7Hv60uOd3P6+tN53sdvFKST0A/yaYDTnJ64PsacF46n6c+lIMkH5RQC2MED60gIZYmaR
+iMf99sKIoSy4ct1OMO3r9aS5CZ+YKGIJyyZ9KRpUjCESKq4yF29efrQMsRosYCgNgdM5pRj1/nUA
+duPnjO7oTx/WpNrkrhkyBz8vX9aBEuCec/oaKTkcHn3AoqRgSMf/AKvSo5iwxsHU+oqUkhc5/X2q
+OR5AAQ6jB5LVQiMzsoJwuVGTn8faozO5kwu0oe5HtUo8wqQJVJB9Kb++2FNyCQcjryMUwEE6+aY9
+yk854oR3Zs4UAZ4xUrLKzEhwBjpzRiTcDx39aAIzKUwWABP+fSnBww75PqKcFIzubLdsZ4piiUjB
+cHHsetADGkSQEBm/LmneX5nSWTAOccDv9KdtcHkg8c8U/ABHB/M+tAEaQgOHaRiQMdR/hUwIJH/1
+qQDLcg/n704Hnv0460gEAB5ooBbtn9aKQDlBYEZo2fNjAIPY0UUDGmNQThVGeuB15pixogDIqjjH
+AxRRRcLBgkk7j096cPm47/jRRTEJwSR3/wDr0mRjk9KKKBMQum0Et1HHB9KDInALD8jRRV8pk5sQ
+3MQIBfv6H1oFxEcfPxj0NFFV7NE+1lcEuYyuVk4+hooopOCuUqjP/9k=
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-07.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABhAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2oduv
+50jNheuOnengEDJB7elNOWwcE9DSJK4ebZlyinB43dafHNI0hDALg9mBzx/+qont2DF1gDZJYktj
+jI/z+FOiURHLReWx6AHPFAE4yeTx070jYJJyB16mlViVGc9qhktwxLBnVmzkqcUCJcgE5brx1pQC
+3Q8fWoTaZYlTL97P36mgjMUSou7aoAGetAA25FGDxxnmlU4HJ9e9Jk4wQf0oYNt4DA8+lAEMouBI
+zLsKA8AtyeKQ/aFA2lO3foKlKmVtj7toOQVbBzj2pv2fHCyygYGMtn+dAEi5xz1+tFLGGVMEseTy
+cetFIY44K9ug/hojAC5OOPakJ7ZHb+KkyFHBGP8Ae96YiubkFNu1sLkcRE9DjtTkaNpVB3kk9TGR
+296ZHcQrCoMqFiCSN/rzSyS+cUWKRQ271zjg0ATgg9MAAD+GomnQg7QT1GRGT/KgyNEoWRQwwPnQ
+n+XWqPmRSRsVVG+d+fKLfxHvTAvJcsuQsTsM/wBzH88VKH3gNt25A4K1nosIYFsKqnOTGFH8qnSc
+uMxI7DPXOP54oAnY8jP5YpxIAx7HtVf96/PyL/wIt/hShXb70wB5+7/9fNACNcrHK4cgYIHK+2aa
+99B5RIkjLADjpzRDIlsxilnDNwcs2D3/AMKJLiHyyBNGS2MfP70AWU4XovU9qKd8vqD/AMCopDDJ
+6DPb0pQTjv8ATj1qmYZF3Moc+hBHrTiWCDKEHeMbuc84NAiSJwII+SPk7kUrktInJHz9Rj+6aggt
+4Ps6Zii+7/zzFOeFBJH5SIh38lUGfumgBz4DAtNIM4x93/CsxNzmcfO5EjDLRbj29DgfStFgEB2D
+sNz7cmoIrUgy/wCrBLE4KE+nvTAZ88SkjK+/l7P1JqwJWix5vC8DcCMUiQuG+5FgnG5QQcY7DFKt
+tGM4AYkAEkZOPxoAd9pBBEaSPwegA/U8U11unUhdsZOcHO4j8KVFxmJhnAOMjqKldCCNmOvO4UAM
+tmkyxdtzAhSQAAcAZ/XNSTH9wOD95eOP7wqCK3tzyYkbLEkmP3NK8EAVSkUanK4wg9aALifd5zn8
+KKiwMnK55/u0UgHAjGCfT1prIpHIzjsQadIAwGCOg/ipFIIwzD/vugCvFDEIejcbhyWxwcU7ygDH
+j5SX9Cf4TTIovlb965Xc/G/GPmPtRKm149rsSXIAMhOPlNMCbhzgY2rjt3pg2idwAD8o6A+pp6qs
+aAA9h/FSbQDvyo+Uj79AEhXaM4GPTB9KaMBcfTjFKOW5wef7xpThRkEZwP4qBEUgwA54Izng9KeP
+vcDIz6e1I+2QEEjBByN1IhG3buyQcE7qAI4Yo2iU/NkgH7zf40NEiyR7c5yepY9j6mmwwsYELTsD
+tXow/wAKUoqyR/vCxyTy/saALAOBgj/x2igYGef/AB+ikMfgjHJPT0pCCMn5sYPpT3Vdox6DtUbD
+g8DHP8NAEESuyuwllX53+UBcfePtSEuk8RBkYl8chf7p9qkhRdh4HDt/D7mhpFWaEFR1J5X2x/Wm
+ANI/o3QZ6VDcEBUbDZBOCWAxmrRMTdAM4H8NIY0YHhc4PBWgRTLvIzYlYYYZw4xjH86c5DMjpI7c
+4OHGAasCFQCpVSM5+5TRGqDARdvHRKAFWTDlSxLYJxxTJi8eZVV2OeVUAk8dqkCcbQBjB424p2Ae
+MDr/AHT6UAQQxv5Y3Sy4z228c/SnFDHMn7x2GG6gf0psCMYEJkXLAHmM9/xoEZFz8xUgIwGEI7j3
+9qALHzZPX9KKFOM/d/75oqRirIMdscfxU3OB1HQ/xUpDKQAcj60E8HGeQe9UBDCR5RwQf3j/AMR/
+vGgYNwhOMbTn5j6ipUOUB6Z5zkelJjBUgkdARmgBGVSeMAcfxGk4HfIwf4jTmYEgf196UNj0796B
+DVcFznoD/eNOB45Ixx/FS7h07Z9aTjPDenegAOM9fX+I0EjOOOT/AHj6UjEZ68896Ukf3u/r7UAR
+QoDBGMjhFx81K3yzJyMbWH3j14/+vSxfu4VHPQDrSMN7Kc42kn73Xgj+tAEoYDPI/wC+qKQKST16
++tFICRvvfjR2/A0UUDI1/wBWn+e1L/Ev1FFFNbCHP94fj/OkPf6GiigBR3+tM/i/4CKKKAG9vzpT
+/X+lFFACj7o/3RSHv9DRRQBMOp+tFFFSM//Z
+
+------=_NextPart_000_0019_01C557A0.A8C083E0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker02-08.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABMAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD06y0r
+XYPF9/qFzq3m6VLGBDac/uzx26DGDyOua3SeOppzEDPf8qj2Ao2Rxj29KkkdijcTwOKVyMgEgflT
+IynljaRj8PemAuTg5znFHIGTk80DaR2/SkIGe3+TQAucY9Ka7hULNwoGSfSjjdgkU2VRJHtwp5H3
+sYoAPPRZRGGG89KYwkadgULrgYwcdvc1ImUBDBMZyMADAqkrtdz74WKELgAkD19M+ooETFSGVxEU
+OcFiRyPTg1bGcA4zWd5cqHzJXDliAOeOo/wq8jBuOhB5Bx60MDlPFMRfU4iB/wAsQP8Ax5qKua+B
+9uTjP7senqaKnUDo2J6Y71HM22F85xj+lSE85x9Kr3CNL8h6MCODjnH/AOumhku0OMnp7k0yAful
+XHb3puxCAUVyOP4z/jSRvIqIoiJAO3K9ucetMCYrjoP5+lAJyDRhscj/ADis15o/OZWcEhjkM49f
+TmgRp+YpbOM8+tKxBjzjp6n2rOj8kuN0QOT/AHev04GatKmU27AqYxs2igCUZYg/w46c80yRSkqy
+7WYAEEKCev8A+qnfMD0Gc04sygkAZ7DpQBAXEyKmxzlhncpAwOe4qQochc8jlG5/KoVlZlGdm7gA
+A+1SBpSNrwjrwVIOKAKV9ZC5mWQj+HHf1NFWvNyASB3/AJmipsxDpp2jk2rGG9evr9KijkdwrSKB
+82MenBqxJGrEFwePc1CIkhCLGG2l8n5icnB5qkURxmzMKc24O0Zzt9qdDny1MbxrEGPQDkZP5U+K
+4AijXa/3Rj5G9vamJseMtKGZS5whU9dx7UCLIAx1wR2/Cs91zKT5jD5j0DHv7Vo9F5yT261EG5ZS
+AMN7+xpgVkDBgwZmbsGVv/ZjiphdIcJJ8jjqG47evepf4+3P1pkkW5c5IYdGHUcUASMRnPH4Ukrq
+iBiyjkcn61FEqlmGNjjqFyPxocOnzM5ZSRhcHPX2pAO8yFoyA8efZh6VKxGeMZ5xVdpAYWIEgJXA
++RvSpQqoh2And165oAQIAqgAHjrmipQM/n70VNwsYNjr95d+Lr/RpdHmitraMOl42dsh446Y5yeh
+PQ/htSqRsYJu2nJ6eh96kCgEjikAA9OaoZDG7CKM+UeFHpz096dCo2sdoBLHrjjk04BVXbkYAwKW
+NdqkZX7xPB9zQITcAgyQe36U0ECV8bc5/oKftwuCcjHrTcFXc54PT8hTEKHxngYz6CgtxjA9uBQA
+W75peRyfSgZHKpYfKwVxyOP0+lRmYHb8mWDcqMZHWpyx+Y59e9QtGglEwUeZkAnPUZ/+vQIXzQcL
+sYZHdeKWEq8YYY2gYFKWYDkHjvkU6PcI1BHIXn8qQDwBjqKKTJ7E0VJRKevH9aYOvPH504tz0FNP
+38YFUhCnn16ehpoUjJz39/WkXkZwOlPHrgdf60wGlDjqenvTCoPyeccgZ569qkHOM9wKRkU5BA7j
+oKAImkBcYnx0GAPelBMZBaUkdDn6U8xoh+VQM+3vShQQM89O1AiIEZ3mUFR6A9xUqlJMlTnBwevB
+pMA8YGMelAQLkgDJPPHXmiwCqMY5/nRn3OPoadjhaTaOlIBeex/SinBQaKko/9k=
+
+------=_NextPart_000_0019_01C557A0.A8C083E0--

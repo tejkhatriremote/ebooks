@@ -1,0 +1,200 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=082-086//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In addition to the critical section management functions listed in this section, Windows 2000 also allows you to test the state of a critical section without blocking, with the <small>TryEnterCriticalSection</SMALL> function:</P>
+<!-- CODE //-->
+<pre>
+BOOL fAcquired = TryEnterCriticalSection(&ampcs);
+if(fAcquired)
+{
+    // Write to protected variables
+    nAgeAlexandria = 6;
+    nAgeMackenzie = 2;
+}
+else
+{
+    // Couldn&#146;t acquire critical section
+}
+</PRE>
+<!-- END CODE //-->
+<p><small>TryEnterCriticalSection</SMALL> returns <small>TRUE</SMALL> if your thread has control over the critical section, or it returns <small>FALSE</SMALL> if another thread already has possession of the critical section.</P>
+<p>The <small>TryEnterCriticalSection</SMALL> function allows you to take a crack at acquiring the critical section&#151;if the critical section is available, your thread takes ownership of it. If the critical section is not available, <small>TryEnterCriticalSection</SMALL> returns <small>FALSE</SMALL>, and your thread is free to handle other work.</P>
+<h4 align="LEFT"><a name="Heading22"></A><font color="#000077">Managing Events</FONT></H4>
+<p>Critical sections are useful when you&#146;re protecting data or functions from multiple threads. However, in a multithreaded application, sometimes you need to notify another thread that an event has occurred. With Windows 2000, this is done by creating events.
+</P>
+<p>An <i>event</I> is a Windows 2000 synchronization object that&#146;s managed by the operating system. Each event can have an associated name; this allows multiple processes to share the same event handle.</P>
+<p>Events are used when one thread must wait for another thread to complete a task, or when a thread must sleep and wait for another thread to indicate that an event has occurred.</P>
+<p>Once created, an event can be in one of two states:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Signaled</I>. A wait request on this event will be satisfied.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Not signaled</I>. A wait request on this thread will not be satisfied, and the waiting thread will be blocked.
+</DL>
+<p>Typically, an event is used to indicate a particular task is completed. A thread waiting for this task to be completed waits until the event is signaled and then continues processing, as shown in Figure 3.5.
+</P>
+<p>Normally, an event that&#146;s signaled is immediately reset to the not-signaled state in an atomic operation. This prevents another thread from reusing the event. Manual-reset events that stay signaled, even after a wait request has been satisfied, are discussed later in this chapter.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-05.jpg',347,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-05.jpg',347,420)"><font color="#000077"><b>Figure 3.5</B></FONT></A>&nbsp;&nbsp;Multiple threads using events for synchronization.</P>
+<p><font size="+1"><b>Creating and Closing Event Handles</B></FONT></P>
+<p>The <small>CreateEvent</SMALL> function is used to create an event:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hEvent = CreateEvent(NULL, FALSE, FALSE, &#147;EventName&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>CreateEvent</SMALL> function takes four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure. If you aren&#146;t concerned about security issues, you can use <small>NULL</SMALL> for this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that indicates whether this is to be a manual-reset event. Manual-reset events are described in detail later; this parameter is normally <small>FALSE</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that indicates the initial state of the event. If this parameter is <small>TRUE</SMALL>, the event is signaled; a value of <small>FALSE</SMALL> indicates that this event should be placed into a not-signaled state.
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional name for the event. Keep in mind that all event, mutex, and file-mapping objects use the same namespace, so you must take care not to reuse names accidentally. In most cases, this value is <small>NULL</SMALL>, especially when you&#146;re not sharing events across process boundaries.
+</DL>
+<p>If the event is successfully created, a handle to the event is returned. If an error occurs, <small>NULL</SMALL> is returned.</P>
+<p>Event handles are Windows 2000 objects, much like file, thread, and process handles. When you&#146;re finished using an event handle, the <small>CloseHandle</SMALL> function is used:</P>
+<!-- CODE SNIP //-->
+<pre>
+CloseHandle(hEvent);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Signaling and Resetting Event Handles</B></FONT></P>
+<p>To change the state of an event handle to signaled, the <small>SetEvent</SMALL> function is used:</P>
+<!-- CODE SNIP //-->
+<pre>
+SetEvent(hEvent);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetEvent</SMALL> function takes a handle as its only parameter.</P>
+<p>Once signaled, an auto-reset event handle is reset after it&#146;s used to satisfy a wait request. Manual-reset events must be explicitly reset using the <small>ResetEvent</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+ResetEvent(hEvent);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Auto-reset events are often used when you&#146;re performing initializations or other events that must be broadcast to a number of threads. In this case, it makes sense to leave a thread signaled, even though it has been used to satisfy a wait request. This enables all waiting threads to be satisfied by setting a single event.
+</P>
+<p>When you&#146;re using manual-reset events to signal a group of threads, it can be difficult to determine when all waiting threads have been released. Windows 2000 includes a <small>PulseEvent</SMALL> function for this very purpose:</P>
+<!-- CODE SNIP //-->
+<pre>
+PulseEvent(hEvent);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>PulseEvent</SMALL> function signals the event handle and resets it after all the waiting threads have been released.</P>
+<p><font size="+1"><b>Waiting on a Handle</B></FONT></P>
+<p>When a thread needs to wait for a handle to be signaled, there are several different ways to do so. Two functions can be used to put a thread into a wait state while waiting for a handle to be signaled:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WaitForSingleObject</SMALL> is used when the thread is waiting for one handle to be signaled.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WaitForMultipleObjects</SMALL> is used for testing an array of handles.
+</DL>
+<p><small>WaitForSingleObject</SMALL> tests a handle passed to it as a parameter and returns immediately if the handle is signaled:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwResult = WaitForSingleObject(hEvent, INFINITE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>WaitForSingleObject</SMALL> function takes two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The handle to be tested
+<dd><b>&#149;</B>&nbsp;&nbsp;A timeout value, in milliseconds, or <small>INFINITE</SMALL> for no timeout limit
+</DL>
+<p>The event remains signaled for a manual-reset event handle, even after the first thread&#146;s wait request has been satisfied. All other events are set to their nonsignaled state by <small>WaitForSingleObject</SMALL> after satisfying a wait request.</P>
+<p>Here are the three possible return values for <small>WaitForSingleObject</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WAIT_OBJECT_0</SMALL> is returned when the handle is signaled. Note that the last character of this symbol is a zero, not the letter <i>O</I>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WAIT_TIMEOUT</SMALL> is returned when the handle is not signaled and the timeout limit has expired.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WAIT_ABANDONED</SMALL> is returned only when a thread is waiting on a mutex handle.
+</DL>
+<p>Beware of nested calls to <small>WaitForSingleObject</SMALL>. At times, a thread may need to wait for several handles to become signaled. Using nested calls to <small>WaitForSingleObject</SMALL> can be risky in cases where multiple threads are contending for multiple objects, as shown in Figure 3.6.</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-06.jpg',458,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-06.jpg',458,420)"><font color="#000077"><b>Figure 3.6</B></FONT></A>&nbsp;&nbsp;An example of deadlock.</P>
+<p>In Figure 3.6, both thread A and thread B have one of the resources needed to continue. Unfortunately, neither can continue unless the other thread relinquishes the resource it has already taken possession of. Fortunately, Windows 2000 enables you to wait for several synchronization objects at the same time, as discussed in the next section.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

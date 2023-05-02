@@ -1,0 +1,147 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=932-935//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Public Queues Versus Private Queues</FONT></H4>
+<p>Message queues can be defined as either <i>public</I> or <i>private</I>. A public queue can be located by other applications through Active Directory, whereas a private queue cannot. In general, a private queue is used only by applications on the local computer. Private queues tend to be faster than public queues, because they don&#146;t require support from Active Directory. They also work when Active Directory is not available&#151;for example, when a client laptop computer is disconnected from the network or connected in a workgroup.</P>
+<p>The name of a message queue is known as its <i>pathname</I>. Public and private queues are named differently. A public queue has a pathname in this format:</P>
+<!-- CODE SNIP //-->
+<pre>
+ComputerName\QueueName
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The computer name can be the NetBIOS name or the fully qualified DNS name. Here are examples of public queue pathnames:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+kenzie.codevtech.com\teletubbyqueue
+
+KENZIE\teletubbyqueue
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A private queue pathname includes the <small>Private$</SMALL> substring between the computer and queue names, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+ALI\Private$\pongoqueue
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When a message queue is on the local computer, the computer name can be replaced by a dot:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+.\teletubbyqueue
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The message queue&#146;s pathname is specified when the queue is created, and it can&#146;t be changed.
+</P>
+<h3><a name="Heading7"></A><font color="#000077">MSMQ Object Properties</FONT></H3>
+<p>When working with MSMQ, you use three types of objects: machines, queues, and messages. Each of these objects has properties that can be set, retrieved, and changed using the MSMQ API functions. There are three classes of properties used with MSMQ, one for each type of MSMQ object:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Machine properties</I>. Associated with the queue manager on a particular machine. These properties are stored in Active Directory. Machine properties are accessed through the <small>MQQMPROPS</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Queue properties</I>. Associated with a particular message queue. Properties for public queues are stored in Active Directory. Properties for private queues are stored on the computer that hosts the queue. Queue properties are accessed through the <small>MQQUEUEPROPS</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Message properties</I>. Associated with individual messages sent through the queue. Some properties are assigned by the application that creates the message, and other properties are assigned by MSMQ as the message is sent through the message queue. Properties for messages are contained in the individual messages. Message properties are accessed through the <small>MQMSGPROPS</SMALL> structure.
+</DL>
+<p>As discussed in this list, each type of MSMQ object has its own structure used to contain properties. Each of these structures stores properties as arrays of property IDs, property values, and <small>HRESULT</SMALL> values, as shown in Figure 28.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-02.jpg',666,362 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-02.jpg',666,362)"><font color="#000077"><b>Figure 28.2</B></FONT></A>&nbsp;&nbsp;Properties are arranged into arrays.</P>
+<p>As shown in Figure 28.2, property values are stored as arrays of <small>PROPVARIANT</SMALL> structures. <small>PROPVARIANT</SMALL> is a discriminated union contained in a structure similar to the COM <small>VARIANT</SMALL> structure.</P>
+<p>Variables of <small>PROPVARIANT</SMALL> are used just like COM variant variables. You must specify the type of the data stored in the <small>PROPVARIANT</SMALL> union as well as set the proper variable, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+rgMsgPropVar[ndx].vt = VT_LPWSTR;
+rgMsgPropVar[ndx].pwszVal = L&#148;Test Msg Unleashed&#148;;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A common mistake is to forget to set the <small>vt</SMALL> member variable or to set this variable to the wrong value. This value is used to determine the particular union member used to store the data; if it&#146;s incorrect, the results are unpredictable. In the following sections, the description of each property includes the property&#146;s type. Type information is also provided in the Platform SDK documentation.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Queue Properties</FONT></H4>
+<p>Every message queue has a collection of properties that determine the behavior of the queue. With the exception of the queue pathname, all properties are optional. As discussed in the preceding section, each property is passed as a <small>PROPVARIANT</SMALL> structure. More information about <small>PROPVARIANT</SMALL> will be provided later in this chapter.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

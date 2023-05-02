@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=865-868//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Again, a connection to the <small>IEventSystem</SMALL> is established and then a string is built using <small>PublisherID</SMALL>. Finally, the method <small>IEventSystem::Remove</SMALL> is called. The way this method works is that it builds a query that selects a series of subscriptions and then removes them. For the publisher class and the event class, the removal steps are identical.</P>
+<p>The next step for the publisher is to define the event it will broadcast to the various subscribers. This is known as <i>defining the event class</I>. An example follows:</P>
+<!-- CODE //-->
+<pre>
+CComPtr&lt;IEventClass&gt; spIEventClass;
+
+hr = CoCreateInstance(CLSID_CEventClass,
+                      NULL,
+                      CLSCTX_SERVER,
+                      IID_IEventClass,
+                      (void**)&amp;spIEventClass);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to create IEventClass&#148;, IID_IStockPublisher, hr);
+    return hr;
+}
+hr = StringFromIID(CLSID_StockEvents, &amp;strGUID);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to create String from IID&#148;, IID_IStockPublisher, hr);
+    return hr;
+}
+bstrEventClassID = strGUID;
+CoTaskMemFree(strGUID);
+
+bstrEventProgID = str_StockEventsProgID;
+
+hr = StringFromIID(IID_IStockEvents, &amp;strGUID);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to create String from IID&#148;, IID_IStockPublisher, hr);
+    return hr;
+}
+bstrFiringIID = strGUID;
+CoTaskMemFree(strGUID);
+
+// Set The Properties of the EventClass
+hr = spIEventClass-&gt;put_EventClassID(bstrEventClassID);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to set EventClassID&#148;, IID_IStockPublisher, hr);
+         return hr;
+}
+hr = spIEventClass-&gt;put_EventClassName(bstrEventProgID);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to set EventClassName&#148;, IID_IStockPublisher, hr);
+    return hr;
+}
+
+hr = spIEventClass-&gt;put_FiringInterfaceID(bstrFiringIID);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to FiringInterfaceID&#148;, IID_IStockPublisher, hr);
+    return hr;
+}
+// Store into the EventSystem
+hr = spIEventSystem-&gt;Store(PROGID_EventClass, spIEventClass);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to store EventClass from the EventSystem&#148;,
+    &#8658; IID_IStockPublisher, hr);
+    return hr;
+}
+</PRE>
+<!-- END CODE //-->
+<p>Like the publisher definition, the event class definition is accomplished through the use of ProgIDs. An event class is defined by instantiating the <small>IEventClass</SMALL> interface. The interface that needs to be associated with this event is <small>IStockEvent</SMALL>. The interface is defined in the property <small>IEventClass::FiringInterfaceID</SMALL>. A CLSID needs to be associated with the interface in the property <small>IEventClass::EventClassID</SMALL>. Also, the accompanying ProgID is associated with the property <small>IEventClass::EventClassName</SMALL>.</P>
+<p>The CLSID and ProgID make it possible for the COM&#43; event services to understand the interface being broadcast. Therefore, in your IDL, a coclass that references the interface being broadcast must be defined. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+[
+    uuid(DD011223-E8EA-11D1-B994-00C04F990088),
+    version(1.0),
+    helpstring(&#147;SimplePublisherATL 1.0 Type Library&#148;)
+]
+library SIMPLEPUBLISHERATLLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+    [
+        uuid(877E7998-E8EC-11D1-B994-00C04F990088),
+        helpstring(&#147;StockPublisher Class&#148;)
+    ]
+    coclass StockPublisher
+    {
+        [default] interface IStockPublisher;
+    };
+    [
+        uuid(f89859d1-6565-11d1-88c8-0080c7d771bf),
+        helpstring(&#147;StockEvent Class&#148;)
+    ]
+    coclass StockEvents
+    {
+         [source] interface IStockEvents;
+    };
+};
+</PRE>
+<!-- END CODE //-->
+<p>The event services class is then registered with the COM&#43; event services. This is done by calling the method <small>IEventSystem::Store</SMALL>, The first parameter (<small>PROGID_EventClass</SMALL>) indicates that the definition is an event class.</P>
+<p>The publisher has performed both its tasks and optionally can fire some events. The firing of events is the result of some method calls on the object. The original <small>IStockEvent</SMALL> interface had two methods (<small>StockPriceChanged</SMALL> and <small>NewStock</SMALL>). A sample implementation of firing <small>NewStock</SMALL> follows:</P>
+<!-- CODE //-->
+<pre>
+CComPtr&lt;IStockEvents&gt; spIStockEvents;
+HRESULT hr;
+
+hr = CoCreateInstance(CLSID_StockEvents,
+                      NULL,
+                      CLSCTX_SERVER,
+                      IID_IStockEvents,
+                      (void**)&amp;spIStockEvents);
+if (FAILED(hr))
+{
+    Error(&#147;Failed to create IStockEvents from EventSystem&#148;,
+    &#8658; IID_IStockPublisher, hr);
+    return hr;
+}
+hr = spIStockEvents-&gt;NewStock(bstrNewStockSymbol, bstrCompanyName );
+if (FAILED(hr))
+{
+    Error(&#147;Failed to invoke NewStock&#148;, IID_IStockPublisher, hr);
+    return hr;
+}
+
+</PRE>
+<!-- END CODE //-->
+<p>In this example, the coclass <small>StockEvents</SMALL> is called. The previous IDL&#146;s coclass did not refer to any implementation but yet it&#146;s instantiated using <small>CoCreateInstance</SMALL>. The way this works is that the COM object being instantiated is part of the COM&#43; event services. It&#146;s like a stub, and it executes on the publisher&#146;s machine.</P>
+<p>When the method <small>IStockEvents::NextStock</SMALL> is called, the stub is called and then the message is broadcast. Stored within the stub is a cache of subscribers. The list of subscribers comes from the COM&#43; event services event store. The message will instantiate the COM&#43; objects that implement the <small>IStockEvents</SMALL> interface and subscribe to the event. Each subscriber gets the same message, but in a sequential order.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Caution:&nbsp;&nbsp;</B><p>A timeout due to very slow communication lines may confuse COM&#43; event services and cause a subscriber to miss a message.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Implementing a Subscriber</B></FONT></P>
+<p>When a message is broadcast, a client component receives the event. The client must be a COM object.
+</P>
+<p>The subscription is a multistep process, and it needs an identifier (GUID). This identifier could be defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+const GUID guid_StockPriceChangeSub = { 0x6b1046e6, 0xe922, 0x11d1,
+&#8658; { 0xb9, 0x94, 0x0, 0xc0, 0x4f, 0x99, 0x0, 0x88 } };
+const GUID guid_NewStockSub = { 0x6b1046e7, 0xe922, 0x11d1,
+&#8658; { 0xb9, 0x94, 0x0, 0xc0, 0x4f, 0x99, 0x0, 0x88 } };
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

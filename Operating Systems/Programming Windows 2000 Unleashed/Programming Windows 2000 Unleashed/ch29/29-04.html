@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=973-975//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>DwGet<i>Xxx</I></SMALL> functions return properties of all types through a <small>PVOID</SMALL> out parameter, contrary to the name, which might lead you to believe that only <small>DWORD</SMALL> values are returned. Each of these functions requires you to pass a control code with the function, specifying the type of property to be retrieved.</P>
+<p><font size="+1"><b>Direct Management of Cluster Objects</B></FONT></P>
+<p>In addition to control code functions and control codes, cluster objects may be managed directly by API functions. Each type of cluster object has a set of management functions. When either a control code function or a management function may manage a cluster object, it&#146;s preferable to use the control code.
+</P>
+<p>Most cluster management functions require a cluster handle as a parameter. The <small>OpenCluster</SMALL> function returns a handle to a cluster:</P>
+<!-- CODE SNIP //-->
+<pre>
+HCLUSTER hclus = OpenCluster(L&#147;ZAPHOD&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>OpenCluster</SMALL> has one parameter: the name of the cluster to be opened. If <small>NULL</SMALL> is passed as this parameter, a handle to the local cluster is returned. If the cluster cannot be found, or if an error occurs, <small>NULL</SMALL> is returned. This function can be used to determine whether an application is running on a machine that belongs to a cluster.</P>
+<p>A cluster handle must be closed when it&#146;s no longer needed. To close a cluster handle, use the <small>CloseCluster</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+BOOL fClosed = CloseCluster(hclus);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>CloseCluster</SMALL> function takes a cluster handle as its only parameter. If an error occurs while the handle is closing, <small>CloseCluster</SMALL> returns <small>FALSE</SMALL>.</P>
+<p>Using cluster object direct management functions, you can create instances of the various cluster object types, open handles to cluster objects, and delete resources from the cluster. For a complete list of the functions used to manage cluster objects directly, consult the Platform SDK.</P>
+<p><font size="+1"><b>Direct Management of the Cluster Database</B></FONT></P>
+<p>In general, it isn&#146;t recommended that an application manage the cluster database directly. In most cases, an application should use control code functions or direct management functions when working with a cluster. Direct access to the cluster database does not result in notification messages being sent to resource DLLs that may be affected by the change.
+</P>
+<p>Because the cluster database is implemented on top of the Windows 2000 System Registry, the functions used for managing the cluster database are similar to Windows 2000 Registry functions.</P>
+<p>The top-level key in the cluster database is retrieved using the <small>GetClusterKey</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HKEY hKeyRoot = GetClusterKey(hclus, KEY_READ);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>GetClusterKey</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the cluster that hosts the cluster database.
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more access flags that indicate the level of desired access to the cluster database. Cluster database functions use the same flags as Win32 System Registry functions.
+</DL>
+<p>If <small>GetClusterKey</SMALL> is successful, it returns the top-level key in the cluster database; otherwise, it returns <small>NULL</SMALL>.</P>
+<p>Similar functions exist to retrieve the top-level keys for other cluster object types:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetClusterGroupKey</SMALL>. Opens the root key for a specified cluster group object
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetClusterNetInterfaceKey</SMALL>. Opens the root key for a specified cluster network interface object
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetClusterNetworkKey</SMALL>. Opens the root key for a specified cluster network object
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetClusterNodeKey</SMALL>. Opens the root key for a specified cluster node object
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetClusterResourceKey</SMALL>. Opens the root key for a specified cluster resource object
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetClusterResourceTypeKey</SMALL>. Opens the root key for a specified cluster resource type object
+</DL>
+<p>To open a subkey in the cluster database, use the <small>ClusterRegOpenKey</SMALL> or <small>ClusterRegCreateKey</SMALL> function. <small>ClusterRegOpenKey</SMALL> is similar to the <small>RegOpenKeyEx</SMALL> function, except that <small>ClusterRegOpenKey</SMALL> is used to open an existing key in the cluster database, instead of the Registry:</P>
+<!-- CODE SNIP //-->
+<pre>
+LONG WINAPI ClusterRegOpenKey(HKEY    hKey,
+                              LPCWSTR lpszSubKey,
+                              REGSAM  samDesired,
+                              PHKEY   phkResult);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ClusterRegOpenKey</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to a currently open key in the cluster database
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode string that contains the name of the subkey to be opened
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more Registry access flags that indicate the level of desired access to the cluster database
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an <small>HKEY</SMALL> that will contain the subkey if the function succeeds
+</DL>
+<p>The <small>ClusterRegOpenKey</SMALL> function returns <small>ERROR_SUCCESS</SMALL> if successful and a Win32 error code upon failure.</P>
+<p>If the key does not exist, the <small>ClusterRegOpenKey</SMALL> function fails. The <small>ClusterRegCreateKey</SMALL> function can also be used to open an existing key in the cluster database. Like <small>ClusterRegOpenKey</SMALL>, <small>ClusterRegCreateKey</SMALL> opens an existing key in the cluster database. Unlike <small>ClusterRegOpenKey</SMALL>, the <small>ClusterRegCreateKey</SMALL> function will return a handle to a newly created key if the key doesn&#146;t exist:</P>
+<!-- CODE SNIP //-->
+<pre>
+LONG WINAPI ClusterRegCreateKey(HKEY hKey,
+                        LPCWSTR lpszSubKey,
+                        DWORD dwOptions,
+                        REGSAM samDesired,
+                        LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+                        PHKEY phkResult,
+                        LPDWORD lpdwDisposition);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

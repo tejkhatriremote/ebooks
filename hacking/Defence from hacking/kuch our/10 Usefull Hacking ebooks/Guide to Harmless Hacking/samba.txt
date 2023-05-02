@@ -1,0 +1,61 @@
+SAMBA SHARES 
+I can only see a small subset of all of the computers on the windows' network. is there anyway to see all of them? my roommate on winxp can see a lot more computers than i can on linux. any ideas?
+Jeremy 
+ 
+ Elliot Kendall 
+
+February 6, 2002 
+10:20:04 PM  $ nmap -p 139 "129.64.x.*"
+To find shares, where x is your subnet number. Port 137 is also used for windows filesharing by Win2k. 
+$ nmblookup < ip address >
+Find the computer name (generally first one listed) 
+
+$ smbclient -L //< computer name >/ -I < ip address >
+Displays a list of shares on the machine. Just hit enter when prompted for a password. 
+
+$ smbclient //< computer name >/< share name > -I < ip address >
+Add "-U < username >" for passworded shares. The client itself is similar to the standard FTP client. Type "?" at the prompt for help. 
+
+I know this is more than you asked, but it's worth documenting the whole process for anyone who might wonder. 
+ 
+ Steven Karel Administrator 
+
+February 7, 2002 
+01:12:23 PM  I think your second step should be 
+$ nmblookup -A < ip address > 
+ 
+ Adam Batkin Administrator 
+
+February 7, 2002 
+06:09:09 PM  I assume you are running NMBD and so you sortof expect that to be handling the name->ip resolution (rather than scanning every computer, which takes a long time, and is not generally considered to be good practice). Try adding the following to your [global] smb.conf section: wins server = 129.64.99.16 From my understanding, windows based computers get that information from the DHCP servers, but Linux cannot do this (since SMB/CIFS isn't part of the operating system itself).
+Hope this helps 
+ 
+ Elliot Kendall 
+
+February 7, 2002 
+08:34:12 PM  How is scanning the subnet for windows filesharing a bad idea? It doesn't take much time if you only scan one port, and it's essentially the way windows does things itself. If your firewall blocks SMB packets, you'll notice lots of rejects in your logs from machines broadcasting their presence to the subnet. A quick scan of a single port won't add much to the noise level.  
+ Adam Batkin Administrator 
+
+February 8, 2002 
+12:26:13 AM  Ignoring the potential debate we could have about portscanning (even if it is only one port;) I just think that nmap'ing a subnet is a little much, and a bit of a hack. In my opinion the best thing would be to try to get smbd/nmbd to work properly with other systems. It would generate no extra traffic (since it sounds like nmbd is already "doing it's thing" it's just not picking up as much as it can) and then there would be an automatically browsable list of computers/workgroups, without having to manually scan for them every time.
+
+Below is an excerpt from my smb.conf that might help...I'm running RH7.2 with a custom 2.4.17 Kernel and the default Samba RPMS (2.2.1a-4). 
+[global]
+        workgroup = UNET
+        netbios name = ADAM-FILES
+        server string =
+        encrypt passwords = Yes
+        map to guest = Bad Password
+        null passwords = Yes
+        log file = /var/log/samba/%m.log
+        max log size = 0
+        socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+        preferred master = False
+        domain master = False
+        dns proxy = No
+        wins server = 129.64.99.16
+
+
+I can see most of the network, or at least that's what it looks like...I have 207 workgroups listed through smbclient.
+
+Hope this helps!  

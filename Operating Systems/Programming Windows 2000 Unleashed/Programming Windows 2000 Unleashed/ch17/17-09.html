@@ -1,0 +1,181 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=556-560//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Connection points are used in Chapter 18 when building controls with ATL. A connection-point interface is used to notify the control&#146;s container about events that occur inside the control.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>You don&#146;t need to implement <small>IConnectionPoint</SMALL> or <small>IConnectionPointContainer</SMALL> to exchange interface pointers between COM objects. The connection-point mechanism allows a client and server to negotiate available outgoing interfaces.</P>
+<p>If you&#146;re specifying a fixed set of interfaces for bi-directional communication, you have no need for connection points.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading22"></A><font color="#000077">Custom Marshaling</FONT></H3>
+<p>When interfaces are accessed across apartment boundaries, the method calls must be marshaled. Most of the time, this is a very painless process for you as a developer:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If your interfaces are derived from <small>IDispatch</SMALL>, you can take advantage of type-library marshaling. If you build your project using ATL, the type library is automatically created and registered for you as part of the build process. Automation interfaces use type-library marshaling by default.
+<dd><b>&#149;</B>&nbsp;&nbsp;If you&#146;re implementing custom interfaces, you must build and register a proxy/stub DLL, following the steps discussed earlier in this chapter. The proxy/stub DLL uses standard marshaling interfaces exposed by Windows 2000 to marshal data between apartments.
+</DL>
+<p>The advantages of standard marshaling are that it&#146;s easy to implement, requiring almost no work on your part, and it&#146;s very predictable in terms of behavior and performance cost. The proxy and stub are placed into the apartments of the client and server automatically when COM connects the client and server.
+</P>
+<p>Every time the client calls a function on the server, the proxy and stub conspire together to make sure that data is properly marshaled between the apartments. There are times, however, when the standard marshaling offered by COM and Windows 2000 is not the most efficient way to marshal your interface.</P>
+<h4 align="LEFT"><a name="Heading23"></A><font color="#000077">Understanding Custom Marshaling</FONT></H4>
+<p>Another marshaling option is to implement <i>custom marshaling</I>. Objects that support custom marshaling expose the <small>IMarshal</SMALL> interface, which is used for moving data across apartments. When COM creates an instance of a COM object, it queries the object for <small>IMarshal</SMALL>. If the interface is not supported, COM and Windows 2000 implement standard marshaling. If the COM object supports the <small>IMarshal</SMALL> interface, COM will not create a stub for the COM object&#151;rather, it asks the object, through the <small>IMarshal</SMALL> interface, how data should be marshaled back to the client. The COM object writes a packet of data to a custom proxy that&#146;s used to establish communication between the COM object and its proxy in the other apartment.</P>
+<p>A simplified version of the <small>IMarshal</SMALL> definition is provided in Listing 17.9.</P>
+<p><b>Listing 17.9</B> A Simplified Version of <small>IMarshal</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+interface IMarshal : public IUnknown
+{
+public:
+    HRESULT GetUnmarshalClass(REFIID riid,
+                              void *pv,
+                              DWORD dwDestContext,
+                              void *pvDestContext,
+                              DWORD mshlflags,
+                              CLSID *pCid);
+    HRESULT GetMarshalSizeMax(REFIID riid,
+                              void *pv,
+                              DWORD dwDestContext,
+                              void *pvDestContext,
+                              DWORD mshlflags,
+                              DWORD *pSize);
+    HRESULT MarshalInterface(IStream *pStm,
+                             REFIID riid,
+                             void *pv,
+                             DWORD dwDestContext,
+                             void *pvDestContext,
+                             DWORD mshlflags);
+    HRESULT UnmarshalInterface(IStream *pStm,
+                               REFIID riid,
+                               void **ppv);
+    HRESULT ReleaseMarshalData(IStream *pStm);
+    HRESULT DisconnectObject(DWORD dwReserved);
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>As shown in Listing 17.9, the <small>IMarshal</SMALL> interface has six methods:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetUnmarshalClass</SMALL>. Implemented by the server, this method requests the CLSID for the proxy that must be used to unmarshal the stream of bytes that represent the marshaled data for the COM object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetMarshalSizeMax</SMALL>. Implemented by the server, this method requests the largest possible size for the data that will be sent as the initial marshaling packet to the far-end proxy.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MarshalInterface</SMALL>. Implemented by the server, this function requests the server to write data into an <small>IStream</SMALL> that will be transmitted to the far-end proxy.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>UnmarshalInterface</SMALL>. Implemented by the proxy.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ReleaseMarshalData</SMALL>. Implemented by the server and proxy, this method is called by the operating system when the marshaling packet must be destroyed before it has been unmarshaled.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DisconnectObject</SMALL>. Implemented by the server, this function is called to allow servers and custom proxies a chance to shut down.
+</DL>
+<p>As you can see from this list, some functions in <small>IMarshal</SMALL> are implemented by the COM server object, and some are implemented by a custom proxy, which must be created as part of the custom marshaling process. Here are the steps involved in custom marshaling:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;A client launches a COM object in another apartment.
+<dd><b>2.</B>&nbsp;&nbsp;The COM object is queried for <small>IMarshal</SMALL>.
+<dd><b>3.</B>&nbsp;&nbsp;The COM object returns a pointer to its <small>IMarshal</SMALL> interface.
+<dd><b>4.</B>&nbsp;&nbsp;The COM object is asked for the size of its marshaling packet when called through <small>IMarshal::GetMarshalSizeMax</SMALL>.
+<dd><b>5.</B>&nbsp;&nbsp;The COM object is asked for information about its custom proxy when called through <small>IMarshal::GetUnmarshalClass</SMALL>.
+<dd><b>6.</B>&nbsp;&nbsp;The COM object is asked to write a marshaling packet into an <small>IStream</SMALL> when called through <small>IMarshal::MarshalInterface</SMALL>.
+<dd><b>7.</B>&nbsp;&nbsp;COM creates a marshaling stream that includes the CLSID of the custom proxy and the marshaling packet supplied by the COM object.
+<dd><b>8.</B>&nbsp;&nbsp;COM uses the marshaling stream to create an instance of the custom proxy for the client&#146;s apartment.
+<dd><b>9.</B>&nbsp;&nbsp;The custom proxy is requested to initialize itself when called through <small>IMarshal::UnmarshalInterface</SMALL>.
+<dd><b>10.</B>&nbsp;&nbsp;COM returns a pointer to the custom proxy to the client.
+</DL>
+<h4 align="LEFT"><a name="Heading24"></A><font color="#000077">Understanding Marshal by Value</FONT></H4>
+<p>The most commonly implemented type of custom marshaling is known as <i>marshal by value</I>, or <i>MBV</I>. This type of marshaling is implemented to reduce the cost of communicating with a COM object whose internal state rarely changes. With MBV, the state of the COM object is passed to the custom proxy, which handles calls to the object completely within the apartment of the client.</P>
+<p>MBV can greatly reduce the amount of overhead required to communicate with a COM object that lies outside the client&#146;s apartment. From the client&#146;s point of view, all calls are made to a DLL that&#146;s inside the client&#146;s apartment. The client has no reliable way of knowing that it&#146;s talking to a proxy instead of the actual COM object.</P>
+<h4 align="LEFT"><a name="Heading25"></A><font color="#000077">Implementing a Custom Proxy</FONT></H4>
+<p>The first step in implementing MBV is to implement the custom proxy that will be loaded into the client&#146;s address space. In general, a custom proxy has two responsibilities:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Unmarshal the data sent from the COM object and use it to initialize the proxy.
+<dd><b>&#149;</B>&nbsp;&nbsp;Mimic the COM object&#146;s interfaces so that the client believes it&#146;s talking to the COM object.
+</DL>
+<p>When implementing MBV, the COM object will serialize its state and pass it (by value) to the custom proxy. The custom proxy reads the state and creates a facsimile of the COM object that&#146;s reasonable enough to fool a client.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,78 @@
+
+        Synnergy Laboratories Advisory SLA-2000-9
+
+NAME
+
+       Sambar HTTPD ISAPI 4.4 b3 & b4 search vulnerability
+
+
+AFFECTED
+ 
+  Windows
+	Win95
+	WinNT
+	OSR2
+
+ Linux (possibily)
+
+
+SYNOPSIS
+
+  Synnergy Labs has found a bug in Sambar's dynamic link loader which does not check
+  malformed query parameters, allowing a remote user to view arbitrary contents
+  on the server running this httpd. 
+
+
+DESCRIPTION
+
+  The Sambar Server, www.sambar.com, comes with a non-caching HTTP proxy server and 
+  basic SMTP, POP3, and IMAP4 proxy servers compiled in.
+  Sambar was created to test a three-tier communication infrastructure modeled 
+  after the Sybase Open Client/Open Server. Originally developed on a Sun 
+  Workstation (UNIX), it was ported to the PC (Windows 32) and licensed for 
+  commercial purposes.
+
+  The vulnerability occurs in the search.dll Sambar ISAPI Search shipped with 
+  this product. This dynamic link loader does not check on the 'query' parameter
+  that is parsed to the server, therefore by constructing a malformed URL
+  we are able to view the contents of the server, all folders, and files.
+
+  Thanks also to USSR Labs (www.ussrback.com) for further testing.
+
+
+EXPLOIT
+
+
+  All that is needed is a malformed query parameter parsed to the search.dll file.
+
+  http://server-running-sambar.com/search.dll?search?query=%00&logic=AND
+
+  .. this will reveal the current working directory contents.
+
+
+  http://server-running-sambar.com/search.dll?search?query=/&logic=AND
+
+  .. this will reveal the root dir of the server.
+
+
+ 
+
+SOLUTION
+
+  The vendor [ tod@sambar.com ] of Sambar Technologies has been contacted, 
+  so wait until a patched version comes out.  
+
+AUTHOR
+
+  dethy @ synnergy.net
+
+
+DISCLAIMER
+
+  Synnergy Laboratories may not be held liable for the use or potential effects of 
+  these programs or advisories, nor the content contained within. Use them at your 
+  own risk.
+
+COPYRIGHT
+
+        Synnergy Laboratories -  www.synnergy.net (c) 1998-2000 

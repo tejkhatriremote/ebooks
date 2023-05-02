@@ -1,0 +1,404 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:Administering the Registry</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--APPENDIX=A//-->
+<!--PAGES=295-301//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="ewtoc.html">Table of Contents</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Appendix A<br>Administering The Registry
+</FONT></H2>
+<p><big><big>W</BIG></BIG>indows NT and Windows 95 both let you administer the registry from remote locations. A simple way to change values on a system is to use Regedt32.exe to connect to a remote computer and modify the registry. This procedure works fine for small numbers of modifications or queries, but what if you have 20, 50, or 100 workstations to change?</P>
+<p>You may decide that you want a way to automatically perform registry administration tasks on a remote computer. REGREM is a utility written in C that demonstrates remote registry administration; it queries the registry of a remote Windows NT computer. The program prints to the screen a copy of the network configuration settings for a remote Windows NT computer.</P>
+<!-- CODE //-->
+<pre>
+// regrem.c
+// Steve Scoggins 1997
+
+#include &lt;stdio.h&gt;
+#include &lt;time.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;windows.h&gt;
+
+#define OK ERROR_SUCCESS
+
+main(int argc, char *argv[])
+&#123;
+
+  static char lpszNIC_Description[80];
+  static char lpszNIC_Manufacturer[80];
+  static char lpszNIC_ProductName[80];
+  static char lpszNIC_ServiceName[80];
+
+  static char lpszTcpip_DefaultGateway[20];
+  static char lpszTcpip_IPAddress[20];
+  static char lpszTcpip_SubnetMask[20];
+
+  static char lpszTcpip_Domain[80];
+  static char lpszTcpip_Hostname[80];
+  static char lpszTcpip_NameServer[80];
+  static char lpszTcpip_SearchList[128];
+  static char lpszComputerName[80];
+  static char lpszDefaultDomainName[80];
+
+  char szKeyPart1[] = "SYSTEM\\CurrentControlSet\\Services\\";
+  char szKeyPart2[] = "\\Parameters";
+  char szServiceKey[128];
+
+  long InterruptNumber, IoBaseAddress;
+
+  HKEY hkey, hNetKey ;
+  DWORD lenKeyValue;
+  unsigned long DataType;
+  int err;
+
+  char *name = argv[1];
+
+    if ((err = RegConnectRegistry(name, HKEY_LOCAL_MACHINE, &#38;hkey)) == OK)
+    &#123;
+
+    // Open the Registry Key for the first instance of a Network Adapter
+    // in the Registry
+    // Read the Description, Manufacturer, Product Name, and Service Name
+    // for this instance of an installed Network Adapter.
+
+    if(RegOpenKey(hkey, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\
+          NetworkCards\\1",&#38;hNetKey) == ERROR_SUCCESS)
+    &#123;
+      RegQueryValueEx(hNetKey, "Description", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "Description", 0, &#38;DataType,(LPTSTR)
+          lpszNIC_Description, &#38;lenKeyValue);
+      printf("Windows NT Network Adapter:\n");
+      printf("Description: %s\n",lpszNIC_Description);
+
+      RegQueryValueEx(hNetKey, "Manufacturer", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "Manufacturer", 0, &#38;DataType,
+          (LPTSTR)lpszNIC_Manufacturer, &#38;lenKeyValue);
+      printf("Manufacturer: %s\n",lpszNIC_Manufacturer);
+
+      RegQueryValueEx(hNetKey, "ProductName", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "ProductName", 0, &#38;DataType,
+          (LPTSTR)lpszNIC_ProductName, &#38;lenKeyValue);
+      printf("Product Name: %s\n",lpszNIC_ProductName);
+
+      RegQueryValueEx(hNetKey, "ServiceName", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "ServiceName", 0, &#38;DataType,
+          (LPTSTR)lpszNIC_ServiceName, &#38;lenKeyValue);
+      printf("Service Name: %s\n",lpszNIC_ServiceName);
+
+      RegCloseKey(hNetKey);
+    &#125;
+
+    // Now that we have the ServiceName for the Network Adapter from the
+    // NetworkCards key we will reconstruct the correct ServiceKey path
+    // based on the Service Name for this network adapter.
+
+    strcpy(szServiceKey, szKeyPart1);
+    strcat(szServiceKey, lpszNIC_ServiceName);
+    strcat(szServiceKey, szKeyPart2);
+
+    if(RegOpenKey(hkey, (LPCTSTR) szServiceKey, &#38;hNetKey) == ERROR_SUCCESS)
+    &#123;
+
+      RegQueryValueEx(hNetKey, "InterruptNumber", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "InterruptNumber", 0, &#38;DataType, (LPBYTE)
+          &#38;InterruptNumber, &#38;lenKeyValue);
+      printf("Interrupt Number: %x\n",InterruptNumber);
+
+      RegQueryValueEx(hNetKey, "IoBaseAddress", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "IoBaseAddress", 0, &#38;DataType, (LPBYTE)
+          &#38;IoBaseAddress, &#38;lenKeyValue);
+      printf("IO Base Address: %x\n",IoBaseAddress);
+      RegCloseKey(hNetKey);
+    &#125;
+
+    // Open the TCP/IP Key for this Network Adapter
+    // Read some of the key TCP/IP parameters for this Network Adapter
+
+    strcat(szServiceKey, "\\Tcpip");
+
+    if(RegOpenKey(hkey, (LPCTSTR) szServiceKey ,&#38;hNetKey) == ERROR_SUCCESS)
+    &#123;
+      RegQueryValueEx(hNetKey, "DefaultGateway", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "DefaultGateway", 0, &#38;DataType,(LPTSTR)
+          lpszTcpip_DefaultGateway, &#38;lenKeyValue);
+      printf("TCP/IP DefaultGateway : %s\n",lpszTcpip_DefaultGateway);
+
+      RegQueryValueEx(hNetKey, "IPAddress", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "IPAddress", 0, &#38;DataType,
+          (LPTSTR)lpszTcpip_IPAddress, &#38;lenKeyValue);
+      printf("TCP/IP IPAddress : %s\n",lpszTcpip_IPAddress);
+
+      RegQueryValueEx(hNetKey, "SubnetMask", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "SubnetMask", 0, &#38;DataType,
+          (LPTSTR)lpszTcpip_SubnetMask, &#38;lenKeyValue);
+      printf("TCP/IP Subnet Mask : %s\n",lpszTcpip_SubnetMask);
+      RegCloseKey(hNetKey);
+    &#125;
+
+    // Read the global TCP/IP paramters
+
+    if(RegOpenKey(hkey, "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\
+          Parameters",&#38;hNetKey) == ERROR_SUCCESS)
+    &#123;
+      RegQueryValueEx(hNetKey, "Domain", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "Domain", 0, &#38;DataType,
+          (LPTSTR)lpszTcpip_Domain, &#38;lenKeyValue);
+      printf("TCP/IP Domain Name: %s\n",lpszTcpip_Domain);
+
+      RegQueryValueEx(hNetKey, "Hostname", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "Hostname", 0, &#38;DataType,
+          (LPTSTR)lpszTcpip_Hostname, &#38;lenKeyValue);
+      printf("TCP/IP Hostname: %s\n",lpszTcpip_Hostname);
+
+      RegQueryValueEx(hNetKey, "NameServer", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "NameServer", 0, &#38;DataType,
+          (LPTSTR)lpszTcpip_NameServer, &#38;lenKeyValue);
+      printf("TCP/IP DNS Name Servers: %s\n",lpszTcpip_NameServer);
+
+      RegQueryValueEx(hNetKey, "SearchList", 0, &#38;DataType, NULL,
+          &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "SearchList", 0, &#38;DataType,
+          (LPTSTR)lpszTcpip_SearchList, &#38;lenKeyValue);
+      printf("TCP/IP Domain Name Search List: %s\n",lpszTcpip_SearchList);
+
+      RegCloseKey(hNetKey);
+    &#125;
+
+    // Read the Computer Name and Domain Name for this Windows NT Computer
+
+    if(RegOpenKey(hkey, "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\
+          ActiveComputerName", &#38;hNetKey) == ERROR_SUCCESS)
+    &#123;
+      RegQueryValueEx(hNetKey, "ComputerName", 0, &#38;DataType,
+          NULL, &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "ComputerName", 0, &#38;DataType,
+          (LPTSTR)lpszComputerName, &#38;lenKeyValue);
+      printf("Windows NT Computer Name: %s\n",lpszComputerName);
+
+      RegCloseKey(hNetKey);
+    &#125;
+
+    if(RegOpenKey(hkey, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\
+          Winlogon", &#38;hNetKey) == ERROR_SUCCESS)
+    &#123;
+      RegQueryValueEx(hNetKey, "DefaultDomainName", 0, &#38;DataType,
+          NULL, &#38;lenKeyValue);
+      RegQueryValueEx(hNetKey, "DefaultDomainName", 0, &#38;DataType,
+          (LPTSTR)lpszDefaultDomainName, &#38;lenKeyValue);
+      printf("Windows NT DomainName: %s\n",lpszDefaultDomainName);
+
+      RegCloseKey(hNetKey);
+    &#125;
+    RegCloseKey(hkey);
+    &#125;
+
+    else
+    &#123;
+        switch (err)
+        &#123;
+            #define MSG(x) case x : printf("%s\t\t\t\n", #x)
+            MSG(ERROR_OPERATION_ABORTED); break;
+            MSG(ERROR_BAD_NETPATH); break;
+            MSG(ERROR_ACCESS_DENIED); break;
+            default: printf("Error #%u (look in WINERROR.H)\n", err);
+            break;
+        &#125;
+        printf("failed to connect to remote registry");
+    &#125;
+    printf("bye!\n");
+    return 0;
+&#125;
+</PRE>
+<!-- END CODE //-->
+<p>The source and the compiled executable are available on the CD-ROM that comes with this book. To run REGREM, you must be logged on as an administrator of the Windows NT Domain for the remote computer.
+</P>
+<p>A network administrator could use this type of software utility to query the network configuration for all the Windows NT computers on the local network. The results are printed to the screen. If you want a file containing this information, you can redirect the screen printout to a file using the following form of the command:</P>
+<!-- CODE SNIP //-->
+<pre>
+REGREM ComputerName &gt; FileName
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Sample output from REGREM is shown below.
+</P>
+<!-- CODE //-->
+<pre>
+Windows NT Network Adapter:
+Description: 3Com Etherlink III PCI Bus-Master Adapter (3C590)
+Manufacturer: 3Com
+Product Name: El59x
+Service Name: El59x1
+Interrupt Number: 12ff8c
+IO Base Address: 3
+TCP/IP DefaultGateway : 200.200.200.254
+TCP/IP IPAddress : 200.200.200.200
+TCP/IP Subnet Mask : 255.255.255.0
+TCP/IP Domain Name: test.com
+TCP/IP Hostname: bigdog
+TCP/IP DNS Name Servers:
+TCP/IP Domain Name Search List:
+Windows NT Computer Name: BIGDOG
+Windows NT DomainName: BIGDOG
+bye!
+</PRE>
+<!-- END CODE //-->
+<p>You can also run the Regrem.exe client on any Windows 95 or Windows NT workstation that is logged on to your Windows NT Domain. To run this utility on a Windows 95 computer, install the Microsoft Remote Registry Services. The REGREM client utility uses Winreg.dll as an RPC client that communicates with the RPC server on the remote Windows NT computer. The RPC service on the remote computer uses Regserv.exe.
+</P>
+<p>You must enable user-level access before you can run remote registry software on a Windows 95 computer. You also must be authenticated by the Windows NT Domain server before you are allowed to connect to a remote registry on a Windows NT computer in the Windows NT Domain.</P>
+<h3><a name="Heading2"></A><font color="#000077">Installing Remote Registry Services on a Windows 95 Computer</FONT></H3>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Open My Computer.
+<dd><b>2.</B>&nbsp;&nbsp;Open Control Panel.
+<dd><b>3.</B>&nbsp;&nbsp;Open the Network applet.
+<dd><b>4.</B>&nbsp;&nbsp;Click Add.
+<dd><b>5.</B>&nbsp;&nbsp;Double-click Service.
+<dd><b>6.</B>&nbsp;&nbsp;Click Have Disk.
+<dd><b>7.</B>&nbsp;&nbsp;When the install dialog box opens, type <b>Admin\NetTools\RemoteReg</B> for the directory path.
+<dd><b>8.</B>&nbsp;&nbsp;Click OK.
+<dd><b>9.</B>&nbsp;&nbsp;When the network service dialog box opens, select the Microsoft Remote Registry service.
+<dd><b>10.</B>&nbsp;&nbsp;Click OK.
+<dd><b>11.</B>&nbsp;&nbsp;Click the Access Control Tab in the Network setup dialog box.
+<dd><b>12.</B>&nbsp;&nbsp;Check the &#147;User-level access control&#148; option.
+<dd><b>13.</B>&nbsp;&nbsp;Click OK.
+<dd><b>14.</B>&nbsp;&nbsp;Type your Windows NT Domain name in the &#147;Obtain list of users and groups from&#148; box and click OK.
+</DL>
+<h3><a name="Heading3"></A><font color="#000077">Enabling Remote Administration for a Windows 95 Computer</FONT></H3>
+<p><big><big>N</BIG></BIG>ote: for remote registry administration to work, you must enable remote registration on the remote Windows 95 computers.</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Open My Computer.
+<dd><b>2.</B>&nbsp;&nbsp;Open the Control Panel.
+<dd><b>3.</B>&nbsp;&nbsp;Open the Passwords applet.
+<dd><b>4.</B>&nbsp;&nbsp;Click the Remote Administration tab.
+<dd><b>5.</B>&nbsp;&nbsp;Check &#147;Enable Remote Administration of this server.&#148;
+<dd><b>6.</B>&nbsp;&nbsp;The Domain Administrators are listed in the list box of users allowed to use Remote Administration. Click the Add button to add other NT Domain users authorized to use Remote Administration.
+<dd><b>7.</B>&nbsp;&nbsp;Click OK to finish.
+</DL>
+<p>This program is meant as a demonstration of what is possible. Make sure you visit this book&#146;s Web site frequently for updates and other programming examples.
+</P>
+<h3><a name="Heading4"></A><font color="#000077">Using Windows 95-Style INF Files to Modify Registry Settings</FONT></H3>
+<p><big><big>A</BIG></BIG>nother way to modify the Windows NT registry automatically without writing code is to use .inf files. You can change multiple workstations and servers remotely and automatically. To avoid having to fire up Regedt32.exe for each change, you can simply tell the Logon.bat file to run your .inf file, which can perform any sort command or registry modification.</P>
+<p>The following command line runs an .inf file on a Windows NT computer:</P>
+<!-- CODE SNIP //-->
+<pre>
+RUNDLL32 syssetup,SetupInfObjectInstallAction DefaultInstall 128 E:\NT
+Registry\cdautoff.inf
+</PRE>
+<!-- END CODE SNIP //-->
+<p>It is very important that you provide the fully qualified path to the .inf file. If you just supply the filename, this procedure will not work. You can place this command line in a logon batch file if you want to make this modification for multiple users. You can then edit the users&#146; profiles and specify this batch file.
+</P>
+<p>Listed below is an INF file that turns off CD-ROM Autorun via the registry.</P>
+<!-- CODE //-->
+<pre>
+; CDAUTOFF.INF
+;
+; This is an example INF setup information file to turn OFF CD-ROM Autorun
+
+[Version]
+Signature="$Windows NT$"
+Provider=%Provider%
+
+[Strings]
+Provider="Steve Scoggins"
+
+[DefaultInstall]
+AddReg = add.reg
+
+[add.reg]
+HKLM,SYSTEM\CurrentControlSet\Services\Cdrom,"Autorun",0x10001,0
+</PRE>
+<!-- END CODE //-->
+<p>You can automatically roll out any number of modifications to the registry using this technique. The trick is learning what the bit fields for each key does.
+</P>
+<p>For more information about using INF files to automate installing applications or making registry changes, I recommend the references cited below:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Microsoft Windows NT Workstation Resource Kit</I>, Microsoft Press ISBN 1-57231-343-9, Chapter 2, Customizing Setup; &#147;Creating .inf files&#148;, page 59
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Microsoft Visual C&#43;&#43; 5.0 Professional Edition</I>, Microsoft Developer Studio Infoviewer
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="ewtoc.html">Table of Contents</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

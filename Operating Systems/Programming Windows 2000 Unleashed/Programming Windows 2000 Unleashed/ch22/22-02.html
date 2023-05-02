@@ -1,0 +1,130 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=731-734//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Just-in-Time Activation</B></FONT></P>
+<p>If the database connections can be reused, is there some way the <small>User</SMALL> object can be reused? There is, because the object is considered &#147;stateless.&#148; Also, keep in mind that 1,000 active users do not always equal 1,000 concurrent users. Maybe only 100 of the users are actually doing work. The rest are drinking coffee, discussing last night&#146;s game, or chatting. Therefore, instead of instantiating 1,000 objects, you should instantiate 100 objects and share them among the 1,000 users.</P>
+<p>The recycling is possible because it already has been defined that all the objects are stateless and do not contain data. This means that creating an object would be just as quick as getting a database connection, because the cache contains an available object. This magic is handled by COM&#43; services and is known as <i>Just-in-time activation</I>.</P>
+<p>Just-in-time activation is like RAM on any modern operating system. In a typical case, a machine might have 128MB of RAM, but to allow it to handle bigger tasks, the administrator can tell the machine that it has 256MB of virtual RAM. This is a trick in that pages of memory are being swapped in and out of memory from the hard disk. When this swapping occurs, of course, it&#146;s slower than using the available RAM. However, the trick with virtual RAM is that it assumes the programs running will not reference all the memory at once.</P>
+<p>This is the same trick just-in-time activation uses. It knows when to associate a connection and when to take away that connection. All this is done without the owner objects knowing what&#146;s going on, just like the RAM that&#146;s being referenced from the hard disk. The program, in this case, thinks it&#146;s RAM.</P>
+<p><font size="+1"><b>Lifetimes</B></FONT></P>
+<p>If objects are stateless and are considered business processes with virtual references, how is a system developed? The answer is <i>lifetimes</I>. However, there are two types of lifetimes&#151;a physical lifetime and an activated lifetime (also called an <i>activity</I>). This is illustrated in Figure 22.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-02.jpg',148,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-02.jpg',148,420)"><font color="#000077"><b>Figure 22.2</B></FONT></A>&nbsp;&nbsp;The different lifetimes of an object.</P>
+<p>In this diagram, the <i>physical lifetime</I> involves the object from the time it&#146;s instantiated to when it&#146;s deleted. The <i>activity</I> is the lifetime while the object is referenced. The activity lifetime is needed so that the object can be cached to provide the best trade-off between resources and access time.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Activities</FONT></H4>
+<p>The lifetime you&#146;re likely to use most often is the activity lifetime. Activities are needed because reality dictates that it&#146;s impossible to write a purely stateless object. The state must be kept somewhere. If it isn&#146;t kept in the COM object, it must be kept somewhere else.
+</P>
+<p>In human terms, an activity is a conversation. Each sentence is a reference to the previous statement. If the statements have no references, the conversation would go nowhere. You would be constantly asking, &#147;What did you just say?&#148; However, a conversation does not last forever. A conversation covers a few points, and then that part of it is done. Activities do the same thing. It is possible to maintain state outside the COM object and pass it in&#151;through library programming.</P>
+<p>An activity should be short and can be measured in terms of minutes or seconds. It contains a series of steps that perform some type of function that represents a business process. An activity contains a series of sequential steps. However, activities can be called in any order.</P>
+<p>Imagine attending a conference. To do this, you would identify yourself and then register to attend the conference. Converting this into a computer system, you would have two activities. The first activity is becoming a user. You will want to do this because you will want to download the slides or demo source code. The second activity is the registration process. In an activity approach, the objects that are part of the user activity are not the same as the registration activity. The reason is that in each activity you are interested in similar, but different, information. Hence, what happens is you sometimes get object redundancy using an activity approach. An OO purist will become very nervous with that comment. However, it is a valid point, because the activities are different domains and should not be shared. The problem with sharing is not the sharing itself, but the bugs. If a shared object has a bug in one activity, it must be tested in all activities. This can take more time and money.</P>
+<p><font size="+1"><b>Designing for Activities</B></FONT></P>
+<p>This is perhaps the most important section in the entire chapter, so you should read it carefully.
+</P>
+<p>The key concept of an activity is that it accomplishes a task. Activities never need to use threads or semaphores. They are considered single <small>User</SMALL> objects. The only exception to this rule may be the singleton. A <i>singleton</I> is used when only one instance of the object is allowed. You should avoid them, because they force sequential access and can limit scalability.</P>
+<p>An activity encompasses one action that can be translated into a transaction. The point of an activity is to ensure that it&#146;s granular enough so that it&#146;s not specific to any underlying data. This is important, because an activity must be able to be executed on different underlying data abstractions (see Figure 22.3).</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-03.jpg',154,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-03.jpg',154,420)"><font color="#000077"><b>Figure 22.3</B></FONT></A>&nbsp;&nbsp;Activities and domains.</P>
+<p>The abstraction must be met because the activity of a process is a well-known entity and tends to live in very long cycles. What changes is the way that the activity interacts with its data to create new data or pieces of information. The processing of the newly constructed data is yet another form of activity, and the activity has a direct correlation to the state of the system.
+</P>
+<p>An activity does not cross domains. A domain boundary is a series of activities that are grouped into a single object or series of objects that make up up a physical entity. If the activity were to cross domains, a dependency would be created between the two domains. This cross-dependency hampers maintainability and scalability and results in lean resources. A domain may be compromised of other domains and some objects.</P>
+<p>It is correct to build up a hierarchy of domains, where a new domain allows the cross-referencing of two domains. However, the proper way of implementing this is to use a helper object that cross-references the two objects dynamically. This way, the two cross-referenced objects use interfaces of each other but do not depend on quizzing the correctness of each other.</P>
+<h3><a name="Heading6"></A><font color="#000077">Writing Transactional Components</FONT></H3>
+<p>Now let&#146;s go over a few rules for writing transactional COM&#43; objects:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;All COM&#43; objects must be stateless. This means that when objects are activated, they always appear as fresh objects.
+<dd><b>&#149;</B>&nbsp;&nbsp;COM&#43; objects do not use the programming constructor to initialize any COM&#43; features, because when a constructor is being called, the COM&#43; layer is not totally initialized.
+<dd><b>&#149;</B>&nbsp;&nbsp;All COM&#43; objects get resources late and release them early to promote scalability. Because of the COM&#43; caching and optimization, it&#146;s okay to retrieve a database connection at the method call level.
+<dd><b>&#149;</B>&nbsp;&nbsp;All COM&#43; objects use activities to do work. The activities are directly related to a business operation.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

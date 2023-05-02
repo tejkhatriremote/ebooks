@@ -1,0 +1,756 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch08.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch10.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 9</A>
+	<UL>
+		<LI><A HREF="#Heading2">Combining Code and Controls</A>
+		<UL>
+			<LI><A HREF="#Heading3">The Interest Calculation Application</A>
+			<UL>
+				<LI><A HREF="#Heading4">Figure 9.1.</A>
+			</UL>
+			<LI><A HREF="#Heading5">Using Control Arrays</A>
+			<UL>
+				<LI><A HREF="#Heading6">Figure 9.2.</A>
+				<LI><A HREF="#Heading7">Figure 9.3.</A>
+			</UL>
+			<LI><A HREF="#Heading8">Finishing the Form</A>
+			<LI><A HREF="#Heading9">Adding Code</A>
+			<LI><A HREF="#Heading10">The Unload Statement</A>
+			<LI><A HREF="#Heading11">Finishing Touches</A>
+			<UL>
+				<LI><A HREF="#Heading12">Figure 9.4.</A>
+				<LI><A HREF="#Heading13">Figure 9.5.</A>
+			</UL>
+			<LI><A HREF="#Heading14">Error Checking</A>
+			<UL>
+				<LI><A HREF="#Heading15">Figure 9.6.</A>
+				<LI><A HREF="#Heading16">Figure 9.7.</A>
+			</UL>
+			<LI><A HREF="#Heading17">Summary</A>
+			<LI><A HREF="#Heading18">Q&amp;A</A>
+			<LI><A HREF="#Heading19">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading20">Quiz</A>
+				<LI><A HREF="#Heading21">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 9</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Combining Code and
+Controls</FONT></H2>
+<P>This hour's lesson takes a short break from the theory you've seen for the past
+few lessons. In this lesson you will put some of the code you've seen into a fairly
+large application and run the application to work with the results. You've already
+learned a lot about Visual Basic. Nevertheless, as this lesson illustrates, you've
+got a lot of exciting things yet to learn over the next few lessons.</P>
+<P>This lesson's primary goal is to refresh your Visual Basic knowledge once again
+by putting together the big picture. In this lesson you'll build a simple but complete
+application just to get practice working with both code and the controls you've learned
+so far. Once you refresh your application-building skills in this lesson, the next
+lesson teaches more controls from the toolbox. The more controls you learn to use,
+the more powerful your applications become.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>Where to place the initial form
+	<P>
+	<LI>What a control array is
+	<P>
+	<LI>How default properties speed development
+	<P>
+	<LI>Where and how to add external code modules
+	<P>
+	<LI>How to write your own functions
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">The Interest Calculation
+Application</FONT></H3>
+<P>The previous lesson describes how to compute compound interest using a <TT>For</TT>
+loop. You studied the code in the previous lesson, and this lesson will build a simple
+application around that interest calculation.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>In creating
+	an application from scratch, this hour lets you review the application, controls,
+	form, and standard modules. Therefore, when the next lesson begins to teach some
+	more advanced controls, you'll be better prepared for them. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 9.1 shows the running application that you'll create here.<BR>
+<BR>
+<A NAME="Heading4"></A><A HREF="../art/ch09/09cce01.jpg"><FONT COLOR="#000077">Figure
+9.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>The interest calculating application's
+window. </I><BR>
+<BR>
+Perform these steps to create the interest calculating application:
+
+<DL>
+	<DD><B>1.</B> Start a new project (select File|New Project). Double-click the Standard
+	EXE icon (the icon you'll most often choose for regular applications).<BR>
+	<B><BR>
+	2.</B> Change the form's <TT>Name</TT> property to <TT>frmInterest</TT>. Change the
+	<TT>Caption</TT> property to <TT>Interest Calculation</TT>.<BR>
+	<B><BR>
+	3.</B> Change the form's <TT>StartUpPosition</TT> property to <TT>2-CenterScreen</TT>.
+	You've not seen the <TT>StartUpPosition</TT> property yet. The <TT>StartUpPosition</TT>
+	property determines the location of the Form window when the user runs the program.
+	Let Visual Basic center the form on your user's screen because you don't know the
+	exact measurements of the screen that your users will use. If you set <TT>StartUpPosition</TT>
+	to <TT>2-CenterScreen</TT>, Visual Basic always places the form in the middle of
+	the screen no matter what the user's screen size and resolution are. (Use the <TT>WindowState</TT>
+	property to open the Form window in its maximized state if you want a full-screen
+	Form window when the application starts.)
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The <TT>StartUpPosition</TT>
+	property makes the Form Layout window unnecessary in most cases. <TT>StartUpPosition</TT>
+	gives you much more accurate placement of the form than the Form Layout window. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD><B>4. </B>You've now got to add the labels and text boxes. The form's title label
+	is simple to generate. Place a label on the form and set the following properties:
+	<TT>Name</TT>: <TT>lblTitle</TT>, <TT>Alignment</TT>: <TT>2-Center</TT>, <TT>BorderStyle</TT>:
+	<TT>1-Fixed Single</TT>, <TT>Caption</TT>: <TT>Interest Calculator</TT>, <TT>Font</TT>:
+	<TT>Bold 18</TT>, <TT>Height</TT>: <TT>495</TT>, <TT>Left</TT>: <TT>2090</TT>, <TT>Top</TT>:
+	<TT>240</TT>, and <TT>Width</TT>: <TT>3855</TT>.<BR>
+	<B><BR>
+	5. </B>You now must set up a series of three label/text box pairs. Notice that Figure
+	9.1's labels all have hotkeys. Although a label cannot accept the focus, pressing
+	Alt+hotkey sends the focus to the control next in line, which will be the text box
+	next to the label (assuming that you place the text box right after you place the
+	corresponding label).<BR>
+	<BR>
+	Set the interest rate label as follows: <TT>Name</TT>: <TT>lblRate</TT>, <TT>Alignment</TT>:
+	<TT>1-RightJustify</TT>, <TT>Caption</TT>: <TT>&amp;Interest rate (8 for 8%):</TT>,
+	<TT>Font</TT>: <TT>Regular 14</TT>, <TT>Height</TT>: <TT>375</TT>, <TT>Left</TT>:
+	<TT>2040</TT>, <TT>Top</TT>: <TT>1080</TT>, and <TT>Width</TT>: <TT>2895</TT>. Set
+	the interest rate text box as follows: <TT>Name</TT>: <TT>txtRate</TT>, <TT>Alignment</TT>:
+	<TT>0-LeftJustify</TT>, <TT>Font</TT>: <TT>10</TT>, <TT>Height</TT>: <TT>375</TT>,
+	<TT>Left</TT>: <TT>5160</TT>, <TT>ToolTipText</TT>: <TT>Annual rate investment grows</TT>,
+	<TT>Top</TT>: <TT>1080</TT>, and <TT>Width</TT>: <TT>615</TT>. Blank out the <TT>Text</TT>
+	property so nothing appears in the text box at startup. Notice that you are adding
+	<TT>ToolTipText</TT> at the same time you add the control that the user interacts
+	with. Design time is the best time to add <TT>ToolTipText</TT> because the control's
+	meaning is clearest in your mind then.
+</DL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading5"></A><FONT COLOR="#000077">Using Control Arrays</FONT></H3>
+<P>This is a great time to introduce a new concept called control arrays. A control
+array is a group of more than one control of the same control type. You will better
+understand control arrays after you learn about data arrays in Hour 10, &quot;List
+Boxes and Data Lists,&quot; but the interest rate application makes this a great
+project to introduce them.</P>
+<P>Notice that the interest calculator's Term and Investment Amount labels and text
+boxes all look similar to the Interest rate label and text box you just placed on
+the form. All the font information and <TT>Height</TT> properties are the same. Therefore,
+while you could enter the remaining labels and text boxes, you can utilize the Windows
+Clipboard to make the job go faster.</P>
+<P>Highlight both the existing Interest rate label and text box. You can select multiple
+controls by pressing the Ctrl key while you click on each control, or you can lasso
+the controls by dragging a rectangle around the two controls. When you select both
+controls, sizing handles appear around them, as shown in Figure 9.2.<BR>
+<BR>
+<A NAME="Heading6"></A><A HREF="../art/ch09/09cce02.jpg"><FONT COLOR="#000077">Figure
+9.2.</FONT></A><FONT COLOR="#000077"> </FONT><I>The sizing handles show that two
+controls are selected.</I></P>
+<P>Select Edit|Copy to copy the selected controls to the Windows Clipboard. Now select
+Edit|Paste, and Visual Basic pops up a warning dialog box that reads <TT>You already
+have a control named `txtRate'. Do you want to create a control array?</TT></P>
+<P>A control array is a set of multiple controls that have the same name. You distinguish
+between the controls inside the array with an index value. For this particular example,
+you should not create a control array (you will create one in the next lesson). Therefore,
+answer No to the dialog box and again answer No when Visual Basic asks you about
+creating a control array for the text box.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Visual Basic
+	saw that you wanted to paste two controls on the form that already had controls with
+	those same names. Visual Basic cannot replace existing controls when you paste new
+	ones with the same name, so Visual Basic guessed (in this case incorrectly) that
+	you wanted to add a control array named <TT>txtRate</TT>. When you refused the control
+	array, Visual Basic made up its own name for the new label (<TT>Label1</TT>) and
+	the new text box (<TT>Text1</TT>). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Move the pasted label and text box to their correct positions under the first
+pair and set these properties for the label: <TT>Name</TT>: <TT>lblTerm</TT>, <TT>Caption</TT>:
+<TT>&amp;Term (annual periods):</TT>, <TT>Left</TT>: <TT>2040</TT>, <TT>Top</TT>:
+<TT>1800</TT>, and <TT>Width</TT>: <TT>2895</TT>. The <TT>Height</TT> and <TT>Font</TT>
+properties are already correct because you borrowed these properties from the control
+you originally copied from. Set these properties for the text box: <TT>Name</TT>:
+<TT>txtTerm</TT>, <TT>Left</TT>: <TT>5160</TT>, <TT>ToolTipText</TT>: <TT>Number
+of periods</TT>, <TT>Top</TT>: <TT>1800</TT>, and <TT>Width</TT>: <TT>615</TT>. As
+you can see, you don't have to set as many properties when you paste from an existing
+similar control.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>Default properties are the
+properties Visual Basic assumes if you omit the properties from a control inside
+the Code window.</P>
+<P>Click the form and select Edit|Paste once more (the Clipboard still holds those
+first two controls you sent there), refuse the control array, and set the following
+properties for the new label: <TT>Name</TT>: <TT>lblInvest</TT>, <TT>Caption</TT>:
+<TT>I&amp;nvestment Amount:</TT>, <TT>Left</TT>: <TT>1920</TT>, <TT>Top</TT>: <TT>2520</TT>,
+and <TT>Width</TT>: <TT>2895</TT>. Set the text box's properties to <TT>Name</TT>:
+<TT>txtInvest</TT>, <TT>Left</TT>: <TT>5040</TT>, <TT>ToolTipText</TT>: <TT>Money
+you invested</TT>, <TT>Top</TT>: <TT>2520</TT>, and <TT>Width</TT>: <TT>1215</TT>.</P>
+<P>Your screen should look something like Figure 9.3.<BR>
+<BR>
+<A NAME="Heading7"></A><A HREF="../art/ch09/09cce03.jpg"><FONT COLOR="#000077">Figure
+9.3.</FONT></A><FONT COLOR="#000077"> </FONT>Proper form design takes a while.
+<H3 ALIGN="CENTER"><A NAME="Heading8"></A><FONT COLOR="#000077">Finishing the Form</FONT></H3>
+<P>You can quickly finish the form now. While the label and text box still reside
+on the Windows Clipboard, this would be a good time to add the Ending Investment
+label and text box. Select Edit | Paste once again and set the pasted label's properties
+as follows: <TT>Name</TT>: <TT>lblEnding</TT>, <TT>Caption</TT>: <TT>Ending Investment:</TT>,
+<TT>Left</TT>: <TT>1800</TT>, <TT>Top</TT>: <TT>4560</TT>, and <TT>Width</TT>: <TT>2895</TT>.
+Set the text box's properties as follows: <TT>Name</TT>: <TT>txtEnding</TT>, <TT>Left</TT>:
+<TT>4920</TT>, <TT>Locked</TT>: <TT>True</TT>, <TT>TabStop</TT>: <TT>False</TT> (so
+the user cannot send the focus to this text box), <TT>Top</TT>: <TT>4560</TT>, <TT>ToolTipText</TT>:
+<TT>Compounded Investment</TT>, and <TT>Width</TT>: <TT>1455</TT>.</P>
+<P>The new property you set just now is the <TT>Locked</TT> property. When you lock
+a control, Visual Basic allows no user editing of the control. Therefore, the code
+beneath the form can modify the text box's <TT>Text</TT> property but the user cannot.
+The final text box will be a holding place for the calculated compound investment
+amount, so the user should not be allowed to edit the control even though it's a
+Text Box control.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You might wonder
+	why the application uses a text box and not a read-only control such as a label.
+	The Label control would work just as well and would not require a <TT>Locked</TT>
+	property setting because labels can never be changed by the user. Nevertheless, the
+	text box keeps a uniform appearance throughout the form, so we're using a text box
+	here. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Add a command button named <TT>cmdCompute</TT>, add the caption <TT>&amp;Compute
+Interest</TT>, and add a <TT>ToolTipText</TT> value of <TT>Click to compute final
+investment</TT>. Place and size the command button as follows: <TT>Height</TT>: <TT>495</TT>,
+<TT>Left</TT>: <TT>2640</TT>, <TT>Top</TT>: <TT>3360</TT>, and <TT>Width</TT>: <TT>2535</TT>.
+Add a final command button named <TT>cmdExit</TT> to the lower-right corner with
+the <TT>E&amp;xit</TT> <TT>Caption</TT> property.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>See, building
+	an application can be tedious, but your productivity is greater with Visual Basic
+	than with virtually every other application development system available. Although
+	you've seen most of this lesson's concepts before, this is the first lesson that
+	truly ties things together by walking you through the entire application-creation
+	process. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3 ALIGN="CENTER"><A NAME="Heading9"></A><FONT COLOR="#000077">Adding Code</FONT></H3>
+<P>Often, programmers run their applications as they build them despite the fact
+that no code exists yet to make the application do real work. You should be able
+to run your application now to make sure that the labels and text boxes all look
+correct. Check out the tooltip text to make sure you've entered the text properly.
+Click the toolbar's End button to stop the program so that you can add the final
+code.</P>
+<P>The code is going to borrow a bit from the interest calculation routine you learned
+about in Hour 8, &quot;Visual Basic Looping.&quot; You'll have to modify the routine
+somewhat so the data comes from the Text Box controls you've set up. You want the
+calculation to take place when the user clicks the center command button, so add
+the following code to the command button's <TT>Click()</TT> event procedure. Double-click
+the Form window's Compute Interest command button to open the <TT>cmdCompute_Click
+()</TT> event procedure to complete the code that follows:</P>
+<PRE><FONT COLOR="#0066FF">Private Sub cmdCompute_Click()
+` Use a For loop to calculate a final total
+` investment using compound interest.
+`
+` intNum is a loop control variable
+` sngIRate is the annual interest rate
+` intTerm is the number of years in the investment
+` curInitInv is the investor's initial investment
+` sngInterest is the total interest paid
+   Dim sngIRate As Single, sngInterest As Single
+   Dim intTerm As Integer, intNum As Integer
+   Dim curInitInv As Currency
+
+   sngIRate = txtRate.Text / 100#
+   intTerm = txtTerm.Text
+   
+   curInitInv = txtInvest.Text
+   sngInterest = 1#   ` Begin at one for first compound
+
+   ` Use loop to calculate total compound amount
+   For intNum = 1 To intTerm
+      sngInterest = sngInterest * (1 + sngIRate)
+   Next intNum
+
+   ` Now we have total interest,
+   ` calculate the total investment
+   ` at the end of N years
+   txtEnding.Text = curInitInv * sngInterest
+End Sub
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>This is basically
+	the same code that you saw in the previous lesson when studying <TT>For</TT> loops.
+	This code does include a few minor differences so that the application's control
+	names properly initialize and receive values. 
+<HR>
+<BR>
+	
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Visual Basic supports
+	default properties for most controls. The default property is the property Visual
+	Basic uses if you don't explicitly specify a property. For example, if you use a
+	Text Box control in code and don't type the <TT>Text</TT> property, Visual Basic
+	assumes you mean <TT>Text</TT> (as long as you don't specify a different property).
+	Therefore, the first assignment in the application is now <TT>sngIRate = txtRate.Text
+	/ 100#</TT>, but the following statement is identical in every respect because Visual
+	Basic assumes that you are using the text box's <TT>Text</TT> property: <TT>sngIRate
+	= txtRate / 100#</TT>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You must also add the terminating code for the Exit command button. Here's a simple
+way the Code window lets you add new procedures:
+
+<DL>
+	<DD><B>1.</B> Click the drop-down object list box (the left list box, directly beneath
+	the toolbar) and select <TT>cmdExit</TT>.<BR>
+	<B><BR>
+	2. </B>Select the event for which you want to add code in the right drop-down list
+	box whose tooltip reads <TT>Object</TT>. (The default procedure listed for command
+	buttons is <TT>Click</TT>, so in this case you don't need to select a different procedure.)
+</DL>
+
+<P>Add the following code for the command button's event procedure:</P>
+<PRE><FONT COLOR="#0066FF">Private Sub cmdExit_Click()
+   ` Unload the form and terminate application
+   Unload frmInterest
+   End
+End Sub
+</FONT></PRE>
+<H3 ALIGN="CENTER"><A NAME="Heading10"></A><FONT COLOR="#000077">The Unload Statement</FONT></H3>
+<P>The Exit command button's <TT>Click</TT> event procedure contains a statement
+you've not seen until now. The <TT>Unload</TT> statement unloads a form from memory.
+If the form to unload is currently displayed, Visual Basic removes the form and returns
+all of the form's control values back to their design-time state.</P>
+<P>In most cases the <TT>Unload</TT> statement is unnecessary, especially when your
+application contains only a single form. If you add multiple forms to the application,
+however, the user could have closed one of the Form windows (by clicking the form's
+window close buttons), and the <TT>End</TT> statement could fail to release that
+form's resources properly.</P>
+<P>The <TT>Unload</TT> statement lets you use a shortcut that looks like this:</P>
+<PRE><FONT COLOR="#0066FF">Unload Me
+</FONT></PRE>
+<P><TT>Me</TT> is a special object that refers to the currently active form. Use
+<TT>Unload Me</TT> when the application contains only a single form if you don't
+want to type the full form name. For a multiple-form application, however, be sure
+to unload all the forms before terminating the program.
+<H3 ALIGN="CENTER"><A NAME="Heading11"></A><FONT COLOR="#000077">Finishing Touches</FONT></H3>
+<P>Run your application and enter some sample values. Figure 9.4 shows the application
+with some sample data entered for a five-year investment. As shown in Figure 9.4,
+if you invested $1,000 today at 11% interest, in five years you will have approximately
+$1,685.<BR>
+<BR>
+<A NAME="Heading12"></A><A HREF="../art/ch09/09cce04.jpg"><FONT COLOR="#000077">Figure
+9.4. </FONT></A><I>The running application computes the final investment amount.</I></P>
+<P>The application is not really complete and ready for distribution. Although you've
+mastered the mechanics of this simple application, more is needed to make the application
+professional. Obviously, the ending investment's decimal place precision is far too
+high.</P>
+<P>You need to format the value shown in the Ending Investment text box. When you
+format a value, you don't change the value, but you change the value's look. Visual
+Basic includes a built-in function called <TT>Format()</TT> that formats numeric
+and string values so you can display such values as dollars and cents, area code
+formats, or whatever formats you want to use. Although Hour 14, &quot;Built-in Functions
+Save Time,&quot; explains <TT>Format()</TT> in detail, you can use the <TT>Format()</TT>
+function now to spruce up your application.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>To format is to change the
+way a value appears to the user.</P>
+<P>At the end of the <TT>cmdCompute_Click()</TT> event procedure, change the ending
+investment's assignment to this:</P>
+<PRE><FONT COLOR="#0066FF">txtEnding.Text = Format(curInitInv * sngInterest, &quot;$###,##0.00&quot;)
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Some formats get
+	lengthy, so programmers often declare a string variable and assign the format to
+	the variable. They then use the variable inside the <TT>Format()</TT> function instead
+	of using the string literal for the format. If you use the same format in several
+	locations within the code, the variable means less typing on your part, and if you
+	ever change the format, you only have to change the format in one place. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The <TT>Format()</TT> function's basic format is this:</P>
+<PRE><FONT COLOR="#0066FF">Format(expression, strFormat)
+</FONT></PRE>
+<P>Visual Basic changes the look of expression to match that of the format string
+you supply. Therefore, the format string <TT>&quot;$###,##0.00&quot;</TT> instructs
+Visual Basic to display the value with a dollar sign, floating numbers with the <TT>#</TT>
+(if the number is less than $100,000.00 the numbers will move left to touch the dollar
+sign instead of leaving a gap for the missing digits), commas in the amount if the
+amount is over $1,000, and a decimal point with two decimal places showing. If the
+value happens to be <TT>$0.00</TT>, the zeros ensure that the value prints, whereas
+if you used a <TT>#</TT> in place of each <TT>0</TT>, the <TT>#</TT> would show nothing
+if the result were zero.</P>
+<P>Once you format the value and rerun the application with the numbers used earlier,
+you'll see a result that looks better, as Figure 9.5 shows.<BR>
+<BR>
+<A NAME="Heading13"></A><A HREF="../art/ch09/09cce05.jpg"><FONT COLOR="#000077">Figure
+9.5.</FONT></A><FONT COLOR="#000077"> </FONT><I>The <TT>Format()</TT> function improved
+the output.</I>
+<H3 ALIGN="CENTER"><A NAME="Heading14"></A><FONT COLOR="#000077">Error Checking</FONT></H3>
+<P>A big problem still exists with the application if you plan to distribute it to
+others. The problem is not in the logic or in the calculation or in the form. The
+problem is the application's lack of error checking. If the user does not enter a
+value in one or more of the text boxes, the calculation will not work properly. Even
+worse, an error such as a divide by zero error could occur and stop the running program.
+Mathematically, one cannot divide by zero, and Visual Basic stops the program and
+issues a runtime error message if a divide by zero occurs. Any time you write an
+application that performs division, you should check to make sure that you never
+divide by zero.</P>
+<P>Therefore, you'll need to add error checking to the application to make sure the
+user enters positive values greater than <TT>0</TT> in each of the text boxes before
+clicking the computational command button.</P>
+<P>The error checking can be fairly simple. Convert the text box values to numbers,
+and if any text box contains zero or less, perform the following:
+
+<DL>
+	<DD><B>1.</B> Tell the user about the problem with a message box.<BR>
+	<BR>
+	<B>2. </B>When the user closes the message box, set the focus on the control with
+	the bad value so the user can more easily enter a corrected value.<BR>
+	<BR>
+	<B>3. </B>Test the controls again before any calculation is performed to ensure that
+	the problem is fixed.
+</DL>
+
+<P>Several approaches exist for handling this error. The approach this lesson uses
+is slightly advanced, but it gives you a chance to see an external standard module
+added to an application (an external code module that is different from the form
+module), and you'll get a glimpse of the function-writing instruction you'll learn
+in Hour 13, &quot;Modular Programming.&quot; You will actually create your own function
+instead of using one of the built-in functions supplied with Visual Basic.</P>
+<P>First, assign the hook to the other function in your <TT>cmdCompute_Click()</TT>
+event procedure like this:</P>
+<PRE><FONT COLOR="#0066FF">Private Sub cmdCompute_Click()
+` Use a For loop to calculate a final total
+` investment using compound interest.
+`
+` intNum is a loop control variable
+` sngIRate is the annual interest rate
+` intTerm is the number of years in the investment
+` curInitInv is the investor's initial investment
+` sngInterest is the total interest paid
+   Dim sngIRate As Single, sngInterest As Single
+   Dim intTerm As Integer, intNum As Integer
+   Dim curInitInv As Currency
+   
+   ` Error-checking
+   If ErrorCheck() = 1 Then
+     Exit Sub
+   End If
+   
+   sngIRate = txtRate.Text / 100#
+</FONT></PRE>
+<PRE><FONT COLOR="#0066FF">  intTerm = txtTerm.Text
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The rest of
+	the procedure is identical to the earlier listing. You only need to add the four
+	lines that follow the variable declarations. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The <TT>ErrorCheck()</TT> is a procedure you'll add that checks the form for bad
+values. You will add this procedure in a separate module, not at the bottom of the
+form module. Notice that you use the <TT>ErrorCheck()</TT> procedure just as you
+use built-in functions: You call the function with an empty argument list (no arguments
+are necessary), and the function returns a value. If that value is <TT>1</TT>, the
+form contains an error, so you use the <TT>Exit Sub</TT> statement to terminate the
+event procedure and return the user to the form. (The previous lesson described other
+forms of the <TT>Exit</TT> statement such as <TT>Exit For</TT>.) If no error exists,
+the <TT>ErrorCheck()</TT> procedure will not return a <TT>1</TT>, and the processing
+continues as normal.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A function procedure is a
+procedure that you write that accepts zero or more arguments and returns a single
+value.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A subroutine procedure is
+a procedure that you write that accepts zero or more arguments but does not return
+a value.</P>
+<P>You must now add the <TT>ErrorCheck()</TT> procedure. Unlike the event procedures
+you've been writing until now, the <TT>ErrorCheck()</TT> procedure is a function
+procedure and not a subroutine procedure. A function procedure always returns a value,
+whereas a subroutine procedure never returns a value. (Again, you'll learn more about
+function and subroutine procedures in Hour 13.)</P>
+<P>To add an extra module to your project, perform these steps:
+
+<DL>
+	<DD><B>1.</B> Select Project | Add Module to add a new module (that you can view
+	in a Code window) to the project. You could also right-click over your Project window
+	and add the module from the pop-up menu.<BR>
+	<BR>
+	<B>2.</B> Click the <TT>Module</TT> icon that appears in the Add Module dialog box.
+	Visual Basic adds a new module with the default name <TT>Module1</TT> (and the filename
+	<TT>Module1.BAS</TT>). Figure 9.6's Project window shows the new module in your project.
+	Your Code window will now display a blank module where you can type the module's
+	code.
+</DL>
+
+<P><A NAME="Heading15"></A><A HREF="../art/ch09/09cce06.jpg"><FONT COLOR="#000077">Figure
+9.6.</FONT></A><FONT COLOR="#000077"> </FONT><I>You've now added another code module
+to the project.</I>
+
+<DL>
+	<DD><B>3.</B> Maneuver between modules and the form by double-clicking the Project
+	window object you want to work with. For now, however, stay inside the new module.
+</DL>
+
+<P>Type the following function procedure inside the new module's Code window:</P>
+<PRE><FONT COLOR="#0066FF">Public Function ErrorCheck() As Integer
+   ` Error-checking for the form
+   If Val(frmInterest.txtRate.Text) &lt;= 0 Then
+      intPress = MsgBox(&quot;Enter a value for the rate&quot;, vbCritical)
+      frmInterest.txtRate.SetFocus
+      ErrorCheck = 1
+      Exit Function
+   End If
+   If Val(frmInterest.txtTerm.Text) &lt;= 0 Then
+      intPress = MsgBox(&quot;Enter a value for the term&quot;, vbCritical)
+      frmInterest.txtTerm.SetFocus
+      ErrorCheck = 1
+      Exit Function
+   End If
+   If Val(frmInterest.txtInvest.Text) &lt;= 0 Then
+      intPress = MsgBox(&quot;Enter a value for the investment&quot;, vbCritical)
+      frmInterest.txtInvest.SetFocus
+      ErrorCheck = 1
+      Exit Function
+   End If
+   ` No error occurred if execution gets here
+   ErrorCheck = 0
+End Function
+</FONT></PRE>
+<P>The first difference you'll notice between the function procedure and the event
+subroutine procedures you've seen so far is the difference between the opening and
+closing statements. The keyword <TT>Function</TT> distinguishes the function procedure
+from a subroutine procedure. The procedures you've seen until now were subroutine
+procedures that used the <TT>Sub</TT> keyword to define them. In addition, the function
+procedure's opening line ends with <TT>As Integer</TT>. This qualifier tells Visual
+Basic that the function procedure will return an integer value. Functions can return
+any data type as long as you define the function to return the proper data type with
+the <TT>As</TT> keyword.</P>
+<P>The function then checks each text box on the form. All form references include
+the form name! Therefore, instead of referring to the interest rate text box as <TT>txtRate</TT>,
+the code qualifies the text box with a form name as follows: <TT>frmInterest.txtRate</TT>.
+You've got to remember that an external standard module, such as this one, is not
+part of a form's code found in the form module. A standard module might need access
+to several forms in the same project, so the standard module needs the qualifying
+form name before each control name.</P>
+<P>Once a text box is found to hold a bad value, a message box describes the problem.
+The module then sets the focus to that control. Therefore, the focus goes straight
+to the problem so the user can edit the control without having to find it first once
+the error message box goes away.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B><TT>SetFocus</TT>
+	is not a property or an event. <TT>SetFocus</TT> is known as a method. Controls usually
+	support all three: properties, events, and methods. A method is a built-in routine
+	attached directly to a control. In a way, the control executes its own method. You'll
+	append method names to the end of a control as done here. Read the methods from right
+	to left to understand them fully. For example, <TT>frmInterest.txtTerm.SetFocus</TT>
+	tells Visual Basic to set the focus on the control named <TT>txtTerm</TT> located
+	on the <TT>frmInterest</TT> form. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Finally, the code sets the function's return value to <TT>1</TT> if an error occurs
+and exits the function (and therefore the module) and returns the return value to
+the calling code, which is the form module. To return a value from a function procedure,
+you simply assign the value that you want to return to the function name.</P>
+<P>Figure 9.7 shows the message box that appears if the user enters a term value
+that's zero or less.<BR>
+<BR>
+<A NAME="Heading16"></A><A HREF="../art/ch09/09cce07.jpg"><FONT COLOR="#000077">Figure
+9.7. </FONT></A><I>The user must enter better data.</I></P>
+<P>Save your project (<TT>Lesson 9 Int Proj</TT> would be a good name). When you
+save the project, Visual Basic asks for a form name and a module name as well (use
+<TT>Lesson 9 Int Form</TT> and <TT>Lesson 9 Int Mod</TT> to follow the naming convention
+that this 24-hour tutorial uses).
+<H3 ALIGN="CENTER"><A NAME="Heading17"></A><FONT COLOR="#000077">Summary</FONT></H3>
+<P>This hour develops a complete application. Through the development process, you
+saw how even a simple project can require detailed components such as error checking
+and proper form management. Too many books rush to the theory without hands-on work
+or rush to the hands-on without explaining the process. This lesson gives your 24-hour
+tutorial a needed boost with both hands-on development that strengthens what you
+already knew and some new topics to consider such as function procedures and form
+placement.</P>
+<P>The next hour describes important list-based controls. You'll learn how to produce
+drop-down list boxes and how to initialize and work with such lists.
+<H3 ALIGN="CENTER"><A NAME="Heading18"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+
+<DL>
+	<DD><B>Q Why does End not terminate an application properly? End seems to work fine
+	without the extra Unload statement.<BR>
+	<BR>
+	A </B><TT>End</TT> does work fine for single-form applications. Problems can arise,
+	however, if you create applications with multiple forms. In certain cases, the <TT>End</TT>
+	statement may fail to release every form's resources. In today's multitasking, multiuser
+	networked world, you need to release resources as soon as you can so that other processes
+	have access to those resources (such as memory and CPU time). The <TT>Unload</TT>
+	statement takes care of closing forms properly.<BR>
+	<B><BR>
+	Q How can I find the default properties for all controls?<BR>
+	<BR>
+	A </B>Surprisingly, Visual Basic's online help does not list the default properties.
+	The default properties are the most common properties referenced for a control. Therefore,
+	the default property for a text box is the <TT>Text</TT> property, and the default
+	property for a label is the <TT>Caption</TT> control. Generally, using a control's
+	default property makes for less typing, but default properties can add confusion
+	later when you try to figure out the code and change it. Therefore, if you use default
+	properties, use them only for the label and text box, but specify all other controls'
+	default properties explicitly so that your code is as clear as possible.
+</DL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading19"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<H4 ALIGN="CENTER"><A NAME="Heading20"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+
+<DL>
+	<DD><B>1.</B> What does the form's <TT>StartUpPosition</TT> value do?<BR>
+	<B><BR>
+	2.</B> Why do label captions often show hotkey letter combinations?<BR>
+	<B><BR>
+	3.</B> When is the best time to enter <TT>ToolTipText</TT> properties and why?<BR>
+	<B><BR>
+	4.</B> What is a control array?<BR>
+	<B><BR>
+	5.</B> Why does Visual Basic like to offer a control array when you paste a control
+	on a form that has the source of the paste already on the form?<BR>
+	<B><BR>
+	6.</B> Why might you want to lock a Text Box control?<BR>
+	<B><BR>
+	7.</B> What is the proper way to terminate an application?<BR>
+	<B><BR>
+	8.</B> What happens when you attempt to divide by zero?<BR>
+	<B><BR>
+	9. </B>True or false: The following two statements are identical:
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">lblTitle = &quot;The Sound of Multimedia&quot;
+
+lblTitle.Caption = &quot;The Sound of Multimedia&quot;</FONT></PRE>
+
+</BLOCKQUOTE>
+
+<PRE><FONT COLOR="#0066FF"></FONT></PRE>
+
+<DL>
+	<DD><B>10. </B>What is the difference between a function procedure and a subroutine
+	procedure?
+</DL>
+
+<H4 ALIGN="CENTER"><A NAME="Heading21"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+
+<DL>
+	<DD><B>1.</B> Change this lesson's application's form properties so the user cannot
+	resize the form. Search through the form properties until you find the property that
+	will do this.<BR>
+	<B><BR>
+	2. </B>Add input box routines to the application so that the user sees the error
+	message in the input box and can enter the replacement values in the input box. The
+	code then places the input box's value into the form. Once the form gets a replacement
+	value, be sure to check the controls again to make sure that the replacement value
+	is correct. You might want to add a <TT>Do-While</TT> loop around the input box routines
+	so that the user keeps seeing the input box warnings until the user enters a value
+	greater than zero.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch08.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch10.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

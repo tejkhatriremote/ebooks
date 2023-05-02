@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=643-647//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch19/19-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 20<br>DCOM
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Location Transparency <i>644</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Security in DCOM <i>651</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using the DCOM Configuration Utility <i>676</I></B>
+</DL>
+<p>Distributed COM makes it possible for you to use COM components across machine boundaries. This chapter covers topics that are related to Distributed COM, such as location transparency, security, and controlling where COM components are activated in the network.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Location Transparency</FONT></H3>
+<p>Distributed COM, or DCOM, takes advantage of a COM property known as <i>location transparency</I>. Location transparency is one of the key concepts in COM; it allows a client to use a COM object without needing to know where the actual COM object exists. Because clients connect to COM objects through interface pointers, there&#146;s no need for a client to use a different communication method for remote clients.</P>
+<p>With COM, interfaces don&#146;t change as they are moved into a different process or even to a remote machine. For example, if you were to create an <small>IEspresso</SMALL> interface, the <small>IEspresso</SMALL> interface would appear to be <small>IEspresso</SMALL>, no matter where the COM object was located. If a COM object is located in another apartment, COM and the operating system will create proxies to marshal interfaces and data between the client and server, as shown in Figure 20.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-01.jpg',500,144 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-01.jpg',500,144)"><font color="#000077"><b>Figure 20.1</B></FONT></A>&nbsp;&nbsp;A proxy moves an object&#146;s interfaces into the client&#146;s apartment.</P>
+<p>DCOM takes the notion of location transparency to an extreme and enables a client to use a COM object located in another computer, as shown in Figure 20.2.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-02.jpg',500,129 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-02.jpg',500,129)"><font color="#000077"><b>Figure 20.2</B></FONT></A>&nbsp;&nbsp;DCOM enables communication between clients and COM objects over a network.</P>
+<p>Before we dive into the specifics of DCOM, the next section describes a high-level view of how a COM object is instantiated on a remote machine.
+</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Creating an Instance of a Remote Object</FONT></H4>
+<p>This section describes some of the basic ways a client can create an instance of a COM object on a remote computer. In order to simplify the discussion, security issues are largely postponed in this section. Security is discussed later in the section &#147;Security in DCOM.&#148;
+</P>
+<p><font size="+1"><b>Naming a Remote Computer Implicitly</B></FONT></P>
+<p>In keeping with the idea of location transparency, a client can create an instance of a COM object on a remote machine implicitly (that is, without specifying the location of the COM object). Creating an instance in this way begins in the System Registry.
+</P>
+<p>As discussed in previous chapters, every creatable COM class has a key in the Registry under <small>HKEY_CLASSES_ROOT</SMALL>. One named value under this key specifies the application ID, or AppID, for the module used to create the class:</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_CLASSES_ROOT\CLSID\&lt;class ID GUID&gt;]
+    AppId = &lt;app ID GUID&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>An AppID is a GUID that identifies the process used to create one or more COM classes. Information about remote activation and security is stored under the AppID. Each AppID has a separate entry in the Registry under the following key:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+[HKEY_CLASSES_ROOT\AppID\&lt;app ID GUID&gt;]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There may be more than one CLSID in the Registry that refer to each AppID key, as shown in Figure 20.3, because the same module may house multiple COM classes&#151;the AppID contains information about the module rather than the class.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-03.jpg',500,369 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch20/images/20-03.jpg',500,369)"><font color="#000077"><b>Figure 20.3</B></FONT></A>&nbsp;&nbsp;Each AppID may be referred to by several CLSID Registry entries.</P>
+<p>The AppID key has several named values that are interesting when you&#146;re working with DCOM; there&#146;s a great deal of security information stored under this key that will be discussed later in this chapter. One key is used specifically for locating a DCOM server&#151;the <small>RemoteServerName</SMALL> named value. If the operating system discovers a computer name in this value, it will attempt to activate the component on the remote machine.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>The <small>RemoteServerName</SMALL> value provides a convenient way for you to enable clients to use components in remote computers without hard-coding the location of the remote machines in code. However, if a client explicitly asks for a component to be activated on a specific machine, this Registry value will be ignored.
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Active Directory can be used to store information about the location of COM servers. Information kept in the Registry can be placed into a General Policy Object, or GPO, which is used to update a user&#146;s Registry configuration.
+</P>
+<p><font size="+1"><b>Explicitly Creating a COM Object Remotely</B></FONT></P>
+<p>In addition to using the <small>RemoteServerName</SMALL> value found in the System Registry, you can also specify the location of a COM component programmatically. Here are the two Win32 function calls that are most often used to create remote instances of components:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoGetClassObject</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CoCreateInstanceEx</SMALL>
+</DL>
+<p>These two functions take the <small>COSERVERINFO</SMALL> structure as a parameter that describes the location of the remote component:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct  _COSERVERINFO
+{
+    DWORD       dwReserved1;
+    LPWSTR      pwszName;
+    COAUTHINFO* pAuthInfo;
+    DWORD       dwReserved2;
+}COSERVERINFO;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>COSERVERINFO</SMALL> structure has four members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwReserved1</SMALL> is reserved and must be set to zero.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pwszName</SMALL> is the name of the remote computer used to instantiate the component. The name can be in any form that can be resolved on the network. This includes dotted quad IP addresses, UNC names, and domain format names. For example, <small>L&#147;ali.codevtech.com&#148;</SMALL> is a valid name, as is <small>L&#147;\\BoatHouse&#148;</SMALL> and <small>L&#147;10.1.1.24&#148;</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pAuthInfo</SMALL> is a pointer to a <small>COAUTHINFO</SMALL> structure that contains security information used for this activation request. To use default security, pass <small>NULL</SMALL> as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwReserved2</SMALL> is reserved and must be set to zero.
+</DL>
+<p>The <small>CoGetClassObject</SMALL> function returns a pointer to the class object&#146;s <small>IClassFactory</SMALL> interface, as shown in the code fragment in Listing 20.1.</P>
+<p><b>Listing 20.1</B> Creating a Remote Instance of <small>IClassFactory</SMALL> Using <small>CoGetClassObject</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+COSERVERINFO csi;
+ZeroMemory(&ampcsi, sizeof(csi));
+csi.pwszName = L&#147;slartibartfast.codevtech.com&#148;;
+
+IClassFactory* pcf = NULL;
+HRESULT hr = CoGetClassObject(CLSID_MyClass,
+                              CLSCTX_ALL,
+                              &ampcsi,
+                              IID_IClassFactory,
+
+                              (LPVOID*)&amp;pcf);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch19/19-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

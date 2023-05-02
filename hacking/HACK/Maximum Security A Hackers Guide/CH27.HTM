@@ -1,0 +1,1238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 27 -- Firewalls</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch26.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch26/ch26.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch28.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/ch28.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">27</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Firewalls</FONT></H1>
+</CENTER>
+<P>More than 50 percent of all users have heard of firewalls, but only a handful
+know what a firewall really is. This is because firewalls are only used by those
+actively engaged in protecting networks connected to the Internet.
+<H2><FONT COLOR="#000077"><B>What Is a Firewall?</B></FONT></H2>
+<P>A <I>firewall</I> is any device used to prevent outsiders from gaining access
+to your network. This device is usually a combination of software and hardware. Firewalls
+commonly implement exclusionary schemes or rules that sort out wanted and unwanted
+addresses.</P>
+<P>To understand how firewalls work, consider some of the subjects discussed earlier
+in this book. First, most simple authentication procedures use the IP address as
+an index. The IP address is the most universal identification index on the Internet.
+This address can be either a static or dynamic address:
+
+<UL>
+	<LI>A static IP address is permanent; it is the address of a machine that is always
+	connected to the Internet. There are many classes of static IP addresses. One class
+	can be discovered by issuing a whois query; this class consists primarily of top-level
+	machines in a network, such as domain name servers, Web servers, and root-level machines.
+	These actually have registered hostnames within the whois database at InterNIC. Other
+	classes of static IP addresses are addresses assigned to second- and third-level
+	machines within networks dominated by domain name servers, root servers, Web servers,
+	and so on. These also have permanent physical addresses. However, these machines
+	might or might not possess a registered hostname. In any event, their addresses are
+	registered as well.<BR>
+	<BR>
+	
+	<LI>A dynamic IP address is one that is arbitrarily assigned to a different node
+	each time it connects to a network. Dynamic IP is often used by ISPs for dial-up
+	access--each time a node dials up, it is assigned a different IP address.
+</UL>
+
+<P>Whether your address is static or dynamic, it is used in all network traffic that
+you conduct. For example, as discussed in Chapter 13, &quot;Techniques to Hide One's
+Identity,&quot; a Web server records your IP address when you request a Web page.
+This is not to intrude on your privacy; it is done so that the server knows how to
+send you the requested data. In a similar fashion, all network services capture your
+IP (either temporarily or permanently) so they can return data to your address. In
+essence, it works much like the postal service: Imagine if every letter mailed had
+a return address. On the Internet, things are just so. The IP is the return address.</P>
+<P>When a connection is made between your machine and a remote machine, various dialogs
+may ensue. I discussed some of those dialogs in Chapter 6, &quot;A Brief Primer on
+TCP/IP.&quot; A common one--which you are apt to remember--is the TCP/IP three-way
+handshake. At any rate, such dialogs occur, during which time your IP is known by
+the target machine.</P>
+<P>Under normal circumstances, where no firewall or other superseding utility (such
+as TCP_Wrapper) has been installed, the dialog between your machine and the remote
+machine occurs directly (see Figure 27.1).</P>
+<P><A NAME="01"></A><A HREF="01-15.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch27/01.htm"><B>FIGURE 27.1.</B></A> <I><BR>
+The route of information.</I></P>
+<P>When I say that information travels directly, that is a very qualified term. As
+you can see, the process (even without security measures) is complex:
+
+<DL>
+	<DD><B>1. </B>The data originates somewhere within <TT>Your Network</TT> (which,
+	by the way, could refer to a machine in your home). In this case, you are connected
+	to your provider's network. For our purposes, your provider's network <I>is</I> <TT>Your
+	Network</TT>.<BR>
+	<BR>
+	<B>2. </B>Information travels from your machine to a machine on the provider's network.
+	From there, the information travels through an Ethernet cable (or other means of
+	transport) to the main server of <TT>Your Network</TT>.<BR>
+	<BR>
+	<B>3. </B>The server of <TT>Your Network</TT> passes this information to Router 1,
+	which promptly pours the information through the telephone line (or other high-speed
+	connection) to the Internet at large.<BR>
+	<BR>
+	<B>4. </B>The information travels across the Internet (passing through many routers
+	and gateways along the way), ultimately reaching Router 2. Router 2 pipes the information
+	into <TT>Their Server</TT>; the information is then served via Ethernet (or other
+	transport) to <TT>Their Network</TT>.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I have greatly simplified the network
+	outlay design by providing only relevant details. In practice, there might be all
+	sorts of devices located between <TT>Your Network</TT> and <TT>Their Network</TT>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>If neither side has installed security measures, the path is deemed (for all purposes)
+<I>direct</I>. Router 2, for example, allows packets from any source (IP) address
+to travel directly to <TT>Their Server</TT> and ultimately, to <TT>Their Network</TT>.
+At no point during that travel do the packets meet an obstacle. This is a completely
+insecure situation. However, for many years, this was the standard. Today, the type
+of situation illustrated in Figure 27.1 is too dangerous. Over the years, network
+engineers considered a wide range of solutions, including the firewall.
+<H2><FONT COLOR="#000077"><B>What Are the Components of a Firewall?</B></FONT></H2>
+<P>The most fundamental components of a firewall exist neither in software nor hardware,
+but inside the mind of the person constructing it. A firewall, at its inception,
+is a concept rather than a product; it is an idea in the architect's mind of who
+and what will be allowed to access the network. <I>Who</I> and <I>what</I> dramatically
+influence how network traffic (both incoming and outgoing) is routed. For this reason,
+constructing a firewall is part art, part common sense, part ingenuity, and part
+logic.</P>
+<P>Suppose the architect knows a Web server must exist on the host network. This
+Web server will obviously accept connections from almost any IP address. A restricted
+area, therefore, must be created for that server. In other words, in providing Web
+services from the host network, the architect must ensure that the Web server does
+not endanger the remaining portions of the network. Likewise, incoming mail is also
+an issue.
+<H3><FONT COLOR="#000077"><B>Specific Components and Characteristics</B></FONT></H3>
+<P>Firewalls can be composed of software, hardware, or, most commonly, both. The
+software components can be either proprietary, shareware, or freeware. The hardware
+can be any hardware that supports the software being used.</P>
+<P>If hardware, a firewall can (and often does) consist of no more than a router.
+As you will learn in Chapter 28, &quot;Spoofing Attacks,&quot; routers have advanced
+security features, including the capability to screen IP addresses. This screening
+process allows you to define which IP addresses are allowed to connect and which
+are not.</P>
+<P>Other implementations consist of both hardware and software. (These can get pretty
+eclectic. I have seen people using 386 boxes with shareware firewall/bridge products
+on them.)</P>
+<P>In any event, all firewalls share a common attribute: the capability to discriminate
+or the capability to deny access generally based on source address.
+<H2><FONT COLOR="#000077"><B>Types of Firewalls</B></FONT></H2>
+<P>There are different kinds of firewalls, and each type has its advantages and disadvantages.
+The most common type is referred to as a <I>network-level firewall</I>. Network-level
+firewalls are usually router based. That is, the rules of who and what can access
+your network is applied at the router level. This scheme is applied through a technique
+called <I>packet filtering</I>, which is the process of examining the packets that
+come to the router from the outside world.</P>
+<P>In a router-based firewall implementation, the source address of each incoming
+connection (that is, the address from which the packets originated) is examined.
+After each IP source address has been identified, whatever rules the architect has
+instituted will be enforced. For example, perhaps the architect decides that no network
+traffic will be accepted from any address within Microsoft Corporation. Thus, the
+router rejects any packets forwarded from <TT>microsoft.com</TT>. These packets never
+reach the internal server or the network beneath it.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Routers are about the size of a
+	small printer. Generally, at the back of the router are connection points for Ethernet
+	and digital telephone lines. Use these connection points to connect the telephone
+	line (T1, T3, and so on) and Ethernet to your server. Routers are configured using
+	special software. In most instances, the software is quite easy to use. Most newer
+	implementations are controlled through a windowed interface (such as the X Window
+	system, OpenWindows, and so on). Routers range in price (from used to new) from $600
+	to $1800. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Router-based firewalls are fast. Because they only perform cursory checks on the
+source address, there is no real demand on the router. It takes no time at all to
+identify a bad or restricted address. Nevertheless, the speed comes with a price:
+Router-based firewalls use the source address as an index. That means (barring controls
+against such access) packets sent from forged source addresses can gain at least
+some level of access to your server.</P>
+<P>In fairness, many packet-filtering techniques can be employed with router-based
+firewalls that shore up this weakness. The IP address header is not the only field
+of a packet that can be trapped by a router. As packet-filtering technology becomes
+more sophisticated, so do the schemes or rules employed by an administrator. One
+can now even apply rules related to state information within packets, using indexes
+such as time, protocol, ports, and so forth.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For an excellent discussion
+	of the fields that can be filtered, as well as a comprehensive look at packet filtering,
+	&quot;Network (In)Security Through IP Packet Filtering&quot; by D. Brent Chapman
+	is a must. Find it online at <A HREF="javascript:if(confirm('http://www.unix.geek.org.uk/~arny/pktfilt.ps  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.unix.geek.org.uk/%7Earny/pktfilt.ps'" tppabs="http://www.unix.geek.org.uk/%7Earny/pktfilt.ps"><TT>http://www.unix.geek.org.uk/~arny/pktfilt.ps</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>However, these are not the only deficiencies of packet-filtering, router-based
+firewalls. For example:
+
+<DL>
+	<DD>Another problem is that a number of RPC (Remote Procedure Call) services are
+	very difficult to filter effectively because the associated servers listen at ports
+	that are assigned randomly at system startup. A service known as portmapper maps
+	initial calls to RPC services to the assigned service numbers, but there is no such
+	equivalent for a packet filtering router. Since the router cannot be told which ports
+	the services reside at, it isn't possible to block completely these services unless
+	one blocks all UDP packets (RPC services mostly use UDP). Blocking all UDP would
+	block potentially necessary services such as DNS. Thus, blocking RPC results in a
+	dilemma.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The preceding paragraph
+	is excerpted from &quot;Problems with Packet Filtering Routers&quot; by John Wack.
+	It can be found online at <A HREF="javascript:if(confirm('http://www.telstra.com.au/pub/docs/security/800-10/node51.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.telstra.com.au/pub/docs/security/800-10/node51.html'" tppabs="http://www.telstra.com.au/pub/docs/security/800-10/node51.html"><TT>http://www.telstra.com.au/pub/docs/security/800-10/node51.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Wack discusses RPC as a potential problem because the ports can be assigned dynamically
+at startup. However, in most cases, this type of filtering (appropriately called
+<I>protocol filtering</I>) is not a problem. Very sophisticated schemes can be implemented
+in protocol filtering, and these rely primarily on the port called by the remote
+host.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For an excellent discussion
+	of protocol filtering and packet filtering in general, check out &quot;Packet Filtering
+	in an IP Router&quot; by Bruce Corbridge, Robert Hening, and Charles Slater. This
+	paper offers an inside look at exactly how packet filtering is accomplished in Telebit
+	routers. More importantly, the document takes you through the design and implementation
+	of the router. You can find it online at <A HREF="javascript:if(confirm('http://www.alw.nih.gov/Security/FIRST/papers/firewall/cslater.ps  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.alw.nih.gov/Security/FIRST/papers/firewall/cslater.ps'" tppabs="http://www.alw.nih.gov/Security/FIRST/papers/firewall/cslater.ps"><TT>http://www.alw.nih.gov/Security/FIRST/papers/firewall/cslater.ps</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Packet Filtering Tools</B></FONT></H3>
+<P>Packet filtering can be implemented without instituting a complete firewall. There
+are many free and commercial packet-filtering tools on the Internet. Following is
+a list of several such utilities.
+<H4><FONT COLOR="#000077"><B>TCP_Wrappers</B></FONT></H4>
+<P>TCP_Wrappers is a program written by Wietse Venema (also the co-author of the
+famous scanning utility, SATAN). Arguably, no other tool more easily or efficiently
+facilitates monitoring connections to your machine. The program works by replacing
+system daemons and recording all connection requests, their time, and most importantly,
+their origin. For these reasons, TCP_Wrappers is one of the most critical evidence-gathering
+tools available. TCP_Wrappers also has the capability to screen out unwanted networks
+and IP addresses, preventing users from such addresses from connecting.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>TCP_Wrappers is available
+	online at <A HREF="javascript:if(confirm('ftp://ftp.win.tue.nl/pub/security/tcp_wrappers_7.4.tar.gz  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.win.tue.nl/pub/security/tcp_wrappers_7.4.tar.gz'" tppabs="ftp://ftp.win.tue.nl/pub/security/tcp_wrappers_7.4.tar.gz"><TT>ftp://ftp.win.tue.nl/pub/security/tcp_wrappers_7.4.tar.gz</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>NetGate</B></FONT></H4>
+<P>NetGate (developed by SmallWorks) is a rule-based packet filtering system. It
+was designed for use on SPARC systems running SunOS 4.1.<I>x</I>. Like most packet
+filters, NetGate can examine each and every packet it encounters and can apply various
+rules, based upon the source address revealed in that examination. (NetGate also
+sports some pretty strong logging capabilities.) Reportedly, the distribution can
+be obtained either as a binary installation ($1500) or source ($2500). If your company
+needs a product with support (as opposed to freeware), I would recommend NetGate
+as a reasonable and economical alternative to other, more high-profile products.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>You can find information
+	about NetGate at <A HREF="javascript:if(confirm('http://hosaka.smallworks.com/netgate/packetfiltering.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://hosaka.smallworks.com/netgate/packetfiltering.html'" tppabs="http://hosaka.smallworks.com/netgate/packetfiltering.html"><TT>http://hosaka.smallworks.com/netgate/packetfiltering.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Internet Packet Filter</B></FONT></H4>
+<P>This interesting package is freely available. Written by Darren Reed, the Internet
+Packet Filter has all the amenities of a finely coded, commercial application. (Reed
+took particular pride in developing a package that could defeat the type of IP spoofing
+attack that Kevin Mitnik purportedly launched against machines at the San Diego Supercomputer
+Center.) Some interesting tidbits: Reed provided functionality not only to discard
+TCP packets that were incomplete or malformed, but to do so silently (your host returns
+no ICMP error). Internet Packet Filter also offers a comprehensive testing utility,
+so you can ensure your rules are sound before you implement them. (The program actually
+can take previous logs as input, and you can watch as the rules are applied. Very
+cool.) It is available for SunOS.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The Internet Packet Filter
+	can be found at <A HREF="javascript:if(confirm('ftp://coombs.anu.edu.au/ebooks/1575212684/ch27/:/pub/net/kernel/ip_fil3.0.4.tar.gz  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://coombs.anu.edu.au/ebooks/1575212684/ch27/:/pub/net/kernel/ip_fil3.0.4.tar.gz'" tppabs="ftp://coombs.anu.edu.au/ebooks/1575212684/ch27/:/pub/net/kernel/ip_fil3.0.4.tar.gz"><TT>ftp://coombs.anu.edu.au:/pub/net/kernel/ip_fil3.0.4.tar.gz</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Audit and Logging Tools</B></FONT></H3>
+<P>Packet filters, when used in conjunction with powerful auditing tools, can greatly
+assist in protecting your network and identifying intruders. The right combination
+of these types of tools can be every bit as effective as a commercial firewall (and
+generally, a whole lot less expensive). Following are some good auditing tools.
+<H4><FONT COLOR="#000077"><B>Argus</B></FONT></H4>
+<P>Argus was developed at Carnegie Mellon University's Software Engineering Institute.
+Argus is known to compile without errors, at least on the following platforms:
+
+<UL>
+	<LI>SunOS 4.<I>x</I>
+	<LI>Solaris 2.3
+	<LI>SGI IRIX5.2
+</UL>
+
+<P>In the document announcing Argus's availability, authors report that Argus is
+suitable for network monitoring, identifying potential network problems, and perhaps
+most importantly, verifying access control policies.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The document announcing
+	Argus's availability can be found online at <A HREF="javascript:if(confirm('ftp://ftp.sei.cmu.edu/pub/argus-1.5/argus-1.5.announce  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.sei.cmu.edu/pub/argus-1.5/argus-1.5.announce'" tppabs="ftp://ftp.sei.cmu.edu/pub/argus-1.5/argus-1.5.announce"><TT>ftp://ftp.sei.cmu.edu/pub/argus-1.5/argus-1.5.announce</TT></A>.
+	The tool can be obtained online at <A HREF="javascript:if(confirm('ftp://ftp.sei.cmu.edu/pub/argus-1.5/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.sei.cmu.edu/pub/argus-1.5/'" tppabs="ftp://ftp.sei.cmu.edu/pub/argus-1.5/"><TT>ftp://ftp.sei.cmu.edu/pub/argus-1.5/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Netlog</B></FONT></H4>
+<P>Netlog, developed at Texas A&amp;M University, can log all TCP and UDP traffic.
+To use this product, you must have a C compiler that will take ANSI C conventions.
+This tool also supports logging of ICMP messages (though the developers report that
+performing this logging activity soaks up a great deal of storage).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Netlog is available online
+	at <A HREF="javascript:if(confirm('ftp://coast.cs.purdue.edu/pub/tools/unix/TAMU/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://coast.cs.purdue.edu/pub/tools/unix/TAMU/'" tppabs="ftp://coast.cs.purdue.edu/pub/tools/unix/TAMU/"><TT>ftp://coast.cs.purdue.edu/pub/tools/unix/TAMU/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Netman</B></FONT></H4>
+<P>This tool is covered extensively in Chapter 12, &quot;Sniffers.&quot; However,
+I will reiterate that this is a suite of applications that is well crafted; it is
+arguably the most complete package of its kind ever made.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Netman is available online
+	at <A HREF="javascript:if(confirm('ftp://ftp.cs.curtin.edu.au/pub/netman/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.cs.curtin.edu.au/pub/netman/'" tppabs="ftp://ftp.cs.curtin.edu.au/pub/netman/"><TT>ftp://ftp.cs.curtin.edu.au/pub/netman/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>NOCOL/NetConsole v4.0</B></FONT></H4>
+<P>NOCOL/NetConsole v4.0 is a suite of standalone applications that perform a wide
+variety of monitoring tasks. This suite offers a Curses interface, which is great
+for running on a wide range of terminals (it does not require the X Window system
+in order to work). It is extensible, has support for a Perl interface, and is quite
+complex. It also operates on networks running AppleTalk and Novell NetWare.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>NOCOL/NetConsole v.4.0
+	is available online at <A HREF="javascript:if(confirm('ftp://ftp.navya.com/pub/vikas/nocol.tar.gz  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.navya.com/pub/vikas/nocol.tar.gz'" tppabs="ftp://ftp.navya.com/pub/vikas/nocol.tar.gz"><TT>ftp://ftp.navya.com/pub/vikas/nocol.tar.gz</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>There are other platform-specific packet filters. One well-known one is packetfilter,
+which runs on Ultrix 4.3. It is kernel resident.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The man page for packetfilter
+	is available online at <A HREF="javascript:if(confirm('http://198.233.42.11/ cgi-bin/man2html/packetfilter(4)  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://198.233.42.11/%20cgi-bin/man2html/packetfilter%284%29'" tppabs="http://198.233.42.11/%20cgi-bin/man2html/packetfilter%284%29"><TT>http://198.233.42.11/
+	cgi-bin/man2html/packetfilter(4)</TT></A>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Nonetheless, many of these tools, although capable of examining and monitoring
+packet traffic, cannot institute access-control policies. And that is the whole purpose
+of a firewall. It gives the administrator the ability to finely control who can (and
+cannot) access the network.
+<H3><FONT COLOR="#000077"><B>Application-Proxy Firewalls/Application Gateways</B></FONT></H3>
+<P>Other types of firewalls exist. A common type is <I>application-proxy firewalls</I>
+(sometimes referred to as <I>application gateways</I>). These work a bit differently
+from packet-filtering, router-based firewalls. Application gateways are software-based.
+When a remote user from the void contacts a network running an application gateway,
+the gateway blocks the remote connection. Instead of passing the connection along,
+the gateway examines various fields in the request. If these meet a set of predefined
+rules, the gateway creates a bridge between the remote host and the internal host.
+<I>Bridge</I> refers to a patch between two protocols. For example, in a typical
+application gateway scheme, IP packets are not forwarded to the internal network.
+Instead, a type of translation occurs, with the gateway as the conduit and interpreter.
+This is sometimes referred to as the <I>man-in-the-middle configuration</I>.</P>
+<P>The advantage of the application-gateway proxy model is the lack of IP forwarding.
+More importantly, more controls can be placed on the patched connection. Finally,
+such tools often offer very sophisticated logging facilities. Again, there is no
+such thing as a free lunch. As you might expect, this gateway scheme has a cost in
+terms of speed. Because each connection and all packet traffic are accepted, negotiated,
+translated, and reforwarded, this implementation can be slower than router-based
+packet filtering.</P>
+<P><I>IP forwarding</I> occurs when a server that receives an external request from
+the outside world forwards that information in IP format to the internal network.
+Leaving IP forwarding enabled is a fatal error. If you allow IP forwarding to occur,
+a cracker can get in from the outside and reach workstations on your internal network.</P>
+<P>Another disadvantage of this scheme is that a proxy application must be created
+for each networked service. Thus, one is used for FTP, another for Telnet, another
+for HTTP, and so forth. As John Wack explains in his article titled &quot;Application
+Gateways&quot;:
+
+<DL>
+	<DD>A disadvantage of application gateways is that, in the case of client-server
+	protocols such as Telnet, two steps are required to connect inbound or outbound.
+	Some application gateways require modified clients, which can be viewed as a disadvantage
+	or an advantage, depending on whether the modified clients make it easier to use
+	the firewall. A Telnet application gateway would not necessarily require a modified
+	Telnet client, however it would require a modification in user behavior: the user
+	has to connect (but not log in) to the firewall as opposed to connecting directly
+	to the host. But a modified Telnet client could make the firewall transparent by
+	permitting a user to specify the destination system (as opposed to the firewall)
+	in the Telnet command. The firewall would serve as the route to the destination system
+	and thereby intercept the connection, and then perform additional steps as necessary
+	such as querying for a one-time password. User behavior stays the same, however at
+	the price of requiring a modified client on each system.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Application Gateways&quot;
+	by John Wack can be found online at <A HREF="javascript:if(confirm('http://www.telstra.com.au/pub/docs/security/800-10/node52.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.telstra.com.au/pub/docs/security/800-10/node52.html'" tppabs="http://www.telstra.com.au/pub/docs/security/800-10/node52.html"><TT>http://www.telstra.com.au/pub/docs/security/800-10/node52.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>TIS FWTK</B></FONT></H4>
+<P>A typical example of an application-gateway firewall package is the Trusted Information
+Systems (TIS) Firewall Tool Kit (hereinafter referred to as the <I>FWTK</I>). This
+software package, early versions of which are free for noncommercial use, contains
+many separate components. The majority of these components are proxy applications.
+It includes proxies for the following services:
+
+<UL>
+	<LI>Telnet
+	<LI>FTP
+	<LI>rlogin
+	<LI>sendmail
+	<LI>HTTP
+	<LI>The X Window system
+</UL>
+
+<P>The FWTK is a comprehensive system. Nonetheless, it does not protect your network
+immediately upon installation. This is not a product that you simply install and
+abandon. The TIS FWTK is a <I>tool kit</I>. After you unpack the software, you must
+make certain decisions. You must also understand what you are doing. This is not
+a simple configuration problem. If you make erroneous rules or decisions along the
+way, your network might be unreachable from the void, even from friendly networks.
+Reading the documentation is paramount.</P>
+<P>The beautiful thing about the FWTK is that it has excellent access control built
+into its design. For example, you can allow or deny access (connection) from a network,
+a part of a network, or even a single address. In this respect, it has granular access
+control.</P>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Before you get the TIS
+	FWTK, you should probably examine a posting of a message from Marcus Ranum, one of
+	the developers of TIS FWTK. This is a short, entertaining document that gives some
+	insight into how the FWTK started. That document is located online at <A HREF="javascript:if(confirm('http://www.micrognosis.com/~nreadwin/fwtk/history.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.micrognosis.com/%7Enreadwin/fwtk/history.txt'" tppabs="http://www.micrognosis.com/%7Enreadwin/fwtk/history.txt">http://www.micrognosis.com/~nreadwin/fwtk/history.txt</A>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Obtain a copy of the
+	TIS Firewall Tool Kit at <A HREF="javascript:if(confirm('ftp://ftp.tis.com/pub/firewalls/toolkit/dist/  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.tis.com/pub/firewalls/toolkit/dist/'" tppabs="ftp://ftp.tis.com/pub/firewalls/toolkit/dist/"><TT>ftp://ftp.tis.com/pub/firewalls/toolkit/dist/</TT></A>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The FWTK requires a UNIX
+	system and a C compiler. Moreover, although the FWTK is known to compile on SunOS
+	and BSD without problems, configuration issues exist for Linux. To sort out these
+	problems quickly, there is no better document than &quot;Creating a Linux Firewall
+	using the TIS Toolkit&quot; by Benjamin Ewy. That document is located online at <A
+	HREF="javascript:if(confirm('http://www.ssc.com/lj/issue25/1204.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ssc.com/lj/issue25/1204.html'" tppabs="http://www.ssc.com/lj/issue25/1204.html"><TT>http://www.ssc.com/lj/issue25/1204.html</TT></A>.
+	Patches for use with the FWTK on Linux are located online at <A HREF="javascript:if(confirm('ftp://ftp.tisl.ukans.edu/pub/security/firewalls/fwtkpatches.tgz  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.tisl.ukans.edu/pub/security/firewalls/fwtkpatches.tgz'" tppabs="ftp://ftp.tisl.ukans.edu/pub/security/firewalls/fwtkpatches.tgz"><TT>ftp://ftp.tisl.ukans.edu/pub/security/firewalls/fwtkpatches.tgz</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The reason I mention the TIS FWTK is because it was the first, full-fledged firewall
+of this class. It was a ground breaker in the firewall field.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Thinking About
+	Firewalls,&quot; also by Marcus Ranum, is a very good document about firewalls in
+	general. This document details the types of firewalls that can be implemented and
+	their advantages and disadvantages. It can be found online at <A HREF="javascript:if(confirm('http://hp735c.csc.cuhk.hk/ThinkingFirewalls.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://hp735c.csc.cuhk.hk/ThinkingFirewalls.html'" tppabs="http://hp735c.csc.cuhk.hk/ThinkingFirewalls.html"><TT>http://hp735c.csc.cuhk.hk/ThinkingFirewalls.html</TT></A>.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Another extremely popular firewall
+	in this class is SOCKS, which is based on the application-proxy model. The connect
+	request is intercepted by SOCKS and translated. Thus, a direct connection never occurs
+	between your network and the outside world. SOCKS is of great significance because
+	it is so well established that support for it is already included in many browser
+	packages, most notably Netscape Navigator.<BR>
+	
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>There is a very comprehensive
+	coverage of SOCKS technology on the Internet. The document is so well designed and
+	written that anyone can get a solid grasp of how SOCKS works in just a few moments.
+	That document is at <A HREF="javascript:if(confirm('http://www.socks.nec.com/introduction.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.socks.nec.com/introduction.html'" tppabs="http://www.socks.nec.com/introduction.html"><TT>http://www.socks.nec.com/introduction.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>It is my opinion that application-gateway systems (proxy-based firewalls) are
+more secure. This is because there is no IP forwarding scheme. That means IP packets
+from the void cannot reach any machine on your internal network.
+<H2><FONT COLOR="#000077"><B>Firewalls Generally</B></FONT></H2>
+<P>One of the main ideas behind a firewall is that your network will remain theoretically
+invisible (or at least unreachable) to anyone not authorized to connect. This process
+works through the exclusionary schemes that one can apply using a firewall.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>CAUTION:</B></FONT><B> </B>Your firewalled network will
+	not be entirely invisible. At least one scanner, called <I>Jakal</I>, can scan for
+	services running behind a firewall. Jakal, a stealth scanner, will scan a domain
+	(behind a firewall) without leaving any trace of the scan. According to the authors,
+	all alpha test sites were unable to log any activity (though it is reported that
+	&quot;some firewalls did allow SYN | FIN to pass through&quot;). Refer to Chapter
+	9, &quot;Scanners,&quot; for the scoop on that utility. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Theoretically, a firewall is the most stringent security measure you can implement
+(barring, of course, disconnecting your system from the Internet). Nevertheless,
+issues regarding this stringent security environment remain. One is that security
+with a firewall can be configured so stringently that it can actually impair the
+process of networking. For example, some studies suggest that the use of a firewall
+is impractical in environments where users critically depend on distributed applications.
+Because firewalls implement such a strict security policy, these environments become
+bogged down. What they gain in security, they lose in functionality. Universities
+are a perfect example of this type of environment. Research in universities is often
+conducted where two or more departments (often on network segments located far from
+each other) are involved in the compilation of data (and corroboration of research
+efforts). In these environments, it is very difficult to work under such tight security
+restraints.</P>
+<P>A second issue regarding firewalls is that they lead to placing most of your eggs
+in one basket. Because a firewall is your face to the void, a breach can cause your
+internal network to be easily destroyed. That is, firewalls can foster a climate
+in which they are the only real access control and security you have. Firewalls are
+almost always described as the bottleneck of a network, where all authentication
+is to be done. This seems suitable as long as firewalls are infallible. But what
+if they aren't? What if a technique is discovered to crack any firewall? Networks
+that rely on firewalls would be completely exposed, and odds of survival would be
+slim.</P>
+<P>Before you construct a firewall, you should undertake some serious research. When
+you construct a firewall, you must know your network intimately. This requires true
+organization. Various network segments (either on the same network or different ones)
+will need to communicate with each other. These networks can communicate through
+automated processes or human interaction. Automated processes might prove easy to
+accommodate. Human-initiated processes, however, can differ dramatically.</P>
+<P>For some organizations, a firewall is just plain impractical. ISPs are within
+this class. One could quickly lose customers by instituting harsh security policies.
+Indeed, some contend that firewalls are not needed. These people argue that solid
+system administration practices will render the same benefit as a firewall, without
+slowing the network or making connections difficult.</P>
+<P>There are other problems with establishing a firewall as well. If FTP, Telnet,
+Gopher, HTTP, RPC, rlogin, and NFS were the only protocols that the Internet would
+ever use, a firewall would pose only limited problems with access. After all, proxies
+have been written for all of these applications. The problem is, these are not the
+only services; new services crop up each month. Thus, to provide your internal users
+with effective Internet access, you must keep up with the applications now emerging.
+Proxies for such services will generally be obtainable, but after the new service
+or protocol has already been on the market for some time. Of course, <I>some time</I>
+is generally only a few months, but during those months, your internal users will
+fuss.
+<H2><FONT COLOR="#000077"><B>Building a Firewall: What You Need to Know</B></FONT></H2>
+<P>The construction of a firewall is not for the faint of heart. It is for a system
+administrator (or other individual) who <I>intimately</I> knows the network to be
+firewalled. The process is not simple; the steps include
+
+<DL>
+	<DD><B>1. </B>Identifying topology and protocol needs<BR>
+	<BR>
+	<B>2.</B> Developing policies<BR>
+	<BR>
+	<B>3. </B>Having adequate tools<BR>
+	<BR>
+	<B>4.</B> Using those tools effectively<BR>
+	<BR>
+	<B>5. </B>Testing the configuration
+</DL>
+
+<H3><FONT COLOR="#000077"><B>Identifying Topology and Protocol Needs</B></FONT></H3>
+<P>The first step is to understand the network in its entirety. This task might involve
+more than simply looking over the machines, the logs, and so forth. It might involve
+discussing these matters with individual departments. For example, in larger networks,
+there might be many interactions between a specific department in one building and
+a specific department in another. These buildings might be located hundreds or even
+thousands of miles away from each other. You need to know what type of outgoing traffic
+users require.</P>
+<P>It is important to maintain your tact during this process. You will often run
+into users who insist, &quot;We've been doing it this way for 10 years now.&quot;
+Even though you have great authority (because security is such a serious concern),
+you should work with these people as much as possible. It is not necessary that they
+understand the process in full. Nevertheless, if you intend to restrict or otherwise
+hamper their ability to reach out into the void, you should explain why to them.
+The last thing you need is to anger (or otherwise foster resentment within) local
+users. Rather, you need their support because after you finish building your firewall,
+you will distribute a policy. How closely local users follow that policy will dramatically
+affect the security of your network. For example, if insecure modems are located
+in this or that department, this is a potential hole. If you have dealt tactfully
+with local users, you will probably have nothing to fear. However, if you have issued
+Draconian decrees, you can be pretty sure that local users will trip you up.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I hear folks dispute this all the
+	time. They insist that no one can simply install a modem on a machine. Why not? I
+	have seen it happen in many companies. There is nothing in a policy alone that will
+	prevent an employee from doing so. Furthermore, on networks with PC-based workstations,
+	many machines or workstations have internal modems to begin with. I dealt with one
+	client who had a Novell NetWare network from the old days. Even the client was unaware
+	that some machines had modems (1200 baud, of course). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>So, your first job is to determine what can and cannot be restricted. A list should
+be made of all nonstandard protocols that are essential between this network and
+any other. That done, you can begin to get a picture of how the firewall will be
+built (at least, the local access policies). Determining whom (or what) not to let
+in is a little less perplexing. More than likely, you will want to restrict connections
+from any network known to forward unsolicited e-mail, sexual content, or other materials
+not related to your business. You might also want to restrict addresses that are
+known hacking or cracking havens.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I would restrict all known hacking
+	and cracking addresses. For example, a well- known hacking group recently conducted
+	a wide scan of U.S. domains, purportedly under the guise of security research. This
+	caused a stir in security-related mailing lists and newsgrouqa and rightly so. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Are Firewalls Foolproof?</B></FONT></H3>
+<P>Are firewalls foolproof? Are humans foolproof? The answer to both questions is
+no. Firewall products have not been proven to be flawed, but human implementation
+has. Crackers have conducted various studies on breaking firewalls. The majority
+of those studies point to two phases of an attack. The first is to discover what
+type of firewall exists on a particular network and what type of services are running
+behind it. That first task has already been encapsulated in an automated package;
+the Jakal scanner can accomplish this for you.</P>
+<P>The second task, finding a hole in the firewall, is a bit more difficult. Cracker
+studies indicate that if there is such a hole, it exists as a result of human error
+(or rather, misconfiguration on the part of the system administrator). This is not
+a rare occurrence. One must recognize that no matter what platform is in use, this
+is a problem. In UNIX networks, it can be at least partially attributed to the fact
+that UNIX is so complex. There are hundreds of native applications, protocols, and
+commands. This is before you begin to construct a firewall. Failed firewall implementation
+on Microsoft platforms might occur for other reasons (for instance, because administrators
+might be unfamiliar with TCP/IP). In either case, human error is a likely possibility.
+For this reason, companies should be extremely selective when choosing the personnel
+responsible for implementing the firewall. Some common cracker agendas include
+
+<UL>
+	<LI>Sorting out the real components from the fake ones--Many firewalls use <I>sacrificial
+	hosts</I>, machines designed either as Web servers (that the owners are willing to
+	part with) or decoys. <I>Decoys</I> are nothing more than traps, places where an
+	inexperienced cracker's activities are captured and logged. These can employ complex
+	means of veiling their bogus character. For example, they might issue responses to
+	emulate a real file system or real applications. These generally are deeply entrenched
+	in a chroot'd environment. The cracker's first task is to identify what viable targets
+	might actually exist.
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference: </B></FONT>Decoys bear at least a fleeting
+	resemblance to the box (reportedly built by Steven Bellovin) described in the article
+	by B. Cheswick titled &quot;An Evening With Berferd In Which a Cracker is Lured,
+	Endured and Studied.&quot; This article can be found online at <A HREF="javascript:if(confirm('ftp://research.att.com/dist/internet_security/berferd.ps  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://research.att.com/dist/internet_security/berferd.ps'" tppabs="ftp://research.att.com/dist/internet_security/berferd.ps"><TT>ftp://research.att.com/dist/internet_security/berferd.ps</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+
+<UL>
+	<LI>Trying to get some definitive information about the internal system--This applies
+	especially to machines that serve mail and other services. At a minimum, you should
+	attempt to get an insider to send you a mail message so that the paths can be examined.
+	This might give you a clue as to how some portions of the network are constructed.<BR>
+	<BR>
+	
+	<LI>Keeping up with the current advisories--In certain situations, new bugs arise
+	in commonly used programs that can run on or behind the firewall. These holes might
+	be able to get you at least the minimum access necessary to gain a better look.
+</UL>
+
+<P>Also, no firewall can effectively prevent attacks from the inside. If a cracker
+can place someone (perhaps himself or herself) in your employ, it won't be long before
+your network is cracked. I know someone who managed to gain employment with a well-known
+oil company. That hacker collected extensive information not only about the internal
+network there, but also about the firewall hosts.</P>
+<P>Finally, firewalls have been bypassed or broken in the past. The Quake site at
+Crack dot Com is one such example. Although relatively little information has been
+distributed about how the crack was accomplished, it was reported in <I>Wired</I>
+that:
+
+<DL>
+	<DD>Hackers broke into the Web server and file server of Crack dot Com, a Texas gaming
+	company, on Wednesday, stealing the source code for id's Quake 1.01, as well as Crack's
+	newest project, Golgotha, and older games Abuse and Mac Abuse...The hackers, who
+	were able to get through the Crack's firewall, left intact a bash-history file that
+	recorded all their movements.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The preceding paragraph
+	is excerpted from &quot;Hackers Hack Crack, Steal Quake,&quot; an article, by Annaliza
+	Savage, that appeared in <I>Wired</I>. Find the article online at <A HREF="javascript:if(confirm('http://www.wired.com/news/culture/story/1418.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.wired.com/news/culture/story/1418.html'" tppabs="http://www.wired.com/news/culture/story/1418.html"><TT>http://www.wired.com/news/culture/story/1418.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>It is possible to identify the type of firewall being run on a given server. However,
+printing that is beyond the level of irresponsibility to which I am prepared to stoop
+just to sell a book. I will say this: You can do it with a combination of the Jakal
+scanner and a script written to jackhammer a site. Which addresses are blocked matters
+less than <I>how</I> they are blocked (that is, you need to elicit responses from
+the firewall).
+<H2><FONT COLOR="#000077"><B>Commercial Firewalls</B></FONT></H2>
+<P><B>The Eagle Family of Firewalls by Raptor</B></P>
+<P>Company: Raptor Systems</P>
+<P>Specs: <A HREF="javascript:if(confirm('http://www.raptor.com/products/brochure/40broch.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.raptor.com/products/brochure/40broch.html'" tppabs="http://www.raptor.com/products/brochure/40broch.html"><TT>http://www.raptor.com/products/brochure/40broch.html</TT></A></P>
+<P>Home: <A HREF="javascript:if(confirm('http://www.raptor.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.raptor.com/'" tppabs="http://www.raptor.com/"><TT>http://www.raptor.com</TT></A><TT></TT></P>
+<P>Raptor has been around a long time. It introduced its line of firewall products
+in 1991. The company has a solid reputation. As stated in its online company description:
+
+<DL>
+	<DD>...Raptor Systems' award-winning Eagle family of firewalls provides security
+	across a range of industries, including telecommunications, entertainment, aerospace,
+	defense, education, health care, and financial services. Raptor has numerous strategic
+	relationships with world-class companies like Compaq Computer Corporation, Siemens-Nixdorf,
+	Hewlett-Packard, Sprint, and Shiva Corporation.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Check out Raptor's online
+	company description at <A HREF="javascript:if(confirm('http://www.raptor.com/products/brochure/40broch.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.raptor.com/products/brochure/40broch.html#aboutraptor'" tppabs="http://www.raptor.com/products/brochure/40broch.html#aboutraptor"><TT>http://www.raptor.com/products/brochure/40broch.html#aboutraptor</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Its products combine a wide range of firewall techniques, including heavy logging;
+specialized, event-triggered treatment of suspicious activity; and extremely granular
+access controls. This family of firewall products integrates application proxies.</P>
+<P><B>Check Point Firewall and Firewall-1</B></P>
+<P>Company: Check Point Software Technologies Ltd.</P>
+<P>Specs: <A HREF="javascript:if(confirm('http://www.checkpoint.com/products/firewall/intro.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.checkpoint.com/products/firewall/intro.html'" tppabs="http://www.checkpoint.com/products/firewall/intro.html"><TT>http://www.checkpoint.com/products/firewall/intro.html</TT></A></P>
+<P>Home: <A HREF="javascript:if(confirm('http://www.checkpoint.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.checkpoint.com/'" tppabs="http://www.checkpoint.com/"><TT>http://www.checkpoint.com/</TT></A><TT></TT></P>
+<P>Check Point is based in Israel and was founded in 1993. It also has outposts in
+eight U.S. cities, including Redwood City, Los Angeles, New York, and others. The
+product line offers cross-platform support.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Articles and press releases
+	about Check Point are located online at <A HREF="javascript:if(confirm('http://www.checkpoint.com/press/index.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.checkpoint.com/press/index.html'" tppabs="http://www.checkpoint.com/press/index.html"><TT>http://www.checkpoint.com/press/index.html</TT></A>.
+	More important information about Check Point's flagship product is located at <A
+	HREF="javascript:if(confirm('http://www.checkpoint.com/products/white/index.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.checkpoint.com/products/white/index.html'" tppabs="http://www.checkpoint.com/products/white/index.html"><TT>http://www.checkpoint.com/products/white/index.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One of the more interesting elements of Check Point Firewall-1 is that it includes
+time object control. That is, one can assign certain times of the day to perform
+certain access restrictions. Firewall-1 also has provisions to distribute process
+loads among a series of workstations.</P>
+<P><B>SunScreen</B></P>
+<P>Company: Sun Microsystems</P>
+<P>Specs: <A HREF="javascript:if(confirm('http://www.sun.com/security/overview.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sun.com/security/overview.html'" tppabs="http://www.sun.com/security/overview.html"><TT>http://www.sun.com/security/overview.html</TT></A></P>
+<P>Home: <A HREF="javascript:if(confirm('http://www.sun.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sun.com/'" tppabs="http://www.sun.com/"><TT>http://www.sun.com</TT></A><TT></TT></P>
+<P>Sun's SunScreen is comprised of a series of products. In the SunScreen product
+line, Sun has addressed one of the primary problems I mentioned previously: If your
+bottleneck is broken, your network is completely exposed. Sun's new line of products
+will likely revolutionize the firewall industry (certainly on the Sun platform).
+The chief products include
+
+<UL>
+	<LI>SunScreen SPF 100/100G--Turnkey solution that provides non-IP-address capability.
+	That is, crackers from the outside cannot reliably identify the nodes behind the
+	wall. Moreover, heavy packet-filtering technology has been added.<BR>
+	<BR>
+	
+	<LI>SunScreen<FONT SIZE="1"><SUP>TM</SUP></FONT> EFS--Implements heavy-duty packet
+	filtering and more importantly, encryption. Special amenities include provisions
+	for remote administration and administration through an HTML interface.
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Some specs for SunScreen
+	EFS are located online at <A HREF="javascript:if(confirm('http://www.sun.com/security/prod_spec.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sun.com/security/prod_spec.html'" tppabs="http://www.sun.com/security/prod_spec.html"><TT>http://www.sun.com/security/prod_spec.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+
+<UL>
+	<LI>SunScreen<FONT SIZE="1"><SUP>TM</SUP></FONT> SKIP--This is an interesting product
+	that provides PCs and workstations with secure authentication.
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Check out SunScreen SKIP
+	online at <A HREF="javascript:if(confirm('http://www.sun.com/security/skip.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sun.com/security/skip.html'" tppabs="http://www.sun.com/security/skip.html"><TT>http://www.sun.com/security/skip.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>
+<P><B>IBM Internet Connection Secured Network Gateway</B></P>
+<P>Company: Internal Business Machines (IBM)</P>
+<P>Specs: <A HREF="javascript:if(confirm('http://www.ics.raleigh.ibm.com/firewall/info.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ics.raleigh.ibm.com/firewall/info.htm'" tppabs="http://www.ics.raleigh.ibm.com/firewall/info.htm"><TT>http://www.ics.raleigh.ibm.com/firewall/info.htm</TT></A></P>
+<P>Home: <A HREF="javascript:if(confirm('http://www.ics.raleigh.ibm.com/firewall/overview.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ics.raleigh.ibm.com/firewall/overview.htm'" tppabs="http://www.ics.raleigh.ibm.com/firewall/overview.htm"><TT>http://www.ics.raleigh.ibm.com/firewall/overview.htm</TT></A><TT></TT></P>
+<P>This product is designed for AIX. Like Sun's SunScreen product line, it is capable
+of hiding the IPs of your internal network. It supports application proxies and has
+exceptional logging and reporting capabilities, as well as isolated Web services.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For an extremely comprehensive
+	study of IBM's Internet Connection Secured Network Gateway, visit <A HREF="javascript:if(confirm('http://www.ncsa.com/fpfs/ibm.html at NCSA  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ncsa.com/fpfs/ibm.html%20at%20NCSA'" tppabs="http://www.ncsa.com/fpfs/ibm.html%20at%20NCSA"><TT>http://www.ncsa.com/fpfs/ibm.html</TT>
+	at NCSA</A>. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>
+<P><B>Cisco PIX Firewall</B></P>
+<P>Company: Cisco Systems</P>
+<P>Specs: <A HREF="javascript:if(confirm('http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm'" tppabs="http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm"><TT>http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm</TT></A></P>
+<P>Home: <A HREF="javascript:if(confirm('http://www.cisco.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cisco.com/'" tppabs="http://www.cisco.com/"><TT>http://www.cisco.com</TT></A><TT></TT></P>
+<P>This firewall relies not on application proxies (which can consume additional
+network resources and CPU time) but instead on a secure operating system within the
+hardware component itself. Special features include an HTML configuration and administration
+control tool, IP concealment and non-translation, easy configuration, and support
+for 16,000 instant connections.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Firewalls now comprise the most commonly accepted method of protecting a network
+and, for the most part, seem to be impenetrable when attacked by 95 percent of the
+cracking community. Moreover, firewall technology is yet in its infancy. Nevertheless,
+firewalls have been cracked in the past. It is also worth noting that some firewalls
+can raise security issues themselves. For example, it was recently found that the
+Gopher proxy in a Raptor product can, under certain circumstances, leave a Windows
+NT server vulnerable to a denial-of-service attack. (The CPU climbs to near 100 percent
+utilization.)</P>
+<P>The future of firewall technology is a very interesting field indeed. However,
+if you have truly sensitive data to protect (and it must be connected to the Internet),
+I advise against using a firewall (commercial or otherwise) as your only means of
+defense.
+<H3><FONT COLOR="#000077"><B>Resources</B></FONT></H3>
+<P><B>Internet Firewalls and Network Security (Second Edition).</B> Chris Hare and
+Karanjit Siyan. New Riders. ISBN: 1-56205-632-8. 1996.</P>
+<P><B>Internet Firewalls.</B> Scott Fuller and Kevin Pagan. Ventana Communications
+Group Inc. ISBN: 1-56604-506-1. 1997.</P>
+<P><B>Building Internet Firewalls.</B> D. Brent Chapman and Elizabeth D. Zwicky.
+O'Reilly &amp; Associates. ISBN: 1-56592-124-0. 1995.</P>
+<P><B>Firewalls and Internet Security : Repelling the Wily Hacker.</B> William R.
+Cheswick and Steven M. Bellovin. Addison-Wesley Professional Computing. ISBN: 0-201-63357-4.
+1994.</P>
+<P><B>Actually Useful Internet Security Techniques.</B> Larry J. Hughes, Jr. New
+Riders. ISBN: 1-56205-508-9. 1995.</P>
+<P><B>Internet Security Resource Library: Internet Firewalls and Network Security,
+Internet Security Techniques, Implementing Internet Security.</B> New Riders. ISBN:
+1-56205-506- 2. 1995.</P>
+<P><B>Firewalls FAQ.</B> Marcus J. Ranum.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.cis.ohio-state.edu/hypertext/faq/usenet/firewalls-faq/faq.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cis.ohio-state.edu/hypertext/faq/usenet/firewalls-faq/faq.html'" tppabs="http://www.cis.ohio-state.edu/hypertext/faq/usenet/firewalls-faq/faq.html"><TT>http://www.cis.ohio-state.edu/hypertext/faq/usenet/firewalls-faq/faq.html</TT></A>
+</UL>
+
+<P><B>NCSA Firewall Policy Guide.</B> Compiled by Stephen Cobb, Director of Special
+Projects. National Computer Security Association.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ncsa.com/fwpg_p1.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ncsa.com/fwpg_p1.html'" tppabs="http://www.ncsa.com/fwpg_p1.html"><TT>http://www.ncsa.com/fwpg_p1.html</TT></A>
+</UL>
+
+<P><B>Comparison: Firewalls.</B> Comprehensive comparison of a wide variety of firewall
+products. <I>LANTimes</I>. June 17, 1996.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.lantimes.com/lantimes/usetech/compare/pcfirewl.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.lantimes.com/lantimes/usetech/compare/pcfirewl.html'" tppabs="http://www.lantimes.com/lantimes/usetech/compare/pcfirewl.html"><TT>http://www.lantimes.com/lantimes/usetech/compare/pcfirewl.html</TT></A>
+</UL>
+
+<P><B>There Be Dragons.</B> Steven M. Bellovin. Proceedings of the Third Usenix UNIX
+Security Symposium, Baltimore, September 1992. AT&amp;T Bell Laboratories, Murray
+Hill, NJ. August 15, 1992.</P>
+<P><B>Rating of Application Layer Proxies.</B> Michael Richardson.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.sandelman.ottawa.on.ca/SSW/proxyrating/proxyrating.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sandelman.ottawa.on.ca/SSW/proxyrating/proxyrating.html'" tppabs="http://www.sandelman.ottawa.on.ca/SSW/proxyrating/proxyrating.html"><TT>http://www.sandelman.ottawa.on.ca/SSW/proxyrating/proxyrating.html</TT></A>
+</UL>
+
+<P><B>Keeping Your Site Comfortably Secure: An Introduction to Internet Firewalls.</B>
+John P. Wack and Lisa J. Carnahan. National Institute of Standards and Technology.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://csrc.ncsl.nist.gov/nistpubs/800-10/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://csrc.ncsl.nist.gov/nistpubs/800-10/'" tppabs="http://csrc.ncsl.nist.gov/nistpubs/800-10/"><TT>http://csrc.ncsl.nist.gov/nistpubs/800-10/</TT></A>
+</UL>
+
+<P><B>SQL*Net and Firewalls.</B> David Sidwell and Oracle Corporation.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.zeuros.co.uk/firewall/library/oracle-and-fw.pdf  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.zeuros.co.uk/firewall/library/oracle-and-fw.pdf'" tppabs="http://www.zeuros.co.uk/firewall/library/oracle-and-fw.pdf"><TT>http://www.zeuros.co.uk/firewall/library/oracle-and-fw.pdf</TT></A>
+</UL>
+
+<P><B>Covert Channels in the TCP/IP Protocol Suite.</B> Craig Rowland. Rotherwick
+&amp; Psionics Software Systems Inc.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.zeuros.co.uk/firewall/papers.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.zeuros.co.uk/firewall/papers.htm'" tppabs="http://www.zeuros.co.uk/firewall/papers.htm"><TT>http://www.zeuros.co.uk/firewall/papers.htm</TT></A>
+</UL>
+
+<P><B>If You Can Reach Them, They Can Reach You.</B> William Dutcher. A PC Week Online
+Special Report, June 19, 1995.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.pcweek.com/sr/0619/tfire.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pcweek.com/sr/0619/tfire.html'" tppabs="http://www.pcweek.com/sr/0619/tfire.html"><TT>http://www.pcweek.com/sr/0619/tfire.html</TT></A>
+</UL>
+
+<P><B>Packet Filtering for Firewall Systems.</B> February 1995. CERT (and Carnegie
+Mellon University).
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://info.cert.org/pub/tech_tips/packet_filtering  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://info.cert.org/pub/tech_tips/packet_filtering'" tppabs="ftp://info.cert.org/pub/tech_tips/packet_filtering"><TT>ftp://info.cert.org/pub/tech_tips/packet_filtering</TT></A>
+</UL>
+
+<P><B>Network Firewalls.</B> Steven M. Bellovin and William R. Cheswick. IEEECM,
+32(9), pp. 50-57, September 1994.</P>
+<P><B>Session-Layer Encryption.</B> Matt Blaze and Steve Bellovin. Proceedings of
+the Usenix Security Workshop, June 1995.</P>
+<P><B>A Network Perimeter With Secure External Access.</B> Frederick M. Avolio and
+Marcus J. Ranum. An extraordinary paper that details the implementation of a firewall
+purportedly at the White House.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.alw.nih.gov/Security/FIRST/papers/firewall/isoc94.ps  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.alw.nih.gov/Security/FIRST/papers/firewall/isoc94.ps'" tppabs="http://www.alw.nih.gov/Security/FIRST/papers/firewall/isoc94.ps"><TT>http://www.alw.nih.gov/Security/FIRST/papers/firewall/isoc94.ps</TT></A>
+</UL>
+
+<P><B>Packets Found on an Internet.</B> Steven M. Bellovin. Lambda. Interesting analysis
+of packets appearing at the application gateway of AT&amp;T.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ftp.research.att.com/dist/smb/packets.ps  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://ftp.research.att.com/dist/smb/packets.ps'" tppabs="ftp://ftp.research.att.com/dist/smb/packets.ps"><TT>ftp://ftp.research.att.com/dist/smb/packets.ps</TT></A>
+</UL>
+
+<P><B>Using Screend to Implement TCP/IP Security Policies.</B> Jeff Mogul. Rotherwick
+and Digital.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.zeuros.co.uk/firewall/library/screend.ps  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.zeuros.co.uk/firewall/library/screend.ps'" tppabs="http://www.zeuros.co.uk/firewall/library/screend.ps"><TT>http://www.zeuros.co.uk/firewall/library/screend.ps</TT></A>
+</UL>
+
+<P><B>Firewall Application Notes.</B> Livingston Enterprises, Inc. Good document
+that starts by describing how to build a firewall. It also addresses application
+proxies, Sendmail in relation to firewalls, and the characteristics of a bastion
+host.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.telstra.com.au/pub/docs/security/firewall-1.1.ps.Z  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.telstra.com.au/pub/docs/security/firewall-1.1.ps.Z'" tppabs="http://www.telstra.com.au/pub/docs/security/firewall-1.1.ps.Z"><TT>http://www.telstra.com.au/pub/docs/security/firewall-1.1.ps.Z</TT></A>
+</UL>
+
+<P><B>X Through the Firewall, and Other Application Relays.</B> Treese/Wolman. Digital
+Equipment Corp. Cambridge Research Lab.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://crl.dec.com/pub/DEC/CRL/tech-reports/93.10.ps.Z  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://crl.dec.com/pub/DEC/CRL/tech-reports/93.10.ps.Z'" tppabs="ftp://crl.dec.com/pub/DEC/CRL/tech-reports/93.10.ps.Z"><TT>ftp://crl.dec.com/pub/DEC/CRL/tech-reports/93.10.ps.Z</TT></A>
+</UL>
+
+<P><B>Intrusion Protection for Networks 171.</B> <I>BYTE Magazine</I>. April, 1995.</P>
+<P><B>Benchmarking Methodology for Network Interconnect Devices (RFC 1944).</B> S.
+Bradner and J. McQuaid.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('ftp://ds.internic.net/rfc/rfc1944.txt  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='ftp://ds.internic.net/rfc/rfc1944.txt'" tppabs="ftp://ds.internic.net/rfc/rfc1944.txt"><TT>ftp://ds.internic.net/rfc/rfc1944.txt</TT></A>
+</UL>
+
+<P><B>Firewall Performance Measurement Techniques: A Scientific Approach.</B> Marcus
+Ranum.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.v-one.com/pubs/perf/approaches.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.v-one.com/pubs/perf/approaches.htm'" tppabs="http://www.v-one.com/pubs/perf/approaches.htm"><TT>http://www.v-one.com/pubs/perf/approaches.htm</TT></A>
+</UL>
+
+<P><B>Warding Off the Cyberspace Invaders.</B> Amy Cortese. <I>Business Week</I>.
+03/13/95.</P>
+<P><B>Vulnerability in Cisco Routers Used as Firewalls.</B> Computer Incident Advisory
+Capability Advisory: Number D-15.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://ciac.llnl.gov/ciac/bulletins/d-15.shtml  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://ciac.llnl.gov/ciac/bulletins/d-15.shtml'" tppabs="http://ciac.llnl.gov/ciac/bulletins/d-15.shtml"><TT>http://ciac.llnl.gov/ciac/bulletins/d-15.shtml</TT></A>
+</UL>
+
+<P><B>WAN-Hacking with AutoHack--Auditing Security behind the Firewall.</B> Alec
+D.E. Muffett. Written by the author of Crack, the famous password-cracking program.
+Extraordinary document that deals with methods of auditing security from behind a
+firewall (and auditing of a network so large that it contained tens of thousands
+of hosts).
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://solar.net.ncu.edu.tw/~jslee/me/docs/muffett-autohack.ps  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://solar.net.ncu.edu.tw/%7Ejslee/me/docs/muffett-autohack.ps'" tppabs="http://solar.net.ncu.edu.tw/%7Ejslee/me/docs/muffett-autohack.ps"><TT>http://solar.net.ncu.edu.tw/~jslee/me/docs/muffett-autohack.ps</TT></A>
+</UL>
+
+<P><B>Windows NT Firewalls Are Born.</B> <I>PC Magazine</I>. February 4, 1997.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.pcmagazine.com/features/firewall/_open.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.pcmagazine.com/features/firewall/_open.htm'" tppabs="http://www.pcmagazine.com/features/firewall/_open.htm"><TT>http://www.pcmagazine.com/features/firewall/_open.htm</TT></A>
+</UL>
+
+<P><B>IP v6 Release and Firewalls.</B> Uwe Ellermann. 14th Worldwide Congress on
+Computer and Communications Security. Protection, pp. 341-354, June 1996.</P>
+<P><B>The SunScreen Product Line Overview.</B> Sun Microsystems.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.sun.com/security/overview.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sun.com/security/overview.html'" tppabs="http://www.sun.com/security/overview.html"><TT>http://www.sun.com/security/overview.html</TT></A>
+</UL>
+
+<P><B>Product Overview for IBM Internet Connection Secured Network Gateway for AIX,
+Version 2.2.</B> IBM firewall information.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.ics.raleigh.ibm.com/firewall/overview.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.ics.raleigh.ibm.com/firewall/overview.htm'" tppabs="http://www.ics.raleigh.ibm.com/firewall/overview.htm"><TT>http://www.ics.raleigh.ibm.com/firewall/overview.htm</TT></A>
+</UL>
+
+<P><B>The Eagle Firewall Family.</B> Raptor firewall information.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.raptor.com/products/brochure/40broch.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.raptor.com/products/brochure/40broch.html'" tppabs="http://www.raptor.com/products/brochure/40broch.html"><TT>http://www.raptor.com/products/brochure/40broch.html</TT></A>
+</UL>
+
+<P><B>Secure Computing Firewall</B>&amp;tm;<B> for NT.</B> Overview. Secure Computing.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.sctc.com/NT/HTML/overview.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.sctc.com/NT/HTML/overview.html'" tppabs="http://www.sctc.com/NT/HTML/overview.html"><TT>http://www.sctc.com/NT/HTML/overview.html</TT></A>
+</UL>
+
+<P><B>Check Point FireWall-1 Introduction.</B> Check Point Technologies firewall
+information.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.checkpoint.com/products/firewall/intro.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.checkpoint.com/products/firewall/intro.html'" tppabs="http://www.checkpoint.com/products/firewall/intro.html"><TT>http://www.checkpoint.com/products/firewall/intro.html</TT></A>
+</UL>
+
+<P><B>Cisco PIX Firewall.</B> Cisco Systems firewall information.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm'" tppabs="http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm"><TT>http://www.cisco.com/univercd/data/doc/cintrnet/prod_cat/pcpix.htm</TT></A>
+</UL>
+
+<P><B>Protecting the Fortress From Within and Without.</B> R. Scott Raynovich. <I>LAN
+Times</I>. April 1996.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.wcmh.com/lantimes/96apr/604c051a.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.wcmh.com/lantimes/96apr/604c051a.html'" tppabs="http://www.wcmh.com/lantimes/96apr/604c051a.html"><TT>http://www.wcmh.com/lantimes/96apr/604c051a.html</TT></A>
+</UL>
+
+<P><B>Internet Firewalls: An Introduction.</B> Firewall white paper. NMI Internet
+Expert Services.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.netmaine.com/netmaine/whitepaper.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.netmaine.com/netmaine/whitepaper.html'" tppabs="http://www.netmaine.com/netmaine/whitepaper.html"><TT>http://www.netmaine.com/netmaine/whitepaper.html</TT></A>
+</UL>
+
+<P><B>Features of the Centri</B><FONT SIZE="1"><SUP>TM</SUP></FONT><B> Firewall.</B>
+Centri firewall information.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.gi.net/security/centrifirewall/features.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.gi.net/security/centrifirewall/features.html'" tppabs="http://www.gi.net/security/centrifirewall/features.html"><TT>http://www.gi.net/security/centrifirewall/features.html</TT></A>
+</UL>
+
+<P><B>Five Reasons Why an Application Gateway Is the Most Secure Firewall.</B> Global
+Internet.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.gi.net/security/centrifirewall/fivereasons.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.gi.net/security/centrifirewall/fivereasons.html'" tppabs="http://www.gi.net/security/centrifirewall/fivereasons.html"><TT>http://www.gi.net/security/centrifirewall/fivereasons.html</TT></A>
+</UL>
+
+<CENTER>
+<P>
+<HR>
+<A HREF="ch26.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch26/ch26.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch28.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch28/ch28.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,257 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=362-366//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="11-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Most of the work in the <small>CDIBitmap</SMALL> class is done by the <small>CDIBitmap::Load</SMALL> member functions. The first version of this member function takes a pointer to a <small>CFile</SMALL> object as its only parameter. Depending on your application, you could modify this routine to accept a filename. However, in an MFC application, a <small>CFile</SMALL> pointer is easy to get from the MFC framework during serialization.</P>
+<p>After verifying that the <small>CFile</SMALL> object refers to a Windows bitmap, the <small>Load</SMALL> function reads each part of the bitmap data structure and creates a DIB dynamically. Note that there are actually two calls to the <small>new</SMALL> operator; there&#146;s no requirement that the DIB exist in one solid chunk of memory. The <small>BITMAPINFOHEADER</SMALL> is stored in one location, and the pixel image array is stored in another location.</P>
+<p>The second version of the <small>Load</SMALL> member function reads the bitmap from a resource file. The <small>FindResource</SMALL>, <small>LoadResource</SMALL>, and <small>LockResource</SMALL> API functions are used to access the block of memory that contains the raw bitmap resource.</P>
+<p>The <small>CDIBitmap::DrawDIB</SMALL> member function calls <small>StretchDIBits</SMALL> to display the DIB. Very little work is actually done in this function. For example, the width and height of the DIB are calculated using <small>CDIBitmap</SMALL> member functions.</P>
+<p>The remaining member functions are used to calculate various bits of information about the DIB. Only a pointer to the beginning of the <small>BITMAPINFO</SMALL> structure and a pointer to the beginning of the pixel image array are stored; all other information is calculated as it&#146;s needed.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">The CBmpPalette Class</FONT></H4>
+<p>The <small>CBmpPalette</SMALL> class is used to create a logical palette that contains the colors used by a <small>CDIBitmap</SMALL> object. Although the MFC class library includes a <small>CPalette</SMALL> class, you must derive your own class from it in order to do any meaningful work. Listing 11.3 contains the class declaration for <small>CBmpPalette</SMALL>. This class is included in the Dib project as <small>dibpal.h</SMALL>.</P>
+<p><b>Listing 11.3</B> The <small>CBmpPalette</SMALL> Class Interface<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+#ifndef BMP_PAL_UNLEASHED
+#define BMP_PAL_UNLEASHED
+class CBmpPalette : public CPalette
+{
+public:
+    CBmpPalette(CDIBitmap* pBmp);
+};
+#endif
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>All the work done by <small>CBmpPalette</SMALL> is done in the constructor; there are no member functions other than the functions inherited from <small>CPalette</SMALL>. The <small>CPalette</SMALL> class is always used together with <small>CDIBitmap</SMALL>. A pointer to a <small>CDIBitmap</SMALL> object is passed to <small>CBmpPalette</SMALL> as a constructor parameter.</P>
+<p><small>CBmpPalette</SMALL> allocates a logical palette with enough entries to store the palette required by the <small>CDIBitmap</SMALL> object. After storing some basic palette information, the palette entries are filled in, using the values collected from the <small>CDIBitmap</SMALL> object. After the palette is created, the logical palette is deleted. The implementation for <small>CBmpPalette</SMALL> is provided in Listing 11.4 and is included in the Dib project as <small>dibpal.cpp</SMALL>.</P>
+<p><b>Listing 11.4</B> The Implementation of the <small>CBmpPalette</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+#include &#147;stdafx.h&#148;
+#include &#147;dib256.h&#148;
+#include &#147;dibpal.h&#148;
+
+CBmpPalette::CBmpPalette( CDIBitmap* pBmp )
+{
+    ASSERT( pBmp );
+    int cPaletteEntries = pBmp-&gtGetPalEntries();
+    int cPalette = sizeof(LOGPALETTE) &#43;
+                   sizeof(PALETTEENTRY) * cPaletteEntries;
+    // Since the LOGPALETTE structure is open-ended, you
+    // must dynamically allocate it, rather than using one
+    // off the stack.
+    LOGPALETTE* pPal = (LOGPALETTE*)new BYTE[cPalette];
+    RGBQUAD*    pColorTab = pBmp-&gtGetColorTablePtr();
+    pPal-&gtpalVersion = 0x300;
+    pPal-&gtpalNumEntries = cPaletteEntries;
+    // Roll through the color table, and add each color to
+    // the logical palette.
+    for(int ndx = 0; ndx &lt cPaletteEntries; ndx&#43;&#43;)
+    {
+        pPal-&gtpalPalEntry[ndx].peRed   = pColorTab[ndx].rgbRed;
+        pPal-&gtpalPalEntry[ndx].peGreen = pColorTab[ndx].rgbGreen;
+        pPal-&gtpalPalEntry[ndx].peBlue  = pColorTab[ndx].rgbBlue;
+        pPal-&gtpalPalEntry[ndx].peFlags = NULL;
+    }
+    VERIFY(CreatePalette(pPal));
+    delete [] (BYTE*)pPal;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">CDibDoc Class Changes</FONT></H4>
+<p>In the Dib example, the <small>CDibDoc</SMALL> class is responsible for the bitmap objects and has two new member functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetBitmap</SMALL> returns a pointer to a <small>CDIBitmap</SMALL> object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetPalette</SMALL> returns a pointer to a <small>CBmpPalette</SMALL> object.
+</DL>
+<p>The <small>CDibDoc</SMALL> class contains a <small>CDIBitmap</SMALL> object and a pointer to a <small>CBmpPalette</SMALL> object. The <small>CDibDoc</SMALL> class header is shown in Listing 11.5, with changes in bold type.</P>
+<p><b>Listing 11.5</B> The <small>CDibDoc</SMALL> Class Header, with Changes in Bold Type<hr></P>
+<!-- CODE //-->
+<pre>
+<b>#include &#147;dib256.h&#148;
+#include &#147;dibpal.h&#148;</B>
+
+class CDibDoc : public CDocument
+{
+protected: // create from serialization only
+    CDibDoc();
+    DECLARE_DYNCREATE(CDibDoc)
+
+// Attributes
+public:
+
+// Operations
+public:
+    <b>CDIBitmap* GetBitmap();
+    CPalette*  GetPalette();</B>
+// Overrides
+    // ClassWizard generated virtual function overrides
+    //{{AFX_VIRTUAL(CDibDoc)
+    public:
+    virtual BOOL OnNewDocument();
+    virtual void Serialize(CArchive&amp ar);
+    //}}AFX_VIRTUAL
+
+// Implementation
+<b>protected:
+   CDIBitmap    m_dib;
+   CBmpPalette* m_pPal;</B>
+public:
+    virtual ~CDibDoc();
+#ifdef _DEBUG
+    virtual void AssertValid() const;
+    virtual void Dump(CDumpContext&amp dc) const;
+#endif
+
+// Generated message map functions
+protected:
+    //{{AFX_MSG(CDibDoc)
+    // NOTE - the ClassWizard will add and remove member functions here.
+    //    DO NOT EDIT what you see in these blocks of generated code !
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP()
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>CDIBitmap</SMALL> object is loaded during serialization. After it has been loaded, the <small>CBmpPalette</SMALL> object is created dynamically. <small>m_pPal</SMALL>, the pointer to <small>CBmpPalette</SMALL>, is initialized in the constructor and deleted in the destructor. The changes for the constructor, destructor, <small>OnNewDocument</SMALL>, and <small>Serialize</SMALL> member functions for the <small>CDibDoc</SMALL> class are shown in Listing 11.6. All changed lines are marked in bold.</P>
+<p><b>Listing 11.6</B> Changes to <small>CDibDoc</SMALL> Member Functions, with Changes in Bold Type<hr></P>
+<!-- CODE //-->
+<pre>
+CDibDoc::CDibDoc()
+{
+    <b>m_pPal = 0;</B>
+}
+
+CDibDoc::~CDibDoc()
+{
+    <b>delete m_pPal;</B>
+}
+
+BOOL CDibDoc::OnNewDocument()
+{
+    if (!CDocument::OnNewDocument())
+        return FALSE;
+    <b>delete m_pPal;
+    m_pPal = 0;</B>
+    return TRUE;
+}
+
+void CDibDoc::Serialize(CArchive&amp ar)
+{
+    if (ar.IsStoring())
+    {
+        <b>TRACE(TEXT(&#147;Storing a bitmap is not supported&#148;));
+        ASSERT(FALSE);</B>
+    }
+    else
+    {
+        <b>CFile* pFile = ar.GetFile();
+        ASSERT( pFile );
+        ar.Flush();
+        BOOL fLoaded = m_dib.Load(pFile);
+        if(fLoaded != FALSE)
+        {
+            delete m_pPal;
+            m_pPal = new CBmpPalette(&ampm_dib);
+            UpdateAllViews(NULL);
+        }
+        else
+            AfxMessageBox(TEXT(&#147;Error Loading Bitmap&#148;));</B>
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="11-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

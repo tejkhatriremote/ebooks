@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:Performance</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=6//-->
+<!--PAGES=273-275//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch05/270-272.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="276-278.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Section VI<br>Performance
+</FONT></H2>
+<p>Improving the way parts of your system perform, particularly those parts that affect your users, is a great way to make your life easier. However, sometimes it&#146;s the subtle changes that can enhance system performance the most. In this section, you&#146;ll find specific ways to improve the performance of your general system, your network (including special sections on particular services), your file systems, and your printers.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">General System Performance</FONT></H3>
+<p><big>T</BIG>he tuning parameters in this section tune the general performance of NT, rather than a specific aspect of NT such as file systems or memory. By our definition, these keys tune NT itself, not specific device drivers or user-level applications.</P>
+<p><b>VI-1</B> <big>M</BIG>anaging the number of threads can help you optimize performance. When NT boots, it creates a pool of worker threads that NT&#146;s kernel, Executive Subsystems, and device drivers use. When one of these components places a work item, such as the Cache Manager&#146;s lazy cache flusher or the Memory Manager&#146;s idle memory zero-filler, in a queue, a thread is assigned to process it. If too many threads are in the pool, they needlessly consume system resources. However, if not enough threads are in the pool, work items are not serviced in a timely manner. Adjust the following two registry keys to change the number of threads.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\Session Manager\Executive
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>AdditionalCriticalWorkerThreads
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>&lt;any number&gt;
+</TABLE>
+<p>
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>VI-2</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\Session Manager\Executive
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>AdditionalDelayedWorkerThreads
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>&lt;any number&gt;
+</TABLE>
+<p>The number you specify in the value increases the number of threads created for the specified work queue. NT has two thread queues. Threads in the Critical Work Queue execute in the low real-time priority range, so they have precedence over most system activity. Threads in the Delayed Work Queue have a slightly lower priority that results in higher latency &#151; the threads that service it compete with other processing for CPU time. The number of threads created for each queue is based on two criteria: whether the system is a server or workstation and how much physical memory the system has. You can&#146;t tell directly whether more threads in a particular situation give you better performance, but you can experiment with benchmark workloads to see if they provide a benefit.
+</P>
+<p><b>VI-3</B> <big>T</BIG>o make your foreground windows more responsive than your background windows, in Windows 3.51 you could boost priorities. In NT 4.0 Workstation, instead of boosting priorities, you set quantums to boost foreground windows (Server treats foreground and background windows alike). Change this registry entry to set the boost value.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>PriorityControl
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>You can also set the boost value with a slider in the Performance tab of the System Control Panel applet. Valid values are shown below.
+</P>
+<table width="100%"><tr>
+<td width="10%">0
+<td width="80%">No quantum boost for foreground windows
+<tr>
+<td>1
+<td>Foreground windows have quantums twice as long as other windows
+<tr>
+<td>2
+<td>Foreground windows have quantums three times as long as other windows
+</TABLE>
+<p><b>VI-4</B> <big>H</BIG>ere&#146;s a tricky registry entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Control\Session Manager\Executive
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>PriorityQuantumMatrix
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>
+</TABLE>
+<p>Although you can&#146;t use this value to enhance performance, its name implies that you can. This value actually encodes expiration data about NT Beta and Release Candidates.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch05/270-272.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="276-278.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

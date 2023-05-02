@@ -1,0 +1,127 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=658-661//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><small>CoInitializeSecurity</SMALL> has nine parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an object that the operating system can use to determine security attributes for the process. This can be a pointer to the <small>IAccessControl</SMALL> interface, a pointer to a <small>SECURITY_DESCRIPTOR</SMALL> structure, or a GUID for an AppID. You can also pass a <small>NULL</SMALL> value if you&#146;re turning off security for this interface. Each of these options is discussed later in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of elements in the array of <small>SOLE_AUTHENTICATION_SERVICE</SMALL> structures passed as the next parameter. Normally, you pass <small>-1</SMALL> for this parameter, and COM will determine the correct authentication service for you.
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of <small>SOLE_AUTHENTICATION_SERVICE</SMALL> structures, each of which defines an authentication service that will be used for incoming method calls. Normally, you&#146;ll pass <small>-1</SMALL> as the previous parameter and <small>NULL</SMALL> as this parameter; this enables COM to select a reasonable authentication service.
+<dd><b>&#149;</B>&nbsp;&nbsp;The fourth parameter is reserved and must be set to <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A minimum authentication level for this process. If a client attempts to call this process with a lower authentication level, the method call will be rejected.
+<dd><b>&#149;</B>&nbsp;&nbsp;The impersonation level that&#146;s granted to servers when this process is placing an outgoing COM method call. This value has no effect on incoming method calls.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SOLE_AUTHENTICATION_LIST</SMALL> structure. If and when this process acts as a client, this parameter is used to negotiate the authentication level. Usually, you set this parameter to <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more flags that indicate the security capabilities of the process. These values are taken from the <small>EOLE_AUTHENTICATION_CAPABILITIES</SMALL> enumeration and are discussed next.
+<dd><b>&#149;</B>&nbsp;&nbsp;The last parameter is reserved and must be <small>NULL</SMALL>.
+</DL>
+<p>The <small>EOLE_AUTHENTICATION_CAPABILITIES</SMALL> enumeration contains a number of flags that are used to define security attributes for the process. The values from this enumeration are defined as follows:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_NONE</SMALL>. Specifies that no capability flags are set.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_DEFAULT</SMALL>. Capabilities should be determined using the security blanket negotiation algorithm.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_MUTUAL_AUTH</SMALL>. Not used.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_STATIC_CLOAKING</SMALL>. The thread&#146;s token, if any, will be used to determine the client&#146;s identity. The client&#146;s identity is checked on the first method call to each proxy, as well as each time <small>CoSetProxyBlanket</SMALL> is called.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_DYNAMIC_CLOAKING</SMALL>. The thread&#146;s token, if any, will be used to determine the client&#146;s identity. The client&#146;s identity is checked on each method call to a proxy, thus making this option more expensive than static cloaking
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_ANY_AUTHORITY</SMALL>. Any SSL server certificate will be trusted, even if the top-level certificate isn&#146;t trusted. This is useful when the top-level certificate authority isn&#146;t installed on the computer.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_SECURE_REFS</SMALL>. Reference counting will be authenticated to prevent processes from interfering with reference counts for object instances to which they do not have access. This can prevent malicious or poorly written applications from releasing objects that belong to you. The authentication level must not be set to <small>none</SMALL> if this flag is used. This feature adds a small performance cost.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_ACCESS_CONTROL</SMALL>. Specifies that the first parameter passed to <small>CoInitializeSecurity</SMALL> is a pointer to an <small>IAccessControl</SMALL> interface. COM uses the <small>IAccessControl</SMALL> interface to determine the security attributes for the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_APPID</SMALL>. Specifies that the first parameter passed to <small>CoInitializeSecurity</SMALL> is a pointer to an AppID&#146;s GUID. COM uses the values stored for this AppID to determine the security attributes for the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_MAKE_FULLSIC</SMALL>. Specifies that DCOM should generate SSL principal names in the <i>Full Subject Issuer Chain</I>, or fullsic, format described in RFC 1779.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_REQUIRE_FULLSIC</SMALL>. Specifies that COM must fail <small>CoUnmarshalInterface</SMALL> for any interface that contains SSL principal names that are not in a fullsic-compliant format.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_AUTO_IMPERSONATE</SMALL>. Every method call will automatically impersonate the identity of the calling party. The authentication level must not be set to none.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>EOAC_DISABLE_AAA</SMALL>. Prevents any processes from being launched with the caller&#146;s identity (a feature known as <i>Activate-As-Activator</I>). This flag is useful only when dealing with a process that makes outbound COM method calls.
+</DL>
+<p>Any process that wants to control its security attributes must call <small>CoInitializeSecurity</SMALL> fairly quickly. If a process does not call <small>CoInitializeSecurity</SMALL>, COM will call it with default parameters. The best approach is to call <small>CoInitializeSecurity</SMALL> immediately after calling <small>CoInitializeEx</SMALL>. Once COM determines the security needs for a process for the first time, it will not allow <small>CoInitializeSecurity</SMALL> to be called. A typical reason for COM to determine the security attributes for a process is when marshaling or unmarshaling an interface. After marshaling has taken place in a process, or if <small>CoInitializeSecurity</SMALL> has already been set, calls to <small>CoInitializeSecurity</SMALL> will fail with an <small>HRESULT</SMALL> of <small>0x80010119</SMALL>, <small>RPC_E_TOO_LATE</SMALL>.</P>
+<p>Applications and components written in C or C<small>&#43;&#43;</SMALL> usually have no problem meeting this requirement. If you write applications in Visual Basic, you&#146;ll find it impossible to call <small>CoInitializeSecurity</SMALL>, because the runtime environment makes certain COM method calls before your code gets a chance to run.</P>
+<p><font size="+1"><b>Using IAccessControl to Define Security Attributes</B></FONT></P>
+<p>The <small>IAccessControl</SMALL> interface is used to manage security via a COM interface. <small>IAccessControl</SMALL> uses Unicode versions of the <small>ACTRL_ACCESS</SMALL> structures discussed in Chapter 7. The <small>IAccessControl</SMALL> interface isn&#146;t terribly well documented in early releases of Windows 2000, and it requires you to build up an <small>ACTRL_ACCESS</SMALL> structure that&#146;s used to define security information.</P>
+<p>At the time this book was written, the IID for <small>IAccessControl</SMALL> was not included in any of the standard Win32 header files. The example presented later in Listing 20.5 inserts this value manually. If you receive errors for this line of code, you can safely comment it out.</P>
+<p>Listing 20.4 is a simplified version of the <small>IAccessControl</SMALL> interface.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

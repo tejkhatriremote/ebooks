@@ -1,0 +1,164 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:OLE Drag and Drop</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=15//-->
+<!--PAGES=480-484//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="15-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Nine functions are defined as part of the <small>IDataObject</SMALL> interface. Most data objects will provide meaningful implementations of many of these interfaces, although in most cases at least a few of the functions will return <small>not implemented</SMALL>. Table 15.2 lists the purpose of each of these functions.</P>
+<table width="100%"><caption align="LEFT" valign="TOP"><b>Table 15.2</B> Member Functions Included in the <small>IDataObject</SMALL> Interface
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="20%" align="LEFT" valign="TOP"><i>Function</I>
+<th width="80%" align="LEFT" valign="TOP"><i>Purpose</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>DAdvise</SMALL>
+<td align="LEFT" valign="TOP">Used when a client needs to be notified when the contents of a data object are changed. The client passes a pointer to an <small>IAdviseSink</SMALL> interface to the data object, which uses the <small>IAdviseSink</SMALL> interface to notify the client of changes. This type of interaction is similar to the DDE <small>XTP_ADVISE</SMALL> protocol and is used primarily when embedding an object into a container.
+<tr>
+<td align="LEFT" valign="TOP"><small>DUnadvise</SMALL>
+<td align="LEFT" valign="TOP">Breaks a connection previously set up with <small>DAdvise</SMALL>.
+<tr>
+<td align="LEFT" valign="TOP"><small>EnumDAdvise</SMALL>
+<td align="LEFT" valign="TOP">Enumerates the advisory connections established by a data object.
+<tr>
+<td align="LEFT" valign="TOP"><small>EnumFormatEtc</SMALL>
+<td align="LEFT" valign="TOP">Enables you to enumerate the formats supported by a data object using the <small>IEnumFORMATETC</SMALL> interface.
+<tr>
+<td align="LEFT" valign="TOP"><small>GetCanonicalFormatEtc</SMALL>
+<td align="LEFT" valign="TOP">Returns the most general rendering information for a specific data object.
+<tr>
+<td align="LEFT" valign="TOP"><small>GetData</SMALL>
+<td align="LEFT" valign="TOP">Returns data in an <small>STGMEDIUM</SMALL> structure, depending on the format described in the <small>FORMATETC</SMALL> structure. Data returned by this function must be freed by the caller. If the data cannot be rendered as requested, an error <small>HRESULT</SMALL> value is returned.
+<tr>
+<td align="LEFT" valign="TOP"><small>GetDataHere</SMALL>
+<td align="LEFT" valign="TOP">A rarely used function that enables the caller to specify where to store the contents of data copied by the data object.
+<tr>
+<td align="LEFT" valign="TOP"><small>QueryGetData</SMALL>
+<td align="LEFT" valign="TOP">Asks the data object whether data can be transferred in a specific format. This function is one of those rare cases in which you cannot use the <small>SUCCEEDED</SMALL> or <small>FAILED</SMALL> macro. If the data can be transferred in the requested format, <small>S_OK</SMALL> is returned. If the requested format function fails, <small>S_FALSE</SMALL> is returned if the requested format is not supported.
+<tr>
+<td align="LEFT" valign="TOP"><small>SetData</SMALL>
+<td align="LEFT" valign="TOP">A rarely used function that allows a client (normally, a consumer) to change the contents stored by a data object.
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>When you&#146;re using MFC, the <small>IDataObject</SMALL> interface is wrapped by the <small>COleDataSource</SMALL> class.</P>
+<h3><a name="Heading8"></A><font color="#000077">Using OLE Drag and Drop</FONT></H3>
+<p>As discussed earlier, OLE drag and drop uses the OLE Clipboard and uniform data transfer to transfer data from a source and a consumer. Figure 15.2 shows the OLE objects involved in a typical drag-and-drop operation.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-02.jpg',320,164 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-02.jpg',320,164)"><font color="#000077"><b>Figure 15.2</B></FONT></A>&nbsp;&nbsp;The various component objects involved in a typical OLE drag-and-drop operation.</P>
+<p>As shown in Figure 15.2, three MFC classes are involved in a drag-and-drop operation:
+</P>
+<dl>
+<dd>&#149; <small>COleDataSource</SMALL>. Handles collecting the data to be transferred and implements an <small>IDataObject</SMALL> interface. This class handles the source-side interaction with OLE. Unless you need specialized behavior, you can use this class &#147;as is,&#148; without deriving from it.
+<dd>&#149; <small>COleDropTarget</SMALL>. Handles the consumer or destination side of a drag-and-drop operation. You&#146;ll always derive a new class from <small>COleDropTarget</SMALL> in order to perform specific behavior required when an object is dropped on a particular window.
+<dd>&#149; <small>COleDataObject</SMALL>. A wrapper for the <small>IDataObject</SMALL> interface, as discussed earlier. A <small>COleDataObject</SMALL> is passed as a parameter in many of the functions called during the drag-and-drop operation.
+</DL>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">An OLE Drag-and-Drop Source</FONT></H4>
+<p>With a small amount of work, any window can be an OLE drag-and-drop source. If you&#146;re using MFC, your <small>CWnd</SMALL>-derived class must implement a <small>COleDataSource</SMALL> member variable.</P>
+<p>When a drag is detected, you store the data to be transferred in the drag and drop in the <small>COleDataSource</SMALL> member variable. This step is very much like placing an item on the Windows Clipboard. After storing data in <small>COleDataSource</SMALL>, call the <small>COleDataSource::DoDragDrop</SMALL> member function to start the drag-and-drop operation.</P>
+<p><small>DoDragDrop</SMALL> does not return until the drag and drop completes. If <small>DoDragDrop</SMALL> returns <small>DROPEFFECT_MOVE</SMALL>, the drag and drop has been completed successfully, and you should perform whatever tasks are necessary to make the object appear to move. In many cases, this means that the object should be deleted.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">An OLE Drag-and-Drop Destination</FONT></H4>
+<p>Implementing a drop target involves a bit more code than implementing a drop source, but it&#146;s fairly simple code, especially if you&#146;re using MFC. The modifications discussed in this section can be made to any <small>CWnd</SMALL>-derived class, including any control or view.</P>
+<p>The key component of an OLE drop target is the <small>IDropTarget</SMALL> interface. MFC wraps the <small>IDropTarget</SMALL> interface in the <small>COleDropTarget</SMALL> class. The first step in implementing a drop target is to derive a class from <small>COleDropTarget</SMALL> and to override three functions:</P>
+<dl>
+<dd>&#149; <small>OnDragEnter</SMALL>. Called during a drag and drop when the cursor initially passes over the window associated with the <small>COleDropTarget</SMALL> object. In almost all cases, this function does nothing except call <small>OnDragOver</SMALL>.
+<dd>&#149; <small>OnDragOver</SMALL>. Called during a drag and drop as the cursor moves over the window associated with the <small>COleDropTarget</SMALL> object. This function sets the current drop effect for the cursor.
+<dd>&#149; <small>OnDrop</SMALL>. Called when the user actually &#147;drops&#148; an object on the window associated with the COleDragTarget object. This function must fetch the data from the OLE Clipboard and paste it into the target window.
+</DL>
+<p>The class derived from <small>COleDropTarget</SMALL> must be added to the <small>CWnd</SMALL>-derived class as a member variable. The window class must be registered as a drop target via the <small>COleDropTarget::Register</SMALL> function.</P>
+<h3><a name="Heading11"></A><font color="#000077">Looking at a Drag-and-Drop Example</FONT></H3>
+<p>As an illustration of how you can use OLE drag and drop in any Windows 2000 application, an example is included on the accompanying CD-ROM. The OleTree example adds OLE drag-and-drop capability to a pair of tree controls. Items can be exchanged between these controls by dragging them from one tree to the other. Items also can be transferred to or from any other applications that support OLE drag and drop, such as Microsoft Word.
+</P>
+<p>OleTree is a dialog-box&#150;based project created with AppWizard. The main dialog box for OleTree is shown in Figure 15.3. Note the new edit control, the new pushbutton control, and the two new tree controls.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-03.jpg',392,234 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch15/images/15-03.jpg',392,234)"><font color="#000077"><b>Figure 15.3</B></FONT></A>&nbsp;&nbsp;The main dialog box for OleTree.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="15-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,164 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=285-289//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch08/08-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 9<br>Writing Windows 2000 Services
+</FONT></H2>
+<p><b>In This Chapter</B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Understanding Services <i>286</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Programming a Windows 2000 Service <i>290</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>An Example of a Windows 2000 Service <i>304</I></B>
+</DL>
+<p>This chapter covers Windows 2000 services. A <i>service</I> is a special executable that runs under Windows 2000 but doesn&#146;t interact with the user or other applications as most processes do. Services usually run in a different security context than the logged-on user, and they often run even if no interactive user is present.</P>
+<p>Developing a service poses new issues for you as a developer. How do you interact and control a process that can&#146;t assume that you&#146;re logged on? How can you determine if your service is running correctly? This chapter answers these questions and more.</P>
+<h3><a name="Heading2"></A><font color="#000077">Understanding Services</FONT></H3>
+<p>Services are special executables that run under Windows 2000. Unlike normal executables, services don&#146;t normally run as processes that are run under the account of the logged-on user. Instead, a service usually runs in a special account known as <i>local system</I> or in an account that&#146;s specially configured for the service. Services are normally used to control hardware attached to the computer or supply resources that must be available at all times.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Interacting with Windows 2000 Services</FONT></H4>
+<p>In general, a service written for Windows 2000 does not interact directly with the desktop. There are ways for a service to communicate directly with an interactive user, but, in general, services have no direct contact with the user&#146;s desktop.
+</P>
+<p>Services don&#146;t interact with users at all&#151;instead, they interact with the Windows 2000 <i>Service Control Manager</I>, or <i>SCM</I>. The SCM stores information about every service installed on the computer and tracks each service&#146;s state as it&#146;s launched, run, and stopped.</P>
+<p>In fact, many Windows 2000 users have no idea services are running on their machine at all. The first indication that many users have that a service is even installed is the message box shown in Figure 9.1, notifying the user that a service or device driver has failed.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-01.jpg',491,119 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-01.jpg',491,119)"><font color="#000077"><b>Figure 9.1</B></FONT></A>&nbsp;&nbsp;The dialog box displayed when a service or device driver fails to start.</P>
+<p>By the way, a service is nothing like a device driver, but Windows 2000 displays the same message box for drivers and services. The burden is placed on the user or help desk to narrow down the problem further.
+</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Controlling Windows 2000 Services</FONT></H4>
+<p>User interaction with a service is done in two ways. The <i>Microsoft Management Console</I>, or <i>MMC</I>, includes a Services snap-in that enables simple management of all services registered on a computer. Prior to Windows 2000, services were managed through a common Control Panel applet found in Windows NT. Beginning with Windows 2000, the MMC is a common tool for all administrative functions (except for the MSCS Clustering Service).</P>
+<p>The MMC Services snap-in is shown in Figure 9.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-02.jpg',639,423 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-02.jpg',639,423)"><font color="#000077"><b>Figure 9.2</B></FONT></A>&nbsp;&nbsp;The MMC snap-in used to manage system services in Windows 2000.</P>
+<p>Services can also be controlled with specialized Control Panel applets. Control Panel applets are special DLLs that are launched by the user through the Control Panel. Writing Control Panel applets that control services is discussed in Chapter 10, &#147;Controlling Windows 2000 Services.&#148;
+</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Services and the Windows 2000 Event Log</FONT></H4>
+<p>Like almost all programs, services encounter error conditions from time to time. Unlike most programs, a service can&#146;t assume that a user is currently logged in. This means that the service can&#146;t reliably and easily interact with the user by displaying a dialog box or other message. For this reason, services use the Windows 2000 event log as a storage location for messages that may be useful to an administrator or user.
+</P>
+<p>As shown in Figure 9.3, the Windows 2000 event log stores messages from operating system components and services in one of three predefined event logs:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The System log is used by device drivers.
+<dd><b>&#149;</B>&nbsp;&nbsp;The Security log is used by the system to store audit success and failure results when security auditing is turned on.
+<dd><b>&#149;</B>&nbsp;&nbsp;The Application log is used by services and normal applications.
+</DL>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-03.jpg',636,451 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-03.jpg',636,451)"><font color="#000077"><b>Figure 9.3</B></FONT></A>&nbsp;&nbsp;The Windows 2000 event log stores information in three predefined log files.</P>
+<p>You can extend the event-logging mechanism by adding your own event logs. Unless you need this added functionality, it&#146;s much easier to send your events to the Application log. You can also create your own event log viewer that provides specific features that aren&#146;t included with the standard event log viewer shown in Figure 9.3.
+</P>
+<p>Later in this chapter, the sample service updates the application event log with its status.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Windows 2000 Services and System Security</FONT></H4>
+<p>As discussed earlier, a service is usually associated with a machine rather than a particular user. Users may come and go, but services are expected to stay running, even when no user is logged onto a machine. Windows 2000 allows services to survive user logons and logoffs by allowing their security information to be specified in the Service Control Manager&#146;s database.
+</P>
+<p>When you create your service and register it with the Service Control Manager, you must include information that tells the SCM under which security context the service is to be run. The SCM uses the account information from the database when the service is started.</P>
+<p>Three different types of accounts are used by Windows 2000 services:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The local system account
+<dd><b>&#149;</B>&nbsp;&nbsp;The account of the current interactive user
+<dd><b>&#149;</B>&nbsp;&nbsp;A specified account in the system
+</DL>
+<p>The pros and cons of these three approaches are discussed in the following sections.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Using the Local System Account</FONT></H4>
+<p>Many services run in the security context of the local system account, also known as the <i>system account</I>. Here are the advantages to using the local system account for your service:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;You don&#146;t need to administer account information for the service because the local system account is a built-in account.
+<dd><b>&#149;</B>&nbsp;&nbsp;The local system account is very powerful&#151;by default, it has complete control over the entire machine.
+<dd><b>&#149;</B>&nbsp;&nbsp;A service running under the local system account will not be interrupted when interactive users establish or end sessions on the machine.
+</DL>
+<p>The main disadvantage of the local system account is that it has very little power in a domain. Beginning with Windows 2000, you can assign default privileges to the machine; these credentials will be used by the local system account in the network. If your service does not need specific rights that aren&#146;t granted to all local system users, this approach will work for you.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>In previous releases of Windows NT, a service with local system credentials could not establish any sort of securable network connection. You could tweak a Registry key to allow connections to be made to the local system account, but this introduced large, gaping holes into the network&#146;s security configuration.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+</FONT>
+</BLOCKQUOTE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch08/08-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

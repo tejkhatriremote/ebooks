@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Basic Scripting Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--APPENDIX=A//-->
+<!--PAGES=423-427//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="ch10/10-16.html">Previous</A></TD>
+<td><a href="ewtoc.html">Table of Contents</A></TD>
+<td><a href="appendix-b.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Appendix A<br>Basic Scripting Concepts
+</FONT></H2>
+<p>Writing scripts allows a system administrator to manipulate UNIX to perform various tasks and functions and even fix problems. This appendix does not go deeply into all the aspects of writing scripts. You can get a wealth of information from specific shell programming books available on the market today. If you have never seen a shell script before, then this provides you with just enough to get you going to run all the scripts described in this book.
+</P>
+<p>Shell scripts can be as easy to create and they are to execute. Scripts can be set up to execute command that monitor anything from processes to log file. Executed scripts can be set up to execute other scripts. You can even add logic to a script with regular expressions to do various tasks, when certain conditions have been met. You can design a script with a unique new command that consists of a series of UNIX commands that you devised.</P>
+<p>Once you have given the script a name, open it up in an editor. You will see that scripts are made up of a several pieces: a defining shell, a series of UNIX commands, and if needed other reserved commands that are available to the shell you have chosen to use. Once the script is written, if you modify the permissions to be <i>executable</I>, the script is ready to run.</P>
+<h3><a name="Heading2"></A><font color="#000077">Building a Script</FONT></H3>
+<p>Here is a very simple script to start out with. The script is called <small>ll</SMALL> and it merely performs a long listing of all the files in the current directory. Create a file using the editor of your choice (I like vi) with the filename <small>ll.</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+% vi ll
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In the file, insert the two lines. The first line defines the shell that is to be used. This is a pound and a exclamation mark (<small>#!</SMALL>) followed by the path of the shell that will be used. This can be the path to any shell that the script understands. The second line runs the <small>ls</SMALL> command. Exit the editor when you have typed these two commands.</P>
+<!-- CODE SNIP //-->
+<pre>
+#! /bin/sh
+ls -al
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the name type of the shell to run the script in. If a known definition is defined, then the script runs under the current shell of the person trying to execute the script. This should be defined, because those who execute the script might all have different working shells.
+</P>
+<p>Line 2: This simply does a long listing of the directory that the person executing the script is currently in.</P>
+<p>What you currently have is a file with two lines of information in it.</P>
+<!-- CODE SNIP //-->
+<pre>
+% ls -al ll
+-rw-r---r--    1 ugu staff      17 Dec 18 19:30 ll
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To turn this normal flat ASCII file into a script, merely change the permissions of the file so the it has executable permissions on it with the <small>chmod</SMALL> command.</P>
+<!-- CODE SNIP //-->
+<pre>
+% chmod u&#43;x ll
+% ls -al ll
+-rwxr---r--    1 ugu staff      17 Dec 18 19:32 ll
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>u&#43;x</SMALL> option within <small>chmod</SMALL> changes the permissions for the owner of the file to be the only person who can execute the file as a script. For you, it is a script; for everyone else, it is just a regular text file.</P>
+<p>To run your script, enter the name at a shell prompt. In this case the script is called <small>ll.</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+% ./ll
+
+-rwxr--xr-x    1 ugu staff     228 Sep 12 09:10 ffind*
+-rwxr---r--    1 ugu staff      17 Dec 18 19:32 ll*
+-rw-r--r--    1 ugu staff    7198 Nov 13 12:55 top.html
+drwxr--xr-x    1 ugu staff     512 Dec  6 11:12 perl/
+-rw-r---r--    1 ugu staff    2354 Oct 14 19:47 pinger
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The results of the <small>ll</SMALL> script should output a listing of the current directory to the display. The period-slash (<small>./</SMALL>) prior to the command tells UNIX not to look anywhere else but in this current directory. If the period-slash were not there, the system would first check the aliases table for any possible aliases, and then check for files called <small>ll</SMALL> in the paths defined in your list of environment variables.</P>
+<p>You can and use this script like a command and pipe it through to other commands. If you want to see a long list of files in the current directory that were last modified in December, pipe the <small>ll</SMALL> command through to <small>grep.</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+% ll | grep &#147;Dec&#148;
+-rwxr---r--    1 ugu staff      17 Dec 18 19:32 ll*
+drwxr--xr-x    1 ugu staff     512 Dec  6 11:12 perl/
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you want to get a count of the number of files in the directory, you can pipe the <small>ll</SMALL> command script through to <small>wc.</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+% ll | wc -l
+      5
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading3"></A><font color="#000077">Recursive Scripts</FONT></H3>
+<p>You have just seen how a script not only executes UNIX commands, but also can be turned into a command itself. Suppose you created a script that monitored the system with a few UNIX commands.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% vi monsys
+
+#! /bin/sh
+hostname
+tail -10  /var/adm/messages
+last root | head -3
+ls -al /etc/passwd
+ps -ef | grep sendmail
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the shell
+</P>
+<p>Line 2: Get the hostname</P>
+<p>Line 3: Show the last three lines of the messages log</P>
+<p>Line 4: Show the last three people who logged in as root</P>
+<p>Line 5: Display time stamp on the password file</P>
+<p>Line 6: Check the process table and display the sendmail process</P>
+<p>Change the permissions on the ASCII file to executable, so that it can be run and the commands can be processed.</P>
+<!-- CODE SNIP //-->
+<pre>
+% chmod u&#43;x monsys
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Once this is done the script can be executed to display some critical areas that can be monitored.
+</P>
+<!-- CODE //-->
+<pre>
+rocket
+
+Jan 18 18:39:19 6B:rocket Xsession: mike: login
+Jan 18 18:39:20 6B:rocket access control disabled, clients can
+&#8658;connect from any host
+Jan 18 19:44:53 3D:rocket automount[185]: pluto: exports: Port
+&#8658;mapper failure
+
+root ttyq0      pluto           Mon Jan 18 19:44 - 19:45  (00:00)
+
+-rw-r--r--   1 root     sys    1779 Dec 24 10:37 /etc/passwd
+
+   root  421   1  0   Jan 16 ?   0:34 /usr/lib/sendmail -bd -q15m
+   root  822  816  1 20:25:51 pts/0  0:00 grep sendmail
+</PRE>
+<!-- END CODE //-->
+<p>A security administrator comes along and asks you for a monitoring tool that keeps an eye on the root login attempts into the system and if the password changes. Because you know your script already outputs this information, you can call the <small>monsys</SMALL> script from another script.</P>
+<!-- CODE SNIP //-->
+<pre>
+% vi securinfo
+
+#! /bin/sh
+monsys | egrep &#145;(^root|passwd)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the shell to be used.
+</P>
+<p>Line 2: Execute <small>monsys</SMALL>, and only display when root logged into the system and when the password file was last changed.</P>
+<!-- CODE SNIP //-->
+<pre>
+% chmod u&#43;x securinfo
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After the permissions have been changed, executing the <small>securinfo</SMALL> script, in turn, executes the <small>monsys</SMALL> script and you get the information you are looking for.</P>
+<!-- CODE SNIP //-->
+<pre>
+% securinfo
+root ttyq0     pluto            Mon Jan 18 19:44 - 19:45  (00:00)
+-rw-r--r--    1 root     sys        1779 Dec 24 10:37 /etc/passwd
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This gets you started writing basic scripts and allows you to have some understanding as to what you are doing when you start entering all the little hints and hacking scripts that are provided in this book.
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Create a file in an editor.
+<dd><b>2.</B>&nbsp;&nbsp;Define the shell to be used.
+<dd><b>3.</B>&nbsp;&nbsp;Build the script with UNIX commands functions and reserved commands for that particular shell.
+<dd><b>4.</B>&nbsp;&nbsp;Exit the shell.
+<dd><b>5.</B>&nbsp;&nbsp;Change the file permissions to make it executable.
+<dd><b>6.</B>&nbsp;&nbsp;Execute the new script.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="ch10/10-16.html">Previous</A></TD>
+<td><a href="ewtoc.html">Table of Contents</A></TD>
+<td><a href="appendix-b.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

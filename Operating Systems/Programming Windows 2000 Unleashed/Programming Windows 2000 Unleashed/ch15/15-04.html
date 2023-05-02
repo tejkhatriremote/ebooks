@@ -1,0 +1,367 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:OLE Drag and Drop</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=15//-->
+<!--PAGES=484-489//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="15-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<p>Use the values from Table 15.3 for the new controls added to the main dialog box resource.
+</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 15.3</B> Resource and Control Information for the Main Dialog Box
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Control</I>
+<th align="LEFT" valign="TOP"><i>Resource ID</I>
+<th align="LEFT" valign="TOP"><i>Caption</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Add pushbutton
+<td align="LEFT" valign="TOP"><small>IDC_ADD</SMALL>
+<td align="LEFT" valign="TOP"><small>&amp;Add</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Left tree control
+<td align="LEFT" valign="TOP"><small>IDC_LEFT</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Right tree control
+<td align="LEFT" valign="TOP"><small>IDC_RIGHT</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p>Using the control property sheets, enable the following properties for the two tree controls:
+</P>
+<dl>
+<dd>&#149; Has buttons
+<dd>&#149; Has lines
+<dd>&#149; Border
+<dd>&#149; Lines at root
+</DL>
+<p>ClassWizard is used to add a new class derived from <small>CTreeCtrl</SMALL> to manage the tree controls to the OleTree project. The new class, <small>CDragTree</SMALL>, includes OLE drag-and-drop functionality. If you&#146;re not familiar with adding classes to an existing project using ClassWizard, just click the ClassWizard Add Class button and choose New from the pop-up menu. Table 15.4 contains the properties for the new class.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 15.4</B> Attributes for the <small>CDragTree</SMALL> Class
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Attribute</I>
+<th align="LEFT" valign="TOP"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Name
+<td align="LEFT" valign="TOP"><small>CDragTree</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Base Class
+<td align="LEFT" valign="TOP"><small>CTreeCtrl</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">File
+<td align="LEFT" valign="TOP"><small>DragTree.cpp</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Automation
+<td align="LEFT" valign="TOP">None
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>ClassWizard is used to associate controls in the main dialog box with member variables in the <small>COleTreeDlg</SMALL> class. The controls and their associated member variables are shown in Table 15.5.</P>
+<table width="100%"><caption align="LEFT" colspan="4"><b>Table 15.5</B> Control Member Variables Added to the <small>OleTreeDlg</SMALL> Class
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Control ID</I>
+<th align="LEFT" valign="TOP"><i>Category</I>
+<th align="LEFT" valign="TOP"><i>Variable Type</I>
+<th align="LEFT" valign="TOP"><i>Variable Name</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>CString</SMALL>
+<td align="LEFT" valign="TOP"><small>m_strEdit</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_LEFT</SMALL>
+<td align="LEFT" valign="TOP">Control
+<td align="LEFT" valign="TOP"><small>CDragTree</SMALL>
+<td align="LEFT" valign="TOP"><small>m_treeLeft</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_RIGHT</SMALL>
+<td align="LEFT" valign="TOP">Control
+<td align="LEFT" valign="TOP"><small>CDragTree</SMALL>
+<td align="LEFT" valign="TOP"><small>m_treeRight</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>ClassWizard is used to add message-handling functions to the OleTree project in order to handle messages from the new controls, using the values provided in Table 15.6. Note that messages reflected from the tree view control are prefixed by <small>=</SMALL> inside the ClassWizard Message list box.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="4"><b>Table 15.6</B> Message-Handling Information for the OleTree Project
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Class Name</I>
+<th align="LEFT" valign="TOP"><i>Object ID</I>
+<th align="LEFT" valign="TOP"><i>Message</I>
+<th align="LEFT" valign="TOP"><i>Member Function</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>COleTreeDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>IDC_ADD</SMALL>
+<td align="LEFT" valign="TOP"><small>BN_CLICKED</SMALL>
+<td align="LEFT" valign="TOP"><small>OnAdd</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>CDragTree</SMALL>
+<td align="LEFT" valign="TOP"><small>CDragTree</SMALL>
+<td align="LEFT" valign="TOP"><small>=TVN_BEGINDRAG</SMALL>
+<td align="LEFT" valign="TOP"><small>OnBegindrag</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>As discussed earlier, <small>COleDropTarget</SMALL> is the MFC base class that wraps the <small>IDropTarget</SMALL> interface. In order to perform OLE drag-and drop-operations, you must derive a class from <small>COleDropTarget</SMALL> that is specialized for your data&#151;for the OleTree project, this class is named <small>CTreeDropTarget</SMALL>. The declaration for the <small>CTreeDropTarget</SMALL> class is provided in Listing 15.6. This listing is saved as <small>DropTarg.h</SMALL> in the project directory.</P>
+<p><b>Listing 15.6</B> The <small>CTreeDropTarget</SMALL> Class Declaration<hr></P>
+<!-- CODE //-->
+<pre>
+#pragma once
+
+class CTreeDropTarget:public COleDropTarget
+{
+// Constructor
+public:
+    CTreeDropTarget();
+// Interfaces
+public:
+    virtual DROPEFFECT OnDragEnter(CWnd*           pWnd,
+                                   COleDataObject* pObj,
+                                   DWORD           dwKeyState,
+                                   CPoint          pt);
+    virtual DROPEFFECT OnDragOver(CWnd*           pWnd,
+                                  COleDataObject* pObj,
+                                  DWORD           dwKeyState,
+                                  CPoint          pt);
+    virtual BOOL OnDrop(CWnd*           pWnd,
+                        COleDataObject* pObj,
+                        DROPEFFECT      de,
+                        CPoint          pt);
+// Operations
+public:
+    void SetDragItem(HTREEITEM hItem);
+    void SetParent(CTreeCtrl* pTree);
+// Implementation
+private:
+    CTreeCtrl* m_pTree;
+    BOOL       m_fIsDragging;
+    HTREEITEM  m_hDragItem;
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 15.7 contains the implementation of the <small>CTreeDropTarget</SMALL> class. This file is saved as <small>DropTarg.cpp</SMALL> and is part of the OleTree project.</P>
+<p><b>Listing 15.7</B> The Implementation of the <small>CTreeDropTarget</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+#include &#147;stdafx.h&#148;
+#include &#147;DropTarg.h&#148;
+#include &#147;fmtetc.h&#148;
+//
+// CTreeDropTarget constructor
+CTreeDropTarget::CTreeDropTarget()
+{
+    m_pTree = NULL;
+    m_fIsDragging = FALSE;
+    m_hDragItem = NULL;
+}
+//
+// OnDragEnter - called when a drag item initially passes over
+// the window associated with this object. In most cases, this call
+// is delegated to OnDragOver.
+DROPEFFECT CTreeDropTarget::OnDragEnter(CWnd*           pWnd,
+                                        COleDataObject* pObj,
+                                        DWORD           dwKeyState,
+                                        CPoint          pt)
+{
+    return OnDragOver(pWnd, pObj, dwKeyState, pt);
+}
+//
+// OnDragOver - called as a drag item passes over the window
+// associated with this object. Two things happen in this
+// function. First, the tree control item under the mouse is
+// highlighted to provide feedback to the user. Second, the
+// mouse cursor is set to the move cursor if the OLE Clipboard
+// has text data available, or the copy cursor if the text is
+// available and the Control key is pressed.
+DROPEFFECT CTreeDropTarget::OnDragOver(CWnd*           pWnd,
+                                       COleDataObject* pObj,
+                                       DWORD           dwKeyState,
+                                       CPoint          pt)
+{
+    UINT uHitTest = TVHT_ONITEM;
+    HTREEITEM hTarget = m_pTree-&gt;HitTest(pt, &amp;uHitTest);
+    m_pTree-&gt;SelectDropTarget(hTarget);
+    DROPEFFECT deResult = DROPEFFECT_NONE;
+    if(pObj-&gt;IsDataAvailable(CF_TEXT))
+    {
+        if(dwKeyState &amp; MK_CONTROL)
+            deResult = DROPEFFECT_COPY;
+        else
+            deResult = DROPEFFECT_MOVE;
+    }
+    return deResult;
+}
+//
+// OnDrop - called when the user drops the drag item on our window
+// The text string is collected from the OLE Clipboard, and a new
+// item is created for the tree control.
+BOOL CTreeDropTarget::OnDrop(CWnd*           pWnd,
+                             COleDataObject* pObj,
+                             DROPEFFECT      de,
+                             CPoint          pt)
+{
+    CFormatEtc  fe;
+    STGMEDIUM   stg;
+    // Test to see if the dropper can give us text
+    BOOL fHasText = pObj-&gt;GetData(CF_TEXT, &amp;stg, &amp;fe);
+    if(fHasText == FALSE)
+        return FALSE;
+    LPSTR pszObj = (LPSTR)GlobalLock(stg.hGlobal);
+    if(pszObj)
+    {
+        HTREEITEM hNewItem;
+        UINT uHitTest = TVHT_ONITEM;
+        HTREEITEM hTarget = m_pTree-&gt;HitTest(pt, &amp;uHitTest);
+        // Drop to self is not allowed.
+          if(m_fIsDragging &amp;&amp; (hTarget == m_hDragItem))
+            return FALSE;
+        if(hTarget != NULL)
+        {
+            hNewItem = m_pTree-&gt;InsertItem(pszObj,
+                                           hTarget,
+                                           TVI_FIRST);
+        }
+        else // Add at root
+        {
+            hNewItem = m_pTree-&gt;InsertItem(pszObj,
+                                           TVI_ROOT,
+                                           TVI_LAST);
+        }
+        m_pTree-&gt;SelectDropTarget(NULL);
+        m_pTree-&gt;SelectItem(hNewItem);
+        GlobalUnlock(stg.hGlobal);
+        GlobalFree(stg.hGlobal);
+        return TRUE;
+    }
+    return FALSE;
+}
+//
+// SetParent - called by the CTreeCtrl object associated with this
+// drop target. The pointer to the CTreeCtrl object is used to add
+// items to the tree, and highlight the drop target.
+void CTreeDropTarget::SetParent(CTreeCtrl* pCtrl)
+{
+    m_pTree = pCtrl;
+}
+//
+// SetDragItem - called by the CTreeCtrl object when a drag begins
+// or ends. The drag item is used to prevent dropping an object on
+// itself, which is a meaningless operation.
+void CTreeDropTarget::SetDragItem(HTREEITEM hItem)
+{
+    m_hDragItem = hItem;
+    if(hItem)
+        m_fIsDragging = TRUE;
+    else
+        m_fIsDragging = FALSE;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="15-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

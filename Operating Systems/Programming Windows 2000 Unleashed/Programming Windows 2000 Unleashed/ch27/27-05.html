@@ -1,0 +1,224 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=920-923//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="27-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>After initializing the COM runtime library, Listing 27.3 calls <small>ADsGetObject</SMALL> to bind to the top-level node of the ADSI namespace and retrieve a pointer to the <small>IADsContainer</SMALL> interface on an ADSI object. After some error-handling code, the <small>ADsBuildEnumerator</SMALL> function is used to create an enumerator that can be used to iterate over the directory objects stored in the ADSI container object referenced through <small>IADsContainer</SMALL>.</P>
+<p>ADSI enumerators always work with the variant type. In this case, the enumerator is used to enumerate child objects, so the code follows these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Collect the next variant element from the enumerator. If no more elements are available, <small>ADsEnumerateNext</SMALL> will return 0 for the number of elements fetched, and you must break out of the loop.
+<dd><b>2.</B>&nbsp;&nbsp;Retrieve the <small>IDispatch</SMALL> interface pointer from the variant element. This is the default Automation interface for a child object stored in the container.
+<dd><b>3.</B>&nbsp;&nbsp;Query for the ADSI interface that you&#146;ll work with. In Listing 27.3, the call to <small>QueryInterface</SMALL> asks for <small>IADs</SMALL>, which is supported by all ADSI objects.
+<dd><b>4.</B>&nbsp;&nbsp;Perform whatever work is required using the interface pointer retrieved for the child object.
+<dd><b>5.</B>&nbsp;&nbsp;Release the interfaces to the child object. Remember to release the initial <small>IDispatch</SMALL> interface pointer to the child object.
+<dd><b>6.</B>&nbsp;&nbsp;Loop around to enumerate further, until no more child objects exist in the enumeration.
+</DL>
+<p>Continuing with the source code in Listing 27.3, after the enumeration loop is finished, the enumerator is no longer needed, so it&#146;s released using <small>ADsFreeEnumerator</SMALL>.</P>
+<p><font size="+1"><b>Using ADSI Non-Automation Interfaces</B></FONT></P>
+<p>Most of the ADSI interfaces are implemented as dual interfaces, meaning that they may be called using Automation interfaces by scripting clients or through vtable interfaces by C and C<small>&#43;&#43;</SMALL> clients.</P>
+<p>In order to provide low-overhead access to the directory, two ADSI interfaces are not Automation-compatible and can be called only through the vtable:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IDirectoryObject</SMALL>. A non-Automation interface that provides low-overhead access to a directory object. This interface provides a subset of the functionality provided by the <small>IADs</SMALL> dual interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IDirectorySearch</SMALL>. A non-Automation interface that&#146;s used to perform queries on the directory. All directories do not support this interface; as of Beta 3, only the LDAP ADSI provider exposes it.
+</DL>
+<p>The <small>IDirectorySearch</SMALL> interface has a large number of methods. Here are some of the more popular methods:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetSearchPreference</SMALL>. Specifies the options to be used to perform a search.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ExecuteSearch</SMALL>. Executes a search and returns a search handle back to the caller.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetFirstRow</SMALL>. Returns the first row of a search result to the caller.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetNextRow</SMALL>. Returns the next row of a search result to a caller. If <small>GetFirstRow</SMALL> has not been previously called, this function returns the first row.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetColumn</SMALL>. Returns data from a particular column in the search result.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FreeColumn</SMALL>. Frees resources allocated by an earlier call to <small>GetColumn</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CloseSearchHandle</SMALL>. Releases a handle to a search result and frees any allocated memory.
+</DL>
+<p>Listing 27.4 contains a fragment of the Search project, which can be found on the CD-ROM that accompanies this book. The Search project uses the <small>IDirectorySearch</SMALL> interface to display information about users in the directory.</P>
+<p><b>Listing 27.4</B> Using <small>IDirectorySearch</SMALL> to Search for Users in Active Directory<hr></P>
+<!-- CODE //-->
+<pre>
+ADS_SEARCHPREF_INFO g_rgSearchPref[3];
+DWORD g_dwPrefs = 0;
+
+int  ErrorHandling(LPCTSTR lpszTitle);
+void PrintColumnToConsole(PADS_SEARCH_COLUMN pCol);
+void SetSearchPrefs();
+
+int wmain()
+{
+    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    WCHAR wszQuery[512] = L&#147;LDAP://CN=Users,&#148;;
+
+    // Bind to the current domain controller
+
+    IADs*   pRoot = NULL;
+    VARIANT var;
+    HRESULT hr = ADsGetObject(L&#147;LDAP://rootDSE&#148;,
+                              IID_IADs,
+                              (void**)&amppRoot);
+    if(FAILED(hr))
+    {
+        ErrorHandling(L&#147;ADsGetObject - rootDSE&#148;);
+        CoUninitialize();
+        return 0;
+    }
+    hr = pRoot-&gtGet(L&#147;DefaultNamingContext&#148;,&ampvar);
+    if(FAILED(hr))
+    {
+        ErrorHandling(L&#147;Get default naming context&#148;);
+        CoUninitialize();
+        return 0;
+    }
+    // Append DC naming context to the path.
+    wcscat(wszQuery,var.bstrVal);
+    VariantClear(&ampvar);
+    pRoot-&gtRelease();
+    // Use IDirectorySearch to perform a search for directory
+    // users, and display some basic information.
+    IDirectorySearch* pSearch = NULL;
+    hr = ADsGetObject(wszQuery,
+                      IID_IDirectorySearch,
+                      (void**)&amppSearch);
+    if(FAILED(hr))
+    {
+        ErrorHandling(L&#147;ADsGetObject&#148;);
+        CoUninitialize();
+        return 0;
+    }
+    SetSearchPrefs();
+    hr = pSearch-&gtSetSearchPreference(g_rgSearchPref, g_dwPrefs);
+    if(FAILED(hr))
+    {
+        ErrorHandling(L&#147;IDirectorySearch::SetSearchPreference&#148;);
+        pSearch-&gtRelease();
+        CoUninitialize();
+        return 0;
+    }
+    LPWSTR rgszAttributes[] = { L&#147;ADsPath&#148;,
+                                L&#147;Name&#148;,
+                                L&#147;samAccountName&#148; };
+    ADS_SEARCH_HANDLE hSearch = NULL;
+    DWORD dwCount= sizeof(rgszAttributes)/sizeof(LPWSTR);
+
+    hr = pSearch-&gtExecuteSearch(L&#147;objectClass=user&#148;,
+                                rgszAttributes,
+                                dwCount,
+                                &amphSearch);
+    if(SUCCEEDED(hr))
+    {
+        hr = pSearch-&gtGetNextRow(hSearch);
+        while(SUCCEEDED(hr) &amp&amp hr != S_ADS_NOMORE_ROWS)
+        {
+            ADS_SEARCH_COLUMN column;
+            for(unsigned int ndx = 0; ndx &lt dwCount; ndx++)
+            {
+                hr = pSearch-&gtGetColumn(hSearch,
+                                        rgszAttributes[ndx],
+                                        &ampcolumn);
+                if(hr == E_ADS_COLUMN_NOT_SET)
+                    continue;
+                wprintf(L&#147;[%s] = &#148;, rgszAttributes[ndx]);
+                PrintColumnToConsole(&ampcolumn);
+                pSearch-&gtFreeColumn(&ampcolumn);
+                wprintf(L&#147;\n&#148;);
+            }
+            wprintf(L&#147;\n&#148;);
+            hr = pSearch-&gtGetNextRow(hSearch);
+        }
+    }
+    pSearch-&gtCloseSearchHandle(hSearch);
+    pSearch-&gtRelease();
+    CoUninitialize();
+    return 0;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="27-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="27-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

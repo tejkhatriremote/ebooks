@@ -1,0 +1,169 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using the COM[TITLE]#43; In-Memory Database</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=24//-->
+<!--PAGES=0834-837//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="24-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="24-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Binding of the Data</B></FONT></P>
+<p>When you&#146;re using static accessors, the binding is in the space of the client. Consider the diagram shown in Figure 24.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-05.jpg',185,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-05.jpg',185,420)"><font color="#000077"><b>Figure 24.5</B></FONT></A>&nbsp;&nbsp;OLE DB segment memory.</P>
+<p>With OLE DB, the data for the recordset is stored in a contiguous memory buffer. Either the client COM object or the IMDB server can provide this memory buffer. IMDB does not provide a memory buffer; instead, the client must provide the buffer. Using either a static accessor or a manual accessor, you must provide the memory. Also, all values must be either <i>by value</I> or <i>by reference</I>. The data type bindings <small>DBTYPE_VECTOR</SMALL> and <small>DBTYPE_ARRAY</SMALL> are not supported.</P>
+<p><font size="+1"><b>Fetching of Data</B></FONT></P>
+<p>IMDB does not fetch data when it&#146;s being bound. It also does not fetch data on the <small>IRowset::GetNextRows</SMALL> call. This is because the data is already in memory. What happens is that IMDB creates bookmarks for the rows specified. This has the benefit of being very fast. The data is retrieved when <small>IRowset::GetData</SMALL> is called. However, in the implementation of <small>CRowset::MoveNext</SMALL>, both are called in the same method.</P>
+<p><font size="+1"><b>Using Bookmarks</B></FONT></P>
+<p>To save processing time, you&#146;ll often want to pass around a recordset that has been bound to IMDB. An example would be a bound rowset that needs to set another COM object. For instance, you could use <small>Object1::GetAllValues</SMALL>, which allows iteration of the object set, like so:</P>
+<!-- CODE SNIP //-->
+<pre>
+IRowsetPtr rowset = m_accessor.GetInterface();
+IUnknownPtr unk = rowset;
+
+op-&gt;setCursor( unk, m_accessor.m_hRow);
+_com_util::CheckError( ptr-&gt;QueryInterface( pVal));
+(*pVal)-&gt;AddRef();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this piece of code, the rowset interface is retrieved and converted to <small>IUnknown</SMALL>. Then the specific rowset is bound to another COM object using the method call</P>
+<!-- CODE SNIP //-->
+<pre>
+SecondObject::setCursor( IUnknown *ptr, unsigned long hRow):
+
+CAccessorRowset&lt; CManualAccessor&gt; m_accessor;
+
+_com_util::CheckError( pUnk-&gt;QueryInterface( &amp;(m_accessor.m_spRowset)));
+_com_util::CheckError( m_accessor.Bind());
+m_accessor.m_hRow = hrow;
+_com_util::CheckError( m_accessor.GetData());
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The accessor used is <small>CManualAccessor</SMALL>, because the static accessor can be bound dynamically. (Do not use <small>CDynamicAccessor</SMALL>.) Then, the rowset interface is retrieved using the QI (A COM <small>IUnknown::QueryInterface</SMALL> call) and bound to the accessor. This establishes the connection between IMDB and the rowset. However, in order to know which record you&#146;re looking at, <small>m_hRow</SMALL> needs to be set. You won&#146;t know what this value is because it&#146;s internal to the database. For example, with SQL Server, this value is an actual record count index. Finally, you call <small>GetData</SMALL> to retrieve the data at the current location. This technique is legal and can be used to pass a rowset around to various COM&#43; objects.</P>
+<p><font size="+1"><b>Support for Blob Data</B></FONT></P>
+<p>In most cases, blobs will not be cached in the IMDB database. With IMDB, a blob is cached if requested and if the size of the blob is less than one percent of the entire IMDB cache.
+</P>
+<p>Accessing a blob, in most cases, does not make use of standard field methods. When working with blobs, you should consider them to be file-based COM objects. Look at the following code, for example:</P>
+<!-- CODE //-->
+<pre>
+class CCategories {
+public:
+    ISequentialStream*    pPicture;
+ BEGIN_COLUMN_MAP(CCategories)
+    BLOB_ENTRY(4, IID_ISequentialStream, STGM_READ, pPicture)
+END_COLUMN_MAP()
+};
+     CTable&lt;CAccessor&lt;CCategories&gt; &gt; categories;
+    ULONG               cb;
+    BYTE        myBuffer[65536];
+     categories.Open(session, _T(&#147;Categories&#148;));
+     while (categories.MoveNext() == S_OK)
+    {
+        do
+        {
+            categories.pPicture-&gt;Read(myBuffer, 65536, &amp;cb);
+        } while (cb &gt; 0);
+        categories.pPicture-&gt;Release();
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this example, the field is called <small>BLOB_ENTRY</SMALL>. It&#146;s then specified as a read-only <small>STGM_READ</SMALL> field. This is bound using the <small>ISequential</SMALL> stream <small>pPicture</SMALL> variable. When this variable is used, the data is read like a file. When the field is no longer being used, it is released. This is normally necessary with a regular database, because the field is cached in and out of RAM. If it isn&#146;t released, the COM object will remain. With IMDB, the situation is a bit different because the data is always kept in RAM and therefore can be considered valid all the time. However, this is not a general rule because the documentation does not specify it.</P>
+<p>When using <small>IRowset::GetData</SMALL> or <small>IRowsetChange::SetData</SMALL>, you have several ways to operate on the blob data:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetData</SMALL>. The data can be placed in a memory buffer, assuming that the size of the blob is known.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetData</SMALL>. You can supply a memory buffer, assuming that the size of the blob can be predetermined. Whether this method can be called depends on whether the data can be stored as one contiguous memory segment.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetData</SMALL>. You can use an <small>ISequentialStream</SMALL> interface pointer with <small>STGM_READ</SMALL> or <small>STGM_CREATE</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetData</SMALL>. You can supply an <small>ISequentialStream</SMALL> interface pointer and the length of the stream. In other words, you can&#146;t pass in an object of any length.
+</DL>
+<p>How do these cases influence where the object is cached? In the first three cases, the data is cached in IMDB and written to the underlying data source, whenever possible. If it cannot be stored in IMDB, it&#146;s stored in the underlying data source.
+</P>
+<p>In the last method, the data is written directly to the IMDB data cache. This depends on whether the blob is small enough. If the blob is too large, the data is written directly to the underlying data source. In this situation, the blob is considered to be in write-through mode.</P>
+<p>This is one big exception, though, in the case of a transaction. When a transaction occurs and a record has just been created, the data is somewhere in RAM (it could be IMDB, swapped pages, and so on). This is not an inconsistency, but it has to do with the concept of ACID, which states that only a successful transaction can have a correct state. A successful transaction will have a cache state as defined in the previous paragraphs.</P>
+<p>When you&#146;re using <small>IRowsetUpdate</SMALL>, the modified blobs will be cached in client memory. Therefore, you should make sure the blob is small enough to fit into memory. Once <small>IRowsetUpdate::Update</SMALL> has been called, the blob will be made durable.</P>
+<p>So what does this mean in a nutshell? It means that the more RAM you have, the better off you are. It also means that caching pictures, small audio clips, and small video clips is okay. However, when you&#146;re dealing with blob data that extends into the gigabyte range, IMDB is not the solution. IMDB for smaller blobs is managed whether the blobs cached or not, because there&#146;s no explicit mechanism to remove the blobs from cache.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="24-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="24-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

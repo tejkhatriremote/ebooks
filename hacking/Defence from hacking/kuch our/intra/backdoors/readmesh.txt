@@ -1,0 +1,3 @@
+This file was downloaded from Smart Hack - http://www.smarthack.com, for a huge archive of files just like this one please visit us.  Smarthack.com takes no responsibility for what you do with this file. It is in no way illegal what so ever, if you choose to use it in a illegal manner we DO NOT support this and this is your own decision.  Also if you do not understand how this file works or what it is used for please DO NOT use it and delete it from your system.
+
+BASS99 - http://www.smarthack.com

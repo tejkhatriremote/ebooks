@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=02//-->
+<!--PAGES=070-072//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Example Four: Kill Network Daemons</B></FONT></P>
+<p>When logged in remotely, be careful of which daemons you kill off from the process table. Some daemons that are running control the connectivity of the machine to the network. If these daemons are killed, you might not be able to establish any new remote connections or take the system off the network all together. The following list includes daemons that you need to be careful with when deciding to kill them or not. Your flavor might not include all these daemons, so don&#146;t be scared if one of these daemons is not running on your system:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>inetd</SMALL>&#151;Network services (Telnet, FTP, rsh, bootp, and so on) are unable to establish a connection over the network with the system.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>nfsd</SMALL>&#151;Any client filesystem that sends a request for an NFS mount point is unable to be established if this daemon is killed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>listen</SMALL>&#151;If this is killed it is unable to listen to the network for a service request that comes in over the network.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>mountd</SMALL>&#151;NFS filesystem requests never make it to this RPC server daemon.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>in.named</SMALL>&#151;If you kill this daemon you&#146;d better pray that you have a secondary DNS defined in your computing environment. This is the primary Domain Name Server, so if a large number of systems are dependent on the this server, it would be very wise to kill this daemon only when diagnosing DNS issues.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>httpd</SMALL>&#151;Any client-side Web-based browser is unable to connect to the system if this daemon is killed off.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>in.ftpd</SMALL>&#151;Killing this daemon denies all inbound FTP connections. If this daemon is started from the <small>inetd</SMALL> daemon, the <small>inetd</SMALL> daemon has to be killed first. If not, a new <small>ftp</SMALL> daemon is started when the next request comes in over the network for FTP.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>in.telnetd</SMALL>&#151;As with <small>in.ftpd</SMALL>, this daemon too can be started from within the <small>inetd</SMALL> daemon when a Telnet request comes in from the network. If it is and it is killed, the current request is disconnected and a new connection can be established when a Telnet request is made.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>sendmail</SMALL>&#151;When this process is killed, in-bound mail is not allowed into the system. This daemon should be dealt with only in diagnosing problems with mail handling.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>portmap</SMALL>&#151;Although one of the most dangerous to kill, if dead, RPC server connections do not know what network service port to send the RPC packets to. RPC serves such ports for <small>rusersd, rwalld, lockd, mountd, nsfd</SMALL> and are not able to function.
+</DL>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>So why even mess with the network configurations while logged in over the network? There are times when network changes take place over the net. It does depend on the change though. Some are nonvolatile changes, but there are many that you need to be aware of that can take the system down or off the network.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>There are times when a change might need to take place on many systems on the network. Test the change out on one remotely to see whether the process can be scripted and propagated out to all the rest of the systems. When network configuration files are changed, the result is to restart the related network daemon. In development environments I&#146;ve worked in, IP addresses were often changed on-the-fly and, in many cases, the users would enable us to reboot their systems. You might not get this luxury.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+ftpd, ifconfig, inetd, listen, mountd, named, nfsd, portmap, reboot, routed,
+sendmail
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading10"></A><font color="#000077">2.5 Shutdown, Halt, or Reboot over the Network</FONT></H3>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">2.5.1 Description</FONT></H4>
+<p>Bringing the system down over a network should be done only after all other attempts to resolve the problem have failed.
+</P>
+<p><font size="+1"><b>Example One: When to use shutdown and halt</B></FONT></P>
+<p>Some UNIX administrators argue that it should never be done at all. There are instances when it does become necessary to shut down or reboot the system. Whichever command you use, always make sure you are on the correct system and know the appropriate command to use (see section 1.17, &#147;Bringing a System Down,&#148; in Chapter 1, &#147;Topics in Administration&#148;) before executing any command that brings the system down.
+</P>
+<p>As you know, issuing a <small>halt</SMALL> command takes the system into a power-off state, whereas the <small>shutdown</SMALL> command takes the system down and possibly places the system into a new init state, if needed. It is not wise to attempt this unless you have remote access to the console or the user is sitting at the system so you can talk her through the procedures.</P>
+<p>Having access to a terminal server or a remote console is the next best thing to being there. Devices such as these on the market today enable you to take a system all the way down to the PROM level from the comfort of your own home. If you are interested in a terminal server, check-out the vendor/hardware/terminals section of the UNIX Guru Universe (<a href="http://www.ugu.com">http://www.ugu.com</A>) or go to an Internet search engine Web site and search with the keywords &#147;terminal server.&#148;</P>
+<p>There might come a time when the user is at another campus or across town. After a series of attempts at solving her problem, you are forced to shut down the system while you have her on the phone with you. This is okay, providing she does not hesitate to take advice from you. It often depends on the relationship you have with your user and her ability to move around in UNIX . If you are able to guide your user through a series of steps without frustrating her by the process, proceed. Otherwise, assure her that you are heading straight over to take care of the problem.</P>
+<p><font size="+1"><b>Example Two: When to Use reboot</B></FONT></P>
+<p>Using <small>reboot</SMALL> over the network should still be attempted only when all else fails. It is always best to have a person at the terminal, if possible, when you initiate the <small>reboot</SMALL> command. As the command is executed, your connection to the remote host is terminated and you need the user to be your eyes and describe what is taking place on the terminal. You are able to tell the state of the system as she reads the output of the boot process to you, and determine whether the reboot is successful or not.</P>
+<p>Many circumstances warrant an administrator to force a reboot remotely over the network. If the hardware appears to be okay and there&#146;s nothing wrong with the kernel, you are still taking a risk, but the system more than likely will reboot successfully, without any problems.</P>
+<p>The nice thing about having a person in front of the terminal is having her read the boot-up process line-by-line. In working with your systems day in and day out, you learn step-by-step what you should and shouldn&#146;t see on the screen as it boots up.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Windows DNA Overview</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=01//-->
+<!--PAGES=022-024//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch02/02-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Data Tier</FONT></H4>
+<p>The last tier is the data tier. It&#146;s the resource management tier. In contrast to the business logic tier, the data tier performs no processing of data. Instead, the task of managing the huge amount of data is defined in the data tier. Databases and resources are getting bigger every day, and this task is becoming more and more difficult.
+</P>
+<p>The UDA (Universal Data Access) strategy is a bit different from strategies used by other vendors. UDA stores and manipulates data. A question that must be asked is: What kinds of data exist? The answer is an infinite amount of different data. Some data is in a spreadsheet, some in a word processing document, and other data is in a relational database. To be able to store this data, you could write your own routines, but then sharing among different packages will become difficult. Or, another situation is to use one database and then store it within. The typical way to do this has been to use a blob. However, that makes things centralized and requires an additional software dependency and costs.</P>
+<p>Now consider the situation of references within documents. One transaction creates a two-way relation between two documents. And another transaction changes the reference of one of the documents. When the other document attempts to use the reference, it may generate a GPF.</P>
+<p>The solution to this problem or the varying data storage problem cannot be easily solved. The approach that UDA takes is in the definition of another data layer object model. Although this may seem drastic, it is necessary. The previous data access layer, ODBC, is great for relational data, but requires a large amount of tweaking for other data. In this data layer, each resource writes its own data format. But access to that data format is handled by the object layer.</P>
+<p>An example of this working is the query processor within UDA. The query processor has the ability to retrieve data from various resources and make it appear like one query. In the end, this makes it possible to slice and dice data as needed from the various sources.</P>
+<p>The UDA object model is called the <i>OLE DB object model</I> (see Figure 1.5). This is a low-level data access model that includes the specifications for how transactions and row sets are defined. The OLE DB object operates at very high speeds using raw interfaces with complex data types. This means that writing to OLE DB requires quite a bit of legwork. Although it&#146;s not part of the Windows 2000 distribution, Visual C<small>&#43;&#43;</SMALL> has a thin template layer on top called <i>OLE DB Consumer templates</I>. This serves to simplify OLE DB, without making it slower or less efficient.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch01/images/01-05.jpg',135,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch01/images/01-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch01/images/01-05.jpg',135,420)"><font color="#000077"><b>Figure 1.5</B></FONT></A>&nbsp;&nbsp;Universal data access.</P>
+<p>The advantage of the OLE DB object model is that it&#146;s not limited. There&#146;s a specific subset that must be implemented. Nothing stops a vendor from extending the object model to provide fine-tuned access to its data. This, again, is like the presentation tier, where broad reach versus rich functionality must be traded off.
+</P>
+<p>Because of the low-level nature of OLE DB, Visual Basic and script writers cannot use it directly. A simpler model known as ADO (Active Data Objects) has been created. This object model is a very small but powerful object that allows access to most of the features of OLE DB. One question that must be answered is how OLE DB exposes this rich functionality and blobs? The answer is as other COM objects. This is why ADO does not need to be big to handle all the various data formats. It&#146;s the responsibility of the provider to generate the COM objects.</P>
+<h3><a name="Heading12"></A><font color="#000077">Summary</FONT></H3>
+<p>Windows 2000 is a part of Windows DNA. It is the operating system that provides the facilities needed to write complex vertical market applications.
+</P>
+<p>It starts at the client machine, which can be simple handheld computing devices or high-end workstations. The client machine is responsible for displaying the data and interacting with the user. In the middle tier, the business logic is executed. The services required include transactions and messaging. By integrating these various services into the operating system, the entire system becomes more stable and more scalable. Finally, the data is stored in the data services tier. Here, another set of services relating to data storage is exposed.</P>
+<p>Windows DNA is not about only services and Windows 2000. This book will discuss the details regarding the various services and facilities. However, there is also a methodology, which is beyond the scope of this book.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch02/02-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

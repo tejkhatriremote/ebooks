@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=351-356//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="11-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The size of the bitmap image in bytes is given in <small>biSizeImage</SMALL> member. If the value of <small>biCompression</SMALL> is <small>BI_RGB</SMALL>, this value may be 0. For images that are in the JPEG or PNG formats, this value is the size of the JPEG or PNG image buffer.</P>
+<p>The values of <small>biXPelsPerMeter</SMALL> and <small>biYPelsPerMeter</SMALL> can be used to help an application select the most appropriate bitmap for a particular resolution, if multiple resources are available.</P>
+<p>The value of <small>biClrUsed</SMALL> specifies the number of valid entries in the bitmap&#146;s color table. If this value is 0, the maximum number of entries should be assumed, based on the value of <small>biBitCount</SMALL>.</P>
+<p>The number of colors considered &#147;important&#148; is stored in <small>biClrImportant</SMALL>. If this value is 0, all colors are considered important. This information is never used by any of the GDI functions; rather, it&#146;s meant for use by applications. If an application is unable to create a palette that contains all the bitmap&#146;s colors, this value can be used to determine whether the result is acceptable.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>If your application is written for Windows NT 4.0 or Windows 2000, you can use the <small>BITMAPV4HEADER</SMALL> and <small>BITMAPV5HEADER</SMALL> structures. <small>BITMAPV4HEADER</SMALL> was introduced beginning with Windows NT 4.0 and Windows 95; it supplied color-matching data that could be used with Image Color Management (ICM) functions. <small>BITMAPV5HEADER</SMALL> can be used beginning with Windows 2000 and Windows 98, and it improves the ICM support. If you don&#146;t need these features, stick with the original <small>BITMAPINFOHEADER</SMALL>.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>The DIB&#146;s Color Table</B></FONT></P>
+<p>After the <small>BITMAPINFOHEADER</SMALL> structure, the <small>bmiColors</SMALL> variable marks the beginning of the color table. This table is used if the bitmap is not a 16-, 24-, or 32-bit-per-pixel bitmap. The color table is an array of <small>RGBQUAD</SMALL> structures, with each entry storing one of the colors used by the bitmap. Here are the members of the <small>RGBQUAD</SMALL> structure:</P>
+<!-- CODE SNIP //-->
+<pre>
+BYTE    rgbBlue;
+BYTE    rgbGreen;
+BYTE    rgbRed;
+BYTE    rgbReserved; // Always set to zero
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The members of the <small>RGBQUAD</SMALL> structure represent the red, green, and blue color intensity for a color stored in the color table. Each structure member has a range of 0&#150;255. If all members have a value of 0, the color is black; if all members have a value of 255, the color is white.</P>
+<p><font size="+1"><b>The DIB Image Array</B></FONT></P>
+<p>An array of pixel information follows the color table. Every pixel in the bitmap is represented by one element of this array. Each of the elements contains a value that represents one of the color map entries. For example, if the first element in the array has a value of 32, the first pixel in the bitmap will use the color found in color table entry number 32, as shown in Figure 11.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-05.jpg',340,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-05.jpg',340,420)"><font color="#000077"><b>Figure 11.5</B></FONT></A>&nbsp;&nbsp;Every entry in the image array refers to a pixel in the displayed image.</P>
+<p>If this is a 16-, 24-, or 32-bit-per-pixel bitmap, there is no color table, and each element of the array contains the RGB color for a single pixel. In effect, the palette has been moved out to the pixel array for these types of bitmaps.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">16-Color DIBs</FONT></H4>
+<p>The <small>CBitmap</SMALL> class is often used to manipulate monochrome and 16-color bitmaps. Loading and displaying a bitmap with the <small>CBitmap</SMALL> class is easy and requires only a few lines of code. To display a bitmap with a resource ID of <small>IDB_HELLO</SMALL> in a view, edit the view&#146;s <small>OnDraw</SMALL> function, like this:</P>
+<!-- CODE //-->
+<pre>
+void CBitmapView::OnDraw(CDC* pDC)
+{
+    CBitmap     bmp;
+    bmp.LoadBitmap( IDB_HELLO );
+    // Calculate bitmap size using a BITMAP structure.
+    BITMAP      bm;
+    bmp.GetObject( sizeof(BITMAP), &ampbm );
+    // Create a memory DC, select the bitmap into the
+    // memory DC, and BitBlt it into the view.
+    CDC         dcMem;
+    dcMem.CreateCompatibleDC( pDC );
+    CBitmap* pbmpOld = dcMem.SelectObject( &ampbmp );
+    pDC-&gtBitBlt( 10,10, bm.bmWidth, bm.bmHeight,
+                 &ampdcMem, 0,0, SRCCOPY );
+    // Reselect the original bitmap into the memory DC.
+    dcMem.SelectObject( pbmpOld );
+}
+</PRE>
+<!-- END CODE //-->
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">256-Color DIBs</FONT></H4>
+<p>You might think that manipulating a 256-color bitmap is just as easy as loading a 16-color bitmap. Unfortunately, that&#146;s not the case. When a 256-color DIB is displayed on a 256-color device, the colors are almost never correct because of the way Windows 2000 (as well as other Windows flavors) handles the color palette.
+</P>
+<p>Before looking at the code used to display 256-color bitmaps, you may want to review how Windows 2000 determines the colors available to your application. When a bitmap is loaded, Windows 2000 doesn&#146;t make any special effort to make sure that color entries in the bitmap&#146;s color table are added to the system&#146;s color palette. The result is an ugly-looking bitmap. To display a 256-color bitmap, you must always create and manage a logical palette for your application.</P>
+<p><font size="+1"><b>An Overview of the Windows 2000 Palette</B></FONT></P>
+<p>The Windows 2000 GDI uses palettes to manage color selection for 256-color devices. There are actually several different types of palettes, as shown in Figure 11.6.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-06.jpg',500,370 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-06.jpg',500,370)"><font color="#000077"><b>Figure 11.6</B></FONT></A>&nbsp;&nbsp;The different types of color palettes used in Windows 2000.</P>
+<p>Device drivers that use palettes have an internal palette that stores the current set of colors available for display. This means that 256-color devices have 256 entries in the hardware palette.
+</P>
+<p>The Windows 2000 palette manager maintains a system palette that (we hope) matches the hardware palette.</P>
+<p>Every application can have one or more logical palettes. An application interacts with the system palette in order to control the colors that are currently available for display.</P>
+<p>To maintain some level of consistency, Windows 2000 reserves the first and last 10 palette entries, leaving 236 palette entries for application use, as shown in Figure 11.7.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-07.jpg',500,185 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-07.jpg',500,185)"><font color="#000077"><b>Figure 11.7</B></FONT></A>&nbsp;&nbsp;Windows 2000 makes 236 palette entries available to applications.</P>
+<p>At first glance, it might seem unfair for 20 entries to be removed from the system palette. The reason that these entries are removed is to keep the basic window display predictable. The 20 reserved palette entries include the colors used by 16-color VGA devices. As long as these palette entries are available, Windows applications that don&#146;t use the palette are displayed as expected.
+</P>
+<p><font size="+1"><b>The System Palette</B></FONT></P>
+<p>A palette is one of the attributes that belongs to a DC. Once you&#146;ve decided to use a palette in your application, you must follow these basic steps:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Create a logical palette. This is the process of allocating space for the palette entries and describing the colors that will be included in the palette. As you&#146;ll soon see, this process is much easier than it sounds. In most cases, when you need to create a palette, you copy the colors from a bitmap or other object into the new palette. This step is usually performed once, and the logical palette is stored by the application so that it can be used whenever needed.
+<dd><b>2.</B>&nbsp;&nbsp;Select the palette into a DC. Unlike other GDI objects, <small>SelectObject</SMALL> doesn&#146;t work for logical palettes. You must use the <small>SelectPalette</SMALL> function.
+<dd><b>3.</B>&nbsp;&nbsp;Realize the palette. Basically, this means that the Windows 2000 palette manager is asked to add your palette to the system palette or map your palette to a reasonably close substitute. Selecting and realizing the palette always happen at the same time; there&#146;s no point in selecting a palette unless you intend to realize it immediately.
+<dd><b>4.</B>&nbsp;&nbsp;Use the palette. If the system palette is updated, the application should redraw itself. This is usually done by invalidating any windows that depend on palette entries.
+<dd><b>5.</B>&nbsp;&nbsp;Deselect the palette by selecting the previous palette back into the DC.
+<dd><b>6.</B>&nbsp;&nbsp;Delete the palette object. This step is usually performed only when you&#146;re sure the palette is no longer needed.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="11-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Fixing Windows 2000 Professional When It Breaks</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=29//-->
+<!--PAGES=941-944//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="936-940.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="944-947.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b><i>!reload</I></B></FONT></P>
+<p>The <tt>!reload</TT> command loads the symbols from the symbol tree. Output from the command looks like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   kd&gt; !reload
+   Loading symbols for 0x80100000  ntoskrnl.exe -&gt;
+   d:\support\debug\i386\symbols\exe\ntoskrnl.dbg
+   KD ModLoad: 80100000 801ca740 ntoskrnl.exe
+   KD ModLoad: 80400000 8040b000 hal.dll
+   KD ModLoad: 80010000 80013320 atapi.sys
+   KD ModLoad: 80014000 8001ba80 SCSIPORT.SYS
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You need to execute this command before any other because the symbols are needed to execute other commands.
+</P>
+<p><font size="+1"><b>Log Files</B></FONT></P>
+<p>You&#146;ll also probably want a log file. To create a log file, all you have to do is type
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   <b>.logopen</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This creates a text file named <tt>kd.log</TT> that can be found in the same directory as the debugger program you&#146;re using. Using a log file enables you to compare the output from commands such as <tt>!vm</TT> and <tt>!memusage</TT>.</P>
+<p>If you already have a log file and just want to append to it, type</P>
+<!-- CODE SNIP //-->
+<pre>
+   <b>.logappend</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This places any additional output at the end of the log file. When you&#146;re ready to close the file, type
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   <b>.logclose</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b><i>!drivers</I></B></FONT></P>
+<p>The <tt>!drivers</TT> command lists all the device drivers on your system. The information from the device drivers looks something like the following (we cleaned it up a bit for the sake of clarity):</P>
+<!-- CODE SNIP //-->
+<pre>
+   kd&gt; !driversLoaded System Driver Summary
+   Base  Code Size  Data Size Driver Name Creation Time
+   80100000 b31c0 (716kb) 17200 (92kb) ntoskrnl.exe Thu Jan 25 19:14:08 1996
+   80400000 92c0 ( 36kb) 20c0 ( 8kb)  hal.dll Thu Jan 18 15:28:52 1996
+   80010000 2940 ( 10kb) 760 ( 1kb) atapi.sys Sun Jan 21 19:40:48 1996
+   80014000 6400 ( 25kb) 13c0 ( 4kb) SCSIPORT.SYS Fri Jan 19 12:19:37 1996
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The followingx can be determined from the above:
+</P>
+<dl>
+<dt><b>Base</B>
+<dd>The starting address (in hex) of the device driver. When the code that causes the Kernel STOP Error falls between the base address for the driver and the base address for the next driver on the list, that driver is often the cause of the error. For example, as you can see from the above output, the base for <tt>atapi.sys</TT> is <tt>0x8001000</TT>. Any address that falls between that and <tt>0x80014000</TT> (the base address for <tt>scsiport.sys</TT>) belongs to <tt>atapi.sys</TT>. If the target computer displays a blue screen, often the first address listed is that of a driver.
+<dt><b>Code Size</B>
+<dd>The size of the driver code in both hex and decimal.
+<dt><b>Data Size</B>
+<dd>The amount of allocated space given to the driver for data in both hex and decimal.
+<dt><b>Driver Name</B>
+<dd>The filename of the driver.
+<dt><b>Creation Time</B>
+<dd>The link date of the driver or, in simpler terms, the date when a driver or executable file is compiled.
+</DL>
+
+<p><font size="+1"><b><i>!locks</I></B></FONT></P>
+<p>The <tt>!locks</TT> command displays all locks held on resources by threads. Locks can be either shared or exclusive. The information provided by this command is especially useful when deadlocks occur on the target computer. A deadlock occurs when a nonexecuting thread has an exclusive lock on a resource that another executing thread needs.</P>
+<p>The output for the <tt>!locks</TT> command looks similar to the following:</P>
+<!-- CODE SNIP //-->
+<pre>
+   kd&gt; !locks -v -d 
+   **** DUMP OF ALL RESOURCE OBJECTS ****
+   Resource &#64; ntoskrnl!MmSystemWsLock (0x80148b90) Available
+    Contention Count = 4
+   Resource &#64; ntoskrnl!MmSectionExtendResource (0x80148990) Available
+   Resource &#64; 0xff7143a0 Shared 2 owning threads
+    Threads: ffb3ba61-01
+   0013ffa31: Unable to read ThreadCount for resource
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b><i>!memusage</I></B></FONT></P>
+<p>This command briefly describes the system&#146;s current memory usage and then gives a more detailed list of memory usage. The output for <tt>!memusage</TT> looks like this:</P>
+<!-- CODE //-->
+<pre>
+   kd&gt; !memusage
+   loading PFN database
+       Zeroed:  0 (  0 kb)
+       Free:  2 (  8 kb)
+      Standby: 786 ( 3144 kb)
+      Modified:  95 ( 380 kb)
+    ModifiedNoWrite:  0 (  0 kb)
+     Active/Valid: 3211 ( 12844 kb)
+      Transition:  0 (  0 kb)
+      Unknown:  0 (  0 kb)
+       TOTAL: 4094 ( 16376 kb)
+    Usage Summary in KiloBytes (Kb):
+   Control Valid Standby Dirty Shared Locked PageTables name
+   ff6ab5c8  0  36  0  0  0  0 mapped_file( GNLI____.TTF )
+   ff6aa548  0  40  0  0  0  0 mapped_file( KF______.TTF )
+   ff6ab428  0  32  0  0  0  0 mapped_file( GNM_____.TTF )
+   ff6afc68  0  40  0  0  0  0 mapped_file( Latinwd.ttf )
+</PRE>
+<!-- END CODE //-->
+<p>Even though this command gives some information about memory leaks, it is still better to look at the <tt>!vm</TT> command for memory information on the most common Kernel STOP Errors.</P>
+<p><font size="+1"><b><i>!vm</I></B></FONT></P>
+<p>The <tt>!vm</TT> command provides a list of the target system&#146;s virtual memory usage. Output for the command looks similar to the following:</P>
+<!-- CODE //-->
+<pre>
+   kd&gt; !vm
+   *** Virtual Memory Usage ***
+      Physical Memory:  3950 ( 15800 Kb)
+      Available Pages:  788 ( 3152 Kb)
+      Modified Pages:  95 ( 380 Kb)
+      NonPagedPool Usage: 83 ( 332 Kb)
+      PagedPool 0 Usage: 763 ( 3052 Kb)
+      PagedPool 1 Usage:  69 ( 276 Kb)
+      PagedPool 2 Usage:  85 ( 340 Kb)
+      PagedPool Usage:  917 ( 3668 Kb)
+      Shared Commit:   88 ( 352 Kb)
+      Process Commit:  285 ( 1140 Kb)
+      Per Process:   787 ( 3148 KB)
+      PagedPool Commit:  917 ( 3668 Kb)
+      Driver Commit:  495 ( 1980 Kb)
+      Committed pages:  2710 ( 10840 Kb)
+      Commit limit:  9077 ( 36308 Kb)
+</PRE>
+<!-- END CODE //-->
+<p>The memory usage you see in the above list is given in both pages and kilobytes. The most useful information for analyzing problems is
+</P>
+<dl>
+<dt><b>Physical Memory</B>
+<dd>The total physical memory on the target computer.
+<dt><b>Available Pages</B>
+<dd>The total number of pages of both physical and virtual memory available. If this number is low, the cause might be a process that allocates too much virtual memory.
+<dt><b>NonPagedPool Usage</B>
+<dd>>The number of pages allocated to the nonpaged pool. A pool is memory that can&#146;t be swapped to the pagefile, so it always occupies physical memory. This number should not be larger than 10 percent of the total physical memory. If this number is larger, the target computer may have a memory leak.
+</DL>
+
+<p><font size="+1"><b><i>!errlog</I></B></FONT></P>
+<p>Sometimes the debugger maintains a log of Kernel errors that occur on the target computer. The <tt>!errlog</TT> command enables you to view this log. Most of the time, however, this log is empty. If an event has been logged, you may be able to find out from the log which process caused the Kernel STOP Error.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="936-940.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="944-947.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,207 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=754-757//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Generating and Catching Errors with com_error</FONT></H4>
+<p>All COM compiler classes like to generate exceptions. This approach reduces the number of <small>if</SMALL> statements that you need to write. It makes code much easier to read and understand. Whenever any COM operation goes awry, a <small>_com_error</SMALL> is generated.</P>
+<p><font size="+1"><b>Raising _com_error Objects</B></FONT></P>
+<p>To be able to issue a <small>_com_error</SMALL> object, the object has to be thrown. Although it might seem logical to use</P>
+<!-- CODE SNIP //-->
+<pre>
+   throw _com_error(..)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>this is not the proper way to throw the exception. The correct way is to use the method <small>_com_raise_error</SMALL>. However, the problem with this is that the definition is not given in the <small>comdef.h</SMALL> fileit&#146;s undefined. However, it is defined in the newest version of Visual C<small>&#43;&#43;</SMALL> 6; therefore, you should upgrade to this version. If, however, you cannot upgrade, you should add the following definition to your source code or to your <small>comdef.h</SMALL> file:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void __stdcall _com_raise_error(
+   HRESULT hr, IErrorInfo* perrinfo = 0) throw(_com_error);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is the official way to issue an error, per the Visual C<small>&#43;&#43;</SMALL> documentation. The input error code is a valid <small>HRESULT</SMALL> error code. Two other functions are available for issuing errors. They are defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void __stdcall _com_issue_error(HRESULT) throw(_com_error);
+   void __stdcall _com_issue_errorex(
+   HRESULT, IUnknown*, REFIID) throw(_com_error);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>These functions work similar to how the <small>_com_raise_error</SMALL> method works, except that it&#146;s possible to identify the object raising the error and the reference interface. By default, the COM compiler&#150;generated objects use <small>_com_issue_errorex</SMALL> in the methods if anything goes wrong. Here&#146;s some sample source code that shows how to raise an</P>
+<!-- CODE SNIP //-->
+<pre>
+   _com_error exception:
+   _com_issue_error( E_NOTIMPL);
+   _com_raise_error( E_NOTIMPL);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here&#146;s a sample <small>try/catch</SMALL> block that will catch the preceding example:</P>
+<!-- CODE SNIP //-->
+<pre>
+   try {
+   ...
+   }
+   catch( _com_error obj) {
+   printf( &#147;Error is %s\n&#148;, obj.ErrorMessage());
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There&#146;s nothing complex about this exception block. However, as the code stands in its current form, it will only catch the <small>_com_error</SMALL> exception.</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Working with Any Data: _variant_t</FONT></H4>
+<p>When COM and OLE were introduced, it was possible to work with variant data types. It&#146;s a data type that can represent any other data type. For languages such as BASIC that are based on variant data types, this is appropriate. However, for a typed language such as C<small>&#43;&#43;</SMALL>, it becomes a problem. As such, throughout the history of COM and OLE, writing C<small>&#43;&#43;</SMALL> code to handle variants has never been any fun. With the COM compiler support, there&#146;s another class that wraps the variant data type into something. This class is simpler and more effective because it uses overloading to convert a data type into a variant. Because of its simplicity, there isn&#146;t really much to explain, except to show you some source code that demonstrates how the variant data type can be used:</P>
+<!-- CODE SNIP //-->
+<pre>
+       _variant_t var;
+       _variant_t var2((long)12);
+
+       var = (short)12;
+       var = &#147;Hello&#148;;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is very simple, but yet there&#146;s a trick. Notice that when <small>var</SMALL> is assigned a value of <small>12</SMALL>, a type has to be declared. The reason for this is because <small>12</SMALL> can be an int, long, or short. Encapsulated within the class is all the legwork to ensure that the variant is properly declared and assigned. If, however, you are passed a <small>VARIANT</SMALL> and want to convert it into a <small>_variant_t</SMALL> type, all you have to do is assign it as shown in the following example:</P>
+<!-- CODE SNIP //-->
+<pre>
+       VARIANT vtText;
+
+       VariantInit( &ampvtText);
+       V_VT( &ampvtText) = VT_BSTR;
+       V_BSTR( &ampvtText) = SysAllocString( L&#148;12&#148;);
+
+       testCopy = vtText;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Another operation that&#146;s needed is the ability to change the variant from one type to another. For example, in the preceding source code, the variant type is <small>VT_BSTR</SMALL>, but because the string represents a number, it could be a short, long, or int. To do this, you need to change the types using the following method:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void ChangeType( VARTYPE vartype, const _variant_t* pSrc = NULL )
+   &#8658; throw( _com_error );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The first parameter, <small>vartype</SMALL>, is the destination variant type. This is directly analogous to the types introduced with OLE Automation, such as <small>VT_BSTR, VT_I4</SMALL>, and so on.</P>
+<p>The second parameter is used to define a source used for conversion. This means that if <small>pSrc</SMALL> is not <small>NULL</SMALL>, the contents of <small>pSrc</SMALL> are converted to the type <small>vartype</SMALL> and then copied to the referenced <small>_variant_t</SMALL> object. Anything being referenced in the current object is lost. The default is <small>NULL</SMALL>, which means that reference object is to be converted into the type desired.</P>
+<p>The functions for clearing the variant are a bit odd:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void Clear( ) throw( _com_error );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This method clears the currently referenced variant and sets it to nothing. The other method is one that sets the variant to a string value (<small>SetString</SMALL>). The odd thing about this method is that it does not differ from the overloaded <small>char *</SMALL> operator. Therefore, the exact purpose is unknown. It&#146;s simpler to use the overloaded operator.</P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Working with BSTRs: _bstr_t</FONT></H4>
+<p>The final class discussed is perhaps one of the most needed classes. This class makes it simple to convert strings from <small>BSTRs</SMALL> to wide chars or normal chars. Like the variant, it wraps most of its conversions within a set of overloaded operators. Here&#146;s a typical scenario:</P>
+<!-- CODE SNIP //-->
+<pre>
+       _bstr_t bstrVar( &#147;Hello&#148;);
+       char *tempHello;
+
+       tempHello = bstrVar;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This example does nothing but convert a string to a <small>_bstr_t</SMALL> type in the constructor. With the overloaded assignment operator, it&#146;s then converted back into a normal char string. However, there&#146;s a catch to using this class. Consider the following example:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void func( BSTR input) {
+       _bstr_t var( input, true);
+       char *result;
+
+       result = var;
+       return;
+   }
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The reason the <small>BSTR</SMALL> input parameter is used as the <small>_bstr_t</SMALL> constructor parameter is that it&#146;s easier to convert. However, the problem with the conversion is that the raw bytes are manipulated and the <small>BSTR</SMALL> that&#146;s passed in is created by the caller of the class. Therefore, the input <small>BSTR</SMALL> has to be copied into another buffer. If this didn&#146;t occur, then when the <small>_bstr_t</SMALL> variable destroys itself, it will attempt to free the <small>BSTR</SMALL>, and because the <small>BSTR</SMALL> was not created by the function, an error will occur. Therefore, it&#146;s imperative that the input buffer is copied to before anything is done.</P>
+<h3><a name="Heading16"></A><font color="#000077">Working with Multiple COM&#43; Objects</FONT></H3>
+<p>When you&#146;re writing COM&#43; objects, in most cases, there will not be one COM&#43; object doing all the work. A COM&#43; object may instantiate another object, which may instantiate another, and so on. In this situation, there are two fundamental issues:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When a COM object is instantiated, how will the COM&#43; transaction attribute affect the current transaction context if it exists?
+<dd><b>&#149;</B>&nbsp;&nbsp;When multiple COM objects are combined into one transaction, how does the transaction outcome method determine the outcome of the transaction?
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

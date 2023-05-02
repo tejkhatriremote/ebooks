@@ -1,0 +1,939 @@
+<HTML>
+<HEAD>
+   
+   <TITLE>GTMHH Vol5 No4</TITLE>
+</HEAD>
+<BODY>
+<br>
+_________________________________________________________
+
+<P>Guide to (mostly) Harmless Hacking
+
+<P>Vol. 5 Programmers' Series
+
+<P>No. 4: A nice 'n' easy introduction into the bash shell
+<BR>_________________________________________________________
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+By idle (<A HREF="mailto:idle@mailexcite.com">idle@mailexcite.com</A>)
+<BR>with a little help from his friends (Meino :) (Carolyn Meinel)
+<BR>&nbsp;
+
+<P>&nbsp;The first in the Programmers' Series introduced you to some of
+the very
+<BR>basics of writing shell scripts. Creating files, executing commands
+and so
+<BR>on.&nbsp; This Guide will introduce you to additional important concepts,
+but
+<BR>this time using the bash shell.
+
+<P>&nbsp;Why is shell programming important for hacking?&nbsp; Let's say
+you are trying
+<BR>to get root control of a Hacker Wargame computer (see
+<BR><A HREF="http://www.happyhacker.org">http://www.happyhacker.org</A>
+for latest information on what computers are
+<BR>legal to break into).&nbsp; You find an exploit shell script at some
+place such
+<BR>as <A HREF="http://www.rootshell.com">http://www.rootshell.com</A>
+that looks ideal for doing the job -- but it
+<BR>doesn't work!&nbsp; Maybe your problem was not with the exploit script,
+but with
+<BR>what shell you are using or how your shell is set up.&nbsp; This Guide
+will help
+<BR>you understand more about what makes the bash shell work and how to
+make it
+<BR>do what you want it to do.
+
+<P>******************************************************************
+<BR>In this Guide you will learn about:
+<BR>* The shell "environment"
+<BR>* variables
+<BR>* processes (parent and child processes)
+<BR>* the bash prompt -- how to customize it
+<BR>* tilde expansion
+<BR>* aliases
+<BR>* creating your bash startup (profile) file
+<BR>* how to write scripts in bash
+<BR>******************************************************************
+
+<P>******************************************************************
+<BR>Newbie note: Bash is a Unix shell program.&nbsp; It takes all your
+commands and
+<BR>turns them into something a Unix type operating system can understand.&nbsp;
+I
+<BR>(Carolyn Meinel) recommend the tcsh shell, but if you can't use tcsh
+right
+<BR>now, bash is my second favorite shell.&nbsp; Bash stands for "Bourne
+Again
+<BR>Shell," a word play on the Bourne Shell, from which the bash shell
+was
+<BR>adapted.&nbsp; To find out whether you are currently using the bash
+shell, in
+<BR>your shell account give the command "env".&nbsp; It will include an
+entry
+<BR>"SHELL:bash" if you are already using it.&nbsp; If&nbsp; it shows a
+different shell,
+<BR>give the command "bash".&nbsp; If it gives an error message, you don't
+have bash.
+<BR>******************************************************************
+
+<P>&nbsp; You'll soon see that even your most basic shell in any kind of
+Unix is
+<BR>more powerful than DOS, and if you are short of ideas for scripts to
+write,
+<BR>hopefully this will open your mind a little.
+
+<P>Environment Variables
+
+<P>&nbsp;&nbsp;&nbsp; If you have any programming experience at all, or
+you have been reading
+<BR>the Guides like a good little hacker, then you will know about Variables.
+<BR>Think of these as named pieces of your computer's memory which hold
+values.
+<BR>Depending upon the variables in question, you may or may not have immediate
+<BR>control of their contents.
+
+<P>&nbsp;&nbsp; Another concept is your environment, which is what you
+find when you give
+<BR>the "env" command. Much like the real world you live in, your environment
+in
+<BR>your shell stores information such as the operating system you are
+running,
+<BR>the version, your home directory, a list of directories to look at
+when you
+<BR>want to run a program, and so on.
+
+<P>&nbsp;&nbsp; Some of the more common bash environment variables that
+you will want to
+<BR>know a bit about are:
+
+<P>&nbsp;&nbsp; PATH
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this is a colon-separated list of directories
+which bash uses to
+<BR>search for commands. eg:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/newstuff/progs
+
+<P>&nbsp;&nbsp; HOME
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; the current users home directory, eg:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /home/bob
+
+<P>&nbsp;&nbsp; CDPATH
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a colon-seperated list of directories
+to search when you issue the
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cd command, eg:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /home:/usr/local/etc:/usr/local/games
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if you had a directory under /usr/local/etc
+called myGreatProg,&nbsp; you
+<BR>could issue a cd myGreatProg on the command line and you would be taken
+to
+<BR>the first occurrence of myGreatProg in CDPATH. In this case,
+<BR>/usr/local/etc/myGreatProg. When it comes down to it, this is not necessary,
+<BR>it's just a nicety which can confuse you at times. Use with care!
+
+<P>&nbsp;&nbsp; MAILPATH
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a colon-separated list of spool files
+which bash checks periodically
+<BR>for new mail, eg:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /usr/spool/mail/bob:/var/spool/bob
+
+<P>&nbsp;&nbsp; PS1 &amp; PS2
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; primary and secondary prompt strings.
+The primary prompt is used at
+<BR>your standard interactive shell. ie; when you log in or you run bash.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The secondary prompt is used when bash
+needs more input to complete a
+<BR>command. for example, at the prompt, type:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cd
+\
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bash will change the prompt to ">" or
+whatever your PS2 is set to,
+<BR>indicating that you need to type more before it can execute your
+<BR>instruction. Try typing:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; and after you press ENTER, the complete
+command will have been "cd ~".
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This takes you to your home directory.
+The backslash "\" indicated
+<BR>that the command continues on the next line. This can be used in your
+<BR>scripts as well for long lines that you don't want to get too messy.
+
+<P>&nbsp;&nbsp; RANDOM
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This is a nice variable which you can
+call upon to give you a random
+<BR>number. Assigning a number to this will allow you to generate a seed.
+This
+<BR>is a nifty idea, but unfortunately, it is not entirely random. After
+<BR>executing this a few times, I noticed a pattern, so if you are going
+to use
+<BR>It, take care. Mind you, if you were going to write some really flash
+crypto
+<BR>routine, then you'd probably be using a programming language as opposed
+to a
+<BR>scripting language :)
+
+<P>&nbsp;&nbsp;&nbsp; To set variables, you can use the set command, eg:
+
+<P>set TEMP_VAR=cheese
+
+<P>&nbsp;&nbsp;&nbsp; But this will not export it into the environment
+in bash. to do that,
+<BR>you must use export, eg:
+
+<P>xport TEMP_VAR
+
+<P>&nbsp;&nbsp;&nbsp; You can, however, just use export, thus:
+
+<P>export TEMP_VAR=cheese
+
+<P>Processes
+
+<P>&nbsp;&nbsp;&nbsp; The concept of the environment now comes into full
+effect. When you are
+<BR>in your bash shell and you execute a command or script, that command
+<BR>INHERITS it's parent process's environment. The shell in this case
+is the
+<BR>parent process, and the command or script you run is the child process.
+This
+<BR>child process can in turn start a child process of it's own. The concept
+of
+<BR>child and parent is relative to which process you are talking about.
+Any
+<BR>process that starts a child becomes that child's parent. Much like
+in real
+<BR>life. You are a child, but may eventually become a parent as well.
+
+<P>&nbsp;&nbsp;&nbsp; Init is the Mother Of All Processes. Think of it
+as god if you are
+<BR>religious.&nbsp; If you're not religious, think of it as a The Big
+Bang. Or
+<BR>anything else that pleases you.
+
+<P>&nbsp;&nbsp;&nbsp; To see how your children and their parents are doing,
+use the command
+<BR>'pstree', or if you don't have that, 'ps -f' to get a list of every
+process
+<BR>running and how it relates to init.
+
+<P>&nbsp;&nbsp;&nbsp; Are we going off on a tangent? Probably...anyway,
+when you type a
+<BR>command, you will notice a variable called $_ is being set. We'll see
+soon
+<BR>what this is actually doing.
+
+<P>&nbsp;&nbsp; Let's try an example. Type this:
+
+<P>set hi_temp="Hi, this is TEMP"
+<BR>set | less
+
+<P>&nbsp;&nbsp;&nbsp; Note: if you don't have less, use more. ;)
+<BR>&nbsp;&nbsp;&nbsp; You will see at this point, no variable called $hi_temp.
+but at the
+<BR>bottom, you should see
+
+<P>=hi_temp=Hi, This is TEMP
+
+<P>&nbsp;&nbsp;&nbsp; Then type:
+
+<P>set hi_test="Hi, this is TEST"
+<BR>set | less
+
+<P>&nbsp;&nbsp;&nbsp; Take note there is now no reference to "hi_temp".
+But one of the last
+<BR>lines should read "_=hi_test=Hi, this is TEST."
+
+<P>&nbsp;&nbsp;&nbsp; The variable $_ is actually just a reminder of the
+last command you
+<BR>typed, not a place to remember set commands. You will find very quickly
+that
+<BR>unless you explicitly use export in the first instance in the shell
+(not in
+<BR>a script file), you will not be able to export to the environment.
+This is
+<BR>because the set command runs as a child process which eats it's own
+variables.
+
+<P>&nbsp;&nbsp;&nbsp; You can prove this to yourself by doing the following:
+
+<P>set hi_test="Hi, this is TEST"
+<BR>ls
+<BR>set| grep "hi_test"
+
+<P>&nbsp;&nbsp;&nbsp; You will have nothing returned back. Whereas if you
+had done:
+
+<P>export hi_test="Hi, this is TEST"
+<BR>ls
+<BR>set | grep "hi_test"
+
+<P>&nbsp;&nbsp;&nbsp; Bash will return:
+
+<P>hi_test=Hi, this is TEST
+
+<P>&nbsp;&nbsp;&nbsp; Once the variable is in the environment, it can be
+accessed by the child
+<BR>processes. Note that the parent process will not inherit any variables
+from
+<BR>the children. This is very dangerous.
+
+<P>&nbsp;&nbsp; In scripts, if you are setting variables to be used locally
+in the
+<BR>script, you won't have to export. But if you wish for those processes
+your
+<BR>script calls, ie, another script, then you will have to export.
+
+<P>More on Variables
+
+<P>&nbsp;&nbsp;&nbsp; To reference variables on the command line or in
+your scripts, you will
+<BR>have to prepend the variable name with the String symbol, or the dollar
+sign
+<BR>($). Take the following simple example entered at the command line
+
+<P>export HI=hello
+<BR>echo "$HI"
+
+<P>&nbsp;&nbsp;&nbsp; The output after the echo command is:
+
+<P>hello
+
+<P>&nbsp;&nbsp;&nbsp; If you had just typed 'echo "HI"' as your last command,
+what do you
+<BR>think would have been displayed? All those who replied 'HI' get to
+buy
+<BR>themselves a chocolate fish. Note that after the echo command, no matter
+<BR>whether we are using variables or not, I use quote marks (") before
+and
+<BR>after the string to be echoed. This is best shown by example. Type
+the
+<BR>following at the prompt:
+
+<P>export HI="*"
+<BR>echo $HI
+
+<P>&nbsp;&nbsp;&nbsp; You will get the equivalent of the current directory's
+listing dumped
+<BR>out. But if you go:
+
+<P>echo "$HI"
+
+<P>&nbsp;&nbsp;&nbsp; Bash will display
+
+<P>*
+
+<P>&nbsp;&nbsp;&nbsp; Which is what you wanted. IE; the CONTENTS of the
+variable. bash likes
+<BR>to substitute commands before executing. Remember when to use quotes
+and you
+<BR>will be fine.
+
+<P>&nbsp;&nbsp;&nbsp; To display a variable already set in place, you just
+use echo, eg:
+
+<P>echo "$PS1"
+
+<P>&nbsp;&nbsp;&nbsp; Will probably give you:
+
+<P>&nbsp;\h:\w\$
+
+<P>&nbsp;&nbsp;&nbsp; Don't worry if yours is slightly different. Now you
+can create and
+<BR>reference variables.
+
+<P>The Bashg Prompt
+
+<P>&nbsp;&nbsp;&nbsp; This is the equivalent to using the DOS PROMPT command
+or the tcsh
+<BR>set prompt= command. In bash, the variable that stores what your prompt
+<BR>is to display is $PS1.
+
+<P>&nbsp;&nbsp; To change this you simply need to do something basic like:
+
+<P>export PS1="this is my computer: "
+
+<P>&nbsp;&nbsp;&nbsp; And next time you look, your prompt will read:
+
+<P>this is my computer:
+
+<P>&nbsp;&nbsp;&nbsp; This prompt will wait for you to enter a command.
+You will notice that
+<BR>this is now set. Press ENTER, type "ls", it stays. Great! But that
+is a
+<BR>little boring.
+
+<P>&nbsp;&nbsp;&nbsp; What you want it to do is display your user name
+and/or the current
+<BR>directory you are in so that you don't have to use pwd (the command
+to show
+<BR>your directory) constantly.&nbsp; Bash allows you to use switches (as
+seen when
+<BR>we did an echo $PS1 earlier) to display lots of useful info. Here is
+a list
+<BR>of the main ones:
+
+<P>&nbsp;&nbsp; \d&nbsp;&nbsp;&nbsp; date (format: ddd mmm dd - eg: Sat
+Mar 12)
+<BR>&nbsp;&nbsp; \h&nbsp;&nbsp;&nbsp; display your computers hostname
+<BR>&nbsp;&nbsp; \n&nbsp;&nbsp;&nbsp; newline
+<BR>&nbsp;&nbsp; \s&nbsp;&nbsp;&nbsp; shell name (ie: bash)
+<BR>&nbsp;&nbsp; \t&nbsp;&nbsp;&nbsp; time (24 hour format: hh:mm:ss -
+eg: 16:22:08)
+<BR>&nbsp;&nbsp; \u&nbsp;&nbsp;&nbsp; current user
+<BR>&nbsp;&nbsp; \w&nbsp;&nbsp;&nbsp; working directory (this changes on
+the fly to the directory
+<BR>that you change to).
+<BR>&nbsp;&nbsp; \$&nbsp;&nbsp;&nbsp; display $ character
+<BR>&nbsp;&nbsp; \\&nbsp;&nbsp;&nbsp; display \ character
+
+<P>&nbsp;&nbsp;&nbsp; There are others, but these will be the most useful
+to you. Play around
+<BR>and see what others you can find.
+
+<P>Tilde Expansion
+
+<P>&nbsp;&nbsp;&nbsp; Another neat thing that bash provides is what is
+called Tilde Expansion.
+<BR>The tilde key (~) on it's own is expanded out to the user's home directory,
+<BR>for example. You can see this by issuing a 'cd ~' on your command line.
+Here
+<BR>is a list of expansions that bash will give you:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~&nbsp;&nbsp;&nbsp;&nbsp; expands to
+$HOME
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~bob&nbsp; expands to bob's home directory
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~+&nbsp;&nbsp;&nbsp; $PWD
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~-&nbsp;&nbsp;&nbsp; $OLDPWD
+
+<P>&nbsp;&nbsp; These expansions basically replace themselves on the command
+line with
+<BR>the contents of the second column above. Once the command has been
+expanded,
+<BR>bash executes it.
+
+<P>Aliases
+
+<P>&nbsp;&nbsp;&nbsp; One of the things I could not do without is the alias
+command. If you
+<BR>enter any aliases, bash will fill out the text of the alias name with
+<BR>whatever the alias contents is before executing the command.
+
+<P>&nbsp;&nbsp;&nbsp; For example, when I use ls, I like to see my directory
+listing in a
+<BR>certain way. Colors, for example, are good. I also like slashes (/)
+at the
+<BR>end of directory names just to show they are directories, and I also
+like to
+<BR>view all files starting with a full stop (.) in my listings.
+
+<P>&nbsp;&nbsp; So instead of typing 'ls -Aop' every single time I want
+a dir listing, I
+<BR>just use an alias so that -Aop becomes my default. I enter the command:
+
+<P>alias ls='ls -Aop'
+
+<P>&nbsp;&nbsp;&nbsp; And from then on, bash uses that alias as my default
+command. Whenever I
+<BR>enter the alias name (in this case 'ls'), bash expands that out to
+'ls
+<BR>-Aop'automatically for me.
+
+<P>&nbsp;&nbsp;&nbsp; If I want to remove the alias, I use 'unalias ls'.
+Alternatively, I can
+<BR>opt to type 'unalias -a' to remove all aliases I have set.
+
+<P>Bash Startup File
+
+<P>&nbsp;&nbsp;&nbsp; If you have read the previous guides, you will know
+that bash provides
+<BR>you with some startup files which get run whenever you log into a bash
+<BR>shell. The file I am talking about is your profile. This can be called
+<BR>.bash_profile, .bash_login, or .profile and is located in your home
+directory.
+
+<P>&nbsp;&nbsp; If you don't have this file, then just create it in your
+favorite text
+<BR>editor. Then you can insert any alias commands you want, and next time
+you
+<BR>log in, they will all be active.
+
+<P>&nbsp;&nbsp;&nbsp; Or, you can write the file now and use the 'source'
+command to execute
+<BR>your profile without logging out:
+
+<P>source .profile
+
+<P>(or substitute for ".profile" whatever your profile is called.)
+
+<P>**********************************************************************
+<BR>&nbsp; You can kill your account -- warning!
+<BR>&nbsp;
+<BR>&nbsp;Adding things to .profile should be tested ONLY with the "source
+<BR>.profile"&nbsp; command!!! And only if you are satisfied with the result,
+log out
+<BR>and login again!!!
+<BR>&nbsp;
+<BR>&nbsp;&nbsp; Reason: Imagine you wrote an "exit" at the wrong place
+(i.e. not
+<BR>preceding it with a comment-sign), you will never be able to login!
+<BR>&nbsp;
+<BR>&nbsp;&nbsp; A solution is to login twice, one shell is good for testing
+the other one
+<BR>for recovering from errors!!!&nbsp; You can login twice with the command
+"telnet
+<BR>localhost". Then if you mess up in this second shell you will wind
+up back
+<BR>in your first shell and can delete the profile file before it kills&nbsp;&nbsp;
+your
+<BR>shell again.&nbsp; This saves the embarrassment of having to call tech
+support
+<BR>and confess to having made a big mess of your account.
+<BR>**********************************************************************
+
+<P>Let's Script!
+
+<P>&nbsp;So now that we've got all that basic stuff out of the way, let's
+get into
+<BR>some serious shell scripting.
+
+<P>&nbsp;&nbsp;&nbsp; You know how to string commands together by now;
+you just create a text
+<BR>file, start listing any commands you want to execute, save the file,
+change
+<BR>its permissions (chmod +x &lt;filename>) and viola, you have a shell
+script.
+
+<P>&nbsp;&nbsp;&nbsp; But what if you want to do something more? What if
+you want to pass
+<BR>parameters on the command line? What if you want to check for files
+<BR>existence before executing a command? What if you want to compare the
+values
+<BR>of two variables?
+
+<P>&nbsp;&nbsp;&nbsp; What indeed? You will need to know a bit about Loop
+Constructs and
+<BR>Conditional Constructs.
+
+<P>&nbsp;&nbsp; Loop constructs are:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; until
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for
+
+<P>&nbsp;&nbsp; Conditional constructs are:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case
+
+<P>&nbsp;&nbsp;&nbsp; I will list the syntaxes of each and give basic real
+life examples to
+<BR>help you along your way. None of these are exhaustive, but they will
+give
+<BR>you a good foothold to allow you to further research bash and learn
+how to
+<BR>kick serious butt.
+
+<P>&nbsp;&nbsp;&nbsp; One thing to remember with the following constructs
+is that they are not
+<BR>like most other languages you may be used to. When you do a test, you
+are
+<BR>actually executing commands. Whether these are commands built-in to
+bash, or
+<BR>whether they are other commands it doesn't matter, but you can't get
+away
+<BR>with direct comparisons of variables. You'll see in the examples. Also,
+all
+<BR>semi-colons (;) can be replaced with newlines.
+
+<P>&nbsp;&nbsp; ********************************************************************
+<BR>&nbsp;&nbsp; IMPORTANT NOTE:
+
+<P>&nbsp;&nbsp; bash is VERY space sensitive. Unless you copy any example
+scripts
+<BR>&nbsp;&nbsp; EXACTLY, you will most likely encounter problems.
+<BR>&nbsp;&nbsp; ********************************************************************
+
+<P>&nbsp;&nbsp; UNTIL
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+until &lt;test>; do &lt;commandlist>; done
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;commandlist> will continue to be executed until &lt;test>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+has an exit status which is not zero (ie; until it's not
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+false)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Example script:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+#!/bin/bash
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+counter=1
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+until [ "$counter" = "10" ]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+do
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo $counter
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+let counter+=1
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+done
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+--------
+
+<P>&nbsp;&nbsp;&nbsp; This script is very simple. It sets a variable called
+"counter" and
+<BR>initializes it to a value of 1. (We don't need to export it as it doesn't
+<BR>need to be in the environment. Only this script will be using it.)
+
+<P>&nbsp;&nbsp;&nbsp; Then we want to echo a list from 1 to 10, so we do
+the comparison. We
+<BR>put the test arguments into square brackets so that bash knows we are
+doing
+<BR>a comparison. It will keep looping until the variable counter reaches
+a
+<BR>value of "10".
+
+<P>&nbsp;&nbsp;&nbsp; The line "let counter+=1" is saying "take the contents
+of the variable
+<BR>counter, add 1 to it, and save the value back into counter. We could
+have
+<BR>also typed:
+
+<P>let counter=$counter+1
+
+<P>&nbsp;&nbsp; Note where you use the $ preceding the variable names and
+when you don't.
+<BR>When we want to display the actual value in the variable we use $variable.
+<BR>When we want to reference the variable for the reasons of changing
+it, we
+<BR>just use variable.
+
+<P>&nbsp;&nbsp;&nbsp; The 'let' command allows you to do mathematical equations.
+<BR>Alternatively, you can wrap the equation in $[]. For the example above,
+it
+<BR>would be:
+
+<P>$[counter+=1]
+
+<P>&nbsp;&nbsp;&nbsp; This is know as Arithmetic Expansion, and I have
+found it to be less
+<BR>reliable than using the let command. Also, using let makes your scripts
+that
+<BR>much more readable in the future.
+
+<P>Mathematical Operators:
+
+<P>&nbsp;&nbsp; So you know what sort of mathematical operators you can
+use, here is a list:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unary
+minus and plus
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ! ~&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logical
+and bitwise negation
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * / %&nbsp;&nbsp;&nbsp; multiplication,
+division, remainder
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; addition,
+subtraction
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt; >>&nbsp;&nbsp;&nbsp; left and
+right bitwise shifts
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;= >= &lt; >&nbsp; comparison
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; == !=&nbsp;&nbsp;&nbsp; equality and
+inequality
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+bitwise AND
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ^&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+bitwise exclusive OR
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+bitwise OR
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;&amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+logical AND
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+logical OR
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = *= /= %= += -= &lt;&lt;= >>= &amp;=
+^= |=
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+assignment operators
+
+<P>&nbsp;&nbsp; WHILE
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+while &lt;test>; do &lt;commandlist>; done
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+do &lt;commandlist> while &lt;test> has an exit status
+<BR>of zero. (ie; true)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Example Script:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #!/bin/bash
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; counter=1
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while [ "$counter"
+!= "11" ]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo $counter
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+let counter+=1
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+
+<P>&nbsp;&nbsp;&nbsp; We use the same script here using a different method
+of testing. This
+<BR>script will continue to loop while the variable $counter is not 11.
+This
+<BR>means that it will happily process the commandlist until $counter equals
+11.
+<BR>Note that this is a string comparison, not an integer (numerical) comparison.
+
+<P>&nbsp;&nbsp; FOR
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for &lt;var> [in &lt;list>]; do &lt;commandlist>; done
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This will execute &lt;commandlist> for each item in
+<BR>&lt;list>.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+If the optional [in &lt;list>] is left out, bash
+<BR>will replace this with $@.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Example Script:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #!/bin/bash
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for i in cheese comics
+"computers which don't suck" motorbikes
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "I like $i"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+
+<P>&nbsp;&nbsp;&nbsp; This will display:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I like cheese
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I like comics
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I like computers which don't suck
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I like motorbikes
+
+<P>&nbsp;&nbsp;&nbsp; As you can see, each word is treated as a separate
+parameter unless you
+<BR>use quotes to block a group of words.
+
+<P>&nbsp;&nbsp; IF
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Syntax:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if &lt;test>; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;commandlist>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+elif &lt;test2>; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;commandlist>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+elif &lt;test...>; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;commandlist>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;commandlist>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+fi
+
+<P>Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This command is rather more
+complex in nature. Using elif,
+<BR>you can include as many tests as you like. If the
+<BR>script fails to find a match in any of the tests, it
+<BR>will default to executing the commandlist under else.
+
+<P>The &lt;test> has an extensive list of parameters you can
+<BR>pass which allow you to test for various things
+<BR>including whether files exist on your hard drive,
+<BR>comparing 2 variables, etc.
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Example script:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #!/bin/bash
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if [ -z $1 ]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "enter your favorite band name"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+exit
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fi
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if [ "$1" = "manowar"
+]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "the greatest band on the planet!"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; elif [ "$1" = "DIO"
+]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "awesome! they rock!"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; elif [ "$1" = "KISS"
+]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; then
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "ah. that's taking me back..."
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "never heard of $1"
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fi
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+
+<P>&nbsp;&nbsp;&nbsp; First, if you don't know it already, $1 indicated
+the first parameter on
+<BR>a command line. For example, if you enter 'cd /home/me', "/home/me"
+is the
+<BR>first parameter that you have entered. Inside the script, or the cd
+command,
+<BR>it could be referred to as $1. $2 is second, $3 is the third, etc.
+One nice
+<BR>ability is to use $0, which refers to the calling command - in this
+case
+<BR>"cd." Even batter is $* which stores all command line parameters, except
+$0.
+
+<P>&nbsp;&nbsp;&nbsp; OK, next we introduce two kinds of tests in the if
+construct. -z checks
+<BR>to see if the user has entered any parameters, and promptly informs
+them
+<BR>when they forget to do so.
+
+<P>&nbsp;&nbsp;&nbsp; The next one which is used in the rest of the script
+compares two
+<BR>variables. Both are wrapped in quote marks to avoid bash trying to
+execute
+<BR>them as commands.
+
+<P>&nbsp;&nbsp;&nbsp; Another point to note is make sure to separate the
+square brackets,
+<BR>otherwise bash will get confused.
+
+<P>&nbsp;&nbsp;&nbsp; Other useful if lines:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if [ -f ~/.profile ]
+<BR>(checks to see if you have a .profile file in you current home dir.
+<BR>If so, the test will pass TRUE)
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if [ ! -f ~/.profile ]
+<BR>(checks to see if ~/.profile is NOT there and return TRUE if the
+<BR>file is NOT there.)
+
+<P>&nbsp;&nbsp;&nbsp; Take note, this only checks for the existence of
+files, not directories.
+<BR>Can you figure out how to make it check for the existence of directories?
+<BR>&nbsp;
+
+<P>&nbsp;&nbsp; CASE
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Syntax:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+case &lt;var> in
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+pattern [| pattern]) &lt;commandlist> ;;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+pattern [| pattern]) &lt;commandlist> ;;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+esac
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+The case command firstly expands whatever is in
+<BR>&lt;var> and compares it to all the patterns listed. If it finds a
+match, it
+<BR>will execute the appropriate &lt;commandlist>.&nbsp; More than one
+pattern can be
+<BR>included per line by separating them with a pipe (|) symbol.
+
+<P>&nbsp;Also, you can use the pattern * to include everything else. Example
+script:
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --------
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #!/bin/bash
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case $1 in
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cheese | bread | meat)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "food!" ;;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+viper | stingray | transam)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "car!" ;;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+*)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+echo "I don't know what it is!" ;;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; esac
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ---------
+
+<P>&nbsp;&nbsp;&nbsp; This is fairly straight forward once you get to grips
+with it. It pulls
+<BR>in a parameter that you enter on the command line and tries to figure
+out
+<BR>what it is. If you enter "cheese", "bread" or "meat", our clever script
+will
+<BR>recognize this as a type of food and will tell you so.
+
+<P>&nbsp;&nbsp;&nbsp; If you enter "viper", "stingray" or "transam", it
+will recognize it as a
+<BR>car! Anything else leaves our poor program clueless.
+
+<P>&nbsp;&nbsp;&nbsp; There is also a command called select which was stolen
+from the korn
+<BR>shell. The syntax for this is very similar to case. See if you can
+figure it
+<BR>out and get it working. HINT - read "man bash".
+
+<P>&nbsp;&nbsp;&nbsp; There are many more features of bash, I have not
+covered a great
+<BR>portion, but that is part of the fun. Now go read the man page (this
+text
+<BR>should help you make sense out of it!) and see what other nifty little
+<BR>features bash has.
+
+<P>&nbsp;I wrote this tutorial using bash version 1.14.7(1). I am about
+to upgrade
+<BR>to 2.02.01 or whatever the latest is to see what differences that gives
+me.
+
+<P>&nbsp;&nbsp;&nbsp; Get the latest bash version via ftp at prep.ai.mit.edu
+or one of its
+<BR>mirror sites. This is a good time to brush up your search engine skills
+;)
+
+<P>_______________________________________________________________________
+<BR>Where are those back issues of GTMHHs and Happy Hacker Digests? Check
+out
+<BR>the official Happy Hacker Web page at <A HREF="http://www.happyhacker.org">http://www.happyhacker.org</A>.
+<BR>We are against computer crime. We support good, old-fashioned hacking
+of the
+<BR>kind that led to the creation of the Internet and a new era of freedom
+of
+<BR>information. So don't email us about any crimes you may have committed!
+<BR>To subscribe to Happy Hacker and receive the Guides to (mostly) Harmless
+<BR>Hacking, please email <A HREF="mailto:hacker@techbroker">hacker@techbroker</A>.com
+with message "subscribe
+<BR>happy-hacker" in the body of your message.
+<BR>Copyright 1998 idle (<A HREF="mailto:idle@mailexcite.com">idle@mailexcite.com</A>).
+You may forward, print out or
+<BR>post this GUIDE TO (mostly) HARMLESS HACKING on your Web site as long
+as you
+<BR>leave this notice at the end.
+<BR>_________________________________________________________
+
+<P>Carolyn Meinel
+<BR>M/B Research -- The Technology Brokers
+<BR><A HREF="http://techbroker.com">http://techbroker.com</A>
+<BR>&nbsp;
+<BR>&nbsp;
+</BODY>
+</HTML>

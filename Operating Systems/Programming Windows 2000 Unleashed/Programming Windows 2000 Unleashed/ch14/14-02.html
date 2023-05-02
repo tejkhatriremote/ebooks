@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=449-451//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="14-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>_bstr_t</SMALL> class is just a C<small>&#43;&#43;</SMALL> class wrapper around a <small>BSTR</SMALL>. The big advantage to using <small>_bstr_t</SMALL> is that it has built-in constructors and destructors that will properly issue the correct incantations to allocate and free the underlying <small>BSTR</SMALL>. This allows you to use an instance of <small>_bstr_t</SMALL> as if it were a built-in C<small>&#43;&#43;</SMALL> type. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+#include &lt;windows.h&gt;
+#include &lt;wchar.h&gt;
+#include &lt;comdef.h&gt;
+
+void GoodIdea(_bstr_t&amp; bstr)
+{
+    _bstr_t bstrLocal = L&#147;This string will not leak.&#148;;
+    bstr = L&#147;This will not cause an access violation.&#148;;
+}
+
+int wmain()
+{
+    _bstr_t bstr = L&#147;Foo&#148;;
+    GoodIdea(bstr);
+    wprintf(L&#147;%s\n&#148;, (wchar_t*)bstr);
+
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p>The <small>_bstr_t</SMALL> type will be covered in detail in Chapter 17.</P>
+<p><font size="+1"><b>The Variant Type</B></FONT></P>
+<p>The <small>VARIANT</SMALL> type is a tagged union that contains practically any type of object. The <small>IDispatch</SMALL> interface uses <small>VARIANT</SMALL> objects to pass data to and from Automation servers. The <small>VARIANTARG</SMALL> structure is a <small>typedef</SMALL> of the <small>VARIANT</SMALL> structure&#151;it can be used in place of a <small>VARIANT</SMALL>. The <small>VARIANT</SMALL> structure is defined like this:</P>
+<!-- CODE //-->
+<pre>
+struct tagVARIANT
+{
+    union
+    {
+        struct  __tagVARIANT
+        {
+            VARTYPE vt;
+            WORD wReserved1;
+            WORD wReserved2;
+            WORD wReserved3;
+            union
+            {
+                LONG            lVal;
+                BYTE            bVal;
+                SHORT           iVal;
+                FLOAT           fltVal;
+                DOUBLE          dblVal;
+                VARIANT_BOOL    boolVal;
+                _VARIANT_BOOL   bool;
+                SCODE           scode;
+                CY              cyVal;
+                DATE            date;
+                BSTR            bstrVal;
+                IUnknown        __RPC_FAR *punkVal;
+                IDispatch       __RPC_FAR *pdispVal;
+                SAFEARRAY       __RPC_FAR *parray;
+                BYTE            __RPC_FAR *pbVal;
+                SHORT           __RPC_FAR *piVal;
+                LONG            __RPC_FAR *plVal;
+                FLOAT           __RPC_FAR *pfltVal;
+                DOUBLE          __RPC_FAR *pdblVal;
+                VARIANT_BOOL    __RPC_FAR *pboolVal;
+                _VARIANT_BOOL   __RPC_FAR *pbool;
+                SCODE           __RPC_FAR *pscode;
+                CY              __RPC_FAR *pcyVal;
+                DATE            __RPC_FAR *pdate;
+                BSTR            __RPC_FAR *pbstrVal;
+                IUnknown        __RPC_FAR *__RPC_FAR *ppunkVal;
+                IDispatch       __RPC_FAR *__RPC_FAR *ppdispVal;
+                SAFEARRAY       __RPC_FAR *__RPC_FAR *pparray;
+                VARIANT         __RPC_FAR *pvarVal;
+                PVOID           byref;
+                CHAR            cVal;
+                USHORT          uiVal;
+                ULONG           ulVal;
+                INT             intVal;
+                UINT            uintVal;
+                DECIMAL         __RPC_FAR *pdecVal;
+                CHAR            __RPC_FAR *pcVal;
+                USHORT          __RPC_FAR *puiVal;
+                ULONG           __RPC_FAR *pulVal;
+                INT             __RPC_FAR *pintVal;
+                UINT            __RPC_FAR *puintVal;
+
+                struct           __tagBRECORD
+                {
+                    PVOID           pvRecord;
+                    IRecordInfo     __RPC_FAR *pRecInfo;
+                    }__VARIANT_NAME_4;
+                }__VARIANT_NAME_3;
+
+            }__VARIANT_NAME_2;
+            DECIMAL decVal;
+        }__VARIANT_NAME_1;
+    };
+typedef VARIANT __RPC_FAR *LPVARIANT;
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="14-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

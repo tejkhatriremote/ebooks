@@ -1,0 +1,223 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=745-748//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b><i>Who Are You? IsCallerInRole</I></B></FONT></P>
+<p>Not everyone can add to or delete generated invoices. You can use regular security, but using roles is a simpler solution. The role in use can be checked using the following functions:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   HRESULT IObjectContext::IsCallerInRole (
+       BSTR <i>bstrRole</I>,             [in]
+       BOOL* <i>pfIsInRole</I>);            [out]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The first parameter defines the role to be checked for, and the second return parameter indicates whether the first parameter is part of that role. You can&#146;t perform a security check to see which roles the component is running under. This method only allows a query&#151;test-and-react-type programming. If the <small>pfIsInRole</SMALL> parameter is <small>TRUE</SMALL>, the user is in that role. However, keep in mind that the parameter will return <small>TRUE</SMALL> if security is not enabled on the component. Otherwise, if the component is not running within the role, it will return <small>FALSE</SMALL>.</P>
+<p>The return parameter indicates whether the return value in <small>pflIsInRole</SMALL> is correct. A correct value is indicated by <small>S_OK</SMALL>. Now consider the case where the input role is not found in the catalog. In this case, the <small>TRUE</SMALL> or <small>FALSE</SMALL> value is not enough to indicate what has happened. In this situation, the return code is <small>CONTEXT_E_ROLENOTFOUND</SMALL>. A sample implementation would be as follows:</P>
+<!-- CODE //-->
+<pre>
+   // check for security
+   if (lAmount &gt 500 || lAmount &lt -500) {
+           BOOL bInRole;
+           BSTR bstrRole;
+           bstrRole = SysAllocString(L&#148;Managers&#148;);
+           hr = pObjectContext-&gtIsCallerInRole(bstrRole, &ampbInRole);
+           SysFreeString(bstrRole);
+           if (!SUCCEEDED(hr)) goto Error;
+           if (!bInRole) {
+               wcscpy(*pbstrResult,
+                   L&#148;Need &#145;Managers&#146; role for amounts over $500&#148;);
+               hr = S_FALSE;
+               goto Error;
+           }
+   }
+</PRE>
+<!-- END CODE //-->
+<p>This method is a very powerful security method because it allows the programmer to determine whether the caller is in a correct role to be able to execute certain functionality. In this sample source code, the security check involves making sure that the caller is a manager if the transfer amount is greater than 500 dollars. The role is something specific to COM&#43; services, and it&#146;s a custom group that&#146;s based on all components within a package. Users are put into roles through the COM&#43; services. You should use roles and not Windows 2000 security directly, because not all transaction functions use the Windows 2000 security functions directly. One catch is that if security is not enabled, the function returns <small>TRUE</SMALL>. This will not be correct in many instances. The way around this problem is to check whether security is enabled with the function <small>IsSecurityEnabled</SMALL>.</P>
+<p><font size="+1"><b><i>Is This Safe? IsSecurityEnabled</I></B></FONT></P>
+<p>This function is important because if the previously defined function is used, you must know whether security has been enabled. The definition of this method is as follows:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   BOOL IObjectContext::IsSecurityEnabled ( );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A <small>TRUE</SMALL> value indicates that the object does have security enabled, whereas a <small>FALSE</SMALL> value indicates that security is not enabled. The security is enabled or disabled at the administrative level.</P>
+<p>In the preceding example, the method would return <small>TRUE</SMALL> because the check box Enable Authorization Checking is checked. An exception to the security check working properly occurs if the server is configured to run the base client&#146;s process space.</P>
+<p>The last function provides the ability to create objects. Although a new or COM create would be okay, the problem is that those methods do not support transactions. Using those methods, the COM object would be created, but it may not necessarily execute within the same transaction.</P>
+<p><b>CreateInstance</B></P>
+<p>Up to this point, all the transaction examples have dealt with a single COM object. Most transactions will be multiobject based. To tie all the COM objects into one transaction, the transaction context interface provides a COM object creation method. It&#146;s defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HRESULT IObjectContext::CreateInstance (
+       REFCLSID <i>rclsid</I>,         [in]
+           REFIID <i>riid</I>,             [in]
+           LPVOID FAR* <i>ppvObj</I> );         [out]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This method is similar to a normal COM creation method. The first parameter is a reference to a coclass ID of the COM object. The second parameter is an interface ID that the COM object has implemented. The last parameter represents the returned interface of the instantiated COM object. That&#146;s all you need to know for now.
+</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Creating a Transaction COM&#43; Object Using Visual Basic</FONT></H4>
+<p>Let&#146;s look at some Visual Basic transaction source code from the preceding chapter:
+</P>
+<!-- CODE //-->
+<pre>
+   Public Function add() As Boolean
+       On Error GoTo addError
+
+       Dim objCtxt As ObjectContext
+       Dim objCon As New Connection
+       Dim strSQL As String
+
+       Set objCtxt = GetObjectContext()
+
+       objCtxt.SetComplete
+       add = True
+       Exit Function
+
+   addError:
+       objCtxt.SetAbort
+       add = False
+   End Function
+</PRE>
+<!-- END CODE //-->
+<p>In this sample source code, the same pattern is used as that of the Visual C<small>&#43;&#43;</SMALL> program. The first step is to retrieve the object <small>ObjectContext</SMALL>. This is a Visual Basic wrapper. Note that you don&#146;t need to call <small>Release</SMALL>. Unlike the Visual C<small>&#43;&#43;</SMALL> environment, Visual Basic uses the object <small>ObjectContext. ObjectContext</SMALL> is almost identical to <small>IObjectContext</SMALL>, with a few differences:</P>
+<!-- CODE //-->
+<pre>
+   [
+        odl,
+        uuid(74C08646-CEDB-11CF-8B49-00AA00B8A790),
+        helpstring(&#147;ObjectContext&#148;),
+        helpcontext(0x00205ad9),
+        dual,
+   oleautomation
+   ]
+   interface ObjectContext : IDispatch {
+   HRESULT CreateInstance(
+                [in] BSTR bstrProgID,
+                 [out, retval] VARIANT* pObject);
+   HRESULT SetComplete();
+   HRESULT SetAbort();
+   HRESULT EnableCommit();
+   HRESULT DisableCommit();
+   HRESULT IsInTransaction([out, retval] VARIANT_BOOL* pbIsInTx);
+   HRESULT IsSecurityEnabled([out, retval] VARIANT_BOOL* pbIsEnabled);
+   HRESULT IsCallerInRole(
+                           BSTR bstrRole,
+                           [out, retval] VARIANT_BOOL* pbInRole);
+   HRESULT Count([out, retval] long* plCount);
+   HRESULT Item(
+                           [in] BSTR name,
+                           [out, retval] VARIANT* pItem);
+   HRESULT _NewEnum([out, retval] IUnknown** ppEnum);
+   HRESULT Security([out, retval] SecurityProperty** ppSecurityProperty);
+   HRESULT ContextInfo([out, retval] ContextInfo** ppContextInfo);
+       };
+</PRE>
+<!-- END CODE //-->
+<p>In general, the interface functions identically to the C<small>&#43;&#43;</SMALL> implementation. However, there are some differences. For instance, the <small>CreateInstance</SMALL> method accepts as an input parameter a ProgID as an object. When you create an object, be careful how you convert the object. For example, you should stay away from object declarations. Instead, use interface data types. The following is an example of how not to convert an object:</P>
+<!-- CODE SNIP //-->
+<pre>
+   dim myObj as Object
+   Set myObj = ctxt.CreateInstance(&#147;Prog.Id&#148;)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here&#146;s a better method:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   dim myObj as SomeObject
+   set myObj = ctxt.CreateInstance(&#147;Prog.Id&#148;)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The main reason why this is a better method is that it does not use the <small>IDispatch</SMALL> to reference the methods of the object.</P>
+<p>The other properties&#151;<small>Item, Count</SMALL>, and <small>Security</SMALL>&#151;relate to functionality that will be explained in other chapters in this section of the book.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

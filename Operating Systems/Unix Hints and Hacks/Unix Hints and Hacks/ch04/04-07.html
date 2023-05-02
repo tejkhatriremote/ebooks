@@ -1,0 +1,222 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=139-143//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>After acquiring a sniffer, it was set up to watch the line through the night. I ran the preceding script searching for NFS timeouts, knowing that the sniffer was going to collect an enormous amount of data. Searching through all the data would have taken forever because only the network, not the specific NFS service port, could be globally monitored with this sniffer. In the morning, three NFS timeouts were emailed to us. When the sniffer was examined and compared with the time stamps of the NFS timeouts I received via email, I learned that all connectivity to the router didn&#146;t exist during these periods.
+</P>
+<p>Because I didn&#146;t have access to the router, I now had the proof needed that something was possibly wrong with the router. The network administrator for that router was then brought into the loop and discovered that the router was continuously rebooting. It was replaced and all was well.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+diff, grep, Mail, mail
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading18"></A><font color="#000077">4.9 Monitoring with ping</FONT></H3>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">4.9.1 Description</FONT></H4>
+<p>There are several reasons why a system can fall off the network. Use <small>ping</SMALL> to let you know when it happens.</P>
+<p><font size="+1"><b>Example One: ping a Remote Host</B></FONT></P>
+<p>Flavor: AT&ampT
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>ping</B> [<b>-c</B> count] [<b>-s</B> size] <b>host</B>
+ping host [size] [count]
+ping host [-n count] size
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Almost all flavors of UNIX offer the capability to execute <small>ping</SMALL> with a packet count and a size. Check your man pages to find out the order that the arguments need to be in. To ensure that you don&#146;t get a false response, use <small>ping</SMALL> with a count of 3 and a large enough number of data byes so that the network connectivity between the two machines is thoroughly tested.</P>
+<p>For a successful result with a count of three data packets, all three should be transmitted and all three received. There should be 0% packet loss between the two systems. If there is a problem with the network, the number of packets received will be zero.</P>
+<p>Here is the output of a successful transmission of three data packets that are 1000 bytes large.</P>
+<!-- CODE SNIP //-->
+<pre>
+xinu 1% ping -c 3 -s 1000 rocket
+PING jumbo (209.15.10.11): 1000 data bytes
+1008 bytes from 209.15.10.11: icmp_seq=0 ttl=255 time=20 ms
+1008 bytes from 209.15.10.11: icmp_seq=1 ttl=255 time=5 ms
+1008 bytes from 209.15.10.11: icmp_seq=2 ttl=255 time=5 ms
+----jumbo PING Statistics----
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 5/10/20 ms
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If there was a problem with the network, this is what the output would look like.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+xinu 2% ping -c 3 -s 1000 rocket
+PING 209.15.10.11 (209.15.10.11): 1000 data bytes
+----209.15.10.11 PING Statistics----
+3 packets transmitted, 0 packets received, 100% packet loss
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The thought is if I can know when zero packets were received, I can send out a message on that signal. Using the <small>ping</SMALL> command in combination with <small>grep</SMALL> and <small>awk</SMALL> achieves the following.</P>
+<!-- CODE SNIP //-->
+<pre>
+xinu 2% ping -c 3 -s 1000 rocket | grep received | awk -f,
+&#8658; &#146;{ print $1 }&#146; | awk &#145;{print $1}&#146;
+0
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If there is no connectivity to the remote machine, as in this case, the result is the value <small>0</SMALL>. If there is connectivity the result would have been <small>3</SMALL>.</P>
+<p><font size="+1"><b>Example Two: Monitoring a Host with ping</B></FONT></P>
+<p>Flavor: AT&ampT
+</P>
+<p>Shell: sh</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>ping</B> [<b>-c</B> count] [<b>-s</B> size] <b>host</B>
+<b>grep</B> [<i>pattern</I>]
+<b>echo</B> [<i>string</I>]
+<b>mail</B> [-s string] <b>address</B>
+<b>sleep</B> [<i>value</I>]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When this is added to a notification script that mails a system administrator when there are problems, it could be written as
+</P>
+<!-- CODE //-->
+<pre>
+#! /bin/sh
+while [ 1 ]
+do
+  PING=`ping -c 3 -s 1000 rocket | grep received | awk -F,
+ &#8658; &#146;{ print $2 }&#146; | awk &#145;{print $1}&#146;`
+  if [ $PING -eq 0 ]; then
+    echo &#147;rocket Off Network&#148; |  mail -s &#147;PING FAILED&#148;
+&#8658; admin@pager.ugu.com
+  fi
+  sleep 60
+done
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the shell.
+</P>
+<p>Line 2: Begin the endless monitoring.</P>
+<p>Line 4: Store the number of received data packets into the variable <small>$PING</SMALL>.</P>
+<p>Line 5: Check whether no data packets were received by the remote host.</P>
+<p>Line 6: If none were received, send a mail message that the system is off the network from a <small>ping</SMALL> test.</P>
+<p>Line 7: Wait for a minute, and then test it again.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Be aware the sleep period should not be too great of a value. Cases have been reported where this value was set to five minutes. Some UNIX systems can reboot in under five minutes. When this occurs the Ping Failed message never gets sent and a problem will never be known. Use your own judgment on this value.</FONT><hr>
+</BLOCKQUOTE>
+<p>If you are in a large environment, you can easily modify the preceding script to perform this function on a list of hosts that you define.
+</P>
+<!-- CODE //-->
+<pre>
+#! /bin/sh
+HOSTS=&#148;rocket moon pluto&#148;
+while [ 1 ]; do
+  for SYS in $HOSTS; do
+    PING=`ping -c 3 -s 1000 $SYS | grep received | awk -F, &#145;{
+&#8658; print $2 }&#146; | awk &#145;{print $1}&#146;`
+    if [ $PING -eq 0 ]; then
+      echo &#147;$SYS Off Network&#148; |  mail -s &#147;PING FAILED&#148;
+&#8658; admin@pager.ugu.com
+    fi
+  done
+  sleep 30
+done
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the shell.
+</P>
+<p>Line 2: Define the multiple systems that are being monitored.</P>
+<p>Line 3: Begin the endless monitoring of the remote hosts.</P>
+<p>Line 4: Begin checking each of the remote hosts one at a time.</P>
+<p>Line 5: Store the number of received data packets into the variable <small>$PING</SMALL>.</P>
+<p>Line 6: Check whether no data packets were received by the remote host.</P>
+<p>Line 7: If none were received, send a mail message that the system is off the network from a <small>ping</SMALL> test.</P>
+<p>Line 8: Wait a little bit, and then try it all again.</P>
+<p>The <small>sleep</SMALL> value should be adjusted with each host that is added to be monitored. If there are over seven hosts, you might not even want to add a pause with the <small>sleep</SMALL> command. It is good to try to monitor a system once every one or two minutes. You should evaluate the amount that is required for your individual environment.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Monitoring a series of systems is a necessary proactive step that can be taken to maintain a healthy computing environment.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Monitoring the system is one of my favorite things to do, especially when one goes down. I&#146;ll tell you why: Almost two out of five times that my pager goes off, it&#146;s because a system dropped off the network because the user hit the power button. When a proactive phone call is made to the user, asking whether everything is okay, he is usually shocked that you knew so quickly that he tampered with the system. By staying on top of the situation, you earn his admiration. At the same time, however, he&#146;s scared that you are like a god or Big Brother that knows all and can see all.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

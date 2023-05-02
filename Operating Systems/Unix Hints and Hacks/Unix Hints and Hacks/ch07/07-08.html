@@ -1,0 +1,175 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Displays and Emulations</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=07//-->
+<!--PAGES=270-274//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The console port for an ASCII terminal is controlled by a daemon called a <small>getty</SMALL>. If this is killed, a new one restarts and resets the serial connection to the console port, or ASCII terminal. The <small>getty</SMALL> sets the terminal type, modes , speed, and line discipline. In UNIX, when this daemon is started it is controlled by the <small>init</SMALL> process. When <small>init</SMALL> starts up it references the /etc/inittab file or /etc/ttytab on older BSD systems for all its configurations. An entry consists of the following fields: an ID, run state, action, and process.</P>
+<!-- CODE SNIP //-->
+<pre>
+t1:23:respawn:/sbin/getty ttyd1 co_9600
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Because the <small>getty</SMALL> daemon is controlled by the <small>init</SMALL> process you can merely kill the <small>getty</SMALL> process and <small>init</SMALL> restarts a new <small>getty</SMALL> automatically. This is because of the third field in the inittab entry, that says to respawn the daemon if it exits for any reason.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>Do not kill the <small>init</SMALL> process, because you can cause more harm then good depending on the settings on the configuration table.
+</FONT><hr>
+</BLOCKQUOTE>
+<!-- CODE SNIP //-->
+<pre>
+rocket 6# ps -ef | grep getty
+    root 20665     1  0   Dec 05 ttyd1    0:00 /sbin/getty ttyd1
+&#8658;co_9600
+
+rocket 7# kill 20665
+rocket 8# ps -ef | grep getty
+    root  3463     1  0 01:31:14 ttyd1    0:00 /sbin/getty ttyd1
+&#8658;co_9600
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This example can be applied only to a system that has multiple terminals attached, X terminals, diskless clients, or a network connection for remote access to kill the daemon.
+</P>
+<p><font size="+1"><b>Example Four: The Dangers of a Power Cycle</B></FONT></P>
+<p>You might think that the simple solution is to power cycle the ASCII terminal. There can be severe repercussions by doing this. Some of the new servers and systems out on the market today can sense a loss of power to the terminal. When power is restored to the terminal you can find yourself sitting at the system&#146;s PROM level or in a maintenance mode. Simply put, the system goes down hard.
+</P>
+<p>Test this on your particular system during a scheduled outage or when the terminal is first attached to the system. It doesn&#146;t happen on all systems, but there are a select few that it does happen to.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Different things can happen to the emulation and keyboard without notice or by accident when a user works on an ASCII terminal.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Executing the <small>cat</SMALL> command on a directory, issuing a <small>grep</SMALL> on a binary file, dropping the keyboard, unplugging a cable, or hitting the wrong key by mistake can all cause an ASCII terminal to experience some type of problem. If none of these occurs and there is still a problem, keep your eye out for user error.</P>
+<p>A frantic call came in from a user at a remote site 70 miles away. The terminal quit working! There was power to the monitor and to the keyboard, but no output appeared on the terminal. Of course, my first gut feeling was that the cable was unplugged. The system engineer (SE) from the manufacturer insisted that it was a cable issue. The SE was reassured that the users had checked out all the hardware and cables. The SE arrived at the site first and wasn&#146;t too happy. Not only was he dragged out of bed to be there at 3:30 a.m., but he found the problem was a loose cable that had been pulled out when the terminal was moved. The users checked the cable only where it connected to the terminal and not where it connected to the computer.</P>
+<h3><a name="Heading14"></A><font color="#000077">7.7 Sharing STDIN/STDOUT on Two Terminals</FONT></H3>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">7.7.1 Description</FONT></H4>
+<p>If you have ever needed to show someone a series of commands on two terminal devices or had to work on a remote system and display your activity to the administrator of that system, there is a way within UNIX to do this.
+</P>
+<p>Flavor: AT&ampT, BSD</P>
+<p>Shells: sh</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>sh -c</B> &#147;command <b>|</B> <b>tee -a</B> local_tty&#148; <b>1</B>&gtother_tty
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The nice thing about the <small>write</SMALL> command is that you can display a series of simple text messages to another terminal device. Unfortunately the key words are <i>simple text messages</I>. If you want to send commands and have the results sent to a terminal device, the <small>write</SMALL> command will not work. You can achieve this through other means, however.</P>
+<p>A new shell is created to execute a command and the output of the executed command is sent to the file descriptors of standard in. These file descriptors are actually pointing to the device that you want to share the results of the command with.</P>
+<!-- CODE SNIP //-->
+<pre>
+$ sh -c &#147;date | tee -a /dev/ttyq0&#148; 1&gt/dev/ttyd5
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this command, two devices are involved. The device /dev/ttyq0 is the terminal of the administrator running the command. The device /dev/ttyq1 is the terminal of the other administrator, operator, or user with whom the output is being shared.
+</P>
+<p>A new shell (sh) is started and executes the <small>date</SMALL> command (<small>-c</SMALL>). When <small>date</SMALL> is run, the results are piped to <small>tee</SMALL> which appends (<small>-a</SMALL>) the output to the end of device /dev/ttyq0. It then sends the STDOUT to the other terminal device, /dev/ttyq5.</P>
+<p>This works well for individual commands but it can be time consuming if you have multiple commands that you have to execute. What you can do is, instead of passing a single command through, pass another shell through. This way, any commands you execute from that moment on are shared to the other terminal device.</P>
+<!-- CODE SNIP //-->
+<pre>
+$ sh -c &#147;/bin/csh | tee -a /dev/ttyq0&#148; 1&gt/dev/ttyd5
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The shell can be any shell&#151;csh, Bourne, Korn, or even tcsh. It doesn&#146;t matter. Try not to lose sight of the fact that after you run this command, you will have three shells open. When you exit the third shell that is being shared with another terminal device, the second shell closes as well. This leave you back with your original shell.
+</P>
+<p>If you still don&#146;t want to type the entire command, it can be placed into a script for easy use. If you have a shared area on an NFS-mounted centralized file server, place this script there so you will be able to access it anywhere in your environment that your server has access to.</P>
+<p>Flavors: AT&ampT, BSD</P>
+<p>Shells: ALL</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>shtty</B> program other_tty
+# vi shtty
+
+[ $# -lt 2 ] &amp&amp echo &#147;Usage: $0 program other_tty&#148; &amp&amp exit 2
+MYTTY=&#145;tty&#145;
+PROG=$1
+OTTY=$2
+sh -c &#147;$PROG | tee -a $MYTTY&#148; 1&gt$OTTY 2&gt&amp1 0&gt$OTTY
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Verify that there is a program and a terminal device to share the output with. If not all the arguments are passed, display the proper syntax and exit.
+</P>
+<p>Line 2: Set the terminal device variable (<small>MYTTY</SMALL>) to the current terminal device executing the script.</P>
+<p>Line 3: Set the program variable (<small>PROG</SMALL>) to the name of the program that will be shared to the two devices.</P>
+<p>Line 4: Set the variable (<small>OTTY</SMALL>) for the other terminal device that the program will be sharing to.</P>
+<p>Line 5: Open a new shell, execute the program, and send it to the end of <small>$MYTTY</SMALL> terminal device and out to the <small>$OTTY</SMALL> other terminal device.</P>
+<p>Before you use this in the real world, play with it first on your own terminal. All you have to do is open up two shells in different windows and make note of the terminal devices with the <small>tty</SMALL> command. Run <small>shtty</SMALL> and try various commands. The script has problems with terminal emulation routines that deal with cursor and screen manipulation on such commands as <small>vi, more</SMALL>, and <small>clear</SMALL>. The use of <small>shtty</SMALL> doesn&#146;t reveal a hidden or encrypted password; therefore, if you need to show someone how to change a password on a system, this can be done safely.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

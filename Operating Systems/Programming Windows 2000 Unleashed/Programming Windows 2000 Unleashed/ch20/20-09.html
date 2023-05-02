@@ -1,0 +1,268 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:DCOM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=20//-->
+<!--PAGES=667-670//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="20-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 20.7</B> Helper Functions Used to Create Commonly Used SIDs</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Returns a SID for the system account.
+ * The SID must be freed using the Win32 FreeSid() function.
+ */
+PSID GetSystemSid()
+{
+    PSID pSidRet = NULL;
+    SID_IDENTIFIER_AUTHORITY sidAuth = SECURITY_NT_AUTHORITY;
+    AllocateAndInitializeSid(&ampsidAuth,
+                             1,
+                             SECURITY_LOCAL_SYSTEM_RID,
+                             0, 0, 0, 0, 0, 0, 0,
+                             &amppSidRet);
+    return pSidRet;
+}
+
+/*
+ * Returns the SID for the current process owner. The SID
+ * must be freed using the c runtime free() function.
+ */
+PSID GetProcessOwnerSid()
+{
+    PSID pSidRet = NULL;
+    HANDLE hToken;
+    HANDLE hProcess = GetCurrentProcess();
+    BOOL fOpened = OpenProcessToken(hProcess,
+                                    TOKEN_QUERY,
+                                    &amphToken);
+    if(fOpened != FALSE)
+    {
+        TOKEN_USER* pUserToken = NULL;
+        DWORD       cbUserToken;
+        // Get the size required for the user token
+        GetTokenInformation(hToken, TokenUser,NULL,0,&ampcbUserToken);
+        if(ERROR_INSUFFICIENT_BUFFER != GetLastError())
+            return NULL;
+
+        pUserToken = (TOKEN_USER*)malloc(cbUserToken);
+        if(!pUserToken)
+            return NULL;
+
+        BOOL fToken = GetTokenInformation(hToken,
+                                          TokenUser,
+
+                                          pUserToken,
+                                          cbUserToken,
+                                          &ampcbUserToken);
+        if(fToken)
+        {
+            DWORD cbSid = GetLengthSid(pUserToken-&gtUser.Sid);
+            pSidRet = (PSID)malloc(cbSid);
+            if(pSidRet)
+            {
+                CopySid(cbSid, pSidRet, pUserToken-&gtUser.Sid);
+            }
+        }
+        free(pUserToken);
+    }
+    return pSidRet;
+}
+
+/*
+ * Returns the SID for the primary group of the current process.
+ * The SID must be freed using the c runtime free() function.
+ */
+PSID GetProcessGroupSid()
+{
+    PSID pSidRet = NULL;
+    HANDLE hToken;
+    HANDLE hProcess = GetCurrentProcess();
+    BOOL fOpened = OpenProcessToken(hProcess,
+                                    TOKEN_QUERY,
+                                    &amphToken);
+    if(fOpened != FALSE)
+    {
+        TOKEN_PRIMARY_GROUP* pGroupToken = NULL;
+        DWORD       cbGroupToken;
+
+        // Get the size required for the primary group token
+        GetTokenInformation(hToken,
+                            TokenPrimaryGroup,
+                            NULL,
+                            0,
+                            &ampcbGroupToken);
+        if(ERROR_INSUFFICIENT_BUFFER != GetLastError())
+            return NULL;
+
+        pGroupToken = (TOKEN_PRIMARY_GROUP*)malloc(cbGroupToken);
+        if(!pGroupToken)
+            return NULL;
+
+        BOOL fToken = GetTokenInformation(hToken,
+                                          TokenPrimaryGroup,
+                                          pGroupToken,
+                                          cbGroupToken,
+                                          &ampcbGroupToken);
+        if(fToken)
+        {
+            DWORD cbSid = GetLengthSid(pGroupToken-&gtPrimaryGroup);
+            pSidRet = (PSID)malloc(cbSid);
+            if(pSidRet)            {
+                CopySid(cbSid, pSidRet, pGroupToken-&gtPrimaryGroup);
+            }
+        }
+        free(pGroupToken);
+    }
+    return pSidRet;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>CSecurityDescriptor</SMALL> class is part of the ATL class library, and it greatly simplifies the task of managing security descriptors. If your COM object is written with ATL, it&#146;s a good idea to use this class&#151;it can really cut down on the amount of security code that you need to create yourself. Unfortunately, this class is not well documented in the Visual C<small>&#43;&#43;</SMALL> documentation.</P>
+<p><small>CSecurityDescriptor</SMALL> is basically a C<small>&#43;&#43;</SMALL> class wrapped around a Win32 <small>SECURITY_DESCRIPTOR</SMALL> structure. Here are some of the more helpful methods offered by <small>CSecurityDescriptor</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Initialize</SMALL>. Initializes the security descriptor so that access is granted to everyone
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InitializeFromProcessToken</SMALL>. Grants access to everyone and also sets the security descriptor&#146;s owner and group SIDs using the current process token
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InitializeFromThreadToken</SMALL>. Grants access to everyone and also sets the security descriptor&#146;s owner and group SIDs using the current thread token
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Allow</SMALL>. Adds an <small>ACCESS_ALLOWED_ACE</SMALL> representing a specified security principal to the security descriptor&#146;s DACL, properly merging the new ACE into the DACL if required
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Deny</SMALL>. Adds an <small>ACCESS_DENIED_ACE</SMALL> representing a specified security principal to the security descriptor&#146;s DACL, properly merging the new ACE into the DACL if required
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Revoke</SMALL>. Removes a specified security principal from the security descriptor&#146;s DACL
+</DL>
+<p>Listing 20.8 is an example of the same security code presented in Listing 20.6 but rewritten to take advantage of <small>CSecurityDescriptor</SMALL>.</P>
+<p><b>Listing 20.8</B> Using the ATL <small>CSecurityDescriptor</SMALL> Class to Define Security Attributes</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+CSecurityDescriptor sd;
+sd.InitializeFromProcessToken();
+sd.Allow(L&#148;codevtech\\mickeyw&#148;,COM_RIGHTS_EXECUTE);
+sd.Allow(L&#148;NT Authority\\System&#148;,COM_RIGHTS_EXECUTE);
+HRESULT hrSec = CoInitializeSecurity(sd,
+                                     -1,
+                                     0,
+                                     NULL,  // Reserved
+                                     RPC_C_AUTHN_LEVEL_CONNECT,
+                                     RPC_C_IMP_LEVEL_IDENTIFY,
+                                     NULL,
+                                     0,
+
+                                     0);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 20.8, note that <small>sd</SMALL> is passed directly to <small>CoInitializeSecurity</SMALL>. The <small>CSecurityDescriptor</SMALL> class includes a conversion operator that converts an instance of <small>CSecurityDescriptor</SMALL> into a pointer to its contained <small>SECURITY_DESCRIPTOR</SMALL> structure.</P>
+<p><font size="+1"><b>Using an AppID to Define Security Attributes</B></FONT></P>
+<p>Another way to use <small>CoInitializeSecurity</SMALL> is to pass an AppID that contains the desired security attributes. This is a useful option in cases where you want to have multiple security profiles stored in the Registry. Each profile can be stored as an AppID, and when the COM object is initialized, one of the AppIDs is selected to be used as the security profile. Listing 20.9 provides an example of using an AppID with <small>CoInitializeSecurity</SMALL>.</P>
+<p><b>Listing 20.9</B> Using an AppID to Provide Security Attributes to <small>CoInitializeSecurity</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+// A GUID that is used as an AppID
+static const GUID AppIDPo = {0x4FB6BB00, 0x3347, 0x11D0,
+                    {0xB4, 0x0A, 0x0, 0xAA, 0x0, 0x5F,0xF5, 0x86}};
+
+// ... Code to initialize AppID in registry omitted ...
+
+HRESULT hrSec = CoInitializeSecurity((void*)&ampAppIDPo,
+                                     -1,
+                                     0,
+                                     NULL,  // Reserved, must be NULL
+                                     RPC_C_AUTHN_LEVEL_CONNECT,
+                                     RPC_C_IMP_LEVEL_IDENTIFY,
+                                     NULL,
+                                     EOAC_APPID,
+
+                                     0);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="20-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="20-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

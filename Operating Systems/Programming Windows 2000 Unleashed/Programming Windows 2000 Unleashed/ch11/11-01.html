@@ -1,0 +1,164 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=341-347//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch10/10-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2 align="CENTER"><font color="#000077"><i>Part II<br>User Interaction/Desktop
+</I></FONT></H2>
+<p><b><big>In This Part</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Advanced Graphical Device Interface Programming <i>0</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Owner Draw and Custom Draw <i>0</I></B>
+</DL>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 11<br>Advanced Graphical Device Interface Programming
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>GDI Basics <i>344</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Device Contexts <i>345</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Bitmaps <i>348</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>The DIB Example <i>356</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Paths <i>370</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Metafiles <i>373</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>A Metafile Example <i>374</I></B>
+</DL>
+<p>This chapter discusses the Graphical Device Interface (GDI) that&#146;s provided by Windows 2000. The basic differences between the GDI offered by Windows 9<i>x</I> and Windows 2000 are covered, as well as the various types of GDI objects offered by Windows 2000.</P>
+<p>Most of this chapter covers 256-color bitmaps and the steps required to modify the system color palette to display 256-color bitmaps properly. A sample program that loads and displays 256-color bitmaps is provided; this application includes two reusable classes you can include in your own programs.</P>
+<p>This chapter also covers using enhanced metafiles, which are used to store GDI functions for playback at a later time, and GDI paths, which can be used to draw irregular or unusual shapes. Sample programs for each of these topics are provided also.</P>
+<h3><a name="Heading2"></A><font color="#000077">GDI Basics</FONT></H3>
+<p>The Windows 2000 GDI is similar to the GDI offered in Windows 9<i>x</I> and earlier versions of 16-bit Windows. However, it also includes some enhancements that make Windows 2000 a preferred choice for some types of graphics applications.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>Many of the differences between the GDI offered by Windows 2000 and that offered by Windows 9<i>x</I> are a result of the generic desktop version of Windows needing to offer backward compatibility to applications that run on Windows 3.1. Too many Windows 3.1 applications rely on implementation details with regard to GDI objects, and these applications tend to break when these structures change. In addition, Microsoft made certain tradeoffs to reduce the memory footprint required by Windows 95&#151;these tradeoffs were carried forward into Windows 98 and include some Win32 functions that aren&#146;t implemented in Windows 95 or Windows 98.</P>
+<p>In fact, much of the Windows 9<i>x</I> GDI is 16-bit code. Many parameters and values are truncated at 16 bits. Most of these issues are only minor problems for most people. Still, it&#146;s nice to know where possible problems are. Of course, this is only an issue if you write code that must run on Windows 9<i>x</I> and Windows 2000. A list of differences between the Windows 9<i>x</I> and Windows 2000 GDIs is provided in the following sections.</P>
+<p>Two major problems occur when you move GDI code between Windows 2000 and Windows 9<i>x</I>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;In Windows 9<i>x</I>, all coordinates are 16-bit values. If you use a 32-bit value, the least significant 16 bits are truncated.
+<dd><b>&#149;</B>&nbsp;&nbsp;In Windows 9<i>x</I>, if you delete a GDI object that&#146;s selected into a device context (DC), the operation succeeds. The deleted object is still selected into the DC, but it&#146;s destroyed when the DC is deleted. However, in Windows 2000, the call to <small>DeleteObject</SMALL> will fail, and you&#146;ll have a memory leak unless you deselect the GDI object and delete it again.
+</DL>
+<p>In addition to these issues, some GDI calls and options aren&#146;t supported between the two platforms. All these differences are documented, and there&#146;s always a way around the limitation. These differences will probably not cause you any trouble, in most cases.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading3"></A><font color="#000077">Device Contexts</FONT></H3>
+<p>A <i>DC</I> is an important part of the Windows 2000 GDI. A DC is a structure maintained by Windows, which stores information needed when a Windows 2000 application must display output to a device. The DC stores information about the drawing surface and its capabilities. Before using any of the GDI output functions, you must create a DC for that device.</P>
+<p>Windows 2000 and the MFC class library provide the following four different basic types of DCs. Although you use these DCs in different situations, the basic rules for their use are consistent:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Display DCs are used to display information to a standard video terminal. These are the most commonly used DCs in a Windows program.
+<dd><b>&#149;</B>&nbsp;&nbsp;Printer DCs are used to display output on a printer or plotter.
+<dd><b>&#149;</B>&nbsp;&nbsp;Memory DCs, sometimes called <i>compatible DCs</I>, are used to perform drawing operations on a bitmap.
+<dd><b>&#149;</B>&nbsp;&nbsp;Information DCs are used to collect information on a device. These DCs cannot be used for actual output. However, they&#146;re extremely fast and have little overhead and are therefore ideal for use when information is being collected.
+</DL>
+<p>With the exception of the information DCs, each of the different DC types is used for creating a different sort of output. That&#146;s why the MFC class library offers five classes that help encapsulate Windows 2000 DCs. These five classes are shown in Figure 11.1.
+</P>
+<p>Here&#146;s a list of the DC classes provided by MFC:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDC</SMALL> is the base class for all the DC classes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPaintDC</SMALL> performs some useful housekeeping functions that are needed when a window responds to <small>WM_PAINT</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CMetaFileDC</SMALL> is used when creating metafiles, which are records of GDI commands that can be used in place of bitmaps.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CClientDC</SMALL> is used when a DC will be used only for output to a window&#146;s client area.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CWindowDC</SMALL> is used when the entire window may be drawn on.
+</DL>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-01.jpg',500,293 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-01.jpg',500,293)"><font color="#000077"><b>Figure 11.1</B></FONT></A>&nbsp;&nbsp;The relationships between MFC DC classes.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">The GDI Map Modes</FONT></H4>
+<p>In Windows, you use <i>map modes</I> to define the size and direction of units used in drawing functions. As a Windows programmer, you have several different coordinate systems available. Map modes can use physical or logical dimensions, and they can start at the top, at the bottom, or at an arbitrary point on the screen.</P>
+<p>A total of eight different map modes are available in Windows. You can retrieve the current map mode used by a DC using the <small>GetMapMode</SMALL> function and set a new map mode using <small>SetMapMode</SMALL>. Here are the available map modes:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_ANISOTROPIC</SMALL> uses a viewport to scale the logical units to an application-defined value. The <small>SetWindowExt</SMALL> and <small>SetViewportExt</SMALL> member functions are used to change the units, orientation, and scaling.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_HIENGLISH</SMALL>, where each logical unit is converted to a physical value of 0.001 inch. Positive <small>x</SMALL> is to the right; positive <small>y</SMALL> is up.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_HIMETRIC</SMALL>, where each logical unit is converted to a physical value of 0.01 millimeter. Positive <small>x</SMALL> is to the right; positive <small>y</SMALL> is up.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_ISOTROPIC</SMALL> (similar to <small>MM_ANISOTROPIC</SMALL>), where logical units are converted to arbitrary units with equally scaled axes. This means that one unit on the x-axis is always equal to one unit on the y-axis. Use the <small>SetWindowExt</SMALL> and <small>SetViewportExt</SMALL> member functions to specify the desired units and orientation of the axes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_LOENGLISH</SMALL>, where each logical unit is converted to a physical value of 0.01 inch. Positive <small>x</SMALL> is to the right; positive <small>y</SMALL> is up.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_LOMETRIC</SMALL>, where each logical unit is converted to a physical value of 0.1 millimeter. Positive <small>x</SMALL> is to the right; positive <small>y</SMALL> is up.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_TEXT</SMALL>, where each logical unit is converted to one device pixel. Positive <small>x</SMALL> is to the right; positive <small>y</SMALL> is down.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MM_TWIPS</SMALL>, where each logical unit is converted to 1/20 of a point. Because a point is 1/72 inch, a <i>twip</I> is 1/1440 inch. This mapping mode is useful when sending output to a printer. Positive <small>x</SMALL> is to the right; positive <small>y</SMALL> is up.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch10/10-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

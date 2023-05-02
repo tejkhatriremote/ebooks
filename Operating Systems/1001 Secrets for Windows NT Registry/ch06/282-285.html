@@ -1,0 +1,246 @@
+<html>
+<head>
+<meta name=vsisbn content="1882419685">
+<meta name=vstitle content="1001 Secrets for Windows NT Registry">
+<meta name=vsauthor content="Tim Daniels">
+<meta name=vspublisher content="29th Street Press">
+<meta name=vspubdate content="12/01/97">
+<meta name=vscategory content="Operating Systems: Windows NT">
+
+
+
+
+
+<title>1001 Secrets for Windows NT Registry:Performance</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/1882419685.gif" width=60 height=73 alt="1001 Secrets for Windows NT Registry" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>1001 Secrets for Windows NT Registry</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Tim Daniels</i>
+    <br>
+    29th Street Press
+    <br>
+    <b>ISBN:</b>&nbsp;1882419685<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;12/01/97</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=1882419685//-->
+<!--TITLE=1001 Secrets for Windows NT Registry//-->
+<!--AUTHOR=Tim Daniels//-->
+<!--PUBLISHER=29th Street Press//-->
+<!--CHAPTER=6//-->
+<!--PAGES=282-285//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="279-282.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="285-287.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>This value sets the minimum network throughput, in kilobytes per second, before Lanmanager Workstation enables the read-ahead function. The default value is -1.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Lanmanager Server</FONT></H4>
+<p><big>L</BIG>anmanger Server is Microsoft&#146;s implementation of an SMB (Server Message Block) file server. It is a focal point of performance tuning for any file-sharing server.</P>
+<p><b>VI-16</B> <big>I</BIG>f you frequently get &#147;server paged&#148; or &#147;server nonpaged&#148; errors in Performance Monitor, you are seeing Lanmanager Server running out of memory that it&#146;s allocated for itself. You may want to raise these values to give Lanmanager Server more memory; however, giving these memory resources to Lanmanager keeps other system drivers and applications from using them. To give Lanmanager more paged and nonpaged memory, change the registry entries below.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>MaxNonPagedMemoryUsage
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>
+</P>
+<table width="100%"><tr>
+<td width="10%"><b>VI-17</B>
+<td width="20%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td>
+<td align="RIGHT"><b>Value Name:</B>
+<td>MaxPagedMemoryUsage
+<tr>
+<td>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td>
+<td align="RIGHT"><b>Value:</B>
+<td>0
+</TABLE>
+<p>These values set the number of megabytes allocated by Lanmanager Server for nonpaged and paged memory. The default, which is determined internally, is 0.
+</P>
+<p><b>VI-18</B> <big>B</BIG>y default, Lanmanager Server&#146;s worker threads run at one priority level higher than typical application threads. If network throughput is low because the Server&#146;s threads are competing with other threads for processor time, you may want to change this registry entry to increase the priority boost.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>ThreadPriority
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>Valid values are 0, 1, or 2, which determine how many levels above normal priority Lanmanager&#146;s worker threads run; and 15, which makes Lanmanager Server&#146;s threads run at real-time priority. Increasing the priority may reduce the responsiveness of other applications and services on the machine, especially if you set it to real-time priority.
+</P>
+<p><b>VI-19</B> <big>W</BIG>hen the server maintains extra pre-initialized end-points, establishing new connections takes less processing. This value sets the number of end-points the server maintains.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>MinFreeConnections
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>RED_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>2
+</TABLE>
+<p>Valid values range from 2 to 5; the default is determined internally. You can reduce the value to minimize idle memory overhead when the memory resources on the system are in high demand.
+</P>
+<p><b>VI-20</B> <big>I</BIG>f memory resources are scarce or if you want to limit the total number of users that can simultaneously log on to the server, change this registry entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>Users
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>&lt;number&gt;
+</TABLE>
+<p>The value is the number of users who can long on to the server simultaneously.
+</P>
+<p><b>VI-21</B> <big>E</BIG>very time a connection is made to Lanmanager Server, resources are allocated to service it. Sometimes idle connections tie up resources for a long time. To free resources sooner, change this registry entry.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>AutoDisconnect
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>15
+</TABLE>
+<p>This value specifies the number of minutes a connection can be idle before it is automatically disconnected and the resources associated with it are freed. The default value is 15. Reducing this value can keep resource usage to a minimum, but it&#146;s possible to incur additional overhead if clients reconnect after their connections are dropped.
+</P>
+<p><b>VI-22</B> <big>T</BIG>he registry entry below tells Lanmanager Server to allocate work items for processing raw SMBs (Server Message Blocks).</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>EnableRaw
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>Setting this value to 1 (the default) enables support for raw SMBs, and performance improves. Setting this value to 0 disables support.
+</P>
+<p><big>O</BIG>pportunistic locking is a performance-enhancing protocol Windows NT file systems use to detect remote machines&#146; modifications to shared files and directories. Enabling op-locks can cause you to lose cached data if the system fails.</P>
+<table width="100%"><tr>
+<td width="30%" align="RIGHT"><b>Hive:</B>
+<td width="70%">HKEY_LOCAL_MACHINE
+<tr>
+<td valign="TOP" align="RIGHT"><b>Key:</B>
+<td>System\CurrentControlSet\Services\LanmanServer\ Parameters
+<tr>
+<td align="RIGHT"><b>Value Name:</B>
+<td>EnableOpLocks
+<tr>
+<td align="RIGHT"><b>Data Type:</B>
+<td>REG_DWORD
+<tr>
+<td align="RIGHT"><b>Value:</B>
+<td>1
+</TABLE>
+<p>The default value is 1, which enables op-locking. Change the value to 0 to disable this feature.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="279-282.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="285-287.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

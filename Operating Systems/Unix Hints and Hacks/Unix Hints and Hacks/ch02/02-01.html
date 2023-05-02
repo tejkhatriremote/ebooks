@@ -1,0 +1,188 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=02//-->
+<!--PAGES=059-063//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch01/01-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 2<br>Networking
+</FONT></H2>
+<dl>
+<dd><b>2.1 OSI Networking Model</B>
+<dd><b>2.2 Finding the Failure</B>
+<dd><b>2.3 Hiding Files with NFS</B>
+<dd><b>2.4 Remote Network Configurations</B>
+<dd><b>2.5 Shutdown, Halt, or Reboot over the Network</B>
+<dd><b>2.6 Talking NFS3 to NFS2</B>
+<dd><b>2.7 Unmounting and Busy Devices</B>
+<dd><b>2.8 Static Routing or</B> <small>routed</SMALL>
+<dd><b>2.9 Get the Ethernet Address with</B> <small>arp</SMALL>
+</DL>
+<p>As it applies to information technology, a network is a series of points or nodes that are interconnected by communication paths. It is these nodes that you are responsible to have functioning and talking on the network.
+</P>
+<p>Networking has an important role in UNIX administration. A UNIX workstation or server is extremely versatile in how it can be configured on a network. This chapter discusses unique networking issues that can come up during the course of a day.</P>
+<p>UNIX system administrators deal with anything from NFS mounts to network configurations and mounting and unmounting network devices. In many cases, changes to the network affect not only one machine but multiple machines. The administrator must be careful to understand what is affected by the networking issues that are being handled at that time.</P>
+<p>Working on a network is much more dangerous than some believe. The modification on one system can affect an entire network. This is true no matter where you are or what system you are on. If you, like me, usually have four or more shells to different systems on your console at any given time, you must pay close attention the location of each window. If you don&#146;t pay attention to where each window is remotely logged in to, you might find yourself modifying the wrong system.</P>
+<h3><a name="Heading2"></A><font color="#000077">2.1 OSI Networking Model</FONT></H3>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">2.1.1 Description</FONT></H4>
+<p>You must familiarize yourself with networking concepts and the Open Systems Interconnection (OSI) network model.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The OSI model helps you understand how data is moved across a network and which network layers manipulate the data in certain ways between nodes. There are seven layers to the model. Each of the seven layers provides a set of functions to the layer above and also relies on the layer below.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 7</B> The application layer&#151;At this layer, a user and a computer interface to a network. It refers to the user programs themselves, such as file transfers and terminal emulations.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 6</B> The presentation layer&#151;This layer is usually part of an operating system that converts incoming and outgoing data from one presentation format to another. For example, it converts a text stream into a pop-up window with the newly arrived text.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 5</B> The session layer&#151;This layer manages the establishment of a continuing series of requests and responses between the applications at each end. It provides a cleaner interface to the transport layer and synchronization to recover from transport layer failures.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 4</B> The transport layer&#151;This layer makes sure data gets delivered to a specific process on a specific machine. It manages the end-to-end control and deals with error-correction.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 3</B> The network layer&#151;This layer handles the routing of data between two hosts and any congestion that might develop.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 2</B> The link (or data-link) layer&#151;This layer deals with communication between two machines sharing a common physical channel. It also handles lost, damaged, and duplicated frames for error control and timeouts.
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Layer 1</B> The physical layer&#151;It is concerned with insuring that when one side sends a <small>1</SMALL> bit, the other side receives a <small>1</SMALL> bit.
+</DL>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>In large IS or IT organizations, it is sometimes difficult to receive help at a moment&#146;s notice from other groups within the organization. Using basic troubleshooting techniques, you can narrow down the layer at which the problem might exist. Depending on the problem, you can provide insight to others that you need to enlist help from. If the problem is not at your end, you can more accurately explain and justify where (or in what layer) the problem exists. This can aid the others in providing a quicker response time for solving your problem.
+</P>
+<p>Many UNIX environments work closely with the networking groups within an organization. You might be asked in a job interview whether you can name all the layers. This is expected knowledge, but isn&#146;t required by most interviewers for a senior level administrator position. They usually are impressed if you can name all seven layers (and in the correct order). Providing the definitions and functions adds even more to your credibility.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>World Wide Web:
+</P>
+<p>A TCP/IP primer&#151;<a href="http://www.sunworld.com/swol-11-1995/swol-11-sysadmin.html">http://www.sunworld.com/swol-11-1995/swol-11-sysadmin.html</A></P>
+<p>Internet protocols&#151;<a href="http://oac3.hsc.uth.tmc.edu/staff/snewton/tcp-tutorial/">http://oac3.hsc.uth.tmc.edu/staff/snewton/tcp-tutorial/</A></P>
+<h3><a name="Heading4"></A><font color="#000077">2.2 Finding the Failure</FONT></H3>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">2.2.1 Description</FONT></H4>
+<p>Quick hints for troubleshooting basic network problems.
+</P>
+<p><font size="+1"><b>Examples</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>ifconfig</B> interface
+ping address
+telnet address
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Certain steps must be taken when diagnosing network connectivity problems. The problem is either a local issue with the individual computer or a global issue affecting the entire network.
+</P>
+<p><font size="+1"><b><i>Who Is Affected?</I></B></FONT></P>
+<p>Has everyone in the area lost their connection or is the network problem isolated to one user? If it&#146;s everyone in the area, the problem is most likely in the networking hardware, such as the concentrator or the gateway router. If the problem is isolated to a single user, consider the following steps.
+</P>
+<p><font size="+1"><b><i>Check the Network Interface</I></B></FONT></P>
+<p>Verify that the network interface is up and broadcasting.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# ifconfig hme0
+hme0: flags=863&lt;<b>UP</B>,BROADCAST,NOTRAILERS,RUNNING,MULTICAST&gt;
+&#8658;mtu 1500
+         inet 199.45.34.2 netmask ffffff00 broadcast
+&#8658;199.45.34.255
+</PRE>
+<!-- END CODE SNIP //-->
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>This interface is from a Sun SPARC station. The name of your interface is different, but the output is similar. Your interface should be in an <i>up</I> state.</FONT><hr>
+</BLOCKQUOTE>
+<p>Verify that there is a route to the gateway or router. The <small>routed</SMALL> daemon should be running or, when executing <small>netstat</SMALL>, a default router entry should appear. If the computer sits on a network and is on a subnet, one of these should be running or defined.</P>
+<p>Check to make sure that the <small>routed</SMALL> daemon is running:</P>
+<!-- CODE SNIP //-->
+<pre>
+% ps -ef | grep routed
+<b>root 27005     1   0  23:39:15 ?          0:00 </B>
+<b>&#8658;/usr/sbin/in.routed</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Check to see whether a default route is configured.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# netstat -rn
+Routing tables
+Destination     Gateway         Flags   Refcnt Use      Interface
+127.0.0.1       127.0.0.1       UH      2      2955050  lo0
+<b>default         199.45.34.254   UG      5      5592713  hme0</B>
+199.45.34.0     199.45.34.2     U       30     10052190 hme0
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch01/01-12.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

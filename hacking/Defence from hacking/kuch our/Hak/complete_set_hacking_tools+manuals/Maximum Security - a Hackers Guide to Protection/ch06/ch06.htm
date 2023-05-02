@@ -1,0 +1,1094 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 6 -- A Brief Primer on TCP/IP</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="../button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="../ch05/ch05.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch07/ch07.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">6</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">A Brief Primer on TCP/IP</FONT></H1>
+</CENTER>
+<P>This chapter examines the Transmission Control Protocol (TCP) and the Internet
+Protocol (IP). These two protocols (or networked methods of data transport) are generally
+referred to together as <I>TCP/IP</I>.</P>
+<P>You can read this chapter thoroughly to gain an in-depth understanding of how
+information is routed across the Internet or you can use this chapter as an extended
+glossary, referring to it only when encountering unfamiliar terms later in this book.</P>
+<P>The chapter begins with fundamental concepts and closes with a comprehensive look
+at TCP/IP. The chapter is broken into three parts. The first part answers some basic
+questions you might have, including</P>
+
+<UL>
+	<LI>What is TCP/IP?<BR>
+	<BR>
+	
+	<LI>What is the history of TCP/IP?<BR>
+	<BR>
+	
+	<LI>What platforms support TCP/IP?
+</UL>
+
+<P>The second portion of the chapter addresses how TCP/IP actually works. In that
+portion, I will focus on the most popular services within the TCP/IP suite. These
+services (or modes of transport) comprise the greater portion of the Internet as
+we know it today.</P>
+<P>The final portion of this chapter explores key TCP/IP utilities with which each
+user must become familiar. These utilities are of value in maintenance and monitoring
+of any TCP/IP network.</P>
+<P>Note that this chapter is not an exhaustive treatment of TCP/IP. It provides only
+the minimum knowledge needed to continue reading this book. Throughout this chapter,
+however, I supply links to documents and other resources from which the reader can
+gain an in-depth knowledge of TCP/IP.
+<H2><FONT COLOR="#000077"><B>TCP/IP: The Basics</B></FONT></H2>
+<P>This section is a quick overview of TCP/IP. It is designed to prepare you for
+various terms and concepts that arise within this chapter. It assumes no previous
+knowledge of IP protocols.
+<H3><FONT COLOR="#000077"><B>What Is TCP/IP?</B></FONT></H3>
+<P><I>TCP/IP</I> refers to two network protocols (or methods of data transport) used
+on the Internet. They are Transmission Control Protocol and Internet Protocol, respectively.
+These network protocols belong to a larger collection of protocols, or a protocol
+<I>suite</I>. These are collectively referred to as the <I>TCP/IP suite</I>.</P>
+<P>Protocols within the TCP/IP suite work together to provide data transport on the
+Internet. In other words, these protocols provide nearly all services available to
+today's Net surfer. Some of those services include</P>
+
+<UL>
+	<LI>Transmission of electronic mail<BR>
+	<BR>
+	
+	<LI>File transfers<BR>
+	<BR>
+	
+	<LI>Usenet news delivery<BR>
+	<BR>
+	
+	<LI>Access to the World Wide Web
+</UL>
+
+<P>There are two classes of protocol within the TCP/IP suite, and I will address
+both in the following pages. Those two classes are</P>
+
+<UL>
+	<LI>The network-level protocol<BR>
+	<BR>
+	
+	<LI>The application-level protocol
+</UL>
+
+<H4><FONT COLOR="#000077"><B>Network-Level Protocols</B></FONT></H4>
+<P>Network-level protocols manage the discrete mechanics of data transfer. These
+protocols are typically invisible to the user and operate deep beneath the surface
+of the system. For example, the IP protocol provides packet delivery of the information
+sent between the user and remote machines. It does this based on a variety of information,
+most notably the IP address of the two machines. Based on this and other information,
+IP guarantees that the information will be routed to its intended destination. Throughout
+this process, IP interacts with other network-level protocols engaged in data transport.
+Short of using network utilities (perhaps a sniffer or other device that reads IP
+datagrams), the user will never see IP's work on the system.
+<H4><FONT COLOR="#000077"><B>Application-Level Protocols</B></FONT></H4>
+<P>Conversely, application-level protocols are visible to the user in some measure.
+For example, File Transfer Protocol (FTP) is visible to the user. The user requests
+a connection to another machine to transfer a file, the connection is established,
+and the transfer begins. During the transfer, a portion of the exchange between the
+user's machine and the remote machine is visible (primarily error messages and status
+reports on the transfer itself, for example, how many bytes of the file have been
+transferred at any given moment).</P>
+<P>For the moment, this explanation will suffice: TCP/IP refers to a collection of
+protocols that facilitate communication between machines over the Internet (or other
+networks running TCP/IP).
+<H3><FONT COLOR="#000077"><B>The History of TCP/IP</B></FONT></H3>
+<P>In 1969, the Defense Advanced Research Projects Agency (DARPA) commissioned development
+of a network over which its research centers might communicate. Its chief concern
+was this network's capability to withstand a nuclear attack. In short, if the Soviet
+Union launched a nuclear attack, it was imperative that the network remain intact
+to facilitate communication. The design of this network had several other requisites,
+the most important of which was this: It had to operate independently of any centralized
+control. Thus, if 1 machine was destroyed (or 10, or 100), the network would remain
+impervious.</P>
+<P>The prototype for this system emerged quickly, based in part on research done
+in 1962 and 1963. That prototype was called <I>ARPANET</I>. ARPANET reportedly worked
+well, but was subject to periodic system crashes. Furthermore, long-term expansion
+of that network proved costly. A search was initiated for a more reliable set of
+protocols; that search ended in the mid-1970s with the development of TCP/IP.</P>
+<P>TCP/IP had significant advantages over other protocols. For example, TCP/IP was
+lightweight (it required meager network resources). Moreover, TCP/IP could be implemented
+at much lower cost than the other choices then available. Based on these amenities,
+TCP/IP became exceedingly popular. In 1983, TCP/IP was integrated into release 4.2
+of Berkeley Software Distribution (BSD) UNIX. Its integration into commercial forms
+of UNIX soon followed, and TCP/IP was established as the Internet standard. It has
+remained so (as of this writing).</P>
+<P>As more users flock to the Internet, however, TCP/IP is being reexamined. More
+users translates to greater network load. To ease that network load and offer greater
+speeds of data transport, some researchers have suggested implementing TCP/IP via
+satellite transmission. Unfortunately, such research has thus far produced dismal
+results. TCP/IP is apparently unsuitable for this implementation.</P>
+<P>Today, TCP/IP is used for many purposes, not just the Internet. For example, intranets
+are often built using TCP/IP. In such environments, TCP/IP can offer significant
+advantages over other networking protocols. One such advantage is that TCP/IP works
+on a wide variety of hardware and operating systems. Thus, one can quickly and easily
+create a heterogeneous network using TCP/IP. Such a network might have Macs, IBM
+compatibles, Sun Sparcstations, MIPS machines, and so on. Each of these can communicate
+with its peers using a common protocol suite. For this reason, since it was first
+introduced in the 1970s, TCP/IP has remained extremely popular. In the next section,
+I will discuss implementation of TCP/IP on various platforms.
+<H3><FONT COLOR="#000077"><B>What Platforms Support TCP/IP?</B></FONT></H3>
+<P><I>Most</I> platforms support TCP/IP. However, the quality of that support can
+vary. Today, most mainstream operating systems have native TCP/IP support (that is,
+TCP/IP support that is built into the standard operating system distribution). However,
+older operating systems on some platforms lack such native support. Table 6.1 describes
+TCP/IP support for various platforms. If a platform has native TCP/IP support, it
+is labeled as such. If not, the name of a TCP/IP application is provided.
+<H4><FONT COLOR="#000077"><B>Table 6.1. Platforms and their support for TCP/IP.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Platform</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>TCP/IP Support</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">UNIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">DOS</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Piper/IP By Ipswitch</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Windows</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">TCPMAN by Trumpet Software</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Windows 95</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Windows NT</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">MacTCP or OpenTransport (Sys 7.5+)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">OS/2</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">AS/400 OS/400</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+</TABLE>
+</P>
+<P>Platforms that do not natively support TCP/IP can still implement it through the
+use of proprietary or third-party TCP/IP programs. In these instances, third-party
+products can offer varied functionality. Some offer very good support and others
+offer marginal support.</P>
+<P>For example, some third-party products provide the user with only basic TCP/IP.
+For most users, this is sufficient. (They simply want to connect to the Net, get
+their mail, and enjoy easy networking.) In contrast, certain third-party TCP/IP implementations
+are comprehensive. These may allow manipulation of compression, methods of transport,
+and other features common to the typical UNIX TCP/IP implementation.</P>
+<P>Widespread third-party support for TCP/IP has been around for only a few years.
+Several years ago, for example, TCP/IP support for DOS boxes was very slim.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>There is actually a wonderful product
+	called <I>Minuet</I> that can be used in conjunction with a packet driver on LANs.
+	Minuet derived its name from the term <I>Minnesota Internet Users Essential Tool</I>.
+	Minuet offers quick and efficient access to the Net through a DOS-based environment.
+	This product is still available free of charge at many locations, including <A HREF="ftp://minuet.micro.umn.edu/pub/minuet/"><TT>ftp://minuet.micro.umn.edu/pub/minuet/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>One interesting point about non-native, third-party TCP/IP implementations is
+this: Most of them do not provide servers within their distributions. Thus, although
+a user can connect to remote machines to transfer a file, the user's machine cannot
+accept such a request. For example, a Windows 3.11 user using TCPMAN cannot--without
+installing additional software--accept a file-transfer request from a remote machine.
+Later in this chapter you'll find a list of a few names of such additional software
+for those who are interested in providing services via TCP/IP.
+<H2><FONT COLOR="#000077"><B>How Does TCP/IP Work?</B></FONT></H2>
+<P>TCP/IP operates through the use of a protocol <I>stack</I>. This stack is the
+sum total of all protocols necessary to complete a single transfer of data between
+two machines. (It is also the path that data takes to get out of one machine and
+into another.) The stack is broken into layers, five of which are of concern here.
+To grasp this layer concept, examine Figure 6.1.</P>
+<P><A NAME="01"></A><A HREF="01.htm"><B>Figure 6.1.</B></A><B><BR>
+</B><I>The TCP/IP stack.</I></P>
+<P>After data has passed through the process illustrated in Figure 6.1, it travels
+to its destination on another machine or network. There, the process is executed
+in reverse (the data first meets the physical layer and subsequently travels its
+way up the stack). Throughout this process, a complex system of error checking is
+employed both on the originating and destination machine.</P>
+<P>Each layer of the stack can send data to and receive data from its adjoining layer.
+Each layer is also associated with multiple protocols. At each tier of the stack,
+these protocols are hard at work, providing the user with various services. The next
+section of this chapter examines these services and the manner in which they are
+associated with layers in the stack. You will also examine their functions, the services
+they provide, and their relationship to security.
+<H2><FONT COLOR="#000077"><B>The Individual Protocols</B></FONT></H2>
+<P>You have examined how data is transmitted via TCP/IP using the protocol stack.
+Now I want to zoom in to identify the key protocols that operate within that stack.
+I will begin with network-level protocols.
+<H3><FONT COLOR="#000077"><B>Network-Level Protocols</B></FONT></H3>
+<P>Network protocols are those protocols that engage in (or facilitate) the transport
+process transparently. These are invisible to the user unless that user employs utilities
+to monitor system processes.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B><I>Sniffers</I> are devices that
+	can monitor such processes. A sniffer is a device--either hardware or software--that
+	can read every packet sent across a network. Sniffers are commonly used to isolate
+	network problems that, while invisible to the user, are degrading network performance.
+	As such, sniffers can read all activity occurring between network-level protocols.
+	Moreover, as you might guess, sniffers can pose a tremendous security threat. You
+	will examine sniffers in Chapter 12, &quot;Sniffers.&quot; 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Important network-level protocols include</P>
+
+<UL>
+	<LI>The Address Resolution Protocol (ARP)
+	<LI>The Internet Control Message Protocol (ICMP)
+	<LI>The Internet Protocol (IP)
+	<LI>The Transmission Control Protocol (TCP)
+</UL>
+
+<P>I will briefly examine each, offering only an overview.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For more comprehensive
+	information about protocols (or the stack in general), I highly recommend <I>Teach
+	Yourself TCP/IP in 14 Days </I>by Timothy Parker, Ph.D (Sams Publishing). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>The Address Resolution Protocol</B></FONT></H4>
+<P>The Address Resolution Protocol (ARP) serves the critical purpose of mapping Internet
+addresses into physical addresses. This is vital in routing information across the
+Internet. Before a message (or other data) is sent, it is packaged into IP packets,
+or blocks of information suitably formatted for Internet transport. These contain
+the numeric Internet (IP) address of both the originating and destination machines.
+Before this package can leave the originating computer, however, the hardware address
+of the recipient (destination) must be discovered. (Hardware addresses differ from
+Internet addresses.) This is where ARP makes its debut.</P>
+<P>An ARP request message is broadcast on the subnet. This request is received by
+a router that replies with the requested hardware address. This reply is caught by
+the originating machine and the transfer process can begin.</P>
+<P>ARP's design includes a cache. To understand the ARP cache concept, consider this:
+Most modern HTML browsers (such as Netscape Navigator or Microsoft's Internet Explorer)
+utilize a cache. This cache is a portion of the disk (or memory) in which elements
+from often-visited Web pages are stored (such as buttons, headers, and common graphics).
+This is logical because when you return to those pages, these tidbits don't have
+to be reloaded from the remote machine. They will load much more quickly if they
+are in your local cache.</P>
+<P>Similarly, ARP implementations include a cache. In this manner, hardware addresses
+of remote machines or networks are remembered, and this memory obviates the need
+to conduct subsequent ARP queries on them. This saves time and network resources.</P>
+<P>Can you guess what type of security risks might be involved in maintaining such
+an ARP cache? At this stage, it is not particularly important. However, address caching
+(not only in ARP but in all instances) does indeed pose a unique security risk. If
+such address-location entries are stored, it makes it easier for a cracker to forge
+a connection from a remote machine, <I>claiming</I> to hail from one of the cached
+addresses.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Readers seeking in-depth
+	information on ARP should see RFC 826 (<A HREF="http://www.freesoft.org/Connected/RFC/826"><TT>http://www.freesoft.org/Connected/RFC/826</TT></A>).<BR>
+	
+<HR>
+
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Another good reference
+	for information on ARP is Margaret K. Johnson's piece about details of TCP/IP (excerpts
+	from <I>Microsoft LAN Manager TCP/IP Protocol</I>) (<A HREF="http://www.alexia.net.au/~www/yendor/internetinfo/index.html"><TT>http://www.alexia.net.au/~www/yendor/internetinfo/index.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>The Internet Control Message Protocol</B></FONT></H3>
+<P>The Internet Control Message Protocol handles error and control messages that
+are passed between two (or more) computers or hosts during the transfer process.
+It allows those hosts to share that information. In this respect, ICMP is critical
+for diagnosis of network problems. Examples of diagnostic information gathered through
+ICMP include</P>
+
+<UL>
+	<LI>When a host is down
+	<LI>When a gateway is congested or inoperable
+	<LI>Other failures on a network
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Perhaps the most widely known ICMP
+	implementation involves a network utility called <I>ping</I>. Ping is often used
+	to determine whether a remote machine is alive. Ping's method of operation is simple:
+	When the user pings a remote machine, packets are forwarded from the user's machine
+	to the remote host. These packets are then echoed back to the user's machine. If
+	no echoed packets are received at the user's end, the ping program usually generates
+	an error message indicating that the remote host is down. 
+<HR>
+</P>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>I urge those readers
+	seeking in-depth information about ICMP to examine RFC 792 (<A HREF="http://sunsite.auc.dk/RFC/rfc/rfc792.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc792.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>The Internet Protocol</B></FONT></H3>
+<P>IP belongs to the network layer. The Internet Protocol provides packet delivery
+for all protocols within the TCP/IP suite. Thus, IP is the heart of the incredible
+process by which data traverses the Internet. To explore this process, I have drafted
+a small model of an IP datagram (see Figure 6.2).</P>
+<P><A NAME="02"></A><A HREF="02.htm"><B>Figure 6.2.</B></A><B><BR>
+</B><I>The IP datagram.</I></P>
+<P>As illustrated, an IP datagram is composed of several parts. The first part, the
+<I>header</I>, is composed of miscellaneous information, including originating and
+destination IP address. Together, these elements form a complete header. The remaining
+portion of a datagram contains whatever data is then being sent.</P>
+<P>The amazing thing about IP is this: If IP datagrams encounter networks that require
+smaller packages, the datagrams bust apart to accommodate the recipient network.
+Thus, these datagrams can fragment during a journey and later be reassembled properly
+(even if they do not arrive in the same sequence in which they were sent) at their
+destination.</P>
+<P>Even further information is contained within an IP datagram. Some of that information
+may include identification of the protocol being used, a header checksum, and a time-to-live
+specification. This specification is a numeric value. While the datagram is traveling
+the void, this numeric value is constantly being decremented. When that value finally
+reaches a zero state, the datagram dies. Many types of packets have time-to-live
+limitations. Some network utilities (such as Traceroute) utilize the time-to-live
+field as a marker in diagnostic routines.</P>
+<P>In closing, IP's function can be reduced to this: providing packet delivery over
+the Internet. As you can see, that packet delivery is complex in its implementation.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>I refer readers seeking
+	in-depth information on Internet protocol to RFC 760 (<A HREF="http://sunsite.auc.dk/RFC/rfc/rfc760.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc760.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>The Transmission Control Protocol</B></FONT></H3>
+<P>The Transmission Control Protocol is the chief protocol employed on the Internet.
+It facilitates such mission-critical tasks as file transfers and remote sessions.
+TCP accomplishes these tasks through a method called <I>reliable</I> data transfer.
+In this respect, TCP differs from other protocols within the suite. In <I>unreliable</I>
+delivery, you have no guarantee that the data will arrive in a perfect state. In
+contrast, TCP provides what is sometimes referred to as <I>reliable stream delivery</I>.
+This reliable stream delivery ensures that the data arrives in the same sequence
+and state in which it was sent.</P>
+<P>The TCP system relies on a virtual circuit that is established between the requesting
+machine and its target. This circuit is opened via a three-part process, often referred
+to as the <I>three-part handshake</I>. The process typically follows the pattern
+illustrated in Figure 6.3.</P>
+<P><A NAME="03"></A><A HREF="03.htm"><B>Figure 6.3.</B></A><B><BR>
+</B><I>The TCP/IP three-way handshake.</I></P>
+<P>After the circuit is open, data can simultaneously travel in both directions.
+This results in what is sometimes called a <I>full-duplex transmission path</I>.
+Full-duplex transmission allows data to travel to both machines at the same time.
+In this way, while a file transfer (or other remote session) is underway, any errors
+that arise can be forwarded to the requesting machine.</P>
+<P>TCP also provides extensive error-checking capabilities. For each block of data
+sent, a numeric value is generated. The two machines identify each transferred block
+using this numeric value. For each block successfully transferred, the receiving
+host sends a message to the sender that the transfer was clean. Conversely, if the
+transfer is unsuccessful, two things may occur:</P>
+
+<UL>
+	<LI>The requesting machine receives error information
+	<LI>The requesting machine receives nothing
+</UL>
+
+<P>When an error is received, the data is retransmitted unless the error is fatal,
+in which case the transmission is usually halted. A typical example of a fatal error
+would be if the connection is dropped. Thus, the transfer is halted for no packets.</P>
+<P>Similarly, if no confirmation is received within a specified time period, the
+information is also retransmitted. This process is repeated as many times as necessary
+to complete the transfer or remote session.</P>
+<P>You have examined how the data is transported when a connect request is made.
+It is now time to examine what happens when that request reaches its destination.
+Each time one machine requests a connection to another, it specifies a particular
+destination. In the general sense, this destination is expressed as the Internet
+(IP) address and the hardware address of the target machine. However, even more detailed
+than this, the requesting machine specifies the application it is trying to reach
+at the destination. This involves two elements:</P>
+
+<UL>
+	<LI>A program called inetd
+	<LI>A system based on ports
+</UL>
+
+<H3><FONT COLOR="#000077"><B>inetd: The Mother of All Daemons</B></FONT></H3>
+<P>Before you explore the inetd program, I want to briefly define daemons. This will
+help you more easily understand the inetd program.</P>
+<P><I>Daemons</I> are programs that continuously listen for other processes (in this
+case, the process listened for is a connection request). Daemons loosely resemble
+<I>terminate and stay resident</I> (TSR) programs in the Microsoft platform. These
+programs remain alive at all times, constantly listening for a particular event.
+When that event finally occurs, the TSR undertakes some action.</P>
+<P>inetd is a very special daemon. It has been called many things, including the
+<I>super-server</I> or <I>granddaddy of all processes</I>. This is because inetd
+is the main daemon running on a UNIX machine. It is also an ingenious tool.</P>
+<P>Common sense tells you that running a dozen or more daemon processes could eat
+up machine resources. So rather than do that, why not create one daemon that could
+listen for all the others? That is what inetd does. It listens for connection requests
+from the void. When it receives such a request, it evaluates it. This evaluation
+seeks to determine one thing only: What service does the requesting machine want?
+For example, does it want FTP? If so, inetd starts the FTP server process. The FTP
+server can then process the request from the void. At that point, a file transfer
+can begin. This all happens within the space of a second or so.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>inetd isn't just for UNIX anymore.
+	For example, Hummingbird Communications has developed (as part of its Exceed 5 product
+	line) a version of inetd for use on any platform that runs Microsoft Windows or OS/2.
+	There are also non- commercial versions of inetd, written by students and other software
+	enthusiasts. One such distribution is available from TFS software and can be found
+	at <A HREF="http://www.trumpton.demon.co.uk/software/inetd.html"><TT>http://www.trumpton.demon.co.uk/software/inetd.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In general, inetd is started at boot time and remains resident (in a listening
+state) until the machine is turned off or until the root operator expressly terminates
+that process.</P>
+<P>The behavior of inetd is generally controlled from a file called <TT>inetd.conf</TT>,
+located in the <TT>/etc</TT> directory on most UNIX platforms. The <TT>inetd.conf</TT>
+file is used to specify what services will be called by inetd. Such services might
+include FTP, Telnet, SMTP, TFTP, Finger, Systat, Netstat, or any other processes
+that you specify.
+<H3><FONT COLOR="#000077"><B>The Ports</B></FONT></H3>
+<P>Many TCP/IP programs can be initiated over the Internet. Most of these are client/server
+oriented. As each connection request is received, inetd starts a server program,
+which then communicates with the requesting client machine.</P>
+<P>To facilitate this process, each application (FTP or Telnet, for example) is assigned
+a unique address. This address is called a <I>port</I>. The application in question
+is bound to that particular port and, when any connection request is made to that
+port, the corresponding application is launched (inetd is the program that launches
+it).</P>
+<P>There are thousands of ports on the average Internet server. For purposes of convenience
+and efficiency, a standard framework has been developed for port assignment. (In
+other words, although a system administrator can bind services to the ports of his
+or her choice, services are generally bound to recognized ports. These are commonly
+referred to as <I>well-known ports</I>.)</P>
+<P>Please peruse Table 6.2 for some commonly recognized ports and the applications
+typically bound to them.
+<H4><FONT COLOR="#000077"><B>Table 6.2. Common ports and their corresponding services
+or applications.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Service or Application</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Port</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">File Transfer Protocol (FTP)</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">21</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Telnet</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">23</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Simple Mail Transfer Protocol (SMTP)</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">25</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Gopher</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">70</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Finger</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">79</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Hypertext Transfer Protocol (HTTP)</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">80</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Network News Transfer Protocol (NNTP)</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">119</TD>
+	</TR>
+</TABLE>
+</P>
+<P>I will examine each of the applications described in Table 6.2. All are application-level
+protocols or services (that is, they are visible to user and the user can interact
+with them at the console).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>For a comprehensive list
+	of all port assignments, visit <A HREF="ftp://ftp.isi.edu/in-notes/iana/assignments/port-numbers"><TT>ftp://ftp.isi.edu/in-notes/iana/assignments/port-numbers</TT></A>.
+	This document is extremely informative and exhaustive in its treatment of commonly
+	assigned port numbers. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H3><FONT COLOR="#000077"><B>Telnet</B></FONT></H3>
+<P>Telnet is best described in RFC 854, the Telnet protocol specification:
+
+<DL>
+	<DD>The purpose of the Telnet protocol is to provide a fairly general, bi-directional,
+	eight-bit byte-oriented communications facility. Its primary goal is to allow a standard
+	method of interfacing terminal devices and terminal-oriented processes to each other.
+</DL>
+
+<P>Telnet not only allows the user to log in to a remote host, it allows that user
+to execute commands on that host. Thus, an individual in Los Angeles can Telnet to
+a machine in New York and begin running programs on the New York machine just as
+though the user were actually in New York.</P>
+<P>For those of you who are unfamiliar with Telnet, it operates much like the interface
+of a bulletin board system (BBS). Telnet is an excellent application for providing
+a terminal-based front end to databases. For example, better than 80 percent of all
+university library catalogs can be accessed via Telnet. Figure 6.4 shows an example
+of a Telnet library catalog screen.</P>
+<P><A NAME="04"></A><A HREF="04.htm"><B>Figure 6.4.</B></A><B><BR>
+</B><I>A sample Telnet session.</I></P>
+<P>Even though GUI applications have taken the world by storm, Telnet--which is essentially
+a text-based application--is still incredibly popular. There are many reasons for
+this. First, Telnet allows you to perform a variety of functions (retrieving mail,
+for example) at a minimal cost in network resources. Second, implementing secure
+Telnet is a pretty simple task. There are several programs to implement this, the
+most popular of which is Secure Shell (which I will explore later in this book).</P>
+<P>To use Telnet, the user issues whatever command necessary to start his or her
+Telnet client, followed the name (or numeric IP address) of the target host. In UNIX,
+this is done as follows:</P>
+<PRE><FONT COLOR="#0066FF">#telnet internic.net
+</FONT></PRE>
+<P>This command launches a Telnet session, contacts <TT>internic.net</TT>, and requests
+a connection. That connection will either be honored or denied, depending on the
+configuration at the target host. In UNIX, the Telnet command has long been a native
+one. That is, Telnet has been included with basic UNIX distributions for well over
+a decade. However, not all operating systems have a native Telnet client. Table 6.3
+shows Telnet clients for various operating systems.
+<H4><FONT COLOR="#000077"><B>Table 6.3. Telnet clients for various operating systems.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating System</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Client</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">UNIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 95</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native (command line), ZOC, NetTerm, Zmud, WinTel32, Yawtelnet</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows NT</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native (command line), CRT, and all listed for 95</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 3.<I>x</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Trumptel Telnet, Wintel, Ewan</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">NCSA Telnet, NiftyTelnet, Comet</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">VAX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+</TABLE>
+
+<H3><FONT COLOR="#000077"><B>File Transfer Protocol</B></FONT></H3>
+<P>File Transfer Protocol is the standard method of transferring files from one system
+to another. Its purpose is set forth in RFC 0765 as follows:
+
+<DL>
+	<DD>The objectives of FTP are 1) to promote sharing of files (computer programs and/or
+	data), 2) to encourage indirect or implicit (via programs) use of remote computers,
+	3) to shield a user from variations in file storage systems among Hosts, and 4) to
+	transfer data reliably and efficiently. FTP, though usable directly by a user at
+	a terminal, is designed mainly for use by programs.
+</DL>
+
+<P>For over two decades, researchers have investigated a wide variety of file-transfer
+methods. The development of FTP has undergone many changes in that time. Its first
+definition occurred in April 1971, and the full specification can be read in RFC
+114.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>RFC 114 contains the
+	first definition of FTP, but a more practical document might be RFC 959 (<A HREF="http://www.freesoft.org/Connected/RFC/959/index.html"><TT>http://www.freesoft.org/Connected/RFC/959/index.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Mechanical Operation of FTP</B></FONT></H4>
+<P>File transfers using FTP can be accomplished using any suitable FTP client. Table
+6.4 defines some common clients used, by operating system.
+<H4><FONT COLOR="#000077"><B>Table 6.4. FTP clients for various operating systems.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating System</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Client</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">UNIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native, LLNLXDIR2.0, FTPtool</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 95</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native, WS_FTP, Netload, Cute-FTP, Leap FTP, SDFTP, FTP Explorer</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows NT</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">See listings for Windows 95</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 3.<I>x</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Win_FTP, WS_FTP, CU-FTP, WSArchie</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Anarchie, Fetch, Freetp</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">OS/2</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Gibbon FTP, FTP-IT, Lynn's Workplace FTP</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">VAX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native</TD>
+	</TR>
+</TABLE>
+
+<H4><FONT COLOR="#000077"><B>How Does FTP Work?</B></FONT></H4>
+<P>FTP file transfers occur in a client/server environment. The requesting machine
+starts one of the clients named in Table 6.4. This generates a request that is forwarded
+to the targeted file server (usually a host on another network). Typically, the request
+is sent by inetd to port 21. For a connection to be established, the targeted file
+server must be running an FTP server or FTP daemon.</P>
+<P><B>FTPD</B> FTPD is the standard FTP server daemon. Its function is simple: to
+reply to connect requests received by inetd and to satisfy those requests for file
+transfers. This daemon comes standard on most distributions of UNIX (for other operating
+systems, see Table 6.5).
+<H4><FONT COLOR="#000077"><B>Table 6.5. FTP servers for various operating systems.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating System</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Client</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">UNIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Native (FTPD)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 95</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">WFTPD, Microsoft FrontPage, WAR FTP Daemon, Vermilion</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows NT</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Serv-U, OmniFSPD, Microsoft Internet Information Server</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 3.<I>x</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">WinQVT, Serv-U, Beames &amp; Whitside BW Connect, WFTPD FTP Server, WinHTTPD</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Netpresenz, FTPD</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">OS/2</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Penguin</TD>
+	</TR>
+</TABLE>
+</P>
+<P>FTPD waits for a connection request. When such a request is received, FTPD requests
+the user login. The user must either provide his or her valid user login and password
+or may log in anonymously.</P>
+<P>Once logged in, the user may download files. In certain instances and if security
+on the server allows, the user may also upload files.
+<H4><FONT COLOR="#000077"><B>Simple Mail Transfer Protocol</B></FONT></H4>
+<P>The objective of Simple Mail Transfer protocol is stated concisely in RFC 821:
+
+<DL>
+	<DD>The objective of Simple Mail Transfer protocol (SMTP) is to transfer mail reliably
+	and efficiently.
+</DL>
+
+<P>SMTP is an extremely lightweight and efficient protocol. The user (utilizing any
+SMTP- compliant client) sends a request to an SMTP server. A two-way connection is
+subsequently established. The client forwards a MAIL instruction, indicating that
+it wants to send mail to a recipient somewhere on the Internet. If the SMTP allows
+this operation, an affirmative acknowledgment is sent back to the client machine.
+At that point, the session begins. The client may then forward the recipient's identity,
+his or her IP address, and the message (in text) to be sent.</P>
+<P>Despite the simple character of SMTP, mail service has been the source of countless
+security holes. (This may be due in part to the number of options involved. Misconfiguration
+is a common reason for holes.) I will discuss these security issues later in this
+book.</P>
+<P>SMTP servers are native in UNIX. Most other networked operating systems now have
+some form of SMTP, so I'll refrain from listing them here.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Further information on
+	this protocol is available in RFC 821 (<A HREF="http://sunsite.auc.dk/RFC/rfc/rfc821.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc821.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Gopher</B></FONT></H4>
+<P>The Gopher service is a distributed document-retrieval system. It was originally
+implemented as the Campus Wide Information System at the University of Minnesota.
+It is defined in a March 1993 FYI from the University of Minnesota as follows:
+
+<DL>
+	<DD>The Internet Gopher protocol is designed primarily to act as a distributed document-delivery
+	system. While documents (and services) reside on many servers, Gopher client software
+	presents users with a hierarchy of items and directories much like a file system.
+	In fact, the Gopher interface is designed to resemble a file system since a file
+	system is a good model for locating documents and services.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The complete documentation
+	on the Gopher protocol can be obtained in RFC 1436 (<A HREF="http://sunsite.auc.dk/RFC/rfc/rfc1436.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc1436.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The Gopher service is very powerful. It can serve text documents, sounds, and
+other media. It also operates largely in text mode and is therefore much faster than
+HTTP through a browser. Undoubtedly, the most popular Gopher client is for UNIX.
+(Gopher2_3 is especially popular, followed by Xgopher.) However, many operating systems
+have Gopher clients. See Table 6.6 for a few.
+<H4><FONT COLOR="#000077"><B>Table 6.6. Gopher clients for various operating systems.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating System</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Client</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows (all)</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Hgopher, Ws_Gopher</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Mac Turbo Gopher</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">AS/400</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The AS/400 Gopher Client</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">OS/2</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Os2Gofer</TD>
+	</TR>
+</TABLE>
+</P>
+<P>Typically, the user launches a Gopher client and contacts a given Gopher server.
+In turn, the Gopher server forwards a menu of choices. These may include search menus,
+pre-set destinations, or file directories. Figure 6.5 shows a client connection to
+the University of Illinois.</P>
+<P><A NAME="05"></A><A HREF="05.htm"><B>Figure 6.5.</B></A><B><BR>
+</B><I>A sample gopher session.</I></P>
+<P>Note that the Gopher model is completely client/server based. The user never logs
+on per se. Rather, the client sends a message to the Gopher server, requesting all
+documents (or objects) currently available. The Gopher server responds with this
+information and does nothing else until the user requests an object.
+<H4><FONT COLOR="#000077"><B>Hypertext Transfer Protocol</B></FONT></H4>
+<P>Hypertext Transfer Protocol is perhaps the most renowned protocol of all because
+it is this protocol that allows users to surf the Net. Stated briefly in RFC 1945,
+HTTP is
+
+<DL>
+	<DD>...an application-level protocol with the lightness and speed necessary for distributed,
+	collaborative, hypermedia information systems. It is a generic, stateless, object-oriented
+	protocol which can be used for many tasks, such as name servers and distributed object
+	management systems, through extension of its request methods (commands). A feature
+	of HTTP is the typing of data representation, allowing systems to be built independently
+	of the data being transferred.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>RFC 1945 has been superseded by
+	RFC 2068, which is a more recent specification of HTTP and is available at <A HREF="ftp://ds.internic.net/rfc/rfc2068.txt"><TT>ftp://ds.internic.net/rfc/rfc2068.txt</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>HTTP has forever changed the nature of the Internet, primarily by bringing the
+Internet to the masses. In some ways, its operation is much like Gopher. For example,
+it too works via a request/response scenario. And this is an important point. Whereas
+applications such as Telnet require that a user remain logged on (and while they
+are logged on, they consume system resources), protocols such as Gopher and HTTP
+eliminate this phenomenon. Thus, the user is pushed back a few paces. The user (client)
+only consumes system resources for the instant that he or she is either requesting
+or receiving data.</P>
+<P>Using a common browser like Netscape Navigator or Microsoft Internet Explorer,
+you can monitor this process as it occurs. For each data element (text, graphic,
+sound) on a WWW page, your browser will contact the server one time. Thus, it will
+first grab text, then a graphic, then a sound file, and so on. In the lower-left
+corner of your browser's screen is a status bar. Watch it for a few moments when
+it is loading a page. You will see this request/response activity occur, often at
+a very high speed.</P>
+<P>HTTP doesn't particularly care what type of data is requested. Various forms of
+multimedia can be either embedded within or served remotely via HTML-based WWW pages.
+In short, HTTP is an extremely lightweight and effective protocol. Clients for this
+protocol are enumerated in Table 6.7.
+<H4><FONT COLOR="#000077"><B>Table 6.7. HTTP clients for various operating systems.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating System</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>HTTP Client</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows (all)</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Netscape Navigator, WinWeb, Mosaic, Microsoft Internet Explorer, WebSurfer, NetCruiser,
+			AOL, Prodigy</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Netscape Navigator, MacMosaic, MacWeb, Samba, Microsoft Internet Explorer</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">UNIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Xmosaic, Netscape Navigator, Grail, Lynx, TkWWW, Arena</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">OS/2</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Web Explorer, Netscape Navigator</TD>
+	</TR>
+</TABLE>
+</P>
+<P>Until recently, UNIX alone supported an HTTP server. (The standard was NCSA HTTPD.
+Apache has now entered the race, giving HTTPD strong competition in the market.)
+The application is extremely small and compact. Like most of its counterparts, it
+runs as a daemon. Its typically assigned port is 80. Today, there are HTTP servers
+for nearly every operating system. Table 6.8 lists those servers.
+<H4><FONT COLOR="#000077"><B>Table 6.8. HTTP server for various operating systems.</B></FONT></H4>
+<P>
+<TABLE BORDER="1">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>Operating System</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP"><I>HTTP Server</I></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 3.<I>x</I></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Website, WinHTTPD</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows 95</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">OmniHTTPD, Server 7, Nutwebcam, Microsoft Personal Web Server, Fnord, ZB Server,
+			Website, Folkweb</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Microsoft Windows NT</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">HTTPS, Internet Information Server, Alibaba, Espanade, Expresso, Fnord, Folkweb,
+			Netpublisher, Weber, OmniHTTPD, WebQuest, Website, Wildcat</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">Macintosh</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">MacHTTP, Webstar, Phantom, Domino, Netpresenz</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">UNIX</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">HTTPD, Apache</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP">OS/2</TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">GoServe, OS2HTTPD, OS2WWW, IBM Internet Connection Server, Bearsoft, Squid &amp;
+			Planetwood</TD>
+	</TR>
+</TABLE>
+
+<H4><FONT COLOR="#000077"><B>Network News Transfer Protocol</B></FONT></H4>
+<P>The Network News Transfer Protocol is one of the most widely used protocols. It
+provides modern access to the news service commonly known as USENET news. Its purpose
+is defined in RFC 977:
+
+<DL>
+	<DD>NNTP specifies a protocol for the distribution, inquiry, retrieval, and posting
+	of news articles using a reliable stream-based transmission of news among the ARPA-Internet
+	community. NNTP is designed so that news articles are stored in a central database
+	allowing a subscriber to select only those items he wishes to read. Indexing, cross-referencing,
+	and expiration of aged messages are also provided.
+</DL>
+
+<P>NNTP shares characteristics with both Simple Mail Transfer Protocol and TCP. Similarities
+to SMTP consist of NNTP's acceptance of plain-English commands from a prompt. It
+is similar to TCP in that stream-based transport and delivery is used. NNTP typically
+runs from Port 119 on any UNIX system.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>I refer readers seeking
+	in-depth information on NNTP to RFC 977 (<A HREF="http://andrew2.andrew.cmu.edu/rfc/rfc977.html"><TT>http://andrew2.andrew.cmu.edu/rfc/rfc977.html</TT></A>).<BR>
+	You may also wish to obtain RFC 850 for examination of earlier implementations of
+	the standard (<A HREF="http://sunsite.auc.dk/RFC/rfc/rfc850.html"><TT>http://sunsite.auc.dk/RFC/rfc/rfc850.html</TT></A>).
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H4><FONT COLOR="#000077"><B>Concepts</B></FONT></H4>
+<P>You have examined TCP/IP services and protocols individually, in their static
+states. You have also examined the application-level protocols. This was necessary
+to describe each protocol and what they accomplish. Now it is time to examine the
+larger picture.
+<H2><FONT COLOR="#000077"><B>TCP/IP <I>Is</I> the Internet</B></FONT></H2>
+<P>By now, it should be apparent that TCP/IP basically comprises the Internet itself.
+It is a complex collection of protocols, many of which remain invisible to the user.
+On most Internet servers, a minimum of these protocols exist:</P>
+
+<UL>
+	<LI>Transmission Control Protocol
+	<LI>Internet Protocol
+	<LI>Internet Control Message Protocol
+	<LI>Address Resolution Protocol
+	<LI>File Transfer Protocol
+	<LI>The Telnet protocol
+	<LI>The Gopher protocol
+	<LI>Network News Transfer Protocol
+	<LI>Simple Mail Transfer Protocol
+	<LI>Hypertext Transfer Protocol
+</UL>
+
+<P>Now, prepare yourself for a shock. These are only a handful of protocols run on
+the Internet. There are actually hundreds of them. Better than half of the primary
+protocols have had one or more security holes.</P>
+<P>In essence, the point I would like to make is this: The Internet was designed
+as a system with multiple avenues of communication. Each protocol is one such avenue.
+As such, there are hundreds of ways to move data across the Net.</P>
+<P>Until recently, utilizing these protocols called for accessing them one at a time.
+That is, to arrest a Gopher session and start a Telnet session, the user had to physically
+terminate the Gopher connection.</P>
+<P>The HTTP browser changed all that and granted the average user much greater power
+and functionality. Indeed, FTP, Telnet, NTTP, and HTTP are all available at the click
+of a button.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>In this chapter, you learned about TCP/IP. Relevant points about TCP/IP include</P>
+
+<UL>
+	<LI>The TCP/IP protocol suite contains all protocols necessary to facilitate data
+	transfer over the Internet
+	<LI>The TCP/IP protocol suite provides quick, reliable networking without consuming
+	heavy network resources
+	<LI>TCP/IP is implemented on almost all computing platforms
+</UL>
+
+<P>Now that know the fundamentals of TCP/IP, you can progress to the next chapter.
+In it, you will explore some of the reasons why the Internet is not secure. As you
+can probably guess, there will be references to TCP/IP throughout that chapter.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="../ch05/ch05.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch07/ch07.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+<IMG SRC="../button/corp.gif" WIDTH="284" HEIGHT="45" ALIGN="BOTTOM" ALT="Macmillan Computer Publishing USA"
+BORDER="0"></P>
+
+<P>&#169; <A HREF="../copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

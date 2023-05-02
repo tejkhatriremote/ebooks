@@ -1,0 +1,305 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=038-042//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Three message-handling functions must be added to the <small>CVMGridDlg</SMALL> class, as shown in Table 2.4:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnMouseDownGrid</SMALL> is a handler for the <small>MouseDown</SMALL> message from the grid control. When the user clicks the mouse over a grid cell, the grid location will be determined and the virtual memory page that contains that cell will be committed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnFree</SMALL> is a handler for the <small>IDC_FREE</SMALL> pushbutton control. When this button is pressed, all the reserved virtual memory for the grid is freed. <dd><b>&#149;</B>&nbsp;&nbsp;<small>OnReserve</SMALL> is a handler for the <small>IDC_RESERVE</SMALL> pushbutton control. When this button is pushed, virtual memory for the grid control will be reserved.
+</DL>
+<p>The added message-handling functions for the <small>IDC_GRID</SMALL>, <small>IDC_FREE</SMALL>, and <small>IDC_RESERVE</SMALL> controls are listed in Table 2.4.</P>
+<table width="100%"><caption align="LEFT" colspan="4"><b>Table 2.4</B> Adding Message-handling Functions for the Main Dialog Box
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th width="20%" align="LEFT"><i>Object ID</I>
+<th width="20%" align="LEFT"><i>Message</I>
+<th width="20%" align="LEFT"><i>Class</I>
+<th width="40%" align="LEFT"><i>Function</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_GRID</SMALL>
+<td align="LEFT" valign="TOP"><small>MouseDown</SMALL>
+<td align="LEFT" valign="TOP"><small>CVMGridDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>OnMouseDownGrid</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_FREE</SMALL>
+<td align="LEFT" valign="TOP"><small>BN_CLICKED</SMALL>
+<td align="LEFT" valign="TOP"><small>CVMGridDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>OnFree</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_RESERVE</SMALL>
+<td align="LEFT" valign="TOP"><small>BM_CLICKED</SMALL>
+<td align="LEFT" valign="TOP"><small>CVMGridDlg</SMALL>
+<td align="LEFT" valign="TOP"><small>OnReserve</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>A <small>CGridItem</SMALL> structure is used to represent chunks of virtual memory used by VMGrid. The actual size of each <small>CGridItem</SMALL> depends on the size of <small>TCHAR</SMALL>. In Unicode builds, each <small>CGridItem</SMALL> is a 2KB chuck of virtual memory. In non-Unicode builds, it&#146;s a 1KB chuck of virtual memory. The class definition provided in Listing 2.3 is part of the <small>VMGridDlg.cpp</SMALL> file, before any <small>CVMGridDlg</SMALL> class member functions.</P>
+<p><b>Listing 2.3</B> The <i>CGridItem</I> Structure Used by VMGrid<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+   #define CHUNK_LENGTH 1024
+   struct CGridItem
+   {
+       TCHAR m_chData[CHUNK_LENGTH];
+   };
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>The VMGrid application uses <small>VirtualAlloc</SMALL> to reserve a 100KB range of addresses when it&#146;s initialized. The source code shown in bold in Listing 2.4 has been added to the <small>CVMGrid::OnInitDialog</SMALL> function to reserve this range of addresses.</P>
+<p><b>Listing 2.4</B> Changes Made to the <i>CVMGridDlg::OnInitDialog</I> Function<hr></P>
+<!-- CODE //-->
+<pre>
+   BOOL CVMGridDlg::OnInitDialog()
+   {
+       .
+       // existing code
+       .
+       .
+       .
+       // TODO: Add extra initialization here
+       <b>m_pVirtualAlloc = (TCHAR*)VirtualAlloc(NULL,
+                                       100 * sizeof(CGridItem),
+                                       MEM_RESERVE,
+                                       PAGE_NOACCESS);
+       ASSERT(m_pVirtualAlloc);
+       m_btnReserve.EnableWindow(FALSE);
+       UpdateGrid();</B>
+       return TRUE;
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>After the Free button is clicked, all the virtual memory is released by the VMGrid application through the <small>VirtualFree</SMALL> function. After the Reserve button is clicked, the 100KB range of virtual memory addresses is reserved, just as in <small>OnInitDialog</SMALL>. Listing 2.5 shows the source code for the <small>OnFree</SMALL> and <small>OnReserve</SMALL> functions.</P>
+<p><b>Listing 2.5</B> Reserving and Freeing Virtual Memory in VMGrid<hr></P>
+<!-- CODE //-->
+<pre>
+   void CVMGridDlg::OnReserve()
+   {
+       ASSERT(m_pVirtualAlloc == NULL);
+       if(m_pVirtualAlloc == NULL)
+       {
+           m_pVirtualAlloc = (TCHAR*)VirtualAlloc(NULL,
+                                          100 * sizeof(CGridItem),
+                                          MEM_RESERVE,
+                                          PAGE_NOACCESS);
+           ASSERT(m_pVirtualAlloc);
+           m_btnFree.EnableWindow();
+           m_btnReserve.EnableWindow(FALSE);
+           UpdateGrid();
+       }
+   }
+   void CVMGridDlg::OnFree()
+   {
+       ASSERT(m_pVirtualAlloc != NULL);
+       if(m_pVirtualAlloc != NULL)
+       {
+           VirtualFree(m_pVirtualAlloc, 0, MEM_RELEASE);
+           m_pVirtualAlloc = NULL;
+           m_btnFree.EnableWindow(FALSE);
+           m_btnReserve.EnableWindow();
+           UpdateGrid();
+       }
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>After a range of virtual memory is reserved, the user can commit a page of virtual memory by clicking a grid cell. Each cell represents a chunk of virtual memory. Because virtual memory is managed in pages, clicking an uncommitted cell results in several cells being committed. Listing 2.6 shows the source code that handles mouse clicks reported from the grid control.
+</P>
+<p><b>Listing 2.6</B> Handling Mouse Clicks in the Grid Control<hr></P>
+<!-- CODE //-->
+<pre>
+   void CVMGridDlg::OnMouseDownGrid(short Button, short Shift, long x, long y)
+   {
+       if(m_pVirtualAlloc != NULL)
+       {
+           int nIndex = m_grid.GetRow() * 10 &#43; m_grid.GetCol();
+           CommitAt(nIndex);
+           UpdateGrid();
+       }
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Two new member functions for the <small>CVMGridDlg</SMALL> class must be added manually:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CommitAt</SMALL>. Copies a string to a section of virtual memory, committing the page if needed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>UpdateGrid</SMALL>. Runs through the virtual address space reserved by VMGrid and displays the status of the memory addresses represented by the grid.
+</DL>
+<p>Listing 2.7 contains the source code for these functions.
+</P>
+<p><b>Listing 2.7</B> Memory-handling and Reporting Functions for the <i>CVMGridDlg</I> Class<hr></P>
+<!-- CODE //-->
+<pre>
+   void CVMGridDlg::CommitAt(int index)
+   {
+       _ _try
+       {
+           // Try a simple access to test if the page is committed.
+           TCHAR chTest = *(m_pVirtualAlloc &#43; index * CHUNK_LENGTH);
+           // The page is committed, just do a string copy
+           lstrcpy(m_pVirtualAlloc &#43; index * CHUNK_LENGTH,
+                   _T(&#147;Committed&#148;));
+       }
+       _ _except(GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+       {
+           VirtualAlloc(m_pVirtualAlloc &#43; index*CHUNK_LENGTH,
+                        sizeof(CGridItem),
+                        MEM_COMMIT,
+                        PAGE_READWRITE);
+           lstrcpy(m_pVirtualAlloc &#43; index*CHUNK_LENGTH,
+                   _T(&#147;Committed&#148;));
+       }
+   }
+   void CVMGridDlg::UpdateGrid()
+   {
+       MEMORY_BASIC_INFORMATION  mbi;
+       VOID* pAddr = m_pVirtualAlloc;
+       TRACE(_T(&#147;updategrid -- \n&#148;));
+       TRACE(_T(&#147;m_pVirtualAlloc at %X\n&#148;), m_pVirtualAlloc);
+       do{
+           int cQuery = VirtualQuery(pAddr, &ampmbi, sizeof(mbi));
+           if(cQuery != sizeof(MEMORY_BASIC_INFORMATION))
+               break;
+           if(mbi.AllocationBase == 0)
+               break;
+           // Change the status of the grid control
+           LPTSTR   pszMsg;
+           switch(mbi.State)
+           {
+           case MEM_RESERVE:
+               pszMsg = _T(&#147;Res&#148;);
+               break;
+           case MEM_COMMIT:
+               pszMsg = _T(&#147;Com&#148;);
+               break;
+           case MEM_FREE:
+               pszMsg = _T(&#147;Free&#148;);
+               break;
+           default:
+               pszMsg = _T(&#147;Unk&#148;);
+               break;
+           }
+           TRACE(_T(&#147;vm info - allocation starts at %X\n&#148;), mbi.AllocationBase);
+           TRACE(_T(&#147;vm info - base at %X\n&#148;), mbi.BaseAddress);
+           TRACE(_T(&#147;vm info - region size is %X\n&#148;), mbi.RegionSize);
+           TRACE(_T(&#147;vm info - state is %s\n&#148;), pszMsg);
+           ULONG delta = (char*)mbi.BaseAddress - (char*)mbi.AllocationBase;
+           ULONG nGridStart =  delta/sizeof(CGridItem);
+           int cGrids = mbi.RegionSize/sizeof(CGridItem);
+           int nFoo = mbi.RegionSize;
+           TRACE(_T(&#147;Grid start is %d, grid count is %d\n&#148;), nGridStart, cGrids);
+           while(cGrids != 0 &amp&amp nGridStart &lt 100)
+           {
+               int nCol = nGridStart%10;
+               int nRow = nGridStart/10;
+               m_grid.SetRow(nRow);
+               m_grid.SetCol(nCol);
+               m_grid.SetText(pszMsg);
+               nGridStart<small>&#43;&#43;</SMALL>;
+               cGrids--;
+           }
+           // Get the next Chunk O&#146; RAM
+           if(nGridStart &lt 100)
+               pAddr = (char*)mbi.BaseAddress &#43; mbi.RegionSize;
+           else
+               break;
+       } while(pAddr);
+       m_grid.SetRow(0);
+       m_grid.SetCol(0);
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>CommitAt</SMALL> function provided in Listing 2.7 tries to access an address represented by a grid location clicked by a user. It starts by trying to access the first address represented by the cell; if the cell is not committed, an <small>EXCEPTION_ACCESS_VIOLATION</SMALL> exception is raised. The exception handler first commits the page and then copies a string at the address.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,1572 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Storage allocation
+Date: Fri, 13 May 2005 09:53:16 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0043_01C557A1.95E4FB10"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker04.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Storage allocation</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Storage allocation</H1><I>$Revision: 2.3 $</I> <BR><I>$Date: =
+1999/06/15=20
+03:30:36 $</I>=20
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>
+      <P>
+      <P>A linker or loader's first major task is storage allocation. =
+Once=20
+      storage is allocated, the linker can proceed to subsequent phases =
+of=20
+      symbol binding and code fixups. Most of the symbols defined in a =
+linkable=20
+      object file are defined relative to storage areas within the file, =
+so the=20
+      symbols cannot be resolved until the areas' addresses are known.=20
+      <P>
+      <P>As is the case with most other aspects of linking, the basic =
+issues in=20
+      storage allocation are straightforward, but the details to handle=20
+      peculiarities of computer architecture and programming language =
+semantics=20
+      (and the interactions between the two) can get complicated. Most =
+of the=20
+      job of storage allocation can be handled in an elegant and =
+relatively=20
+      architecture-independent way, but there are invariably a few =
+details that=20
+      require ad hoc machine specific hackery. =
+</P></TD></TR></TBODY></TABLE>
+<P>
+<H2>Segments and addresses</H2>Every object or executable file uses a =
+model of=20
+the target address space. Usually the target is the target computer's=20
+application address space, but there are cases where it's something =
+else, such=20
+as a shared library. The fundamental issue in a relocating linker or =
+loader is=20
+to ensure that all the segments in a program are defined and have =
+addresses, but=20
+that addresses don't overlap where they're not supposed to.=20
+<P>
+<P>Each of the linker's input files contains a set of segments of =
+various types.=20
+Different kinds of segments are treated in different ways. Most commonly =
+all=20
+segments of a particular type. such as executable code, are concatenated =
+into a=20
+single segment in the output file. Sometimes segments are merged one on =
+top of=20
+another, as for Fortran common blocks, and in an increasing number of =
+cases, for=20
+shared libraries and C++ special features, the linker itself needs to =
+create=20
+some segments and lay them out.=20
+<P>
+<P>Storage layout is a two-pass process, since the location of each =
+segment=20
+can't be assigned until the sizes of all segments that logically precede =
+it are=20
+known.=20
+<P>
+<H2>Simple storage layout</H2>In a simple but not unrealistic situation, =
+the=20
+input to a linker consists of a set of modules, call them M<SUB>1</SUB> =
+through=20
+M<SUB>n</SUB>, each of which consists of a single segment starting at =
+location 0=20
+of length L<SUB>1</SUB> through L<SUB>n</SUB>, and the target address =
+space also=20
+starts at zero, Figure 1.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-01.html"><IMG=20
+      height=3D62 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> Single segment storage allocation <BR>bunch of=20
+      segments all starting at zero are relocated one after another=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>The linker or loader examines each module in turn, allocating storage =
+
+sequentially. The starting address of M<SUB>i</SUB> is the sum of =
+L<SUB>1</SUB>=20
+through L<SUB>i-1</SUB>, and the length of the linked program is the sum =
+of=20
+L<SUB>1</SUB> through L<SUB>n</SUB>.=20
+<P>
+<P>Most architectures require that data be aligned on word boundaries, =
+or at=20
+least run faster if data is aligned, so linkers generally round each=20
+L<SUB>i</SUB> up to a multiple of the most stringent alignment that the=20
+architecture requires, typically 4 or 8 bytes.=20
+<P>
+<P>Example 1: Assume a main program called main is to be linked with =
+three=20
+subroutines called calif, mass, and newyork. (It allocates venture =
+capital=20
+geographically.) The sizes of each routine are (in hex): l r. name size =
+_ main=20
+1017 calif 920 mass 615 newyork 1390 Assume that storage allocation =
+starts at=20
+location 1000 hex, and that the alignment is four bytes. Then the =
+allocations=20
+might be: l r. name location _ main 1000 - 2016 calif 2018 - 2937 mass =
+2938 -=20
+2f4c newyork 2f50 - 42df Due to alignment, one byte at 2017 and three =
+bytes at=20
+2f4d are wasted, not enough to worry about.=20
+<P>
+<H2>Multiple segment types</H2>
+<TABLE cellSpacing=3D0 cols=3D1 cellPadding=3D0 bgColor=3Dpink>
+  <TBODY>
+  <TR>
+    <TD>In all but the simplest object formats, there are several kinds =
+of=20
+      segment, and the linker needs to group corresponding segments from =
+all of=20
+      the input modules together. On a Unix system with text and data =
+segments,=20
+      the linked file needs to have all of the text collected together, =
+followed=20
+      by all of the data, followed logically by the BSS. (Even though =
+the BSS=20
+      doesn't take space in the output file, it needs to have space =
+allocated to=20
+      resolve BSS symbols, and to indicate the size of BSS to allocate =
+when the=20
+      output file is loaded.) This requires a two-level storage =
+allocation=20
+      strategy.=20
+      <P>
+      <P>Now each module M<SUB>i</SUB> has text size T<SUB>i</SUB>, data =
+size=20
+      D<SUB>i</SUB>, and BSS size B<SUB>i</SUB>, Figure 2.=20
+      <P>
+      <CENTER>
+      <TABLE border=3D3>
+        <TBODY>
+        <TR>
+          <TD><A =
+href=3D"http://www.iecc.com/linker/linkerfig04-02.html"><IMG=20
+            height=3D104 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-02.jpg"=20
+            width=3D100></A> </TD>
+          <TD><I>Figure 2:</I> Multiple segment storage allocation =
+<BR>text,=20
+            data, and BSS segments being combined separately=20
+      </TD></TR></TBODY></TABLE></CENTER>
+      <P>As it reads each input module, the linker allocates space for =
+each of=20
+      the T<SUB>i</SUB>, D<SUB>i</SUB>, and B<SUB>i</SUB> as though each =
+segment=20
+      were separately allocated at zero. After reading all of the input =
+files,=20
+      the linker now knows the total size of each of the three segments, =
+
+      T<SUB>tot</SUB>, D<SUB>tot</SUB>, and B<SUB>tot</SUB>. Since the =
+data=20
+      segment follows the text segment, the linker adds T<SUB>tot</SUB> =
+to the=20
+      address assigned for each of the data segments, and since the BSS =
+segment=20
+      follows both the text and data segments, the linker adds the sum =
+of=20
+      T<SUB>tot</SUB> and D<SUB>tot</SUB> to the allocated BSS segments. =
+
+      <P>
+      <P>Again, the linker usually needs to round up each allocated =
+size.=20
+      <P>
+      <H2>Segment and page alignment</H2>If the text and data segments =
+are=20
+      loaded into separate memory pages, as is generally the case, the =
+size of=20
+      the text segment has to be rounded up to a full page and the data =
+and BSS=20
+      segment locations correspondingly adjusted. Many Unix systems use =
+a trick=20
+      that saves file space by starting the data immediately after the =
+text in=20
+      the object file, and mapping that page in the file into virtual =
+memory=20
+      twice, once read-only for the text and once copy-on-write for the =
+data. In=20
+      that case, the data addresses logically start exactly one page =
+beyond the=20
+      end of the text, so rather than rounding up, the data addresses =
+start=20
+      exactly 4K or whatever the page size is beyond the end of the =
+text.=20
+      <P>
+      <P></P></TD></TR></TBODY></TABLE>Example 2: We expand on Example 1 =
+so that each=20
+routine has a text, data, and bss segment. The word alignment remains 4 =
+bytes,=20
+but the page size is 0x1000 bytes. l r r r. name text data bss _ main =
+1017 320=20
+50 calif 920 217 100 mass 615 300 840 newyork 1390 1213 1400 (all =
+numbers hex)=20
+<P>
+<P>The linker first lays out the text, then the data, then the bss. Note =
+that=20
+the data section starts on a page boundary at 0x5000, but the bss starts =
+
+immediately after the data, since at run time data and bss are logically =
+one=20
+segment. l r r r. name text data bss _ main 1000 - 2016 5000 - 531f 695c =
+- 69ab=20
+calif 2018 - 2937 5320 - 5446 69ac - 6aab mass 2938 - 2f4c 5448 - 5747 =
+6aac -=20
+72eb newyork 2f50 - 42df 5748 - 695a 72ec - 86eb There's wasted space at =
+the end=20
+of the page between 42e0 and 5000. The bss segment ends in mid-page at =
+86eb, but=20
+typically programs allocate heap space starting immediately after that.=20
+<P>
+<H2>Common blocks and other special segments</H2>The straightforward =
+segment=20
+allocation scheme above works nicely for about 80% of the storage that =
+linkers=20
+deal with. The rest is handled with special case hacks. Here we look at =
+some of=20
+the more popular ones.=20
+<P>
+<H3>Common</H3>Common storage is a feature dating back to Fortran I in =
+the=20
+1950s. In the original Fortran system, each subprogram (main program, =
+function,=20
+or subroutine) had its own statically declared and allocated scalar and =
+array=20
+variables. There was also a common area with scalars and arrays that all =
+
+subprograms could use. Common storage proved very useful, and in =
+subsequent=20
+versions of Fortran it was generalized from a single common block (now =
+known as=20
+blank common, as in the name consists of blanks) to multiple named =
+common=20
+blocks, with each subprogram declaring the blocks that it uses.=20
+<P>
+<P>For the first 40 years of its existence, Fortran didn't support =
+dynamic=20
+storage allocation, and common blocks were the primary tool that Fortran =
+
+programmers used to circumvent that restriction. Standard Fortran =
+permits blank=20
+common to be declared with different sizes in different routines, with =
+the=20
+largest size taking precedence. Fortran systems universally extend this =
+to allow=20
+all common blocks to be declared with different sizes, again with the =
+largest=20
+size taking precedence.=20
+<P>
+<P>Large Fortran programs often bump up against the memory limits in the =
+systems=20
+in which they run, so in the absence of dynamic memory allocation, =
+programmers=20
+frequently rebuild a package, tweaking the sizes to fit whatever problem =
+a=20
+package is working on. All but one of the subprograms in a package =
+declare each=20
+common block as a one-element array. One of the subprograms declares the =
+actual=20
+size of all the common blocks, and at startup time puts the sizes in =
+variables=20
+(in yet another common block) that the rest of the package can use. This =
+makes=20
+it possible to adjust the size of the blocks by changing and recompiling =
+a=20
+single routine that defines them, and then relinking.=20
+<P>
+<P>As an added complication, starting in the 1960s Fortran added BLOCK =
+DATA to=20
+specify static initial data values for all or part of any common block =
+(except=20
+for blank common, a restriction rarely enforced.) Usually the size of =
+the common=20
+block in the BLOCK DATA that initializes a block is taken to be the =
+block's=20
+actual size at link time.=20
+<P>
+<P>To handle common blocks, the linker treats the declaration of a =
+common block=20
+in an input file as a segment, but overlays all of the blocks with the =
+same name=20
+rather than concatenating these segments. It uses the largest declared =
+size as=20
+the segment's size, unless one of the input files has an initialized =
+version of=20
+the segment. In some systems, initialized common is a separate segment =
+type,=20
+while in others it's just part of the data segment.=20
+<P>
+<P>Unix linkers have always supported common blocks, since even the =
+earliest=20
+versions of Unix had a Fortran subset compiler, and Unix versions of C =
+have=20
+traditionally treated uninitialized global variables much like common =
+blocks.=20
+But the pre-ELF versions of Unix object files only had the text, data, =
+and bss=20
+segments with no direct way to declare a common block. As a special case =
+hack,=20
+linkers treated a symbol that was flagged as undefined but nonetheless =
+had a=20
+non-zero value as a common block, with the value being the size of the =
+block.=20
+The linker took the largest value encountered for such symbols as the =
+size of=20
+the common block. For each block, it defined the symbol in the bss =
+segment of=20
+the output file, allocating the required amount of space after each =
+symbol,=20
+Figure 3.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-03.html"><IMG=20
+      height=3D71 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-03.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 3:</I> Unix common blocks <BR>common at the end of bss =
+
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<H3>C++ duplicate removal</H3>In some compilation systems, C++ compilers =
+produce=20
+a great deal of duplicated code due to virtual function tables, =
+templates and=20
+extern inline functions. The design of those features implicitly expects =
+an=20
+environment in which all of the pieces of a program are processed=20
+simultaneously. A virtual function table (usually abbreviated vtbl) =
+contains the=20
+addresses of all the virtual functions (routines that can be overridden =
+in a=20
+subclass) for a C++ class. Each class with any virtual functions needs a =
+vtbl.=20
+Templates are essentially macros with arguments that are datatypes, and =
+that=20
+expand into a distinct routines for every distinct set of type =
+arguments. While=20
+it is the programmer's job to ensure that if there is a reference to =
+normal=20
+routines called, say <TT>hash(int)</TT> and <TT>hash(char *) ,</TT> =
+there's=20
+exactly one definition of each kind of hash, a template version of=20
+<TT>hash(T)</TT> automatically creates versions of <TT>hash</TT> for =
+each data=20
+type that is used anywhere in the program as an argument to =
+<TT>hash</TT>.=20
+<P>
+<P>In an environment in which each source file is separately compiled, a =
+
+straightforward technique is to place in each object file all of the =
+vtbls,=20
+expanded template routines, and extern inlines used in that file, =
+resulting in a=20
+great deal of duplicated code.=20
+<P>
+<P>The simplest approach at link time is to live with the duplication. =
+The=20
+resulting program works correctly, but the code bloat can bulk up the =
+object=20
+program to three times or more the size that it should be.=20
+<P>
+<P>In systems stuck with simple-minded linkers, some C++ systems have =
+used an=20
+iterative linking approach, separate databases of what's expanded where, =
+or=20
+added pragmas (source code hints to the compiler) that feed back enough=20
+information to the compiler to generate just the code that's needed. We =
+cover=20
+these in Chapter 11.=20
+<P>
+<P>Many recent C++ systems have addressed the problem head-on, either by =
+making=20
+the linker smarter, or by integrating the linker with other parts of the =
+program=20
+development system. (We also touch on the latter approach in chapter =
+11.) The=20
+linker approach has the compiler generate all of the possibly duplicate =
+code in=20
+each object file, with the linker identifying and discarding duplicates. =
+
+<P>
+<P>MS Windows linkers define a COMDAT flag for code sections that tells =
+the=20
+linker to discard all but one identically named sections. The compiler =
+gives the=20
+section the name of the template, suitably mangled to include the =
+argument=20
+types, Figure 4=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 4 --></TD>
+    <TD><I>Figure 4:</I> Windows <BR>IMAGE_COMDAT_SELECT_NODUPLICATES 1 =
+Warn=20
+      if multiple identically named sections occur. =
+<BR>IMAGE_COMDAT_SELECT_ANY=20
+      2 Link one identically named section, discard the rest.=20
+      <BR>IMAGE_COMDAT_SELECT_SAME_SIZE 3 Link one identically named =
+section,=20
+      discard the rest. Warn if a discarded section isn't the same size. =
+
+      <BR>IMAGE_COMDAT_SELECT_EXACT_MATCH 4 Link one identically named =
+section,=20
+      discard the rest. Warn if a discarded section isn't identical in =
+size and=20
+      contents. (Not implemented.) <BR>IMAGE_COMDAT_SELECT_ASSOCIATIVE 5 =
+Link=20
+      this section if another specified section is also linked.=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>The GNU linker deals with the template problem by defining a "link =
+once" type=20
+of section similar to common blocks. If the linker sees segments with =
+names of=20
+the form <I>.gnu.linkonce.</I>name it throws away all but the first such =
+segment=20
+with identical names. Again, compilers expand a template to a =
+.gnu.linkonce=20
+section with the name including the mangled template name.=20
+<P>
+<P>This scheme works pretty well, but it's not a panacea. For one thing, =
+it=20
+doesn't protect against the vtbls and expanded templates not actually =
+being=20
+functionally identical. Some linkers attempt to check that the discarded =
+
+segments are byte-for-byte identical to the one that's kept. This is =
+very=20
+conservative, but can produce false errors if two files were compiled =
+with=20
+different optimization options or with different versions of the =
+compiler. For=20
+another, it doesn't discard nearly as much duplicated code as it could. =
+In most=20
+C++ systems, all pointers have the same internal representation. This =
+means that=20
+a template instantiated with, say, a pointer to int type and the same =
+template=20
+instatiated with pointer to float will often generate identical code =
+even though=20
+the C++ types are different. Some linkers may attempt to discard =
+link-once=20
+sections which contain identical code to another section, even when the =
+names=20
+don't quite match perfectly, but this issue remains unsatisfactorily =
+resolved.=20
+<P>
+<P>Although we've been discussing templates up to this point, exactly =
+the same=20
+issues apply to extern inline functions and default constructor, copy, =
+and=20
+assignment routines, which can be handled the same way.=20
+<P>
+<H3>Initializers and finalizers</H3>Another problem not unique to C++ =
+but=20
+exacerbated by it are initializers and finalizers. Frequently, it's =
+easier to=20
+write libraries if they can arrange to run an initializing routine when =
+the=20
+program starts, and a finalizing routine when the program is about to =
+exit. C++=20
+allows static variables. If a variable's class has a constructor, that=20
+constructor needs to be called at startup time to initialize the =
+variable, and=20
+if it has a destructor, the destructor needs to be called at exit time. =
+There=20
+are various ways to finesse this without linker support, which we =
+discuss in=20
+Chapter 11, but modern linkers generally do support this directly.=20
+<P>
+<P>The usual approach is for each object file to put any startup code =
+into an=20
+anonymous routine, and to put a pointer to that routine into a segment =
+called=20
+<I>.init</I> or something similar. The linker concatenates all the =
+<I>.init</I>=20
+segments together, thereby creating a list of pointers to all the =
+startup=20
+routines. The program's startup stub need only run down the list and =
+call all=20
+the routines. Exit time code can be handled in much the same way, with a =
+segment=20
+called <I>.fini</I>.=20
+<P>
+<P>It turns out that this approach is not altogether satisfactory, =
+because some=20
+startup code needs to be run earlier than others. The definition of C++ =
+states=20
+that application-level constructors are run in an unpredictable order, =
+but the=20
+I/O and other system library constructors need to be run before =
+constructors in=20
+C++ applications are called. The ``perfect'' approach would be for each =
+init=20
+routine to list its dependencies explicitly and do a topological sort. =
+The BeOS=20
+dynamic linker does approximately that, using library reference =
+dependencies.=20
+(If library A depends on library B, library B's initializers probably =
+need to=20
+run first.)=20
+<P>
+<P>A much simpler approximation is to have several initialization =
+segments,=20
+<I>.init</I> and <I>.ctor</I>, so the startup stub first calls the =
+<I>.init</I>=20
+routines for library-level initialization and then the <I>.ctor</I> =
+routines for=20
+C++ constructors. The same problem occurs at the end of the program, =
+with the=20
+corresponding segments being <I>.dtor</I> and <I>.fini</I>. One system =
+goes so=20
+far as to allow the programmer to assign priority numbers, 0 to 127 for =
+user=20
+code and 128-255 for system library code, and the linker sorts the =
+initializer=20
+and finalizer routines by priority before combining them so highest =
+priority=20
+initializers run first. This is still not altogether satisfactory, since =
+
+constructors can have order dependencies on each other that cause =
+hard-to-find=20
+bugs, but at this point C++ makes it the programmer's responsibility to =
+prevent=20
+those dependencies.=20
+<P>
+<P>A variant on this scheme puts the actual initialization code in the=20
+<I>.init</I> segment. When the linker combined them the segment would be =
+in-line=20
+code to do all of the initializations. A few systems have tried that, =
+but it's=20
+hard to make it work on computers without direct addressing, since the =
+chunk of=20
+code from each object file needs to be able to address the data for its =
+own=20
+file, usually needing registers that point to tables of address data. =
+The=20
+anonymous routines set up their addressing the same way any other =
+routine does,=20
+reducing the addressing problem to one that's already solved.=20
+<P>
+<H3>IBM pseudo-registers</H3>IBM mainframe linkers provide an =
+interesting=20
+feature called ``external dummy'' sections or ``pseudo-registers.'' The =
+360 was=20
+one of the earlier mainframe architectures without direct addressing, =
+which=20
+means that small shared data areas are expensive to implement. Each =
+routine that=20
+refers to a global object needs its own four-byte pointer to the object, =
+which=20
+is a lot of overhead if the object was only four bytes to start with. =
+PL/I=20
+programs need a four-byte pointer to each open file and other global =
+objects,=20
+for example. (PL/I was the only high-level language to use =
+pseudo-registers,=20
+although it didn't provide application programmers with access to them. =
+It used=20
+them for pointers to control blocks for open files so application code =
+could=20
+include inline calls to the I/O system.)=20
+<P>
+<P>A related problem is that OS/360 didn't provide any support for =
+what's now=20
+called per-process or task local storage, and very limited support for =
+shared=20
+libraries. If two jobs ran the same program, either the program was =
+marked=20
+reentrant, in which case they shared the entire program, code and data, =
+or not=20
+reentrant, in which case they shared nothing. All programs were loaded =
+into the=20
+same address space, so multiple instances of the same program had to =
+make their=20
+arrangements for instance-specific data. (System 360s didn't have =
+hardware=20
+memory relocation, and although 370s did, it wasn't until after several=20
+revisions of the OS/VS operating system that the system provided =
+per-process=20
+address spaces.)=20
+<P>
+<P>Pseudo-registers help solve both of these problems, Figure 5. Each =
+input file=20
+can declare pseudo-registers, also called external dummy sections. (A =
+dummy=20
+section in 360 assembler is analogous to a structure declaration.) Each=20
+pseudo-register has a name, length, and alignment. At link time, the =
+linker=20
+collects all of the pseudo-registers into one logical segment, taking =
+the=20
+largest size and most restrictive assignment for each, and assigns them =
+all=20
+non-overlapping offsets in this logical segment.=20
+<P>
+<P>But the linker doesn't allocate space for the pseudo-register =
+segment. It=20
+merely calculates the size of the segment, and stores it in the =
+program's data=20
+at a location marked by a special CXD, cumulative external dummy, =
+relocation=20
+item. To refer to a particular pseudo-register, program code uses yet =
+another=20
+special XD, external dummy, relocation type to indicate where to place =
+the=20
+offset in the logical segment of one of the pseudo-registers.=20
+<P>
+<P>The program's initialization code dynamically allocates space for the =
+
+pseudo-registers, using a CXD to know how much space is needed, and=20
+conventionally places the address of that region in register 12, which =
+remains=20
+unchanged for the duration of the program. Any part of the program can =
+get the=20
+address of a pseudo-register by adding the contents of R12 to an XD item =
+for=20
+that register. The usual way to do this is with a load or store =
+instruction,=20
+using R12 as the index register and and XD item embedded as the address=20
+displacement field in the instruction. (The displacement field is only =
+12 bits,=20
+but the XD item leaves the high four bits of the 16-bit halfword zero, =
+meaning=20
+base register zero, which produces the correct result.)=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-05.html"><IMG=20
+      height=3D64 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-05.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 5:</I> Pseudo-registers <BR>bunch of chunks of space =
+pointed=20
+      to by R12. various routines offsetting to them=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>The result of all this is that all parts of the program have direct =
+access to=20
+all the pseudo-registers using load, store, and other RX format =
+instructions. If=20
+multiple instances of a program are active, each instance allocates a =
+separate=20
+space with a different R12 value.=20
+<P>
+<P>Although the original motivation for pseudo-registers is now largely=20
+obsolete, the idea of providing linker support for efficient access to=20
+thread-local data is a good one, and has appeared in various forms in =
+more=20
+modern systems, notably Windows32. Also, modern RISC machines share the =
+360's=20
+limited addressing range, and require tables of memory pointers to =
+address=20
+arbitrary memory locations. On many RISC UNIX systems, a compiler =
+creates two=20
+data segments in each module, one for regular data and one for "small" =
+data,=20
+static objects below some threshold size. The linker collects all of the =
+small=20
+data segments together, and arranges for program startup code to put the =
+address=20
+of the combined small data segment in a reserved register. This permits =
+direct=20
+references to small data using based addressing relative to that =
+register. Note=20
+that unlike pseudo-registers, the small data storage is both laid out =
+and=20
+allocated by the linker, and there's only one copy of the small data per =
+
+process. Some UNIX systems support threads, but per-thread storage is =
+handled by=20
+explicit program code without any special help from the linker.=20
+<P>
+<H3>Special tables</H3>The last source of linker-allocated storage is =
+the linker=20
+itself. Particularly when a program uses shared libraries or overlays, =
+the=20
+linker creates segments with pointers, symbols, and whatever else data =
+are=20
+needed at runtime to support the libraries or overlays. Once these =
+segments are=20
+created, the linker allocates storage for them the same way it does for =
+any=20
+other segments.=20
+<P>
+<H3>X86 segmented storage allocation</H3>The peculiar requirements of =
+8086 and=20
+80286 sort-of-segmented memory addressing led to a a few specialized =
+facilities.=20
+X86 OMF object files give each segment a name and optionally a class. =
+All=20
+segments with the same name are, depending on some flag bits set by the =
+compiler=20
+or assembler, combined into one big segment, and all the segments in a =
+class are=20
+allocated contiguously in a block. Compilers and assemblers use class =
+names to=20
+mark types of segments such as code and static data, so the linker can =
+allocate=20
+all the segments of a given class together. So long as all of the =
+segments in a=20
+class are less than 64K total, they can be treated as a single =
+addressing=20
+``group'' using a single segment register, which saves considerable time =
+and=20
+space.=20
+<P>
+<P>Figure 6 shows a program linked from three input files, main, able, =
+and=20
+baker. Main contains segments MAINCODE and MAINDATA, able contains =
+ABLECODE, and=20
+ABLEDATA, and baker contains BAKERCODE, BAKERDATA, and BAKERLDATA. Each =
+of the=20
+code sections in in the CODE class and the data sections are in the DATA =
+class,=20
+but the BAKERLDATA "large data" section is not assigned to a class. In =
+the=20
+linked program, assuming the CODE sections are a total of 64K or less, =
+they can=20
+be treated as a single segment at runtime, using short rather than long =
+call and=20
+jump instructions and a single unchanging CS code segment register. =
+Likewise, if=20
+all the DATA fit in 64K they can be treated as a single segment using =
+short=20
+memory reference instructions and a single unchanging DS data segment =
+register.=20
+The BAKERLDATA segment is handled at runtime as a separate segment, with =
+code=20
+loading a segment register (usually the ES) to refer to it.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-06.html"><IMG=20
+      height=3D60 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-06.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 6:</I> X86 <BR>CODE class with MAINCODE, ABLECODE, =
+BAKERCODE=20
+      <BR>DATA class with MAINDATA, ABLEDATA, BAKERDATA <BR>BAKERLDATA=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>Real mode and 286 protected mode programs are linked almost =
+identically. The=20
+primary difference is that once the linker creates the linked segments =
+in a=20
+protected mode program, the linker is done, leaving the actual =
+assignment of=20
+memory locations and segment numbers until the program is loaded. In =
+real mode,=20
+the linker has an extra step that allocates the segments to linear =
+addresses and=20
+assigns "paragraph" numbers to the segments relative to the beginning of =
+the=20
+program. Then at load time, the program loader has to fix up all of the=20
+paragraph numbers in a real mode program or segment numbers in a =
+protected mode=20
+program to refer to the actual location where the program is loaded.=20
+<P>
+<H2>Linker control scripts</H2>Traditionally, linkers offered the user =
+limited=20
+control over the arrangement of output data. As linkers started to =
+target=20
+environments with messy memory organizations, such as embedded =
+microprocessors,=20
+and multiple target environments, it became necessary to provide finer =
+grained=20
+control over the arrangement both of data in the target address space =
+and in the=20
+output file. Simple linkers with a fixed set of segments generally have =
+switches=20
+to specify the base address of each segment, for programs to be loaded =
+into=20
+something than the standard application environment. (Operating system =
+kernels=20
+are the usual application for these switches.) Some linkers have huge =
+numbers of=20
+command line switches, often with provision to continue the command line =
+
+logically in a file, due to system limits on the length of the actual =
+command=20
+line. For example, the Microsoft linker has about fifty command line =
+switches=20
+that can set the characteristics of each section in the file, the base =
+address=20
+of the output, and a variety of other output details.=20
+<P>
+<P>Other linkers have defined a script language to control the linker's =
+output.=20
+The GNU linker, which also has a long list of command line switches, =
+defines=20
+such a language. Figure 7 shows a simple linker script that produces =
+COFF=20
+executables for System V Release 3.2 systems such as SCO Unix.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><!-- INSERT FIGURE 7 --></TD>
+    <TD><I>Figure 7:</I> GNU linker control script for COFF executable =
+<BR>
+      <P><TT><BR>OUTPUT_FORMAT("coff-i386") =
+<BR>SEARCH_DIR(/usr/local/lib);=20
+      <BR>ENTRY(_start) <BR>SECTIONS <BR>{ <BR>.text SIZEOF_HEADERS : {=20
+      <BR>*(.init) <BR>*(.text) <BR>*(.fini) <BR>etext =3D .; <BR>} =
+<BR>.data=20
+      0x400000 + (. &amp; 0xffc00fff) : { <BR>*(.data) <BR>edata =3D .; =
+<BR>}=20
+      <BR>.bss SIZEOF(.data) + ADDR(.data) : <BR>{ <BR>*(.bss) =
+<BR>*(COMMON)=20
+      <BR>end =3D .; <BR>} <BR>.stab 0 (NOLOAD) : <BR>{ <BR>[ .stab ] =
+<BR>}=20
+      <BR>.stabstr 0 (NOLOAD) : <BR>{ <BR>[ .stabstr ] <BR>} <BR>}=20
+      <P></TT>
+      <P></P></TD></TR></TBODY></TABLE></CENTER>
+<P>The first few lines describe the output format, which must be present =
+in a=20
+table of formats compiled into the linker, the place to look for object =
+code=20
+libraries, and the name of the default entry point, <TT>_start</TT> in =
+this=20
+case. Then it lists the sections in the output file. An optional value =
+after the=20
+section name says where the section starts, hence the <TT>.text</TT> =
+section=20
+starts immediately after the file headers. The <TT>.text</TT> section in =
+the=20
+output file contains the <TT>.init</TT> sections from all of the input =
+files,=20
+then the <TT>.text</TT> sections, then the <TT>.fini</TT> sections. The =
+linker=20
+defines the symbol <TT>etext</TT> to be the address after the =
+<TT>.fini</TT>=20
+sections. Then the script sets the origin of the <TT>.data</TT> section, =
+to=20
+start on a 4K page boundary roughly 400000 hex beyond the end of the =
+text, and=20
+the section includes the <TT>.data</TT> sections from all the input =
+files, with=20
+the symbol <TT>edata</TT> defined after them. Then the <TT>.bss</TT> =
+section=20
+starts right after the data and includes the input <TT>.bss</TT> =
+sections as=20
+well as any common blocks with <TT>end</TT> marking the end of the bss. =
+(COMMON=20
+is a keyword in the script language.) After that are two sections for =
+symbol=20
+table entries collected from the corresponding parts of the input files, =
+but not=20
+loaded at runtime, since only a debugger looks at those symbols. The =
+linker=20
+script language is considerably more flexible than this simple example =
+shows,=20
+and is adequate to describe everything from simple DOS executables to =
+Windows PE=20
+executables to complex overlaid arrangements.=20
+<P>
+<H2>Embedded system storage allocation</H2>Allocation in embedded =
+systems is=20
+similar to the schemes we've seen so far, only more complicated due to =
+the=20
+complicated address spaces in which programs must run. Linkers for =
+embedded=20
+systems provide script languages that let the programmer define areas of =
+the=20
+address space, and to allocate particular segments or object files into =
+those=20
+areas, also specifying the alignment requirements for segments in each =
+area.=20
+<P>
+<P>Linkers for specialized processors like DSPs have special features to =
+support=20
+the peculiarities of each processor. For example, the Motorola 5600X =
+DSPs have=20
+support for circular buffers that have to be aligned at an address that =
+is a=20
+power of two at least as large as the buffer. The 56K object format has =
+a=20
+special segment type for these buffers, and the linker automatically =
+allocates=20
+them on a correct boundary, shuffling segments to minimize unused space. =
+
+<P>
+<H2>Storage allocation in practice</H2>We end this chapter by walking =
+through=20
+the storage allocation for some popular linkers.=20
+<P>
+<H3>Storage allocation in Unix a.out linkers</H3>Allocation in pre-ELF =
+Unix=20
+linkers is only slightly more complex than the idealized example at the=20
+beginning of the chapter, since the set of segments known in advance, =
+Figure 8.=20
+Each input file has text, data, and bss segments, and perhaps common =
+blocks=20
+disguised as external symbols. The linker collects the sizes of the =
+text, data,=20
+and bss from each of the input files, as well as from any objects taken =
+from=20
+libraries. After reading all of the objects, any unresolved external =
+symbols=20
+with non-zero values are taken to be common blocks, and are allocated at =
+the end=20
+of bss.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-08.html"><IMG=20
+      height=3D93 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-08.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 8:</I> a.out linking <BR>picture of text, data, and=20
+      bss/common from explicit and library objects being combined into =
+three big=20
+      segments </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>At this point, the linker can assign addresses to all of the =
+segments. The=20
+text segment starts at a fixed location that depends on the variety of =
+a.out=20
+being created, either location zero (the oldest formats), one page past =
+location=20
+zero (NMAGIC formats), or one page plus the size of the a.out header =
+(QMAGIC.)=20
+The data segment starts right after the data segment (old unshared =
+a.out), on=20
+the next page boundary after the text segment (NMAGIC). In every format, =
+bss=20
+starts immediately after the data segment. Within each segment, the =
+linker=20
+allocates the segments from each input file starting at the next word =
+boundary=20
+after the previous segment.=20
+<P>
+<H3>Storage allocation in ELF</H3>ELF linking is somewhat more complex =
+than=20
+a.out, because the set of input segments can be arbitrarily large, and =
+the=20
+linker has to turn the input segments (sections in ELF terminology) into =
+
+loadable segments (segments in ELF terminology.) The linker also has to =
+create=20
+the program header table needed for the program loader, and some special =
+
+sections needed for dynamic linking, Figure 9.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-09.html"><IMG=20
+      height=3D101 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-09.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 9:</I> ELF linking <BR>Adapt figs from pages 2-7 and =
+2-8 of=20
+      TIS ELF doc <BR>show input sections turning into output segments.=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>ELF objects have the traditional text, data, and bss sections, now =
+spelled=20
+.text, .data, and .bss. They also often contain .init and .fini, for =
+startup and=20
+exit time code, as well as various odds and ends. The .rodata and .data1 =
+
+sections are used in some compilers for read-only data and out-of-line =
+data=20
+literals. (Some also have .rodata1 for out-of-line read-only data.) On=20
+RISCsystems like MIPS with limited sized address offsets, .sbss and =
+.scommon,=20
+are "small" bss and common blocks to help group small objects into one =
+directly=20
+addressable area, as we noted above in the discussion of =
+pseudo-registers. On=20
+GNU C++ systems, there may also be linkonce sections to be included into =
+text,=20
+rodata, and data segments.=20
+<P>
+<P>Despite the profusion of section types, the linking process remains =
+about the=20
+same. The linker collects each type of section from the input files =
+together,=20
+along with sections from library objects. The linker also notes which =
+symbols=20
+will be resolved at runtime from shared libraries, and creates .interp, =
+.got,=20
+.plt, and symbol table sections to support runtime linking. (We defer =
+discussion=20
+of the details until Chapter 9.) Once that is all done, the linker =
+allocates=20
+space in a conventional order. Unlike a.out, ELF objects are not loaded =
+anywhere=20
+near address zero, but are instead loaded in about the middle of the =
+address=20
+space so the stack can grow down below the text segment and the heap up =
+from the=20
+end of the data, keeping the total address space in use relative =
+compact. On 386=20
+systems, the text base address is 0x08048000, which permits a reasonably =
+large=20
+stack below the text while still staying above address 0x08000000, =
+permitting=20
+most programs to use a single second-level page table. (Recall that on =
+the 386,=20
+each second-level table maps 0x00400000 addresses.) ELF uses the QMAGIC =
+trick of=20
+including the header in the text segment, so the actual text segment =
+starts=20
+after the ELF header and program header table, typically at file offset =
+0x100.=20
+Then it allocates into the text segment .interp (the logical link to the =
+dynamic=20
+linker, which needs to run first), the dynamic linker symbol table =
+sections,=20
+.init, the .text and link-once text, and the read-only data.=20
+<P>
+<P>Next comes the data segment, which logically starts one page past the =
+end of=20
+the text segment, since at runtime the page is mapped in as both the =
+last page=20
+of text and the first page of data. The linker allocates the various =
+.data and=20
+link-once data, the .got section and on platforms that use it, .sdata =
+small data=20
+and the .got global offset table.=20
+<P>
+<P>Finally come the bss sections, logically right after the data, =
+starting with=20
+.sbss (if any, to put it next to .sdata and .got), the bss segments, and =
+common=20
+blocks.=20
+<P>
+<H3>Storage allocation in Windows linkers</H3>Storage allocation for =
+Windows PE=20
+files is somewhat simpler than for ELF files, because the dynamic =
+linking model=20
+for PE involves less support from the linker at the cost of requiring =
+more=20
+support from the compiler, Figure 10.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig04-10.html"><IMG=20
+      height=3D102 =
+src=3D"http://www.iecc.com/linker/thumb-linker04-10.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 10:</I> PE storage allocation <BR>adapt from MS web =
+site=20
+  </TD></TR></TBODY></TABLE></CENTER>
+<P>PE executable files are conventionally loaded at 0x400000, which is =
+where the=20
+text starts. The text section includes text from the input files, as =
+well as=20
+initialize and finalize sections. Next comes the data sections, aligned =
+on a=20
+logical disk block boundary. (Disk blocks are usually smaller than =
+memory pages,=20
+512 or 1K rather than 4K on Windows machines.) Following that are bss =
+and=20
+common, .rdata relocation fixups (for DLL libraries that often can't be =
+loaded=20
+at the expected target address), import and export tables for dynamic =
+linking,=20
+and other sections such as Windows resources.=20
+<P>
+<P>An unusual section type is .tls, thread local storage. A Windows =
+process can=20
+and usually does have multiple threads of control simultaneously active. =
+The=20
+.tls data in a PE file is allocated for each thread. It includes both a =
+block of=20
+data to initialize and an array of functions to call on thread startup =
+and=20
+shutdown.=20
+<P>
+<H2>Exercises</H2>
+<P>
+<P>1. Why does a linker shuffle around segments to put segments of the =
+same type=20
+next to each other? Wouldn't it be easier to leave them in the original =
+order?=20
+<P>
+<P>2. When, if ever, does it matter in what order a linker allocates =
+storage for=20
+routines? In our example, what difference would it make if the linker =
+allocated=20
+newyork, mass, calif, main rather than main, calif, mass, newyork. =
+(We'll ask=20
+this question again later when we discuss overlays and dynamic linking, =
+so you=20
+can disregard those considerations.)=20
+<P>
+<P>3. In most cases a linker allocates similar sections sequentialy, for =
+
+example, the text of calif, mass, and newyork one after another. But it=20
+allocates all common sections with the same name on top of each other. =
+Why?=20
+<P>
+<P>4. Is it a good idea to permit common blocks declared in different =
+input=20
+files with the same name but different sizes? Why or why not?=20
+<P>
+<P>5. In example 1, assume that the programmer has rewritten the calif =
+routine=20
+so that the object code is now hex 1333 long. Recompute the assigned =
+segment=20
+locations. In example 2, further assume that the data and bss sizes for =
+the=20
+rewritten calif routine are 975 and 120. Recompute the assigned segment=20
+locations.=20
+<P>
+<H2>Project</H2><I>Project 4-1:</I> Extend the linker skeleton from =
+project 3-1=20
+to do simple UNIX-style storage allocation. Assume that the only =
+interesting=20
+segments are <TT>.text</TT>, <TT>.data</TT>, and <TT>.bss</TT>. In the =
+output=20
+file, text starts at hex 1000, data starts at the next multiple of 1000 =
+after=20
+the text, and bss starts on a 4 byte boundary after the data, Your =
+linker needs=20
+to write out a partial object file with the segment definitions for the =
+output=20
+file. (You need not emit symbols, relocations, or data at this point.) =
+Within=20
+your linker, be sure you have a data structure that will let you =
+determine what=20
+address each segment in each input file has been assigned, since you'll =
+need=20
+that for project in subsequent chapters. Use the sample routines in =
+Example 2 to=20
+test your allocator.=20
+<P>
+<P><I>Project 4-2:</I> Implement Unix-style common blocks. That is, scan =
+the=20
+symbol table for undefined symbols with non-zero values, and add space =
+of=20
+appropriate size to the .bss segment. Don't worry about adjusting the =
+symbol=20
+table entries, that's in the next chapter.=20
+<P>
+<P><I>Project 4-3:</I> Extend the allocator in 4-3 to handle arbitrary =
+segments=20
+in input files, combining all segments with identical names. A =
+reasonable=20
+allocation strategy would be to put at 1000 the segments with RP =
+attributes,=20
+then starting at the next 1000 boundary RWP attributes, then on a 4 =
+boundary RW=20
+attributes. Allocate common blocks in .bss with attribute RW. =
+</P></BODY></HTML>
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-01.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA+AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD07wjo
++o6JogtNV1JtQuBIzCViThTjC5PJ7n8a3hgkdvyoyAo5qtOJ2kg8i48oLIGfKhvMUA5Xnp259qkk
+qalr+naZOILqfy5CoYDaTkHIHI9wajsfEOn6pO8VhMJnjXc4wRx6j1pz6rpZwJdTtN4bG1pY/lcd
+vqKtWd1BcRCW2mSaJmwsiFSGGPYfWmBa3EfT8PWm9c8/y9aecgdh+NAb6H/9dADQ3YnP5UoKk5/w
+pQD1JH0zTQfUjpQBDdPOlo7W6CSYY2qcfj3GeO2Rn1FYrap4gWYp/wAI6GXZneLyPqOv4dMfjW3K
+21V+cqM8kY/umoWnjkEoivNzohYgFT/T2/SgCPTLm+urbdfWAtJQ+NvnK4Yccgj3zwfStDrkY/l6
+1BZwG1iMbTyTHe775CCeWJx06DOB7CrPbrQBGQvfA/Kihjz60UwJT2OKgckNEf8Aa9fY1KxJwAT+
+tZU0GrnWVkU2B09WBAYP5oGMHHbrn86kAfSop2tZvLgUId0ieSreblcYJI465+v45tpEsUbJCixA
+ScBRgDIHYfWkuklSzke1VTOq/uxI7Bc4747VDNfW9tO0U1xbRP8AexLLgngc4PamBeKyEn5wB9KP
+KfJJlb8Mf4VRt9St7qULb3kFxkZIibJHTB6/5xV8Z6Z7+9ADRG+ceY5H4f4UeUQQd7n8f/rU7PPW
+jdkDnAoEVJbdjA0ZkL+aWGHGQMoeMelYWkaS1vd3k7xWYeIPEzx2zIzkqDuBJwR1B9xjPFbsjJMF
+VJAzI/zBWOR8p9K5zS9Xub+88qS5tzGYiXiSOdXDbc9W4/OgZ16n+vc+tLncAf8APWsm10YW+oNf
+C+vpGfc3kyS5jGecAY7Z4rVB/X2PrQAh3en60Ujbs/8A66KpEtjgMnkGkxliSKUYBH19qCRnp39q
+koq31zHa27PKyIDwNzBcnHuaoajpyanbzEW8Zkcfu7gxo5UFRyM+/NXr7TbHUlRL20huFQ5USIrY
+496mjRIoUjSMKiAKoAGAAOlAjPhsYrUQxw2iROFG9440TdjGSdv4/nWi0ZODlgPQYqi93LDPL58l
+vFB5u2JjjJGxTzyOc7v0oXULV5Fjjv4JHZsBFZSTyPf3H50DLggTdggn6kkfzpTBEGUiJPrtFJG3
+7rc7L9cAcZo81ScKGbgdAMfn0piIpvkVZIwobdydueAp96xbLUrWS/ujbzXLyXS+YVktpBGu1e2e
+FyB+NbDM5kUSKFjLYHIz905rM07TYrC7nc3EzQphYEe7Z127e6lsdfagCd7LVpL5JodVjWzwD5H2
+UEkYX+LPsT+NbKjpkd/T3rLTVtPtylvPeQxTbF+R3VSc8DAPXJ4rTAHGD3Pp60gGvuDcFcUUyTG7
+/wDVRVIllfRtb07XtPW+025E9uWKbsFSCDyCCARV/OSeR+dU9M0qx0WyW0061S3gVi2xCepPJq6o
+zxjr71JYzPPBH500k7c5/X2qQjB6dPeo5U+QgjKnr8x9KBGfcRQXcki3UEckW44EqhlJwvIyPrVS
+z0mwtSHMFk04mzG8cCKUXcMKCB29at6ZomnaP5o0+2EAkVQwEjHIXp1Jx1NXSfmHXr6+9MCOGPlw
+AoO8nP49anycjJHQd6NnJI46dz607b7ccd6AGYyMZBB96awG0Z2j8fapAvPTj60hTeOex9fagCtL
+ZWs8gkktreR1wQzopIxjHbtVpQfUfn70h+UnAGB708A4/wDr0gA47kfnRTwp5+vqaKVwsf/Z
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-02.jpg
+
+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
+z//Z
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-03.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABHAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2vcro
+GVlKkA5DUbx1z39awPD2hXvh3wfHpaXQnvIon8uRhhA5JIH+6CRVeS48Y/aZkjtdNaMKPLdtyhm5
+yDznj6c1JJ0oyR6cD+KjnIGfXvXNXEXjDMLw3FnxbBXjfhWlyctwM4I2+nStbRv7XFtKdZFqJvNP
+l/Zc7SnbO7nPX8qAL/O0DjnHOaU/MmMjJzg57013Kpuw2eBgY9eKYJ04HmAEnoSKYDYoXhjK7lcn
+GFBwOgHP5UkEUkWd7JjPAVicdc845qVGyMqc9OhFO3Y9c0ALnPOR0HegEM3BHX1rH1K21OW6hlst
+Ta2RAC8f2fzQ/oD6d6xLTR/EkGY38RzsDKW3fYs7lbkjn7pyTj/IAB2ZIAHIzgd6M85BGM+tcs/h
+3WJ0jmtvEVxE22PBeLePlQKflJxyQW5HU+1dNGHjfltwzjGBnpQAjE5GcdP71FPdnJHB6e1FMkkY
+5HX0/iqt5W6STdI+A3A8wjtVlmIA64qAErLKSshywwdvUY//AF1JRG8SoinfJncvWVj1YetTIMHG
+cjJ6tUchklVUWGT7ykk47EH1pyu6YEnALcMBwfr6UwMTxUsUdgbyXUrq0hjVUbyGbqXGCQPyPfHT
+HflZLrTooXlXxFqZbyxJ5fmSfL6t0xxz3xnivR3jEihZAGU44YA0hjt0bJjQMDk/KOOMZ/LigDnv
+C9vC/mXcOrXd5HEWtmjldtoYMDnB/i9/fjjFdLlWPQDB9ajiCLH+6UKvXCgAE0pBxxnrzQBBdSvb
+wXE0EXmyrDuSPdjewzgZ7ZNZ+n6rqd5drHcaK9pFglnadWw2cAYHtk1o7WNwf3jKojB4xzyf8KVl
+L/Mk8xxzxt9PpQA63I+zR9PuL3qU7SQMDOeOfaorddtrECWYhAMnHPFSjrjnk+3pQIa68jAHT1oo
+ctkYJHHtRVIQlzj7NJ8xB2dmIpwt4+mX4/6bN/jTbjJgkVQxYpgcClMxX5dkmSeu2oKIQwSd0y+3
+apA3FjnJqTzFPGxzknqCP500FtzyMGQbFAZh7mgyzKwBjL89VI/kaYiKKBlc+ap8veGUO+4Dg9PT
+tUyhHdsw855JxzTPtO+QxIWVwATvXGM56evNTfvDj5+f93/69AETgxneF2rtGVz05NSl1ZBgjnvu
+9qau/ewY5wAQQMUhHktuVWaMnkcZH0oAo30FreRz2d3JsSWJQQsmCRk1T0zRdL0i8NxazzlyGU+Z
+MWBzgk/XgVs+YGY7AdwjBDcYOf8A9VOzIHJ5/Aj0oAjtGBtYc/8APMdT7VZ+UMOB19faqUZ33MJQ
+MqrBlgffoP0NXMEMCc4z7UANYAn7o/OipAoIB+b9KKLhYrTKryIGJxsJ4kI7j0pTbx7gN8nX/nu/
++NK4kWXIR2Gztj1pRMenlTdf7ooAYs6C2iUncxRfl3Ek1FGZI2CSuIkJ+Qhsn6E9M1ZgjK20YYMp
+CqCDjNPOd2GyQT7UAQrFDApwMBjubLnn3pd0JHmhl29N27tj1qN7VWdWDOqqpGwHg5GKfHlCAsbK
+p9AMDigBqrE25UbDKByHJIp+/wAs4lwBnhweDx39Kap3MzLvU7QMsvXr2NOaSRSd6EjPVcHt6UAV
+Y4oVkZgDKWG5QSDtPOcelWWVNxURAqTknjBNQ20cbqXtwYw4LE4xk5weD9KsMGBUb24PPA54oAqQ
+RvFJB5cibWhAYkZBC/1+aqFnceIHv0iutOt0tg53TLcA8fN/DjP93v3rQy0k1sqhjs3MSCMAAFcf
+mRx7Ve2kHIJ6+3pQAqkBR0FFABPZuvqKKQClWII4zj1puCX/AB9faiii47CZPpnp3oIJP3QeeeaK
+KAAD5c7R0HenFdzE4HX19qKKdxDdmR90cj1pQgHGB1/pRRSuAxowxBPBA4xR5a5Of4jzkk9qKKdw
+DaVXAVehNHGeVA5/pRRRcLD1KgcgUUUUgsf/2Q==
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-05.jpg
+
+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
+PA57e9FMbPHU8e9FFhXP/9k=
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-06.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA8AGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2PVnu
+006VbGSBbzGY/NbAznvWHa3HisyWQuTpbRh0+0mNmyU+UNt9DncfTGB1yas+K7a4u7aNbRbh50lR
+9kFyIGwN3OTwR7Hr+FcvHpniBAy/2dqX3AOdUVxx6enQc+n4ikI9HWSF22q659Kkzzjj61zHhu1u
+7GedLpbjLfdMswl3jA6d1roT5IGdsoP1Y0CJn9xj8abyOP61EDG7jDk+xc1IY0JBBb/vo0AOOMY4
+zSMMLkEDHcmmGOIHGXJ/3zVS7EER37ZXkClcI5IGfUZpgWywPSVSfY0bkXkSA/U1xGvss3iMSxSS
+bFUQyGPV0hAwcsPLJ6jcn1z24zmbWFqmyWRghBY/23EcdDgseT+P/wCoGekidC4Xcm49BnrUm4+g
+4rmBdW6eDw01y3kwR4kNvOszKQy8FhweoznsTXPXdvblZGll8RgSSBgNvXJBA47HIyPp6UgPR8g4
+5P50U5RhQOeBjmimISVwsbOB90ZOKyI/E2mSNIv26MMiM5AYZ2qCT+QBqfWb6bT7MzQWpnYY/drj
+J565J7f4Vx8dxppWIroMKs8W7aqgAZ3AqMdcgc+u71pDO+gkW5t45o5tySKGU+oIzTzkDqDXN6Lr
+Mt3M1t9je1ihUBMgtn5tuPbGK3/mBw7gA9l6/nQIdK8ewCTbg9j3/Cogm7iOIqv1Kj8hTwoTO1Bk
+924J/rSfPL8vmFVH3ivGfYUARspPyea/HVhwo/qT+NVbpf3axAxOCSQWXgY5zxwD+FXNiIQkcfmE
+dxzj8TUdyxMTFw77SCVQ4/An/wDVQBwevW9nH4lkRXtd0igEy2TPlznkuCB6fTPNUrWK3chJJbbL
+Y+U2HDElcHJyAMZGDk8k54xVy5/tKW6mdYtaUMzHMFx+7zz93occLgc/e+pp6QXqgl/+EhG5iDGs
+u7I7c56H0yMYpjOmtCLLw5HNpFsk9wYo38pV8oOzEBjt42+uD6VBb6vrbTRmXTYkiMqqwWUFghLZ
+fr2ULx1y3tSWVjLqtnPp1/FdxR7vMDu/znJDYDegJIxjjt2q8nhDS4pI2jimQRsHCidsHHTgn+VI
+RtBTj71FLuxRQK5S1LTINWtDbXW14WxuR84OCCOhHQgGsweDtEWPYbdSMYAV2Ax9Mn1Nauos6afc
+GLyzcGJ/KEhwpfHAPtnFcqs3ikKrrDZD5clEcn+FeAAcD5gx69CPego6G10KzsJN9kFhYoE3FSTg
+EkD8yT+J9a0vuj+HHtWVpVxfG2m/tXYrrM3lGJWP7vjBb/a657VoscjAfjocfyoEI7K2cHCj7zf0
+pMKUwconQDoT/n0o24YZxkcqn93609d3Xgtjrj+VACKrFQCpRQMBRwaeowNvl/KB0xRhj8xzR0B+
+ZyfzoAd5fPysyj0yKQ9eZX/CkIyfvP8AglJhicfvMeyigAIUMCC3/AutO3AjqSabhQeS/wBSKeAp
+5RgfrQAm/wD2f1ooYYOCPyopgc140eMaXECwGZQBmXy+cE/ezxwDXDxQq0kUKRWgOQu0akzqzAkY
+DcHOVYY9uea9UurSC5WNZokcA7gGUHB6d/rUaaHpzISbSHJ4J8ten5Uhnn8LRxXUVwfsiYkG7bdE
+lBwATztBJyNv0weBj0dASBlQT6+lRHRbBUMa28Sq3UCJOf0q0V+Yj04oEIo2L6Z60mVz3J9aeVGT
+nnnFAQDHXpmgBOdvJ4oDe2PrQSaXA25wM0ANJHcfhuNICD/e+m40isSe35Cn9GxjP1oATA42qfxe
+lKk9IgPcNS7EIyUHSnCNcFhlcelADN7DjJoo+8AT1ooEf//Z
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-08.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABdAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2iyvb
+bUrSK8tJkmtpV3I6cgipGAzgY/KsZ9Dt7HR7XS9Nup9Nt4eEMJBbkN3bPc5571WGg3GGkk1y/ZmO
+1hGQAPTHcHn1P8sSSdCc8jj8qQg5OQMc9q5ttBlOwPrGpK6MdjeisFG0nnPIJz1+b2FTw+HbiGVG
+Ou6jKqqwAdl6lSuenOM55z0piNwjjH1qAW4CupbJbjpgDoOmfasRfDV5HNvGv35QD7hIOTznJ/Ht
+jp681qaZpjWMBjkvbi6YMSrzMCQMAYz+v40AWo0MUaoSDt46e9SA47f5zSFB1wf0qG7glmtWSG4a
+3kyCJFRWIwfQ0ATnPt+VLhhyFB/CuZTStYdpiut3RRuCBDGCD0OOeOn51bs9PvI9UNw2p3gizua3
+cKUYEEYHJx68elAzaBORlR+VPQE44H5VG6gYPP6UkXbr+lFhEoU9gPyoppGTxn9KKAMvxF5T6JcC
+VYCpCA/aM7PvDGdvPWs7wwynR3ZBYeU8qsPsLuQWIGc7uemK6Rk3gBzx9aasCCPaMbPrQMrEbGQh
+H6875BjofepISyIyshA3ErjB4PNEk0cT7Ujd2+98pzjI96fHJ5jHPyt6EjNAh6yo2VzyB0OM0u7J
+x0HOOlJKoclDgjuDTPK258uRgeepyP1oAlJ98/lSFh1yR+I9aillkiClgrDIGVPP5Y/rUU021FPm
+Rx7jwXbOTn/PegCNb63tmZJJlRi5OGIHG4ipknjmdJYpFeN14ZSCDg//AF6p3OjaXqbeZe2yTSKW
+QFieBk8fqatxRRQNBBDhIo0KqoPQAjimBaBDL36D0pBgAc88elINw4z29acCODkHj1pAITnHJ6e1
+FI3bLAcetFOwD8njLD86bu/2ufrS7wqjI9Ocmk3AkHj25pDKsqfvgSw+YYH7wrz+HXrSmFmwBLwG
+3FgenHqcntU5kyP/AK59KU5JIx+poEMw4JPmgn3/APrU0+cMkNG2fcr/AI1ISQDwenqahknO4pCh
+eQDnk4X6mmBFLcO0RDja3IULliSD/ntVV5YfILtITn5goY7l9zjt6gVaIljcSDaWkyvc8/pj/wCt
+ULYiuEDkPIsmQyoSQCcY9hyRQBLbtL5bcBhvIJD45B9MUod/tkW+MrwRkuOmRWXqHiOz0d4oZxKz
+yM7YRGbjeQOg9f61ds7+HUxb3NvuaMlwCQRyGwf5UAaRbBJBH505Wzg8dB3qMnngHP1NOToMA9u5
+oAGbGOe3rRTjjjg9PeigQkkSTRtG4O1hgjJ5rnx4O0qCPCfakX/YnZcfl/8Ar/AVqaLq9vrukW+q
+We8QXC5USLhhgkEHnsQauSDKgAncwwODSKObuvCtlPHFE9xd7o0KqwZiQTnn0z8x/CpoPD9pBPDc
+JJdObd8qTMxPbg55I4HGa2H+Wf7zgbRyqk5qD965/duQxJLOynpyORx6CgRM8hnYxxMf9txnj2Hv
+/KnDy4Im42qufXv/ADNRmMW8bMrHK5LE5+b6+9LEPNbzXJzjKKQeBjr9aYETxPIzSPlFbjaM5X0P
+8qkI2KrBdpjbawGehPb9DU0iseVOeCCuDyKqT+YsDMitIv3QqA7tp6g59DSAs25HkbsMCGbg5/vG
+mFs3KYyflJ7+oqOJC8KvIsiOxyU3MMZP1pZEWPLIxVsYHUnr70wLOMg8H9fWnqcDHPb1qJQ2M5P5
+H1qRRkdTn6GgQZOBxnj3opDnj6ehooFcIYIbaJIbeNI40ACoiYCj0ApYwPMYnqMAce1SEc9B+VRJ
+nzGyB1B6dsUihsm1F3tnHAwqnNEUiOhXaRt4wykHpTbhS8RCg5yD8oGeOarGCVnAIbcSvTGcd+R0
+4oAnKieQtgeUh9PvN/gP5/SnwqpT5gBlc/dp+AqkbQB0AAx2pkKjylBX+GmA8pgnAHsMVDLCHlV8
+lCpJIUfe7YNWGAGcLzj0phUk9OxpIDI1DQrbVJopJZp0eFmwYXKHkqSD+Kg1at7FLK1igRXdYVVV
+ZzuJAPc+tSs6I7lmCZY46YPA5p4McjFUkDFgd2CDjmmBljXpRfC1bSLzY0uwTrGDHjdgNkkcYOa2
+4zvUNt64PK1z114ZjvpPtKX19C8jiRwkx24znaB2FPg8LxxyxuLi7fY6sFkuGIBByOMkHmkB0DAc
+cDp/dopvzAYbBI7gY/rRTRJIOQRx+QqMpyGAyeARxyKkC4JAPf0prL7/AKVJdiDzYsBWIX2bg9Pe
+hJbZQMNGO3UelWAuQDn0poxtB/z0p3FYgJMoO1WCdyQBnjtUowOgwAOnFP25UnPNJt3ZyT/kUXCw
+045+ntQ+0k8evpTmXk8noaGT5mGT0ouFjn28JaNvJaxiYYwM5JGAB1z6Cp7Pw3pVjcx3NvZok0YO
+1x2zxwCfStgj5c5Pf+dKV5xnue1FwIkUKuAO/oPWpFHBOP5etLsx3oxjH+e9FxWGvgHp+gopWABo
+ouKx/9k=
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-09.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABlAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD1bRtP
+Xwz4ags7i7e4WziJadwMkcnp6DoPYVH/AMJRo8rCKC9RpndY1TaQSxwAOnv+FbRw3Gcjv0rJvT9n
+hlntoPOnLk+UhjQnAAzkjrgfyqSSraeK9Mvpoo1ukjd22CNwQzE8DHFbW2XAwy4yc5I6ZrMsZZ5F
+aW5tmt2DkLGzxuWXH3vl6c9vatWKUPHvB6jPUUxCkdPTPt60cDp/T1p2eM5I/Km7un/1qAA4Iz7+
+1QyzwwFfNlRNxwu9lGfpmp9wJ4P8vWqmoWdtfxKLmGKTawCl0DbckdM/54FAFZ9WsWYbb+32NtVS
+sinJzjHXqSRT7C8sdRKyW98lwANwCOvT/DkVDH4c02KVZY7a3EgYMrGFSVPHT06DpT7bS7Swuklt
+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
+zj6etFFFFhXP/9k=
+
+------=_NextPart_000_0043_01C557A1.95E4FB10
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker04-10.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABmAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2xlYk
+4znFIMjP3s5rjbjxXrUfxHTQE0gNprKP9I2NuIK5L56YB4x7V2WAT2/KpJE6eucChiQDnPQ9xXHe
+J59Mg1lo7572MyWyHdHAske0Mxx0J6r06ZIPbi94d0/S1VtSsHnlLh4t8+c53sWJB7k/oBTA6MuS
+ce9Ru5UKoOCfU9qf3z6UgO4DjPTqBQBX88iEHndg5J+makhmM0e44BDEEZyARUuAQTjseMClAA4A
++X2FADAcD8u9B7c+velY8cA9qwIvC1vb3VxcQXNzHLNHIpcNkqz5yy+h5H5D3yAb0kyxgb2C5bA+
+b2pscqSjMbKegOGrmjo3lXQWXXtTkaIhzG86gYwOTnBxwf17ZFVotA3NtTXtUYs43FZ0PzZUZ4PG
+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
+
+------=_NextPart_000_0043_01C557A1.95E4FB10--

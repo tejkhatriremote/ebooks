@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 14 -- How Firewalls Work</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;14</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Firewalls Work</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowFirewallsWork">
+How Firewalls Work</A>
+</UL>
+
+<HR>
+<P>
+All intranets are vulnerable to attack. Their underlying TCP/IP
+architecture is identical to that of the Internet. Since the Internet
+was built for maximum openness and communication, there are countless
+techniques that can be used to attack intranets. Attacks can involve
+the theft of vital company information and even cash. Attacks
+can destroy or deny a company's computing resources and services.
+Attackers can break in or pose as a company employee to use the
+company's intranet resources.
+<P>
+<I>Firewalls</I> are hardware and software combinations that block
+intruders from access to an intranet while still allowing people
+on the intranet to access the resources of the Internet. Depending
+on how secure a site needs to be, and on how much time, money,
+and resources can be spent on a firewall, there are many kinds
+that can be built. Most of them, though, are built using only
+a few elements. Servers and routers are the primary components
+of firewalls.
+<P>
+Most firewalls use some kind of <I>packet filtering</I>. In packet
+filtering, a <I>screening router</I> or <I>filtering router</I>
+looks at every packet of data traveling between an intranet and
+the Internet. See <A HREF="ch13.htm" >Chapter 13</A> for more information on filtering.
+<P>
+<I>Proxy servers</I> on an intranet are used when someone from
+the intranet wants to access a server on the Internet. A request
+from the user's computer is sent to the proxy server instead of
+directly to the Internet. The proxy server contacts the server
+on the Internet, receives the information from the Internet, and
+then sends the information to the requester on the intranet. By
+acting as a go-between like this, proxy servers can filter traffic
+and maintain security as well as log all traffic between the Internet
+and the network.
+<P>
+<I>Bastion hosts</I> are heavily fortified servers that handle
+all incoming requests from the Internet, such as FTP requests.
+A single bastion host handling incoming requests makes it easier
+to maintain security and track attacks. In the event of a break
+in, only that single host has been compromised, instead of the
+entire network. In some firewalls, multiple bastion hosts can
+be used, one for each different kind of intranet service request.
+<H2><A NAME="HowFirewallsWork"><FONT SIZE=5 COLOR=#FF0000>
+How Firewalls Work</FONT></A></H2>
+<P>
+Firewalls protect intranets from any attacks launched against
+them from the Internet. They are designed to protect an intranet
+from unauthorized access to corporate information, and damaging
+or denying computer resources and services. They are also designed
+to stop people on the intranet from accessing Internet services
+that can be dangerous, such as FTP. 
+<OL>
+<LI>Intranet computers are allowed access to the Internet only
+after passing through a firewall. Requests have to pass through
+an <I>internal screening router</I>, also called an <I>internal
+filtering router</I>or <I>choke router</I>. This router prevents
+packet traffic from being sniffed remotely. A choke router examines
+all pack-ets for information such as the source and destination
+of the packet.<FONT COLOR=#FFFFFF>1</FONT>
+<LI>The router compares the information it finds to rules in a
+<I>filtering table</I>, and passes or drops the packets based
+on those rules. For example, some services, such as rlogin, may
+not be allowed to run. The router also might not allow any packets
+to be sent to specific suspicious Internet locations. A router
+can also block every packet traveling between the Internet and
+the internal network, except for e-mail. System administrators
+set the rules for determining which packets to allow in and which
+to block.
+<LI>When an intranet is protected by a firewall, the usual internal
+intranet services are available-such as e-mail, access to corporate
+databases and Web services, and the use of groupware.
+<LI>Screened subnet firewalls have one more way to protect the
+intranet-an <I>exterior screening router</I>, also called an <I>exterior
+filtering router</I> or an <I>access router</I>. This router screens
+packets between the Internet and the perimeter network using the
+same kind of technology that the interior screening router uses.
+It can screen packets based on the same rules that apply to the
+internal screening router and can protect the network even if
+the internal router fails. It also, however, may have additional
+rules for screening packets specifically designed to protect the
+bastion host.
+<LI>As a way to further protect an intranet from attack, the bastion
+host is placed in a <I>perimeter network</I>-a subnet-inside the
+firewall. If the bastion host was on the intranet instead of a
+perimeter network and was broken into, the intruder could gain
+access to the intranet.
+<LI>A bastion host is the main point of contact for connections
+coming in from the Internet for all services such as e-mail, FTP
+access, and any other data and requests. The bastion host services
+all those requests-people on the intranet contact only this one
+server, and they don't directly contact any other intranet servers.
+In this way, intranet servers are protected from attack. Bastion
+hosts can also be set up as proxy servers. See <A HREF="ch15.htm" >Chapter 15</A> for
+more information about proxy servers and <A HREF="ch16.htm" >Chapter 16</A> for more information
+about bastion hosts.
+</OL>
+<HR>
+
+<CENTER><P><A HREF="ch13.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch15.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

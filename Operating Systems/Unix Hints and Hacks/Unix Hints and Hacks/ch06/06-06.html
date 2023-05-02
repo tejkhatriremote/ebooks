@@ -1,0 +1,217 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:File Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=06//-->
+<!--PAGES=213-216//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Example Two: Creating Links to Links to Links</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>As centralized file servers and NFS-mounted filesystems become more prevalent in many environments, there is a need to share similar data to all the workstations. This data typically includes man pages, online documentation, source code, binary freeware programs, and project-related data. Most servers and systems today are purchased having the capability of expanding the disk capacity in the future.</P>
+<p>As new disks, volumes, or raid arrays are brought online to free up disk space, administrators sometimes need to migrate existing data to the new area. They often go for the easiest data that can be moved on to the new disks. The nonvolatile static data that isn&#146;t constantly changing is usually the first to go. Administrators simply copy the files to the new area and place a symbolic link in its place. This way the user is pointing to a symbolic link that points to another link, which points to the directory where the data resides.</P>
+<!-- CODE //-->
+<pre>
+rocket 27% ls -l /usr/local
+lrwxrwxrwx  1 root            6 Oct 14  1996 /usr/local -&gt
+<b>&#8658;</B>/hosts/planet/usr/local
+
+rocket 28% ls -l /hosts/planet/usr/local
+lrwxrwxrwx  1 root            6 Jan 12  1997 /hosts/planet/usr/
+<b>&#8658;</B>local -&gt /hosts/planet/disk2/local
+
+rocket 29% ls -l /hosts/planet/disk2/local
+drwxr-xr-x  3 root         5120 Nov  6 14:34 bin/
+drwxr-xr-x  5 root          512 Jul 30 14:23 src/
+drwxr-xr-x 14 root          512 Mar 25  1997 gnu/
+drwxr-xr-x 31 root         2048 Jun 29  1997 lib/
+drwxr-xr-x 16 bin           512 Oct 21  1996 man/
+</PRE>
+<!-- END CODE //-->
+<p>You can see that a new area on the host planet has new disks located at /disk2. The content of /usr/local is shared by all the workstation and is symbolically linked to the new area from the old area. When the user attempts to follow /usr/local to the new area, the system processes the request and takes the user to the old area where a link is waiting to point the user to the new location of where the files physically reside.
+</P>
+<p>After all the files have been migrated and the new links are in place, each workstation should be updated to reflect the change right away.</P>
+<p>So the old link</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 30% ls -l /usr/local
+lrwxrwxrwx  1 root            6 Oct 14  1996 /usr/local -&gt
+<b>&#8658;</B>/hosts/planet/usr/local
+</PRE>
+<!-- END CODE SNIP //-->
+<p>is updated to point to the new location
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 8% mv local local.O; ln -s /hosts/planet/disk2/local
+<b>&#8658;</B>/usr/local
+
+rocket 31%  ls -l /usr/local*
+lrwxrwxrwx  1 root            6 Nov 22 12:22 /usr/local -&gt
+<b>&#8658;</B>/hosts/planet/disk2/local
+lrwxrwxrwx  1 root            6 Oct 14  1996 /usr/local.O -&gt
+<b>&#8658;</B>/hosts/planet/usr/local
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To limit the possibility of interrupting the user, execute a quick move and link command back-to-back so the change happens instantaneously to the user with little or no interruption.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 32% mv local local.O; ln -s /hosts/planet/disk2/local
+<b>&#8658;</B>/usr/local
+</PRE>
+<!-- END CODE SNIP //-->
+<blockquote>
+<p><font size="-1"><hr><b>Warning:&nbsp;&nbsp;</B>Do not attempt this quick move and link with open files or daemons locked to them. This can play havoc with the some applications, including license managers.
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Example Three: Searching for Dead Links</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: sh, perl</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> [dir] <b>-type</B> l <b>-print</B> | <b>perl -nle</B> &#145;-e || <b>print</B>&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Before you can start cleaning links up, you might want to search for all the links that are unconnected to any files. As filesystems are moved around to other partitions and even other hosts, symbolic links will break. You can run a <small>find</SMALL> and pipe it to a Perl routine to check for nonexistent links; if it finds one, it prints it to STDOUT.</P>
+<!-- CODE SNIP //-->
+<pre>
+vi badlinks
+
+#! /bin/sh
+find . -type l -print | perl -nle &#145;-e || print&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Define the shell to be used.
+</P>
+<p>Line 2: From the current directory, find all the files that are links and check whether they are nonexistent. If so, print them to STDOUT.</P>
+<p>You can then use the script to output all the bad links on the system to a file.</P>
+<!-- CODE SNIP //-->
+<pre>
+# cd /
+# badlinks &gt /usr/tmp/badlinks.txt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After all the bad links are discovered, you can generally relink them to the new location of the files they used to be linked to. If you feel that all the bad links are no longer needed on the system, you can pass the <small>badlinks</SMALL> script to the <small>rm</SMALL> program to remove the bad links for you.</P>
+<!-- CODE SNIP //-->
+<pre>
+# cd /
+# rm &#145;badlinks&#145;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Starting at the root level, every time a bad link is found, it is immediately removed from the system. There is a greater chance of these bad links being discovered in user home directories and work areas. They tend to create links to filesystems that can disappear or be changed by the system administrator, escaping the user&#146;s notice until they are gone. It is best to run this script immediately after you move any files from one area to another.
+</P>
+<p><font size="+1"><b>Example Four: Cleaning Up Links to Links to Links</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>In many cases, there are times that you might inherit a system that has links pointing to multiple links within a system. This is one true case where a directory had multiple links. Here the link didn&#146;t just connect to another filesystem on the local workstation, but it went across two NFS filesystems to a directory a remote host.</P>
+<!-- CODE SNIP //-->
+<pre>
+lrwxrwxrwx  1 root            6 Jun 22  1995 /usr/local/bin -&gt
+<b>&#8658;</B>/var/local/bin
+lrwxrwxrwx  1 root            6 Oct 10  1996 /var/local/bin -&gt
+<b>&#8658;</B>/hosts/planet/usr2/local/bin
+lrwxrwxrwx  1 root            6 May 24  1997 /hosts/planet/usr2/
+<b>&#8658;</B>local/bin -&gt /hosts/planet/vol04/local
+lrwxrwxrwx  1 root            6 Aug 12 16:22 /hosts/planet/vol04/
+<b>&#8658;</B>local -&gt /hosts/saturn/vol01/local
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This can be considered sloppy administration. The local binary files that once resided in /usr were moved to /var. A file server called planet was implemented and the files were accessed through NFS mount points to /usr2. As it starting filling up, a new array was installed and the files were moved to /vol04. Soon a new, faster fileserver came along to replace planet and the files were moved to the host saturn on /vol01 and accessed through NFS mount points.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Pointing to the physical directory</I>&#151;In this method, you take the local link and follow all the links until you come to the end and reach the physical directory. This could be local or even on a remote host. Create the symbolic link to point at this physical directory.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Pointing to the server</I>&#151;If there are plans to move the files and directories around, it is best to make the link on the local host point to most stable link on the server. In this example, saturn (the new file server) has the most reliable links.
+</DL>
+<p>If there is more than one link for the same file or directory on the local host, it is best to link the last one in the chain on the local hosts to the physical destination or server.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+lrwxrwxrwx  1 root            6 Jun 22  1995 /usr/local/bin -&gt
+<b>&#8658;</B>/var/local/bin
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Users tend to have scripts and programs that might have the paths hard-coded. It is best to remove all the middle links first and, if nothing breaks for the user, clean up the local links. Check with any users who might be affected before you attempt this and before doing any mass cleanup of files and links to make sure you don&#146;t crash their sessions or applications that might be running.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Windows 2000 Debugging</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=08//-->
+<!--PAGES=270-273//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="08-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading10"></A><font color="#000077">Using the Visual C&#43;&#43; Integrated Debugger</FONT></H3>
+<p>The debugger that&#146;s integrated into Visual Studio is very easy to use. By default, your project&#146;s initial build configuration will create an executable that&#146;s ready to be debugged. To start a debug session, simply press F5 on your keyboard, select the Go icon from the toolbar, or select Start Debug, Go from the Build menu.
+</P>
+<p>As with all debuggers, the Visual C<small>&#43;&#43;</SMALL> debugger has a special relationship with the program being debugged, also known as the <i>debuggee</I>. When an interesting event occurs in the debuggee, Windows 2000 will send events to the debugger in the form of notification events. Here are some examples of events a debugger is interested in:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If the debuggee calls <small>OutputDebugString</SMALL>, the debugger is notified so that the text string can be displayed.
+<dd><b>&#149;</B>&nbsp;&nbsp;If the debuggee executes an instruction that&#146;s marked as a breakpoint, the debugger is given the opportunity to halt execution of the debuggee.
+<dd><b>&#149;</B>&nbsp;&nbsp;Exceptions that occur in the debuggee are passed to the debugger. Even exceptions that will be handled by an exception handler are initially passed to the debugger.
+</DL>
+<p>The Win32 interfaces and events used to implement basic debuggers are documented in the Platform SDK in the chapter titled &#147;Debug and Error Handling,&#148; located in the &#147;Base Services&#148; section. You won&#146;t be able to write a competitor to SoftIce using these interfaces, but you may be able to gain an understanding into the partnership that&#146;s established between the operating system and the debugger.
+</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Visual C&#43;&#43; Debugger Basics</FONT></H4>
+<p>Running your program in the context of the Visual C<small>&#43;&#43;</SMALL> debugger offers the following advantages over running your program normally from Explorer or a command prompt:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If your program crashes while running in the debugger, the debugger will attempt to stop at the offending source line. The values of variables and the call stack are available. These often give you enough information to correct the problem.
+<dd><b>&#149;</B>&nbsp;&nbsp;If you detect a fault, you may be able to use the Visual C<small>&#43;&#43;</SMALL> Edit and Continue feature to recompile your application and continue debugging without needing to restart your debugging session. Edit and Continue is discussed later in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;Trace and debug statements are available in the Debug tab of the output window. You can use these statements to trace the execution of your program, even if you aren&#146;t manually stepping through your source code.
+</DL>
+<p><font size="+1"><b>Setting a Breakpoint</B></FONT></P>
+<p>A <i>breakpoint</I> is a location in your application that causes the debugger to stop running your program. When the debugger stops at a breakpoint, all threads in your application are suspended. There are two basic types of breakpoints:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Unconditional breakpoints
+<dd><b>&#149;</B>&nbsp;&nbsp;Conditional breakpoints
+</DL>
+<p>An <i>unconditional breakpoint</I> always causes the debugger to halt. You can set an unconditional breakpoint in one of several ways:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Click the breakpoint icon in the toolbar. A breakpoint will be added to your source code at the current cursor position.
+<dd><b>&#149;</B>&nbsp;&nbsp;Right-click in your source code window and select Insert/Remove Breakpoint from the context menu.
+<dd><b>&#149;</B>&nbsp;&nbsp;Press the F9 key. A breakpoint will be added to your source code at the current cursor position.
+</DL>
+<p>Regardless of which method you use to set your breakpoint, the location of the breakpoint is indicated by a red dot in the left margin of the source code.
+</P>
+<p>A <i>conditional breakpoint</I> causes the debugger to halt when the breakpoint is executed <i>and</I> a specific condition is true. For example, you may want to skip a breakpoint location 100 times before executing the break, or you may want to wait until a variable is set to a specific value.</P>
+<p>To set a conditional breakpoint, you must open the Breakpoints dialog box by pressing Ctrl&#43;B or by selecting Breakpoints from the Edit menu. The Breakpoints dialog box is shown in Figure 8.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-04.jpg',401,334 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-04.jpg',401,334)"><font color="#000077"><b>Figure 8.4</B></FONT></A>&nbsp;&nbsp;The Breakpoints dialog box is used to set conditional breakpoints.</P>
+<p>To select the line number for the breakpoint, click the right arrow located next to the edit control. The current line number will be displayed as a menu item. Select the line number, and the edit control will be filled in properly.
+</P>
+<p>After selecting a line number for the breakpoint, you can specify an additional condition that must be true in order for the break to be executed. Clicking the Conditions button brings up the Breakpoint Condition dialog box, as shown in Figure 8.5.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-05.jpg',318,239 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-05.jpg',318,239)"><font color="#000077"><b>Figure 8.5</B></FONT></A>&nbsp;&nbsp;The Breakpoint Condition dialog box allows you to set additional criteria for the breakpoint.</P>
+<p>In the Breakpoint Condition dialog box, you can enter an expression that must be evaluated as true in order for the break to occur. You can also specify the number of times a breakpoint will be skipped before the break occurs.
+</P>
+<p><font size="+1"><b>Stepping Through Program Statements</B></FONT></P>
+<p>If your program is stopped at a breakpoint, you have several options for continuing execution:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;You can step to the next source line by pressing the F10 key.
+<dd><b>&#149;</B>&nbsp;&nbsp;If the next line is a function call, you can step into the function by pressing F11.
+<dd><b>&#149;</B>&nbsp;&nbsp;You can continue executing the current function and return to the calling function by pressing Shift&#43;F11.
+<dd><b>&#149;</B>&nbsp;&nbsp;You can run to the cursor position by pressing Ctrl&#43;F10.
+</DL>
+<p>Each of these options is also available in the Debug menu.
+</P>
+<p><font size="+1"><b>Using DataTips</B></FONT></P>
+<p>The Visual C<small>&#43;&#43;</SMALL> debugger will display the value for many variables in a DataTip window if you hover the mouse cursor over the variable. The DataTip window is similar to a ToolTip, except it displays the value of the variable. In the case of commonly used structures, such as <small>CRect</SMALL> or <small>CString</SMALL>, a DataTip is displayed that provides information about the most commonly used members of the class or structure.</P>
+<p>The DataTip will not be displayed for invalid values. Also, the debugger will not display a DataTip for structures and classes that it doesn&#146;t recognize. However, displaying DataTip information for your own data types is discussed later in this chapter.</P>
+<p><font size="+1"><b>Changing the Next Line to Be Executed</B></FONT></P>
+<p>There will be times when you need to change the flow of execution for your program. Typically, you&#146;re single-stepping in the debugger, and you want to skip over a line of source code or return to the top of a function.
+</P>
+<p>To change the next line to be executed, right-click the line you want to execute and select Set Next Statement from the context menu.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="08-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

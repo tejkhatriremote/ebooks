@@ -1,0 +1,252 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Pipes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=26//-->
+<!--PAGES=895-898//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="26-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<p>Most of the time, BardServ is blocked on a call to <small>ConnectNamedPipe</SMALL>, waiting for a client process to connect to the other side of a pipe. When a client connects to the named pipe, BardServ creates a thread to service that client, creates a new pipe, and then blocks again on a call to <small>ConnectNamedPipe</SMALL>.</P>
+<p>Listing 26.5 shows the most of the source code for the <small>BardServ.c</SMALL> source file. The complete listing can be found on this book&#146;s CD-ROM. This is the only source file in the BardServ console mode project.</P>
+<p><b>Listing 26.5</B> The BardServ Source Code<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+#define BUFFERSIZE 256
+const int cTimeout = INFINITE;
+
+const TCHAR g_szPipe[] = _T(&#147;\\\\.\\pipe\\Quote&#148;);
+const TCHAR g_szUnknown[] = _T(&#147;Unknown request&#148;);
+const TCHAR g_rgszQuotes[][350] = {
+     //Henry V     {_T(&#147;We few, we happy few, we band of brothers;\n&#148;)
+      _T(&#147;For he today that sheds his blood with me\n&#148;)
+      _T(&#147;Shall be my brother; be he ne&#146;er so vile,\n&#148;)
+      _T(&#147;This day shall gentle his condition.\n&#148;)
+      _T(&#147;And gentlemen in England, now abed,\n&#148;)
+      _T(&#147;Shall think themselves accursed they were not here;\n&#148;)
+      _T(&#147;And hold their manhoods cheap whiles any speaks\n&#148;)
+      _T(&#147;That fought with us upon Saint Chrispin&#146;s day.\n&#148;) },
+     //Hamlet
+     {_T(&#147;There are more things in heaven and earth, Horatio,\n&#148;)
+      _T(&#147;Than are dreamt of in your philosophy.\n&#148;) },
+     //Richard III
+     {_T(&#147;Now is the winter of our discontent\n&#148;)
+      _T(&#147;Made glorious summer by this sun of York;\n&#148;) }
+};
+
+int   ErrorHandling(LPCTSTR lpszTitle);
+DWORD PipeFunc(LPARAM lparam);
+
+int _tmain()
+{
+    // Create a security descriptor that has a NULL ACL
+    // that allows unlimited access.
+    SECURITY_ATTRIBUTES     sa;
+    SECURITY_DESCRIPTOR*    psd;
+    psd = (SECURITY_DESCRIPTOR*)LocalAlloc(LPTR,
+                                SECURITY_DESCRIPTOR_MIN_LENGTH);
+    InitializeSecurityDescriptor(psd,SECURITY_DESCRIPTOR_REVISION);
+    SetSecurityDescriptorDacl(psd, TRUE, NULL, FALSE);
+    sa.nLength = sizeof(sa);
+    sa.lpSecurityDescriptor = psd;
+    sa.bInheritHandle = TRUE;
+
+    // Hang in a loop, creating named pipe instances and
+    // waiting for a client to connect.  There is a teeny,
+    // tiny hole where two clients might try to connect
+    // at the same time; however this is an extremely small
+    // time gap.
+    while(1)
+    {
+        BOOL fConnected;
+        HANDLE hPipe = CreateNamedPipe(g_szPipe,
+                                       PIPE_ACCESS_DUPLEX,
+                                       PIPE_TYPE_MESSAGE |
+                                       PIPE_READMODE_MESSAGE |
+                                       PIPE_WAIT,
+                                       PIPE_UNLIMITED_INSTANCES,
+                                       BUFFERSIZE,
+                                       BUFFERSIZE,
+                                       cTimeout,
+                                       &ampsa);
+        if(hPipe == INVALID_HANDLE_VALUE)
+            return ErrorHandling(_T(&#147;CreatePipe Failed&#148;));
+        _tprintf(_T(&#147;Main thread waiting for a client\n&#148;));
+        fConnected = ConnectNamedPipe(hPipe, NULL);
+        if(fConnected || GetLastError() == ERROR_PIPE_CONNECTED)
+        {
+           // Connected - now spin off a thread to manage this
+           // pipe. Execution continues in PipeFunc.
+           HANDLE hThread;
+           DWORD  dwThreadID;
+           hThread = CreateThread(NULL,
+                                  0,
+                                  (LPTHREAD_START_ROUTINE)PipeFunc,
+                                  (LPVOID)hPipe,
+                                  0,
+                                  &ampdwThreadID);
+           _tprintf(_T(&#147;Thread 0x%02X connected to a client\n&#148;),
+                    dwThreadID);
+           if(hThread == INVALID_HANDLE_VALUE)
+                ErrorHandling(_T(&#147;CreateThread Failed&#148;));
+        }
+        else
+        {
+           CloseHandle(hPipe);
+                return ErrorHandling(_T(&#147;Connect Failed&#148;));
+        }
+    }
+    LocalFree(psd);
+    return 0;
+}
+
+// PipeFunc --
+// Manages a thread containing one pipe instance. If the client
+// sends &#147;Quit&#148;, the thread exits; otherwise, a new quotation is sent
+// to the client.
+DWORD PipeFunc(LPARAM lparam)
+{
+    HANDLE hPipe = (HANDLE)lparam;
+    static int ndx = 0;
+    TCHAR  szBuffer[BUFFERSIZE];
+    DWORD  dwRead, dwWritten;
+    BOOL   fWrite;
+    while(1)
+    {
+        LPCTSTR pszWrite;
+        DWORD   cbWrite;
+        BOOL fRead = ReadFile(hPipe,
+                              szBuffer,
+                              BUFFERSIZE,
+                              &ampdwRead,
+                              NULL);
+        if(fRead == FALSE || dwRead == 0) break;
+        if(_tcsicmp(_T(&#147;Quit&#148;), szBuffer) == 0)
+        {
+            DWORD dwThreadID = GetCurrentThreadId();
+            _tprintf(_T(&#147;Thread 0x%02X closing connection\n&#148;),
+                     dwThreadID );
+            break;
+        }
+        else if(_tcsicmp(_T(&#147;Quote&#148;), szBuffer) == 0)
+        {
+            pszWrite = g_rgszQuotes[ndx];
+            if(&#43;&#43;ndx == 3)
+            ndx = 0;
+        }
+        else
+            pszWrite = g_szUnknown;
+        cbWrite = (lstrlen(pszWrite)*sizeof(TCHAR))&#43;sizeof(TCHAR);
+        fWrite = WriteFile(hPipe,
+                           pszWrite,
+                           cbWrite,
+                           &ampdwWritten,
+                           NULL );
+        if(fWrite == FALSE || dwWritten == 0) break;
+    }
+    FlushFileBuffers(hPipe);
+    DisconnectNamedPipe(hPipe);
+    CloseHandle(hPipe);
+    return NO_ERROR;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Inside <small>_tmain</SMALL>, BardServ creates a <small>SECURITY_ATTRIBUTES</SMALL> structure that allows any client to connect to the pipe. BardServ then enters a loop, creating and connecting pipes for clients. When a client is connected to a pipe, BardServ spins up a thread for that client and passes the pipe handle to the thread function for handling.</P>
+<p>In addition to <small>_tmain</SMALL>, BardServ has two other functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ErrorHandling</SMALL>. Displays a system-supplied text string when an error is detected.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ThreadFunc</SMALL>. Handles the threads that are spun up for every connected pipe. A client can request a quotation by sending the Unicode string &#147;Quote&#148; to BardServ. If the client sends &#147;Quit&#148;, the thread closes the pipe and exits. If the client sends anything else, an error message is returned.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="26-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="26-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

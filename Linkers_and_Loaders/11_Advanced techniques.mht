@@ -1,0 +1,1146 @@
+From: <Saved by Microsoft Internet Explorer 5>
+Subject: Advanced techniques
+Date: Fri, 13 May 2005 10:01:39 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_0081_01C557A2.C1A8C9B0"
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2800.1441
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0081_01C557A2.C1A8C9B0
+Content-Type: text/html;
+	charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.iecc.com/linker/linker11.html
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Advanced techniques</TITLE>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dwindows-1252">
+<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR></HEAD>
+<BODY>
+<H1>Advanced techniques</H1><I>$Revision: 2.1 $</I> <BR><I>$Date: =
+1999/06/04=20
+20:30:28 $</I>=20
+<P>
+<P>This chapter describes a grab-bag of miscellaneous linker techniques =
+that=20
+don't fit very well anywhere else.=20
+<P>
+<H2>Techniques for C++</H2>C++ presents three significant challenges to =
+the=20
+linker. One is its complicated naming rules, in which multiple functions =
+can=20
+have the same name if they have different argument types. Name mangling=20
+addresses this well enough that all linkers use it in some form or =
+another.=20
+<P>
+<P>The second is global initializers and destructors, routines that need =
+to be=20
+run before the main routine starts and after the main routine exits. =
+This=20
+requires that the linker collect the pieces of initializer and =
+destructor code,=20
+or at least pointers to them, into one place so that startup and exit =
+code can=20
+run it all.=20
+<P>
+<P>The third, and by far the most complex issue involves templates and =
+"extern=20
+inline" procedures. A C++ template defines an infinite family of =
+procedures,=20
+with each family member being the template specialized by a type. For =
+example, a=20
+template might define a generic hash table, with family members being a =
+hash=20
+table of integers, of floating point numbers, of character strings, and =
+of=20
+pointers to various sorts of structures. Since computer memories are =
+finite, the=20
+compiled program needs to contain all of the members of the family that =
+are=20
+actually used in the program, but shouldn't contain any others. If the =
+C++=20
+compiler takes the traditional approach of treating each source file =
+separately,=20
+it can't tell when it compiles a file that uses templates whether some =
+of the=20
+template family members are used in other source files. If the compiler =
+takes a=20
+conservative approach and generates code for each family member used in =
+each=20
+file, it will usually end up with multiple copies of each family member, =
+wasting=20
+space. If it doesn't generate that code, it risks having no copy at all =
+of a=20
+required family member.=20
+<P>
+<P>Inline functions present a similar problem. Normally, inline =
+functions are=20
+expanded like macros, but in some cases the compiler generates a =
+conventional=20
+out-of-line version of the function. If several different files use a =
+single=20
+header file that contains an inline function and some of them require an =
+
+out-of-line version, the same problem of code duplication arises.=20
+<P>
+<P>Some compilers have used approaches that change the source language =
+to help=20
+produce object code that can be linked by ``dumb'' linkers. Many recent =
+C++=20
+systems have addressed the problem head-on, either by making the linker =
+smarter,=20
+or by integrating the linker with other parts of the program development =
+system.=20
+We look briefly at these latter approaches.=20
+<P>
+<H3>Trial linking</H3>In systems stuck with simple-minded linkers, C++ =
+systems=20
+have used a variety of tricks to get C++ programs linked. An approach =
+pioneered=20
+by the original cfront implementation is to do a trial link which will =
+generally=20
+fail, then have the compiler driver (the program that runs the various =
+pieces of=20
+the compiler, assembler, and linker) extract information from the result =
+of that=20
+link to finish the compiling and relink, Figure 1.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig11-01.html"><IMG=20
+      height=3D65 =
+src=3D"http://www.iecc.com/linker/thumb-linker11-01.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 1:</I> Trial linking <BR>input files pass through =
+linker to=20
+      trial output plus errors, then inputs plus info from errors plus =
+maybe=20
+      more generated objects pass through linker to final object=20
+</TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>On Unix systems, if the linker can't resolve all of the undefined =
+references=20
+in a link job, it can still optionally can also produce an output file =
+which can=20
+be used as the input to a subsequent link job. The linker uses its usual =
+library=20
+search rules during the link, so the output file contains needed library =
+
+routines as well as information from the input file. Trial linking =
+solves all of=20
+the C++ problems above in a slow but effective way.=20
+<P>
+<P>For global initializers and destructors, the C++ compiler creates in =
+each=20
+input file routines that do the initialization and destruction. The =
+routines are=20
+logically anonymous, but the compiler gives them distinctive names. For =
+example,=20
+the GNU C++ compiler creates routines named <TT>_GLOBAL_.I.__4junk</TT> =
+and=20
+<TT>_GLOBAL_.D.__4junk</TT> to do initialization and destruction of =
+variables in=20
+a class called <TT>junk</TT>. After the trial link, the linker driver =
+examines=20
+the symbol table of the output file and makes lists of the global =
+initializer=20
+and destructor routines, writes a small source file with those lists in =
+arrays=20
+(in either C or assembler). Then in the relink the C++ startup and exit =
+code=20
+uses the contents of the arrays to call all of the appropriate routines. =
+This is=20
+essentially the same thing that C++-aware linkers do, just implemented =
+outside=20
+the linker.=20
+<P>
+<P>For templates and extern inlines, the compiler initially doesn't =
+generate any=20
+code for them at all. The trial link has undefined symbols for all of =
+the=20
+templates and extern inlines actually used in the program, which the =
+compiler=20
+driver can use to re-run the compiler and generate code for them, then =
+re-link.=20
+<P>
+<P>One minor issue is to find the source code for the missing templates, =
+since=20
+it can be lurking in any of a potentially very large number of source =
+files.=20
+Cfront used a simple ad-hoc technique, scanning the header files, and =
+guessing=20
+that a template declared in <TT>foo.h</TT> is defined in =
+<TT>foo.cc</TT>. Recent=20
+versions of GCC use a ``repository'' that notes the locations of =
+template=20
+definitions in small files created during the compilation process. After =
+the=20
+trial link, the compiler driver needs only scan those small files to =
+find the=20
+source to the templates.=20
+<P>
+<H3>Duplicate code elimination</H3>The trial linking approach generates =
+as=20
+little code as possible, then goes back after the trial link to generate =
+any=20
+required code that was left out the first time. The converse approach is =
+to=20
+generate all possible code, then have the linker throw away the =
+duplicates,=20
+Figure 2. The compiler generates all of the expanded templates and all =
+of the=20
+extern inlines in each file that uses them. Each possibly redundant =
+chunk of=20
+code is put in its own segment with a name that uniquely identifies what =
+it is.=20
+For example, GCC puts each chunk in an ELF or COFF section called=20
+<TT>.gnu.linkonce.d.mangledname</TT> where mangled name is the =
+``mangled''=20
+version of the function name with the type information added. Some =
+formats=20
+identify possibly redundant sections solely by name, while Microsoft's =
+COFF uses=20
+COMDAT sections with explicit type flags to identify possibly redundant =
+code=20
+sections. If there are multiple copies of a section with the same name, =
+the=20
+linker discards all but one of them at link time.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig11-02.html"><IMG=20
+      height=3D85 =
+src=3D"http://www.iecc.com/linker/thumb-linker11-02.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 2:</I> Duplicate elimination <BR>Input files with =
+redundant=20
+      sections pass into the linker which collapses them into a single =
+result=20
+      (sub)section </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>This approach does a good job of producing executables with one copy =
+of each=20
+routine, at the cost of very large object files with many copies of =
+templates.=20
+It also offers at least the possibility of smaller final code than the =
+other=20
+approaches. In many cases, code generated when a template is expanded =
+for=20
+different types is identical. For example, a template that implemented a =
+
+bounds-checked array of &lt;TYPE&gt; would generally expand to identical =
+code=20
+for all pointer types, since in C++ pointers all have the same =
+representation. A=20
+linker that's already deleting redundant sections could check for =
+sections with=20
+identical contents and collapse multiple identical sections to one. Some =
+Windows=20
+linkers do this.=20
+<P>
+<H3>Database approaches</H3>The GCC respository is a simple version of a =
+
+database. In the longer run, tool vendors are moving toward database =
+storage of=20
+source and object code, such as the Montana environment in IBM's Visual =
+Age C++.=20
+The database tracks the location of each declaration and definition, =
+which makes=20
+it possible after a source change to figure out what the individual =
+routine=20
+dependencies are and recompile and relink just what has changed.=20
+<P>
+<H2>Incremental linking and relinking</H2>For a long time, some linkers =
+have=20
+permitted incremental linking and relinking. Unix linkers provide a =
+<TT>-r</TT>=20
+flag that tells the linker to keep the symbol and relocation information =
+in the=20
+output file, so the output can be used as the input to a subsequent =
+link.=20
+<P>
+<P>IBM mainframes have always had a ``linkage editor,'' rather than a =
+linker. In=20
+the IBM object format, the segments in each input file (IBM calls the =
+segments=20
+control sections or CSECTs) retain their individual identities in the =
+output=20
+file. One can re-edit a linked program and replace or delete control =
+sections.=20
+This feature was widely used in the 1960s and early 1970s when compiling =
+and=20
+linking were slow enough that it was worth the manual effort needed to =
+arrange=20
+to relink a program, replacing just the CSECTS that had been recompiled. =
+The=20
+replacement CSECTs need not be the same size as the originals; the =
+linker=20
+adjusts all of the relocation information in the output file as needed =
+to=20
+account for the different locations of CSECTs than have moved.=20
+<P>
+<P>In the mid to late 1980s, Quong and Linton at Stanford did =
+experiments with=20
+incremental linking in a UNIX linker, to try and speed up the =
+compile-link-debug=20
+cycle. The first time their linker runs, it links a conventional =
+statically=20
+linked executable, then stays active in the background as a daemon with =
+the=20
+program's symbol table remaing in memory. On subseqent links, it only =
+treats the=20
+input files that have changed, replacing their code in-place in the =
+output file=20
+but leaving everything else alone other than fixing up references to =
+symbols=20
+that have moved. Since segment sizes in the recompiled files usually =
+don't=20
+change very much from one link to the next, they build the initial =
+version of=20
+the output file with a small amount of slop space between the input file =
+
+segments, Figure 3. On each subsequent link, so long as the changed =
+input files'=20
+segments haven't grown more than the slop amount, the changed files' =
+segments=20
+replace the previous versions in the output file. If they have grown =
+past the=20
+end of the slop space, the linker moves the subsequent segments in the =
+output=20
+file using their slop space. If more than a small number of segments =
+need to be=20
+moved, the linker gives up and relinks from scratch.=20
+<P>
+<P>
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig11-03.html"><IMG=20
+      height=3D77 =
+src=3D"http://www.iecc.com/linker/thumb-linker11-03.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 3:</I> Incremental linking <BR>picture of inclink-ed =
+object=20
+      file with slop between segments, and new version's segments =
+pointing to=20
+      replace old ones </TD></TR></TBODY></TABLE></CENTER>
+<P>The authors did considerable instrumentation to collect data on the =
+number of=20
+files compiled between linker runs in typical development activities and =
+the=20
+change in segment sizes. They found that typically only one or two files =
+change,=20
+and the segments grow only by a few bytes if at all. By putting 100 =
+bytes of=20
+slop between segments, they avoided almost all relinking. They also =
+found that=20
+creating the output file's symbol table, which is essential for =
+debugging, was=20
+as much work as creating the segments, and used similar techniques to =
+update the=20
+symbol table incrementally. Their performance results were quite =
+dramatic, with=20
+links that took 20 or 30 seconds to do conventionally dropping to half a =
+second=20
+for an incremental link. The primary drawback of their scheme was that =
+the=20
+linker used about eight megabytes to keep all of the symbols and other=20
+information about the output file, which at the time was a lot of memory =
+
+(workstations rarely had more than 16MB.)=20
+<P>
+<P>Some modern systems do incremental linking in much the same way that =
+Quong=20
+and Linton did. The linker in Microsoft's visual studio links =
+incrementally by=20
+default. It leaves slop between modules and also can in some =
+circumstances move=20
+an updated moduls from one part of the executable to another, putting in =
+some=20
+glue code at the old address.=20
+<P>
+<H2>Link time garbage collection</H2>Lisp and other languages that =
+allocate=20
+storage automatically have for many decades provided <I>garbage =
+collection</I>,=20
+a service that automatically identifies and frees up storage that's no =
+longer=20
+referred to by any other part of the program. Several linkers offer an =
+analogous=20
+facility to remove unused code from object files.=20
+<P>
+<P>Most program source and object files contain more than one procedure. =
+If a=20
+compiler marks the boundaries between procedures, the linker can =
+determine what=20
+symbols each procedure defines, and what symbols each procedure =
+references. Any=20
+procedure with no references at all is unused and can safely be =
+discarded. Each=20
+time a procedure is discarded, the linker should recompute the def/ref =
+list,=20
+since the procedure just discarded might have had the only reference to =
+some=20
+other procedure which can in turn be discarded.=20
+<P>
+<P>One of the earlier systems to do link-time garbage collection is =
+IBM's AIX.=20
+The XCOFF object files put each procedure in a separate section. The =
+linker uses=20
+symbol table entries to tell what symbols are defined in each section, =
+and=20
+relocation entries to tell what symbols are referenced. By default, all=20
+unreferenced procedures are discarded, although the programmer can use =
+linker=20
+switches to tell it not to garbage collect at all, or to protect =
+specific files=20
+or sections from collection.=20
+<P>
+<P>Several Windows linkers, including Codewarrior, the Watcom linker, =
+and linker=20
+in recent versions of Microsoft's Visual C++ can also garbage collect. A =
+
+optional compiler switch creates objects with "packaged" functions, each =
+
+procedure in a separate section of the object file. The linker looks for =
+
+sections with no references and deletes them. In most cases, the linker =
+looks at=20
+the same time for multiple procedures with identical contents (usually =
+from=20
+template expansions, mentioned above) and collapses them as well.=20
+<P>
+<P>An alternative to a garbage collecting linker is more extensive use =
+of=20
+libraries. A programmer can turn each of the object files linked into a =
+program=20
+into a library with one procedure per library member, then link from =
+those=20
+libraries so the linker pulls in procedures as needed, but skips the =
+ones with=20
+no references. The hardest part is to make each procedure a separate =
+object=20
+file. It typically requires some fairly messy preprocessing of the =
+source code=20
+to break multi-procedure source files into several small single =
+procedure files,=20
+replicating the the data declarations and "include" lines for header =
+files in=20
+each one, and renaming internal procedures to prevent name collisions. =
+The=20
+result is a minimum size executable, at the cost of considerably slower=20
+compiling and linking. This is a very old trick; the DEC TOPS-10 =
+assembler in=20
+the late 1960s could be directed to generate an object file with =
+multiple=20
+independent sections that the linker would treat as a searchable =
+library.=20
+<P>
+<H2>Link time optimization</H2>On most systems, the linker is the only =
+program=20
+in the software building process that sees all of the pieces of a =
+program that=20
+it is building at the same time. That means that it has opportunities to =
+do=20
+global optimization that no other component can do, particularly if the =
+program=20
+combines modules written in different languages and compiled with =
+different=20
+compilers. For example, in a language with class inheritance, calls to =
+class=20
+methods generally use indirect calls since a method may be overridden in =
+a=20
+subclass. But if there aren't any subclasses, or there are subclasses =
+but none=20
+of them override a particular method, the calls can be direct. A linker =
+could=20
+make special case optimizations like this to avoid some of the =
+inefficiencies=20
+otherwise inherent in object oriented languages. Fernandez at Princeton =
+wrote an=20
+optimizing linker for Modula-3 that was able to turn 79% of indirect =
+method=20
+calls into direct calls as well as reducing instructions executed by =
+over 10%.=20
+<P>
+<P>A more aggressive approach is to perform standard global =
+optimizations on an=20
+entire program at link time. Srivastava and Wall wrote an optimizing =
+linker that=20
+decompiled RISC architecture object code into an intermediate form, =
+applied=20
+high-level optimizations such as inlining and low-level optimizations =
+such as=20
+substituting a faster but more limited instruction for a slower and more =
+general=20
+one, then regenerated the object code. Particularly on 64 bit =
+architectures, the=20
+speedups from these optimizations can be quite significant. On the 64 =
+bit Alpha=20
+architecture, the general way to address any static or global data, or =
+any=20
+procedure, is to load an address pointer to the item from a pointer pool =
+in=20
+memory into a register, then use the register as a base register. (The =
+pointer=20
+pool is addressed by a global pointer register.) Their OM optimizing =
+linker=20
+looked for situations where a sequence of instructions refer to several =
+global=20
+or static variables that are located close enough to each other that =
+they can=20
+all be addressed relative to the same pointer, and rewrites object code =
+to=20
+remove many pointer loads from the global pool. It also looks for =
+procedure=20
+calls that are within the 32 bit address range of the =
+branch-to-subroutine=20
+instruction and substitutes that for a load and indirect call. It also =
+can=20
+rearrange the allocation of common blocks to place small blocks togther, =
+to=20
+increase the number of places where a single pointer can be used for =
+multiple=20
+references. Using these and some other standard optimizations, OM =
+achieves=20
+significant improvements in executables, removing as many as 11% of all=20
+instructions in some of the SPEC benchmarks.=20
+<P>
+<P>The Tera computer compilation suite does very aggressive link time=20
+optimization to support the Tera's high-performance highly parallel=20
+architecture. The C compiler is little more than a parser that creates =
+"object=20
+files" containing tokenized versions of the source code. The linker =
+resolves all=20
+of the references among modules and generates all of the object code. It =
+
+aggressively in-lines procedures, both within a single module and among =
+modules,=20
+since the code generator handles the entire program at once. To get =
+reasonable=20
+compilation performance, the system uses incremental compilation and =
+linking. On=20
+a recompile, the linker starts with the previous version of the =
+executable,=20
+rewrites the code for the source files that have changed (which, due to =
+the=20
+optimization and in-lining, may be in code generated from files that =
+haven't=20
+changed) and creates a new, updated, executable. Few of the compilation =
+or=20
+linking techniques in the Tera system are new, but to date it's unique =
+in its=20
+combination of so many aggressive optimization techniques in a single =
+system.=20
+<P>
+<P>Other linkers have done other architecture-specific optimizations. =
+The=20
+Multiflow VLIW machine had a very large number of registers, and =
+register saves=20
+and restores could be a major bottleneck. An experimental tool used =
+profile data=20
+to figure out what routines frequently called what other routines. It =
+modified=20
+the registers used in the code to minimize the overlapping registers =
+used by=20
+both a calling routine and its callee, thereby minimizing the number of =
+saves=20
+and restores.=20
+<P>
+<H2>Link time code generation</H2>Many linkers generate small amounts of =
+the=20
+output object code, for example the jump entries in the PLT in Unix ELF =
+files.=20
+But some experimental linkers do far more code generation than that.=20
+<P>
+<P>The Srivastava and Wall optimizing linker starts by decompiling =
+object files=20
+back into intermediate code. In most cases, if the linker wants =
+intermediate=20
+code, it'd be just as easy for compilers to skip the code generation =
+step,=20
+create object files of intermediate code, and let the linker do the code =
+
+generation. That's actually what the Fernandez optimizer described above =
+did.=20
+The linker can take all the intermediate code, do a big optimization =
+pass over=20
+it, then generate the object code for the output file.=20
+<P>
+<P>There's a couple of reasons that production linkers rarely do code =
+generation=20
+from intermediate code. One is that intermediate languages tend to be =
+related to=20
+the compiler's source language. While it's not too hard to devise an=20
+intermediate language that can handle several Fortran-like languages =
+including C=20
+and C++, it's considerably harder to devise one that can handle those =
+and also=20
+handle less similar languages such as Cobol and Lisp. Linkers are =
+generally=20
+expected to link object code from any compiler or assembler, making=20
+language-specific intermediates problematical.=20
+<P>
+<H3>Link-time profiling and instrumentation</H3>Several groups have =
+written=20
+link-time profiling and optimization tools. Romer et al. at the =
+University of=20
+Washington wrote Etch, an instrumentation tool for Windows x86 =
+executables. It=20
+analyzes ECOFF executables to find all of the executable code (which is=20
+typically intermixed with data) in the main executable as well as in DLL =
+
+libraries it calls. It has been used to build a call graph profiler and =
+an=20
+instruction scheduler. The lack of structure in ECOFF executables and =
+the=20
+complexity of the x86 instruction encoding were the major challenges to =
+creating=20
+Etch.=20
+<P>
+<P>Cohn et al. at DEC wrote Spike, a Windows optimization tool for Alpha =
+NT=20
+executables. It performed both instrumentation, to add profiling code to =
+
+executables and DLLs, as well as optimization, using the profile data to =
+improve=20
+register allocation and to reorganize executables to improve cache =
+locality.=20
+<P>
+<H3>Link time assembler</H3>An interesting compromise between linking=20
+traditional binary object code and linking intermediate languages is to =
+use=20
+assembler source as the object language. The linker assembles the entire =
+program=20
+at once to generate the output file. Minix, a small Unix-like system =
+that was=20
+the inspiration for Linux did that.=20
+<P>
+<P>Assembler is close enough to machine language that any compiler can =
+generate=20
+it, while still being high enough level to permit useful optimizations =
+including=20
+dead code elimination, code rearrangement, and some kinds of strength =
+reduction,=20
+as well as standard assembler optimization such as choosing the smallest =
+version=20
+of an instruction that has enough bits to handle a particular operand.=20
+<P>
+<P>Such a system could be fast, since assembly can be very fast, =
+particularly if=20
+the object language is really a tokenized assembler rather than full =
+assembler=20
+source. (In assemblers, as in most othter compilers, the initial =
+tokenizing is=20
+often the slowest part of the entire process.)=20
+<P>
+<H3>Load time code generation</H3>Some systems defer code generation =
+past link=20
+time to program load time. Franz and Kistler created "Slim Binaries", =
+orignally=20
+as a response to Macintosh "fat binaries" that contain object code for =
+both=20
+older 68000 Macs and newer Power PC Macs. A slim binary is actually a =
+compactly=20
+encoded version of an abstract parse for a program module. The program =
+loader=20
+reads and expands the slim binary and generates the object code for the =
+module=20
+in memory, which is then executable. The inventors of slim binaries make =
+the=20
+plausible claim that modern CPUs are so much faster than disks that =
+program=20
+loading time is dominated by disk I/O, and even with the code generation =
+step,=20
+slim binaries are about as fast to load because as standard binaries =
+because=20
+their disk files are small.=20
+<P>
+<P>Slim binaries were originally created to support Oberon, a strongly =
+typed=20
+Pascal-like language, on the Macintosh and later Windows for the x86, =
+and they=20
+apparently work quite well on those platforms. The authors also expect =
+that slim=20
+binaries will work equally well with other source languages and other=20
+architectures. This is a much less credible claim; Oberon programs tend =
+to be=20
+very portable due to the strong typing and the consistent runtime =
+environment,=20
+and the three target machines are quite similar with identical data and =
+pointer=20
+formats except for byte order on the x86. A long series of "universal=20
+intermediate language" projects dating back to the UNCOL project in the =
+1950s=20
+have failed after promising results with a small number of source and =
+target=20
+languages, and there's no reason to think that slim binaries wouldn't =
+meet the=20
+same result. But as a distribution format for a set of similar target=20
+environments, e.g. Macs with 68K or PPC, or Windows with x86, Alpha, or =
+MIPS, it=20
+should work well.=20
+<P>
+<P>The IBM System/38 and AS/400 have used a similar technique for many =
+years to=20
+provide binary program compatibility among machines with different =
+hardware=20
+architectures. The defined machine language for the S/38 and AS/400 is a =
+virtual=20
+architecture with a very large single level address space, never =
+actually=20
+implemented in hardware. When a S/38 or AS/400 binary program is loaded, =
+the=20
+loader translates the virtual code into the actual machine code for =
+whatever=20
+processor the machine on which it is running contains. The translated =
+code is=20
+cached to speed loading on subsequent runs of the program. This has =
+allowed IBM=20
+to evolve the S/38 and then AS/400 line from a midrange system with =
+multi-board=20
+CPUs to a deskside system using a power PC CPU, maintaining binary =
+compatibility=20
+throughout. The virtual architecture is very tightly specified and the=20
+translations very complete, so programers can debug their program at the =
+virtual=20
+architecture level without reference to the physical CPU. This scheme =
+probably=20
+wouldn't have worked without a single vendor's complete control over the =
+virtual=20
+architecture and all of the models of the computers on which it runs, =
+but it's a=20
+very effective way to get a lot of performance out of modestly priced =
+hardware.=20
+<P>
+<H2>The Java linking model</H2>The Java programming language has a =
+sophisticated=20
+and interesting loading and linking model. The Java source language is a =
+
+strongly typed object oriented language with a syntax similar to C++. =
+What makes=20
+it interesting is that Java also defines a portable binary object code =
+format, a=20
+virtual machine that executes programs in that binary format, and a =
+loading=20
+system that permits a Java program to add code to itself on the fly.=20
+<P>
+<P>Java organizes a program into <I>classes</I>, with each class in a =
+program=20
+compiled into a separate logical (and usually physical) binary object =
+code file.=20
+Each class defines the fields that each class members contains, possibly =
+some=20
+static variables, and a set of procedures (methods) that manipulate =
+class=20
+members. Java uses single inheritance, so each class is a subclass of =
+some other=20
+class, with all classes being desendants from the universal base class =
+Object. A=20
+class inherits all of the fields and methods from its superclass, and =
+can add=20
+new fields and methods, possibly overriding existing methods in the =
+superclass.=20
+<P>
+<P>Java loads one class at a time. A Java program starts by loading an =
+initial=20
+class in an implementation-dependent way. If that class refers to other =
+classes,=20
+the other classes are loaded on demand when they are needed. A Java =
+application=20
+can either use the built-in bootstrap class loader which loads clases =
+from files=20
+on the local disk, or it can provide its own class loader which can =
+create or=20
+retrieve classes any way it wants. Most commonly a custom class loader =
+retrieves=20
+class files over a network connection, but it could equally well =
+generate code=20
+on the fly or extract code from compressed or encrypted files. When a =
+class is=20
+loaded due to a reference from another class, the system uses same =
+loader that=20
+loaded the referring class. Each class loader has its own separate name =
+space,=20
+so even if an application run from the disk and one run over the net =
+have=20
+identically named classes or class members, there's no name collision.=20
+<P>
+<P>The Java definition specifies the loading and linking process in =
+considerable=20
+detail. When the virtual machine needs to use a class, first it =
+<I>loads</I> the=20
+class by calling the class loader. Once a class is loaded, the linking =
+process=20
+includes <I>verification</I> that the binary code is valid, and=20
+<I>preparation</I>, allocating the static fields of the class. The final =
+step of=20
+the process is <I>initialization</I>, running any routines that =
+initialize the=20
+static fields, which happens the first time that an instance of the =
+class is=20
+created or a static function of the class is run.=20
+<P>
+<H3>Loading Java classes</H3>Loading and linking are separate processes =
+because=20
+any class needs to ensure that all of its superclasses are loaded and =
+linked=20
+before linking can start. This means that the process conceptually =
+crawls up and=20
+then down the class inheritance tree, Figure 4. The loading process =
+starts by=20
+calling the <I>classLoader</I> procedure with the name of the class. The =
+class=20
+loader produces the class' data somehow, then calls <TT>defineClass</TT> =
+to pass=20
+the data to the virtual machine. <TT>defineClass</TT> parses the class =
+file and=20
+checks for a variety of format errors, throwing an exception if it finds =
+any. It=20
+also extracts the name of the class' superclass. If the superclass isn't =
+already=20
+loaded, it calls classLoader recursively to load the superclass. When =
+that call=20
+returns, the superclass has been loaded and linked, at which point the =
+Java=20
+system proceeds to link the current classs.=20
+<P>
+<CENTER>
+<TABLE border=3D3>
+  <TBODY>
+  <TR>
+    <TD><A href=3D"http://www.iecc.com/linker/linkerfig11-04.html"><IMG=20
+      height=3D67 =
+src=3D"http://www.iecc.com/linker/thumb-linker11-04.jpg"=20
+      width=3D100></A> </TD>
+    <TD><I>Figure 4:</I> Loading and linking a Java class file =
+<BR>crawling up=20
+      and down the tree </TD></TR></TBODY></TABLE></CENTER>
+<P>
+<P>
+<P>The next step, verification, makes a variety of static correctness =
+checks,=20
+such as ensuring that each virtual instruction has a valid opcode, that =
+the=20
+target of each branch is a valid instruction, and that each instruction =
+handles=20
+the appropriate data type for the values it references. This speeds =
+program=20
+execution since these checks need not be made when the code is run. If=20
+verification finds errors, it throws an exception. Then preparation =
+allocates=20
+storage for all of the static members of the class, and intitializes =
+them to=20
+standard default values, typically zero. Most Java implementations =
+create a=20
+method table at this point that contains pointers to all of the methods =
+defined=20
+for this class or inherited from a superclass.=20
+<P>
+<P>The final stage of Java linking is resolution, which is analogous to =
+dynamic=20
+linking in other languages. Each class includes a <I>constant pool</I> =
+that=20
+contains both conventional constants such as numbers and strings, and =
+the=20
+references to other classes. All references in a compiled class, even to =
+its=20
+superclass, are symbolic, and are resolved after the class is loaded. =
+(The=20
+superclass might have been changed and recompiled after the class was, =
+which is=20
+valid so long as every field and method to which the class refers =
+remains=20
+defined in a compatible way.) Java allows implementations to resolve =
+references=20
+at any time from the moment after verification, to the moment when an=20
+instruction actually uses the reference, such as calling a function =
+defined in a=20
+superclass or other class. Regardless of when it actually resolves a =
+reference,=20
+a failed reference doesn't cause an exception until it's used, so the =
+program=20
+behaves as though Java uses lazy just-in-time resolution. This =
+flexibility in=20
+resolution time permits a wide variety of possible implementations. One =
+that=20
+translated the class into native machine code could resolve all of the=20
+references immediately, so the addresses and offsets could be embedded =
+into the=20
+translated code, with jumps to an exception routine at any place where a =
+
+reference couldn't be resolved. A pure interpreter might instead wait =
+and resove=20
+references as they're encountered as the code is interpreted.=20
+<P>
+<P>The effect of the loading and linking design is that classes are =
+loaded and=20
+resolved as needed. Java's garbage collection applies to classes the =
+same as it=20
+applies to all other data, so if all references to a class are deleted, =
+the=20
+class itself can get unloaded.=20
+<P>
+<P>The Java loading and linking model is the most complex of any we've =
+seen in=20
+this book. But Java attempts to satisfy some rather contradictory goals, =
+
+portable type-safe code and also reasonably fast execution. The loading =
+and=20
+linking model supports incremental loading, static verification of most =
+of the=20
+type safety criteria, and permits class-at-a-time translation to machine =
+code=20
+for systems that want programs to run fast.=20
+<P>
+<H2>Exercises</H2>How long does the linker you use take to link a fairly =
+large=20
+program? Instrument your linker to see what it spends its time doing. =
+(Even=20
+without linker source code you can probably do a system call trace which =
+should=20
+give you a pretty good idea.)=20
+<P>
+<P>Look at the generated code from a compiler for C++ or another object =
+oriented=20
+language. How much better could a link time optimizer make it? What info =
+could=20
+the compiler put in the object module to make it easier for the linker =
+to do=20
+interesting optimizations? How badly do shared libraries mess up this =
+plan?=20
+<P>
+<P>Sketch out a tokenized assembler language for your favorite CPU to =
+use as an=20
+object language. What's a good way to handle symbols in the program?=20
+<P>
+<P>The AS/400 uses binary translation to provide binary code =
+compatibility among=20
+different machine models. Other architectures including the IBM =
+360/370/390, DEC=20
+VAX, and Intel x86 use microde to implement the same instruction set on=20
+different underlying hardware. What are the advantages of the AS/400 =
+scheme? Of=20
+microcoding? If you were defining a computer architecture today, which =
+would you=20
+use?=20
+<P>
+<H2>Project</H2><I>Project 11-1:</I> Add a garbage collector to the =
+linker.=20
+Assume that each input file may have multiple text segments named=20
+<TT>.text1</TT>, <TT>.text2</TT>, and so forth. Build a global def/ref =
+data=20
+structure using the symbol table and relocation entries and identify the =
+
+sections that are unreferenced. You'll have to add a command-line flag =
+to mark=20
+the startup stub as referenced. (What would happen if yuo didn't?) After =
+the=20
+garbage collector runs, update the segment allocations to squeeze out =
+space used=20
+by deleted segments.=20
+<P>
+<P>Improve the garbage collector to make it iterative. After each pass, =
+update=20
+the def/ref structure to remove references from logically deleted =
+segments and=20
+run it again, repeating until nothing is deleted. </P></BODY></HTML>
+
+------=_NextPart_000_0081_01C557A2.C1A8C9B0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker11-01.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABBAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2/fni
+sDWr2+triD7Fa21z5u4YmmRG3AgALuPPf9PWugyScEcVlapoFjqskEl7AJGgLeWyzMhG4gkcfQfl
+SEZzXfiMM2zw9bEY+UfaEzux39vTv7DORuDEUse5djeXl0XkAn+fQ1W0nRYdFhkisYtqyEFg87Ny
+AB3HtWjGrqCzt8zHpnOKAIvtJZ8KhBPTPGaw38YaXFIImFyZScBViJ7kdunI7/410ZAZec9c5HrU
+Zd+VEanI5IJpiOcfx3o4l8si7KngSpCWXOcY4/z+PFdDFPujDEOcgEfJyPY470oCRptYkIB90LtU
+VKjqy5QjA6YoAq3V2YbV5o1yyqWCtxux2z2ycc1zKeI9fe52DQA8RPyulwuMZUHJ6Dknjv8Aga6L
+VNKstXWNLyLeYySh9CRzWUPBeixSRNFbupBGCrY6c5x060DI5tU8RtHaywaREY5CxkUygkLhCpBz
+jnLD8Ku6NqV7qAY3li1owxtXzlkDAqDngDBBOMVWfwPosm0C3ZSG3Fg2Cec9voKdYeD9Jsp0uILd
+VljYsjckqeeRz6nNAHRYBoqJYgBjzJf0ooEPOT1NMkIwDzjcM1MWU9QKGCsu3gqeD9KQHIeIr+C0
+1MCbxJNYLhD5Cw5BAzn5sHk5/QVDpXiXTrOKQXniYXpLZy1uykDngAf7p/ziutdYlGJYUk7bimfz
+qKa1tJ4WzawyxPwy+WCGByD9ep/WgZQ0/wAQafrF55Wn6hDL+7L7NjAnBGTk49R+dTanZ3N7bwx2
+WoPZPG24sEDZ47j6881ZgFja+XHFDFEcbEVUC4GOnTjgD8qhudY02Gbyp7q0Rl4xNKq44z39jmgR
+lW2maxa3Mf2jxO0sYO5o/sqBn5zjPPuOPXjtXQLGJFbK7UI24+6T+XIqgde0qBlVbyz+cZ+WYYHG
+eT0HHPNX7a6hu4xJE6uh6MrBgeccEcUwBLSGNAiBlVegDt/jT1t1QggsSOOWJqTAxnFQmaLOGkQH
+3NICYME781GjHcy455NAaInIdD9DQWGQy4OOvPagB5LUU/K46UUxEZBCnBFBb6U3DFmAdRjjkZP8
+6TYQCTKmB32f/XpDHjk5yPzprKrNk4B9RwfzFCMgyhkQtnHAx2z607YG70AQCNlkLGR3RiPlbGF4
+P8+K47xMbeHXRum0iMGNZCt3bu7bzu5G0jqF6e3vXcMjDpyOhFV5ILdiBIVzxw2G6HI6+9AHm0LW
+T3Aaa98PZncPKptpGIHRtuTxx+ua9D082bWMD6dJGbcjanljCtzg8fUGrCwofueUcDH3Bx+tSRwF
+XzuyemTQBEVnTc5lVgATt247fWuY8UXVtp9zC02v3WnkKFMcMTOCCcA+g9fXiuvK9VboeDUDQxyO
+wO7A49f50Aeef2navAWbxleYjIJZbV2ZRxnd2P3u364GOv0a0a300Z1OTUI3iEkcso52FRj3PTP4
+1oraQxKkcSqioNqqEUADsAMcDgflUqqu0KMsx4OewoAl/Kilw3pRTAxtW0Ox1aUS3ctwnlDaDHJt
+GDg8/lXKajp1haGfT4dL128ibarunzJIp5OG5JAPUY65989brOmXOpW3lW95PZSLLvEsQJyNhGCB
+1HP6VlS+HdQLRD/hI74RqcuWQglsgg5zjHHSkMbY+C9JubWOdl1GGQyFyks2HDAkHOOo9O2OmMmu
+nZpEty0aiRiSQM4HJrn7TQb+1ureVvElzNHGys8b/wDLTHXPJ65ro4gREgwRgDIP0oAZvuFUeaqj
+sSrdOaxLhfEqSS/YjpxRpsr5pbPl56cd8DH49a6HGRgjI9D3qPyYxggMPo5A/LNAjN03+1jAx1gW
+Il3YUW+45H49SfSrCzSJdtGZHyEBxsJx/j9auCOJOQuDjqBk07aG6nj60AVyS/WSYH2j/wDrU9WY
+LtWNzz1OBmpGXavGaUY288mgBilsncAo9TyaeCqjCDk9T3NIEGc808Y9O1ADN7D1opzKCehopiHL
+9z8KTt+NFFIZI/3V+lMTqfpRRTAaeo/GmP0oopAOP3T9Kb6/SiigBw7/AFpf4RRRQAqUg+8Pof50
+UUASN1H0ooopiP/Z
+
+------=_NextPart_000_0081_01C557A2.C1A8C9B0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker11-02.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABVAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD1zU9U
+h00wtJFcyeczgeUpYDaM88gAe5qhL4qtESQrZaofLGSfJIGfTk5z+HHPYHGvqFrJLp1zAjyR+Yjg
+SxNgpnPI5ByKxtN0rUrC7ieXW7q4gQktBLHHhsj13Z680gN5JsYO4lSFPznBGT6YqxtDdORVRlWU
+MCindzg4PGOP1NWXbbwFPB7CgByoQeuKcFwMkjp61kXuqJZQrcTzLBbs+xWKFsnBbPB6YBOfas0+
+K9GKF/7WD+g8llyfQZFAjqDk9OaFXBOfx5rE0fWbPWt/9nXzyFAN+YeE+pxjPB4z2rRDyISkh8xx
+z8inpz1/KgCyThS3QYrC1LxLp+lXSW13dBJnGdoiY4HPOR7qR/nNbSHzIgQuQwPFc1c6pq8tu6S+
+HPO3Dbta5iPt0Pb60AWoPFOlXGRb3hnbazfu4WONoJI6dflP+TWpBcCaOKVSdknIBHPSsaLU9aLt
+nw6UTB2n7VCexPQdOeP+BfWr1jc3l3dKt3p4gt/IB8zzVYiTPKYHXjBzQM0zuP8ACfzop6FWQfL0
+46UUACkbenHpimtDE53fdOMfKB/h70gU+velKtwQTQIgaEx4ZZWC5BIwP8PWpvMPdv0o2t1zS/Ke
+Nv40AQNHIDhQkiZyFcYx+ODTDbs5Um1tMx52sRkr24444q3tB6Z/OkICnmgCGOCQg7pEQHr5aYJ/
+E5qdRHEmIxjJySeSfqaadvbP50o2j1oAduJHBNc3qXiSHS5Nkp1JyoBZ0jTaPlz1x09/r6HHQsdq
+sQCeOg6muUg8QOtvvfQtW+fAVXQnPGeRnjoaAJR4nWWN54o77bHC0p86FR93bx2OTu/Q1v2U0su8
+yY4YY4xxgH39awk8STSwuy6NqSuillRouvQAdepJ/IH0rVsbh7iW5JgdCjKUcggSZUZ6j8PagZf3
+KrNk9Tn9KKi2eaS2M/j7UUhFjgH0oDYPTpRxj/61M5OP6UASGQ89PrUZf5exoCZ74H0owq4xzTAQ
+SNnkCnZyOVAyO9KJIx0xS7gR1FADdoJxhc044AxkE+1J8uelGR0FACYY5O9aqxsfLRdtt90HaWJx
++lTTSxwwyzOwREUszHoAB1NcfdaJ4cnuWuG1fZISRLsvB905wPXv+PfOTQB1jSHcFEVvk+h/+tUk
+UhZRuVRgkce1c3BH4btNri/QiKdZjI0wb5h8oy2PfHXJ7nk56CO5gm8wQyo5RmDbWzg5PB/X8qAJ
+4QqxjnOef8P0opm1lAUHIAx0opASANmlJYcAUoPHBprDuWHNABuxzS7kI5FMA+Utuzxnio4oxLEs
+jGTJ/vEgj8KAJGwSFjVc+rDpUayxlWYSKcMUOCMA+n1pT5kRyvzKRg+orGm8M6JcyvNLauZXk80n
+zHB3Z3ZHPHPOKYGzh9wJbg8DOKUSqq5kAU5x1yM+1UdN0a00238mwiWCMsGZnJZiQAOp56AflWg8
+ETbQyBivQg0AJLGk0To6Bo3Uqyt3B6is0+HdCIGdLs+FK48lMYPtjFaYSMnlFxn0pfKXOdqEe4oA
+yjomiorr9htFDfeCwRjPOefl55q5bWsFupEMARSdzHaAWPqfWrIdUBxGv0Ap24s3QEUAJv8ASikI
+JP8A9eikAd/ao5lymOCNwHI96lJwf/rVWu5ZIrZmSIyMMEIOC3PSgDJvrrU7KYRWuktegoGMquqg
+NnBUA+3PbrVd9V1sQ718Oylsg+X54HHcdOvT8/YgSf2zqsZQR+G7ja5xgOnA759P61b03Ur+7nMN
+xo01nFgne7KQcYwBg9ef0NMCjpuraveSFLjw/wCTA28CfzlcLjd1/ID65rpjll52g+1YXh5CPDsB
+YQEsWwbdCqYLnoDg9/x6960L26mtLWeZLSSfYBsSLl3JOOlAF0K+eimkJOeNo9c1z6+JZC0h/sLV
+/LRev2f5iRngDPtU8ev3GxZP7G1NUKuSDCNwKgcYz35x9PpQBslOMlh9MUnI4XJrGGv3LSoF0TUQ
+hcKzPGAQOfmxzxwPzoHiOYls6Dq/y5GTbrzj0w1AG1uLdVApRgHg9+ao6fqsuoSSiTTbq0WMDDXC
+BdxOemCc9P1q8QN2eaQDiyDrRTR060UAB9e9Iw345IIPBFFFACeW4XKyn/gQz/LFGyXGDIpz/sf/
+AF6KKYynpumy2FjHayXZn8s53lME859TV4jJxRRSEJjkcnBpMYJAPGaKKYDxHnGSaa67AOcj0oop
+ACqjAjb0HrSEbWwCevrRRQBJsAHSiiigD//Z
+
+------=_NextPart_000_0081_01C557A2.C1A8C9B0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker11-03.jpg
+
+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
+IooA/9k=
+
+------=_NextPart_000_0081_01C557A2.C1A8C9B0
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Location: http://www.iecc.com/linker/thumb-linker11-04.jpg
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCABDAGQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3M8ds
+ikyT6YHtSluPlFIc/h6UEiZ5BpS2QelNwc+1KOR0/GgDm9aTWHv3bTr6zjwgCxzsQAcHqApPXB68
+gAY70xP+EgFpIsl3pSzqwaFxvKk5bIbPbG3pjvWlrFtc3lvLaQXNxas5VhNArE9wRlSD6dx26jis
+S10jxCJ3I8RXkkKEIFMStnHPzZOc9f8APFAzT0L+1BcTDU7zT5lPzItsG3dTnOTwOnat3ahHAPSq
+NlDLBHaxTPJK8UOx5pOrn5eT15ODV8ccMB9aAG79p65p4k3dMe9BweBzTWTPtigQZBGOPwoJXA+l
+Hl9DuwKdsAH3+aAG/hRT9hI4J/KigAyEORSbgxB/ya43U9T1GG4uUi17SIfLZ2xIxdggZiQVAHIX
+jr2PrxnQa3q0enPdx+I9Ju/mDFcAFAx4zwMYweMZOD3xSA9C6ZGPyphbHODjHrXES6xqWozNFp/i
+jR41llKxKsZMgBJKjB6thT27Hj01/D2u2tzbGO71rTri5kkxEImCEqQNoCnknIP+RQBvTS7I2dQc
+gZ64/OqttcXMkuHRQrN2yD0P+A/OqUvizR4gzjULIRKoJkaXHrx0+n502LxJpiM/lX9kWZsEI+ec
+dOB7E/n6UFJqw7UNLN1eSu+nCcFFCv8AaGTOD0x2xljn6+tVRpMxgSF9HjxErlCL1sliBnnGecdz
+Vu08W6bd3EUUd/bM8hCqok+bcc4GMcZwfyq/qFzJ5BW3njimDplmxwCwz174zj3qHBNnRHFTilHt
+5v8AzMhLK9RjIunIGjjjCp9sbLshGOfTHr1xzSNpdzDJm107JRwVZ75jnByOD6//AFqqxarrElyB
+dzaVEY1AkdJycnPPy5wDgE//AK+IV1jxEnkebJpTBuchypfuMe/B460ezQ/rc+35/wCZrWehpIZD
+d2bwDCgKt27g9c55+lXk0WyjuhcJ5u8EtgysRuJznr/9asBdW8RMlziHTGdJUWJ2lISRTnceuQR8
+vBHfv1rR03UbyS+uYb6ey/dquI7b5m5zyeTgY2np6+mS1BIzniKkne/4s3Tuzw360U1DvQMoBB6c
+UVZgVToumm4muPsFr5swIlbyR84Oc545znn1pkWj6dGrqthaBWYEqIFAO3pnjsc/nWhvCgnJpkbh
+gxCkfMc5+tICkmi6VDIssWm2aOjblZIFBB65Bx1pr6bptsqSxabah4gPKKwqCpycY445Y/ma0eG7
+EVE6B1KscensR0oAy08P6REMNZ20pHI8y3DHmnRaRYec7DTLMNwu5bUdByKrat4ig0m4nWa11F/K
+jR2a3g3rzu6HHbbzmqg8WBoXkj03XDjPDWoXnbkD/wCvz/KgZtR6LZRyrIun2ow27It1Bz2Oc1Hr
+UVzPokkQ09dQJdVNuX271Djv6gc/hWdbeJxezxw29nqiu5Kqbm38tMgE5Ldvun9PWuhjAiiCruwo
+x1oEcMuhm4uoQ3hRrOJQ7Efawx3AfKcZxz0/H2qJdAkMSo3hF3YOTv8A7QHT5iBz7t+tehbx6HGO
+tCkYODz2oAxLTwtpTabbpcWIBBWVoXfcEkAPcYzjc31q3pug6XpE7TWNqkMjoIyyknK5yByavksP
+vA4pyyccdPWgB3mY7UUxsZ4NFADiqlcnNRpxJIB03D+Qp/U8nkdKjIkVmMbR4Jyd2cjigCQ5JqKf
+DIFyfnO36ev6Uh884+aL67T/AI0xhOXUZj2H72OvsfzoAFtbeMgJG/yqFzvPQfjSJax/aGfcxUj7
+rtkD6D/PWoLuQQi5ZIoZLgQ5iWQgBm5wMn8KwTqHiESlV0jSpEydrecqnHOOM/QUAdX5CMchI+M9
+h6YpLdm2AEhiCVyPY4qrIybkS1aJZeeSdwxxmrSjagVANoHXHJoAkdSMnJP40FRtHr60wBO5OaVV
+AHysfxoAUPu4IJxT9y8rtppfacAZNJy/Jwp+tAC7U7SYooCMecr+dFMBQTge4pmSSfwoopAOXkYq
+J+HXHcf0oooGODEM+D6VIWbPU0UUAMV22dfWmvK4IAaiigCdPmjBbk1XyfMxnqaKKBEvQfnQvOM0
+UUANbhiKKKKAP//Z
+
+------=_NextPart_000_0081_01C557A2.C1A8C9B0--

@@ -1,0 +1,212 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM Threading Models</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=16//-->
+<!--PAGES=514-517//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="16-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">The Wrong Way to Share Interface Pointers</FONT></H4>
+<p>First, let&#146;s look at the wrong way to share interface pointers between apartments. The <small>AptClient.cpp</SMALL> source file is provided in Listing 16.6. The AptClient project also contains the <small>ExeSta_i.c</SMALL> source file from the ATL component.</P>
+<p><b>Listing 16.6</B> Sharing Raw Interface Pointers in <small>AptClient.cpp</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * AptClient.cpp
+ * Demonstrates the wrong way to share interface pointers between
+ * apartments.
+ */
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltwchar.h&gt
+#include &ltobjbase.h&gt
+
+#include &#147;exesta.h&#148;
+
+DWORD WINAPI ThreadFunc(LPVOID lpv);
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+
+ITestFunc* g_pTestFunc = NULL;
+
+int wmain()
+{
+    /* Initialize the main STA */
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoInitFailed&#148;, hr);
+        return 0;
+    }
+
+    /* Get a pointer to the ITestFunc interface */
+    hr = CoCreateInstance(CLSID_TestFunc,
+                          NULL,
+                          CLSCTx_ALL,
+                          IID_ITestFunc,
+                          (void**)&ampg_pTestFunc);
+    if(FAILED(hr))
+    {
+        HandleError(L&#147;CoCreateFailed&#148;, hr);
+        return 0;
+    }
+
+    hr = g_pTestFunc-&gtMakeRoundTrip();
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Method call failed in main STA&#148;, hr);
+        return 0;
+    }
+
+    /* Spin up a second thread to party with our interface ptr. */
+    DWORD threadID;
+    HANDLE hThread = CreateThread(NULL,
+                                  0,
+                                  ThreadFunc,
+                                  NULL,
+                                  0,
+                                  &ampthreadID);
+
+    /* Wait for the second thread to complete */
+    WaitForSingleObject(hThread, INFINITE);
+    g_pTestFunc-&gtRelease();
+    CoUninitialize();
+    return 0;
+}
+
+/*
+ * The thread function initializes the second STA, and tries to
+ * use the raw interface pointer from the first STA. The call
+ * is rejected by the proxy.
+ */
+DWORD WINAPI ThreadFunc(LPVOID lpv)
+{
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoInit for 2nd STA failed&#148;, hr);
+        return 0;
+    }
+    /* This line fails. */
+    hr = g_pTestFunc-&gtMakeRoundTrip();
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Method call in 2nd STA failed&#148;, hr);
+        return 0;
+    }
+    CoUninitialize();
+    return 0;
+}
+/*
+ * Display an error message using the system error string.
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amplpMsgBuf,
+                  0,
+                  NULL);
+    MessageBox(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The AptClient program creates two threads, each of which joins an STA by calling <small>CoInitializeEx</SMALL>. The program then tries to use an interface pointer created in the first STA in the second STA. In this case, the component is out of process, so the interface pointer actually belongs to a proxy.</P>
+<p>Proxies are the hall monitors of COM&#151;and they will check to make sure your thread is allowed to enter the COM object&#146;s STA. In this case, the second thread is not allowed to access the interface, and the call will be rejected. The next section shows the correct way to avoid this problem.</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">The Correct Way to Share Interface Pointers</FONT></H4>
+<p>Now let&#146;s look at the correct way to share interface pointers between apartments. The <small>AptMarshal.cpp</SMALL> source file is provided in Listing 16.7.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="16-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="16-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

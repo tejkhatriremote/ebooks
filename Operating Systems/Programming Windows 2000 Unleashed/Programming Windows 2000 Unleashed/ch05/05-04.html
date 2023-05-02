@@ -1,0 +1,233 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Structured Exception Handling</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=05//-->
+<!--PAGES=171-174//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Table 5.1 lists the five flags for enabling floating-point exceptions.
+</P>
+<table width="100%"><td caption align="LEFT" colspan="2"><b>Table 5.1</B> Flags Used to Enable Floating-point Exceptions
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Flag</I>
+<th align="LEFT" valign="TOP"><i>Enables</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>EM_OVERFLOW</SMALL>
+<td align="LEFT" valign="TOP"><small>EXCEPTION_FLT_OVERFLOW</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>EM_UNDERFLOW</SMALL>
+<td align="LEFT" valign="TOP"><small>EXCEPTION_FLT_UNDERFLOW</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>EM_INEXACT</SMALL>
+<td align="LEFT" valign="TOP"><small>EXCEPTION_FLT_INEXACT_RESULT</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>EM_ZERODIVIDE</SMALL>
+<td align="LEFT" valign="TOP"><small>EXCEPTION_FLT_DIVIDE_BY_ZERO</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>EM_DENORMAL</SMALL>
+<td align="LEFT" valign="TOP"><small>EXCEPTION_FLT_DENORMAL_OPERAND</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>To use more than one of these flags, you can combine them using the <small>|</SMALL> operator.</P>
+<p>When a floating-point exception is caught, you must use the <small>_clearfp</SMALL> function to clear the floating-point exception flag. You must clear this flag before you perform any additional floating-point calculations. Listing 5.10 shows an example of enabling and handling floating-point exceptions.</P>
+<p><b>Listing 5.10</B> Enabling and Handling Floating-Point Exceptions<hr></P>
+<!-- CODE //-->
+<pre>
+   double CalcAverageRate(double* pdTotal, double* pdTime)
+   {
+       double dResult;
+
+       int n = _controlfp(0,0);
+       n &amp= ~EM_ZERODIVIDE;
+       _controlfp(n, MCW_EM);
+
+       _ _try
+       {
+           dResult = *pdTotal / *pdTime;
+       }
+       _ _except(EXCEPTION_EXECUTE_HANDLER)
+       {
+           dResult = 0.0;
+           _clearfp();
+       }
+       return dResult;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h3><a name="Heading10"></A><font color="#000077">C&#43;&#43; Exception Handling</FONT></H3>
+<p>So far, this chapter has focused on the structured exception handling offered in Windows 2000. If you&#146;re using C<small>&#43;&#43;</SMALL> to write your applications, you also can take advantage of the exception-handling capabilities that are part of the C<small>&#43;&#43;</SMALL> language specification.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Using Exceptions to Detect Errors</FONT></H4>
+<p>The general idea behind C<small>&#43;&#43;</SMALL> exception handling is similar to that of structured exception handling: A section of code that fails can throw (or raise) an exception that can be caught by an exception handler. The simplest example is when an exception is handled within a single function, as Listing 5.11 shows.</P>
+<p><b>Listing 5.11</B> Throwing and Catching a C<small>&#43;&#43;</SMALL> Exception Inside a Single Function<hr></P>
+<!-- CODE //-->
+<pre>
+   int Divide(int n1, int n2)
+   {
+       int nReturn = 0;
+       try
+       {
+           if(!n2) throw range_error();
+           nReturn = n1/n2;
+       }
+       catch(range_error&amp e)
+       {
+           cout &lt&lt &#147;Caught divide by zero attempt&#148; &lt&lt endl;
+       }
+       return nReturn;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>try</SMALL> keyword marks the beginning of a <small>try</SMALL> block. Inside a <small>try</SMALL> block, any exceptions that are thrown are handled by exception handlers that follow the <small>try</SMALL> block. An exception handler specifies the exceptions that it handles by using the <small>catch</SMALL> keyword. A single <small>try</SMALL> block may throw several types of exceptions, as Listing 5.12 shows.</P>
+<p><b>Listing 5.12</B> Throwing Multiple Exceptions from a Single <small>try</SMALL> Block<hr></P>
+<!-- CODE //-->
+<pre>
+   try
+   {
+       if(nIndex &lt 0)
+           throw range_error();
+       else if(nIndex &gt= m_cbText)
+           throw range_error();
+       else if(check_lock(nIndex) == CL_LOCKED)
+           throw &#147;Element is locked&#148;;
+
+       .
+       . Normal processing
+       .
+   }
+   catch(const char* psz)
+   {
+       cout &lt&lt *pszErr &lt&lt endl;
+   }
+   catch(logic_error&amp e)
+   {
+       cout &lt&lt e.what() &lt&lt endl;
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 5.12, a pointer to <small>char</SMALL> is thrown to the exception handler. The result of the <small>throw</SMALL> expression is used to evaluate which <small>catch</SMALL> clause should be used to resume processing.</P>
+<p>Normally, a function throws exceptions intended to be caught by the calling function. If no suitable <small>catch</SMALL> expression can be found in the calling function, the next higher-level function is checked for a <small>try</SMALL> block and a suitable exception handler. If no exception handler can be found, a special high-level function named <small>terminate</SMALL> is called. This function normally terminates the program.</P>
+<p>A <small>catch</SMALL> expression matches the thrown exception if it&#146;s an exact match for the thrown object. The standard conversions also are allowed; for example, a pointer to a base class catches a pointer to a derived class. A <small>catch</SMALL> expression that contains an ellipsis <small>(...)</SMALL> catches all exceptions. The block of code following a <small>catch</SMALL> expression is called a <small>catch</SMALL> block and must be enclosed in curly braces.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Using Exceptions to Clean Up After Errors Are Detected</FONT></H4>
+<p>When an exception is thrown, any objects that have been fully constructed are guaranteed to be destroyed properly. This is potentially one of the big benefits of using exception handling, because it ensures that your program cleans up properly, even in error conditions.
+</P>
+<p>However, if you use old-fashioned C-style pointers to point to other dynamically created objects, the dynamic objects will not be automatically released when an exception is detected. For example, the code in Listing 5.13 will result in a memory leak.</P>
+<p><b>Listing 5.13</B> The Wrong Way to Handle Dynamic Data with C<small>&#43;&#43;</SMALL> Exceptions<hr></P>
+<!-- CODE //-->
+<pre>
+   void CreateSomeMemoryLeaks()
+   {
+       try
+       {
+           CFoo* pFoo = new CFoo;
+           CBar* pBar = new CBar;
+           CreateException(); // exceptions created here!
+           delete pFoo;
+           delete pBar;
+       }
+       catch(...)
+       {
+            // Cleanup here
+       }
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

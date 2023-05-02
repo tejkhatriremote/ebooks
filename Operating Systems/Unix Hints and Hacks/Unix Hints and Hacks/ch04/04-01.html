@@ -1,0 +1,149 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=115-118//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch03/03-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 4<br>System Monitoring
+</FONT></H2>
+<dl>
+<dd><b>4.1 Monitoring at Boot Time</B>
+<dd><b>4.2 Starting with a Fresh Install</B>
+<dd><b>4.3 Monitor with</B> <small>tail</SMALL>
+<dd><b>4.4 Cut the Log in Half</B>
+<dd><b>4.5 Mail a Process</B>
+<dd><b>4.6 Watching the Disk Space</B>
+<dd><b>4.7 Find the Disk Hog</B>
+<dd><b>4.8 Watching by</B> <small>grep</SMALL><b>-ping the Difference</B>
+<dd><b>4.9 Monitoring with</B> <small>ping</SMALL>
+<dd><b>4.10 Monitoring Core Files</B>
+<dd><b>4.11 Monitoring Crash Files</B>
+<dd><b>4.12 Remember Daylight Savings Time</B>
+<dd><b>4.13 Checking the Time</B>
+</DL>
+<p>There is never a time in a UNIX administrator&#146;s career when a system never has to be monitored. All the systems that an administrator touches have to be monitored at some point and in some way. It might be for security reasons, performance monitoring, troubleshooting, disk utilization, or hardware failures. Whatever the reason, the system has to be monitored.
+</P>
+<p>One of the most common reasons is to gather system utilization information to generate reports and pretty graphs for management. The information that is collected should also be a good indication of the direction a system is going. Over a period of time, a pattern begins to emerge on most systems. As applications and other pieces of software get upgraded and the environment starts growing with users and other devices, the need for more memory, faster CPUs, and more disk space is always there.</P>
+<p>In a fantasy world, you can go to management and say you need more disk space or more memory and they would simply say Okay. In the real world, however, every company follows a budget. If it isn&#146;t in the budget, it doesn&#146;t get purchased. Which is good only when you have a vendor bugging you to buy his products. Tell him with all honesty, no money has been budgeted for his product. Usually he won&#146;t call again until the day after the new fiscal year begins.</P>
+<p>So how does something get in the budget? You have to learn a very important word, <i>justification</I>. If the need isn&#146;t justified, forget it. The best way to justify something is with proof. That is where the system monitoring comes in. When a system is monitored from the beginning, the data cannot be disputed. Depending on the services that the UNIX workstation or server provides, there are instances when you can charge some of the expenses toward the purchase of a new system back to another department or group in the company. Managers love this, because it corroborates the need from other departments that a new system is a necessity when they go to get the approval for it.</P>
+<p>In almost all cases, the key pieces exhibit their own unique growth patterns to watch for. Although every system and environment is different in its own right, there are still patterns that follow a trend as a system becomes overloaded. Here are some patterns you can watch out for.</P>
+<p>CPUs behave extremely differently depending on the applications or services running on them. A system rendering can have 18 CPUs, be 98% utilized at all times, and be normal. Many systems that start with small load averages could begin to see a slow rise or even periods of sharp spikes. The load averages can increase or drop dramatically throughout normal business hours. Eventually, the drops are fewer and the CPUs become increasingly overused.</P>
+<p>In monitoring the memory, you typically might see a couple of things happen. Memory steadily increases as applications are upgraded, more services are added, or user productivity increases over time. As memory increases and more information may start gets swapped out, the system slows. There is another possibility where a new user uses the system for a different purpose or a new application is installed and a need for new memory could happen overnight.</P>
+<p>As time goes by, keep an eye on the disk space. It often does something very interesting. It is pretty easy to tell when the need for more disk space arises. At first, disk usage fluctuates up and down, but it increases a lot more than it ever decreases. Most users do not pay any attention to the percentage of disk space that is available; they seem to believe there is an endless amount until it runs out. When it does run out and the disks are full, users normally clear up only 5&#150;10% of the space, because everything is vital to them. When they don&#146;t accept alternative possibilities (archiving, recordable CDs, and so on), all you can do is sit back and watch the users struggle for disk space in the last 10%. By this time it is too late and users begin to take it out on you, asking you to work miracles and find more space that doesn&#146;t exist.</P>
+<h3><a name="Heading2"></A><font color="#000077">4.1 Monitoring at Boot Time</FONT></H3>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">4.1.1 Description</FONT></H4>
+<p>Why settle for a little information at boot time? There are ways to monitor the boot up process for more information that is sent to the console.
+</P>
+<p><font size="+1"><b>Example One: The rc Files</B></FONT></P>
+<p>Flavor: BSD
+</P>
+<p>The boot up process is filled with informational <small>echo</SMALL> statements, throughout the boot scripts that bring the UNIX operating system up. If you want to know more information as the server is booting, you can add more <small>echo</SMALL> statements into the various boot scripts, /etc/rc.boot, /etc/rc.local, and /etc/rc. These files are very well commented from beginning to end. Simply turn the comments into statements, and the next time you boot you will see the console filled with information.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Before touching any of the rc files, make backup copies of each one.</FONT><hr>
+</BLOCKQUOTE>
+<!-- CODE SNIP //-->
+<pre>
+# vi /etc/rc.local
+
+#
+<b># Trying to add a default route...</B>
+#
+if [ ! -f /sbin/route -a -f /etc/defaultrouter ]; then
+        route -f add default `cat /etc/defaultrouter` 1
+fi
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This is an excerpt from the /etc/rc.local and can be modified to explain what happens next. Change the comment to an <small>echo</SMALL> statement that is displayed when the system boots to better inform you of what is happening in the boot process:</P>
+<!-- CODE SNIP //-->
+<pre>
+#
+<b>echo &#147;Trying to add a default route...&#148;</B>
+#
+if [ ! -f /sbin/route -a -f /etc/defaultrouter ]; then
+        route -f add default `cat /etc/defaultrouter` 1
+fi
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In some instances you might run into a problem booting the system. It sits there hanging, trying to finish a command. This can usually be attributed to some sort of network problem. Finding what network daemon or system call it is hung on can be tricky. As the system is booting, messages are displayed on the console only after a command has been executed. This is okay, but if a command hangs, there is no way to know what the command was that it hung on.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch03/03-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

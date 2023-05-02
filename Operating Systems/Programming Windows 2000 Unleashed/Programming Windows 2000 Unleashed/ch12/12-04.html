@@ -1,0 +1,220 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Owner Draw and Custom Draw</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=12//-->
+<!--PAGES=393-396//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="12-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><small>NMCUSTOMDRAW</SMALL> has seven members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hdr</SMALL>. An <small>NMHDR</SMALL> structure that&#146;s the first member of all common-control notification messages. The <small>NMHDR</SMALL> structure contains the <small>HWND</SMALL> of the control, the control&#146;s ID, and the notification code.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwDrawStage</SMALL>. Indicates the current drawing operation in progress. (Possible values for this member are detailed in the next list.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hdc</SMALL>. A device context for any drawing operations that you perform on the control in response to this message.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>rc</SMALL>. A Windows <small>RECT</SMALL> structure that specifies the rectangle affected by the Custom Draw notification.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwItemSpec</SMALL>. Contains the item number for the control. (This information does not apply for all controls.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>uItemState</SMALL>. Indicates the current state for the item to be drawn. (Possible values for this member are listed later in this section.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>lItemlParam</SMALL>. Contains the 32-bit value passed as an <small>LPARAM</SMALL> to the control as application-specific data. Later in the chapter, a pointer to dynamically created data is stored in this member variable.
+</DL>
+<p>Here are the possible values for the <small>dwDrawStage</SMALL> member variable:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_PREERASE</SMALL>. Sent before items are erased in preparation for drawing. This is a global notification; it doesn&#146;t apply to a specific item in the control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_POSTERASE</SMALL>. Sent after the items have been erased before drawing. This is a global notification; it doesn&#146;t apply to a specific item in the control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_PREPAINT</SMALL>. Sent before items are painted. This is a global notification; it doesn&#146;t apply to a specific item in the control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_POSTPAINT</SMALL>. Sent after items have been painted. This is a global notification; it doesn&#146;t apply to a specific item in the control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_ITEM</SMALL>. A flag combined with the messages listed earlier to create messages that apply to a particular item. The messages in the following list are combinations of the previous messages combined with this flag.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_ITEMPREERASE</SMALL>. Sent before a particular item is erased in preparation for drawing.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_ITEMPOSTERASE</SMALL>. Sent after a particular item has been erased in preparation for drawing.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_ITEMPREPAINT</SMALL>. Sent before a particular item is drawn.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_ITEMPOSTPAINT</SMALL>. Sent after a particular item is drawn.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDDS_SUBITEM</SMALL>. A flag that may be combined with <small>CDDS_ITEMPREPAINT</SMALL> and <small>CDDS_ITEMPOSTPAINT</SMALL> when listview and treeview subitems are drawn. This flag is only set when <small>CDRF_NOTIFYSUBITEMDRAW</SMALL> is returned from <small>CDDS_PREPAINT</SMALL>.
+</DL>
+<p>More information about drawing stages is provided in the section titled &#147;Understanding Drawing Stages.&#148;
+</P>
+<p>Here are the possible values for the <small>uItemState</SMALL> member variable:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_CHECKED</SMALL>. Set if the item is checked.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_DEFAULT</SMALL>. Set if the item is in a default state.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_DISABLED</SMALL>. Set if the item is disabled.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_FOCUS</SMALL>. Set if the item has input focus.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_GRAYED</SMALL>. Set if the item is grayed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_HOT</SMALL>. Set if the item is currently under the mouse cursor.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_INDETERMINATE</SMALL>. Set if the item is in an unknown state.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_MARKED</SMALL>. Set if the item is marked.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDIS_SELECTED</SMALL>. Set if the item is selected.
+</DL>
+<p><font size="+1"><b>Specialized Versions of the Custom Draw Structure</B></FONT></P>
+<p>Four specialized, expanded versions of the basic <small>NMCUSTDRAW</SMALL> structure are used for common controls that require more detailed information in order to provide custom drawing support:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>NMLVCUSTDRAW</SMALL> is used for the listview control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>NMTBCUSTDRAW</SMALL> is used for the toolbar control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>NMTTCUSTDRAW</SMALL> is used for the tooltip control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>NMTVCUSTDRAW</SMALL> is used for the treeview control.
+</DL>
+<p>Each of these structures contains an <small>NMCUSTOMDRAW</SMALL> structure as its first member. Additional members are added after the initial <small>NMCUSTOMDRAW</SMALL> structure.</P>
+<p><small>NMLVCUSTDRAW</SMALL> contains extra information for the listview control and is defined like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   typedef struct tagNMLVCUSTOMDRAW
+   {
+       NMCUSTOMDRAW nmcd;
+       COLORREF     clrText;
+       COLORREF     clrTextBk;
+       int          iSubItem;
+   } NMLVCUSTOMDRAW, *LPNMLVCUSTOMDRAW;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In addition to the <small>NMCUSTOMDRAW</SMALL> structure, <small>NMLVCUSTOMDRAW</SMALL> contains three other members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrText</SMALL>. The application can store the item&#146;s text color in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrTextBk</SMALL>. The application can store the item&#146;s background color in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>iSubItem</SMALL>. The member variable that will contain the subitem index for the member to be drawn. This member variable is only valid if the <small>CDDS_SUBITEM</SMALL> flag is set in <small>dwDrawStage</SMALL>.
+</DL>
+<p><small>NMTBCUSTOMDRAW</SMALL> contains extra information for the toolbar control and is defined like this:</P>
+<!-- CODE //-->
+<pre>
+   typedef struct _NMTBCUSTOMDRAW
+   {
+       NMCUSTOMDRAW nmcd;
+       HBRUSH       hbrMonoDither;
+       HBRUSH       hbrLines;
+       HPEN         hpenLines;
+       COLORREF     clrText;
+       COLORREF     clrMark;
+       COLORREF     clrTextHighlight;
+       COLORREF     clrBtnFace;
+       COLORREF     clrBtnHighlight;
+       COLORREF     clrHighlightHotTrack;
+       RECT         rcText;
+       int          nStringBkMode;
+       int          nHLStringBkMode;
+   } NMTBCUSTOMDRAW, *LPNMTBCUSTOMDRAW;
+</PRE>
+<!-- END CODE //-->
+<p>In addition to the <small>NMCUSTOMDRAW</SMALL> structure, <small>NMTBCUSTOMDRAW</SMALL> contains 12 other members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hbrMonoDither</SMALL>. The application can use this member variable to store a handle to a brush that will be used to draw dithered and marked items in the toolbar. If <small>TBCDRF_NOMARK</SMALL> was returned in the prepaint notification message, this member is ignored.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hbrLines</SMALL>. The application can use this member variable to store a handle to a brush used to draw lines for the toolbar item.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hpenLines</SMALL>. The application can use this member variable to store a handle to a pen used to draw lines for the toolbar item.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrText</SMALL>. The application can store the item&#146;s text color in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrMark</SMALL>. The application can store the color used to draw the background for marked items in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrTextHighlight</SMALL>. The application can store the color used to draw text on highlighted toolbar items in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrBtnFace</SMALL>. The application can store the color used to draw toolbar buttons in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrBtnHighlight</SMALL>. The application can store the color used to draw highlighted items in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>clrHighlightHotTrack</SMALL>. The application can store the color used to draw hot-tracked items in this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>rcText</SMALL>. When received by the application, this rectangle contains the text rectangle for an item label. The application can adjust the right and bottom coordinates of the rectangle in order to affect the placement of the item&#146;s text.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>nStringBkMode</SMALL>. The application can use this member variable to store the background mode used when drawing text on nonhighlighted items.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>nHLStringBkMode</SMALL>. The application can use this member variable to store the background mode used when drawing text on highlighted items.
+</DL>
+<p><small>NMTTCUSTOMDRAW</SMALL> contains extra information for tooltip controls and is defined like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   typedef struct tagNMTTCUSTOMDRAW
+   {
+       NMCUSTOMDRAW nmcd;
+       UINT         uDrawFlags;
+   } NMTTCUSTOMDRAW, FAR *LPNMTTCUSTOMDRAW;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In addition to the <small>NMCUSTOMDRAW</SMALL> structure, <small>NMTTCUSTDRAW</SMALL> contains just one other member: <dl>
+</P>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>uDrawFlags</SMALL>. Contains information about how the item should be drawn, using the same flags as the <small>DrawText</SMALL> API function&#146;s <small>uFormat</SMALL> flags.
+</DL>
+<p><small>NMTVCUSTOMDRAW</SMALL> contains extra information for the treeview control and is defined like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   typedef struct tagNMTVCUSTOMDRAW
+   {
+       NMCUSTOMDRAW nmcd;
+       COLORREF     clrText;
+       COLORREF     clrTextBk;
+       int          iLevel;
+   } NMTVCUSTOMDRAW, *LPNMTVCUSTOMDRAW;
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="12-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

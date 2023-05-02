@@ -1,0 +1,166 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=025-030//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch01/01-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 2<br>Virtual Memory and Memory Management
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Virtual Memory <i>26</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Deciding When to Use Virtual Memory <i>28</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Looking at an Example That Uses Virtual Memory <i>36</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Windows 2000 Heap Functions <i>45</I></B>
+</DL>
+<p>This chapter discusses memory management functions offered by Windows 2000. You&#146;ll learn about the virtual memory management functions, which enable you to directly manage virtual memory addresses. You&#146;ll also see a sample program that illustrates how virtual memory is used; this is provided on the accompanying CD-ROM.
+</P>
+<p>You&#146;ll also learn about the Windows 2000 <i>Heap Memory API</I>, a set of functions that provide higher-level management of virtual memory in Windows 2000. You&#146;ll see an example of using the Heap API to manage memory privately in C<small>&#43;&#43;</SMALL> classes as well.</P>
+<h3><a name="Heading2"></A><font color="#000077">Using Virtual Memory</FONT></H3>
+<p>Virtual memory enables you to allocate and use a much larger range of memory addresses than you have available on your computer. Windows 2000 makes extensive use of virtual memory; every application behaves as though it&#146;s running on a machine that contains 4GB of memory address space, regardless of how much RAM is actually installed on the computer.
+</P>
+<p>The 4GB address space is divided into two sections: Typically the upper 2GB are used by the operating system, and the lower 2GB are available to the application, as shown in Figure 2.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-01.jpg',476,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-01.jpg',476,420)"><font color="#000077"><b>Figure 2.1</B></FONT></A>&nbsp;&nbsp;The Windows 2000 address space.</P>
+<p>The Advanced Server of Windows 2000 for the Intel family of processors includes <i>RAM Tuning</I>, which allows you to reserve an extra 1GB of address space for applications, leaving only 1GB for the operating system, as shown in Figure 2.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-02.jpg',372,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-02.jpg',372,420)"><font color="#000077"><b>Figure 2.2</B></FONT></A>&nbsp;&nbsp;RAM Tuning allots up to 3GB of RAM to Windows 2000 applications.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>RAM Tuning is not available for the Alpha processor versions of Windows 2000. Very Large Model (or VLM) addressing is used for the Alpha processor, and it includes 64-bit addressing. This is a much more powerful facility for addressing large amounts of memory than RAM Tuning. Using the VLM APIs is discussed later in this chapter.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Obviously, the 4GB range of virtual memory addresses is not directly mapped to actual memory hardware. Instead, a Windows 2000 application works with virtual addresses, which can be moved to different physical locations in memory or out to page file storage on the hard disk.
+</P>
+<p>Windows 2000 deals with virtual memory in pages. Each page is a fixed size, which can be determined by calling the <small>GetSystemInfo</SMALL> function. The <small>GetSystemInfo</SMALL> function fills a <small>SYSTEM_INFO</SMALL> structure; the <small>dwPageSize</SMALL> member will contain the virtual memory page size, as shown in this code:</P>
+<!-- CODE SNIP //-->
+<pre>
+   SYSTEM_INFO inf;
+   GetSystemInfo(&ampinf);
+   _tprintf(_T(&#147;Page size = %d\n&#148;), inf.dwPageSize);
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading3"></A><font color="#000077">Deciding When to Use Virtual Memory</FONT></H3>
+<p>Virtual memory is ideal in situations in which you&#146;re not sure how much memory will be used. If you implement a private heap, you actually allocate memory from Windows 2000. With virtual memory, you can reserve a large range of addresses and only allocate, or commit, the pages you actually use.
+</P>
+<p>Virtual memory also is useful when you&#146;re implementing a sparse memory data structure. A sparse memory scheme reserves a large range of virtual memory and uses only a few pages at a time. This is an easy way to implement grid- or spreadsheet-based applications, because you can reserve a large virtual address range that represents the entire grid and then commit only the pages that represent cells that actually are used (see Figure 2.3).</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-03.jpg',405,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-03.jpg',405,420)"><font color="#000077"><b>Figure 2.3</B></FONT></A>&nbsp;&nbsp;Sparse memory allocation in a spreadsheet.</P>
+<p>Figure 2.3 shows a typical sparse memory data structure used to implement a spreadsheet. When a grid initially is used, the page used by that grid is committed. Until a page is committed, no memory is actually allocated by Windows 2000.
+</P>
+<p>If you&#146;ve programmed for 16-bit Windows, you might be familiar with the older heap management functions. These functions still are supported in 32-bit versions of Windows, but their use is discouraged. When programming under Windows 2000, you use Win32 Heap API functions to manage the heap. These functions are discussed in the next few sections.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Reserving a Range of Virtual Memory</FONT></H4>
+<p>The first step in using virtual memory in your Windows 2000 application is to allocate a range of addresses. The <small>VirtualAlloc</SMALL> function returns a pointer to the base of a range of virtual memory that has been reserved for your application:</P>
+<!-- CODE SNIP //-->
+<pre>
+   pMem = VirtualAlloc(NULL, cAllocSize, MEM_RESERVE, PAGE_NOACCESS);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The first parameter passed to <small>VirtualAlloc</SMALL> is the base address of the virtual memory range. That&#146;s right&#151;in Windows 2000, you actually can specify the virtual memory address that the system should return to you. If Windows 2000 cannot allocate memory at that address, <small>NULL</SMALL> is returned. In most cases, you pass <small>NULL</SMALL> as the base address, which allows Windows 2000 to select an address for you.</P>
+<p>If you pass an address to <small>VirtualAlloc</SMALL>, it&#146;s rounded down to the first useable address. If you&#146;re reserving a block of memory, the address is rounded down to a 64KB boundary. If you&#146;re committing a page, as will be discussed later, the address is rounded down to a page boundary.</P>
+<p>The second parameter passed to <small>VirtualAlloc</SMALL> is the size of the requested memory reservation. In most cases, you should ask for as much memory as you are likely to use. The time required for reserving a large number of pages doesn&#146;t vary in relation to the amount of memory requested; there&#146;s no advantage to being thrifty here.</P>
+<p>The <small>MEM_RESERVE</SMALL> flag is passed as the third parameter to <small>VirtualAlloc</SMALL>. <small>MEM_RESERVE</SMALL> is one of four memory allocation flags you can use with <small>VirtualAlloc</SMALL>; it&#146;s used to reserve memory. The other three flags follow:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MEM_COMMIT</SMALL>. Commits a range of virtual memory. If this is combined with <small>MEM_RESERVE</SMALL>, the virtual memory range is reserved and then committed during the same function call.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MEM_RESET</SMALL>. Indicates that the address range is no longer to be used as part of the virtual address space. The memory will not be written to, or read from, the paging file.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MEM_TOP_DOWN</SMALL>. Specifies that the virtual memory should be allocated from the top of the virtual memory address range. You can combine the <small>MEM_TOP_DOWN</SMALL> and <small>MEM_RESERVE</SMALL> flags.
+</DL>
+<p>The fourth parameter is the page-access flag, which enables you to set the access permission for virtual memory pages. Here&#146;s a list of the eight page-access flags:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_READONLY</SMALL>. Allows read access to the committed region of pages. An attempt to write to the committed region results in an access violation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_READWRITE</SMALL>. Allows both read and write access to the committed region of pages.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_EXECUTE</SMALL>. Allows execute access to the committed region of pages for systems that differentiate between read and execute access. An attempt to read or write to the committed region results in an access violation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_EXECUTE_READ</SMALL>. Allows both execute and read access to the committed region of pages. An attempt to write to the committed region results in an access violation. <dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_EXECUTE_READWRITE</SMALL>. Allows execute, read, and write access to the committed region of pages. <dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_GUARD</SMALL>. Specifies that pages in the region are guard pages. A <i>guard page</I> can be used as a boundary page when you&#146;re using virtual memory. An exception is raised when a page with this attribute is initially accessed. (Using guard pages is discussed later in this chapter.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_NOACCESS</SMALL>. Specifies that no attempts to read, write, or execute the specified pages is allowed. Any access attempts will result in an exception.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PAGE_NOCACHE</SMALL>. Specifies that no caching of the committed regions of virtual memory is allowed. This generally is used only when writing device drivers.
+</DL>
+<p>The page-access flags only apply after a page is committed. If a page is free or reserved, any attempt at access causes an access violation exception to be raised.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch01/01-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

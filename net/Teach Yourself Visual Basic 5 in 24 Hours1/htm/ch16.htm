@@ -1,0 +1,1063 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+<!-- This document was created from RTF source by rtftohtml version 3.0.1 -->
+
+	<META NAME="GENERATOR" Content="Symantec Visual Page 1.0">
+
+	<TITLE>Without a title - Title</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<H1 ALIGN="CENTER"><A HREF="ch15.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37"
+HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A
+HREF="../index.html"><IMG SRC="../buttons/blantoc.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+BORDER="0"></A><A HREF="ch17.htm"><IMG SRC="../buttons/blannext.gif" WIDTH="37" HEIGHT="37"
+ALIGN="BOTTOM" BORDER="0"></A></H1>
+
+<UL>
+	<LI><A HREF="#Heading1">Hour 16</A>
+	<UL>
+		<LI><A HREF="#Heading2">Printing with Visual Basic</A>
+		<UL>
+			<LI><A HREF="#Heading3">Introducing Printing</A>
+			<UL>
+				<LI><A HREF="#Heading4">Figure 16.1.</A>
+			</UL>
+			<LI><A HREF="#Heading5">Preparing the User for Printing</A>
+			<UL>
+				<LI><A HREF="#Heading6">Figure 16.2.</A>
+			</UL>
+			<LI><A HREF="#Heading7">Listing 16.1. Telling the user about an upcoming print job.</A>
+			<UL>
+				<LI><A HREF="#Heading8">Figure 16.3.</A>
+			</UL>
+			<LI><A HREF="#Heading9">Introducing the Printer Object</A>
+			<LI><A HREF="#Heading10">The Print Method</A>
+			<UL>
+				<LI><A HREF="#Heading11">Printing Literals</A>
+				<LI><A HREF="#Heading12">Printing Variables and Controls</A>
+				<LI><A HREF="#Heading13">Printing Expressions</A>
+				<LI><A HREF="#Heading14">Printing Multiple Values</A>
+				<LI><A HREF="#Heading15">Utilizing the Fonts</A>
+				<LI><A HREF="#Heading16">Better Spacing with Spc() and Tab()</A>
+			</UL>
+			<LI><A HREF="#Heading17">Listing 16.2. Using Spc()</A>
+			<LI><A HREF="#Heading18">and Tab().</A>
+			<LI><A HREF="#Heading19">Starting to Print</A>
+			<LI><A HREF="#Heading20">Listing 16.3. Using EndDoc to release</A>
+			<LI><A HREF="#Heading21">printed output.</A>
+			<UL>
+				<LI><A HREF="#Heading22">Page Breaks</A>
+			</UL>
+			<LI><A HREF="#Heading23">Listing 16.4. Moving to the top of</A>
+			<LI><A HREF="#Heading24">new output pages.</A>
+			<LI><A HREF="#Heading25">Summary</A>
+			<LI><A HREF="#Heading26">Q&amp;A</A>
+			<LI><A HREF="#Heading27">Workshop</A>
+			<UL>
+				<LI><A HREF="#Heading28">Quiz</A>
+				<LI><A HREF="#Heading29">Exercises</A>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+
+<P>
+<HR SIZE="4">
+
+<H2 ALIGN="CENTER"><A NAME="Heading1"></A><FONT COLOR="#000077">Hour 16</FONT></H2>
+<H2 ALIGN="CENTER"><A NAME="Heading2"></A><FONT COLOR="#000077">Printing with Visual
+Basic</FONT></H2>
+<P>When designing this book, the author and editors considered writing about an add-in
+product included with the Professional and Enterprise Editions of Visual Basic called
+Crystal Reports. This lesson describes printing without the Crystal Reports generator
+for a couple reasons. Some readers may have the Visual Basic Standard Edition and
+lack the Crystal Reports feature. They would be completely left without a way to
+print described in this entire book. In addition, if you have enough data to justify
+using Crystal Reports, you probably regularly use a database management system, such
+as Microsoft Access, that sports much more powerful reporting tools than Visual Basic.
+Therefore, this lesson concentrates on the fundamental reporting tools that every
+Visual Basic programmer will need at some time.</P>
+<P>This lesson describes how you can integrate the Windows printer driver into Visual
+Basic applications that you write. Visual Basic communicates with it so that you
+can send text and even graphics to the printer.</P>
+<P>The highlights of this hour include
+
+<UL>
+	<LI>Where your application sends printed output
+	<P>
+	<LI>Which advantages spooled printing provides
+	<P>
+	<LI>How to use the <TT>Printer</TT> object
+	<P>
+	<LI>When to use <TT>Printer</TT> methods
+	<P>
+	<LI>How the <TT>Print</TT> method routes details to your printer
+</UL>
+
+<H3 ALIGN="CENTER"><A NAME="Heading3"></A><FONT COLOR="#000077">Introducing Printing</FONT></H3>
+<P>Surprisingly, no printer control exists. Unlike most things in Visual Basic, sending
+output to the printer can be a tedious process. Surprisingly, one of Visual Basic's
+weaknesses is also its strength: Printing requires that you send a fairly long list
+of instructions to your printer that describe exactly the way the output is to look.
+As easily as Visual Basic allows you to add and manage controls, one would have thought
+that the printing could be made easier.</P>
+<P>Despite the tedium sometimes associated with printing, you will soon see that
+you can control every aspect of printing, including the font of individual characters
+that your application sends to the printer. The tedious control needed for printing
+provides pinpoint accuracy that lets you control all printing details.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>The Windows print spooler,
+also called the print queue or the printer subsystem, controls all printed output
+in Windows.</P>
+<P>When your application sends output to the printer, Windows intercepts those printer
+commands. Rather than sending output directly to the printer attached to your computer,
+Visual Basic actually sends printed output to the Windows print spooler.</P>
+<P>The print spooler determines how all printed output from all Windows programs
+eventually appears. Therefore, when your Visual Basic application attempts to send
+printed output directly to the printer, the Windows print spooler intercepts those
+commands and might change the output before the printer ever sees it.</P>
+<P>The Windows print spooler knows how to communicate with any printer supported
+by Windows. There are hundreds of different kinds of printers now recognized by Windows,
+and most of these printers require specialized commands. If every program that you
+bought had to provide support for every kind of printer that you or your users might
+own, programs would require even more disk space than they already do. In addition,
+programs would cost more because each software developer would have to spend time
+writing the program to produce output onto every kind of printer available.</P>
+<P>Rather than require that every software developer support all printers, the Windows
+print spooler requires that every software developer support only one kind of printed
+output: the kind required by the Windows print spooler. If the applications that
+you write need to produce printed output, Visual Basic produces that output in a
+form required by the Windows print spooler. Figure 16.1 shows that Visual Basic applications
+send output directly to the Windows print spooler. The Windows print spooler then
+converts that output into the individual commands needed by whatever printer is attached
+to the system.<BR>
+<BR>
+<A NAME="Heading4"></A><A HREF="../art/ch16/16cce01.jpg"><FONT COLOR="#000077">Figure
+16.1.</FONT></A><FONT COLOR="#000077"> </FONT><I>Windows intercepts printer output.
+</I><BR>
+<BR>
+Suppose that you had both a laser printer and a color ink-jet printer attached to
+your computer. Without the Windows print spooler, you would need to provide two sets
+of printer commands for every Visual Basic application you write. With the Windows
+print spooler, you need to provide only one generic set of printed output commands.
+Before running the application, you can use commands available in the Windows print
+spooler to select one of your two printers. When you run the program, Windows will
+convert the Visual Basic output into commands needed by whatever printer is selected.</P>
+<P>The Windows print spooler simplifies communication with all the various printers.
+Your Visual Basic application needs only to send output to the Windows print spooler
+no matter what kind of printer that output will eventually be directed to. The Windows
+print spooler knows how to communicate with all Windows-supported printers and converts
+your Visual Basic application's output to the chosen printer's required format.
+<H3 ALIGN="CENTER"><A NAME="Heading5"></A><FONT COLOR="#000077">Preparing the User
+for Printing</FONT></H3>
+<P>Users could be caught unaware if your application begins printing without first
+warning the user that the printer must be ready.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>Online means the printer
+is ready for printing.</P>
+<P>Always remind the user to turn on the printer, make sure that the printer has
+paper, and ensure that the printer is online. If the user's printer is not first
+turned on and ready with an ample paper supply, the user will receive a Windows print
+spooler error message similar to the one shown in Figure 16.2.<BR>
+<BR>
+<A NAME="Heading6"></A><A HREF="../art/ch16/16cce02.jpg"><FONT COLOR="#000077">Figure
+16.2. </FONT></A><I>The printer is not ready. </I><BR>
+<BR>
+The function procedure in Listing 16.1 provides you with a useful <TT>MsgBox()</TT>
+call that you might want to incorporate into your own programs before printing. Of
+course, if you use common dialog boxes, you don't have to use this message box because
+the Print common dialog box serves good notice that printing is about to begin.
+<H3 ALIGN="CENTER"><A NAME="Heading7"></A><FONT COLOR="#000077">Listing 16.1. Telling
+the user about an upcoming print job.</FONT></H3>
+<PRE><FONT COLOR="#0066FF">
+Public Function PrReady() As Boolean
+   ` Make sure the user is ready to print
+   Dim intIsReady As Integer
+   intIsReady = MsgBox(&quot;Make sure the printer is ready&quot;, _ 
+              vbCritical, &quot;Printer Check&quot;)
+   If (intIsReady = vbCancel) Then
+      PrReady = False ` A Cancel press returns a False value
+   Else
+     PrReady = True  ` User pressed OK so return True
+   End If</FONT></PRE>
+<P><FONT COLOR="#0066FF"><TT>End Function</TT> <BR>
+</FONT><BR>
+Figure 16.3 shows the message box presented by Listing 16.1<BR>
+<BR>
+<A NAME="Heading8"></A><A HREF="../art/ch16/16cce03.jpg"><FONT COLOR="#000077">Figure
+16.3.</FONT></A><FONT COLOR="#000077"> </FONT><I>The user can now prepare the printer.
+</I><BR>
+<BR>
+After the user reads the message and responds to the message box, the function's
+return value determines whether the user wants to see the output (assuming that the
+user has properly prepared the printer for printing) or cancel the printing. The
+return value of <TT>True</TT> or <TT>False</TT> can be checked as follows from another
+procedure that prints based on the user's response:</P>
+<PRE><FONT COLOR="#0066FF">If PrReady() Then      ` If function is true...
+   Call PrintRoutine   ` then print from sub
+End If
+</FONT></PRE>
+<H3 ALIGN="CENTER"><A NAME="Heading9"></A><FONT COLOR="#000077">Introducing the Printer
+Object</FONT></H3>
+<P>Visual Basic applications send all printed output to a special Visual Basic object
+called the <TT>Printer</TT> object. The <TT>Printer</TT> object supports several
+property values and methods with which you determine the look of the printed output.</P>
+<P>The <TT>Printer</TT> keyword specifies the printer object to which your applications
+will direct all output. There is no Printer control on the Toolbox window. All access
+to the <TT>Printer</TT> object must take place using Visual Basic code.</P>
+<P>The commands that your application sends to the <TT>Printer</TT> object are generic
+Windows printer commands. The Windows print spooler converts those generic commands
+to a specific printer's commands. Therefore, you only worry about what you want printed
+and let the Windows print spooler worry about how the output gets produced.</P>
+<P>Throughout this book, when you have learned about a new object, such as the Command
+Button control, you have learned about the properties that relate to that object.
+Before using the <TT>Printer</TT> object, you should see the properties available
+for the <TT>Printer</TT> object so that you'll know what kinds of things you can
+do with printed output from within Visual Basic. All of the <TT>Printer</TT> object's
+properties are listed in Table 16.1.</P>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A pixel is the smallest addressable
+point on the screen or printer.</P>
+<CENTER>
+<P><B>Table 16.1. The Printer object's properties. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><B><I>Property</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ColorMode</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">If <TT>1</TT> (or if set to the <TT>vbPRCMMonochrome</TT> named literal), output
+			prints in monochrome (shades of white and black) even if you use a color printer.
+			If <TT>2</TT> (or if set to the <TT>vbPRCMColor</TT> named literal), output prints
+			in color.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Copies</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the number of copies to print.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>CurrentX</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the horizontal print column, from the upper-left corner of the page, measured
+			either in twips or the scale defined by the <TT>ScaleMode</TT> properties.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>CurrentY</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the vertical print row, from the upper-left corner of the page, measured either
+			in twips or the scale defined by <TT>ScaleMode</TT> properties.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>DeviceName</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The name of the output device, such as a printer driver, to which you want to print.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>DrawMode</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines the appearance of graphics that you draw on the printer.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>DrawStyle</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the style of any graphical lines that your application draws.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>DrawWidth</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the width of lines drawn, from <TT>1</TT> (the default) to <TT>32767</TT>
+			pixels.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>DriverName</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">The name of the printer driver (do not specify the driver's extension).</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Duplex</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">If <TT>1</TT> (or if set to the named literal<TT> vbPRDPSimplex</TT>), printing will
+			occur on one side of the page. If <TT>2</TT> (or if set to the named literal <TT>vbPRDPHorizontal</TT>),
+			printing will occur on both sides (if your printer supports double-sided printing)
+			using a horizontal page turn. If <TT>3</TT> (or if set to the named literal <TT>vbPRDPVertical</TT>),
+			printing will occur on both sides (if your printer supports double-sided printing)
+			using a vertical page turn.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FillColor</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the color of printed shapes. Determines the shading density for noncolor
+			printed output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FillStyle</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Contains the style pattern of printed shapes.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Font</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Returns a font that you can use for setting font attributes.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontBold</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Contains either <TT>True</TT> or <TT>False</TT> to determine whether subsequent printed
+			output will be boldfaced.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontCount</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the current printer's number of installed fonts.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontItalic</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds either <TT>True</TT> or <TT>False</TT> to determine whether subsequent output
+			will be italicized.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontName</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the name of the current font being used for output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Fonts</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Contains a table of values that act as if they were stored in a control array. <TT>Fonts(0)</TT>
+			to <TT>Fonts (FontCount-1)</TT> holds the names of all installed fonts on the target
+			computer.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontSize</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the size, in points, of the current font.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontStrikeThru</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds either <TT>True</TT> or <TT>False</TT> to determine whether subsequent output
+			will be printed with a strikethrough line.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontTransparent</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds either <TT>True</TT> or <TT>False</TT> to determine whether subsequent output
+			will be transparent.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>FontUnderline</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds either <TT>True</TT> or <TT>False</TT> to determine whether subsequent output
+			will be underlined.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ForeColor</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the foreground color of printed text and graphics. (The paper determines
+			the background color.)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>hDC</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">A Windows device context handle for advanced Windows procedure calls.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Height</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the height, in twips, of the current printed page.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Orientation</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">If <TT>1</TT> (or if set to the named literal <TT>vbPRORPortrait</TT>), output prints
+			in portrait mode (printing occurs down the page). If <TT>2</TT> (or if set to the
+			named literal <TT>vbPRORLandscape</TT>), output prints in landscape mode (printing
+			occurs across the page).</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Page</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Contains the page number currently being printed and updated automatically by Visual
+			Basic.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>PaperBin</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies which paper bin the print job will use. You can search the online help
+			for the <TT>PaperBin</TT> property for several named literals you can use to specify
+			different kinds of bins.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>PaperSize</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the size of paper the print job will use. You can search the online help
+			for the <TT>PaperSize</TT> property for several named literals you can use to specify
+			different sizes of paper.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Port</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the printer port, such as <TT>LPT1:</TT>.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>PrintQuality</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Determines how fine the print quality will appear. If <TT>-1</TT> (or set to the
+			<TT>vbPRPQDraft</TT> named literal), the printing quality is the least, but the print
+			completes quickly. If <TT>-2</TT> (or set to the <TT>vbPRPQLow</TT> named literal),
+			printing occurs in a low-resolution mode. If <TT>-3</TT> (or set to the <TT>vbPRPQMedium</TT>
+			named literal), printing occurs in a medium resolution mode. If <TT>-4</TT> (or set
+			to the <TT>vbPRPQHigh</TT> named literal), printing is the slowest but the highest
+			quality.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ScaleHeight</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies how many <TT>ScaleMode</TT> units high each graphic will be upon output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ScaleLeft</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies how many <TT>ScaleMode</TT> units from the left of the page subsequent
+			printed output appears.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ScaleMode</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Sets the unit of measurement for all subsequent printed output that appears.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ScaleTop</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies how many <TT>ScaleMode</TT> units from the top of the page all subsequent
+			printed output appears.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>ScaleWidth</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies how many <TT>ScaleMode</TT> units wide each graphic will be upon printed
+			output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>TrackDefault</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">If <TT>True</TT>, the specified printer changes if you change the default printer
+			at the operating system level. If <TT>False</TT>, the specified printer remains the
+			same during the program's operation even if the system's default printer changes
+			during the program's execution.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>TwipsPerPixelX</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the number of screen twips that each printer's dot (called a pixel) height
+			consumes.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>TwipsPerPixelY</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the number of screen twips that each printer's dot, or pixel, width consumes.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Width</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Holds the size of the page width (measured in twips).</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT" VALIGN="TOP"><TT>Zoom</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Specifies the percentage at which printed output prints. A negative value scales
+			the output down (smaller), <TT>0</TT> requests no scaling, and a positive value scales
+			the output up (larger).</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>Table 16.1 contains lots of printer properties. Fortunately, you'll use only a
+few of the properties for most of your printing needs. The font-related printer properties
+take care of just about all of your printing jobs that are textual in nature.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>The graphics-related
+	printer properties and methods aren't covered in this lesson. Once you master graphics
+	in the next part of this book, you'll be more prepared to understand the graphics-related
+	<TT>Printer</TT> object's properties. Most of the <TT>Printer</TT> object's properties
+	are reserved for controlling extremely advanced graphics output. For typical applications,
+	you'll rarely bother to specify any properties because the default values work well
+	for normal reporting requirements. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Unlike most of Visual Basic's control objects, the <TT>Printer</TT> object's methods
+are much more important than the <TT>Printer</TT> object's property values. Table
+16.2 contains a complete list of the methods supported by Visual Basic's <TT>Printer</TT>
+object.</P>
+<CENTER>
+<P><B>Table 16.2. The Printer object's methods. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><B><I>Method</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>Circle</TT></TD>
+		<TD ALIGN="LEFT">Draws a circle, an ellipse, or an arc on the printer.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>EndDoc</TT></TD>
+		<TD ALIGN="LEFT">Releases the current document, in full, to the print spooler for output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>KillDoc</TT></TD>
+		<TD ALIGN="LEFT" VALIGN="TOP">Immediately terminates the output and deletes the current print job from the print
+			spooler.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>Line</TT></TD>
+		<TD ALIGN="LEFT">Draws lines and boxes on the page.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>NewPage</TT></TD>
+		<TD ALIGN="LEFT">Sends a page break to the printed output so that subsequent output appears on the
+			next page.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>PaintPicture</TT></TD>
+		<TD ALIGN="LEFT">Draws a graphic image file on the printer.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>Print</TT></TD>
+		<TD ALIGN="LEFT">Prints numeric and text data on the printer.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>PSet</TT></TD>
+		<TD ALIGN="LEFT">Draws a graphical point on the printed output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>Scale</TT></TD>
+		<TD ALIGN="LEFT">Determines the scale used for measuring output.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>ScaleX</TT></TD>
+		<TD ALIGN="LEFT">Converts the printer's width to <TT>ScaleMode</TT>'s measurement unit.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>ScaleY</TT></TD>
+		<TD ALIGN="LEFT">Converts the printer's height to <TT>ScaleMode</TT>'s measurement unit.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>TextHeight</TT></TD>
+		<TD ALIGN="LEFT">Determines the full height of text given in the scale set with <TT>Scale</TT>.</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>TextWidth</TT></TD>
+		<TD ALIGN="LEFT">Determines the full width of text given in the scale set with <TT>Scale</TT>.</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>By far the most widely used <TT>Printer</TT> object methods are the <TT>Print</TT>,
+<TT>EndDoc</TT>, and <TT>NewPage</TT> methods. Once you master these three methods,
+you'll rarely need to use any other methods.
+<CENTER>
+<H3><A NAME="Heading10"></A><FONT COLOR="#000077">The Print Method</FONT></H3>
+</CENTER>
+<P>The <TT>Printer</TT> object's <TT>Print</TT> method handles almost all printed
+output. <TT>Print</TT> supports several different formats. With <TT>Print</TT>, you
+can print messages, variables, constants, and expressions on the printer. The <TT>Print</TT>
+method is by far the most commonly used printing method in Visual Basic. By mastering
+<TT>Print</TT>, you will have mastered the single most important printing method
+that you can master.</P>
+<P>Here is the format of the <TT>Print</TT> method:</P>
+<PRE><FONT COLOR="#0066FF">[Printer.]Print [Spc(n) | Tab(n)] Expression
+</FONT></PRE>
+<P>The format makes <TT>Print</TT> look a lot more confusing than it really is, but
+the portion of the <TT>Print</TT> method that appears to the right of <TT>Print</TT>
+takes some explanation. The next several sections explain the various options available
+for the <TT>Print</TT> method.
+<CENTER>
+<H4><A NAME="Heading11"></A><FONT COLOR="#000077">Printing Literals</FONT></H4>
+</CENTER>
+<P>The <TT>Print</TT> method easily prints string and numeric literals. To print
+a string or numeric literal, place the literal to the right of the <TT>Print</TT>
+method. The following methods send the numbers 1, 2, and 3 to the <TT>Printer</TT>
+object for output:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print 1
+Printer.Print 2
+Printer.Print 3
+</FONT></PRE>
+<P>When execution hits these three lines of code, Visual Basic sends <TT>1</TT>,
+<TT>2</TT>, and <TT>3</TT> to the <TT>Printer</TT> object with each number appearing
+on a subsequent line. Every <TT>Print</TT> method sends a carriage return and line
+feed sequence to the printer. A lone <TT>Print</TT> method on a line by itself, such
+as the following, sends a blank line to the printer:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><TT><B> </B>Print</TT>
+	adds a space before all positive numeric values printed on the page. The space is
+	where an invisible plus sign appears. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The following <TT>Print</TT> method sends two lines of text to the <TT>Printer</TT>
+object:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;Visual Basic makes writing programs&quot;
+Printer.Print &quot;for Windows easy.&quot;
+</FONT></PRE>
+<P>When the Windows print spooler gets these two lines of output, the following appears
+on the printer's paper:</P>
+<PRE><FONT COLOR="#0066FF">Visual Basic makes writing programs
+for Windows easy.
+</FONT></PRE>
+<CENTER>
+<H4><A NAME="Heading12"></A><FONT COLOR="#000077">Printing Variables and Controls</FONT></H4>
+</CENTER>
+<P>In addition to literals, the <TT>Print</TT> method prints the contents of variables
+and controls. The following initializes a string variable and an integer variable
+and then prints the contents of the variables on the printer:</P>
+<PRE><FONT COLOR="#0066FF">FirstName = &quot;Charley&quot;
+Age = 24
+Printer.Print FirstName
+Printer.Print Age
+</FONT></PRE>
+<P>Here is the output produced by these <TT>Print</TT> methods:</P>
+<PRE><FONT COLOR="#0066FF">Charley
+ 24
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Remember that
+	Visual Basic won't send anything to the <TT>Printer</TT> object until the code that
+	contains <TT>Print</TT> executes. You would insert <TT>Print</TT> methods at appropriate
+	places in the code's procedures where printed output is required. For example, if
+	there is a command button labeled <TT>Print Report</TT>, that command button's <TT>Click()</TT>
+	event procedure will contain <TT>Print</TT> methods. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H4><A NAME="Heading13"></A><FONT COLOR="#000077">Printing Expressions</FONT></H4>
+</CENTER>
+<P>If you could print only individual strings, numeric constants, and variables,
+<TT>Print</TT> would be extremely limiting. Of course, <TT>Print</TT> is not that
+limited. You can combine literals, variables, and expressions to the right of <TT>Print</TT>
+methods to produce more complex printed output. The following <TT>Print</TT> method
+prints <TT>31</TT>:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print 25 + (3 * 2)
+</FONT></PRE>
+<P>The expression can contain variables, controls, and constants, like this:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print sngFactor * lblWeight.Caption + 10
+</FONT></PRE>
+<P>If you want to send special characters to the printer, you can do that by using
+the <TT>Chr()</TT> function. The following expression produces a message that includes
+embedded quotation marks inside the printed string:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;She said, &quot; &amp; Chr(34) &amp; &quot;I do.&quot; &amp; Chr(34)
+</FONT></PRE>
+<P>When execution reaches the former <TT>Print</TT> method, this is what the print
+spooler routes to the printer:</P>
+<PRE><FONT COLOR="#0066FF">She said, &quot;I do.&quot;
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>You wouldn't
+	be able to print the quotation marks without the <TT>Chr()</TT> function. Usually,
+	Visual Basic uses the quotation marks to determine where string literals begin and
+	end. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H4><A NAME="Heading14"></A><FONT COLOR="#000077">Printing Multiple Values</FONT></H4>
+</CENTER>
+<P><FONT COLOR="#000077"><B>New Term:</B></FONT><B> </B>A print zone occurs every
+14 columns on the page.</P>
+<P>When you need to print several values on one line, you can do so by separating
+those values with semicolons and commas. The semicolon forces subsequent values to
+appear right next to each other in the output. The comma forces values to appear
+in the next print zone.</P>
+<P>The following two messages print on different lines:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;The sales were
+Printer.Print 4345.67
+</FONT></PRE>
+<P>By using the semicolon, you can force these values to print next to each other:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;The sales were &quot;; 4345.67
+</FONT></PRE>
+<P>The semicolon also acts to keep automatic carriage returns and line feeds from
+taking place. The following <TT>Print</TT> method ends with a trailing semicolon:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;The company name is &quot;;
+</FONT></PRE>
+<P>The trailing semicolon keeps the printer's print head at the end of the message
+for subsequent output. Therefore, the subsequent <TT>Print</TT> statement shown next,
+no matter how much later in the code the <TT>Print</TT> appears, would print its
+output right next to the previous <TT>Print</TT>'s output:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print lblComName.Caption   ` Finsh the line
+</FONT></PRE>
+<P>The semicolon is nice for printing multiple values of different data types of
+the same line. The following <TT>Print</TT> prints all its data on the same line
+of output:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;Sales: &quot;; curTotsales; &quot;Region:&quot;; intRegNum
+</FONT></PRE>
+<P>The comma is still sometimes used to force subsequent values to print in the next
+print zone. The following <TT>Print</TT> prints names every 14 spaces on the printed
+line:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print strDivNamel, strDivName2, strDivName3
+</FONT></PRE>
+<P>No matter how long or short each division name is, the next division name will
+print in the next print zone. The previous <TT>Print</TT> might produce output similar
+to the following:</P>
+<PRE><FONT COLOR="#0066FF">North        NorthEast     South
+</FONT></PRE>
+<P>When you print lists of numbers or short strings, the comma allows you to easily
+align each column.
+<CENTER>
+<H4><A NAME="Heading15"></A><FONT COLOR="#000077">Utilizing the Fonts</FONT></H4>
+</CENTER>
+<P>Most Windows-compatible printers support a variety of fonts. The font-related
+properties are often useful for printing titles and other special output messages
+in special font sizes and styles.</P>
+<P>You can add special effects to your printed text by setting the font modifying
+properties from Table 16.1. For example, the following code first puts the printer
+in a boldfaced, italicized, 60-point font (a print size of one full inch), and then
+prints a message:</P>
+<PRE><FONT COLOR="#0066FF">Printer.FontBold = True
+Printer.FontItalic = True
+Printer.FontSize = 60
+Printer.Print &quot;I'm learning Visual Basic!&quot;
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="WARNING:"></A><FONT COLOR="#000077"><B>WARNING:</B></FONT><B> </B>The font
+	properties affect subsequent output. Therefore, if you print several lines of text
+	and then change the font size, the text that you've already printed remains unaffected.
+	Visual Basic prints only the subsequent output with the new font. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H4><A NAME="Heading16"></A><FONT COLOR="#000077">Better Spacing with Spc() and Tab()</FONT></H4>
+</CENTER>
+<P>The <TT>Print</TT> method supports the use of the embedded <TT>Spc()</TT> and
+<TT>Tab()</TT> functions to give you additional control over your program's output.
+<TT>Spc()</TT> produces a variable number of spaces in the output as determined by
+the argument you send to <TT>Spc()</TT>. The following <TT>Print</TT> method prints
+a total of 10 spaces between the first name and the last:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print strFirstName; Spc(10), strLastName
+</FONT></PRE>
+<P>The argument that you send to the embedded <TT>Tab()</TT> function determines
+in which column the next printed character appears. In the following <TT>Print</TT>,
+the date appears in the 50th column on the page:</P>
+<PRE><FONT COLOR="#0066FF">Printer.Print Tab(50), dteDateGenerated
+</FONT></PRE>
+<P>As these examples show, if you print values before or after the <TT>Spc()</TT>
+and <TT>Tab()</TT> functions, you separate the functions from the surrounding printed
+values using the semicolon.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><TT><B> </B>Spc()</TT>
+	and <TT>Tab()</TT> give you more control over spacing than the comma and semicolon
+	allow. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Listing 16.2 contains some code that computes and prints two housing pricing taxation
+values.
+<CENTER>
+<H3><A NAME="Heading17"></A><FONT COLOR="#000077">Listing 16.2. Using Spc() and Tab().</FONT></H3>
+</CENTER>
+<PRE><FONT COLOR="#0066FF">
+Taxl = TaxRate * HouseVal1
+Tax2 = TaxRate * HouseVal2
+
+TotalVal = HouseVal1 + HouseVal2
+TotTaxes = TaxRate * TotalVal
+
+Printer.Print &quot;House Value&quot;; Tab(20); &quot;Tax&quot;
+Printer.Print Format(HouseVal1, &quot;Currency&quot;);
+Printer.Print Tab(20); Format(Taxl, &quot;Currency&quot;)
+Printer.Print Format(HouseVal2, &quot;Currency&quot;);
+Printer.Print Tab(20); Format(Tax2, &quot;Currency&quot;)
+
+Printer.Print  ` Prints a blank line
+Printer.Print &quot;Total tax:&quot;; Spc(5); Format(TotTaxes, &quot;Currency&quot;)
+Printer.NewPage</FONT></PRE>
+<P><FONT COLOR="#0066FF"><TT>Printer.EndDoc</TT> </FONT><BR>
+<BR>
+Here is a sample of what you may see after Listing 16.2 executes:</P>
+<PRE><FONT COLOR="#0066FF">House Value     Tax
+$76,578.23      $9,189.39
+$102,123.67     $12,254.81
+
+Total tax:      $21,444.20
+</FONT></PRE>
+<P>The <TT>Tab(20)</TT> function call ensures that the second column, which contains
+the tax information, is aligned. Also, notice that the trailing semicolons let you
+continue the <TT>Print</TT> methods on subsequent lines without squeezing long <TT>Print</TT>
+method values onto the same line. The code uses <TT>Spc()</TT> to insert five spaces
+between the title and the total amount of tax. The last two lines ensure that the
+printing stops properly.
+<CENTER>
+<H3><A NAME="Heading19"></A><FONT COLOR="#000077">Starting to Print</FONT></H3>
+</CENTER>
+<P>The physical printing doesn't begin until all output is released to the print
+spooler, or until your application issues the <TT>EndDoc</TT> method.</P>
+<P>As you send <TT>Print</TT> methods to the print spooler via the <TT>Printer</TT>
+object, the print spooler builds the page or pages of output but doesn't release
+that output until you issue an <TT>EndDoc</TT> method. <TT>EndDoc</TT> tells the
+print spooler, &quot;I'm done sending output to you; you can print now.&quot;</P>
+<P>Without <TT>EndDoc</TT>, Windows would collect all of an application's output
+and not print any of the output until the application terminates. If you were to
+write an application that the user runs throughout the day and that prints invoices
+as customers make purchases, you would need to issue an <TT>EndDoc</TT> method at
+the end of each invoice-printing procedure if you wanted each invoice to print at
+that time.</P>
+<P>Listing 16.3 prints a message on the printer and then signals to the print spooler
+that output is ready to go to paper. Without <TT>EndDoc</TT>, the print spooler would
+hold the output until the application containing the code terminated.
+<CENTER>
+<H3><A NAME="Heading20"></A><FONT COLOR="#000077">Listing 16.3. Using EndDoc to release
+printed output.</FONT></H3>
+</CENTER>
+<PRE><FONT COLOR="#0066FF">
+Printer.Print &quot;Invoice #&quot;; invnum
+Printer.Print &quot;Customer:&quot;; cust(CCnt); Tab(20); &quot;Final Sales&quot;
+Printer.Print &quot;Amount of sale:&quot;; Tab(20); Format(SaleAmt, &quot;Currency&quot;)
+Printer.Print &quot;Tax:&quot;; Tab(20); Format(tax, &quot;Currency&quot;)
+Printer.Print
+Printer.Print &quot;Total:&quot;; Tab(20), Format(TotalSale, &quot;Currency&quot;)
+
+` Release the job for actual printing
+</FONT></PRE>
+<P><FONT COLOR="#0066FF"><TT>Printer.EndDoc</TT> <BR>
+</FONT><BR>
+The program containing Listing 16.3's code might continue to run and process other
+sets of data. The <TT>EndDoc</TT> method ensures that the output built in the preceding
+<TT>Print</TT> methods all gets sent to the physical printer immediately. If other
+<TT>Print</TT> methods appear later in the program, the print spooler begins building
+the output all over again, releasing that subsequent output only for an <TT>EndDoc</TT>
+procedure or when the application ends.
+<CENTER>
+<H4><A NAME="Heading22"></A><FONT COLOR="#000077">Page Breaks</FONT></H4>
+</CENTER>
+<P>When printing to the printer, you must be careful to print at the top of a new
+page when you want the output to advance one page. The <TT>NewPage</TT> method forces
+the printer to eject the current page and begin subsequent output on the next new
+page.</P>
+<P>The Windows print spooler ensures that each printed page properly breaks at the
+end of a physical page. Therefore, if the printer's page length is 66 lines and you
+print 67 lines, the 67th line will appear at the top of the second page of output.
+There are times, however, when you need to print less than a full page on the printer.
+You can release that incomplete page for printing using the <TT>NewPage</TT> method
+(from Table 16.2). To use <TT>NewPage</TT>, simply apply the <TT>Newpage</TT> method
+to the <TT>Printer</TT> object like this:</P>
+<PRE><FONT COLOR="#0066FF">Printer.NewPage
+</FONT></PRE>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="NOTE:"></A><FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Remember that
+	you actually print to the Windows print spooler and that your application's output
+	methods don't directly control a physical printer. Therefore, <TT>NewPage</TT> tells
+	the print spooler to go to a new page when the print spooler gets to that location
+	in the output. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You've got to remember that you're working with printers that support many fonts
+and font sizes. You can always determine, in advance, how many lines of output will
+fit on a single page as long as you first check the value of the following formula:</P>
+<PRE><FONT COLOR="#0066FF">intNumLinesPerPage = Printer.Height / Printer.TextHeight(&quot;X&quot;)
+</FONT></PRE>
+<P>As explained in Table 16.3, the <TT>Height</TT> property determines the height,
+in twips, of the page, or in whatever measurement value you want to use. The <TT>TextHeight</TT>
+property determines the full height of a printed character (including leading, which
+is the space directly above and below characters). <TT>TextHeight</TT> measures the
+height in twips if you haven't changed the scale using the <TT>ScaleMode</TT> property.</P>
+<P>For printed reports, you'll rarely use the <TT>ScaleMode</TT> method. If you need
+to change the scale of measurement, however, you'll have to change the scale back
+to twips before calculating the number of output lines per page, like this:</P>
+<PRE><FONT COLOR="#0066FF">Printer.ScaleMode = 1
+</FONT></PRE>
+<P><TT>ScaleMode</TT> accepts values defined in Table 16.3.</P>
+<CENTER>
+<P><B>Table 16.3. The ScaleMode values. </B>
+<TABLE BORDER="0">
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><B><I>Value</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Named Literal</I></B></TD>
+		<TD ALIGN="LEFT"><B><I>Description</I></B></TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>0</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbUser</TT></TD>
+		<TD ALIGN="LEFT">A user-defined value</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>1</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbTwips</TT></TD>
+		<TD ALIGN="LEFT">Measured in twips (the default)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>2</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbPoints</TT></TD>
+		<TD ALIGN="LEFT">Measured in points</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>3</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbPixels</TT></TD>
+		<TD ALIGN="LEFT">Measured in pixels (the smallest unit addressable by your printer)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>4</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbCharacters</TT></TD>
+		<TD ALIGN="LEFT">Measured in characters (120x240 twips)</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>5</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbInches</TT></TD>
+		<TD ALIGN="LEFT">Measured in inches</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>6</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbMillimeters</TT></TD>
+		<TD ALIGN="LEFT">Measured in millimeters</TD>
+	</TR>
+	<TR ALIGN="LEFT" rowspan="1">
+		<TD ALIGN="LEFT"><TT>7</TT></TD>
+		<TD ALIGN="LEFT"><TT>vbCentimeters</TT></TD>
+		<TD ALIGN="LEFT">Measured in centimeters</TD>
+	</TR>
+</TABLE>
+</P>
+</CENTER>
+<P>Listing 16.4 contains code that prints two messages, one per page of printed output.
+<CENTER>
+<H3><A NAME="Heading23"></A><FONT COLOR="#000077">Listing 16.4. Moving to the top
+of new output pages.</FONT></H3>
+</CENTER>
+<PRE><FONT COLOR="#0066FF">Printer.Print &quot;The Report begins on the next page...&quot;
+Printer.NewPage  ` Go to top of new page</FONT></PRE>
+<P><FONT COLOR="#0066FF"><TT>Printer.Print &quot;The Campaign Platform&quot;</TT></FONT>
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<A NAME="TIP:"></A><FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>You can apply
+	the <TT>Print</TT> method to your form to print directly on the form without using
+	a control. For example, you can print a title on a form named <TT>frmAccts</TT> with
+	this statement: <TT>frmAccts.Print Spc(20); &quot;XYZ, Co.&quot;</TT> Although you
+	should use controls as much as possible so that the application's code can rearrange
+	and manage the text on the controls, you should remember to use <TT>Print</TT> whenever
+	your form needs to hold unchanging text. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<CENTER>
+<H3><A NAME="Heading25"></A><FONT COLOR="#000077">Summary</FONT></H3>
+</CENTER>
+<P>In this hour you have learned ways you can route output to your printer. Actually,
+you have learned here that all Visual Basic output goes to the Windows print spooler
+and the spooler takes care of speaking to your particular printer.</P>
+<P>Creating printed output is not always simple. With the exception of printing program
+listings (which you can do by selecting File | Print from the development environment),
+printing data can take a while. You must take care of every line and jump to a new
+page when necessary.</P>
+<P>The next hour starts a new part of your tutorial, where you'll create menus and
+add graphics to your applications.
+<CENTER>
+<H3><A NAME="Heading26"></A><FONT COLOR="#000077">Q&amp;A</FONT></H3>
+</CENTER>
+
+<DL>
+	<DD><B>Q I use a network printer sometimes and a local printer sometimes, so what
+	do I do to my application to print to either printer?<BR>
+	<BR>
+	A</B> Absolutely nothing. Remember that your application sends all output to the
+	Windows print spooler and not to a specific printer. When your user sees the Print
+	dialog box (the dialog box you can produce with the Common Dialog Box control), your
+	user selects the printer and from there you can select either your network or local
+	printer. Windows then determines the best way to get your application's output to
+	that printer.<BR>
+	<B><BR>
+	Q What is the difference between Spc() and Tab()?<BR>
+	<BR>
+	A</B> Both functions send spaces to the <TT>Printer</TT> object, but the functions
+	differ in their starting position. <TT>Spc()</TT> adds spaces from the printer's
+	current position. <TT>Tab()</TT> adds enough spaces to move the printer to that position
+	on the line, no matter where the printer current rests. In addition, if you use a
+	<TT>Tab()</TT> value such as <TT>Tab(20)</TT> but the printer is currently past position
+	20, Visual Basic adds another line and tabs to column position 20 on the new line.
+</DL>
+
+<CENTER>
+<H3><A NAME="Heading27"></A><FONT COLOR="#000077">Workshop</FONT></H3>
+</CENTER>
+<P>The quiz questions and exercises are provided for your further understanding.
+See Appendix C, &quot;Answers,&quot; for answers.
+<CENTER>
+<H4><A NAME="Heading28"></A><FONT COLOR="#000077">Quiz</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Why does Visual Basic printer output not go immediately to a printer?<BR>
+	<B><BR>
+	2. </B>What happens if the printer is not online when the user prints something?<BR>
+	<B><BR>
+	3. </B>What is the difference between the <TT>Printer</TT> object and the <TT>Print</TT>
+	method?<BR>
+	<B><BR>
+	4.</B> How can you specify the number of output copies to print?<BR>
+	<B><BR>
+	5.</B> True or false: You can add the <TT>Printer</TT> object to the toolbox.<BR>
+	<B><BR>
+	6.</B> How many spaces does a print zone contain?<BR>
+	<B><BR>
+	7.</B> Why do you sometimes need to use the ASCII-based <TT>Chr()</TT> function when
+	printing?<BR>
+	<B><BR>
+	8. </B>What's the output from the following code?
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<PRE><FONT COLOR="#0066FF">Printer.Print &quot;1&quot;;
+Printer.Print &quot;2&quot;</FONT></PRE>
+
+</BLOCKQUOTE>
+
+
+<DL>
+	<DD><B>9. </B>True or false: Using <TT>Tab(14)</TT> after each variable does the
+	same thing as putting a comma after each variable printed.<BR>
+	10. True or false: You can apply the <TT>Print</TT> method to a form.
+</DL>
+
+<CENTER>
+<H4><A NAME="Heading29"></A><FONT COLOR="#000077">Exercises</FONT></H4>
+</CENTER>
+
+<DL>
+	<DD><B>1.</B> Write the <TT>Print</TT> method that prints a Spanish N (with a tilde)
+	on the printer.<BR>
+	<B><BR>
+	2.</B> Write a program that prints ASCII values 32 through 255 on paper when the
+	user clicks a command button.<BR>
+	<B><BR>
+	3.</B> Modify the book publisher application from Hour 15, &quot;Visual Basic Database
+	Basics,&quot; to print on paper the current book's title and year when the user clicks
+	a command button labeled Print.
+	<P ALIGN="CENTER"><BR>
+	<A HREF="ch15.htm"><IMG SRC="../buttons/blanprev.gif" WIDTH="37" HEIGHT="37" ALIGN="BOTTOM"
+	BORDER="0"></A><A HREF="../index.html"><IMG SRC="../buttons/blantoc.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="ch17.htm"><IMG SRC="../buttons/blannext.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A><A HREF="#heading1"><IMG SRC="../buttons/blantop.gif"
+	WIDTH="37" HEIGHT="37" ALIGN="BOTTOM" BORDER="0"></A>
+</DL>
+
+
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=846-849//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Implementing load balancing is an administrative issue, because it does not involve any interfaces. However, several programming issues are involved. Figure 25.4 illustrates accessing the local data and how it balances the load.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-04.jpg',155,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-04.jpg',155,420)"><font color="#000077"><b>Figure 25.4</B></FONT></A>&nbsp;&nbsp;Load balancing and accessing local data.</P>
+<p>In step 1, the client calls object A, which then calls object B. Object B, for the scope of the transaction, stores some data within IMDB. Now, when another object of type A is referenced, the load-balancing routine determines machine 1 to be less loaded. Therefore, the process is shifted. However, now the reference to object B and the IMDB database becomes invalid. This sort of programming should generally be avoided. For example, IIS cannot be load-balanced when <small>Session</SMALL> state information is kept.</P>
+<p><font size="+1"><b>How Load Balancing Functions</B></FONT></P>
+<p>There are many different ways to implement load balancing. COM&#43; services load balancing uses a response time technique. If the calling response to the object is too low, the process is load-balanced. The load balancing granularity happens at the COM&#43; object level. The GetClassObject and CreateInstance requests are intercepted. After receiving either of these requests, the load balancer locates the best location to instantiate the object. The creation is then moved to the machine and a reference is returned to the object.
+</P>
+<h3><a name="Heading5"></A><font color="#000077">Some Advanced Transaction Concepts</FONT></H3>
+<p>This section outlines some of the smaller yet advanced details of transaction programming.
+</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Avoiding Deadlocks and Blocking</FONT></H4>
+<p>In transaction programming, the issue of deadlocks can occur. Deadlocks occur in the following situation:
+</P>
+<p>There are two records: a and b. If component 1 is working with record a, it is blocking access to this record. If component 2 is working with record b, it is blocking access to its record. At the same time, component 2 accesses record a and component 1 accesses record b. Instant deadlock occurs.</P>
+<p>This is correct and incorrect. It depends on how the isolation of the transaction system is implemented. This is because ACID says that only one process will see the modified data. Therefore, when a deadlock occurs, it is not a deadlock, but a timeout. One transaction will succeed and the other will fail.</P>
+<p>This is the theory. The reality is that a deadlock can occur due to compromises made for performance and efficiency reasons. However, most databases have deadlock detection and will time-out when one occurs. A deadlock will be converted in a block, which reduces scalability.</P>
+<p><font size="+1"><b>Stale Data</B></FONT></P>
+<p>One of the side effects of deadlock detection is stale data conditions. Stale data occurs when a record reads old data and makes an update on that data. During this process, another record has updated the data. This means that the original reader has stale data. So when the original person updates the data, it may be incorrect.
+</P>
+<p>To stop this, a timestamp column can be added. A timestamp is like a version stamp. Whenever a row is added or updated, the timestamp column updates. It&#146;s a sort of version control system. Consider the extending of the client table with an extra field called verStamp. When a selection is made, it goes as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+select id, username, password verStamp from clients where  id = @id
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The field <small>verStamp</SMALL> is then used in the update, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+update clients set ... where id = @id and tsequal( verStamp, @inpVerStamp)
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This way, if anyone updates the record while another user is working with it, the update will fail. At that point, the business object can take an alternate action.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">IObjectConstruct Interfaces</FONT></H4>
+<p>When you&#146;re developing transaction components, one of the most annoying problems involves building a database connection. The reason is because you don&#146;t know what the name of the DSN is. One solution is to compile the name of the resource into the COM object. However, this solution involves the administrator setting up the correct resource.
+</P>
+<p>Another solution would be to set it dynamically using a reference file. However, with COM&#43;, this isn&#146;t necessary anymore. A new interface called <small>IObjectConstruct</SMALL> serves this purpose. The definition of <small>IObjectConstruct</SMALL> is as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+IObjectConstruct : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Construct(
+            /* [in] */ IDispatch __RPC_FAR *pCtorObj) = 0;
+    };
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This interface has only one method: the <small>Construct</SMALL> method. When this interface is implemented, the <small>Construct</SMALL> method is called when the COM object is instantiated. The instantiation string is enabled by checking the Enable Object Construction check box. You learned about this in the discussion about the Security tab in Chapter 21. A string can be entered in the text box. This defines some information about how the COM object can be used.</P>
+<p>This interface makes it possible to implement a constructor without requiring the use of the physical constructor. The advantage of this constructor is that the COM layer will be initialized and made usable. Here&#146;s a sample implementation of the method:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CConstTest::Construct(IDispatch * pUnk)
+{
+    try {
+        IObjectConstructString * pString = NULL;
+        _com_util::CheckError( pUnk-&gt;QueryInterface(IID_
+        &#8658;IObjectConstructString, (void **)&amp;pString));
+
+        if( pString != NULL) {
+            BSTR szConstruct;
+            pString-&gt;get_ConstructString(&amp;szConstruct);
+
+            // do some work
+
+            SysFreeString(szConstruct);
+            pString-&gt;Release();
+        }
+    } catch( _com_error err) {
+        ;
+    }
+    return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p>When this method is passed in, the <small>pUnk</SMALL> variable represents an interface where the object construction interface can be retrieved. The first step is to call <small>QueryInterface</SMALL> and request the <small>IObjectConstructString</SMALL> interface. This interface has a property called <small>ConstructString</SMALL> that contains the construction string. At this point, some dynamic customization can be performed.</P>
+<p>This brings up an important point. This method can be used to store some custom information. However, there&#146;s no destructor, which means that any data that&#146;s kept must be of a type that does not require an explicit destruction. In other words, all types must be autodestructors and cannot be dependent on the COM layer.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Special-Case Transaction Control</FONT></H4>
+<p>Manipulating a transaction is simple if the COM&#43; object is executed using the JIT and transaction attributes. However, consider the situation in which a COM&#43; object is not running within the context of a JIT. An example of this would be when the administrator sets the transaction attribute to <small>Ignored</SMALL>. The reason for this is specialized&#151;for example, the administrator might not want to let the component be deactivated. For these types of components, performing transactions becomes difficult. Windows 2000 adds many new interfaces to handle the various situations.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

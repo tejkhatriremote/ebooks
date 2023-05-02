@@ -1,0 +1,125 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Windows DNA Overview</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=01//-->
+<!--PAGES=017-020//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Business Logic Tier</FONT></H4>
+<p>The business logic tier is the heart of an application. It processes and manipulates the data. (The business process rules and workflow procedures handle this.) This tier is very important, and you&#146;ll need to spend the most programming effort on this tier. This tier includes high-volume processing, transaction support, large-scale deployment, messaging, and possibly the Web. In other words, this middle tier is very complex.
+</P>
+<p>The business logic tier has three major services: COM&#43;, MSMQ, and IIS. Of course, there are other services, such as Microsoft Exchange and Microsoft SQL Server, but they&#146;re not part of the Windows 2000 distribution. The sample architecture can be illustrated as follows:</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch01/images/01-04.jpg',189,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch01/images/01-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch01/images/01-04.jpg',189,420)"><font color="#000077"><b>Figure 1.4</B></FONT></A>&nbsp;&nbsp;Architecture of the business logic tier.</P>
+<p>Each service performs a specific task. COM&#43; is responsible for the basic COM and transaction functionality. IIS (Internet Information Server) is responsible for Internet services such as SMTP (Simple Mail Transfer Protocol), FTP (File Transfer Protocol), and HTTP (Hypertext Transfer Protocol). MSMQ (Microsoft Message Queue) is responsible for messaging. Each service can use other services to create new services. An example would be queued components, which use COM&#43; and MSMQ to create a new service.
+</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">COM&#43;</FONT></H4>
+<p>The next generation of COM is COM&#43;. COM&#43; extends COM by adding services that make it usable for the enterprise. Am I saying that COM is not usable for the enterprise? No, not at all. However, COM provides only the component framework. In order for COM components to have transaction capabilities, additional services are required. This is the purpose of COM&#43;.
+</P>
+<p>COM&#43; and transaction services first came to life in SQL Server. SQL Server 6.5 distributed a service called the Distributed Transaction Coordinator (DTC). This service was responsible for SQL Server transaction management. Then, the DTC was re-released with a simpler wrapper called Microsoft Transaction Server (MTS). MTS made it possible to write COM objects that perform business processes and control transactions. COM&#43; takes the transaction aspect and ingrains it into the COM runtime and operating system. MTS is embedded into the operating system; however, an MTS object can bypass MTS. The loopholes are closed in COM&#43;, making it more consistent and elegant. From a programming point of view, COM&#43; enables all server-side COM objects to take advantage of transactions to make their applications more reliable.</P>
+<p><b>TIP Integration</B></P>
+<p>COM&#43; uses OLE transactions to manage the transaction-processing environment. However, this is specific only to the Windows 2000 platform. Using TIP (Transaction Internet Protocol), it&#146;s possible for COM objects to participate in other transaction-processing (TP) environments. These transactions can be managed by the TP system. This is different from the previous version in MTS. In that version, the transaction had to be managed by MTS and the DTC.</P>
+<p><b>Enhanced Security</B></P>
+<p>In the section on the firewall tier, I explained that Windows 2000 enhances the security model. Quite a bit of this work is part of the COM&#43; environment. COM&#43; security involves either role-based security or process access permissions. <i>Role-based security</I> is a mechanism whereby the user is part of a large group that has a role. Roles can be managers, employees, and so on. Roles make it simpler to manage users who have different security privileges, depending on their domain. A example is an accounting person who has high security access to the accounting processes but low security access to the manufacturing processes. An extension of role-based security in COM&#43; is the ability to apply security at the method level for the COM objects.</P>
+<p><b>Centralized Administration</B></P>
+<p>In the previous version of Windows NT, the COM components were managed using the MTS Explorer. To manage any DCOM settings, DCOMCNFG would be used. In Windows 2000, both these tools are replaced with the Component Services Explorer. It combines and extends the administration of the COM&#43; objects. Tasks include deploying, managing, and monitoring the COM&#43; application.</P>
+<p><font size="+1"><b>IMDB (In-memory Database)</B></FONT></P>
+<p>One service that&#146;s new in Windows 2000 is IMDB. IMDB is an in-memory database that keeps tables in RAM memory. Many applications today require high performance. For those applications, much of the data is read-mostly. An example is the retrieval of a product catalog. This table changes, but very slowly. Most of the time it&#146;s read, and it can be cached. This is where IMDB serves its purpose. With it, you can cache the product catalog tables to make them high-speed access tables.
+</P>
+<p>IMDB is not a general service. It serves a specific purpose and functionality which need to be determined by the programmer.</P>
+<p><font size="+1"><b>Queued Components</B></FONT></P>
+<p>DCOM (Distributed COM) is used to allow a COM object to be called between two different machines. DCOM is a synchronous protocol. When a call originates from one machine, the receiver must be available. If that receiver is not available, the call fails and any operation also fails. If that operation was executing within the context of a transaction, the transaction fails as well. You must then implement a fail and retry mechanism.
+</P>
+<p>In Windows 2000, an easier solution is to use queued components. Queued components make it possible to call another component on another machine asynchronously. Queued components use MSMQ as the underlying messaging architecture. Therefore, if the connection or call fails, it can retry until it succeeds.</P>
+<p><font size="+1"><b>Event Services</B></FONT></P>
+<p>In Windows NT 4.<i>x</I>, connecting events to components is not easy. You could use a technology called COM connection points, but it&#146;s very limiting. What&#146;s needed is a technology that permits loosely coupled events, where the event receiver may be active or not active.</P>
+<p>This event mechanism, available in Windows 2000, is called COM&#43; events. Using COM&#43; events, you can make unicast or multicast calls. The receiver of the event connects to the client using a subscription technique.</P>
+<p>The publish-and-subscribe mechanism is where the publisher informs the COM&#43; event services that it has information it wants to distribute. A receiver that&#146;s interested in this information indicates its interest to the COM&#43; event service using a subscription. Then, when the publisher has any information that&#146;s changing, COM&#43; event services will propagate the changes to the various subscribers.</P>
+<p><font size="+1"><b>Dynamic Load Balancing</B></FONT></P>
+<p>With the release of Windows 2000, you can now dynamically load-balance a COM&#43; object. <i>Dynamic load balancing</I> is the technique of evenly distributing the processing load over a set of machines. Load balancing a server-oriented process occurs transparently with respect to the client making the server call.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

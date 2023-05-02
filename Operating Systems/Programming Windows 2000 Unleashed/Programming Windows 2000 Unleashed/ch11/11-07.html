@@ -1,0 +1,237 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=370-375//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="11-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Once you&#146;ve created a path, you can draw its outline, fill its interior, or use it as a clipping region. To demonstrate using paths to create clipping regions, the CD-ROM includes an MFC sample project named Path.
+</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-09.jpg',500,190 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-09.jpg',500,190)"><font color="#000077"><b>Figure 11.9</B></FONT></A>&nbsp;&nbsp;An example of a path bracket.</P>
+<p>The Path example is a standard AppWizard SDI application. All the interesting work in this example is done in the <small>CPathView::OnDraw</SMALL> function, shown in Listing 11.11.</P>
+<p><b>Listing 11.11</B> Using a Path to Create a Clipping Region<hr></P>
+<!-- CODE //-->
+<pre>
+void CPathView::OnDraw(CDC* pDC)
+{
+    // Calculate the size of the clipping area
+    CRect rcClient;
+    GetClientRect( rcClient );
+    int xBorder = rcClient.Width()/4;
+    int yBorder = rcClient.Height()/4;
+    int cxRect  = rcClient.Width()/2;
+    int cyRect  = rcClient.Height()/2;
+
+    //
+    // Create a large Arial font, and select it into
+    // the device context. This font will be part of
+    // the clipping path.
+    CFont   fntClip;
+    LOGFONT lf;
+    memset( &amplf, 0, sizeof(LOGFONT) );
+    lstrcpy( lf.lfFaceName, &#147;Arial&#148; );
+    lf.lfWeight = FW_BOLD;
+    lf.lfHeight = yBorder;
+    fntClip.CreateFontIndirect( &amplf );
+    CFont* pOldFont = pDC-&gtSelectObject( &ampfntClip );
+
+    // Create a path, and use it as a clipping area
+    HDC hdcPath = pDC-&gtGetSafeHdc();
+    pDC-&gtBeginPath();
+        MoveToEx( hdcPath, xBorder, yBorder, NULL );
+        LineTo( hdcPath, xBorder &#43; cxRect, yBorder );
+        LineTo( hdcPath, xBorder &#43; cxRect, yBorder &#43; cyRect );
+        LineTo( hdcPath, xBorder, yBorder &#43; cyRect );
+        LineTo( hdcPath, xBorder, yBorder );
+        DrawText( hdcPath, TEXT(&#147;NT&#148;), 2, &amprcClient,
+                  DT_CENTER | DT_SINGLELINE| DT_VCENTER );
+    pDC-&gtEndPath();
+    pDC-&gtSelectClipPath( RGN_COPY );
+    //
+    // Create red brushes and pens for the sun burst, and
+    // select them into the device context.
+    CBrush  brRed( RGB(255,0,0) );
+    CPen    penRed( PS_SOLID, 1, RGB(255,0,0) );
+    CBrush* pOldBrush = pDC-&gtSelectObject( &ampbrRed );
+    CPen*   pOldPen = pDC-&gtSelectObject( &amppenRed );
+
+    CSize   sizeOfSun( cxRect/2, cxRect/2 );
+    CPoint  ptSun( cxRect &#43; (xBorder/2), yBorder/2 );
+    CRect   rcSun( ptSun, sizeOfSun );
+    //
+    // Calculate the sin and cosine of one 90 degree
+    // quadrant.
+    double rgSin[90], rgCos[90];
+    const  double pi = 3.14159;
+    CPoint ptCenter( xBorder &#43; cxRect, yBorder );
+    for( int nAngle = 0; nAngle &lt 90; nAngle&#43;&#43; )
+    {
+        rgSin[nAngle] = sin( (((double)nAngle)/180.0) * pi );
+        rgCos[nAngle] = cos( (((double)nAngle)/180.0) * pi );
+    }
+    //
+    // Starting from the upper-right corner of the rectangle,
+    // draw rays across the clipping path, then draw an ellipse
+    // centered in the upper-right corner.
+    double flSegment = (double)(rcClient.Width());
+    for( nAngle = 0; nAngle &lt 90; nAngle&#43;&#43; )
+    {
+        pDC-&gtMoveTo( ptCenter.x, ptCenter.y );
+        int x = (int)(rgCos[nAngle] * flSegment);
+        int y = (int)(rgSin[nAngle] * flSegment);
+        pDC-&gtLineTo( ptCenter.x - (int)(rgCos[nAngle]*flSegment),
+                     ptCenter.y &#43; (int)(rgSin[nAngle]*flSegment));
+
+    }
+    pDC-&gtEllipse( rcSun );
+
+    pDC-&gtSelectObject( pOldBrush );
+    pDC-&gtSelectObject( pOldPen );
+    pDC-&gtSelectObject( pOldFont );
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 11.11 contains calls to the <small>sin</SMALL> and <small>cos</SMALL> functions; therefore, the following <small>#include</SMALL> directive must be added to either <small>stdafx.h</SMALL> or to the top of the <small>PathView.cpp</SMALL> source file, after the other <small>#include</SMALL> directives:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &ltmath.h&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In Listing 11.11, a path is created that contains a rectangle, along with a text string. After the path is selected as a clipping region, all drawing functions are affected by it, as shown in Figure 11.10.
+</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-10.jpg',491,418 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch11/images/11-10.jpg',491,418)"><font color="#000077"><b>Figure 11.10</B></FONT></A>&nbsp;&nbsp;The Path example uses a path as a clipping region.</P>
+<h3><a name="Heading17"></A><font color="#000077">Metafiles</FONT></H3>
+<p>A <i>metafile</I> is a collection of GDI function calls that have been stored in a binary format. Windows 2000 uses <i>enhanced</I> metafiles, which have more capabilities than the ordinary metafiles used in 16-bit versions of Windows.</P>
+<p>A metafile is often used to exchange drawing information via the Clipboard. In fact, a metafile is useful in any case where a bitmap image would take up too much storage. Although a metafile requires much less storage than a bitmap, it takes more time to display a metafile than to transfer a bitmap using the <small>BitBlt</SMALL> function.</P>
+<p>A metafile is constructed by creating a metafile DC and then drawing it just like any other DC. After the GDI calls have been drawn into the metafile DC, the metafile is &#147;played&#148; in order to display its contents.</P>
+<p>The MFC class library includes the <small>CMetaFileDC</SMALL> class, which can be used to simplify creating and playing both plain metafiles and enhanced metafiles. To create an enhanced metafile, the <small>CreateEnhanced</SMALL> member function is used:</P>
+<!-- CODE SNIP //-->
+<pre>
+CMetaFileDC dcMetaFile;
+dcMetaFile.CreateEnhanced( pDC ,
+                           TEXT(&#147;C:\\FOO&#148;),
+                           NULL,
+                           TEXT(&#147;Unleashed MetaFile Example&#148;) );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>CreateEnhanced</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A reference DC that indicates the resolution and device units used by the current device.
+<dd><b>&#149;</B>&nbsp;&nbsp;A filename, if any, that will store the metafile after it&#146;s closed. If a metafile is created by an application for temporary purposes, this parameter will be <small>NULL</SMALL>, and the metafile will be destroyed when its handle is deleted.
+<dd><b>&#149;</B>&nbsp;&nbsp;A bounding rectangle for the image stored in the metafile. If this value is <small>NULL</SMALL>, an appropriate size will be selected, based on the size of the image drawn into the metafile.
+<dd><b>&#149;</B>&nbsp;&nbsp;A description of the metafile image, if any. Otherwise, <small>NULL</SMALL> is entered for this parameter.
+</DL>
+<p>After the metafile is created, it can be used just like any other DC, except that instead an image being drawn, the function calls are stored in the metafile. Here&#146;s an example:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+dcMetaFile.MoveTo( rcDot.TopLeft() );
+dcMetaFile.LineTo( rcDot.BottomRight() );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After all the required GDI function calls have been recorded in the metafile, the metafile is closed using the <small>CloseEnhanced</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HENHMETAFILE          m_hmf;
+m_hmf = dcMetaFile.CloseEnhanced();
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The handle to the metafile is returned when an enhanced metafile is closed. This handle can be played on any DC, using the <small>CDC::PlayMetaFile</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+pDC-&gtPlayMetaFile( m_hmf, rc );
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading18"></A><font color="#000077">A Metafile Example</FONT></H3>
+<p>As an example of how an enhanced metafile is created and used, this book&#146;s CD-ROM includes a sample project named Meta. Meta is a standard AppWizard SDI application with a few simple modifications.
+</P>
+<p>When the Meta application starts, a metafile is created, and the handle is stored by the view class. When a left-click is detected in the Meta client area, a metafile is played in the location of the mouse click. In addition, the location of the mouse click is stored so that the client area is updated correctly when it&#146;s repainted.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="11-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

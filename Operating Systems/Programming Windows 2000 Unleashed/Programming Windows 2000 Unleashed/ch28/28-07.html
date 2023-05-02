@@ -1,0 +1,294 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=947-952//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 28.3</B> Sending a Message to a Message Queue<hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltmq.h&gt
+#include &ltwchar.h&gt
+
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+void GetQueueNameFromUser();
+void GetMsgFromUser();
+void InitMessageProps();
+
+#define MAX_PROPS  5
+#define MAX_FORMAT 256
+#define MAX_BUFFER 512
+
+// Global data used by the example
+WCHAR   g_szComputerName[MAX_BUFFER];
+WCHAR   g_szQueueName[MAX_BUFFER];
+WCHAR   g_szQueuePath[MAX_BUFFER * 2];
+WCHAR   g_szMessageBody[MAX_BUFFER];
+
+// Data structures used for the message queue.
+MQMSGPROPS    g_msgProps;
+PROPVARIANT   g_rgMsgPropVar[MAX_PROPS];
+MSGPROPID     g_rgMsgPropID[MAX_PROPS];
+HRESULT       g_rgMsgResults[MAX_PROPS];
+WCHAR         g_szFormat[MAX_FORMAT];
+
+int wmain()
+{
+    GetQueueNameFromUser();
+
+    // Get the format name of the queue
+    DWORD cbFormat = MAX_FORMAT;
+    HRESULT hr = MQPathNameToFormatName(g_szQueuePath,
+                                        g_szFormat,
+                                        &ampcbFormat);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Format Name Failed&#148;, hr);
+        return 0;
+    }
+
+    // Open a handle to the message queue
+    HANDLE hQueue = NULL;
+    DWORD dwAccess = MQ_SEND_ACCESS;
+    DWORD dwShareMode = MQ_DENY_NONE;
+    hr = MQOpenQueue(g_szFormat,
+                     dwAccess,
+
+                     dwShareMode,
+                     &amphQueue);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;Open Queue Failed&#148;, hr);
+        return 0;
+    }
+
+    InitMessageProps();
+
+    do{
+        GetMsgFromUser();
+        hr = MQSendMessage(hQueue,
+                           &ampg_msgProps,
+                           NULL);
+        if(FAILED(hr))
+            HandleError(L&#147;MQSendMessage&#148;, hr);
+
+    }while(SUCCEEDED(hr)&amp&amplstrcmpi(L&#147;Q&#148;,g_szMessageBody) != 0);
+
+    MQCloseQueue(hQueue);
+    return 0;
+}
+
+// Initialize message properties
+void InitMessageProps()
+{
+    DWORD cbMsgProps = 0;
+
+    g_rgMsgPropID[cbMsgProps] = PROPID_M_BODY;
+    g_rgMsgPropVar[cbMsgProps].vt = VT_VECTOR|VT_UI1;
+    g_rgMsgPropVar[cbMsgProps].caub.pElems = (BYTE*)g_szMessageBody;
+    g_rgMsgPropVar[cbMsgProps].caub.cElems = sizeof(g_szMessageBody);
+    cbMsgProps&#43;&#43;;
+
+    g_rgMsgPropID[cbMsgProps] = PROPID_M_LABEL;
+    g_rgMsgPropVar[cbMsgProps].vt = VT_LPWSTR;
+    g_rgMsgPropVar[cbMsgProps].pwszVal = L&#147;Test Msg&#148;;
+    cbMsgProps&#43;&#43;;
+
+    g_rgMsgPropID[cbMsgProps] = PROPID_M_DELIVERY;
+    g_rgMsgPropVar[cbMsgProps].vt = VT_UI1;
+    g_rgMsgPropVar[cbMsgProps].bVal = MQMSG_DELIVERY_RECOVERABLE;
+    cbMsgProps&#43;&#43;;
+
+    g_msgProps.cProp = cbMsgProps;
+    g_msgProps.aPropID = g_rgMsgPropID;
+    g_msgProps.aPropVar = g_rgMsgPropVar;
+    g_msgProps.aStatus = g_rgMsgResults;
+}
+
+// Error handling routine
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    DWORD dwRet = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                         FORMAT_MESSAGE_FROM_SYSTEM,
+                         NULL,
+                         hr,
+                         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                         (LPWSTR)&amplpMsgBuf,
+                         0,
+                         NULL);
+    if(dwRet == 0)
+    {
+        // Can&#146;t find error text, display HRESULT instead.
+        lpMsgBuf = LocalAlloc(LPTR, 42);
+        if(lpMsgBuf)
+        {
+            wsprintf((LPWSTR)lpMsgBuf,
+                     L&#147;HRESULT = 0x%X&#148;,
+                     hr);
+        }
+    }
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+}
+
+// Collect computer and queue names from the user.
+void GetQueueNameFromUser()
+{
+    do{
+        wprintf(L&#147;Computer name for the message queue:&#148;);
+        _getws(g_szComputerName);
+        wprintf(L&#147;Name of the message queue:&#148;);
+        _getws(g_szQueueName);
+
+    }while(!lstrlen(g_szComputerName) || !lstrlen(g_szQueueName));
+
+    wsprintf(g_szQueuePath,
+             L&#147;%s\\%s&#148;,
+             g_szComputerName,
+             g_szQueueName);
+}
+
+// Get a message from the user
+void GetMsgFromUser()
+{
+    do{
+        wprintf(L&#147;Message to be sent (Q to quit):&#148;);
+        _getws(g_szMessageBody);
+
+    }while(!lstrlen(g_szMessageBody));
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 28.3, <small>SendQueueMsg.cpp</SMALL> begins by requesting the message queue path from the user, as was done earlier in Listing 28.2. Next, <small>MQPathNameToFormatName</SMALL> is used to generate the format name for the message queue. The format name is used to open the message queue with the <small>MQOpenQueue</SMALL> function.</P>
+<p>Next, the initial properties for the message are defined in the <small>InitMessageProps</SMALL> function. <small>InitMessageProps</SMALL> defines three properties for the message:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The message body is defined as the contents of the global <small>g_szMessageBody</SMALL> Unicode string.
+<dd><b>&#149;</B>&nbsp;&nbsp;The message label is defined as <small>&#147;Test Msg&#148;</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The message delivery type is set to <small>MQ_RECOVERABLE</SMALL>, which specifies that the message must be backed up onto disk storage until it&#146;s successfully delivered.
+</DL>
+<p>These properties are defined in arrays of <small>PROPVARIANT</SMALL> and <small>MSGPROPID</SMALL>. The addresses of these arrays are placed in a global <small>MQMSGPROPS</SMALL> structure that will be passed as a parameter in a call to <small>MQSendMessage</SMALL>. The user is then prompted for messages to be placed in the message queue, with <small>MQSendMessage</SMALL> called for each message. The last message sent by the user has a message body that consists of the Unicode string <small>&#147;Q&#148;</SMALL> to mark the end of the series of messages.</P>
+<p>The messages currently stored in the message queue can be displayed using the Active Directory Users and Computers MMC snap-in, as shown in Figure 28.4.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-04.jpg',800,600 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-04.jpg',800,600)"><font color="#000077"><b>Figure 28.4</B></FONT></A>&nbsp;&nbsp;Using MSMQ to view messages stored in a message queue.</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Receiving Messages from a Message Queue</FONT></H4>
+<p>Messages are read from a message queue using the <small>MQReceiveMessage</SMALL> function:</P>
+<!-- CODE //-->
+<pre>
+DWORD dwAction = MQ_ACTION_RECEIVE;
+HRESULT hr = MQReceiveMessage(hQueue,
+                              0,        // Timeout, in msecs.
+                              dwAction,
+                              &ampg_props,
+                              NULL,
+                              NULL,
+                              NULL,
+                              NULL);
+</PRE>
+<!-- END CODE //-->
+<p>The <small>MQReceiveMessage</SMALL> function has eight parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the message queue that messages will be read from.
+<dd><b>&#149;</B>&nbsp;&nbsp;The amount of time the calling thread will wait for a message, in milliseconds. A value of <small>0</SMALL> specifies that there is no timeout.
+<dd><b>&#149;</B>&nbsp;&nbsp;The type of action that should be performed in order to receive a message from the queue. A value of <small>MQ_ACTION_RECEIVE</SMALL> specifies that the first message in the queue should be read and removed from the queue. A value of <small>MQ_ACTION_PEEK_CURRENT</SMALL> specifies that the first message should be read but not removed from the queue. A value of <small>MQ_ACTION_PEEK_NEXT</SMALL> is used with a message cursor to scroll through messages located in the message queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>MQMSGPROPS</SMALL> structure that carries properties for the message read from the queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>OVERLAPPED</SMALL> structure that&#146;s used when asynchronous reads are performed from the message queue. This value is <small>NULL</SMALL> when messages are read synchronously.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a callback function that&#146;s used when messages are read asynchronously from the message queue. This value is <small>NULL</SMALL> when messages are read synchronously.
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to a message cursor. <small>NULL</SMALL> is used if no message cursor is used.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a constant or object that specifies the transaction characteristics to be applied to the message. <small>NULL</SMALL> is used if the message is not part of a transaction.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

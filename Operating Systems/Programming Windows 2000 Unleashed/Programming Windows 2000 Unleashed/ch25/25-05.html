@@ -1,0 +1,163 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=856-860//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In the preceding source code, the Visual Basic client calls <small>GetObject</SMALL>, but it uses the queue COM moniker. A COM moniker provides a way of referencing a resource using some naming convention. You use the CLISD moniker with COM. Using &#147;queue&#148; is the queued component moniker, which is new to Windows 2000. Next, a series of properties and methods are called (<small>OrderNumber, CustomerID</SMALL>, and <small>LineItem</SMALL>). The last method is <small>Process</SMALL>, which sends the message.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">How Queued Components Work</FONT></H4>
+<p>Queued components create messages by intercepting all the properties and method calls and saving them to a buffer. In Figure 25.9, the various properties and methods (<small>num, custid</SMALL>, and <small>Line</SMALL>) are called and a recorder records the steps sequentially. The buffer is sent to the queue when the transaction on the recorder side commits. After the buffer reaches the destination server, the player loads the transmitted message buffer and plays the various methods using sequential methods.</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-09.jpg',161,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-09.jpg',161,420)"><font color="#000077"><b>Figure 25.9</B></FONT></A>&nbsp;&nbsp;The queued component recorder.</P>
+<p>Here are some important points to keep in mind:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The queued component message must contain by-value parameters. You can&#146;t send parameters by reference.
+<dd><b>&#149;</B>&nbsp;&nbsp;The communication is one-way, and no response can be sent.
+<dd><b>&#149;</B>&nbsp;&nbsp;The recorder will finish recording everything before any messages are played on the server side.
+</DL>
+<p>Although it may seem silly to not have messages return to the sender, this is an important feature. Queued components are asynchronous messages and therefore can never expect returned answers. If they did, this would imply a <i>synchronous</I> operation, which can be handled better using DCOM.</P>
+<p><font size="+1"><b>Specifying Explicit Moniker Attributes</B></FONT></P>
+<p>When you&#146;re instantiating the queued component, the default moniker would look like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+queue:/new:QCSamp.Ship
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This specifies that whatever is created is a queued component. The new file moniker provides a way of creating a COM object: It&#146;s like using <small>CoCreateInstance</SMALL>.</P>
+<p>To specify a specific queue, you can use the following notation:</P>
+<!-- CODE SNIP //-->
+<pre>
+queue:ComputerName=bacchus,Priority=3/new:Ship
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This moniker specifies that a queued component is to be created, and the name of the computer where the queued component is located is &#147;bacchus.&#148; When the message for the queued component is sent, a priority of 3 is to be used.
+</P>
+<p>This introduces another side effect. Consider the situation in which two messages are sent to a queued component. The first message has a low priority, and the other has a high priority. However, the low-priority message is sent out first, and the high-priority message is sent out last. Over a long distance, the order in which the messages arrive and are replayed may be in reverse. Therefore, it&#146;s vital that the queued components reflect an event-driven architecture that does not rely on a specific order of messages.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Writing Queued Components</FONT></H4>
+<p>Writing a queued component is not so different from writing a normal COM object. The difference lies in the administration and the attributes. Here&#146;s an example:
+</P>
+<!-- CODE //-->
+<pre>
+[
+    helpstring(&#147;IShip Interface&#148;),
+    &#8658;uuid(CB34A1A4-28C2-11D2-B5B6-00C04FC340EE),
+    object, dual, nonextensible, hidden, pointer_default(unique),
+    QUEUEABLE
+]
+interface IShip : IDispatch
+{
+    [id(1), propput] HRESULT CustomerId([in] long lCustomerId);
+    [id(2), propput] HRESULT OrderId([in] long lOrderId);
+    [id(3)]    HRESULT LineItem([in] long lItemId, [in] long lQuantity);
+    [id(4)]    HRESULT Process([in] long lFlags);
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this IDL file, the attribute <small>QUEUEABLE</SMALL> is defined within the interface properties. This specifies that the component can be defined as a queued component. The definition is from the include file <small>mtxattr.h</SMALL>. Otherwise, you would need to write your queued component as if it were a stateless transactional component.</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Sending a Return Message Using Queued Components</FONT></H4>
+<p>With queued components, the real problem is how to send return messages. When a message is sent, the receiver of the message does not have a direct connection to the sender. Therefore, in order for the receiver to be able to return a message, a notify architecture must be established (see Figure 25.10).
+</P>
+<p>In this architecture, the client creates an order. The transaction is committed, and the message is sent to start the second transaction. This transaction then formulates a message. Upon success, the message is sent back to the originator in the form of a <small>Notify</SMALL> message. The <small>Notify</SMALL> message starts the third transaction and updates the database. It&#146;s that simple.</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-10.jpg',190,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-10.jpg',190,420)"><font color="#000077"><b>Figure 25.10</B></FONT></A>&nbsp;&nbsp;Notify callback architecture.</P>
+<p>What&#146;s important here is that all this must be written using custom COM objects. The <small>Notify</SMALL> COM object is nothing more than a simple object that updates the database and indicates what has happened. How does a transaction know whether the last transaction occurred successfully? It doesn&#146;t, and there&#146;s no way of tying those two transactions together. The only way of knowing what has happened is to leave a piece of state information. This can be done easily using IMDB. This promotes high-speed access with full transaction capabilities.</P>
+<p>There are three transactions in this architecture, and each is independent. Although it may seem logical to tie them together, it&#146;s not advisable (in fact, it&#146;s not even possible). The reason is because queued components are asynchronous in nature, and they execute long transactions. Long transactions tie up resources and reduce scalability. The solution to using multitransaction situations is to define a log and a series of &#147;undo&#148; operators. The undo operators will be called whenever anything goes wrong.</P>
+<h3><a name="Heading15"></A><font color="#000077">Distributing Information Asynchronously</FONT></H3>
+<p>The COM programming model is one in which a request is made and then processed. Whether you&#146;re using straight COM or DCOM, the request is handled synchronously. Using queued components, however, the request is handled asynchronously. In both of these situations, the client requests something from the server.
+</P>
+<p>Another set of problems involves the server informing the client that changes occurred. Although this may seem to involve asynchronous programming, it&#146;s better defined via callback programming, as shown in Figure 25.11.</P>
+<p><a name="Fig11"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-11.jpg',188,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-11t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch25/images/25-11.jpg',188,420)"><font color="#000077"><b>Figure 25.11</B></FONT></A>&nbsp;&nbsp;An example of using a callback.</P>
+<p>The client sends a message to the server. In this message is a reference to the client. In Windows programming, this reference is a Windows message function. In the event services architecture, this is a COM interface. Whenever anything changes, the server informs the client of the changes using this reference.
+</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">Introducing Publisher/Subscriber Architecture</FONT></H4>
+<p>The callback architecture can be generalized into what&#146;s known as the <i>publisher/subscriber architecture</I>. In Figure 25.12, the architecture shows that the client wants some information. However, the information distribution is to be shared among multiple clients. This type of application involves those that have information (publishers) and those that want information (subscribers). Neither knows of the other at development time.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

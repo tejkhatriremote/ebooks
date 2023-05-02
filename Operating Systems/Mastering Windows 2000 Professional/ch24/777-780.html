@@ -1,0 +1,151 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Essentials of Windows 2000 Networking</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=24//-->
+<!--PAGES=777-780//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="774-777.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="780-785.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading34"></A><font color="#000077">Avoiding Browse Mastering: &#147;If Nominated, I Will Not Run&#148;</FONT></H4>
+<p>Elections can take a lot of time on your network. You can simplify the election process and cut down on the number of elections by forcing a Windows for Workgroups computer to never be the master browser. Just add this line to the [network] section of <tt>system.ini</TT>:</P>
+<!-- CODE SNIP //-->
+<pre>
+   MaintainServerList=NO
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You might add that line if you don&#146;t want to accept the performance hit that being the master browser might entail or if you&#146;re running a mixed NT/Windows network. You see, you could end up with an NT master browser and a Windows for Workgroups backup browser. The problem arises in that the Windows workstation must talk to the NT machine to exchange services information. However, the NT machine isn&#146;t allowed to talk to the Windows machine <i>for any reason at all</I> unless the Windows machine either has an account on that machine and is logged on or the NT machine has a Guest account that is enabled. If neither of those things happens, then the newly elected backup browser finds itself without any information&#151;the master browser essentially keeps the backup browser in the dark. If the master browser goes down, then the backup browser can end up taking its place in a fairly ignorant state, leading to empty Browse lists.</P>
+<p>The default value of MaintainServerList is Auto, which means &#147;make me a master browser if needed.&#148; Alternately, you can use a value of Yes, which means &#147;I will always try to be the master browser.&#148;</P>
+<p>For Windows 2000 computers, a corresponding Registry entry MaintainServerList goes in <tt>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Browser\Parameters</TT>. It is of type Reg_Sz, and its value can be Yes, No, or Auto (which is the default).</P>
+<h4 align="LEFT"><a name="Heading35"></A><font color="#000077">Refreshing a Browse List</FONT></H4>
+<p>In general, Browse requests are resolved by either the master browser or a backup browser, so you never know who&#146;s provided your Browse list. But you can force the system to browse via the browse master with the command-line command Net View.
+</P>
+<h4 align="LEFT"><a name="Heading36"></A><font color="#000077">Understanding Why Your Resource Is Not on the Browse List</FONT></H4>
+<p>You can experience browsing trouble (i.e., no Browse list available or incorrect list) if your computers do not exit Windows gracefully&#151;that is, if they get shut off without first exiting Windows. A computer may appear on the master browser&#146;s list for up to 45 minutes.
+</P>
+<p>Remember that not seeing something on the browser isn&#146;t a big deal. If you know the Universal Naming Convention for the resource&#151;the name like <tt>\\markspc\c</TT>&#151;then you can type in that value and you&#146;ll get connected with no trouble even if the browsers are all confused.</P>
+<p>Let&#146;s look in a bit more detail at how the browse service works. It may take up to 51 minutes for the browser to notice that a resource has disappeared&#151;the browser may erroneously report that something is available when it is not. What causes the delay?</P>
+<p>When a server (the computer offering the shared resource) is running, it announces itself to the master browser every 12 minutes. When the server stops, the master browser won&#146;t assume it has gone away for three announce periods, or 36 minutes.</P>
+<p>Thirty-six minutes seems like the longest time that you could ever wait for the Browse list to work properly and eradicate a no-longer-available resource. But what if your browser is a <i>backup browser</I>? The backup browser polls the master every 15 minutes. The longest possible time for a backup browser to query the master is 15 minutes later; thus the worst-case time for a server to disappear from the Browse list is 51 minutes.</P>
+<p><i>New</I> services, in contrast, are announced to the master browser immediately, and, again, the backup browsers may hear of them as long as 15 minutes later, so the longest that it should take for a new service to appear on the Browse list is 15 minutes.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>When we said that servers re-announce themselves to the master browser every 12 minutes, we simplified the truth a bit. The whole truth is that when a service first starts up, it announces itself more frequently. New servers announce at intervals of 1, 4, 8, and 12 minutes after they are started, and after they reach 12 minutes, they announce every 12 minutes afterward.<hr></FONT>
+</BLOCKQUOTE>
+<p>Another reason that you may not see a resource is that its server may not be using the same protocol as your workstation. You see, the services offered by the NetBEUI-using machines are maintained on a different Browse list than the services offered by the TCP/IP-using machines. Different master browsers exist for each transport protocol except Data Link Control (DLC).
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Browsing occurs on any installed protocol that supports the NetBIOS interface.<hr></FONT>
+</BLOCKQUOTE>
+<p>By the way, how does the network know to hold an election if someone just pulls the plug on the master browser and the master browser doesn&#146;t get a chance to force an election? The next time another computer asks for browse information and doesn&#146;t get a response, that computer forces an election.
+</P>
+<h3><a name="Heading37"></A><font color="#000077">Attaching to Network Resources</FONT></H3>
+<p>After your network software is installed, one of the easiest ways to test your network connections is to attach to network resources. Windows 2000 offers various ways to attach to network resources:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Login scripts
+<dd><b>&#149;</B>&nbsp;&nbsp;My Network Places browsing
+<dd><b>&#149;</B>&nbsp;&nbsp;Mapping a network drive
+<dd><b>&#149;</B>&nbsp;&nbsp;Direct connect via UNCs
+</DL>
+<h4 align="LEFT"><a name="Heading38"></A><font color="#000077">Using Login Scripts</FONT></H4>
+<p>The most common way in which you will attach to the network resources is through network rove mappings that the network administrator created in a login script. Often drive letters such as H and M are pointing to files on a file server on the network. These drive icons appear in My Computer. In Figure 24.18, you can see that an L drive is mapped to a share called Users on a server called Spiritwolf.
+</P>
+<p><a name="Fig20"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch24/images/24-20.jpg',630,430)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch24/images/24-20t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch24/images/24-20.jpg',630,430)"><font color="#000077"><b>Figure 24.18</B></FONT></A>&nbsp;&nbsp;My Computer contains drive icons.</P>
+<p>You will be able to distinguish between network drives and local hard drives by the icon associated with the drive. Network drives have the little T connector and cable beneath the icon. From time to time you may see a drive with a red <i>X</I> across it. This symbol indicates that you formerly had a drive mapped to this drive letter, but the system cannot find the network location at this time. This situation happens most frequently if you are accessing the network remotely via a modem. (See Chapter 26, &#147;Remote Access Services,&#148; for more information on remote access.)</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="774-777.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="780-785.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

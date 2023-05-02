@@ -1,0 +1,171 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=289-292//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Using the Interactive User Account</FONT></H4>
+<p>When a service runs as the interactive user, it runs in the security context of the currently logged-on user. Here are the advantages of using the interactive user account:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The service is somewhat easier to debug.
+<dd><b>&#149;</B>&nbsp;&nbsp;You don&#146;t need to configure a special account for the service because the service will be run under an existing user account.
+</DL>
+<p>Here are the disadvantages of configuring a service to run as the interactive user:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The service will terminate when the interactive user logs off. Typically, a service is meant to run between user sessions, so this is a major drawback.
+<dd><b>&#149;</B>&nbsp;&nbsp;The service will have a variable set of user rights, depending on the interactive user. If the interactive user is an administrator, the service may have a large number of access rights. When the interactive user is a guest account, the permissions may differ.
+<dd><b>&#149;</B>&nbsp;&nbsp;Finally, the service can&#146;t be launched if there&#146;s no interactive user.
+</DL>
+<p>Just about the only time you&#146;ll ever configure a service to run as the interactive user is during development. After the service is complete, you&#146;ll want to select another account option.
+</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Using a Specific Account</FONT></H4>
+<p>The third option for your service is to run it as a specific account. This is the option used by services that require specific permissions.
+</P>
+<p>Here are the advantages of running a service in a specific dedicated account:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The system administrator can control the service by adjusting its privileges.
+<dd><b>&#149;</B>&nbsp;&nbsp;The service can easily be allowed access to domain resources, such as other computers, without opening a security hole as is needed with the local system account.
+</DL>
+<p>This is the preferred method to use when developing a service meant for distribution in the enterprise. The only disadvantage of using a dedicated account for a service is that it requires a small amount of administration. However, in return, the service can participate fully in the Windows 2000 security model.
+</P>
+<h3><a name="Heading10"></A><font color="#000077">Programming a Windows 2000 Service</FONT></H3>
+<p>As discussed earlier, the service interacts with the Service Control Manager throughout its lifetime. The service is launched by the Service Control Manager, and it must keep the Service Control Manager informed whenever its status changes. This interaction is not difficult, but it is different from most Windows applications you may be accustomed to writing.
+</P>
+<p>For example, the Service Control Manager must be notified in the following situations:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When the service is in the process of being started or stopped.
+<dd><b>&#149;</B>&nbsp;&nbsp;When the service reaches a running state.
+<dd><b>&#149;</B>&nbsp;&nbsp;When the service is paused.
+<dd><b>&#149;</B>&nbsp;&nbsp;When the service stops.
+</DL>
+<p>In addition, you must register the service and its configuration information into the Service Control Manager&#146;s database so that the Service Control Manager can launch the service. The details of registering a service are discussed in Chapter 10.
+</P>
+<p>As you&#146;ll see in the following sections, a series of steps must be followed when you&#146;re running your service; otherwise, you&#146;ll find yourself fighting the operating system rather than working with it.</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Updating the Service Control Manager with the Service Status</FONT></H4>
+<p>As discussed earlier, the Service Control Manager must be kept up-to-date with the status of the service. At a minimum, the Service Control Manager must be updated when the status changes; in addition, the Service Control Manager should be updated at regular intervals during transitions that take a long time, such as starting or stopping the service.
+</P>
+<p>The service notifies the Service Control Manager of its state by calling the <small>SetServiceStatus</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+SetServiceStatus(hStatus, &ampssStatus);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetServiceStatus</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>A SERVICE_STATUS_HANDLE</SMALL>, which is returned from a successful call to <small>RegisterServiceCtrlHandler</SMALL> or <small>RegisterServiceCtrlHandlerEx</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SERVICE_STATUS</SMALL> structure
+</DL>
+<p>The <small>SERVICE_STATUS</SMALL> structure is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+typedef struct _SERVICE_STATUS {
+    DWORD dwServiceType;
+    DWORD dwCurrentState;
+    DWORD dwControlsAccepted;
+    DWORD dwWin32ExitCode;
+    DWORD dwServiceSpecificExitCode;
+    DWORD dwCheckPoint;
+    DWORD dwWaitHint;
+} SERVICE_STATUS, *LPSERVICE_STATUS;
+</PRE>
+<!-- END CODE //-->
+<p>Each member variable in the <small>SERVICE_STATUS</SMALL> structure is used to provide a different type of feedback about the service&#146;s state to the Service Control Manager:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwServiceType</SMALL> specifies the type of the service. (Possible values for the service type are provided later.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwCurrentState</SMALL> is the current state of the service. This value is set to indicate whether the service is running, stopped, paused, or another state. (Possible values are listed later in this section.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwControlsAccepted</SMALL> indicates which control message will be accepted by the service. It&#146;s interesting that this value is not set when the service is registered with the Service Control Manager&#151;this makes it possible for you to be very flexible with your service. For example, you can update this value depending on the state or capabilities of the hardware your service controls. (Possible values for this member variable are listed later in this section.)
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwWin32ExitCode</SMALL> is used to notify the Service Control Manager that an error has occurred while starting or stopping the service. This member variable should contain a Win32 error code such as a value retrieved using the <small>GetLastError</SMALL> function. If you want to return an error code that&#146;s unique to the service, set this member variable to <small>ERROR_SERVICE_SPECIFIC_ERROR</SMALL> and place the error value in <small>dwServiceSpecificExitCode</SMALL>. If no error has occurred, this variable must be set to <small>NO_ERROR</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwServiceSpecificExitCode</SMALL> is ignored unless <small>dwWin32ExitCode</SMALL> is set to <small>ERROR_SERVICE_SPECIFIC_ERROR</SMALL>. This member variable is set to a service-specific error value that&#146;s returned to the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwCheckPoint</SMALL> is a number that&#146;s incremented as the service is being started, stopped, paused, or restarted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dwWaitHint</SMALL> indicates the amount of time, in milliseconds, the Service Control Manager should expect to wait for the next status update. If this time passes with no update from the service, the Service Control Manager marks the service as failed.
+</DL>
+<p>The <small>dwServiceType</SMALL> member variable contains the service&#146;s type; it can be either <small>SERVICE_WIN32_OWN_PROCESS</SMALL> if the service runs in its own process or <small>SERVICE_WIN32_SHARE_PROCESS</SMALL> if the service runs in a process with other services. There are also other values used for device drivers, but these are the only values used for services. As discussed earlier, if you want your service to be able to communicate directly with the interactive user, you must combine one of the two service types with <small>SERVICE_INTERACTIVE_PROCESS</SMALL>.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

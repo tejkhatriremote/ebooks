@@ -1,0 +1,834 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 24 -- T</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch23.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch23/ch23.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch25.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch25/ch25.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">24</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">Security Concepts</FONT></H1>
+</CENTER>
+<P>On a quiet fall evening not so long ago, the Internet was forever changed. That
+change took only minutes. If you have been reading this book from cover to cover,
+you will remember the date in question. However, for readers absorbing this book
+selectively, I will reiterate. That date was November 2, 1988. Shortly before dusk,
+a worm was unleashed on the network. Within hours, this worm incapacitated many machines
+(reportedly over 1,000 of them) and interrupted or otherwise degraded the performance
+of thousands more. (Many of these machines or networks were key research centers
+engaged in defense-related study.) At the exact moment that the worm was released,
+the history and future of the Internet changed forever. No one knew it at the time,
+because it would take a full year in the aftermath to assess what an enormous impact
+the incident had. But be assured of this: The change occurred in the same instant
+that Morris released his code to the Network.</P>
+<P>Since that time, security has gained almost a cult status. Individuals I know
+who have never had a clue about the subject are suddenly diving for security information.
+You hear it in restaurants all the time. As you are eating your lunch, the buzz floats
+overhead: firewall, router, packet filtering, e-mail bombing, hackers, crackers...the
+list is long indeed. (This book would never have been written if the climate weren't
+just so.) By now, most people know that the Internet is insecure, but few know exactly
+why. Not surprisingly, those very same people are concerned, because most of them
+intend to implement some form of commerce on the Internet. It is within this climate
+that Internet Voodoo has arisen, conjured by marketeers from the dark chaos that
+looms over the Net and its commercial future.</P>
+<P>Marketing folks capitalize on ignorance--that's a fact. I know resellers today
+who sell 8MB SIMMs for $180 and get away with it. However, while technical consultants
+do often overcharge their customers, there is probably no area where this activity
+is more prominent than in the security field. This should be no surprise; security
+is an obscure subject. Customers are not in a position to argue about prices, techniques,
+and so forth because they know nothing about the subject. This is the current climate,
+which offers unscrupulous individuals a chance to rake in the dough. (And they are,
+at an alarming rate.)</P>
+<P>The purpose of this chapter, then, is to offer advice for individuals and small
+businesses. I cannot guarantee that this is the best advice, but I can guarantee
+that it is from experience. Naturally, everyone's experience is different, but I
+believe that I am reasonably qualified to offer some insight into the subject. That
+said, let's begin.
+<H2><FONT COLOR="#000077"><B>How Security Concepts Can Influence Your Choices</B></FONT></H2>
+<P>First, I want to quickly examine security concepts and how they will influence
+your choices of a security consultant. To begin with, know this: &quot;There is nothing
+new under the sun.&quot; This quote is a brilliant statement made by William Shakespeare.
+It is brilliant because, in literature that preceded his own, for thousands of years,
+the statement had already been made. Therefore, he used a redundancy to articulate
+redundancy. How does this relate to Internet security? Read on.</P>
+<P>The truth is, TCP/IP has been around for a long, long time. For example, as I
+reported in Chapter 18, &quot;Novell,&quot; NetWare had fully functional TCP/IP built
+into its operating system back in 1991. UNIX has had it for far longer. So there
+is no real problem here. The knowledge is available out there in the void.</P>
+<P>The greater majority of security breaches stem from human error. (That is because
+crackers with limited knowledge can easily cut deep into systems that are erroneously
+configured. On more carefully configured networks, 90 percent of these self-proclaimed
+&quot;super crackers&quot; couldn't get the time of day from their target.)</P>
+<P>These human errors generally occur from lack of experience. The techniques to
+protect an Internet server have not significantly changed over the past few years.
+If a system administrator or security administrator fails to catch this or that hole,
+he needs to bone up on his advisories.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>I will readily admit that some techniques
+	have been improved, largely by the academic community and not so much by commercial
+	vendors. Commercial vendors are usually slightly behind the academic communities,
+	perhaps by a few months or so. Examples of this might include the development of
+	automated tools to screen your system for known security holes. Many of these are
+	written by students or by freelance software developers. These tools certainly streamline
+	the process of checking for holes, but the holes are commonly known to any security
+	administrator worth his salt. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>So, before you haul off and spend thousands (or even tens of thousands) of dollars
+on a security consult, there are some things that you should consider. Here are a
+couple test questions:
+
+<UL>
+	<LI>Suppose you establish a sacrificial machine, a Macintosh running WebStar and
+	no other TCP/IP servers. The machine is isolated from your network, it has no valuable
+	data on it, and basically, it has no inroad to your internal network. Your network
+	does not run TCP/IP, and none of the publicly accessible nodes perform IP forwarding
+	in any case. Would you pay a security consultant to scan that Web server box? (Instead
+	of either having your system administrator scan it or not scan it at all.) If so,
+	why?<BR>
+	<BR>
+	
+	<LI>You want to co-locate a box at an ISP. You normally work with Microsoft Windows
+	NT (and so does your internal system administrator). Nevertheless, the ISP is trying
+	to convince you to use a SPARC 20 and is willing to sell you one (or lease you one)
+	for fair market value. Do you do it? If so, why?
+</UL>
+
+<P>The correct answer to both of these questions is &quot;probably not.&quot; Here
+are the reasons why:
+
+<UL>
+	<LI>Scenario 1: What would the consultant be scanning for? Because the machine is
+	running no other services but HTTP over WebStar, most modern scanners would render
+	a laundry list of &quot;connection refused&quot; and &quot;server not reachable&quot;
+	messages. In other words, the scan would be a complete waste of time and money because
+	no services exist on the machine. Scanners like those discussed in Chapter 9, &quot;Scanners,&quot;
+	are used only to attack full-fledged TCP/IP implementations, where services (including
+	NFS and other protocols) are either available and misconfigured or available and
+	not configured at all. The question is, would you or your internal system administrator
+	know this? If not, you might get taken.<BR>
+	<BR>
+	
+	<LI>Scenario 2: Why would you agree to place your Web server in the hands of a company
+	on which you will remain totally dependent? If neither you nor your staff knows UNIX,
+	insist on an NT box. If the provider balks, find another. Commonly, the ISP staff
+	might forward the explanation that they feel UNIX is more secure and they therefore
+	cannot tolerate an NT box on their Ethernet. If you agree to their terms, you will
+	either be dependent upon them for all maintenance and programming or you will have
+	to pay good money to train your system administrator in UNIX.
+</UL>
+
+<P>There are literally hundreds of such scenarios. In each, there is an opportunity
+for you to get hustled. A security consult is not to be taken lightly. Neither is
+the management of your co-located box. Remember that your Web server (wherever it
+might be located) is something that can be viewed (and attacked) by the entire world.</P>
+<P>Before you can make an educated choice of a security consultant, you need to be
+familiar with basic security principles. That's what this chapter is really all about.
+<H2><FONT COLOR="#000077"><B>About Remote Security Consults</B></FONT></H2>
+<P>There is a new phenomenon emerging on the Internet. Security consults are now
+being done (although perhaps not in great number) from remote locations. This is
+where someone in the same city (or another city) tests, defines, and ultimately implements
+your security from the outside. In other words, it is done from a location other
+than your offices or home. I have a couple points to make regarding this type of
+procedure:
+
+<UL>
+	<LI>Scan or penetration testing is commonly done from a remote location. The purpose
+	of penetration testing (at the end of the day) is to simulate a real-time attack
+	from the void. There is no replacement for doing this from a remote location. In
+	this limited area of concern, at least, analysis from a remote location is warranted
+	and reasonable.<BR>
+	<BR>
+	
+	<LI>All other forms of security testing and implementation should be done onsite.
+	Implementing security from a remote location is not a secure method and may result
+	in security breaches. As much as the idea may seem attractive to you, I would strongly
+	advise against having any firm or individual handle your security from a remote location.
+	If your network is large and is meant to be as secure as possible, even the existence
+	of a privileged user who can gain remote access to do maintenance work is a security
+	risk. (For example, why would one cut a hole through a firewall just for the convenience
+	of off-site work?)
+</UL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>As an example, an individual on
+	the East Coast recently posted an article in Usenet requesting bids on a security
+	consult. I contacted that party to discuss the matter, mainly out of curiosity. Within
+	three hours, the party forwarded to me his topology, identifying which machines had
+	firewalls running, what machines were running IP forwarding, and so forth.</P>
+	<P>Granted, this individual was simply looking for bids, but he forwarded this type
+	of sensitive information to me, an individual he had neither seen nor heard of before.
+	Moreover, if he had done more research, he would have determined that my real name
+	was unobtainable from either my e-mail address, my Web page, or even my provider.
+	Were it not for the fact that I was on great terms with my then-current provider,
+	he [the provider] would not even know my name. So, the person on the East Coast forwarded
+	extremely sensitive information to an unknown source--information that could have
+	resulted in the compromise of his network. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>So, point one is this: Other than penetration testing, all active, hands-on security
+procedures should be undertaken at your place of business or wherever the network
+is located. Do not forward information to a potential consultant over the Internet,
+do not hire someone sight unseen, and finally, do not contract a consultant whose
+expertise cannot be in some way verified.
+<H2><FONT COLOR="#000077"><B>Security Through Obscurity</B></FONT></H2>
+<P>If a security consultant explains to you (or your system administration staff)
+that one or two holes do exist but that it is extremely unlikely that they can be
+exploited, carefully consider his explanation. Interrogate him as to what &quot;extremely
+unlikely&quot; means and why he thinks the contingency is just so.</P>
+<P>If his explanation is that the level of technical expertise required is highly
+advanced, this is still not a valid reason to let it slide, particularly if there
+are currently no known solutions to the problem. If there are options, take them.
+Never assume (or allow a consultant to assume) that because a hole is obscure or
+difficult to exploit that it is okay to allow that hole to exist.</P>
+<P>Only several months ago, it was theorized that a Java applet could not access
+a client's hard disk drive. That has since been proven to be false. The argument
+initially supporting the &quot;impossibility&quot; of the task was this: The programming
+skill required was not typically a level attained by most crackers. That was patently
+incorrect. Crackers spend many hours trying to determine new holes (or new ways of
+implementing old ones). With the introduction of new technologies, such as Java and
+ActiveX, there is no telling how far a cracker could take a certain technique.</P>
+<P>Security through obscurity was once a sound philosophy. Many years ago, when the
+average computer user had little knowledge of his own operating system (let alone
+knowledge of multiple operating systems), the security-through-obscurity approach
+tended to work out. Things were more or less managed on a need-to-know basis. The
+problem with security through obscurity, however, becomes more obvious on closer
+examination. It breaks down to matters of trust.</P>
+<P>In the old days, when security through obscurity was practiced religiously, it
+required that certain users know information about the system; for example, where
+passwords were located and what special characters had to be typed at the prompt.
+It was common, actually, for a machine, upon connection, to issue a rather cryptic
+prompt. (Perhaps this can be likened to the prompt one might have received as a Delphi
+user just a few years ago.) This prompt was expecting a series of commands, including
+the carrier service, the terminal emulation, and so on. Until these variables were
+entered correctly (with some valid response, of which there were many), nothing would
+happen. For example, if the wrong string was entered, a simple <TT>?</TT> would appear.
+A hacker coming across such a system would naturally be intrigued, but he could spend
+many hours (if not weeks) typing in commands that would fail. (Although the command
+<TT>HELP</TT> seems to be a pretty universal way to get information on almost any
+system.)</P>
+<P>Things changed when more experienced users began distributing information about
+systems. As more and more information leaked out, more sophisticated methods of breaching
+security were developed. For example, it was shortly after the first release of internal
+procedures in CBI (the Equifax credit-reporting system) that commercial-grade software
+packages were developed to facilitate a breaking and entering into that famous computerized
+consumer credit bureau. These efforts finally culminated with the introduction of
+a tool called CBIHACK that automated most of the effort behind cracking Equifax.</P>
+<P>Today, it is common for users to know several operating systems in at least a
+fleeting way. More importantly, however, information about systems security has been
+so widely disseminated that at this stage, even those starting their career in cracking
+know where password files are located, how authentication is accomplished, and so
+forth. As such, security through obscurity is now no longer available as a valid
+stance, nor should it be, especially for one insidious element of it--the fact that
+for it to work at all, humans must be trusted with information. For example, even
+when this philosophy had some value, one or more individuals with an instant need-to-know
+might later become liabilities. Disgruntled employees are historically well known
+to be in this category. As insiders, they would typically know things about a system
+(procedures, logins, passwords, and so forth). That knowledge made the security inherently
+flawed from the start.</P>
+<P>It is for these reasons that many authentication procedures are now automated.
+In automated authentication procedures, the human being plays no part. Unfortunately,
+however, as you will learn in Chapter 28, &quot;Spoofing Attacks,&quot; even these
+automated procedures are now suspect.</P>
+<P>In any event, view with suspicion any proposal that a security hole (small though
+it may be) should be left alone.
+<H2><FONT COLOR="#000077"><B>Choosing a Consultant</B></FONT></H2>
+<P>There are many considerations in choosing a security consultant. First, it is
+not necessary that you contract one of the Big Ten firms (for example, Coopers and
+Lybrand) to secure your network. If you are a small business, this is likely cost
+prohibitive. Also, it is overkill. These firms typically take big contracts for networks
+that harbor hundreds (or in WANs, thousands) of machines.</P>
+<P>If you are a small firm and cannot afford to invest a lot of money in security,
+you may have to choose more carefully. However, your consultant should meet at least
+all the following requirements:
+
+<UL>
+	<LI>He should be local.<BR>
+	<BR>
+	
+	<LI>He should have at least four years experience as a system administrator (or apprentice
+	administrator) on your platform. (If some of that experience was in a university,
+	that is just fine.)<BR>
+	<BR>
+	
+	<LI>He should have a solid reputation.<BR>
+	<BR>
+	
+	<LI>Generally, he should not have a criminal record.<BR>
+	<BR>
+	
+	<LI>He should have verifiable references.
+</UL>
+
+<H3><FONT COLOR="#000077"><B>Why Local?</B></FONT></H3>
+<P>Your consultant should be local because you will need to have him available on
+a regular basis. Also, as I've noted, remote administration of a network is just
+not a wise thing.
+<H3><FONT COLOR="#000077"><B>Experience</B></FONT></H3>
+<P>You notice that I say that university experience will suffice, so long as it does
+not comprise the totality of the consultant's security education. Why? Because the
+academic community is probably the closest to the cutting edge of security. If you
+thumb through this book and examine the references, you will notice that the majority
+of serious security papers were authored by those in the academic community. In fact,
+even many of the so-called commercial white papers cited within this book were also
+authored by students--students who graduated and started security firms.
+<H3><FONT COLOR="#000077"><B>Reputation</B></FONT></H3>
+<P>I suggest that your consultant should have a solid reputation, but I want to qualify
+that. There are two points to be made here, one of which I made at the beginning
+of this book. Just because former clients of a consultant have not experienced security
+breaches does not necessarily mean that the consultant's reputation is solid. As
+I have said, many so-called security spe- cialists conduct their &quot;evaluation&quot;
+knowing that they have left the system vulnerable. In this scenario, the individual
+knows a little something about security, but just enough to leave his clients in
+a vulnerable situation with a false sense of security. Technically, a totally unprotected
+network could survive unharmed for months on the Internet so long as crackers don't
+stumble across it.</P>
+<P>It would be good if you could verify that your potential consultant had been involved
+in monitoring and perhaps plugging an actual breach. Good examples are situations
+where he may have been involved in an investigation of a criminal trespass or other
+network violation.</P>
+<P>Equally, past experience working for an ISP is always a plus.
+<H3><FONT COLOR="#000077"><B>Criminal Record</B></FONT></H3>
+<P>Background checks are intrusive. I realize that. However, consider what you are
+undertaking. Most smaller businesses today would be paralyzed if their data were
+suddenly corrupted or unusable. If yours is such a business, and your potential consultant
+is not an established firm, I would seriously consider a background check. However,
+the existence of a criminal record (especially if that record is for computer-related
+crimes) does not necessarily preclude the individual as a candidate. Much depends
+upon the time that has passed since the conviction, the circumstances of the case,
+and so forth. For example, I would hire Randall Schwartz without thinking twice.
+His technical skills are well known.
+<H2><FONT COLOR="#000077"><B>Your Network</B></FONT></H2>
+<P>There are several ways you can view security, but I prefer the simple approach
+and that approach is this: Your network is your home. Consider that for a moment.
+Try to visualize your network as an extension of yourself. I realize that this sounds
+a bit esoteric, but it really isn't. You can more easily grasp what I am driving
+at by considering this: What type of data is on your network? I will wager that I
+can tell you what's there. Yes; I will bet that only the most unimportant things
+are on your network--things like your financial information, your identity, your
+thoughts, your feelings, your personal reflections, your business...your life.</P>
+<P>Would you let the world walk through the front door of your home? Would you let
+complete strangers rifle through your drawers, looking for personal documents or
+financial statements? Of course not. Then why would you let someone do it over a
+network? The answer is: You wouldn't. The problem is, computers seem relatively benign,
+so benign that we may forget how powerful their technology really is.</P>
+<P>Software vendors want us to rush to the Internet. The more we use the network,
+the more software they can sell. In this marketing frenzy, they attempt to minimize
+some fairly serious problems out there. The truth is, the Internet is not secure
+and will continue to exist in this state of insecurity for some time to come. This
+is especially so because many of the networking products used in the future will
+be based on the Microsoft platform.</P>
+<P>Admittedly, Microsoft makes some of the finest software in the world. Security,
+however, has not been its particular area of expertise. Its Internet operating system
+is going to be NT--that's a fact. That is also where the majority of Microsoft's
+security efforts are being concentrated, and it has made some significant advances.
+However, in the more than 20 years that UNIX has been in existence, it has never
+been completely secure. This is an important point: UNIX is a system that was designed--almost
+from its beginning--as an operating system for use on the Internet. It was what the
+Defense Department chose as the platform to develop ARPAnet. The people who designed
+it are among the most talented (and technically minded) software engineers on the
+planet. And even after all this, UNIX is not secure. We should expect, then, that
+Windows NT will take some time to get the bugs out.</P>
+<P>So, in closing on this subject, I relate this: Your network is your home. It is
+worthy of protection, and that protection costs money. Which brings us to the next
+issue...
+<H2><FONT COLOR="#000077"><B>Cost</B></FONT></H2>
+<P>How much should security cost? It depends on what type of network you have. If
+your network is large and heterogeneous, those conditions are going to increase the
+cost. It is important that you understand why, because when you go to the table to
+negotiate a security package, you need to know what you are talking about.
+<H3><FONT COLOR="#000077"><B>The Homogenous Network</B></FONT></H3>
+<P>If you currently have a homogenous network, you should see a break in cost. Here
+is why: Each operating system implements TCP/IP just slightly differently than the
+rest, at least at the application level. Each operating system also has one or more
+additional or proprietary protocols that aren't available on other systems (or that
+can be available, but only with special software). For example, Windows 95 uses the
+SMB protocol, which is not widely available in default installations of every operating
+system. Certainly, there are clients available; one of them is SAMBA, which runs
+on Linux and perhaps on other operating systems. Because each operating system is
+different but all machines running the same operating system are basically the same,
+a security consult of a homogenous network is less intensive than one that harbors
+many different platforms. It should therefore cost less.</P>
+<P>While this is true, it does not mean that you can get a homogenous network secured
+for next to nothing. In most instances, it is not possible for security attributes
+to simply be cloned or replicated on all workstations within the network. Various
+security issues may develop. Some of those involve topology, as I have explained
+in other chapters and will again discuss here.</P>
+<P>We know that a network segment is a closed area; almost like a network within
+itself. We also know that spoofing beyond that network segment is almost impossible.
+(Almost.) The more network segments your network is divided up into, the more secure
+your network will be. (Ideally, each machine would be hardwired to a router. This
+would entirely eliminate the possibility of IP spoofing, but it is obviously cost
+prohibitive.) Where you make those divisions will depend upon a close assessment
+of risk, which will be determined between your technical staff and the consultant.
+For each segment, you will incur further cost, not only for the consultant's services
+but for the hardware (and possibly for software).
+<H3><FONT COLOR="#000077"><B>The Heterogeneous Network</B></FONT></H3>
+<P>If you have a network comprised of many different platforms, the problem of securing
+it becomes more complex. Here's an example, again using SAMBA as a focal point. In
+certain situations, passwords are revealed when using SAMBA in traffic between UNIX
+and Windows 95 boxes. The more protocols you have running and the more third-party
+software from different vendors (on different platforms) you have, the more complicated
+your security assessment will be.</P>
+<P>Certainly, even from a practical standpoint, there are immediate problems. First,
+due largely to the division between the PC and workstation worlds, the security consultants
+you contract may be unfamiliar with one of more of the platforms within your network,
+and they may need to call outside help for them. Also, and this is no small consideration,
+your consultants may ultimately be forced to provide at least a small portion of
+proprietary code: their own. If this subject crops up, it should be discussed thoroughly.
+There is a good chance that you can save at least some cost by having these consultants
+tie together existing security packages, using their own code as the glue. This is
+not nearly as precarious as it sounds. It may involve nothing more than redirecting
+the output of log files or other, ongoing processes to plain text (or some other
+form suitable for scanning by a program on another platform).</P>
+<P>The problem with hiring toolsmiths of this sort is that you may find your security
+dependent upon them. If your local system administrator is not familiar with the
+code they used, you may have to rely on the consultants to come for second and third
+visits. To guard against this, you should ensure good communications between your
+personnel and the security team. This is a bit harder than it seems.</P>
+<P>First, you have to recognize at least this: Your system administrator is God on
+the network. That network is his domain, and he probably takes exceptional pride
+in maintaining it. (I have seen some extraordinary things done by system administrators--truly
+commercial-grade applications running, custom interfaces, and so forth.) When an
+outside team comes to examine your system administrator's backyard, no matter what
+they say, the experience feels a little intrusive. Diplomacy is really an important
+factor. Remember: The consultants will leave, but you have to live with your system
+administrator on a daily basis.
+<H2><FONT COLOR="#000077"><B>The General Process</B></FONT></H2>
+<P>Before you contact any firm and have them come to your offices (or home, I suppose),
+you need to gather some information on a few things, including the following:
+
+<UL>
+	<LI>Hardware. This should identify the make, manufacturer, model, and series of each
+	workstation, hub, router, network adapter, and so forth. Ideally, you should also
+	have a list of how much memory is in each machine, the capacity of the disk drives,
+	and the specs of your Ethernet. (For example, 10Base-T or whatever.)<BR>
+	<BR>
+	
+	<LI>Software. All types of network software that you intend to run, and their version
+	numbers.<BR>
+	<BR>
+	
+	<LI>Protocols. The protocols you are now running (or plan to run in the future).
+	Try to prioritize these. For example, if there is a single machine that simply must
+	run NFS, highlight that. Also, report the type of connectivity that you currently
+	have.<BR>
+	<BR>
+	
+	<LI>Scope. The maximum number of workstations you plan to run, where they are located,
+	where the network segments exist, where you plan to expand, and any curiosities that
+	might be relevant. (For example, that you have older, legacy Novell NetWare servers
+	running in one office. If these are sufficiently old, they may traffic unencrypted
+	passwords. Your consultant will need to know that. Don't let something like that
+	crop up later.)
+</UL>
+
+<P>Next, you will need to gather a little model of your company's trust system. That
+is, you will need to have your system administrator devise some easy listing method
+to peruse privileges. This will identify what each user or workstation requires in
+the way of privileges. It might be worth outputting this not only in text format,
+but also in some graphical representation. On certain platforms, this type of software
+is available, but it is quite expensive. It is probably better (for small firms trying
+to save money) if this is done using some technical drawing package (such as Visio).</P>
+<P>This information should be bound together. (There are copying services that will
+bind such a folder, such as Kinko's Copies, or perhaps you have in-house facilities
+that can do this.) Each section should be separated by a tab that identifies that
+section. Contained within this folder should also be the following items:
+
+<UL>
+	<LI>A statement from the system administrator about the security of the system. This
+	should include any special considerations, including whether special software has
+	been written, what type of security utilities are now being used, which ones could
+	not be used, and why.<BR>
+	<BR>
+	
+	<LI>A statement of what type of security policies have been enforced within your
+	network, a history of any security breaches that you may have had, and so forth.
+</UL>
+
+<P>This compilation of information should be handed over to the security consultants
+only after you have verified their reputation, because once it is in their hands,
+they will know more about your network than your system administrator did just one
+week before. However, it is important to collect the information, and here is why:
+If you don't do it, the security consulting firm will. That will cost a lot of money.
+Moreover, it will entail them having to disrupt daily activities even further than
+they already have to while implementing solutions.</P>
+<P>The next step may or may not be within your budget, but if it is, I would strongly
+recommend it. Locate two separate security firms known to have good reputations.
+(Even if they are in a different state; it doesn't matter.) Ask those firms what
+it would cost to examine the information and make a recommendation, a kind of mock
+bid. Included within their summaries should be a report of how such a job would be
+implemented if they were doing it. This will not only serve as an index for what
+the probable cost and effort would be, but also may alert you or your system administrator
+to special issues, issues particular to your precise configuration. That having been
+done, you can begin your search for a good, local source.
+<H2><FONT COLOR="#000077"><B>Degrees of Security</B></FONT></H2>
+<P>There are different ways that you can implement security. There is no law saying
+that you have to connect your entire network to the Internet. (Although I see a fair
+number of businesses doing it.) One simple way to reduce your cost is to create only
+a very limited segment that has connectivity. If your primary concern is receiving
+customer feedback (and providing some promotional information), there really is no
+need to connect at all. Certainly, an ISP can host a page (or even co-locate a box)
+for you.</P>
+<P>However, if you are determined to provide dedicated access, with a server under
+your local control, there are some things you can do to greatly increase security.
+First, if the only box you are placing out on the freeway is a Web server (and you
+are concerned about that server being cracked), you can use read-only media. This
+procedure is admittedly more difficult to implement than a live file system (one
+that is read/write), but the gains you realize in security are immense. Under such
+a scenario, even if a cracker gains root access, there is very little that he can
+do. The downside to this, of course, is that dynamic pages cannot be built on-the-fly,
+but if you are providing an auto-quote generator or some similar facility (perhaps
+even interfacing with a database), it can still be done.</P>
+<P>Really, the key is to enclose all CGI into a restricted area. The CGI programs
+read the data on the read-only media and generate a resulting page. This is a very
+secure method of providing technical support, product lists, and prices to clients
+in the void. Essentially, so long as you back up your CGI, you could have that identical
+machine up in one hour or less, even if crackers did manage to crash it. This type
+of arrangement is good for those who are only providing information. It is poor for
+(and inapplicable to) those seeking to accept information. If you are accepting information,
+this might involve a combination of secure HTML packages or protocols, where the
+information received is written to removable, write-one-time media.</P>
+<P>The sacrificial host is really the safest choice. This is a host that is expressly
+out in the open and that you expect to be cracked. Certainly, this is far preferable
+to having any portion of your internal network connected to the Internet. However,
+if you also want your local employees or users to be able to access the Net, this
+is entirely impractical. It can, however, be implemented where you do not expect
+much access from the inside out, particularly in commerce situations.</P>
+<P>A commerce situation is one where you are accepting credit card numbers over a
+browser interface. Be very careful about how you implement such schemes. Here is
+why: There are various paths you can take and some of them represent a greater risk
+than others. Typically, you want to avoid (at any reasonable cost) storing your customers'
+credit card numbers on any server connected to the network. (You have already seen
+the controversy that developed after it was learned that Kevin Mitnik had acquired
+credit card numbers--reportedly 20,000-- from the drives of Netcom.)</P>
+<P>Generally, where you are accepting credit card numbers over the Internet, you
+will also be clearing them over the network. This typically requires the assistance
+of an outside service. There are various ways that this is implemented, although
+two techniques dominate that market.
+<H3><FONT COLOR="#000077"><B>Local Saves</B></FONT></H3>
+<P>In a local save scenario, the information is piped through some secure, encrypted
+HTTP session (SHTTP, for example). Usually, this is done through a form written specifically
+for that purpose. The form outputs the information to a local disk somewhere, from
+which it can later be retrieved for verification purposes. Along that journey from
+the input form to the disk, the numbers may be sent through several processes. One
+is where the numbers are examined against a common algorithm that determines (first
+and foremost) whether the submitted credit card number is even a real one. By <I>real</I>,
+I mean that it is a potentially real one. This is one somewhat flawed version of
+verification. It basically relies on the same algorithms that are used to generate
+card numbers to begin with. If the submitted number fails to result in a number that
+could have been generated by the algorithms, the card number is a dreamt-up number,
+something that someone randomly guessed. There are two flaws with this type of verification,
+one in the basic concept and the other in reference to security.</P>
+<P>The first problem is this: The algorithms used are now widely disseminated. That
+is, there are credit card number generators available across the Internet that will
+resolve numbers to either a state of authenticity or no authenticity. Kids used them
+for years to circumvent the security of Internet service providers.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>One very good example is utilities
+	that exist for unlawfully accessing AOL. These utilities have, embedded within their
+	design, automatic generators that produce a laundry list of card numbers that will
+	be interpreted as valid. When these programs first emerged, the credit card number
+	generators were primitive and available as support utilities. As using generators
+	of this variety became more common, however, these utilities were incorporated into
+	the code of the same application performing the dial-up and sign-on. The utilities
+	would pop up a window list from which the cracker could choose a number. This number
+	would be sent (usually by the <TT>SendKeys</TT> function in VB) to the registration
+	form of the provider. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>So, at the start, individuals could come forward with at least <I>mathematically</I>
+sound numbers for submission. Thus, simple algorithm credit card validation subjects
+the accepting party to a significant amount of risk. For example, if this verification
+is used in the short run but the cards are later subjected to real verification,
+the interim period comprises the longest time during which the accepting party will
+lose goods or services as a result of a fraudulent charge. If this period is extended
+(and the temporary approval of such a credit card number grants the issuer access
+to ongoing services), then technically, the accepting party is losing money for every
+day that the credit card is not actually validated.</P>
+<P>Secondly, and perhaps more importantly, storing the numbers on a local drive could
+prove a fatal option. You are then relying upon the security of your server to protect
+the data of your clientele. This is not good. If the information is ultimately captured,
+intercepted, or otherwise obtained, potentially thousands (or even hundreds of thousands)
+of dollars might be at stake. If there is a subsequent investigation (which there
+usually is), it will ultimately come out that the seed source for the numbers was
+your hard disk drives. In other words, after the Secret Service (or other investigating
+party) has determined that all victims shared only one common denominator (using
+your service), you will have a problem.</P>
+<P>This is especially true if your system administrator fails to detect the breach
+and the breach is then an ongoing, chronic problem. There is a certain level at which
+this could raise legal liability for your company. This has not really been tested
+in the courts, but I feel certain that within the next few years, special legislation
+will be introduced that will address the problem. The unfortunate part of this is
+as follows: Such a case would rely heavily on expert testimony. Because this is a
+gray area (the idea of what &quot;negligent&quot; system administration is, if such
+a thing can exist), lawyers will be able to harangue ISPs and other Internet services
+into settling these cases, even if only in an effort to avoid sizable legal bills.
+By this, I mean that they could &quot;shake down&quot; the target by saying &quot;I
+will cost you $50,000.00 in legal bills. Is it worth the trouble to defend?&quot;
+If the target is a large firm, its counsel will laugh this off and proceed to bury
+the plaintiff's counsel in paperwork and technical jargon. However, if the target
+is a small firm (perhaps hiring a local defense firm that does not specialize in
+Internet law), a legal challenge could be enormously expensive and a drain on resources.
+If you have to choose, try to saddle some third party with the majority of the liability.
+In other words, don't store those numbers on your drives if you can help it.
+<H3><FONT COLOR="#000077"><B>Remote Saves via CGI</B></FONT></H3>
+<P>The second scenario may or may not be preferable. This is where you drop a secure
+HTML form into the structure of your Web site. (This form is provided by the credit
+card clearing service.) With this, you will likely also receive customized scripts
+that redirect the data submitted in that form to a remote server. That remote server
+fulfills one purpose only: clearing the numbers.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>There are various methods through
+	which the mechanics of this process are achieved. One is where the credit card clearing
+	company has proprietary software that attaches to a particular port. On both the
+	client and the server end, this port traffics the information (which is encrypted
+	before it leaves the client and decrypted after the arrival at the server). More
+	than likely, the remote server refuses connections on almost all other ports, or
+	the information is filtered through a pinhole in a firewall. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The advantages and disadvantages are diverse in this scenario. First, there is
+the obvious problem that the accepting party is resigned to traveling blind; that
+is, they will never have the credit card information within their possession. Because
+of this, disputed claims are a serious headache.</P>
+<P>Here's an example: A kid gets his parent's credit card number and charges up a
+storm. This information is validated by the remote server, with the accepting party
+storing no information. Later, the parent disputes the transaction, claiming that
+he never authorized such a charge. This is okay, and may happen periodically. However,
+obtaining records and then sorting out that dispute is both a logistical and legal
+problem. It is not quite as simple as disputing unauthorized charges on one's telephone
+bill. Because the party that cleared (and ultimately collected on) the charge is
+a third party (one that has no part in the exchange of goods or services), confusion
+can easily develop.</P>
+<P>Imagine now if you were such a victim. You contact the party that is the apparent
+recipient of the charge, only to find that the company has &quot;nothing to do with
+it.&quot; When consumers are confronted with this type of situation, they become
+less likely to do commerce over the Net. And while this is essentially no different
+than being confronted with unauthorized 900- number charges on your telephone bill,
+the average consumer will view the Internet with increasing suspicion. This is bad
+for Internet commerce generally. Despite that fact, however, this method is generally
+regarded as the most secure.
+<H2><FONT COLOR="#000077"><B>The Overall Picture of Net Commerce</B></FONT></H2>
+<P>Here is the challenge for Internet commerce consultants, another variable to figure
+in before creating a viable package. For example, one might be designing a &quot;total
+solution&quot; package involving co-location of a box, Web development, security,
+and credit card clearing. Making such a package can be a difficult task. Your choices
+must be carefully considered.</P>
+<P>Naturally, there is also the issue of cost. Most clearing companies take a piece
+of the action, which means that they charge a percentage for each charge cleared.
+Sometimes there are variations on this theme, but there are basically two scenarios.
+In the first, they charge a sizable sum for setup and request no further money from
+the client, instead reaping their percentage from the credit card companies at the
+other end. Another is where the initial cost is lower, but the client is charged
+a percentage on each transaction. Still another, although less common, is where the
+middleman company may take a smaller percentage from both sides, thereby distributing
+the load and making their pricing seem more competitive to both client and credit
+card company.</P>
+<P>There are many services you can contract, including both consultant firms and
+actual software and hardware solution vendors. Here are a few:
+
+<UL>
+	<LI>SecureCC. Secure transactions for the Web.
+	<P><A HREF="javascript:if(confirm('http://www.securecc.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.securecc.com/'" tppabs="http://www.securecc.com/"><TT>http://www.securecc.com/</TT></A><BR>
+	
+	<LI>All Merchants Merchant Service. Credit card, debit card merchants.
+	<P><A HREF="javascript:if(confirm('http://www.cyburban.com/~mmdelzio/first.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cyburban.com/%7Emmdelzio/first.htm'" tppabs="http://www.cyburban.com/%7Emmdelzio/first.htm"><TT>http://www.cyburban.com/~mmdelzio/first.htm</TT></A><BR>
+	
+	<LI>Luckman's. (Specifically, the Web Commander product has support for secure Internet
+	commerce.)
+	<P><A HREF="javascript:if(confirm('http://www.luckman.com/wc/webcom.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.luckman.com/wc/webcom.html'" tppabs="http://www.luckman.com/wc/webcom.html"><TT>http://www.luckman.com/wc/webcom.html</TT></A><BR>
+	
+	<LI>Redhead Corporation.
+	<P><A HREF="javascript:if(confirm('http://www.redhead.com/html/makesale.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.redhead.com/html/makesale.html'" tppabs="http://www.redhead.com/html/makesale.html"><TT>http://www.redhead.com/html/makesale.html</TT></A><BR>
+	
+	<LI>Netscape Communications Corporation.
+	<P><A HREF="javascript:if(confirm('http://www.netscape.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.netscape.com/'" tppabs="http://www.netscape.com/"><TT>http://www.netscape.com/</TT></A><BR>
+	
+	<LI>Process Software Corporation.
+	<P><A HREF="javascript:if(confirm('http://www.process.com/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.process.com/'" tppabs="http://www.process.com/"><TT>http://www.process.com/</TT></A><BR>
+	
+	<LI>Alpha Base Systems, Inc. EZ-Commerce and EZ-ID system.
+	<P><A HREF="javascript:if(confirm('http://alphabase.com/ezid/nf/com_intro.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://alphabase.com/ezid/nf/com_intro.html'" tppabs="http://alphabase.com/ezid/nf/com_intro.html"><TT>http://alphabase.com/ezid/nf/com_intro.html</TT></A><BR>
+	
+	<LI>MTI Advanced Marketing.
+	<P><A HREF="javascript:if(confirm('http://www.mticentral.com/Commerce/  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.mticentral.com/Commerce/'" tppabs="http://www.mticentral.com/Commerce/"><TT>http://www.mticentral.com/Commerce/</TT></A><BR>
+	
+	<LI>Data Fellows. F-Secure line of products.
+	<P><A HREF="javascript:if(confirm('http://www.europe.datafellows.com/f-secure/fsecom.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.europe.datafellows.com/f-secure/fsecom.htm'" tppabs="http://www.europe.datafellows.com/f-secure/fsecom.htm"><TT>http://www.europe.datafellows.com/f-secure/fsecom.htm</TT></A>
+</UL>
+
+<P>In closing on the issue, I would suggest that you read at least a few of the following
+white papers, articles, or technical reports. Some are more difficult to find than
+others, and I would suggest that you take those papers for which I have provided
+no online address and run them through a university library bibliography search.
+Many of them are available through services like WorldCat and Uncover.</P>
+<P><B>Credit Card Transactions: Real World and Online.</B> Keith Lamond. 1996.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://rembrandt.erols.com/mon/ElectronicProperty/klamond/CCard.ht  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://rembrandt.erols.com/mon/ElectronicProperty/klamond/CCard.ht'" tppabs="http://rembrandt.erols.com/mon/ElectronicProperty/klamond/CCard.ht"><TT>http://rembrandt.erols.com/mon/ElectronicProperty/klamond/CCard.ht</TT></A><TT>m</TT>
+</UL>
+
+<P><B>Digital Money Online. A Review of Some Existing Technologies. Dr. Andreas Sch&#246;ter
+and Rachel Willmer.</B> Intertrader Ltd. February 1997.</P>
+<P><B>Millions of Consumers to Use Internet Banking. Booz, Allen &amp; Hamilton Study
+Indicates.</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.bah.com/press/net_banking.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.bah.com/press/net_banking.html'" tppabs="http://www.bah.com/press/net_banking.html"><TT>http://www.bah.com/press/net_banking.html</TT></A>
+</UL>
+
+<P><B>A Bibliography of Electronic Payment Information.</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://robotics.stanford.edu/users/ketchpel/ecash.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://robotics.stanford.edu/users/ketchpel/ecash.html'" tppabs="http://robotics.stanford.edu/users/ketchpel/ecash.html"><TT>http://robotics.stanford.edu/users/ketchpel/ecash.html</TT></A>
+</UL>
+
+<P><B>Electronic Cash, Tokens and Payments in the National Information Infrastructure.</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.cnri.reston.va.us:3000/XIWT/documents/dig_cash_doc/ToC.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cnri.reston.va.us:3000/XIWT/documents/dig_cash_doc/ToC.html'" tppabs="http://www.cnri.reston.va.us:3000/XIWT/documents/dig_cash_doc/ToC.html"><TT>http://www.cnri.reston.va.us:3000/XIWT/documents/dig_cash_doc/ToC.html</TT></A>
+</UL>
+
+<P><B>Electronic Commerce in the NII.</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.cnri.reston.va.us:3000/XIWT/documents/EComm_doc/ECommTOC2.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.cnri.reston.va.us:3000/XIWT/documents/EComm_doc/ECommTOC2.html'" tppabs="http://www.cnri.reston.va.us:3000/XIWT/documents/EComm_doc/ECommTOC2.html"><TT>http://www.cnri.reston.va.us:3000/XIWT/documents/EComm_doc/ECommTOC2.html</TT></A>
+</UL>
+
+<P><B>A Framework for Global Electronic Commerce.</B> Clinton Administration. For
+an executive summary, visit
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.iitf.nist.gov/eleccomm/exec_sum.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.iitf.nist.gov/eleccomm/exec_sum.htm'" tppabs="http://www.iitf.nist.gov/eleccomm/exec_sum.htm"><TT>http://www.iitf.nist.gov/eleccomm/exec_sum.htm</TT></A>
+</UL>
+
+<P>For the complete report, visit
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.iitf.nist.gov/eleccomm/glo_comm.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.iitf.nist.gov/eleccomm/glo_comm.htm'" tppabs="http://www.iitf.nist.gov/eleccomm/glo_comm.htm"><TT>http://www.iitf.nist.gov/eleccomm/glo_comm.htm</TT></A>
+</UL>
+
+<P><B>Card Europe UK--Background Paper. Smartcard Technology Leading To Multi Service
+Capability.</B>
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.gold.net/users/ct96/rep1.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.gold.net/users/ct96/rep1.htm'" tppabs="http://www.gold.net/users/ct96/rep1.htm"><TT>http://www.gold.net/users/ct96/rep1.htm</TT></A>
+</UL>
+
+<P><B>Electronic Payment Schemes.</B> Dr. Phillip M. Hallam-Baker. World Wide Web
+Consortium.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.w3.org/pub/WWW/Payments/roadmap.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.w3.org/pub/WWW/Payments/roadmap.html'" tppabs="http://www.w3.org/pub/WWW/Payments/roadmap.html"><TT>http://www.w3.org/pub/WWW/Payments/roadmap.html</TT></A>
+</UL>
+
+<P><B>Generic Extensions of WWW Browsers.</B> Ralf Hauser and Michael Steiner. First
+Usenix Workshop on Electronic Commerce. July 1995.</P>
+<P><B>Anonymous Delivery of Goods in Electronic Commerce.</B> Ralf Hauser and Gene
+Tsudik. IBMTDB, 39(3), pp. 363-366. March 1996.</P>
+<P><B>On Shopping Incognito.</B> R. Hauser and G. Tsudik. Second Usenix Workshop
+on Electronic Commerce. November 1996.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.isi.edu/~gts/paps/hats96.ps.gz  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.isi.edu/%7Egts/paps/hats96.ps.gz'" tppabs="http://www.isi.edu/%7Egts/paps/hats96.ps.gz"><TT>http://www.isi.edu/~gts/paps/hats96.ps.gz</TT></A>
+</UL>
+
+<P><B>The Law of Electronic Commerce. EDI, Fax and Email: Technology, Proof and Liability.</B>
+B. Wright. Little, Brown and Company. 1991.</P>
+<P><B>Fast, Automatic Checking of Security Protocols.</B> D. Kindred and J. M. Wing.
+Second Usenix Workshop on Electronic Commerce, pp. 41-52. November 1996.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/project/venari/www/usenix96-submit.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/project/venari/www/usenix96-submit.html'" tppabs="http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/project/venari/www/usenix96-submit.html"><TT>http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/project/venari/www/usenix96-submit.html</TT></A>
+</UL>
+
+<P><B>Electronic Commerce on the Internet.</B> Robert Neches, Anna-Lena Neches, Paul
+Postel, Jay M. Tenenbaum, and Robert Frank. 1994.</P>
+<P><B>NetBill Security and Transaction Protocol.</B> Benjamin Cox, J. D. Tygar, and
+Marvin Sirbu. First Usenix Workshop on Electronic Commerce. July 1995.</P>
+<P><B>CyberCash Credit Card Protocol.</B> Donald E. Eastlake, Brian Boesch, Steve
+Crocker, and Magdalena Yesil. Version 0.8. July 1995. (Internet Draft.)</P>
+<P><B>Commerce on the Internet--Credit Card Payment Applications over the Internet.</B>
+Taher Elgamal. July 1995.</P>
+<P><B>Business, Electronic Commerce and Security.</B> B. Israelsohn. 1996.
+
+<UL>
+	<LI><A HREF="javascript:if(confirm('http://www.csc.liv.ac.uk/~u5bai/securit2.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.csc.liv.ac.uk/%7Eu5bai/securit2.html'" tppabs="http://www.csc.liv.ac.uk/%7Eu5bai/securit2.html"><TT>http://www.csc.liv.ac.uk/~u5bai/securit2.html</TT></A>
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Be prepared. If you plan to establish a dedicated connection to the Internet and
+security is an important issue for you, it is wise to learn the terrain. I am not
+suggesting that security specialists are unscrupulous; I am simply warning you of
+potential pitfalls in the security process. By gathering knowledge about your network,
+your trust models, and Internet security in general, you will fare far better. It's
+a jungle out there; you better believe it.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="ch23.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch23/ch23.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch25.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch25/ch25.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

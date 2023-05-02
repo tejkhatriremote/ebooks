@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=941-944//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 28.2</B> Creating a Message Queue<hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltmq.h&gt
+#include &ltwchar.h&gt
+
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+void GetQueueNameFromUser();
+void InitQueueProps();
+
+#define MAX_PROPS  5
+#define MAX_FORMAT 256
+#define MAX_BUFFER 512
+
+// Global data used by the example
+WCHAR g_szComputerName[MAX_BUFFER];
+WCHAR g_szQueueLabel[] = L&#148;Unleashed Msg Queue Example&#148;;
+WCHAR g_szQueueName[MAX_BUFFER];
+WCHAR g_szQueuePath[MAX_BUFFER * 2];
+
+// Data structures used for the message queue.
+MQQUEUEPROPS  g_queueProps;
+PROPVARIANT   g_rgQueuePropVar[MAX_PROPS];
+QUEUEPROPID   g_rgQueuePropID[MAX_PROPS];
+HRESULT       g_rgQueueResults[MAX_PROPS];
+WCHAR         g_szFormat[MAX_FORMAT];
+
+int wmain()
+{
+    GetQueueNameFromUser();
+    InitQueueProps();
+
+    DWORD cbFormat = MAX_FORMAT;
+    HRESULT hr = MQCreateQueue(NULL,
+                               &ampg_queueProps,
+                               g_szFormat,
+                               &ampcbFormat);
+    if(FAILED(hr))
+    {
+        HandleError(L&#147;Create Queue Failed&#148;, hr);
+        return 0;
+    }
+    else
+    {
+        MessageBox(NULL,
+                   g_szQueuePath,
+                   L&#147;Message Queue Created&#148;,
+                   MB_OK);
+    }
+    return 0;
+}
+
+// Initialize property values for the message queue.
+void InitQueueProps()
+{
+    // Set queue name
+    DWORD cbProps = 0;
+    g_rgQueuePropID[cbProps] = PROPID_Q_PATHNAME;
+    //g_rgQueuePropVar[cbProps].vt = VT_LPWSTR;
+    g_rgQueuePropVar[cbProps].vt = VT_UI1;
+    g_rgQueuePropVar[cbProps].pwszVal = g_szQueuePath;
+    cbProps&#43;&#43;;
+
+    // Set journaling on
+    g_rgQueuePropID[cbProps] = PROPID_Q_JOURNAL;
+    g_rgQueuePropVar[cbProps].vt = VT_UI1;
+    g_rgQueuePropVar[cbProps].bVal = MQ_JOURNAL;
+    cbProps&#43;&#43;;
+
+    // Set queue label for administration purposes
+    g_rgQueuePropID[cbProps] = PROPID_Q_LABEL;
+    g_rgQueuePropVar[cbProps].vt = VT_LPWSTR;
+    g_rgQueuePropVar[cbProps].pwszVal = g_szQueueLabel;
+
+    g_queueProps.cProp = cbProps;
+    g_queueProps.aPropID = g_rgQueuePropID;
+    g_queueProps.aPropVar = g_rgQueuePropVar;
+    g_queueProps.aStatus = g_rgQueueResults;
+}
+
+// Error handling routine, modified to display the
+// HRESULT if the error text cannot be found.
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    DWORD dwRet = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                         FORMAT_MESSAGE_FROM_SYSTEM,
+                         NULL,
+                         hr,
+                         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                         (LPWSTR)&amplpMsgBuf,
+                         0,
+                         NULL);
+    if(dwRet == 0)
+    {
+        // Can&#146;t find error text, display HRESULT instead.
+        lpMsgBuf = LocalAlloc(LPTR, 42);
+        if(lpMsgBuf)
+        {
+            wsprintf((LPWSTR)lpMsgBuf,
+                     L&#147;HRESULT = 0x%X&#148;,
+                     hr);
+        }
+    }
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+}
+
+// Collect computer and queue names from the user.
+void GetQueueNameFromUser()
+{
+    do{
+        wprintf(L&#147;Computer name for the message queue:&#148;);
+        _getws(g_szComputerName);
+        wprintf(L&#147;Name of the message queue:&#148;);
+
+        _getws(g_szQueueName);
+
+    }while(!lstrlen(g_szComputerName) || !lstrlen(g_szQueueName));
+
+    wsprintf(g_szQueuePath,
+             L&#147;%s\\%s&#148;,
+             g_szComputerName,
+             g_szQueueName);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 28.2, <small>CreateQueue.cpp</SMALL> begins by requesting the message queue path from the user. This code can be found in the <small>GetQueueNameFromUser</SMALL> function, which is straightforward C code. Next, the initial properties for the message queue are defined in the <small>InitQueueProps</SMALL> function. <small>InitQueueProps</SMALL> defines three properties for the message queue:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The message queue pathname is set as requested by the user.
+<dd><b>&#149;</B>&nbsp;&nbsp;Journaling is turned on.
+<dd><b>&#149;</B>&nbsp;&nbsp;The queue label is set to <small>&#147;Unleashed Msg Queue Example&#148;</SMALL>.
+</DL>
+<p>These properties are defined in arrays of <small>PROPVARIANT</SMALL> and <small>QUEUEPROPID</SMALL>. The addresses of these arrays are placed in an <small>MQQUEUEPROPS</SMALL> structure that&#146;s passed as a parameter in a call to <small>MQCreateQueue</SMALL>. If an error occurs, an error message is displayed to the user; otherwise, the queue is successfully created and the program ends.</P>
+<p>You can view the current status of MSMQ on a server with the Active Directory Users and Computers MMC snap-in. When this snap-in is initially used, it does not display MSMQ information. You must follow these steps to view the state of message queues on a message queue server machine:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Start the Directory Users and Computers snap-in by selecting Directory Management from the Administrative Tools menu (Start, Programs, Administrative Tools, Directory Management).
+<dd><b>2.</B>&nbsp;&nbsp;Select Users, Group, and Computers as containers from the MMC View menu.
+<dd><b>3.</B>&nbsp;&nbsp;Select Advanced Features from the same menu.
+<dd><b>4.</B>&nbsp;&nbsp;Expand the managed objects in the console tree to find the computer that contains the new message queue.
+<dd><b>5.</B>&nbsp;&nbsp;Select the MSMQ node for the computer. A list of message queues hosted on the computer will be displayed in the contents pane on the right side of the MMC.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

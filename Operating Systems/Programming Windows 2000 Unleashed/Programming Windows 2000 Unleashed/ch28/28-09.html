@@ -1,0 +1,239 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=956-959//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 28.5 contains a console mode application that uses <small>MQDeleteQueue</SMALL> to erase a message queue. The source code is part of the DeleteQueue project, which can be found on the CD-ROM that accompanies this book.</P>
+<p><b>Listing 28.5</B> Deleting a Message Queue from Active Directory<hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltmq.h&gt
+#include &ltwchar.h&gt
+
+void HandleError(LPCWSTR strTitle, HRESULT hr);
+void GetQueueNameFromUser();
+
+#define MAX_FORMAT 256
+#define MAX_BUFFER 512
+
+// Global data used by the example
+WCHAR   g_szComputerName[MAX_BUFFER];
+WCHAR   g_szQueueName[MAX_BUFFER];
+WCHAR   g_szQueuePath[MAX_BUFFER * 2];
+WCHAR   g_szFormat[MAX_FORMAT];
+
+int wmain()
+{
+    GetQueueNameFromUser();
+
+    // Get the format name of the queue
+    DWORD cbFormat = MAX_FORMAT;
+    HRESULT hr = MQPathNameToFormatName(g_szQueuePath,
+                                        g_szFormat,
+                                        &ampcbFormat);
+    if(FAILED(hr))
+    {
+        HandleError(L&#147;Format Name Failed&#148;, hr);
+        return 0;
+    }
+
+    hr = MQDeleteQueue(g_szFormat);
+    if(SUCCEEDED(hr))
+        MessageBox(NULL, g_szQueuePath, L&#147;Queue Deleted&#148;, MB_OK);
+
+    return 0;
+}
+
+// Collect computer and queue names from the user.
+void GetQueueNameFromUser()
+{
+    do{
+        wprintf(L&#147;Computer name for the message queue:&#148;);
+        _getws(g_szComputerName);
+        wprintf(L&#147;Name of the message queue:&#148;);
+        _getws(g_szQueueName);
+
+    }while(!lstrlen(g_szComputerName) || !lstrlen(g_szQueueName));
+
+    wsprintf(g_szQueuePath,
+             L&#147;%s\\%s&#148;,
+             g_szComputerName,
+             g_szQueueName);
+}
+
+// Error handling routine
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    DWORD dwRet = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                        FORMAT_MESSAGE_FROM_SYSTEM,
+                        NULL,
+                        hr,
+                        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                        (LPWSTR)&amplpMsgBuf,
+                        0,
+                        NULL);
+    if(dwRet == 0)
+    {
+        // Can&#146;t find error text, display HRESULT instead.
+        lpMsgBuf = LocalAlloc(LPTR, 42);
+        if(lpMsgBuf)
+        {
+            wsprintf((LPWSTR)lpMsgBuf,
+                     L&#147;HRESULT = 0x%X&#148;,
+                     hr);
+        }
+    }
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 28.5, <small>DeleteQueue.cpp</SMALL> starts by gathering the message queue computer and queue names from the user and converting the message queue pathname into a format name. The <small>MQDeleteQueue</SMALL> function is called to delete the message queue from the system.</P>
+<h3><a name="Heading19"></A><font color="#000077">A Message Queue Client Written in Visual Basic</FONT></H3>
+<p>Visual Basic can also be used to write MSMQ applications. As an example of how VB is used in a client-side application, the CD-ROM that accompanies the book includes MSMQSendMsg, a simple VB client that can interact with the C<small>&#43;&#43;</SMALL> examples presented earlier in this chapter.</P>
+<p>This VB example takes advantage of three ActiveX objects that are part of the MSMQ object library:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MSMQMessage</SMALL>. Represents a message sent through a message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MSMQQueueInfo</SMALL>. Represents the properties associated with a message queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MSMQQueue</SMALL>. Represents an instance of an open message queue
+</DL>
+<p>In order to use any of the MSMQ ActiveX objects, you must add a reference to the MSMQ object library. Select References from the Project menu to display the References dialog box. Check the Microsoft Message Queue Object Library item, as shown in Figure 28.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-05.jpg',449,357 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-05.jpg',449,357)"><font color="#000077"><b>Figure 28.5</B></FONT></A>&nbsp;&nbsp;Adding a reference to the MSMQ object library.</P>
+<p>The main form, frmMain, used in the MSMQSendMsg project is shown in Figure 28.6. The form has two command buttons and two textbox controls.
+</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-06.jpg',330,130 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-06.jpg',330,130)"><font color="#000077"><b>Figure 28.6</B></FONT></A>&nbsp;&nbsp;The main form used by MSMQSendMsg.</P>
+<p>The properties for the controls used in frmMain are provided in Table 28.1.
+</P>
+<table width="100%"><td caption valign="TOP" align="LEFT" colspan="4"><b>Table 28.1</B> Properties for Controls in frmMain
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th valign="TOP" align="LEFT" width="20%"><i>Control</I>
+<th valign="TOP" align="LEFT" width="20%"><i>Name</I>
+<th valign="TOP" align="LEFT" width="20%"><i>Index</I>
+<th valign="TOP" align="LEFT" width="40%"><i>Caption</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td valign="TOP" align="LEFT">Button
+<td valign="TOP" align="LEFT">cmd
+<td valign="TOP" align="LEFT">0
+<td valign="TOP" align="LEFT">&ampClose
+<tr>
+<td valign="TOP" align="LEFT">Button
+<td valign="TOP" align="LEFT">cmd
+<td valign="TOP" align="LEFT">1
+<td valign="TOP" align="LEFT">&ampOpen
+<tr>
+<td valign="TOP" align="LEFT">TextBox
+<td valign="TOP" align="LEFT">txt
+<td valign="TOP" align="LEFT">0
+<tr>
+<td valign="TOP" align="LEFT">TextBox
+<td valign="TOP" align="LEFT">txt
+<td valign="TOP" align="LEFT">1
+<tr>
+<td colspan="4"><hr>
+<tr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

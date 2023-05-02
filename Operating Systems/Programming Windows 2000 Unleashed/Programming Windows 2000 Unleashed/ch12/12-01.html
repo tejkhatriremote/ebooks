@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Owner Draw and Custom Draw</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=12//-->
+<!--PAGES=381-384//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch11/11-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 12<br>Owner Draw and Custom Draw
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Owner-drawn Controls <i>382</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Implementing an Owner-Drawn Control <i>383</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>OwnDraw: An Owner Draw Example <i>387</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Using Custom Draw <i>392</I></B>
+</DL>
+<p>This chapter covers owner-drawn and custom-drawn controls. <i>Owner Draw</I> and <i>Custom Draw</I> are two ways you can add specialized visual effects to your controls. The steps required to implement Owner Draw and Custom Draw are discussed in this chapter, as is the support offered by MFC and Visual C<small>&#43;&#43;</SMALL> for customizing your controls using these methods. This chapter also includes two sample programs:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The OwnDraw project creates an owner-drawn list box, where each item appears to be a Windows pushbutton control.
+<dd><b>&#149;</B>&nbsp;&nbsp;The CustDraw project creates a listview control that displays each item in a different color, with a mixture of fonts.
+</DL>
+<p>These sample programs can be found on the CD-ROM or can be created from scratch using the code in this chapter.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Using Owner-drawn Controls</FONT></H3>
+<p>Owner-drawn controls are controls that are drawn by the control&#146;s parent, rather than by the operating system. Owner-drawn controls often add bitmaps, figures, or other special effects in addition to their normal appearance. Owner-drawn controls can also be used to offer extra functionality not included in the standard control.
+</P>
+<p>Here are the five types of controls that can be owner drawn:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Buttons
+<dd><b>&#149;</B>&nbsp;&nbsp;List boxes
+<dd><b>&#149;</B>&nbsp;&nbsp;Combo boxes
+<dd><b>&#149;</B>&nbsp;&nbsp;Menus
+<dd><b>&#149;</B>&nbsp;&nbsp;Listviews
+</DL>
+<p>A self-drawn control is similar to an owner-drawn control, but the control-drawing functionality is included in a C<small>&#43;&#43;</SMALL> wrapper class that handles drawing the control. The responsibility for drawing the control rests with the C<small>&#43;&#43;</SMALL> class rather than with the control&#146;s owner. From the operating system&#146;s point of view, the control is owner drawn. However, any programmer who uses the control does not need to perform any drawing&#151;hence the name <i>self-drawn</I>.</P>
+<p>Owner-drawn controls give you a chance to add functionality to standard controls without the need to completely rewrite the control from scratch.</P>
+<p>Both subclassing and using owner-drawn controls enable you to leverage an existing control so that you can concentrate on adding functionality with your code, rather than duplicating code that has already been written. For example, many early versions of tree controls were actually owner-drawn list boxes.</P>
+<p>Your owner-drawn controls probably won&#146;t be as complex as the tree control found in the Windows 3.1 File Manager, especially because the standard tree common control is available. However, understanding how an owner-drawn control works can easily help you add extra features to your programs.</P>
+<h3><a name="Heading3"></A><font color="#000077">Implementing an Owner-drawn Control</FONT></H3>
+<p>In order for an owner-drawn control to work, the owner of the control receives four messages from Windows containing information about the control:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_DRAWITEM</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_MEASUREITEM</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_COMPAREITEM</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WM_DELETEITEM</SMALL>
+</DL>
+<p>It&#146;s not necessary for every type of owner-drawn control to handle every message. Table 12.1 lists the Owner Draw messages that must be handled for each type of owner-drawn control.
+</P>
+<table width="100%"><td caption align="LEFT" valign="TOP" colspan="6"><b>Table 12.1</B> Messages That Must Be Handled For Owner-drawn Controls
+<tr>
+<td colspan="6"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Message</I>
+<th width="10%" align="LEFT" valign="TOP"><i>Button</I>
+<th width="10%" align="LEFT" valign="TOP"><i>Menu</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Combo Box</I>
+<th width="10%" align="LEFT" valign="TOP"><i>List Box</I>
+<th width="10%" align="LEFT" valign="TOP"><i>Listview</I>
+<tr>
+<td colspan="6"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_DRAWITEM</SMALL>
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_MEASUREITEM</SMALL>
+<td align="LEFT" valign="TOP">No
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_COMPAREITEM</SMALL>
+<td align="LEFT" valign="TOP">No
+<td align="LEFT" valign="TOP">No
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<tr>
+<td align="LEFT" valign="TOP"><small>WM_DELETEITEM</SMALL>
+<td align="LEFT" valign="TOP">No
+<td align="LEFT" valign="TOP">No
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<td align="LEFT" valign="TOP">Yes
+<tr>
+<td colspan="6"><hr>
+</TABLE>
+<p>Each of these messages includes a pointer to a structure that contains information used to identify the object to be drawn. In some cases, the structure contains elements that must be updated by the application. For example, <small>WM_COMPAREITEM</SMALL> passes a pointer to a <small>COMPAREITEMSTRUCT</SMALL> structure that&#146;s updated with the results of a comparison between two list items.</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Handling the WM_DRAWITEM Message</FONT></H4>
+<p>When an owner-drawn control must be painted, Windows sends a <small>WM_DRAWITEM</SMALL> message to the control&#146;s owner. If you&#146;re using MFC, this message is translated into an <small>OnDrawItem</SMALL> function call. When processing <small>OnDrawItem</SMALL>, your program is expected to draw all aspects of the control, including its selection state and focus rectangle, if needed.</P>
+<p>The <small>WM_DRAWITEM</SMALL> message contains two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WPARAM</SMALL>. Contains the control ID.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LPARAM</SMALL>. Contains a pointer to a <small>DRAWITEMSTRUCT</SMALL>.
+</DL>
+<p>If you&#146;re using MFC, the pointer to the <small>DRAWITEMSTRUCT</SMALL> structure and the resource ID for the list box control are passed as function parameters directly.</P>
+<p>The <small>DRAWITEMSTRUCT</SMALL> structure contains everything you need to draw the control. Here are the most commonly used members of a <small>DRAWITEMSTRUCT</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemID</SMALL>. Contains an identifier for the item to be drawn. For a menu item, this member contains the resource ID. For a list box or combo box, this member contains the zero-based index of the item to be drawn. List boxes and combo boxes will send -1 for empty controls when the focus rectangle should be drawn for the entire control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hDC</SMALL>. Identifies the device context that you should draw into. If you&#146;re using MFC, you&#146;ll attach an instance of the <small>CDC</SMALL> class to this member variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>rcItem</SMALL>. Defines the boundaries of the area to be drawn.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemData</SMALL>. Contains a 32-bit value associated with the item.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemAction</SMALL>. Indicates the type of drawing to be done. The possible values for this member are shown in Table 12.2.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>itemState</SMALL>. Indicates the new state of the item to be drawn. Possible values for this member are shown in Table 12.3.
+</DL>
+<table width="100%">
+<td caption align="LEFT" valign="TOP" colspan="2"><b>Table 12.2</B> Possible Values For <small>itemAction</SMALL>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="30%" align="LEFT" valign="TOP"><i>Value</I>
+<th width="70%" align="LEFT" valign="TOP"><i>Description</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>ODA_DRAWENTIRE</SMALL>
+<td align="LEFT" valign="TOP">The entire item must be drawn
+<tr>
+<td align="LEFT" valign="TOP"><small>ODA_FOCUS</SMALL>
+<td align="LEFT" valign="TOP">The item&#146;s focus state must be updated
+<tr>
+<td align="LEFT" valign="TOP"><small>ODA_SELECT</SMALL>
+<td align="LEFT" valign="TOP">The item&#146;s selection state must be updated
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch11/11-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="12-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

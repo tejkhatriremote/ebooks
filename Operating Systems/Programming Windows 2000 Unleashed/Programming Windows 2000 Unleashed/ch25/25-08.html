@@ -1,0 +1,252 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=869-872//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>With a subscription identifier, multiple event cycles can be defined on the same interface. The subscriber needs to define which event cycle it&#146;s interested in.
+</P>
+<p>Now the publisher of the event class needs to be implemented. Here is an example:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CStockSubscriber::Install()
+{
+    CComBSTR bstrSubscriptionID;
+    CComBSTR bstrSubscriptionName (str_StockPriceChangeSub);
+    CComBSTR bstrPublisherID;
+    CComBSTR bstrEventClassID;
+    CComBSTR bstrMethodName;
+    CComBSTR bstrSubscriberClass;
+
+    HRESULT hr = S_OK;
+    LPOLESTR strGUID;
+
+    CComPtr&lt;IEventSubscription&gt; spIEventSubscription;
+    CComPtr&lt;IEventSystem&gt; spIEventSystem;
+
+    hr = CoCreateInstance(CLSID_CEventSystem,
+                          NULL,
+                          CLSCTX_SERVER,
+                          IID_IEventSystem,
+                          (void**)&amp;spIEventSystem);
+
+    hr = CoCreateInstance(CLSID_CEventSubscription,
+                          NULL,
+                          CLSCTX_SERVER,
+                          IID_IEventSubscription,
+                          (void**) &amp;spIEventSubscription);
+
+    hr = StringFromIID(guid_StockPriceChangeSub, &amp;strGUID);
+
+    bstrSubscriptionID = strGUID;
+    CoTaskMemFree(strGUID);
+
+    hr = StringFromIID(IID_IStockPublisher, &amp;strGUID);
+
+    bstrPublisherID = strGUID;
+    CoTaskMemFree(strGUID);
+
+    hr = StringFromIID(CLSID_StockEvents, &amp;strGUID);
+
+    bstrEventClassID = strGUID;
+    CoTaskMemFree(strGUID);
+
+    bstrMethodName = &#147;StockPriceChange&#148;;
+
+    hr = StringFromIID(CLSID_StockSubscriber, &amp;strGUID);
+
+    bstrSubscriberClass = strGUID;
+    CoTaskMemFree(strGUID);
+
+    // Set EventSubscription Properties
+    hr = spIEventSubscription-&gt;put_SubscriptionID (bstrSubscriptionID);
+    hr = spIEventSubscription-&gt;put_SubscriptionName
+    &#8658;(bstrSubscriptionName);
+    hr = spIEventSubscription-&gt;put_PublisherID(bstrPublisherID);
+    hr = spIEventSubscription-&gt;put_EventClassID (bstrEventClassID);
+    hr = spIEventSubscription-&gt;put_MethodName(bstrMethodName);
+    hr = spIEventSubscription-&gt;put_SubscriberCLSID(bstrSubscriberClass);
+
+    CComVariant PropertyBagValue(&#147;MSFT&#148;);
+    CComBSTR    PropertyBagName(&#147;StockSymbol&#148;);
+     hr = spIEventSubscription-&gt;PutPublisherProperty(PropertyBagName,
+     &#8658; &amp;PropertyBagValue);
+     hr = spIEventSystem-&gt;Store(PROGID_EventSubscription,
+     &#8658; spIEventSubscription);
+
+    // Add the Event for NewStocks
+    hr = StringFromIID(guid_NewStockSub, &amp;strGUID);
+    bstrSubscriptionID = strGUID;
+    CoTaskMemFree(strGUID);
+
+    bstrMethodName = &#147;NewStock&#148;;
+    bstrSubscriptionName  = str_NewStockSub;
+
+    // Set EventSubscription Properties
+    hr = spIEventSubscription-&gt;put_SubscriptionID (bstrSubscriptionID);
+    hr = spIEventSubscription-&gt;put_SubscriptionName (bstrSubscriptionName);
+    hr = spIEventSubscription-&gt;put_PublisherID(bstrPublisherID);
+    hr = spIEventSubscription-&gt;put_EventClassID (bstrEventClassID);
+    hr = spIEventSubscription-&gt;put_MethodName(bstrMethodName);
+    hr = spIEventSubscription-&gt;put_SubscriberCLSID(bstrSubscriberClass);
+
+    // Store into the EventSystem
+    hr = spIEventSystem-&gt;Store(PROGID_EventSubscription,
+    &#8658; spIEventSubscription);
+
+    return hr;
+}
+</PRE>
+<!-- END CODE //-->
+<p>This piece of code is fairly long, and the entire piece does not need explanation. In order for a subscriber to be defined, the COM&#43; event service interface needs to be instantiated (line 16). Then, the event subscription interface needs to be instantiated (line 22). This interface is responsible for managing the subscription for the COM object.
+</P>
+<p>In a nutshell, the subscription ID defined previously needs to be set to the property <small>SubscriptionID</SMALL>. The other important property is <small>PublisherID</SMALL>. Generally speaking, this is not an important property, but it becomes important when filtering by the publisher is required. The property <small>EventClassID</SMALL> represents the co-class of the interface that&#146;s being subscribed to. In this example, it&#146;s <small>StockEvents</SMALL>, which is the interface <small>IStockEvents</SMALL>. To determine which method an event should be fired on, the property <small>MethodName</SMALL> is set. Finally, the property <small>SubscriberCLSID</SMALL> is set to the object that will be called. This CLSID is also used to perform subscriber-side filtering. After all these properties have been set, the subscription is added to the <small>IEventSystem</SMALL> interface using the method store.</P>
+<p>Lines 58 to 60 make it possible to define a publisher property. This property is useful when you want to filter for a specific value. In this situation, for the <small>StockPriceChange</SMALL> event, the subscriber wants information about the MSFT stock. Of course, this subscription definition applies if the publisher performs some filtering.</P>
+<p>Removing a subscription is identical to removing a publisher or event class. The difference involves the query string and the ProgID. Here&#146;s a sample implementation:</P>
+<!-- CODE //-->
+<pre>
+    CComBSTR    bstrCriteria;
+    int errorIndex;
+    LPOLESTR    strGUID;
+
+    hr = StringFromIID(guid_StockPriceChangeSub, &amp;strGUID);
+
+    bstrCriteria = &#147;SubscriptionID=&#148;;
+    bstrCriteria &#43;= strGUID;
+    CoTaskMemFree(strGUID);
+
+    hr = spIEventSystem-&gt;Remove(PROGID_EventSubscription, bstrCriteria,
+    &#8658;  &amp;errorIndex);
+</PRE>
+<!-- END CODE //-->
+<p>When a COM object wants to receive an event, it needs to implement the event being broadcast. This is a requirement, because COM&#43; event services would otherwise have no idea where to send the message. Here&#146;s an example of implementing an event:
+</P>
+<!-- CODE //-->
+<pre>
+class ATL_NO_VTABLE CStockSubscriber :
+    public CComObjectRootEx&lt;CComSingleThreadModel&gt;,
+    public CComCoClass&lt;CStockSubscriber, &amp;CLSID_StockSubscriber&gt;,
+    public ISupportErrorInfo,
+    public ISubscriberControl,
+    public IDispatchImpl&lt;IStockSubscriber, &amp;IID_IStockSubscriber,
+    &#8658;  &amp;LIBID_SIMPLESUBSCRIBERATLLib&gt;,
+    public IDispatchImpl&lt;IStockEvents, &amp;IID_IStockEvents, &amp;LIBID_
+    &#8658; SIMPLESUBSCRIBERATLLib&gt;
+{
+...
+}
+</PRE>
+<!-- END CODE //-->
+<p>The easiest way to implement the interface is to use the Visual C<small>&#43;&#43;</SMALL> Implement Interface Wizard. Also, you must remember to change your IDL to reflect that you&#146;ve implemented the <small>IStockEvents</SMALL> interface, as shown in the following example:</P>
+<!-- CODE //-->
+<pre>
+[
+    uuid(9922BBAF-E91D-11D1-B994-00C04F990088),
+    version(1.0),
+    helpstring(&#147;SimpleSubscriberATL 1.0 Type Library&#148;)
+]
+library SIMPLESUBSCRIBERATLLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+    [
+        uuid(9922BBBD-E91D-11D1-B994-00C04F990088),
+        helpstring(&#147;StockSubscriber Class&#148;)
+    ]
+    coclass StockSubscriber
+    {
+        [default] interface     IStockSubscriber;
+        interface IStockEvents;
+        interface ISubscriberControl;
+    };
+};
+</PRE>
+<!-- END CODE //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="25-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

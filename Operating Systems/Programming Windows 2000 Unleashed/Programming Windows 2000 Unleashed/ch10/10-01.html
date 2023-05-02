@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Controlling Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=10//-->
+<!--PAGES=317-320//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch09/09-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 10<br>Controlling Windows 2000 Services
+</FONT></H2>
+<p><b><big>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Writing Service Control Programs <i>318</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Writing Control Panel Applets <i>327</I></B>
+</DL>
+<p>This chapter discusses how you can write programs that control Windows 2000 services. In the preceding chapter, you created the FileSpy service. In this chapter, you&#146;ll create a Control Panel applet that configures the Registry parameters used by the service. This chapter also examines the code used by FileSpy to handle self-registration.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Writing Service Control Programs</FONT></H3>
+<p>Service control programs are specialized programs that are used to control Windows 2000 services. Service control programs are traditionally written as Control Panel applets, but they can also be normal Windows 2000 executables.
+</P>
+<p>Service control programs typically perform one or more of the following activities:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Starting and stopping a service
+<dd><b>&#149;</B>&nbsp;&nbsp;Registering and unregistering a service
+<dd><b>&#149;</B>&nbsp;&nbsp;Changing the configuration parameters for a service in the Service Control Manager (SCM) database
+<dd><b>&#149;</B>&nbsp;&nbsp;Changing configuration information used by the service (such as Registry keys)
+</DL>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Registering a Service with the Service Control Manager</FONT></H4>
+<p>Before the Service Control Manager can manage a service, the service must be registered in the SCM database. You can see the service database entries in the Registry, located under the following key:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services
+</PRE>
+<!-- END CODE SNIP //-->
+<p>For some reason, this key includes device drivers, as well as services. Don&#146;t attempt to tweak Registry entries directly; instead, use the APIs that have been developed specifically for registering services.
+</P>
+<p>Typically, your service will be registered (and unregistered) in one of three ways:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;By the installation program used to install the service
+<dd><b>&#149;</B>&nbsp;&nbsp;By a separate registration program that&#146;s launched by a script or other tool
+<dd><b>&#149;</B>&nbsp;&nbsp;By a command-line switch, such as <small>myservice /register</SMALL>, that&#146;s passed as a parameter to the service (as done by FileSpy in the preceding chapter)
+</DL>
+<p>No matter which approach you take, the service is installed by calling the <small>CreateService</SMALL> function:</P>
+<!-- CODE //-->
+<pre>
+SC_HANDLE sch = CreateService(schServiceCtrlMgr,
+                              _T(&#147;MyTestService&#148;),
+                              _T(&#147;My Service&#148;),
+                              STANDARD_RIGHTS_REQUIRED,
+                              SERVICE_WIN32_OWN_PROCESS,
+                              SERVICE_AUTO_START,
+                              SERVICE_ERROR_NORMAL,
+                              _T(&#147;C:\\Projects\\nt2k\\myserv.exe&#148;),
+                              NULL,    // load-order group
+                              NULL,    // group member tag
+                              NULL,    // dependencies
+                              NULL,    // account
+                              NULL);   // password
+if(sch == NULL)
+{
+    // handle error
+}
+</PRE>
+<!-- END CODE //-->
+<p>As shown here, the <small>CreateService</SMALL> function has 13 parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>SC_HANDLE</SMALL> for the Service Control Manager. This handle is returned when the SCM is opened using the <small>OpenSCManager</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;A name for the service. This name will be used to refer to the service in the Service Control Manager&#146;s database. This name is used as a key in the Services portion of the Registry.
+<dd><b>&#149;</B>&nbsp;&nbsp;A user interface name for the service. This name is used when the service name is presented to a user or administrator, and it&#146;s usually a &#147;friendlier&#148; name for the service.
+<dd><b>&#149;</B>&nbsp;&nbsp;The type of access you&#146;re requesting to the service. (Possible values for this parameter are discussed later.)
+<dd><b>&#149;</B>&nbsp;&nbsp;The type of service process that&#146;s being created. (Possible values for this parameter are discussed later.)
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that indicates how the service will be launched. The preceding example uses <small>SERVICE_AUTO_START</SMALL>, which causes the service to be launched after Windows 2000 is loaded. (Other values are discussed later.)
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies what sort of action should be taken by the system if the service fails to start. <small>SERVICE_ERROR_NORMAL</SMALL> is used in the preceding example; it causes the Service Control Manager to store the error in the system error log. (Other values are discussed later.)
+<dd><b>&#149;</B>&nbsp;&nbsp;The path to the EXE module that contains the service.
+<dd><b>&#149;</B>&nbsp;&nbsp;The load order group name or <small>NULL</SMALL> if the service isn&#146;t part of a group.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that contains a tag for this service&#146;s position in the load order group. Device drivers use this parameter, but this parameter is always <small>NULL</SMALL> for services.
+<dd><b>&#149;</B>&nbsp;&nbsp;A list of names of service or load order groups that the service depends on. Names on the list are separated by zeros, with the last name in the list double-zero terminated. Windows 2000 will start the listed services before this service is launched. If the service has no dependencies, pass <small>NULL</SMALL> as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional account name for the service or <small>NULL</SMALL> if the service will run as the local system.
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional password for the account or <small>NULL</SMALL> if the service is running as the local system.
+</DL>
+<p>The fourth parameter in <small>CreateService</SMALL> is used to specify the type of access you&#146;re requesting to the service. A large number of options are available for specifying the type of access required (see the Platform SDK documentation for details). The preceding example uses <small>STANDARD_RIGHTS_REQUIRED</SMALL>, which, if granted, will allow you to delete the service from the SCM database, as well as query and modify security attributes for the service.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch09/09-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

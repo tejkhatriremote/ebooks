@@ -1,0 +1,301 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=305-309//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 9.6</B> The Generic Service Functions Used in the FileSpy Service<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+#include &#147;util.h&#148;
+#include &#147;svcmain.h&#148;
+#include &#147;fspy.h&#148;
+
+
+LPTSTR    g_szService = _T(&#147;FileSpyService&#148;);
+HANDLE    g_hTerminate = NULL;
+FN_PARAMS g_params;
+HANDLE    g_hndlTable[FN_TABLESIZE];
+BOOL      g_fRunningAsService;
+SERVICE_STATUS_HANDLE  g_hSvcStatus = 0L;
+
+/*
+ * Main entry point for this service module. This is where
+ * all of the action starts. If the SCM can&#146;t be contacted,
+ * the process is run as a console-mode application.
+ */
+
+
+int _cdecl _tmain(int argc, TCHAR* argv[])
+{
+    /*
+     * Service table entry that specifies interfaces for the
+     * services in this module.
+     */
+    SERVICE_TABLE_ENTRY ste[] =
+    {
+        g_szService, SvcMain,
+        NULL, NULL
+    };
+    /*
+     * Handle command-line arguments from the user.
+     */
+    if(argc &gt 1)
+    {
+        HandleCmdLine(argc, argv);
+        return 0;
+    }
+    /*
+     * By default, mark us as running as a service, and call the
+     * SCM via StartServiceCtrlDispatcher. If the function returns
+     * FALSE, then we&#146;re running in console-mode. We set the flag,
+     * and avoid any service-specific code. We call ConsoleMain
+     * directly since the SCM isn&#146;t directing traffic for us :)
+     */
+    g_fRunningAsService = TRUE;
+    if(StartServiceCtrlDispatcher(ste) == FALSE)
+    {
+        DWORD dwErr = GetLastError();
+        if(dwErr == ERROR_FAILED_SERVICE_CONTROLLER_CONNECT)
+        {
+            /* Couldn&#146;t connect to SCM because we&#146;re launched
+             * from the command line.
+             */
+            g_fRunningAsService = FALSE;
+            ConsoleMain();
+        }
+        else
+        {
+            /* Some other error has occurred. */
+            WriteToEventLog(EVENTLOG_ERROR_TYPE,
+                            _T(&#147;Couldn&#146;t start service&#148;));
+        }
+    }
+    return 0;
+}
+/*
+ * The ServiceMain function for this service.
+ */
+VOID WINAPI SvcMain(DWORD argc, TCHAR* argv[])
+{
+    DWORD  dwError;
+    HANDLE hSvcThread = NULL;
+    SECURITY_ATTRIBUTES sa;
+    DWORD dwThreadId;
+
+    g_hSvcStatus = RegisterServiceCtrlHandler(g_szService,
+                                              CtrlHandler);
+    if(g_hSvcStatus == 0)
+    {
+        WriteToEventLog(EVENTLOG_ERROR_TYPE,
+                        _T(&#147;RegisterServiceCtrlHandler failed&#148;));
+        return;
+    }
+    UpdateServiceStatus(g_hSvcStatus,
+                        SERVICE_START_PENDING,
+                        NO_ERROR,
+                        FS_CTRL_INTERVAL);
+
+    /*
+     * Create event used to indicate that the service should
+     * terminate the service main function.
+     */
+    g_hTerminate = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+    /* Call OnInit to initialize service. */
+    if(OnInit(&ampdwError) == FALSE)
+    {
+        WriteToEventLog(EVENTLOG_ERROR_TYPE,
+                        _T(&#147;Service Init failed&#148;));
+        UpdateServiceStatus(g_hSvcStatus,
+                            SERVICE_STOPPED,
+                            dwError,
+                            FS_CTRL_INTERVAL);
+        return;
+    }
+
+    /*
+     * This is where things get interesting. The service has work
+     * to do, but if we exit this function, the service will be
+     * stopped. At this point we will spin up a thread that will
+     * handle the majority of the thread&#146;s work. If we can&#146;t init-
+     * ialize the security attributes structure, or create the
+     * thread, we must notify the SCM that the service is stopped,
+     * and exit this function.
+
+     * Note that the thread is started with CreateThread. If the
+     * service uses the C runtime, this call should be changed to
+     * _beginthreadex to avoid occasional memory leaks.
+
+     */
+    __try
+    {
+        if(SetSimpleSecurityAttributes(&ampsa) == FALSE)
+        {
+            WriteToEventLog(EVENTLOG_ERROR_TYPE,
+                            _T(&#147;Couldn&#146;t init security attributes&#148;));
+            __leave;
+        }
+        hSvcThread = CreateThread(&ampsa,
+                                  0,
+                                  fspymain,
+                                  NULL,
+                                  0,
+                                  &ampdwThreadId);
+        if(hSvcThread == NULL)
+        {
+            WriteToEventLog(EVENTLOG_ERROR_TYPE,
+                            _T(&#147;Couldn&#146;t start worker thread&#148;));
+            __leave;
+        }
+        UpdateServiceStatus(g_hSvcStatus,
+                            SERVICE_RUNNING,
+                            NO_ERROR,
+                            FS_CTRL_INTERVAL);
+        WriteToEventLog(EVENTLOG_INFORMATION_TYPE,
+                        _T(&#147;Service running&#148;));
+
+        /* Wait for termination event and worker thread to
+         * spin down.
+         */
+
+        WaitForSingleObject(hSvcThread, INFINITE);
+        WaitForSingleObject(g_hTerminate, INFINITE);
+        WriteToEventLog(EVENTLOG_INFORMATION_TYPE,
+                        _T(&#147;Service termination event signaled&#148;));
+    }
+    __finally
+    {
+        /* Release resources */
+        UpdateServiceStatus(g_hSvcStatus,
+                            SERVICE_STOPPED,
+                            NO_ERROR,
+                            FS_CTRL_INTERVAL);
+
+        CloseHandle(g_hTerminate);
+        if(hSvcThread)
+            CloseHandle(hSvcThread);
+        FreeSecurityAttributes(&ampsa);
+        OnUnInit();
+        /* Elvis has left the building */
+        UpdateServiceStatus(g_hSvcStatus,
+                            SERVICE_STOPPED,
+                            GetLastError(),
+                            FS_CTRL_INTERVAL);
+    }
+}
+/*
+ * Service control handler function. The service handles two
+ * commands - interrogate and stop.
+ */
+VOID WINAPI CtrlHandler(DWORD dwControl)
+{
+    WriteToEventLog(EVENTLOG_INFORMATION_TYPE,
+                    _T(&#147;Service control handler called&#148;));
+    switch(dwControl)
+    {
+        case SERVICE_CONTROL_STOP:
+            OnServiceStop();
+            break;
+        case SERVICE_CONTROL_INTERROGATE:
+            OnServiceInterrogate();
+            break;
+    }
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The main entry point for the service module is the <small>_tmain</SMALL> function found in Listing 9.6. If this function can&#146;t connect to the Service Control Manager, the service runs as a console mode application by calling the <small>ConsoleMain</SMALL> function. The global <small>BOOL</SMALL> flag <small>g_fRunningAsService</SMALL> is set to <small>FALSE</SMALL> if the process is running as a console mode application. This greatly simplifies the work of debugging the application, because it&#146;s fairly simple to debug a console mode application running in your process.</P>
+<p>Declarations for functions implemented in <small>SvcMain.c</SMALL> are found in the <small>SvcMain.h</SMALL> header file, which can be found in the FileSpy project directory on the CD-ROM that accompanies this book.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-08.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

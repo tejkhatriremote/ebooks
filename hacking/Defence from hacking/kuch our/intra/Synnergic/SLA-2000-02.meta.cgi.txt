@@ -1,0 +1,54 @@
+
+        Synnergy Laboratories Advisory SLA-1999-2
+
+NAME
+
+       meta.pl CGI hardcoded link vulnerability
+
+AFFECTED
+ 
+  UNIX
+
+
+SYNOPSIS
+
+  Synnergy Labs has found a bug in the meta.pl (www.cgi-access.com) that allows 
+  remote users to view arbitary files with httpd privilidges.
+
+
+DESCRIPTION
+
+  Meta Tag Generator uses a hard coded physical path for its output.txt.
+  By editing the hidden variable on the html form, a user can view any file on 
+  the system,  having the priviledges as the UID of the httpd server.
+
+  The following variable within the HTML source shows this hard coded path to the 
+  output.txt in it's VALUE tag.
+
+  <INPUT TYPE=HIDDEN NAME=TextFile VALUE="/home/cgi-access/html/meta/output.txt">
+
+  Thus modifying this VALUE will cause the meta.pl form to output the alternate file
+  that is defined by the user. Of course this will allow a remote user to view files 
+  such as /etc/passwd, if allowed read access to the file.
+
+
+SOLUTION
+
+  Simplest solution is to use softocded scalar variables for the output.txt in the 
+  meta.pl itself so it does not display direct hardcoded links.
+  A more effective method is to parse the client side input for disallowed metachars.
+        
+
+AUTHOR
+
+  dethy @ synnergy.net
+
+
+DISCLAIMER
+
+  Synnergy Laboratories may not be held liable for the use or potential effects of these 
+  programs or advisories, nor the content contained within. Use them at your own risk.
+
+COPYRIGHT
+
+        Synnergy Laboratories -  www.synnergy.net (c) 1998-2000 

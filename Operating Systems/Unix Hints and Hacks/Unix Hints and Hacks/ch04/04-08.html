@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:System Monitoring</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=04//-->
+<!--PAGES=143-146//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+awk, echo, grep, mail, ping, sleep
+</PRE>
+<!-- END CODE SNIP //-->
+<p>World Wide Web:
+</P>
+<p>Big Brother&#151;<a href="http://maclawran.ca/bb-dnld">http://maclawran.ca/bb-dnld</A></P>
+<h3><a name="Heading20"></A><font color="#000077">4.10 Monitoring Core Files</FONT></H3>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">4.10.1 Description</FONT></H4>
+<p>Keeping an eye out for core files is an important way to not waste disk space. If the user doesn&#146;t need them, get rid of them.
+</P>
+<p><font size="+1"><b>Example One: Locating the Core Files</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> dirname [<b>-xdev</B>] [<b>-local</B>] [<b>-mount]</B> [<b>-name</B> <i>file] expression</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In using the <small>find</SMALL> command, there are options available. There is one that can keep the <small>find</SMALL> command from spanning across other filesystems, including NFS-mounted filesystems. Check your man pages to see which one is being used by your flavor. The available arguments for this function would be <small>-x, -xdev, -local</SMALL>, and <small>-mount</SMALL>.</P>
+<p>Search for all the core files on the local root filesystem that have not been accessed in three days and display them to standard out, by using</P>
+<!-- CODE SNIP //-->
+<pre>
+# find / -xdev -name core -atime +3 -print
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If it is determined in your environment that it is safe to remove any and all core files, <small>find</SMALL> can execute the <small>remove</SMALL> command on the core files that it finds.</P>
+<!-- CODE SNIP //-->
+<pre>
+#find / -local -name core -exec rm -f {} &#145;;&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this version of the command, <small>find</SMALL> searches locally on the system for the file named <small>core</SMALL>. If one is found, it is stored in a buffer, and the <small>rm</SMALL> command is then executed on the file that is stored in the buffer. This continues until the <small>find</SMALL> command completes its search. This can be placed in the crontab to be run every night. The crontab entry would appear as</P>
+<!-- CODE SNIP //-->
+<pre>
+15 12 * * * find / -local -name core -exec rm -f {} &#145;;&#146;
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>When a program is sent a <small>QUIT</SMALL> signal, it writes out what was in memory at the time the signal was sent to disk. These core files can be equal in size to the amount of memory in the system. Often, they are equal to the amount of memory that the running application is using at the time when the core file is created.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>The root filesystem is sometimes allocated only 7&#150;30MD of disk space for the partition. If a large enough core file is created and root fills up with no space left, the system has the potential to grind slowly to a halt or crash.
+</P>
+<p>It is very important to keep a watchful eye for these files. Today, some vendors have this <small>find</SMALL> command built in to the crontab when you do a base default installation of the operating system. It is one of the little forgotten commands that add to an administrator&#146;s headaches on a bad day.</P>
+<p>Core files can be written in various places throughout the system. Each place where the core files reside can be considered on an individual basis for determining whether the file needs to be removed right away. When memory is dumped to a core file, it can reside the user&#146;s home directory, the directory the application resides in, or in the root directory.</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>User Home Directory</I> Some applications lock themselves to the directory of the user running the application. When the core file is dumped, it places it into the home directory of that user. You should check to verify that the user is not in need of the core file before it is removed. She might be experiencing problems with the application and working with a vendor who needs the core file to resolve the problem. In reality, 9 out of 10 users never need the core file, and half of that never even know what the file is or how it was created. They leave it in their home directories thinking it is a core file that the system uses as part of their account.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Application Directory</I> If applications are running daemons and they crash, the application can trap the signal and write the core file to a predetermined directory set by an environment variable that the application knows about. Vendors sometimes do this so that they can tell users where the necessary maintenance and support files can be found to help solve problems that users are having. The users of the application might be working with the vendor to resolve any problems they are having. You might want to check with them before removing these files.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Root Directory</I> The core files that end up in the root directory should be either moved and analyzed or removed. Core files reside here when an application running as root ends with a <small>QUIT</SMALL> signal or, on some BSD systems, when the operating system crashes in a hard way with memory parity error or other hardware failures.
+</DL>
+<p>Because these core files are binary files, you might want to use the <small>strings</SMALL> command to extract any useful information that you can. These can be extremely large in size, so you should pipe the command to <small>more</SMALL>.</P>
+<!-- CODE //-->
+<pre>
+# strings core | more
+
+couldn&#146;t register prog %d vers %d
+<b>out of memory</B>
+registerrpc: %s
+trouble replying to prog %d
+never registered prog %d
+svc_tcp.c - tcp socket creation problem
+svctcp_.c - cannot getsockname or listen
+out of memory
+svctcp_create: %s
+svc_tcp: makefd_xprt: %s
+svcudp_create: socket creation problem
+svcudp_create - cannot getsockname
+<b>out of memory</B>
+svcudp_create: %s
+enablecache: cache already enabled
+enablecache: could not allocate cache
+enablecache: could not allocate cache data
+enablecache: could not allocate cache fifo
+cache_set: victim not found
+cache_set: victim alloc failed
+cache_set: could not allocate new rpc_buffer
+.
+.
+.
+etc...
+</PRE>
+<!-- END CODE //-->
+<p>The largest core I&#146;ve experienced was a little over 500MB and took over 15 minutes to write out. I had a root filesystem configured on a 4GB disk partition, so there was enough space to write out the core file. The programmers didn&#146;t want to keep it around, because it was too much for them to analyze. They already knew they had a memory leak problem program.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

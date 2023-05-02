@@ -1,0 +1,186 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=525-529//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Compiling a MIDL Source File</FONT></H4>
+<p>MIDL source files are compiled by invoking the MIDL compiler on the command line:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+MIDL Sail.idl
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you&#146;re using Visual C<small>&#43;&#43;</SMALL> to create a custom COM object using the ATL COM Wizard, the MIDL compiler will be invoked automatically for you.</P>
+<p>Given an input IDL file named <small>Sail.idl</SMALL>, the MIDL compiler generates five files:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>dlldata.c</SMALL>. Contains the functions required for the proxy/stub DLL.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>sail.h</SMALL>. Contains C and C<small>&#43;&#43;</SMALL> versions of the interface definitions.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>sail_i.c</SMALL>. Contains definitions of the CLSIDs and IIDs used by the interfaces, type libraries, and coclasses found in <small>Sail.idl</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>sail_p.c</SMALL>. Contains proxy/stub marshaling code.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>sail.tlb</SMALL>. Contains the type library for <small>Sail.idl</SMALL>. The type library is a binary version of the IDL file and is used by programming languages such as Visual Basic that cannot read IDL files. Type libraries are also used by Automation controllers written in other languages in order to discover properties and methods exposed by a COM object.
+</DL>
+<p>The <small>sail_i.c</SMALL> file is usually included in one of the files used by C or C<small>&#43;&#43;</SMALL> clients of the <small>ISail</SMALL> interface, or it&#146;s linked into the client executable separately. This file contains the GUIDs used by all the objects found in the source IDL file.</P>
+<p>The files <small>sail_i.c</SMALL>, <small>sail_p.c</SMALL>, <small>sail.h</SMALL>, and <small>dlldata.c</SMALL> can be compiled together to create a proxy/stub DLL. This DLL is required if you&#146;re marshaling non[nd]Automation-compatible interfaces across apartments. More information about creating a proxy/stub DLL is provided in the section, &#147;Compiling and Registering the Standard Proxy/Stub DLL,&#148; later in this chapter.</P>
+<p>If you&#146;re targeting Windows NT 4.0 or later, consider using the <small>/Oicf</SMALL> compiler switch when invoking the MIDL compiler. This notifies the MIDL compiler to generate code that uses interpretive marshaling features found only in Windows NT 4.0 and Windows 2000. Interpretive marshaling can greatly reduce the size of the marshaling code used for an interface, and is used for all standard COM interfaces in Windows 2000. If you are building a COM object using the Visual C<small>&#43;&#43;</SMALL> 6.0 ATL COM Wizard, the <small>/Oicf</SMALL> compiler switch is defined automatically.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Using Type Libraries</FONT></H4>
+<p>IDL files were originally created with the C and C<small>&#43;&#43;</SMALL> programmer in mind. Many languages cannot use IDL source files or the C and C<small>&#43;&#43;</SMALL> source files generated by the MIDL compiler. For this reason, the MIDL compiler also generates a <i>type library</I>, which is a binary representation of the IDL source file.</P>
+<p>Languages such as Java and Visual Basic extract information from type libraries instead of using the IDL source. This allows these tools to provide a simple user interface that displays type library information.</P>
+<p>If you are programming with C or C<small>&#43;&#43;</SMALL>, you can use the <small>LoadTypeLib</SMALL> or <small>LoadRegTypeLib</SMALL> function to load the type library; these functions return a pointer to the <small>ITypeLib</SMALL> interface. A related interface, <small>ITypeLib2</SMALL>, is derived from <small>ITypeLib</SMALL>, and also returns type library attributes. The <small>ITypeInfo</SMALL> and <small>ITypeInfo2</SMALL> interfaces are used to describe objects in the type library, and are returned by <small>ITypeLib</SMALL> methods.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Using Structures in IDL</FONT></H4>
+<p>Custom structures are defined in IDL much as they are in C and C<small>&#43;&#43;</SMALL>. Typically, the structure is defined as a <small>typedef</SMALL>. For example, the following code fragment defines a structure type named <small>MyRect</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct tagMyRect
+{
+    int left;
+    int right;
+    int top;
+    int bottom;
+}MyRect;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>After the <small>MyRect</SMALL> structure is defined in the IDL file, it can be used just like any other parameter:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT GetOurRect([out]MyRect* pRect);
+HRESULT DrawOurRect([in]MyRect* pRect);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Structures are not Automation compatible. If you define and use a structure in your IDL, you must use custom interfaces, and you must build and register a proxy/stub DLL for your COM object. This isn&#146;t difficult, but it does require an extra step when building your COM objects. The steps required to build and register proxy/stub DLLs are discussed in the section, &#147;Compiling and Registering the Standard Proxy/Stub DLL,&#148; later in this chapter.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Using Enumerations in IDL</FONT></H4>
+<p>Like structures, enumerations are defined in IDL just as they are in C and C<small>&#43;&#43;</SMALL>. The following fragment defines an enumeration type named <small>BaseballClubs</SMALL> that contains a few major league baseball teams:</P>
+<!-- CODE //-->
+<pre>
+typedef enum tagBaseballClubs
+{
+    Padres = 0,
+    Braves,
+    Yankees,
+    Astros,
+    Indians,
+    Dodgers
+}BaseballClubs;
+</PRE>
+<!-- END CODE //-->
+<p>After the enumeration is defined, it can be used just like any other type:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT PlayBall([in]BaseballClubs* pClub);
+HRESULT GetWorldChamps([out]BaseballClubs* pClub);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Later in this chapter, the custom COM object defines an enumeration containing different processor types that are capable of running Windows 2000.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Pointers and IDL</FONT></H4>
+<p>If you&#146;re one of those people who thought pointers were a difficult topic when learning C or C<small>&#43;&#43;</SMALL>, consider what happens when pointers are transmitted between distributed components. If you&#146;re writing the IDL for interfaces supported by COM objects, your clients may be in the same process, or they may &#147;out of process,&#148; or they may be running on a different machine, as shown in Figure 17.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-01.jpg',500,174 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-01.jpg',500,174)"><font color="#000077"><b>Figure 17.1</B></FONT></A>&nbsp;&nbsp;An interface defines the contract, not the locations of the client or server.</P>
+<p>As discussed in the previous chapter, COM objects are placed into apartments that define their threading model. COM objects may be placed in a Multi-Threaded Apartment (MTA) or a Single-Threaded Apartment (STA). There is only one MTA per process, but there may be multiple STAs. The first STA created in a process is known as the main STA. Once a COM object is created inside an apartment, it never moves to another apartment.
+</P>
+<p>When a client is in the same apartment as the server, pointers can be passed directly between the client and server, as shown in Figure 17.2.</P>
+<p>When a client and server are located in different processes, a pointer to an address in the client&#146;s process is meaningless in the address space of the server. In order for the interface to be useful in both processes, it must be marshaled. As shown in Figure 17.3, an address in the address space of the current process is provided to the client or server.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-02.jpg',500,315 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-02.jpg',500,315)"><font color="#000077"><b>Figure 17.2</B></FONT></A>&nbsp;&nbsp;No marshaling is needed inside an apartment.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-03.jpg',500,156 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-03.jpg',500,156)"><font color="#000077"><b>Figure 17.3</B></FONT></A>&nbsp;&nbsp;When data is being marshaled between processes, the pointers are managed by the COM runtime library.</P>
+<p>A similar issue occurs when the client and server are located on separate machines. Marshaling of interface pointers between apartments was covered in Chapter 16, &#147;COM Threading Models.&#148; Later in this chapter, custom marshaling will be discussed. For now, it&#146;s enough to understand that the proxy/stub DLL and the COM library must conspire together to make it possible for pointers to be exchanged across apartment boundaries.
+</P>
+<p>Potentially, a great deal of work may be required when a pointer is shared between processes or machines. You specify the effort required for your pointers by using MIDL attributes.</P>
+<p>Three different types of pointers are supported by COM:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Full</I>. This is the most expensive pointer type, and it&#146;s indicated with the <small>ptr</SMALL> attribute.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Unique</I>. This pointer requires less work from the COM runtime library than a full pointer, because it does not support pointer aliasing. This pointer type uses the <small>unique</SMALL> attribute.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Reference</I>. This is the least expensive pointer type, and it does not support aliasing or <small>NULL</SMALL> values. This pointer type uses the <small>ref</SMALL> attribute.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

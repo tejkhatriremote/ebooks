@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=977-980//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>There are 10 entry point functions implemented by all resource DLLs:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Startup</SMALL>. The only resource DLL entry point function that&#146;s actually exported by the DLL. This function returns a pointer to a <small>CLRES_FUNCTION_TABLE</SMALL> structure, which contains the addresses of the other entry point functions supported by the DLL. The resource monitor calls startup only once.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Open</SMALL>. Called when the resource monitor wants to begin working with a resource. The resource should be offline when this function is called; if it isn&#146;t offline, the resource DLL should force the resource into an offline state. The resource DLL should also initialize any data structures that will be required by the resource.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Online</SMALL>. Called by the resource monitor to request that the resource be brought online. This function always requires that work be done in a worker threadit&#146;s difficult to imagine any nontrivial resource that can be consistently brought online in less than 300 milliseconds.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LooksAlive</SMALL>. Called periodically by the resource monitor to test the status of the resource DLL. The resource DLL is expected to perform an inexpensive check of the resource and return the status of the resource DLL. Performance is considered to be more important than accuracy in this case; if your resource DLL cannot complete this task in 300 milliseconds, it should use a worker thread to perform the test and return a cached value from the previous test. You can prevent this function from being called altogether by using an event handle, which is discussed in the next section, &#147;Replacing <small>LooksAlive</SMALL> with an Event Handle.&#148;
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IsAlive</SMALL>. Called by the resource monitor periodically to test the status of the resource DLL. Unlike <small>LooksAlive</SMALL>, this function call cannot be optimized away. Also, a resource DLL is expected to perform a thorough test of the resource&#146;s functionality. As with <small>LooksAlive</SMALL>, if a resource DLL cannot complete this task in 300 milliseconds, it should use a worker thread to perform the test and return a cached value from the previous test.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Offline</SMALL>. Called to force the resource offline. This can be due to a failover or due to a normal shutdown request.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Close</SMALL>. Called to remove the resource from the cluster. Implementations of this function typically require a worker thread in order to satisfy the 300-millisecond time limitation. The resource DLL should ensure that the resource is offline. If necessary, the resource should be forced offline using the <small>Terminate</SMALL> function. Any resources that have been allocated to the resource must be freed in this function.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Terminate</SMALL>. Called by the resource monitor or other functions to force an immediate shutdown of the resource. If this function is called, your resource DLL must forcibly release resources owned by the resource and return within 300 milliseconds. This is the only function that&#146;s reentrantit can be called at any time, even when the resource DLL is processing an <small>Open</SMALL> or <small>Online</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ResourceControl</SMALL>. Called to ask the resource to handle a resource control code. Some control codes must be handled by the resource; others are usually handled by the resource monitor.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ResourceTypeControl</SMALL>. Called to ask the resource to handle a resource type control code. Some control codes must be handled by the resource; others are usually handled by the resource monitor.
+</DL>
+<p>Two additional entry point functions are called for resource DLLs that are used for quorum resources:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Arbitrate</SMALL>. Called after <small>Startup</SMALL> and <small>Open</SMALL>. This function requests that the resource attempt to gain control over the quorum resource.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Release</SMALL>. Called to request that the resource release its arbitration over the quorum resource.
+</DL>
+<p>Examples of entry point functions are provided in the form of an example in the section titled &#147;The High Availability Quote Cluster Resource Type.&#148;
+</P>
+<p><font size="+1"><b>Replacing LooksAlive with an Event Handle</B></FONT></P>
+<p>To prevent <small>LooksAlive</SMALL> from being called constantly, a resource DLL can provide an event handle back to the cluster service when the resource is placed online. The cluster service will monitor the event handle instead of calling <small>LooksAlive</SMALL>; the resource DLL is expected to signal the event handle if the resource fails.</P>
+<p><font size="+1"><b>Resource DLL Callback Functions</B></FONT></P>
+<p>Resource DLLs use two callback functions to notify the cluster service about events that are occurring in the resource DLL. Pointers to these functions are passed to the resource DLL as parameters when the <small>Startup</SMALL> entry point function is called:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LogEvent</SMALL>. A pointer to this function is passed to the resource DLL as a <small>PLOG_EVENT_ROUTINE</SMALL> parameter in the <small>Startup</SMALL> entry point function.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetResourceStatus</SMALL>. A pointer to this function is passed to the resource DLL as a <small>PSET_RESOURCE_STATUS_ROUTINE</SMALL> parameter in the <small>Startup</SMALL> entry point function.
+</DL>
+<p><small>LogEvent</SMALL> is called by the resource DLL to place error and event information into the cluster service&#146;s debug log:</P>
+<!-- CODE SNIP //-->
+<pre>
+(pLogEvent)(hResource,
+            LOG_INFORMATION,
+            L&#148;An interesting event\n&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>LogEvent</SMALL> function has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle that identifies the resource that&#146;s creating the log entry. This parameter is passed to the resource DLL as a parameter when the <small>Startup</SMALL> entry point function is called.
+<dd><b>&#149;</B>&nbsp;&nbsp;A value that defines the level of the log entry. Possible values for this parameter are discussed in the following list.
+<dd><b>&#149;</B>&nbsp;&nbsp;A Unicode text string that will be placed in the debug log.
+</DL>
+<p>The following four values are used to define the level of the debug log entry:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LOG_INFORMATION</SMALL>. The log entry is provided for informational purposes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LOG_WARNING</SMALL>. The log entry refers to a possible failure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LOG_ERROR</SMALL>. The log entry refers to a fault that&#146;s isolated to a single component.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>LOG_SEVERE</SMALL>. The log entry refers to a fault that involves multiple components and may have compromised the entire system.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,202 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Displays and Emulations</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=07//-->
+<!--PAGES=247-250//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch06/06-14.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 7<br>Displays and Emulations
+</FONT></H2>
+<dl>
+<dd><b>7.1 Terminal Types</B>
+<dd><b>7.2 Setting Terminal Types</B>
+<dd><b>7.3 Make Use of</B> <small>stty</SMALL>
+<dd><b>7.4 Hotkeys</B>
+<dd><b>7.5 Testing ASCII Terminals</B>
+<dd><b>7.6 Troubleshooting ASCII Terminals</B>
+<dd><b>7.7 Sharing STDIN/STDOUT on Two Terminals</B>
+<dd><b>7.8 Refreshing X</B>
+<dd><b>7.9 Killing Resources with</B> <small>xkill</SMALL>
+<dd><b>7.10 Setting xterm Titlebars</B>
+<dd><b>7.11 Control The Mouse with the Keyboard</B>
+<dd><b>7.12 Display from a Remote X Server</B>
+<dd><b>7.13 ASCII Table in UNIX</B>
+</DL>
+<p>Today hundreds of types of displays and terminals are in the marketplace. Every one of them one is different and every one has unique features. They range from basic ASCII terminals to video terminals that can run both ASCII and X. There are smart terminals and dumb terminals, and in many cases the dumb terminals are smarter than the smart terminals.
+</P>
+<p>No matter what kind of terminal you plan to use, you should be able to find a compatible emulator or proper settings that support the various features and sequences that programs use to manipulate the screen. Depending on what you plan to do when you log in to a system, you might not need to worry about how the terminal reacts if the commands you are issuing don&#146;t require any specific terminal emulator.</P>
+<p>These commands include programs such as <small>who, cat, uname, tail, head, ls</SMALL>, and others that need only a simple linefeed that can endlessly scroll down the screen, similar to a teletype machine that can print on a endless roll of paper. Almost any serial device that displays or prints can be considered a terminal. In the &#145;70s and early &#145;80s, teletype machines worked great as terminals. Although they were slow and used a lot of paper, you could still finish your work.</P>
+<p>By now you might be wondering how UNIX can manipulate so many different types of terminals with different features and different control commands. Or in more basic terms, why does the <small>clear</SMALL> command work on one terminal and not on another?</P>
+<p>There are two parts to UNIX that make terminals emulate properly: a database and a subroutine library. The database describes the capabilities that are supported on the terminal, and the subroutine library is used to query the database to use the capabilities that are stored there. When you put these together, they make what you know today as the <i>termcap</I> file (named for <i>terminal capabilities</I>). Over the years the termcap file has grown extremely large. In the AT&ampT flavors of UNIX, termcap was turned into a database called <i>terminfo</I>. Instead of one large file that holds everything, each terminal description is compiled and stored in a separate file. When programs make use of the terminfo files, they reference the environment variable <small>TERM</SMALL> to figure out what the terminal type is. After this is known, they can go to the database and get the proper database definition for the terminal that you are using.</P>
+<h3><a name="Heading2"></A><font color="#000077">7.1 Terminal Types</FONT></H3>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">7.1.1 Description</FONT></H4>
+<p>Administrators need to be able to set the correct terminal type and know which one to use.
+</P>
+<p><font size="+1"><b>Example One: Working With /etc/termcap</B></FONT></P>
+<p>Flavor: BSD
+</P>
+<p>The BSD version uses the termcap file that is stored in /etc/termcap. A typical termcap entry has the name of the terminal and any alias names for it. The following lines indicate the special features and the settings for it:</P>
+<!-- CODE //-->
+<pre>
+d0|vt100|vt100-am|vt100am|dec vt100:\
+    :do=^J:co#80:li#24:cl=50\E[;H\E[2J:sf=5\ED:\
+    :le=^H:bs:am:cm=5\E[%i%d;%dH:nd=2\E[C:up=2\E[A:\
+    :ce=3\E[K:cd=50\E[J:so=2\E[7m:se=2\E[m:us=2\E[4m:ue=2\E[m:\
+    :md=2\E[1m:mr=2\E[7m:mb=2\E[5m:me=2\E[m:is=\E[1;24r\E[24;1H:\
+    :rf=/usr/share/lib/tabset/vt100:\
+    :rs=\E&gt\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h:ks=\E[?1h\E=:ke=\E[?1l\
+&#8658;E&gt:\
+    :ku=\EOA:kd=\EOB:kr=\EOC:kl=\EOD:kb=^H:\
+    :ho=\E[H:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:pt:sr=5\EM:vt#3:xn:\
+    :sc=\E7:rc=\E8:cs=\E[%i%d;%dr:
+</PRE>
+<!-- END CODE //-->
+<p>If this entry was not already in the termcap file, it needs only to be appended to the bottom of the file. There are no daemons to restart&#151;a query is sent to the file whenever the environment variable <small>TERM</SMALL> is referenced.</P>
+<p>Here is a partial list of definitions in the vt100 entry. On BSD systems, consult the <small>termcap (5)</SMALL> man pages for a more complete listing.</P>
+<table width="100%"><tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td width="5%" valign="TOP" align="LEFT"><small>do</SMALL>
+<td valign="TOP" align="LEFT">moves the cursor down <i>n</I> lines
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>co</SMALL>
+<td valign="TOP" align="LEFT">sets the number of columns
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>li</SMALL>
+<td valign="TOP" align="LEFT">sets the number of lines
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>le</SMALL>
+<td valign="TOP" align="LEFT">controls how a backspace will be handled
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>rf</SMALL>
+<td valign="TOP" align="LEFT">sends the next input character
+<tr>
+<td width="5%" valign="TOP" align="LEFT">
+<td valign="TOP" align="LEFT"><small>up</SMALL>
+<td valign="TOP" align="LEFT">moves the cursor up <i>n</I> lines
+</TABLE>
+<p>If you want to know which terminals your termcap currently supports, you can use the following command to display all the available entries in your /etc/termcap file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% cat termcap | egrep -v &#145;(#|=)&#146; | cut -d&#148;|&#148; -f2 | more
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The command processes (<small>cat</SMALL>) through a termcap file, stripping out (<small>egrep -v</SMALL>) anything with a <small>#</SMALL> character and a <small>=</SMALL> sign in it. It then displays the second field (<small>cut</SMALL>) that is delimited by a vertical bar (<small>|</SMALL>). The first field of the entry is usually an abbreviated name, whereas the second field is generally always more descriptive. Because the file holds many entries, pipe it to <small>more</SMALL> so you can easily read all the entries. The file then displays all the entries in a format that you can easily read:</P>
+<!-- CODE SNIP //-->
+<pre>
+dumb
+switch
+ansi
+sun
+w50
+xterm
+teletec
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Two: Add a File to terminfo</B></FONT></P>
+<p>Flavor: AT&ampT
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>tic</B> <i>file</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>On the AT&ampT side, there is an entry similar to the type of database entries found in the termcap. Each entry is a file for the terminal that it represents. After the entry is made into the terminfo file, it is compiled with <small>tic</SMALL>. The terminfo compiler creates a binary representation of the database description and places it in the appropriate terminfo directory under /usr/lib/terminfo.</P>
+<p>Here is one type of entry for an ANSI terminal that needs to be compiled into the terminfo database:</P>
+<!-- CODE SNIP //-->
+<pre>
+# vi newansi
+
+newansi|ansi 6502,
+ am, cols#80, it#8, lines#24,
+ clear=\E[H\E[2J$&lt50&gt, cub1=\E[D, cud1=\E[B, cuf1=\E[C,
+ cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, el=\E[K, home=\E[H,
+ ht=^I,
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch06/06-14.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

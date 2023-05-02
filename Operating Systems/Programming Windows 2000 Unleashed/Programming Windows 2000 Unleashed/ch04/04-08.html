@@ -1,0 +1,235 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Files</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=4//-->
+<!--PAGES=04-08//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="04-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using the OVERLAPPED Structure</B></FONT></P>
+<p>You use the <small>OVERLAPPED</SMALL> structure to manage overlapped I/O. Because multiple reads and writes can be requested and can remain pending for relatively long periods of time, it can be difficult to keep track of the file location and other information related to the I/O request. You use the <small>OVERLAPPED</SMALL> structure to track this information. The <small>OVERLAPPED</SMALL> structure has five members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Offset</SMALL>. The lower 32-bit value specifying the read or write location.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OffsetHigh</SMALL>. The upper 32-bit value specifying the read or write location.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>hEvent</SMALL>. An event handle that&#146;s alerted when the I/O request is satisfied. This enables you to create an event that is associated with this <small>OVERLAPPED</SMALL> structure, instead of waiting on the file handle associated with the file. This approach allows multiple overlapped reads or writes to be performed at the same time.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Internal</SMALL>. Reserved for operating system use.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>InternalHigh</SMALL>. Reserved for operating system use.
+</DL>
+<p>Two common mistakes are made when using overlapped I/O:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Allowing the <small>OVERLAPPED</SMALL> variable to go out of scope before the I/O request is satisfied.
+<dd><b>&#149;</B>&nbsp;&nbsp;Failing to set <small>OffsetHigh</SMALL> to a value. If this member is not used, it must be set to 0.
+</DL>
+<p><font size="+1"><b>Looking at an Overlapped I/O Example</B></FONT></P>
+<p>You need to follow five steps to use overlapped I/O:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Create a file handle using the <small>FILE_FLAG_OVERLAPPED</SMALL> attribute.
+<dd><b>2.</B>&nbsp;&nbsp;Initialize an <small>OVERLAPPED</SMALL> structure.
+<dd><b>3.</B>&nbsp;&nbsp;Perform a <small>ReadFile</SMALL> or <small>WriteFile</SMALL> function.
+<dd><b>4.</B>&nbsp;&nbsp;Sleep or wait for the file handle to be alerted.
+<dd><b>5.</B>&nbsp;&nbsp;Get the result of the I/O operation.
+</DL>
+<p>These steps are demonstrated in the console mode application provided in Listing 4.10.
+</P>
+<p><b>Listing 4.10</B> Using Overlapped I/O in a Console Mode Program</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+#define BUFFERSIZE 0x1000
+
+int _tmain(int argc, TCHAR* argv[])
+{
+    TCHAR      szFile[_MAX_PATH];
+    HANDLE     hReadFile;
+    OVERLAPPED ov;
+    BYTE       buffer[BUFFERSIZE];
+    DWORD      dwRead;
+    // Get path name to file from user, and open
+    // file as read-only.
+    _tprintf(_T(&#147;File name:&#148;));
+    _getts(szFile);
+    hReadFile = CreateFile(szFile,
+                           GENERIC_READ,
+                           0,
+                           (LPSECURITY_ATTRIBUTES)NULL,
+                           OPEN_EXISTING,
+                           FILE_FLAG_OVERLAPPED,
+                           (HANDLE)NULL);
+    if(hReadFile == INVALID_HANDLE_VALUE)
+    {
+        MessageBox(NULL,
+                   _T(&#147;Can&#146;t Open File&#148;),
+                   _T(&#147;Console File&#148;),
+                   MB_ICONHAND );
+        return 1;
+    }
+    // Read the file, one 4K chunk at a time, and display it
+    // on the console.
+    ov.Offset = 0;
+    ov.OffsetHigh = 0;
+    ov.hEvent = NULL;
+    do{
+        BOOL fReadStarted = ReadFile(hReadFile,
+                                     buffer,
+                                     BUFFERSIZE,
+                                     NULL,
+                                     &ampov);
+        if(fReadStarted)
+
+        {
+            DWORD ndx;
+            for(ndx = 0; ndx &lt 10; ndx&#43;&#43;)
+                _tprintf(_T(&#147;Lah te dah\n&#148;));
+            // Wait for handle to be signaled
+            WaitForSingleObject(hReadFile, INFINITE);
+            GetOverlappedResult(hReadFile,
+                                &ampov,
+                                &ampdwRead,
+                                TRUE);
+            // display data
+            for(ndx = 0; ndx &lt dwRead; ndx&#43;&#43;)
+            {
+                _tprintf(_T(&#147;%c [%#2.2hx]\t&#148;),
+                         buffer[ndx],
+                        (USHORT)buffer[ndx]);
+            }
+        }
+        ov.Offset &#43;= dwRead;
+    }while(dwRead == BUFFERSIZE);
+    CloseHandle(hReadFile);
+    return 1;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The console mode program provided in Listing 4.10 opens an existing file using a name that&#146;s supplied by a user. Unlike the file I/O example shown in Listing 4.3, in this example the <small>FILE_FLAG_OVERLAPPED</SMALL> attribute is used to open the file with an overlapped file handle.</P>
+<p>Next, an <small>OVERLAPPED</SMALL> structure is created and initialized. In this case, the file is read from the beginning&#151;that is, stating offset 0. The <small>OVERLAPPED</SMALL> structure and its offset information are updated after every iteration of the <small>do/while</SMALL> loop.</P>
+<p>The <small>do/while</SMALL> loop has four parts:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A call to <small>ReadFile</SMALL>, in which the overlapped structure is passed to Windows 2000 and the file read is started.
+<dd><b>&#149;</B>&nbsp;&nbsp;Work that&#146;s done while the operating system handles the file request (in this case, a few calls to <small>_tprintf</SMALL>).
+<dd><b>&#149;</B>&nbsp;&nbsp;A call to <small>WaitForSingleObject</SMALL>, in which the thread waits for the file handle to become signaled. (A file handle becomes signaled when a pending I/O request is satisfied.)
+<dd><b>&#149;</B>&nbsp;&nbsp;A call to <small>GetOverlappedResult</SMALL> that returns the result of the file read.
+</DL>
+<p>Note that the call to <small>ReadFile</SMALL> passes <small>NULL</SMALL> instead of a pointer to a variable to hold the number of bytes read. This is because an overlapped call to <small>ReadFile</SMALL> returns almost immediately, and the number of bytes read hasn&#146;t been determined. The call to <small>GetOverlappedResult</SMALL> includes a parameter that determines the number of bytes actually read.</P>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">Using File-Completion Routines</FONT></H4>
+<p>A more sophisticated form of asynchronous I/O involves completion routines. A <i>completion routine</I> is a function that you specify to be called when your asynchronous I/O request is satisfied. When the thread that made the I/O request sleeps or waits in an &#147;alertable&#148; state, the completion routine is called to handle the completion of the I/O request. Figure 4.3 shows how this works in a typical Windows 2000 application.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-03.jpg',427,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch04/images/04-03.jpg',427,420)"><font color="#000077"><b>Figure 4.3</B></FONT></A>&nbsp;&nbsp;Alertable file input and output using completion routines.</P>
+<p>The completion routine is a callback function that follows the general form shown in Listing 4.11.
+</P>
+<p><b>Listing 4.11</B> Typical Format for File Completion Routines</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+void WINAPI ReadComp(DWORD dwErr, DWORD dwBytes, OVERLAPPED* pOv){
+    if(dwErr == 0)
+         // Handle completed I/O
+    else if(dwErr == ERROR_HANDLE_EOF)
+        // Handle end-of-file
+    else
+        // Handle error
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>Three parameters are required for a completion routine:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;An error code for the I/O request, if any. This variable is 0 if no error exists.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of bytes written or read during the I/O request.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the <small>OVERLAPPED</SMALL> structure passed to <small>ReadFileEx</SMALL> or <small>WriteFileEx</SMALL>.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="04-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="04-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

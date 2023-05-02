@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Living with Windows 2000's Strict Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=19//-->
+<!--PAGES=581-584//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="578-580.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="584-587.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Domain Logon to Access a Network File</FONT></H4>
+<p>Now let&#146;s add yet another security layer, a <i>domain</I> layer. So far, we&#146;ve said that each Windows 2000 machine has its own list of users that it knows; these are known as <i>local accounts</I>. As you can imagine, that list could get out of hand pretty quickly in a large organization; in a department with 50 users and 50 machines, you&#146;d have to create all 50 user accounts on <i>each</I> of the 50 machines. A 50-user network would end up requiring you to create a total of 2,500 accounts&#151;not a very appetizing prospect. What&#146;s the obvious answer to this problem? Centralize the user list on one machine. To make administering networks of Windows 2000 machines easier, Windows 2000 machines can be told to look to another machine for a user list.</P>
+<p>Windows 2000 machines sharing a single user list are said to be members of a <i>domain</I>. The machines that hold that list of users must be running Windows 2000 <i>Server</I>, and those machines are referred to as the <i>Domain Controllers</I> (DCs) for the domain. (You can read more about domains in Part V, which covers networking Windows 2000 workstations.)</P>
+<p>Now suppose that your network has three machines; as in the preceding section, you&#146;ll be at M133 trying to access data on RASPBOX. But now M133 and RASPBOX are members of a domain called Holyroman (domains are like empires, right?), with a DC named Charlemagne. Again, let&#146;s follow the sequence of events.</P>
+<p>First, you log on at M133. But instead of telling your system to log you on as Mark from M133, you log on as Mark from Holyroman. That&#146;s the signal to your local LSA not to bother to look for Mark in M133&#146;s user list. Instead, the LSA at M133 says to Charlemagne, &#147;Can you authenticate a guy named Mark in your Holyroman domain?&#148; The LSA on Charlemagne then looks up Mark in the Holyroman domain and verifies that you&#146;ve punched in the right password. Assuming that you have, the LSA on Charlemagne gives M133 an SAT for a user called Holyroman\Mark. At this point, Charlemagne can pretty much go to sleep because it doesn&#146;t figure any further in this story. As you&#146;d imagine, Holyroman\Mark is a member of a group called Holyroman\Users.</P>
+<p>Now you try to access <tt>report.doc</TT> on RASPBOX. RASPBOX&#146;s SRM asks the network file-sharing manager and the file manager for the SDs that they have on <tt>report.doc</TT>. Now, because RASPBOX has joined the domain just as M133 did, the SDs for <tt>report.doc</TT> probably include entries for Holyroman\Users.</P>
+<p>RASPBOX then asks your LSA (at M133) for your SAT. Your LSA hands over the SAT that it got from Charlemagne. The SRM on RASPBOX notes that the Holyroman\Users group can have access to <tt>report.doc</TT>, and that you&#146;re a member of Holyroman\Users. As a result, the SRM grants you access to <tt>report.doc</TT>.</P>
+<p>Again, reviewing the sequence of events: You log on to the <i>domain</I>, which basically means that your machine agrees to use another machine&#146;s user lists. That other machine is a DC for the domain, and the LSA on that DC issues you an SAT. Other machines in the domain have probably allowed the whole domain access to their shared areas, and so when you try to access one of those shared areas as a member of the domain, the sharing machine&#146;s SRM grants you access. The SATs come either from your local machine (if you log on to it) or from your DC (if you log on to your domain). The list of people permitted to use a file is held on the same computer as the file itself. This sequence of events looks like Figure 19.3.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-03.jpg',500,364)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-03.jpg',500,364)"><font color="#000077"><b>Figure 19.3</B></FONT></A>&nbsp;&nbsp;A remote system authorizes an access using a domain account.</P>
+<p>This SAT is generated by a third machine but subsequently held by the local workstation, which is then used for authentication.
+</P>
+<h3><a name="Heading7"></A><font color="#000077">Making the Keys with Users and Passwords</FONT></H3>
+<p>So far, we&#146;ve said that Windows 2000 requires you to create user accounts on each Windows 2000 machine or, if your Windows 2000 machines are networked and have established a domain, then the user accounts are centrally located on machines running Windows 2000 Server and acting as DCs.
+</P>
+<p>If you <i>do</I> have a domain, then you can probably disregard this entire section, as we&#146;d guess that you also have a local network administrator who takes care of domain user accounts. If you <i>are</I> that local domain administrator and you&#146;re looking for help on creating domain user accounts, we would recommend that you look in Chapter 8 of Sybex&#146;s <i>Mastering Windows 2000 Server</I>.</P>
+<p>The database of users is called the Security Access Manager (SAM) file, and the Local Security Authority (LSA) uses the SAM information to create your Security Access Token (SAT) when it logs you on. Now let&#146;s see how to <i>create</I> those accounts.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Introducing the User and Passwords Applet</FONT></H4>
+<p>You create SAM, LSA, and SAT accounts with the Users and Passwords applet in Control Panel. When you open Users and Passwords, you&#146;ll see a window like Figure 19.4.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-04.jpg',404,448)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-04.jpg',404,448)"><font color="#000077"><b>Figure 19.4</B></FONT></A>&nbsp;&nbsp;The Users and Passwords applet</P>
+<p>You see the three pre-built user accounts&#151;Administrator, LocalUser, and Guest. Part of the Windows 2000 setup process asked you what password to assign to the new Administrator account; this account is the result.
+</P>
+<p>This applet isn&#146;t the only way to work with user and group accounts in Windows 2000 Professional. You can also get to this information in the Computer Management tool in Control Panel <img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-02i.jpg"> Administrative Tools. When you use this tool, you&#146;ll see a window that looks like Figure 19.5.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-05.jpg',638,452)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch19/images/19-05.jpg',638,452)"><font color="#000077"><b>Figure 19.5</B></FONT></A>&nbsp;&nbsp;The Computer Management tool gives you access to user and group accounts in Windows 2000 Professional.<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="578-580.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="584-587.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,153 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=772-776//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The only additions are the <small>Lock</SMALL> and <small>Unlock</SMALL> method calls. A <small>Lock</SMALL> call locks the entire <small>Application</SMALL> object and provides synchronization. This means only one user may access the <small>Application</SMALL> object. If the page is referenced by many concurrent users, scalability will be hampered. This is because the others must wait while the user modifies the value. The key is to use this sparingly and quickly. When <small>Lock</SMALL> is called without an <small>Unlock</SMALL> method call, <small>Unlock</SMALL> will be called after the page has finished processing.</P>
+<p><font size="+1"><b>Setting and Resetting the State</B></FONT></P>
+<p>Using <small>Session</SMALL>-level and <small>Application</SMALL>-level objects is okay, but you need to know how to set the correct initial values. Each application has a <small>global.asa</SMALL> file. The <small>global.asa</SMALL> file is located in the root of the virtual directory of the ASP application. This file can contain up to four events, as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+function Session_OnStart() {
+}
+function Session_OnEnd() {
+}
+function Application_OnStart() {
+}
+function Application_OnEnd() {
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The order of the events is as follows:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The Web server is started.
+<dd><b>2.</B>&nbsp;&nbsp;Client requests an ASP page for the first time.
+<dd><b>3.</B>&nbsp;&nbsp;The <small>Application_OnStart</SMALL> event is processed.
+<dd><b>4.</B>&nbsp;&nbsp;The <small>Session_OnStart</SMALL> event is processed for the user.
+</DL>
+<p>Neither of these events is triggered if an HTM or HTML page is referenced. The page referenced must be an .ASP page.
+</P>
+<p>The <small>Session_OnEnd</SMALL> event is called when the user is removed from the Web Application. This can occur in two ways. The first is if the Session or User timeout transpires. The second is if an ASP page calls Session.Abandon. This invokes only the <small>Session_OnEnd</SMALL> event.</P>
+<p>Logically, it would seem that the <small>Application_OnEnd</SMALL> event should be invoked when all users have been removed. However, practically this is not the case. The <small>Application_OnEnd</SMALL> event is triggered only when the server is shut down (as of the time of this writing).</P>
+<p>When you&#146;re writing code within the <small>global.asa</SMALL> file, you need to be concerned with timeouts, because if the ASP is combined with a SQL query, a timeout conflict can occur. Doing the math, if a script has a timeout value of 90 seconds and the SQL query has a 45-second timeout, then in the 46th second, any access to the SQL query will result in an error.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Built-in ASP Objects</FONT></H4>
+<p>Beyond the built-in <small>Application</SMALL> and <small>Session</SMALL> objects, there are five other built-in objects. These objects provide the mechanism that can be used to interact with ASP. For example, Figure 23.1 shows that there are a request stream and a response stream. Therefore, there are two built-in ASP objects called <small>Request</SMALL> and <small>Response</SMALL>. Here are the formal definitions of the other ASP objects:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ASPError</SMALL>. This is a new object introduced with IIS 5.0. It provides the ability to retrieve an error that has been generated within the ASP execution context.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ObjectContext</SMALL>. This object makes it possible to interact with the transaction context when the ASP page is executed.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Request</SMALL>. This object represents the incoming stream and contains information about the request. It also contains information about the incoming parameters, cookies, and client-side certificates.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Response</SMALL>. This object represents the outgoing stream. Here, you can define HTTP headers, create a buffer for delayed sending, and work with other HTTP items.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Server</SMALL>. This is a simple utility object that&#146;s used to instantiate other COM objects. These COM objects can be used to enhance the functionality of ASP scripts.
+</DL>
+<h3><a name="Heading7"></A><font color="#000077">Building a Web Application</FONT></H3>
+<p>Because of the state requirements, building a Web application can seem to be in conflict with building COM&#43; components, but that&#146;s not the case. Therefore, before the aspects of building components are discussed, this section will outline the framework for building Web applications. A framework is needed to keep code maintenance from becoming a nightmare.
+</P>
+<p>Every Web application has a main page. Consider the following main page in Figure 23.2.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-02.jpg',800,571 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-02.jpg',800,571)"><font color="#000077"><b>Figure 23.2</B></FONT></A>&nbsp;&nbsp;A sample Web application.</P>
+<p>Looking closely on this page, you will see three sections: Banner (along the top of the page), Navigation (along the left side of the page), and Meat (the rest of the page). They are explained as follows:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Banner</I>. This usually appears at the top of the Web page. It can also appear at the bottom of the Web page, but it&#146;s more effective at the top. The banner is an application definition section. For example, if you&#146;re in the root application, the banner may be blue. If you&#146;re in the support section, it may be yellow. General navigation may be available, but it&#146;s not needed. The banner may also contain advertisements. In general, the banner is simply a section of a Web page that makes the page look nicer.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Navigation</I>. This is a section of a Web page that traditionally appears on the left. However, it can also be found on the right. This section contains the navigation tools available in the Web page. The navigation method is typically a series of nodes. For example, it could be a text box with a button that executes some action.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Meat</I>. This section appears in the remaining area. It contains the main information the user is actually interested in. This section should not be too long. The less the user has to scroll, the easier the Web page is to read.
+</DL>
+<p>The three-section approach is realized using HTML frames for each section. But there is an issue with frames: Many people object to them because they make for a more difficult end-user experience. In fact, this is true only if the end user attempts to print the page. This is because when you print, you need to specifically tell which section to print. And more often than not, you will end up printing the banner or the navigation section.
+</P>
+<p>This to me is not an excuse. The reason is that a non-frame approach makes for more-difficult coding and more maintenance problems. This is because all the code is thrown onto one page. A compromise would be to offer a printing page on your Web site for information that may be printed.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Understanding Web Activities</FONT></H4>
+<p>When building an application, you need to outline a business process. Consider the diagram shown in Figure 23.3.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-03.jpg',199,163 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch23/images/23-03.jpg',199,163)"><font color="#000077"><b>Figure 23.3</B></FONT></A>&nbsp;&nbsp;A sample business decision diagram.</P>
+<p>In this process, the user is logged on. The process of logging on involves a series of steps and decisions at various nodes (also called <i>operations</I>). These operations must occur sequentially. For example, the node registration of a client can be reached only if the logon attempt fails. This is a task-navigation concept.</P>
+<p>Now consider the sample business decision shown in Figure 23.4&#151;in the context of a Web application. It does not work because browsers can bookmark any operation and jump to it directly. This means that there may not be a context based on some previous operation. Without a context, presenting the material becomes increasingly difficult. It could be argued that a Web page does have a starting point&#151;the root directory. However, this really isn&#146;t true because a starting point is purely optional and can easily be overridden.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="23-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

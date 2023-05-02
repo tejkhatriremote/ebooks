@@ -1,0 +1,272 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=03//-->
+<!--PAGES=103-107//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Use the fully qualified path to create the file when creating.
+</FONT><hr>
+</BLOCKQUOTE>
+<!-- CODE SNIP //-->
+<pre>
+rocket 17% cd foo
+rocket 18% touch fee fii foo fum
+rocket 19% rm -rf *
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To safely execute this process for testing, create a directory called foo in /usr/tmp. Then <small>touch</SMALL> a file called <small>-i</SMALL>. Change the permissions so that it has no permissions. If the <small>-i</SMALL> doesn&#146;t force the interactive confirmation, the lack of permission on the file stops the removal process at the point where it hits that special file. Go into the foo directory and create test files with <small>touch</SMALL>. Finally, test to verify that it works with the <small>rm</SMALL> command.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Accidents happen and sometimes files at the root level get deleted. This adds one more layer of protection for securing the root files and saving the kernel from getting deleted.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Things happen; sometimes you fat-finger the key and other times you aren&#146;t paying attention to what directory you are in when you use the <small>rm</SMALL> command. It&#146;s a nice little bonus feature. When it works, it saves much time in restoring from backups.</P>
+<p>This <small>-i</SMALL> can go in any directory where you are afraid to lose the files or the subdirectories; it does not have to go only at the root level.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>chmod</SMALL>, <small>rm</SMALL>, <small>touch</SMALL></P>
+<h3><a name="Heading14"></A><font color="#000077">3.7 File Collecting</FONT></H3>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">3.7.1 Description</FONT></H4>
+<p>This is a way to check whether users have any suspicious files that can be used to compromise a system. It also shows whether there is anything the user is doing that goes against a corporate policy that has been put in place.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Depending on how these commands are used and by whom, a person with access has the ability to abuse their privileges.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Example One: Using Simple Find</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> <i>path-name-list</I> [ <b>expression</B> ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The following command can search a system for a filename and output the contents into a file to be viewed at a later date. From a security standpoint, key files can be passed in to the command to search for any users who are up to no good.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# find / -name .rhosts -print &gt  /usr/local/admin/gotcha.txt
+# find / -name passwd -print &gt&gt  /usr/local/admin/gotcha.txt
+# find / -name sulog -print &gt&gt  /usr/local/admin/gotcha.txt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>As you look at these commands, I&#146;m sure you realize they are the <small>find</SMALL> command in its simplest form. It merely searches the system starting at the root level. When it comes to finding the name of the word defined in the command to search for, it redirects the output of the path and name to a file. You probably use this nearly every day searching for regular files you misplaced, but it is still a powerful tool from the security side.</P>
+<p><font size="+1"><b>Example Two: Extended Find with xargs</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: Bash</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>find</B> <i>path-name-list</I> [ <b>expression</B> ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Users who maintain history files of past commands that were executed can learn what other commands are used by users. They might think of some new UNIX hack that you don&#146;t have. This is, of course, an abuse of root powers, but you might also find out who is attempting to gain root access or probing around in the system.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# find / -type f -name .bash_history | xargs cat &gt
+&#8658;/tmp/history.txt
+# find / -type f -name bookmarks.html | xargs grep -i xxx  &gt
+&#8658;/tmp/history.txt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>These two lines are very powerful commands, I will touch more on these later in Chapter 6, &#147;File Management.&#148; For now, these commands search for a file and, when it is found, display the contents or <small>grep</SMALL> out a pattern.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>This makes a good addition to any security sweeping programs or scripts that you can run throughout the systems to find suspicious files or data that users might have.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>One of the most fun parts of being an administrator is hearing the boss say, &#147;I need you to look into what this user is up to, because I might need to build a case against him.&#148; So, as part of my sweep, I run the simple <small>find</SMALL> commands discussed&#151;<i>Jackpot!</I> You can find anything from pornographic material and spamming to boss-bashing. Try to read between the obvious simple commands and use it to your advantage, like I do here.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man page:
+</P>
+<p><small>find</SMALL></P>
+<h3><a name="Heading16"></A><font color="#000077">3.8 File Encryption</FONT></H3>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">3.8.1 Description</FONT></H4>
+<p>Encrypting files made easy.
+</P>
+<p><font size="+1"><b>Example One: Simple Encryption</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>crypt</B> [ password ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To encrypt an ASCII file, pipe the STDOUT of the file to the <small>crypt</SMALL> command and redirect it to a new filename. Repeat the process to decrypt the data.</P>
+<p>Take an ASCII file:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% cat foo
+Hey Victor,
+
+The secret back door entrance into UGU is
+located on the &#147;i&#148; in the Hints &amp Hacks Book
+section. Use the password: mcp
+
+Kate
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Encrypt the original file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 2% cat foo | crypt &gt foo.cpt
+Enter key:
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Ensure that the file is encrypted:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 3% cat foo.cpt
+POIM)(*(*Y()(^%(&amp*)JUYG^%RFGVBKLU*^%*()P{OK LKHY
+*&amp^(&amp^H:PO^%$%$KJHBI*B&ampH_)(I)(I{O)(**(&ampYNUY
+-)()(*&amp*&ampYBNUHIUY*&amp&amp{)IM(*OIIOIPOIM(*U&ampN(*UJ
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Decrypt the file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 4% cat foo.cpt | crypt &gt foo.new
+Enter key:
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Output the new decrypted file:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 5% cat foo.new
+Hey Victor,
+
+The secret back door entrance into UGU is
+located on the &#147;i&#148; in the Hints &amp Hacks Book
+section. Use the password: mcp
+
+Kate
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Another way the command could be written is to redirect the ASCII file into the <small>crypt</SMALL> program and redirect it out in one command. So the previous code can be replaced with the following:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% crypt &lt foo &gt foo.cpt
+rocket 2% crypt &ltfoo.cpt &gt foo.new
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Two: Compression with Encryption</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shell: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>crypt</B> <i>file</I>
+<b>compress</B> [ <b>-c</B> ] [ name ]
+<b>uncompress</B> [ <b>-c</B> ] [ name ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>compress</SMALL> command adds a little more security to the file. By doing so, it can give away your encryption technique.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% compress -c foo | crypt &gt foo.cpt
+Enter key:
+rocket 2% crypt &lt foo.cpt | uncompress &gt foo.new
+Enter Key:
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Now that you see how compression works with <small>crypt</SMALL>, this is how you can give your technique away to a hacker. If a hacker attempts to decrypt a file that was encrypted with example One; using the decryption technique from example Two and applying the <small>uncompress</SMALL> command, he would be notified that the file was never compressed.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 2% crypt &lt foo &gt foo.cpt
+Enter key:
+rocket 3% crypt &lt foo.cpt | uncompress &gt foo.new
+Enter Key:
+stdin: not in compressed format
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

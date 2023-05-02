@@ -1,0 +1,127 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Running Windows 3.x and DOS Programs</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=28//-->
+<!--PAGES=901-903//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="899-901.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="903-905.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Much of the DOS extender&#146;s job involves keeping track of what section of memory is being used by each part of the program that it is extending. Keeping track is done with a data structure in memory called <i>page tables</I>. Pretty much every DOS extender uses page tables. (They must for reasons relating to how the 286 and later chips dole out extended memory.) The technical terms for these tables are the local descriptor table, or LDT, and the global descriptor table, or GDT, but all extenders organize tables differently. The big problem is that two programs keeping GDTs that are organized differently are bound to step on one another at some point. But that situation doesn&#146;t occur if you run only one program at a time and switch the entire memory image when moving from one program to another. This is pretty much what happens with VCPI-compliant programs. They can&#146;t multitask with each other because they each see the GDT a different way. But they <i>can</I> share the GDT in the sense that they can unload their own GDT and reload another VCPI program&#146;s GDT before passing control to that program.</P>
+<p>Consider the following analogy. An assembly plant runs 24 hours a day in three shifts. There&#146;s a day manager, an evening manager, and a night manager. Each has a unique approach to the job, but they all use the desk that sits at a good observation point above the assembly line floor. So they&#146;ve agreed: No matter what happens on any manager&#146;s shift, that manager&#146;s got to leave the desktop clean when he or she leaves, the way it was found. There&#146;s no way that two of these managers could work at the desk at the same time, but they can share the desk in an eight-hours-at-a-time way. So it is with VCPI-compliant programs: They <i>context-switch</I> well but do not multitask well.</P>
+<p>For that reason, VCPI applications cannot work reliably in the multitasking framework of Windows 2000 Professional. They will probably work in MS-DOS mode, however, for the simple reason that when you activate a DOS program under standard mode, the memory image of standard mode gets swapped out to disk, clearing the desk for the next VCPI program. Examples of programs that follow the VCPI standard are Lotus 1-2-3 version 3, Paradox 3.5, AutoCAD, FoxPro, and Interleaf Publisher.</P>
+<p>One problem you may find with VCPI programs is that VCPI programs can access extended memory in two ways. A few use an old method of extended memory access called INT 15 access. Most, however, use a newer method whereby memory is allocated via XMS, the extended memory specification. XMS-type VCPI programs will probably run fine as DOS applications under standard mode. INT 15-type VCPI programs require that you pre-allocate memory for them with a parameter on your <tt>himem.sys</TT> invocation, using the <tt>/INT15=nnnn</TT> switch. For example, if you were planning on running an INT 15-type VCPI app that needed a megabyte of extended memory, then your <tt>himem.sys</TT> invocation in the DOS program&#146;s <tt>config.sys</TT> would look like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   device=c:\windows\himem.sys /int15=1024
+</PRE>
+<!-- END CODE SNIP //-->
+<p>But to continue with the VCPI versus DPMI explanation: As you&#146;d expect, the next step was to teach all these managers how to share a desk&#151;that is, to get all DOS extender programs to agree on how to address the GDT and LDT page tables so that they could all have page tables in memory at the same time, allowing smooth multitasking of DOS extender applications and Windows 2000. That standard is called the DOS Protected Mode Interface, or DPMI. The basic difference between Lotus 1-2-3 version 3 and 3.1 is that 3.1 is DPMI compliant and 3 is VCPI compliant. DPMI applications should run without trouble in a DOS box under Windows 2000, just so long as you give them XMS memory in the PIF for the DPMI-compliant application and the vendor has implemented DPMI correctly. Many software vendors, including Lotus, do not implement DPMI completely correctly. Although 1-2-3 version 3.1 is DPMI compliant and as such uses extended memory, it still requires that you create an expanded memory page frame in order to run properly. Look for DOS extender applications to be DPMI compliant.
+</P>
+<p>As time progresses, more and more DOS programs that use memory managers will switch to DPMI compliance and so will run much more easily under Windows 2000. One example is Paradox; version 3.5 was VCPI compliant, and version 4 is DPMI compliant.</P>
+<h4 align="LEFT"><a name="Heading18"></A><font color="#000077">Tracking Resources</FONT></H4>
+<p>Every time you open an application, you use Windows 2000 resources&#151;that&#146;s the way Windows 2000 works. Unfortunately, all too often with previous versions of Windows, opening an application <i>also</I> meant that the applications wouldn&#146;t relinquish their share of the resources after they were done with them. Use Designer once in a Windows 3.<i>x</I> session, for example, and your resources are depleted until you restart Windows 3.<i>x</I>.</P>
+<p>Windows 2000 Professional not only makes applications, including Win16 applications, use resources better, it also makes the applications return the resources when they&#146;re through. Thus if you open enough applications to slow down the system from depleted resources, after you close the applications, you get all the resources <i>back</I> without having to reboot or restart Windows 2000.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>The only memory that is not returned after use is in the case of the NT Virtual Dos Machine (NTVDM). When the NTVDM is started to run a Win16 application, it is kept open even after the Win16 application is closed because it will be used by the next Win16 program that you run. This arrangement saves time when you open and close Win16 applications.<hr></FONT>
+</BLOCKQUOTE>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Understanding Why You Still Have <i>.ini</I> Files
+</FONT></H4>
+<p>The Registry (discussed earlier in this book) takes over the job of containing the user and system configuration information from the <tt>.ini</TT> files that you came to know and love in previous versions of Windows. The only trouble is that those <tt>.ini</TT> files are still present&#151;as are all the <tt>.ini</TT> files belonging to each Win16 program (<tt>amipro.ini</TT>, <tt>psp.ini</TT>, etc.). If Windows 2000 has the Registry, why do you still have <tt>.ini</TT> files?</P>
+<p>The answer is backward compatibility. Win16 programs don&#146;t know how to access the Registry, so they must get their system and user information from <tt>win.ini</TT> and <tt>system.ini</TT>, as well as their specific program information from their own <tt>.ini</TT> files. Win16 applications don&#146;t know or care that the Registry exists except as something that gives them an operating system to work in.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="899-901.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="903-905.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

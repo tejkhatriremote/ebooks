@@ -1,0 +1,147 @@
+
+                                      Cracking for the beginner
+
+
+by Y0SHi
+
+06/05/97
+
+mm/dd/yy
+
+Hi.
+
+My name is Y0SHi, and I cracked my first program today. I'm a beginning cracker offering this tutorial to people who are also
+beginning crackers (or for people who refuse to admit that they are beginning crackers =). In this tutorial, we will crack the file
+"pw.com" together. You will need Soft-Ice ver 2.62 for Dos. If you have any questions, comments, or observations, email me
+at gargos@juno.com. I hope this helps you learn! NOTE: It took me about 15 minutes to crack this program on my own with
+no external help (like this tutorial) =).
+
+
+                                     About the target (PW.COM)
+
+
+PW is a very small file I found on Lord Caligo's website, which contains various programs and tutorials on how to crack (like
+this one). Anyway, in the Programs section, you'll find pw, it is EXTREMELY small, something like 202 bytes unzipped. This
+file is very useful in getting you off on the right foot on how to crack. Download it, study it, learn it, CRACK IT!
+
+
+                                       The actual cracking part
+
+Ok, first run the target, pw, a few times to see what's going on. First, you are prompted to enter your password. If your input
+was successful, you get "Password Ok !!", and if not, "Password Wrong !!".
+
+Load the program into Soft-Ice (using the command "ldr pw.com" [ldr is Soft-Ice's program loader]). Begin tracing through
+the code by pressing "p". You will soon see something similar to the following:
+
+mov ah, 09
+
+mov dx, 0123 ; 0123=offset of "Enter Password: "
+
+int 21h ;dos function display a string (similar to C's printf(" ") and 
+
+;BASIC's print, string's offset is stored in dx
+
+You know now that to print out the strings, dos function 09, int 21 is used. While you're still in Soft-Ice, set a breakpoint on int
+21, ah=09 (type in "bpint 21 ah=09"). This will make the program return to Soft-Ice before every displayed string.
+
+To see where "Password Wrong !!" is printed out, return to the program and type in any old password. You now should be
+back in Soft-Ice. You will see "INT 21H" is highlighted.
+
+1662:01BF INT 21H
+
+To get a clearer view of what's going on, type rip.
+
+IP=01BF (could be different on your PC)
+
+IP=
+
+Type in "01B0"
+
+NOTE: The reason for 01B0: It is a few instructions behind the grim printing of "Password Wrong !!". You could have typed
+in 01A0 orng.
+
+SECOND NOTE: Undoubtedly the IP will be different in your machine. Just type the IP number after subtracting 10-20 from
+it.
+
+Bingo! You land right in the following code.
+
+OR AL, [BX+DI] ; SEE IF AL = BX+DI 
+
+JNZ 01BF ; IF NOT, JUMP TO THE DISPLAYING OF "PASSWORD WRONG !!"
+
+LOOP 01A8
+
+MOV AH, 09
+
+MOV DX, 0133 ; OFFSET OF "PASSWORD OK !!"
+
+INT 21H ; DISPLAY "PASSWORD OK !!"
+
+JMP 01C6 ; JUMP TO MEMORY LOCATION 01C6 (THIS WILL VARY ON YOUR MACHINE)
+
+01BF: MOV AH, 09
+
+MOV DX, 0155 ; OFFSET OF "PASSWORD WRONG !!"
+
+INT 21H ; DISPLAY IT (THIS IS THE SAME ADDRESS WE GOT CALLED TO ORIGINALLY)
+
+01C6: MOV AH, 4C
+
+INT 21H ; THIS FUNCTION IS USED TO TERMINATE A PROGRAM
+
+Did you get all that? I think I commented it well enough for people with little assembly knowledge. Anyway, we DON'T
+waassword Wrong !!" to be shown. We are looking for something to bypass 01BF. Hmm... got it! After "Password Ok !!" is
+shown, it skips the address where we landed first and terminates the program with ah=4ch/int 21h. 
+
+If al and bx+di are not equal, it performs the showing of "Password Wrong !!", but if they are equal, "Password Ok !!" is
+shown, "Password Wrong !!" is skipped and the program is ended. So, if we want to show the "Password Ok !!" message,
+we change jnz 01BF to jz 01BF (which means to show "Password Wrong !!" if AL and BX+DI are equal, and to show
+"Password Ok !!" if they aren't. 
+
+To permanently fix this, open up pw.com in a hexeditor such as PSEDIT and search for 750B (the mnemonics for jnz 01BF)
+and replace the 75 part with 74. This will cause the program to display "Password Ok !!" if you got the wrong password and
+"Password Wrong !!" if the password is right. This would be very useful to do to a network, so all of the users couldn't get in
+but you and anyone else with the wrong password could.
+
+
+                                       Case two: crackme.com
+
+                               Get crackme.com from Lord Caligo's website
+Crackme is a program very similar to the above pw.com, except that it actually has some sort of protection loop; nevertheless,
+it is still a very easy crack; all the program does is display a message and get user input, then runs the input through a
+protection scheme to see if the password is correct. However, in this crack, I won't use a bpint 21 ah=09; this is cheap and
+unreliable, it doesn't even work in this case. No, in this scenario I actually choose to single-step through the code, although this
+sometimes wastes a lot of time. 
+
+I won't go into much detail in the asm code in this one, but to start, load up crackme.com with ldr; in the beginning, we see an
+unconditional jump (the signature of all .com files) to the start of the code; first, the message is displayed, and then input is
+received and run through a protection loop. From this loop we could figure out what the actual password is, but making the
+user type in the right password would be a pain in the ass to them, so we just make it so every password is considered right.
+
+Anyway, find the string display function (as described in the pw section) and then immediately afterwards, the input is received
+and run through the loop. There is no mistaking in finding where the loop begins; it starts right after the "get_keyboard_input"
+function. Anyway, trace through it until you reach the conditional jumps referencing to the address where "bad password" is
+displayed (the most abundant) , and simply skip over it using RIP. Keep doing this for a while until you reach the MOV AH,
+09 / INT 21 function; make a note of the address. Go back to the beginning of the protection schema; trace through one
+instruction, and write down the mnemonics of the code; the mnemonics are 8BF2.
+
+Now, we want the protection loop to skip through the loop and go straight through to the "password ok!" payload, so we
+assemble "jmp the_address_that you_wrote_down" on top of the second instruction of the protection (why the second
+instruction? No real reason, it just felt better) and after that, just to insue no "Invalid Opcode" faults, put in an "inc ax" and after
+that, a "dec ax". Now, go back to the beginning of the code "rip 0100" and run the program the whole way through. And now,
+after the user input, it says "Correct Password!" 
+
+                                          Making it stick
+
+Load up PSEDIT or Hexworks or whatever and search for "8BF2". Replace it with E9AE004048 (that's the mnemonics for
+jmp valid_user, inc ax, and dec ax.) Now, whenever you enter in a password, it'll be right! 
+
+
+                                        Contacting the Author
+
+To contact me on IRC, DON'T look for Y0SHi, this is some stupid bot for www.y0shi.comthat's not my web page). Look for
+YOSHi on EfNet.
+
+Email: gargos@juno.com
+Contacting Lord Caligo: caligo@lords.com, |lAShEr| on efNet
+

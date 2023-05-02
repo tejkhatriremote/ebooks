@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using the COM[TITLE]#43; In-Memory Database</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=24//-->
+<!--PAGES=825-830//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="24-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="24-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Security</B></FONT></P>
+<p>IMDB uses integrated security and impersonation of MTS package accounts to secure itself and database access. On startup, the IMDB service looks for an IMDB Trusted Users role in the system application in the COM&#43; catalog. The IMDB Trusted Users role is added to the catalog during COM&#43; setup.
+</P>
+<p>It&#146;s a good idea to create a local Windows NT group (for example, IMDB Users) and add it to the role. If you want system administrators to be able to access IMDB, add the Administrators group as well.</P>
+<p>The IMDB service reads the catalog only when it starts up. Here are some points to keep in mind:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If you add a user to the role while IMDB is running, you&#146;ll need to stop and restart it before the new user entry will take effect.
+<dd><b>&#149;</B>&nbsp;&nbsp;If you add the IMDB Users group before you start IMDB, you can add users to the group (using Computer Management) without shutting down IMDB for the change to be recognized. You&#146;ll have to log off that user and then back on, as usual.
+</DL>
+<p>For best results, create a Users group and add it to the System role.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>IMDB does not require this role to be present to run in some configurations. For instance, if you log on using an account that&#146;s a member of the Administrators group and then run your COM&#43; applications as the interactive user, you won&#146;t need to set up the IMDB Trusted Users role. However, if you want to run the IMDB service as a non-Administrator user, you will need to add the IMDB Trusted Users role in the system application and populate it with the appropriate groups and users.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p><font size="+1"><b>How IMDB Calculates Memory Usage</B></FONT></P>
+<p>When the IMDB server starts up, the following calculations are used to determine the amount of RAM to use. When the value is specified in the administration utility, use this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Memory = max ( user specified value )
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the value is not specified in the administration utility or it&#146;s set to 0, use this (for Intel machines only):
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Memory = max ( 16MB, Min ( Virtual memory - 256MB, Physical memory - 32MB))
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here&#146;s what to use on Alpha machines:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Memory = max ( 16MB, Physical memory - 32MB)
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading4"></A><font color="#000077">A Simple Example</FONT></H3>
+<p>For this example, the purpose is to go through the motions of using IMDB. This example will be used in an ASP page that accesses some data on the server. Consider the following code:
+</P>
+<!-- CODE //-->
+<pre>
+&lt;%@ Language=Javascript %&gt;
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;META NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;%
+var conn;
+var rs;
+
+conn = Server.CreateObject( &#147;ADODB.Connection&#148;);
+
+conn.Provider = &#147;MSIMDB&#148;;
+conn.ConnectionString = &#147;Pubs&#148;;
+conn.CursorLocation = adUseNone;
+conn.Open();
+%&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+</PRE>
+<!-- END CODE //-->
+<p>This piece of code creates an ADO connection to an IMDB source. Note that <small>conn.Provider</SMALL> is MSIMDB, which is the IMDB. The <small>conn.Connection</SMALL> string is Pubs, which specifies the IMDB data source that will be used as a reference, and <small>conn.CursorLocation</SMALL> is set to <small>None</SMALL>, because the cursor is not an SQL DB&#150;type cursor. Finally, the IMDB database can be opened.</P>
+<p>This example shows that programming an IMDB connection is like writing ADO code. The slightly tricky part involves the configuration of IMDB.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Setting Up IMDB</FONT></H4>
+<p>Before IMDB can even be used, it needs to be set up. First, you need to start the Component Services Explorer (see Figure 24.2).
+</P>
+<p>Select the My Computer node and right-click. From the pop-up menu, select Properties and then select the Options tab (see Figure 24.3).</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-02.jpg',799,574 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-02.jpg',799,574)"><font color="#000077"><b>Figure 24.2</B></FONT></A>&nbsp;&nbsp;Component Services Explorer showing IMDB data sources.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-03.jpg',403,464 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-03.jpg',403,464)"><font color="#000077"><b>Figure 24.3</B></FONT></A>&nbsp;&nbsp;IMDB options.</P>
+<p>By default, IMDB is not started. Select the IMDB check box to enable it (see Figure 24.3). The IMDB data source connects to a database as specified in the IMDB data source. You can also specify whether or not a table is loaded dynamically. If the check box Load Tables Dynamically is not checked, then when IMDB is started, the tables specified in the Tables folder will be loaded. Why load tables dynamically? Because fewer initial resources are required. However, keep in mind that the first client to reference a table will get a performance hit while the table is being loaded.
+</P>
+<p>The text box IMDB Memory Size specifies the amount of RAM that IMDB will use. You should keep this amount below the actual size of RAM. Otherwise, the performance hit of memory being swapped to disk negates the purpose of IMDB. What&#146;s the optimal size? It depends on your hardware and software configuration. Using Performance Monitor, you can see how much memory is being utilized. However, the rule of thumb is that more RAM is better.</P>
+<p>The last text box, Cache Blob Size, specifies whether the binary large object (blob) will be cached. If it&#146;s larger than the amount specified, the blob is not cached. Blobs in a database are binary fields of undetermined sizes. Although, ideally, all of the blob should be stored, this is not practical. An example would be the caching of a full-feature film. Therefore, only a certain amount of the blob will be cached.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Setting Up an IMDB Data Source</FONT></H4>
+<p>To set up an IMDB data source, select the node IMDB Data Sources under the My Explorer node. To add another node, right-click and then select a new data source (see Figure 24.4).
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-04.jpg',383,222 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-04.jpg',383,222)"><font color="#000077"><b>Figure 24.4</B></FONT></A>&nbsp;&nbsp;Setting the IMDB data source definition.</P>
+<p>The New IMDB Data Source dialog box has the following five text boxes:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Name.</I> The name that the IMDB data source will be assigned.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>OLE DB provider name</I>. This is the provider that will be used as the underlying data source. For an ODBC source, it&#146;s MSDASQL. For a SQL Server OLE DB provider, it&#146;s SQLOLEDB, and for an Oracle database, it&#146;s MSDAORA.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Provider data source</I>. This depends on the OLE DB provider you&#146;re using. For ODBC, it&#146;s the ODBC data source name. For SQL Server and Oracle, it&#146;s the server name.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>IMDB catalog name</I>. This specifies the database you want to connect to. This applies only to ODBC and SQL Server. For Oracle, this should be left blank.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Provider properties</I>. This is an optional field where you can specify some other parameters. By far, the most common parameter will be a custom security logon. In the development cycle, this is the simplest method. For SQL Server, you would use &#147;uid=sa;pwd=&#148;. This is to log on as System Administrator (sa), and no password is needed. This string is not applicable for Oracle, and it needs to use &#147;userid=xxx;password=xxx&#148;.
+</DL>
+<p>When these fields have been filled out, click the OK button.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Referencing Resource Tables</FONT></H4>
+<p>To select the IMDB data source, double-click the Tables folder node. Right-click and select New|Table. This pops up a dialog box with one text box. In this text box, type in the name of a table from the reference database and then click the OK button. This specifies the table that will be loaded.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Caution:&nbsp;&nbsp;</B><p>Do not reference an underlying table twice. This will cause coherence problems.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<h3><a name="Heading8"></A><font color="#000077">Some Details on IMDB</FONT></H3>
+<p>From the discussion so far, it would seem that there&#146;s nothing extraordinary about IMDB. It&#146;s just another OLE DB provider. In a sense, this is true. However, there are some other considerations that must be taken into account. These considerations depend on the context and language being used.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="24-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="24-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

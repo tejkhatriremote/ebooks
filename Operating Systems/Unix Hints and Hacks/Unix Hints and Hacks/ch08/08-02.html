@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Editors</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=08//-->
+<!--PAGES=290-294//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="08-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading4"></A><font color="#000077">8.2 The Six Steps to ed</FONT></H3>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">8.2.1 Description</FONT></H4>
+<p><small>ed</SMALL> has a more limited command structure than <small>vi</SMALL>, and it can be more difficult to handle. After you get the hang of it, you shouldn&#146;t have any problems, however. Before you start editing, make a backup copy of the file you are working with. When you&#146;re inside the <small>ed</SMALL> editor, it is very easy to corrupt the file if you get lost or confused at any point while editing.</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+ed [filename]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To bring the <small>ed</SMALL> editor up, use the command <small>ed</SMALL> followed by an optional filename.</P>
+<p><font size="+1"><b>Step One: Command Mode</B></FONT></P>
+<p>When <small>ed</SMALL> is started, you are put into the command mode. At first, you might not realize it because the cursor sits on an empty line without notifying you of what&#146;s happening. To verify that you are in the command mode, type the Enter key; you should see a question mark (<small>?</SMALL>).</P>
+<!-- CODE SNIP //-->
+<pre>
+% ed foobar
+?
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In the command mode, there are certain options that you need to be aware of. They are all basic commands that provide the function of moving around in the editor:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Move the position of the cursor up or down.
+<dd><b>&#149;</B>&nbsp;&nbsp;List out the text that has been entered.
+<dd><b>&#149;</B>&nbsp;&nbsp;Delete a line.
+<dd><b>&#149;</B>&nbsp;&nbsp;Insert and append to existing lines.
+<dd><b>&#149;</B>&nbsp;&nbsp;Go to specific line numbers.
+</DL>
+<p>These are explained in the sections that follow.
+</P>
+<p><font size="+1"><b>Step Two: Moving the Cursor</B></FONT></P>
+<p>There are only two ways to move the cursor position in the <small>ed</SMALL> editor: up and down. Enter the line number you want and you are there. You should familiarize yourself with certain commands that that will help in moving around:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>1</SMALL>&#151;Positions and displays the cursor to the first line
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>$</SMALL>&#151;Positions and displays the cursor on the last line
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>.</SMALL>&#151;Displays the current line the cursor is positioned on
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>1,$l</SMALL>&#151;List all the lines in the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>1,$n</SMALL>&#151;Lists all the lines in the file with line numbers
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>.,$n</SMALL>&#151;Lists the current line the cursor is positioned on with line numbers
+</DL>
+<p><font size="+1"><b>Step Three: Switching to Insert Mode</B></FONT></P>
+<p>There are two ways to insert text: the insert command and the append command. Whether you choose to insert or append the text is up to you. The only difference is where the text gets written, above or below the current line.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>5a</SMALL>&#151;Appends text after line 5 in the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>2i</SMALL>&#151;Appends text before line 2 in the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>.a</SMALL>&#151;Appends text to the current position
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>.i</SMALL>&#151;Inserts text above the position
+</DL>
+<p>To leave insert mode, enter a period (<small>.</SMALL>) on a line by itself. Always keep a mental note that you cannot insert above line 1. In <small>ed</SMALL>, there is no line 0. If you are at the top of the file you must start by appending text.</P>
+<p><font size="+1"><b>Step Four: Quitting the vi Editor</B></FONT></P>
+<p>Because there is no way to move from side to side across a line, the only way to make changes to the line is to use a find/replace command.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>s/pattern1/pattern2</SMALL>&#151;Performs a one-time search on <small>pattern1</SMALL> and replaces it with <small>pattern2</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>1,$s/pattern1/pattern2/g</SMALL>&#151;Searches globally for all occurrences of <small>pattern1</SMALL> and replaces it with <small>patern2</SMALL>
+</DL>
+<p><font size="+1"><b>Step Five: Deleting Characters, Words, and Lines</B></FONT></P>
+<p>The concept of deletion is the same as insert mode or moving up and down through the file. You pass the line number and the command to delete (<small>d</SMALL>):</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>1d</SMALL>&#151;Deletes the first line of the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>2,6d</SMALL>&#151;Deletes line 2&#150;6
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>.,$</SMALL>&#151;Deletes from the current position to the end of the file
+</DL>
+<p><font size="+1"><b>Step Six: Write to a File and Quit</B></FONT></P>
+<p>Unlike <small>vi</SMALL>, there is no way to perform a write and a quit in one command. It is a two-step process. You have to first write the file out, and then quit the editor.</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>w [filename]</SMALL>&#151;Writes out the file if a filename is provided, but does not quit the file
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>q</SMALL>&#151;Quits the file without editing it
+</DL>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>There are times when you won&#146;t have a choice but to use the <small>ed</SMALL> editor. You usually never run this program except in extreme emergencies. There are those who do actually prefer this editor over others for the simplicity that it provides. I&#146;ll still take <small>vi</SMALL> any day.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>In several cases, I have seen administrators scrambling in a pinch after a hard crash searching for their administration books because they forgot how to use <small>ed</SMALL>. There really isn&#146;t a lot to the editor. The odds are against you, however, that you will remember the commands. Practice occasionally; you will not have to use it on a regular basis, but you will need it!</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages
+</P>
+<!-- CODE SNIP //-->
+<pre>
+ed
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading6"></A><font color="#000077">8.3 Six Simple Steps to vi</FONT></H3>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">8.3.1 Description</FONT></H4>
+<p>The <small>vi</SMALL> editor is more powerful and less complicated than many people imagine. Often just mentioning <small>vi</SMALL> makes people shudder and cringe. If you do know the editor, don&#146;t be surprised if you hear from people, &#147;Eww, you know <small>vi</SMALL>!&#148; I strongly believe it is plain ignorance, because the complexity of the editor is extremely overrated. However, it is not without some difficulty&#151;if you dive deeply into the powerful features of <small>vi</SMALL>, the commands to manipulate the data can be a bit cryptic and overwhelming.</P>
+<p>I tend to believe that people can become so lazy or spoiled by GUIs and mouse-based editors that they fail to educate themselves in the finer points of a text-based editor such as <small>vi</SMALL>. They learn that using the mouse to drag-and-drop or cut-and-paste the data in the file is faster and easier. The reality for me is that it is slower. Moving the cursor around through keyboard commands can be faster.</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>vi</B> [-r] [filename]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To bring the editor up, use the command <small>vi</SMALL> followed by an optional filename. Always make a copy or backup of any system files if you modify them, in case something gets corrupted or if you plan to make a lot of changes to the file.</P>
+<p><font size="+1"><b>Step One: Command Mode</B></FONT></P>
+<p>When the editor opens a file, you are immediately put into command mode. From command mode, you can manipulate the text in a variety of ways:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Manipulate the position of the cursor
+<dd><b>&#149;</B>&nbsp;&nbsp;Page through the file
+<dd><b>&#149;</B>&nbsp;&nbsp;Cut-and-paste text throughout the file
+<dd><b>&#149;</B>&nbsp;&nbsp;Delete characters, words, or lines
+<dd><b>&#149;</B>&nbsp;&nbsp;Write and quit the file
+</DL>
+<p>If you ever feel lost within the editor, pressing the Esc key will always return you to command mode. See section 8.4, &#147;Configuring <small>vi</SMALL> Parameters,&#148; for information on how to set <small>showmode</SMALL> to display the modes as you toggle between the two. W</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="08-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

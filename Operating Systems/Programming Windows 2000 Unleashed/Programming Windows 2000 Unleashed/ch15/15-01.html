@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:OLE Drag and Drop</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=15//-->
+<!--PAGES=473-477//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch14/14-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 15<br>OLE Drag and Drop
+</FONT></H2>
+<p><b><big>In This Chapter</BIG></B></P>
+<dl>
+<dd>&#149; <b>Understanding the OLE Clipboard <i>474</I></B>
+<dd>&#149; <b>Using OLE Drag and Drop <i>481</I></B>
+<dd>&#149; <b>Looking at a Drag-and-Drop Example <i>483</I></B>
+</DL>
+<p>As discussed in Chapter 13, &#147;COM and OLE Concepts,&#148; <i>OLE</I> is a technology that&#146;s built on top of COM. This chapter covers two of the most commonly used OLE technologies: drag and drop and data transfer using the OLE extensions to the Windows Clipboard.</P>
+<p>OLE applications use a mechanism known as <i>uniform data transfer</I> to exchange information. Uniform data transfer is a much more extendable way of exchanging data than using the traditional Windows 2000 Clipboard operations. Although the basic Windows 2000 Clipboard works fine for transferring small amounts of text, it&#146;s not very useful when transferring large objects.</P>
+<p>This chapter discusses uniform data transfer, the OLE Clipboard, and OLE drag and drop. You&#146;ll also add OLE drag and drop to an MFC application as an example.</P>
+<h3><a name="Heading2"></A><font color="#000077">Understanding the OLE Clipboard</FONT></H3>
+<p>As you may know, the Clipboard functions offered by Windows 2000&#151;<small>OpenClipboard</SMALL>, <small>SetClipboardData</SMALL>, <small>GetClipboardData</SMALL>, and so on&#151;work with a handle to global data. When transferring large objects such as bitmaps or multimedia clips, these objects must be loaded from disk, created in global memory, and transferred to another program. All this work consumes a large amount of your system&#146;s resources and slows down performance. A mechanism that works fine for small text strings really bogs down when transferring large video clips.</P>
+<p>The OLE Clipboard uses uniform data transfer as its underlying transport. The OLE Clipboard enables you to describe the data to be transferred as well as its current storage medium. This enables you to avoid transferring megabytes of data unnecessarily, which would have consumed all the global memory available on your machine just to paste a large bitmap.</P>
+<p>OLE objects that are the source of a data-transfer operation expose the <small>IDataObject</SMALL> interface and are known as <i>data objects</I>. The <small>IDataObject</SMALL> interface works primarily with two structures:</P>
+<dl>
+<dd>&#149; <small>FORMATETC</SMALL>. Describes the data to be transferred
+<dd>&#149; <small>STGMEDIUM</SMALL>. Describes the current location of the data
+</DL>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Using the FORMATETC and STGMEDIUM Structures</FONT></H4>
+<p>The <small>FORMATETC</SMALL> structure describes the contents involved in an OLE data transfer. When using the Windows 2000 Clipboard, you&#146;re limited to describing the data to be transferred as a <small>DWORD</SMALL> variable. When using OLE uniform data transfer, an entire structure is used to describe the data, as Listing 15.1 shows.</P>
+<p><b>Listing 15.1</B> The <small>FORMATETC</SMALL> Structure<hr></P>
+<!-- CODE //-->
+<pre>
+typedef struct tagFORMATETC
+{
+    CLIPFORMAT      cfFormat;
+    DVTARGETDEVICE  *ptd;
+    DWORD           dwAspect;
+    LONG            lindex;
+    DWORD           tymed;
+}FORMATETC;
+typedef FORMATETC* LPFORMATETC;
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The five member variables of the <small>FORMATETC</SMALL> structure specify much more than the format of the data to be transferred. As shown in the following list, descriptions of the target device, the storage medium, and the amount of detail in the data are also supplied:</P>
+<dl>
+<dd>&#149; <small>cfFormat</SMALL>. Specifies the format of the data represented by this structure. This value can be any of the traditional Windows Clipboard formats, such as <small>CF_TEXT</SMALL> or <small>CF_BITMAP</SMALL>. This value also can refer to formats registered privately by applications using <small>RegisterClipboardFormat</SMALL>. Although Clipboard formats can be used as values, remember that this structure is used for OLE data transfer and has nothing to do with the traditional Windows 2000 Clipboard.
+<dd>&#149; <small>ptd</SMALL>. Points to a <small>DVTARGETDEVICE</SMALL> structure containing information about the target device for which the data is being composed. This value can be <small>NULL</SMALL>, as when the data is created independently of any particular device&#151;in this case the screen device will be used. If a specific target device is required, such as a printer, an appropriate default device must be selected. The <small>DVTARGETDEVICE</SMALL> structure is discussed immediately after this list.
+<dd>&#149; <small>dwAspect</SMALL>. Specifies the amount of detail present in the format. This allows multiple views to be supported for a single object on the Clipboard. A bitmap may be present as a metafile, as a thumbnail, as an icon, and in a native 20MB <small>BITMAP</SMALL> structure, for example. Possible aspect values are presented after this list.
+<dd>&#149; <small>lindex</SMALL>. Identifies a portion of the aspect when data is split across page boundaries. If data is not split across a page boundary, this value is set to &#150;1, which refers to the entire data.
+<dd>&#149; <small>tymed</SMALL>. Specifies how the data is stored and is taken from one of the <small>TYMED</SMALL> constants, which is discussed later in &#147;The <small>STGMEDIUM</SMALL> Structure&#148; section.
+</DL>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Handling FORMATETC Structures</FONT></H4>
+<p>Filling in a <small>FORMATETC</SMALL> structure every time you transfer or query the OLE Clipboard can be a real pain. So much so that examples in this chapter use a C<small>&#43;&#43;</SMALL> wrapper class to make using the structure less painful. Listing 15.2 provides the source code for the <small>CFormatEtc</SMALL> class. This class is used in the sample program presented later in this chapter and can be found on the CD-ROM in the OleTree project directory as <small>fmtetc.h</SMALL>.</P>
+<p><b>Listing 15.2</B> A C<small>&#43;&#43;</SMALL> Wrapper for the <small>FORMATETC</SMALL> Structure<hr></P>
+<!-- CODE //-->
+<pre>
+// CFormatEtc - a C&#43;&#43; class that wraps the FORMATETC structure.
+// All ctor arguments have default values - no arguments are
+// required for transferring text.
+struct CFormatEtc : public FORMATETC
+{
+    CFormatEtc(CLIPFORMAT cf = CF_TEXT,
+               DWORD dwTymed = TYMED_HGLOBAL,
+               DWORD aspect = DVASPECT_CONTENT,
+               DVTARGETDEVICE* ptd = NULL,
+               LONG lindex = -1);
+};
+CFormatEtc::CFormatEtc(CLIPFORMAT cf,
+                       DWORD dwTymed,
+                       DWORD aspect,
+                       DVTARGETDEVICE* pTargDevice,
+                       LONG lDataIndex)
+{
+    cfFormat = cf;
+    tymed = dwTymed;
+    dwAspect = aspect;
+    ptd = pTargDevice;
+    lindex = lDataIndex;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>CFormatEtc</SMALL> class initializes itself according to default arguments declared for its constructor. To construct a <small>CFormatEtc</SMALL> object suitable for text data transfer, you can just declare an object, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+CFormatEtc fe; // Text format transfer
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To create more elaborate format descriptions, pass parameters to the constructor when initializing the object, like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+CFormatEtc  fe(CF_HBITMAP, TYMED_HGLOBAL, DVASPECT_CONTENT);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Because <small>CFormatEtc</SMALL> is derived from <small>FORMATETC</SMALL>, any function that accepts a pointer to a <small>FORMATETC</SMALL> structure will accept a pointer to <small>CFormatEtc</SMALL>.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch14/14-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="15-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

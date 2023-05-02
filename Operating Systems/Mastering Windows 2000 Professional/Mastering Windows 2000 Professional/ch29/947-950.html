@@ -1,0 +1,155 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Fixing Windows 2000 Professional When It Breaks</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=29//-->
+<!--PAGES=947-950//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="944-947.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch30/951-955.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading30"></A><font color="#000077">Examining Crash Dumps with <i>dumpexam</I>
+</FONT></H4>
+<p>What should you do about a blue screen? If you can manage to get a blue screen while you&#146;ve got the debugger attached, you&#146;re golden&#151;you can log the output. But you may not have the whole debugger system set up; that&#146;s where a <tt>crashdump</TT> file can be useful.</P>
+<p>You can tell a Windows 2000 machine that if it ever experiences a blue screen, it should dump the entire contents of memory to a file called <tt>memory.dmp</TT>. You enable that function in the Control Panel. In the System applet, select the Startup/Shutdown tab. You&#146;ll then see a Startup/Shutdown dialog box showing a Recovery group. Check the check box that directs the system to create <tt>memory.dmp</TT>.</P>
+<p>If you ever <i>do</I> see a blue screen, reboot, and you&#146;ll see a huge <tt>memory.dmp</TT> file in your <tt>Winnt</TT> directory. You examine that with <tt>dumpexam</TT>, but you need a few ingredients to use <tt>dumpexam</TT>.</P>
+<p>First, you need the program itself. It&#146;s on the CD-ROM in <tt>\Support\Debug\I386\dumpexam.exe</TT>. If you copy it somewhere else, you should also copy <tt>kdextx86.dll</TT>. You&#146;ll also need the folder in <tt>\Support\Debug\I386\Symbols</TT>, because <tt>dumpexam</TT> needs it to understand what it&#146;s seeing in the memory dump. Invoke <tt>dumpexam</TT> like so:</P>
+<!-- CODE SNIP //-->
+<pre>
+   dumpexam -v -f <tt><i>outfile</I></TT> -y <tt><i>x</I></TT>:\support\debug\i386\symbols memory.dmp
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <tt>-v</TT> option says &#147;be verbose;&#148; the more information we can get, the better. The variable <i>outfile</I> is simply the name of an ASCII text file that will contain the output of the dump analysis. For <i>x</I>, insert the drive letter of your CD-ROM; <tt>memory.dmp</TT> is, of course, the name of the original <tt>crashdump</TT> file. The output file is an expanded-upon blue screen.</P>
+<p>Well, now that you&#146;ve got it, what do you do with it? Let&#146;s look at the information a blue screen provides.</P>
+<p>The first lines are a stop code. They may look like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+   ** STOP:CODE address1 address2 address3 address4
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The four numbers are addresses; one of them is the address of the program that caused the blue screen. You next see a line like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   INACCESSIBLE_BOOT_DEVICE or IRQL_NOT_LESS_OR_EQUAL
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Following that is a list of drivers in memory at the time of the blue screen. It&#146;s a two-column listing. An excerpt might look like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   DLL Base DateStmp - Name
+   80100000 2e53fe55 - ntoskrnl.exe
+   80010000 2e41884b - Aha154x.sys
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <i>base</I> is the start address of the <tt>.dll</TT>. All addresses will be above <tt>80000000</TT> hex because the system area starts there. The date stamp (it&#146;s seconds since 1980) can be useful. If you see a system driver that has a date that is different from the dates of the other system drivers, you may have a newer, corrupted driver.</P>
+<p>Below the driver list is a list of modules that are near the area that caused the blue screen; one of them is the culprit.</P>
+<h4 align="LEFT"><a name="Heading31"></A><font color="#000077">Remembering the Bottom Line: What These Tools Are Good For</FONT></H4>
+<p>Blue screens and the Kernel Debugger can be insightful tools, but remember that in the end they can do only a few things:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;They can point a finger at the bad driver. Calling a vendor and saying, &#147;Your SCSI driver doesn&#146;t work on my system,&#148; is likely to produce a shrug and a &#147;Says you, pal&#148; from the SCSI vendor. Sending the vendor a blue-screen output is a bit more damning and <i>may</I> motivate the vendor to fix its buggy drivers.
+<dd><b>&#149;</B>&nbsp;&nbsp;They can indicate what&#146;s going wrong. Maybe the vendor is blameless, and you&#146;ve just got a corrupted driver. After you know which file may have caused the trouble, you can try reloading it or checking the vendor&#146;s Web site for an updated driver.
+<dd><b>&#149;</B>&nbsp;&nbsp;They can sometimes give you the ammunition to say to Microsoft, &#147;Look&#151;there&#146;s a bug in the [fill in the blank] subsystem, and here&#146;s the proof!&#148; There&#146;s no guarantee that anyone will <i>do</I> anything about it, but at least you&#146;ve got the smoking gun.
+</DL>
+<p>Disasters shouldn&#146;t happen but they sometimes do. With the proper preventive planning, they can become entertaining war stories rather than sources of battle fatigue.
+</P>
+<h3><a name="Heading32"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter introduced you to some of the vital skills needed for troubleshooting Windows 2000 when things go wrong. We discussed how to avoid Windows 2000 crashes, which is the best troubleshooting technique of all. Then you learned about using the Last Known Good start-up option and how to diagnose a boot problem. We finished the chapter by describing the debugging process in Windows 2000 Professional and how to make some sense of the information given by a dump file.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="944-947.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch30/951-955.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

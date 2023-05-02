@@ -1,0 +1,192 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=255-259//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">The ACTRL_PROPERTY_ENTRY Structure</FONT></H4>
+<p>The <small>ACTRL_PROPERTY_ENTRY</SMALL> structure is introduced in Windows 2000 to enable objects to manage security for multiple properties located on a securable object. The <small>ACTRL_PROPERTY_ENTRY</SMALL> structure is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _ACTRL_PROPERTY_ENTRY
+{
+    LPCTSTR                   lpProperty;
+    PACTRL_ACCESS_ENTRY_LIST  pAccessEntryList;
+    ULONG                     fListFlags;
+} ACTRL_PROPERTY_ENTRY;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ACTRL_PROPERTY_ENTRY</SMALL> structure has three members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>lpProperty</SMALL> is used only when specifying security for properties located on an object. This member variable is a pointer to a string containing a <small>GUID</SMALL> that identifies the property. In the more common case where the structure refers to an object, this member variable is <small>NULL</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pAccessEntryList</SMALL> is a pointer to an <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structure that contains the access entry list for the object or property.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>fListFlags</SMALL> is a flag that specifies characteristics for the access control list. Currently, this variable has one documented value: <small>ACTRL_ACCESS_PROTECTED</SMALL>, which is used to prevent the property or object from inheriting entries from its parent when used with objects stored in Active Directory.
+</DL>
+<p>As with the <small>ACTRL_ACCESS_ENTRY_LIST</SMALL> structure, you&#146;ll rarely need to access <small>ACTRL_PROPERTY_ENTRY</SMALL> structure directly if you build your access control lists using Windows 2000 API functions. However, you can grant access to an object for all users if you set <small>pAccessEntryList</SMALL> to <small>NULL</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading17"></A><font color="#000077">The ACTRL_ACCESS Structure</FONT></H4>
+<p>The <small>ACTRL_ACCESS</SMALL> structure is the most commonly used structure for programming security using access control lists in Windows 2000. The structure itself is very simple, and it&#146;s defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _ACTRL_ALIST
+{
+    ULONG                  cEntries;
+    PACTRL_PROPERTY_ENTRY  pPropertyAccessList;
+}ACTRL_ACCESS;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>There are only two members in the <small>ACTRL_ACCESS</SMALL> structure:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>cEntries</SMALL>. Contains the number of <small>ACTRL_PROPERTY_ENTRY</SMALL> structures in the array pointed to by <small>pPropertyAccessList</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>pPropertyAccessList</SMALL>. Points to an array of <small>ACTRL_PROPERTY_ENTRY</SMALL> structures. Each member of the array specifies access control for the entire object or for a property found on the object.
+</DL>
+<p>Several functions make use of the <small>ACTRL_ACCESS</SMALL> structure. Here are some of the most commonly used ones:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SetEntriesInAccessList</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetNamedSecurityInfoEx</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ConvertAccessToSecurityDescriptor</SMALL>
+</DL>
+<p>These functions are discussed in the following section.
+</P>
+<p><font size="+1"><b>Using SetEntriesInAccessList to Create and Modify Access Control Lists</B></FONT></P>
+<p>Earlier in the chapter, the <small>AddAccessAllowedAceEx</SMALL> function was used to add an <small>ACE</SMALL> to the end of an <small>ACL</SMALL>. This function, like many of the low-level Windows security functions, requires you to manage the order and size of the access control list. When using trustee-based security, you can often eliminate the need to manage the low-level details of the access control list.</P>
+<p>For example, the <small>SetEntriesInAccessList</SMALL> function is used to add, modify, or remove the entries in an access control list:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD SetEntriesInAccessList(ULONG               cEntries,
+                             PACTRL_ACCESS_ENTRY pAccessEntryList,
+                             ACCESS_MODE         AccessMode,
+                             LPCTSTR             lpProperty,
+                             PACTRL_ACCESS       pOldList,
+                             PACTRL_ACCESS*      ppNewList);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>SetEntriesInAccessList</SMALL> function returns zero when it&#146;s successful and the Win32 error code when it fails. <small>SetEntriesInAccessList</SMALL> has six parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of <small>ACTRL_ACCESS_ENTRY</SMALL> elements in the array passed as the next parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of <small>ACTRL_ACCESS_ENTRY</SMALL> structures that each define the access control for a single trustee.
+<dd><b>&#149;</B>&nbsp;&nbsp;An <small>ACCESS_MODE</SMALL> value that defines how the new array of <small>ACTRL_ACCESS_ENTRY</SMALL> structures is to be applied to the current access list. Possible values for this structure are discussed later.
+<dd><b>&#149;</B>&nbsp;&nbsp;An optional string parameter used when the access control list is applied to a property on the object. This parameter is set to <small>NULL</SMALL>, when the access control list is applied to the object, or to a string that contains the property&#146;s <small>GUID</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to the current <small>ACTRL_ACCESS</SMALL> structure that contains the access control list, if any. This parameter is optional if you&#146;re creating a new access control list. It&#146;s required if you&#146;re removing an entry from the list or if you&#146;re merging new entries into an existing list.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to an <small>ACTRL_ACCESS</SMALL> structure that will receive the new access control list. The <small>ACTRL_ACCESS</SMALL> structure and access control list will be dynamically allocated and must be freed using the <small>LocalFree</SMALL> function.
+</DL>
+<p>The <small>ACCESS_MODE</SMALL> can be one of the following values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GRANT_ACCESS</SMALL>. Adds new access control entries to the front of the access control list without removing any existing entries
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>REVOKE_ACCESS</SMALL>. Removes access control entries from the access control list for any trustees passed in the access entry list array
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SET_ACCESS</SMALL>. Adds new access control entries to the front of the access control list and removes any existing entries for the same trustees
+</DL>
+<p><font size="+1"><b>Using GetNamedSecurityInfoEx to Retrieve Security Information</B></FONT></P>
+<p>The <small>GetNamedSecurityInfoEx</SMALL> function is used to retrieve access control information for Active Directory objects, Registry keys, kernel objects, and other Windows 2000 named objects. This function is similar to the <small>GetNamedSecurityInfo</SMALL> function discussed earlier in the chapter, except that it adds support for property-level security and works with trustee-based access control structures:</P>
+<!-- CODE //-->
+<pre>
+DWORD GetNamedSecurityInfoEx(LPCTSTR lpObject,
+                             SE_OBJECT_TYPE ObjectType,
+                             SECURITY_INFORMATION SecurityInfo,
+                             LPCTSTR lpProvider,
+                             LPCTSTR lpProperty,
+                             PACTRL_ACCESS *ppAccessList,
+                             PACTRL_AUDIT *ppAuditList,
+                             LPTSTR *lppOwner,
+                             LPTSTR *lppGroup);
+</PRE>
+<!-- END CODE //-->
+<p>The <small>GetNameSecurityInfoEx</SMALL> function returns zero when it&#146;s successful and a Win32 error code when it fails. This function has nine parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that identifies the securable object. As with the <small>GetNamedSecurityInfo</SMALL> function discussed earlier, each type of securable object has a different name format. For details about specific types, consult the online documentation.
+<dd><b>&#149;</B>&nbsp;&nbsp;An identifier for the object type that uses the same values as the <small>GetNamedSecurityInfo</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;One or more flags that specify what sort of information is to be returned by the function, using the same values as the <small>GetNamedSecurityInfo</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that specifies the name of the security provider that will handle the request. You normally pass <small>NULL</SMALL> for this parameter, which causes Windows 2000 to select the proper security provider for you.
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that identifies the child object or property this function is requesting information about. In the most common case, where you&#146;re interested in retrieving information for the object, you pass <small>NULL</SMALL> as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to an <small>ACTRL_ACCESS</SMALL> structure that contains access control information for the object. This parameter can be <small>NULL</SMALL> if the <small>DACL_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to an <small>ACTRL_AUDIT</SMALL> structure that contains audit control information for the object. This parameter can be <small>NULL</SMALL> if the <small>SACL_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to a string that will be set to point to the object&#146;s owner. This parameter can be <small>NULL</SMALL> if the <small>OWNER_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to a string that will be set to point to the object&#146;s group. This parameter can be <small>NULL</SMALL> if the <small>GROUP_SECURITY_INFORMATION</SMALL> flag is not included in the third parameter.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="07-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

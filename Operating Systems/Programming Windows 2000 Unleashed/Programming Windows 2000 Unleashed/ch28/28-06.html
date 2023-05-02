@@ -1,0 +1,146 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using MSMQ</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=28//-->
+<!--PAGES=945-946//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="28-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Figure 28.3 shows the MMC used to display the message queues currently created on a domain controller.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-03.jpg',638,452 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch28/images/28-03.jpg',638,452)"><font color="#000077"><b>Figure 28.3</B></FONT></A>&nbsp;&nbsp;Using MSMQ to view the status of message queues on a server.</P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Opening an Existing Queue</FONT></H4>
+<p>Before messages can be written to or read from a message queue, the process that wants access to the queue must obtain a handle to the message queue. When a process uses <small>MQCreateQueue</SMALL> to create a new message queue, a handle to the new message queue is returned to the caller.</P>
+<p>There are two ways to retrieve a handle to a public queue. The first step in each of these methods is to obtain the format name that describes the message queue. After the format name has been determined, you can call <small>MQOpenQueue</SMALL> to open the message queue and retrieve a handle to the queue. You can obtain a message queue&#146;s format name in these two ways:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If you have the computer and queue names, call the <small>MQPathNameToFormatName</SMALL> function to determine the queue&#146;s format name.
+<dd><b>&#149;</B>&nbsp;&nbsp;If you have an instance value GUID for the message queue, call the <small>MQInstanceToFormatName</SMALL> function to obtain the format name.
+</DL>
+<p>Alternatively, you can enumerate the set of message queues that meet a certain set of criteria. In order to search for message queues in this manner, you use three functions:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQLocateBegin</SMALL>. Defines the query used to search for message queues
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQLocateNext</SMALL>. Retrieves the results for a message queue query
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MQLocateEnd</SMALL>. Ends a message queue query
+</DL>
+<p>After you&#146;ve determined the format name for a message queue, the queue is opened by calling the <small>MQOpenQueue</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hQueue = NULL;
+DWORD dwAccess = MQ_RECEIVE_ACCESS;
+DWORD dwShareMode = MQ_DENY_NONE;
+HRESULT hr = MQOpenQueue(wszFormat,
+                         dwAccess,
+                         dwShareMode,
+                         &amphQueue);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The following four parameters are passed to <small>MQOpenQueue</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The format name of the message queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;The type of access needed to the message queue. <small>MQ_PEEK_ACCESS</SMALL> specifies that messages can be viewed but not removed from the queue. <small>MQ_RECEIVE_ACCESS</SMALL> specifies that messages can be viewed and optionally removed from the queue. <small>MQ_SEND_ACCESS</SMALL> specifies that messages may be sent to the queue.
+<dd><b>&#149;</B>&nbsp;&nbsp;The share mode for the message queue. <small>MQ_DENY_NONE</SMALL> allows access to the message queue by other processes. <small>MQ_DENY_RECEIVE_SHARE</SMALL> prevents other processes from opening the message queue for reading. <small>MQ_DENY_NONE</SMALL> must be used when opening the pipe for sending messages.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a <small>HANDLE</SMALL> variable that will receive the message queue handle if the function call succeeds.
+</DL>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Sending Messages over a Message Queue</FONT></H4>
+<p>Messages are sent over a message queue using the <small>MQSendMessage</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = MQSendMessage(hQueue,
+                           &ampg_msgProps,
+                           NULL);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>MQSendMessage</SMALL> function has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the message queue that will carry the message.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an <small>MQMSGPROPS</SMALL> structure that defines properties for the message to be sent.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a constant or object that specifies the transaction characteristics that are to be applied to the message. <small>NULL</SMALL> is used if the message is not part of a transaction.
+</DL>
+<p>Listing 28.3 contains a console mode application that opens an existing message queue and uses <small>MQSendMessage</SMALL> to place a message into the queue. The source code in Listing 28.3 can be found on this book&#146;s CD-ROM as part of the SendQueueMsg project.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="28-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="28-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

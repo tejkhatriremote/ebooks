@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=034-037//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Locking a Page of Virtual Memory</FONT></H4>
+<p>Normally, you should let the virtual memory management functions built into Windows 2000 determine which pages are loaded into RAM or swapped out to a page file. Sometimes, however, it&#146;s necessary to guarantee that a page always is loaded in RAM for performance reasons. You can lock a page of virtual memory by using the <small>VirtualLock</SMALL> function. Here&#146;s an example:</P>
+<!-- CODE SNIP //-->
+<pre>
+   VirtualLock(pvPageAddr, inf.dwPageSize);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>VirtualLock</SMALL> function takes two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The address that marks the beginning of the locked region of virtual memory
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of bytes that should be locked
+</DL>
+<p>The <small>VirtualLock</SMALL> function affects your virtual memory in one-page chunks, but the values passed to <small>VirtualLock</SMALL> can specify any address&#151;not necessarily a page boundary.</P>
+<p>Here are some things to remember about locking pages of virtual memory:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If you lock a range of virtual memory, you prevent that range of data from being swapped out. If the system needs to free up physical RAM, you have increased the chance that code will be swapped out. This causes total system performance to decrease in many cases.
+<dd><b>&#149;</B>&nbsp;&nbsp;If you lock a large range of virtual memory, other applications are more likely to be swapped out, and total system performance decreases in many cases.
+</DL>
+<p>Most of the time, the Virtual Memory Manager makes intelligent choices about which pages currently should be loaded. Unless you&#146;re writing device drivers or other time-critical software, the pain is probably not worth the gain.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Freeing a Page of Virtual Memory</FONT></H4>
+<p>Freeing sparse pages of virtual memory is quite a bit more difficult than efficiently committing memory. Fortunately, the virtual memory swapping algorithm used by Windows 2000 swaps out unused pages to the hard disk. Once swapped out, these pages are made active only when they&#146;re accessed. In almost all cases, this is sufficient for most applications. Typically, you can defer free virtual memory until the entire range is no longer needed and then use the <small>VirtualFree</SMALL> function:</P>
+<!-- CODE SNIP //-->
+<pre>
+   VirtualFree(pvAddr, dwSize, MEM_RELEASE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>VirtualFree</SMALL> function is called with three parameters: the base address of the memory to be released, the size of the range to be released, and a release flag (in this case, <small>MEM_RELEASE</SMALL>).</P>
+<p>If you need to &#147;decommit&#148; virtual memory, you can explicitly decommit pages of virtual memory by using the <small>VirtualFree</SMALL> function with the <small>MEM_DECOMMIT</SMALL> flag:</P>
+<!-- CODE SNIP //-->
+<pre>
+   VirtualFree(pvAddr, dwSize, MEM_DECOMMIT);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Virtual memory that has been uncommitted still is marked as reserved and is available to be committed.
+</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Allocating Memory for Other Processes</FONT></H4>
+<p>Normally, it&#146;s not possible for one process to allocate memory for another process. However, the virtual memory APIs include the following functions to allow you to do just that:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VirtualAllocEx</SMALL>. Similar to <small>VirtualAlloc</SMALL>, except it allocates virtual memory for another process
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>VirtualFreeEx</SMALL>. Similar to <small>VirtualFree</SMALL>, except it frees virtual memory allocated for another process
+</DL>
+<p>After allocating memory for the other process, you can use the <small>WriteProcessMemory</SMALL> and <small>ReadProcessMemory</SMALL> functions to access the block of memory. Allocating memory for other processes is discussed in more detail in Chapter 3, &#147;Threads and Processes.&#148;</P>
+<h3><a name="Heading9"></A><font color="#000077">Looking at an Example That Uses Virtual Memory</FONT></H3>
+<p>As an example of how the virtual memory functions can be used, the CD-ROM that accompanies the book includes a sample project named VMGrid. VMGrid uses an ActiveX grid control to display the status of a range of virtual memory.
+</P>
+<p>If you&#146;re building the VMGrid project from scratch, use AppWizard to create a dialog-based project named VMGrid that supports ActiveX controls.</P>
+<p>Figure 2.5 shows the main dialog box, <small>IDD_VMGRID_DIALOG</SMALL>.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-05.jpg',575,259 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-05.jpg',575,259)"><font color="#000077"><b>Figure 2.5</B></FONT></A>&nbsp;&nbsp;The main dialog box from the VMGrid example.</P>
+<p>The dialog box has two additional pushbutton controls and one grid control from the Component Gallery. Table 2.1 contains the resource IDs for the new controls.
+</P>
+<table width="100%"><caption colspan="2" align="LEFT"><b>Table 2.1</B> Control Properties for VMGrid&#146;s Main Dialog Box
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th align="LEFT" valign="TOP"><i>Resource ID</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Free pushbutton
+<td align="LEFT" valign="TOP"><small>IDC_FREE</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Reserve pushbutton
+<td align="LEFT" valign="TOP"><small>IDC_RESERVE</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Microsoft FlexGrid control
+<td align="LEFT" valign="TOP"><small>IDC_GRID</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>If you&#146;ve never added an ActiveX control to a Visual C<small>&#43;&#43;</SMALL> project, follow these steps, which assume you&#146;re using Visual C<small>&#43;&#43;</SMALL> 6.0 (other versions of Visual C<small>&#43;&#43;</SMALL> are similar):</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Select Project, Add To Project, Components and Controls from the menu. The Component and Controls Gallery dialog box is displayed.
+<dd><b>2.</B>&nbsp;&nbsp;Select Registered ActiveX Controls from the list box. The ActiveX controls registered on your computer are displayed.
+<dd><b>3.</B>&nbsp;&nbsp;Select the Microsoft FlexGrid Control icon and then click the Insert button. A Confirm Classes dialog box is displayed.
+<dd><b>4.</B>&nbsp;&nbsp;Click the OK button on the Confirm Classes dialog box. The ActiveX grid control is added to your project and inserted into the control palette displayed when editing a dialog box resource.
+<dd><b>5.</B>&nbsp;&nbsp;Close the Component Gallery by clicking the Close button.
+</DL>
+<p>To add a grid control to the dialog box resource, just drag it from the control palette and drop it on the dialog box, just like any other control. Table 2.2 contains the properties for the grid control. All properties not listed should be set to their default values.
+</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 2.2</B> Properties for the Grid Control Used in VMGrid
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Property</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>Rows</SMALL>
+<td align="LEFT" valign="TOP">10
+<tr>
+<td align="LEFT" valign="TOP"><small>Cols</SMALL>
+<td align="LEFT" valign="TOP">10
+<tr>
+<td align="LEFT" valign="TOP"><small>FixedRows</SMALL>
+<td align="LEFT" valign="TOP">0
+<tr>
+<td align="LEFT" valign="TOP"><small>FixedCols</SMALL>
+<td align="LEFT" valign="TOP">0
+<tr>
+<td align="LEFT" valign="TOP"><small>BorderStyle</SMALL>
+<td align="LEFT" valign="TOP">0 - None
+<tr>
+<td align="LEFT" valign="TOP"><small>ScrollBars</SMALL>
+<td align="LEFT" valign="TOP">3 - Both
+<tr>
+<td align="LEFT" valign="TOP"><small>Highlight</SMALL>
+<td align="LEFT" valign="TOP">0 - Never
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The <small>CVMGridDlg</SMALL> class has new member variables associated with controls that were added to the dialog box. Information that you can use to add the variables to <small>CVMGridDlg</SMALL> using ClassWizard is shown in Table 2.3.</P>
+<table width="100%"><caption align="LEFT" colspan="4"><b>Table 2.3</B> Values Used to Add Member Variables for <i>CVMGridDlg</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th width="20%" align="LEFT"><i>Control ID</I>
+<th width="20%" align="LEFT"><i>Variable Name</I>
+<th width="20%" align="LEFT"><i>Category</I>
+<th width="40%" align="LEFT"><i>Type</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_FREE</SMALL>
+<td align="LEFT" valign="TOP"><small>m_btnFree</SMALL>
+<td align="LEFT" valign="TOP">Control
+<td align="LEFT" valign="TOP">CButton
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_RESERVE</SMALL>
+<td align="LEFT" valign="TOP"><small>m_btnReserve</SMALL>
+<td align="LEFT" valign="TOP">Control
+<td align="LEFT" valign="TOP">CButton
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_GRID</SMALL>
+<td align="LEFT" valign="TOP"><small>m_grid</SMALL>
+<td align="LEFT" valign="TOP">Control
+<td align="LEFT" valign="TOP">CMSFlexGrid
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

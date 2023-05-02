@@ -1,0 +1,207 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=25//-->
+<!--PAGES=875-878//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="25-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch26/26-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The publisher filter class is a COM object that implements the <small>IPublisherFilter</SMALL> interface and the event that it&#146;s filtering.</P>
+<p>The <small>IPublisherFilter</SMALL> interface is defined as follows:</P>
+<!-- CODE //-->
+<pre>
+[
+ object,
+ uuid(465e5cc0-7b26-11d1-88fb-0080c7d771bf),
+ helpstring(&#147;IPublisherFilter Interface&#148;),
+ pointer_default(unique)
+]
+interface IPublisherFilter : IUnknown
+{
+    [helpstring(&#147;User-called method to initialize the publisher
+    &#8658; filter after it is installed&#148;)]
+        HRESULT Initialize([in] BSTR methodName, [in,unique] IDispatch*
+        &#8658; dispUserDefined);
+    [helpstring(&#147;Prepare to fire all subscriptions in your collection&#148;)]
+        HRESULT PrepareToFire([in] BSTR methodName, [in] IFiringControl*
+        &#8658; firingControl);
+};
+</PRE>
+<!-- END CODE //-->
+<p>The first method, <small>Initialize</SMALL>, has already been discussed. Here&#146;s a sample implementation:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CPublisherFilter::Initialize( BSTR bstrMethodName,
+            IDispatch* pIDispSubColl)
+{
+    HRESULT                    hr = S_OK;
+    IEventObjectCollection*    pISubColl = NULL;
+    if (!pIDispSubColl)
+        return E_INVALIDARG;
+    hr = pIDispSubColl-&gt;QueryInterface (IID_IEventObjectCollection,
+    &#8658; (void **) &amp;pISubColl);
+     m_spStockPriceChange_Collection = NULL;
+        if (wcscmp(bstrMethodName, L&#148;StockPriceChange&#148;) == 0)
+        {
+        m_spStockPriceChange_Collection = pISubColl;
+        }
+     m_spNewStock_Collection = NULL;
+    if (wcscmp(bstrMethodName, L&#148;NewStock&#148;) == 0)
+        {
+        m_spNewStock_Collection = pISubColl;
+        }
+    return hr;
+}
+</PRE>
+<!-- END CODE //-->
+<p>In this example, the <small>Initialize</SMALL> event is used to store the subscription collection. Which one is stored depends on the passed-in method name (<small>bstrMethodName</SMALL>).</P>
+<p>Once the subscription is about to fire, the method <small>PrepareToFire</SMALL> is called. This method can be used to store the <small>IEventControl</SMALL> interface, as shown in the following example:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CPublisherFilter::PrepareToFire(BSTR bstrMethodName,
+&#8658; IFiringControl* pIFiringControl)
+{
+    if (!pIFiringControl)
+        return E_INVALIDARG;
+    if (wcscmp(bstrMethodName, L&#148;StockPriceChange&#148;) == 0)
+    {
+        m_spIStockPriceFiringControl = pIFiringControl;
+    }
+    if (wcscmp(bstrMethodName, L&#148;NewStock&#148;) == 0)
+    {
+        m_spINewStockFiringControl = pIFiringControl;
+    }
+
+    return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p>Finally, all the variable settings are used when the filter captures a method event. In the event interface defined thus far, the <small>StockPriceChange</SMALL> or <small>NewStock</SMALL> event can be filtered. The filter has the ability to search through the various subscriptions to see who should receive the event. This process can be slow; therefore, you should design it carefully. A filter that takes too long will not be scalable.</P>
+<p>Consider the following implementation:</P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CPublisherFilter::StockPriceChange(BSTR bstrStockSymbol,
+&#8658; double dPrice)
+{
+    long            cPubCacheSubs = 0;
+    HRESULT        hr = S_FALSE;
+    CComPtr&lt;IEnumEventObject&gt; spIEnumSubs = NULL;
+     // Get an Enum of subscriptions from the collection
+    hr = m_spStockPriceChange_Collection-&gt;get_NewEnum (&amp;spIEnumSubs);
+     // See how many Subscriptions there are in the Enum
+    hr = m_spStockPriceChange_Collection-&gt;get_Count(&amp;cPubCacheSubs);
+     CComBSTR bstrPublisherProperty = L&#148;StockSymbol&#148;;
+     for (USHORT i = 0; i &lt; cPubCacheSubs; i&#43;&#43;)
+    {
+        ULONG    cCount = 1;
+        CComBSTR bstrPropertyValue;
+        CComVariant varPropertyValue;
+         CComPtr&lt;IUnknown&gt; spIUnk = NULL;
+        CComQIPtr&lt;IEventSubscription, &amp;IID_IEventSubscription&gt;
+        &#8658; spIEventSubscription;
+         // Get a Subscription from the Enum
+        hr = spIEnumSubs-&gt;Next(cCount, (struct IUnknown **)&amp;spIUnk,
+        &#8658; &amp;cCount);
+        spIEventSubscription = spIUnk;
+         // Get this Subscription&#146;s filter criteria
+        hr = spIEventSubscription-&gt;GetPublisherProperty
+        &#8658; (bstrPublisherProperty,
+                                                        &amp;varPropertyValue);
+       bstrPropertyValue = varPropertyValue.bstrVal;
+    // Compare company names here
+   if (wcscmp(bstrStockSymbol, bstrPropertyValue) == 0)
+    m_spIStockPriceFiringControl-&gt;FireSubscription (spIEventSubscription);
+    }
+    return S_OK;
+}
+</PRE>
+<!-- END CODE //-->
+<p>This method retrieves an interface pointer to the collection of subscriptions currently available in the event cache. The next step is to iterate through the subscriptions and check which subscription should be triggered. The event will be triggered if the <small>bstrStockSymbol</SMALL> matches the publisher property. In an earlier subscription definition, the subscription had a filter of &#147;MSFT.&#148; Therefore, if both now match, the <small>IEvenControl::FireSubscription</SMALL> event will be triggered.</P>
+<h3><a name="Heading18"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter is an introduction to advanced COM&#43; programming. Although this statement may seem contradictory, it&#146;s not. COM&#43; has the ability to tune all aspects of the COM&#43; application. This was not possible with COM and the NT Option Pack. However, with all this flexibility comes the responsibility of knowing when to apply what. This chapter also introduced some of the common advanced COM&#43; topics, including object pooling, load balancing, queued components, and COM&#43; events.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="25-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch26/26-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

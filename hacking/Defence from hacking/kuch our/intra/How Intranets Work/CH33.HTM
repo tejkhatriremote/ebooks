@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter  33 -- How Remote Access Works</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;33</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Remote Access Works</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#ProvidingRemoteAccesstoanIntranet">
+Providing Remote Access to an Intranet</A>
+</UL>
+
+<HR>
+<P>
+The days of working at an office every day from 9:00 a.m. to 5:00
+p.m. and only occasionally working into the night are long gone.
+Today, people may be telecommuting from home, they may be on the
+road, and they may work evenings or weekends from their home office.
+The days of the virtual office are here, and intranets are an
+important part of making that a reality.
+<P>
+Since intranets hold so much of a corporation's resources, and
+since so much work these days is collaborative work done via the
+network, people need access to the intranet in order to do any
+work. That means they need some remote way of gaining access to
+the intranet.
+<P>
+Typically, remote access is gained via a modem. The most common
+method is to dial into a remote access server and its associated
+modem bank. They dial in using one of the Internet's standard
+dial-in protocols, either the Point-to-Point Protocol (PPP) or
+the Serial Line Interface Protocol (SLIP). SLIP is an older protocol
+and has fast been falling out of favor because the PPP protocol
+is more robust, especially when it comes to handling errors. Part
+of the process of dialing in involves identification of the user.
+Some remote access servers hang up and call the individual back
+at a pre-determined phone number.
+<P>
+After someone logs into the remote access server, he or she can
+log into machines on the intranet just like in the office. The
+intranet's firewall allows packets sent via the remote access
+server to enter the intranet. Once they've logged in, they have
+full access to the intranet, although at dial-in speeds instead
+of at higher speeds available when actually at the office.
+<P>
+Providing dial-in access in this manner is expensive, because
+corporations have to maintain large banks of modems that can be
+dialed into, and because they have to pay for the costs of long-distance
+and 800 telephone numbers.
+<P>
+A solution developed by Microsoft, 3Com, US Robotics, and others
+is called the Point-to-Point Tunneling Protocol (PPTP). This protocol
+allows someone to dial into a local Internet Service Provider
+(ISP), and from there access their intranet. Costs come down significantly,
+because the call is made to a local phone number instead of a
+long-distance one, and the banks of modem pools aren't needed.
+<P>
+PPTP also allows for people to use other network protocols, such
+as IPX or NetBIOS, so they can access parts of the corporate network
+that aren't TCP/IP-based. And it also allows for secure transmission
+of data. It does this by encrypting the data being sent, and encapsulating
+it and the other network protocols inside an IP packet. That IP
+packet is then sent out over the Internet through a technique
+called tunneling. On the receiving end, the outer IP envelope
+is stripped off, and the protocols and data inside the packet
+used. The person now has full access to the intranet and other
+corporate network resources, and has done it by making a local
+phone call.
+<H2><A NAME="ProvidingRemoteAccesstoanIntranet"><FONT SIZE=5 COLOR=#FF0000>
+Providing Remote Access to an Intranet</FONT></A></H2>
+<P>
+In today's increasingly mobile world, it's important that people
+be able to access a corporate intranet from their homes or from
+the road. This illustration shows how that access can be gained
+via a new protocol called the Point-to-Point Tunneling Protocol
+(PPTP).
+<OL>
+<LI>Before the PPTP protocol, when people wanted to gain access
+to an intranet they usually dialed into a remote access server
+through its modem bank. After logging into the server, they were
+then able to get access to the intranet's resources. One drawback
+of this approach is that it required the corporation to pay for
+long-distance or 800 telephone access and maintain the modem banks,
+which can easily cost millions of dollars a year.
+<LI>The PPTP protocol allows people to gain access to an intranet
+by dialing into an Internet Service Provider (ISP) and requesting
+to be sent to the intranet. The connection to the ISP is made
+using the normal PPP Internet dial-in protocol. Since ISP calls
+can be local calls, this cuts down tremendously on telecommunications
+costs. It also means that the intranet need not have sizable modem
+pools available to answer every incoming call, another significant
+cost-savings.
+<LI>The ISP has special software and hardware installed that uses
+the PPTP protocol. An important component of gaining access to
+an intranet is to ensure that any data sent to and from it is
+secure. The PPTP protocol can encrypt the data in the IP packet
+it receives. It then takes that encrypted packet and encapsulates
+it inside another IP packet, sometimes called an envelope. PPTP
+also allows remote users to get at corporate network information
+that uses other protocols than TCP/IP, such as IPX and NetBIOS.
+It does this by encapsulating it inside the IP packet as well.
+<LI>The ISP sends the envelope with the encrypted data inside
+it through the public Internet to the intranet. No one can read
+what is inside the envelope since the data is encrypted. When
+data is sent in this manner, it is called tunneling.
+<LI>The data is sent through a firewall to a server on an intranet.
+This server has the hardware and software necessary to handle
+the incoming PPTP packets.
+<LI>The person trying to get at intranet data will have to log
+into this server with a user name and password, just as he or
+she would have to if directly connected to the intranet, as a
+way to keep out intruders. PPTP uses two protocols for allowing
+people to log in, the Password Authentication Protocol (PAP) and
+the Challenge Handshake Authentication Protocol (CHAP). See <A HREF="ch17.htm">Chapter
+17</A> for more on how these protocols work.
+<LI>The intranet server strips off the outside envelope. It then
+decrypts the data inside the envelope. The person can now make
+full use of the intranet-or other network resources. All packets
+that pass between the intranet and the user will go through this
+tunneling technique.
+</OL>
+<HR>
+
+<CENTER><P><A HREF="ch32.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch34.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

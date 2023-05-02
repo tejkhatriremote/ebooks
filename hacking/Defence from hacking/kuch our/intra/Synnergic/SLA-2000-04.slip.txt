@@ -1,0 +1,106 @@
+
+        Synnergy Laboratories Advisory SLA-1999-4
+
+NAME
+
+       SLIP byte-stuffing vulnerability
+
+
+AFFECTED
+ 
+  ALL SLIP connected clients
+
+
+SYNOPSIS
+
+  Synnergy Labs has found a bug in SLIP which allows users to cause a remote 
+  denial of service attack on slip connected clients
+
+
+DESCRIPTION
+
+  SLIP is a TCP/IP protocol used for communication, dedicated serial links, 
+  and dialup purposes between two machines(hosts/routers) that are configured
+  for communication with each other, ie host-host, host-router and router-router 
+  are all common SLIP network configurations.
+
+  The problem lies in SLIP's 'special characters' or illegal values: END and ESC.
+  From the RFC, END is octal 300 (decimal 192) and ESC is octal 333 (decimal 219).
+
+  Now if a malformed packet is sent with the END character, the protocol will split
+  the byte into two seperate byte sequences of octal 333 and octal 334 (decimal 220)
+  to signify that it is not the end of transmission.
+  Likewise, the ESC character will split the packet sent into the octal 333 followed 
+  by octal 335 (decimal 221), allowing further transmission to take place for the 
+  connection. 
+
+  So as we can see, using a patterned byte sequence will allow one to cause a denial 
+  of service attack on the host, since the bytes are split causing a theoretical 
+  double increase in bandwidth received. This is similar to the special characters in 
+  the PPP frame (0x7d, 0x7e, XOR+0x20 and such), which will also generate twice the 
+  packets received through one packet sent.
+
+  Taking a look at the SLIP driver, we see:
+
+  case END:
+    send_char(ESC);
+    send_char(ESC_END);                           
+    break;
+
+  on receipt of our END character we generate ESC(0333) and ESC_END(0334)
+
+  case ESC:                           
+    send_char(ESC);
+    send_char(ESC_ESC);
+    break;
+
+  and again after the ESC character we generate ESC(0333) and ESC_ESC(0335)
+  all resulting in twice the packet payload.
+
+  SLIP actually contains no correction mechanism of it's own, thus relies solely on 
+  the IP header and TCP checksums. SLIP was authored many many years ago before 
+  security was a conscious feature, thus contains several potential problems with it's 
+  packet transmission, error detection, and compression techniques. These should all 
+  be revised unless SLIP will be gradually phased out in the future, as the current 
+  end-of-transmission method is not designed entirely well, and further development 
+  should be implemented.
+
+  Considering that SLIP host's usually are on a slow link anyway (1200bps-19.2kbps), 
+  this DoS creates an abundance of network traffic for the client, which won't be able 
+  to handle the excess payload.
+
+
+EXPLOIT
+
+
+  Exploit is simple, using standard `ping` we are able to set the hexadecimal pattern 
+  for our packet to follow, allowing us to exploit this potential vulnerability in SLIP 
+  leading to a possible 100% data overhead increase.
+
+  /* hex(C0) = oct(300), hex(DB) = oct(333) */
+  [dethy@syn: ~]$ ping -p C0 -c <number> -s <size> <slip-client>
+  [dethy@syn: ~]$ ping -p DB -c <number> -s <size> <slip-client>
+
+  where the -p argument is our illegal value in hex.
+ 
+
+SOLUTION
+
+  SLIP code revision, and possible change to the current algorithm for the 'special 
+  characters' should be manipulated to flush erroneous bytes out of transmission.
+        
+
+AUTHOR
+
+  dethy @ synnergy.net
+
+
+DISCLAIMER
+
+  Synnergy Laboratories may not be held liable for the use or potential effects of 
+  these programs or advisories, nor the content contained within. Use them at your 
+  own risk.
+
+COPYRIGHT
+
+        Synnergy Laboratories -  www.synnergy.net (c) 1998-2000 

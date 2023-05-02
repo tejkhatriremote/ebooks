@@ -1,0 +1,276 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=460-463//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="14-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>A new message-handling function was added to the <small>CAutoBubView</SMALL> view class to handle the new Add Bubble menu item. The new function has the properties shown in Table 14.5.</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-08.jpg',403,162 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-08.jpg',403,162)"><font color="#000077"><b>Figure 14.8</B></FONT></A>&nbsp;&nbsp;The new Add Bubble menu selection added to <small><i>IDR_MAINFRAME</I></SMALL>.
+</P>
+<table width="100%">
+<caption align="LEFT" valign="TOP" colspan="4"><b>Table 14.5</B> Handling the Add Bubble Menu Item
+<tr>
+<td colspan="4"><hr>
+<tr>
+<th width="20%" align="LEFT" valign="TOP"><i>Class Name</I>
+<th width="30%" align="LEFT" valign="TOP"><i>Object ID</I>
+<th width="20%" align="LEFT" valign="TOP"><i>Message</I>
+<th width="30%" align="LEFT" valign="TOP"><i>Function</I>
+<tr>
+<td colspan="4"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>CAutoBubView</SMALL>
+<td align="LEFT" valign="TOP"><small>ID_EDIT_ADD_BUBBLE</SMALL>
+<td align="LEFT" valign="TOP">COMMAND
+<td align="LEFT" valign="TOP"><small>OnEditAddBubble</SMALL>
+<tr>
+<td colspan="4"><hr>
+</TABLE>
+<p>The source code for <small>CAutoBubView::OnEditAddBubble</SMALL> is provided in Listing 14.3.</P>
+<p><b>Listing 14.3</B> Handling the Add Bubble Menu Item</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CAutoBubView::OnEditAddBubble()
+{
+    CAddBubDlg   dlg;
+    if(dlg.DoModal() == IDOK)
+    {
+        CBubble bub;
+        bub.m_clr = RGB(dlg.m_nRed, dlg.m_nGreen, dlg.m_nBlue);
+        bub.m_ptCenter = CPoint(dlg.m_nX, dlg.m_nY);
+        bub.m_nRadius = dlg.m_nRadius;
+
+        CAutoBubDoc* pDoc = GetDocument();
+        ASSERT_VALID(pDoc);
+
+        pDoc-&gt;AddBubble( bub );
+        Invalidate();
+    }
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Remember to add an <small>#include</SMALL> directive at the top of the <small>AutoBubView.cpp</SMALL> source file, just after the existing <small>#include</SMALL> directives:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &#147;AddBubDlg.h&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Drawing Bubble Objects for AutoBub</FONT></H4>
+<p>Bubbles are drawn in the <small>CAutoBubView::OnDraw</SMALL> member function, which is called when the view is redrawn. The source code for <small>OnDraw</SMALL> is provided in Listing 14.4.</P>
+<p><b>Listing 14.4</B> Drawing a Collection of Bubbles</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CAutoBubView::OnDraw(CDC* pDC)
+{
+    CAutoBubDoc* pDoc = GetDocument();
+    ASSERT_VALID(pDoc);
+
+    for(int n = 0; n &lt; pDoc-&gt;GetCount(); n&#43;&#43;)
+    {
+        CBubble aBubble;
+        BOOL fResult = pDoc-&gt;GetBubble(n, &amp;aBubble);
+        if(fResult == FALSE)
+            break;
+
+        CBrush br(aBubble.m_clr);
+        CBrush* pbrOld = pDC-&gt;SelectObject(&amp;br);
+        ASSERT(pbrOld);
+
+        CSize offset(aBubble.m_nRadius, aBubble.m_nRadius);
+        CRect rcBoundary(aBubble.m_ptCenter - offset,
+                         aBubble.m_ptCenter &#43; offset);
+        pDC-&gt;Ellipse(rcBoundary);
+        pDC-&gt;SelectObject(pbrOld);
+    }
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>At this point, the AutoBub project can be compiled and run as a standalone application. Try it out now&#151;before adding the Automation support&#151;so that you can get a feel for adding bubbles using the Add Bubble dialog box.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Adding Automation Support to AutoBub</FONT></H4>
+<p>In this section, you&#146;ll see how easy it is to add Automation to an existing MFC project, using AutoBub as an example. Open ClassWizard and click the Automation tab. A <small>Count</SMALL> property is added to the <small>CAutoBubDoc</SMALL> class by clicking the Add Property button and using the values from Table 14.6.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 14.6</B> AutoBub <small>Count</SMALL> Automation Properties
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">External name
+<td align="LEFT" valign="TOP"><small>Count</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Type
+<td align="LEFT" valign="TOP"><small>long</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Get function
+<td align="LEFT" valign="TOP"><small>CountIs</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Set function
+<td align="LEFT" valign="TOP">(none)
+<tr>
+<td align="LEFT" valign="TOP">Implementation
+<td align="LEFT" valign="TOP">Get/Set methods
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>Two methods&#151;<small>Clear</SMALL> and <small>Add</SMALL>&#151;were added to the <small>CAutoBubDoc</SMALL> class using the values from Tables 14.7 and 14.8, respectively.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 14.7</B> Values Used to Add the <small>Clear</SMALL> Method to the <small>CAutoBubDoc</SMALL> Class
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">External name
+<td align="LEFT" valign="TOP"><small>Clear</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Internal name
+<td align="LEFT" valign="TOP"><small>Clear</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Return type
+<td align="LEFT" valign="TOP">void
+<tr>
+<td align="LEFT" valign="TOP">Parameter list
+<td align="LEFT" valign="TOP">(none)
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<table width="100%">
+<caption align="LEFT" valign="TOP" colspan="3"><b>Table 14.8</B> Values Used to Add the <small>Add</SMALL> Method to the <small>CAutoBubDoc</SMALL> Class
+<tr>
+<td colspan="3"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="30%" align="LEFT" valign="TOP"><i>Value</I>
+<th width="30%" align="LEFT" valign="TOP"><i>Type</I>
+<tr>
+<td colspan="3"><hr>
+<tr>
+<td align="LEFT" valign="TOP">External name
+<td align="LEFT" valign="TOP"><small>Add</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Internal name
+<td align="LEFT" valign="TOP"><small>Add</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Return type
+<td align="LEFT" valign="TOP"><small>void</SMALL>
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP">Parameter list
+<td align="LEFT" valign="TOP"><small>clr</SMALL>
+<td align="LEFT" valign="TOP"><small>short</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">
+<td align="LEFT" valign="TOP"><small>nYPos</SMALL>
+<td align="LEFT" valign="TOP"><small>short</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">
+<td align="LEFT" valign="TOP"><small>nXPos</SMALL>
+<td align="LEFT" valign="TOP"><small>short</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">
+<td align="LEFT" valign="TOP"><small>nRadius</SMALL>
+<td align="LEFT" valign="TOP"><small>short</SMALL>
+<tr>
+<td colspan="3"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="14-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

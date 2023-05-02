@@ -1,0 +1,295 @@
+w00w00!
+
+lkm: Kernel hacking made easy
+By: w00w00 Security Development article by Nicolas Dubee
+
+The following applies to the Linux i86 2.0.x kernel series.
+It may also be accurate for previous releases, but has not been
+tested. 2.1.x kernels introduced a bunch of changes, notably in
+the memory managment routines, and are not discussed here.
+
+Thanks to Halflife who first got the idea to use lkm for malicious
+purposes, and tiepilot, my living hero.
+
+
+
+User space vs. Kernel space
+---------------------------
+
+Linux is a protected operating system. It is implemented over the
+protected mode of the i386 series of CPUs.
+
+Memory is divided into roughly two parts: kernel space and user space.
+Kernel space is where the kernel code lives, and user space is where 
+the user programs live. Of course, a given user program can't write to
+kernel memory or to another program's memory area.
+
+Unfortunately, this is also the case for kernel code. Kernel code
+can't write to user space either. What does this mean? Well, when a given 
+hardware driver wants to write data bytes to a program in user memory, it
+can't do it directly, but rather it must use specific kernel functions
+instead. Also, when paramaters are passed by address to a kernel function,
+the kernel function can not read the parameters directly. It must use
+other kernel functions to read each byte of the parameters.
+
+Here are a few useful functions to use in kernel mode for transferring
+data bytes to or from user memory.
+
+#include <asm/segment.h>
+
+get_user(ptr)
+ Gets the given byte, word, or long from user memory. This is a macro,
+ and it relies on the type of the argument to determine the number of bytes
+ to transfer. You then have to use typecasts wisely.
+ 
+put_user(ptr)
+ This is the same as get_user(), but instead of reading, it writes data
+ bytes to user memory.
+ 
+memcpy_fromfs(void *to, const void *from,unsigned long n)
+ Copies n bytes from *from in user memory to *to in kernel memory.
+ 
+memcpy_tofs(void *to,const *from,unsigned long n)
+ Copies n bytes from *from in kernel memory to *to in user memory.
+
+
+
+System calls
+------------
+
+Most libc calls rely on system calls, which are the simplest kernel
+functions a user program can call. These system calls are implemented
+in the kernel itself or in loadable kernel modules, which are little
+chunks of dynamically linkable kernel code.
+
+Like MS-DOS and many others, Linux system calls are implemented through
+a multiplexor called with a given maskable interrupt. In Linux,
+this interrupt is int 0x80. When the 'int 0x80' instruction is executed,
+control is given to the kernel (or, more accurately, to the function 
+_system_call()), and the actual demultiplexing process occurs.
+
+* How does _system_call() work ?
+
+First, all registers are saved and the content of the %eax register
+is checked against the global system calls table, which enumerates
+all system calls and their addresses.
+This table can be accessed with the extern void *sys_call_table[] variable. 
+A given number and memory address in this table corresponds to each system
+call. System call numbers can be found in /usr/include/sys/syscall.h. 
+They are of the form SYS_systemcallname. If the system call is not
+implemented, the corresponding cell in the sys_call_table is 0, and an
+error is returned. Otherwise, the system call exists and the corresponding
+entry in the table is the memory address of the system call code. 
+
+Here is an example of an invalid system call:
+
+[root@plaguez kernel]# cat no1.c
+#include <linux/errno.h>
+#include <sys/syscall.h>
+#include <errno.h>
+
+extern void *sys_call_table[];
+
+sc()
+{ // system call number 165 doesn't exist at this time.
+    __asm__(
+	    "movl $165,%eax
+             int $0x80");
+}
+
+main()
+{
+    errno = -sc();
+    perror("test of invalid syscall");
+}
+[root@plaguez kernel]# gcc no1.c
+[root@plaguez kernel]# ./a.out
+test of invalid syscall: Function not implemented
+[root@plaguez kernel]# exit
+
+
+The control is then transferred to the actual system call, which performs
+whatever you requested and returns. _system_call() then calls
+_ret_from_sys_call() to check various stuff, and ultimately returns to user
+memory.
+
+
+* libc
+
+The int $0x80 isn't used directly for system calls; rather, libc
+functions, which are often wrappers to interrupt 0x80, are used.
+
+libc generally features the system calls using the _syscallX() macros, where
+X is the number of parameters for the system call.
+
+For example, the libc entry for write(2) would be implemented with a _syscall3
+macro, since the actual write(2) prototype requires 3 parameters.
+Before calling interrupt 0x80, the _syscallX macros are supposed to
+set up the stack frame and the argument list required for the system call.
+Finally, when the _system_call() (which is triggered with int $0x80) returns,
+the _syscallX() macro will check for a negative return value (in %eax)
+and will set errno accordingly.
+
+Let's check another example with write(2) and see how it gets preprocessed. 
+
+[root@plaguez kernel]# cat no2.c
+#include <linux/types.h>
+#include <linux/fs.h>
+#include <sys/syscall.h>
+#include <asm/unistd.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <ctype.h>
+
+_syscall3(ssize_t,write,int,fd,const void *,buf,size_t,count);
+
+main()
+{
+    char *t = "this is a test.\n";
+    write(0, t, strlen(t));
+}
+[root@plaguez kernel]# gcc -E no2.c > no2.C
+[root@plaguez kernel]# indent no2.C -kr
+indent:no2.C:3304: Warning: old style assignment ambiguity in "=-".  Assuming "= -"
+
+[root@plaguez kernel]# tail -n 50 no2.C
+
+
+#9 "no2.c" 2
+
+
+
+
+ssize_t write(int fd, const void *buf, size_t count)
+{
+    long __res;
+    __asm__ __volatile("int $0x80":"=a"(__res):"0"(4), "b"((long) (fd)), "c"((long) (buf)), "d"((long) (count)));
+    if (__res >= 0)
+	return (ssize_t) __res;
+    errno = -__res;
+    return -1;
+};
+
+main()
+{
+    char *t = "this is a test.\n";
+    write(0, t, strlen(t));
+}
+[root@plaguez kernel]# exit
+
+
+Note that the "0"(4) in the write() function above matches the SYS_write
+definition in /usr/include/sys/syscall.h. 
+
+
+
+
+* Making your own system calls.
+
+There are a few ways to make your own system calls.
+For example, you could modify the kernel sources and append your own code.
+A far easier way, however, would be to write a loadable kernel module.
+
+A loadable kernel module is nothing more than an object file containing
+code that will be dynamically linked into the kernel when it is needed.
+
+The main purposes of this feature are to have a small kernel, and to load
+a given driver when it is needed with the insmod(1) command.
+It's also easier to write a lkm than to write code in the kernel source tree.
+
+* Writing a lkm
+
+A lkm is easily made in C.
+It contains a chunk of #defines, some functions, an initialization function
+called init_module(), and an unload function called cleanup_module().
+
+Here is a typical lkm source structure:
+
+
+#define MODULE
+#define __KERNEL__
+#define __KERNE_SYSCALLS__
+
+#include <linux/config.h>
+#ifdef MODULE
+#include <linux/module.h>
+#include <linux/version.h>
+#else
+#define MOD_INC_USE_COUNT
+#define MOD_DEC_USE_COUNT
+#endif
+
+#include <linux/types.h>
+#include <linux/fs.h>
+#include <linux/mm.h>
+#include <linux/errno.h>
+#include <asm/segment.h>
+#include <sys/syscall.h>
+#include <linux/dirent.h>
+#include <asm/unistd.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <ctype.h>
+
+int errno;
+
+char tmp[64];
+
+/* for example, we may need to use ioctl */
+_syscall3(int, ioctl, int, d, int, request, unsigned long, arg);
+
+int myfunction(int parm1,char *parm2)
+{
+   int i,j,k;
+   /* ... */
+}
+
+int init_module(void)
+{
+   /* ... */
+   printk("\nModule loaded.\n");
+   return 0;
+}
+
+void cleanup_module(void)
+{
+   /* ... */
+}
+
+Check the mandatory #defines (#define MODULE, #define __KERNEL__) and
+#includes (#include <linux/config.h> ...)
+
+Also note that as our lkm will be running in kernel mode, we can't use
+libc functions, but we can use system calls with the previously
+discussed _syscallX() macros.
+
+You would compile this module with 'gcc -c -O3 module.c' and insert it
+into the kernel with 'insmod module.o' (optimization must be turned
+on).
+
+As the title suggests, lkm can also be used to modify kernel code without
+having to rebuild it entirely. For example, you could patch the write(2)
+system call to hide portions of a given file.
+Seems like a good place for backdoors, too: what would you do if you
+couldn't trust your own kernel?
+
+
+
+* Kernel and system calls backdoors
+
+The main idea behind this is pretty simple. We'll redirect those damn
+system calls to our own ones in a lkm, which will enable us to force the
+kernel to react as we want it to.
+For example, we could hide a sniffer by 
+patching the IOCTL system call and masking the PROMISC bit. Lame but
+efficient.
+
+To modify a given system call, just add the definition of the
+extern void *sys_call_table[] in your lkm, and have the init_module()
+function modify the corresponding entry in the sys_call_table to point to
+your own code. The modified call can then do whatever you wish it to, call
+the original system call by modifying sys_call_table once more, and ...

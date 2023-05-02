@@ -1,0 +1,165 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=585-588//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<p>In addition to the ActiveX control test container, you should test your control in other containers, such as Visual Basic. Using Visual Basic to test ActiveX controls is discussed later, at the end of this chapter.
+</P>
+<h3><a name="Heading18"></A><font color="#000077">Creating ActiveX Controls with ATL</FONT></H3>
+<p>In addition to MFC, you can use the ActiveX Template Library to build your ActiveX controls. This is the same ATL library used in Chapter 17 to create custom COM objects.
+</P>
+<p>Here are the ATL classes that are specific to ActiveX controls:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CWindow</SMALL>. Similar to the MFC <small>CWnd</SMALL> class but much lighter weight; this class provides easy access to a number of commonly used functions.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CWindowImpl</SMALL>. Derived from <small>CWindow</SMALL> and used by the control class to subclass and superclass an existing window class; it implements the ATL message map.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CDialogImpl</SMALL>. Derived from <small>CWindow</SMALL> and used to implement dialog boxes.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CContainedWindow</SMALL>. Derived from <small>CWindow</SMALL> and used to model a window contained in another object. If you superclass or subclass an existing window, an instance of <small>CContainedWindow</SMALL> will represent the original window.
+</DL>
+<p>In addition to these classes, ATL provides support for adding properties, events, and connection points to your ActiveX control. These features are discussed in the following sections.
+</P>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Implementing Stock Properties Using ATL</FONT></H4>
+<p>The easiest way to add a stock property to an ATL control is with the ATL Object Wizard. The Stock Properties tab enables you to add stock properties by moving the property name between two list boxes, as shown in Figure 18.10.
+</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-10.jpg',421,279 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-10.jpg',421,279)"><font color="#000077"><b>Figure 18.10</B></FONT></A>&nbsp;&nbsp;The ATL Object Wizard&#146;s Stock Properties tab.</P>
+<p>The class header for the ATL control object contains a property map that tracks all properties exposed by the control.
+</P>
+<p>The property map begins with the <small>BEGIN_PROP_MAP</SMALL> macro and ends with the <small>END_PROP_MAP</SMALL> macro. Inside the property map are a series of macros that specify properties supported by the ATL object, as shown in Listing 18.6.</P>
+<p><b>Listing 18.6</B> An Example of an ATL Property Map<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+BEGIN_PROP_MAP(CTestButton)
+    PROP_DATA_ENTRY(&#147;_cx&#148;, m_sizeExtent.cx, VT_UI4)
+    PROP_DATA_ENTRY(&#147;_cy&#148;, m_sizeExtent.cy, VT_UI4)
+    PROP_ENTRY(&#147;BackColor&#148;, DISPID_BACKCOLOR, CLSID_StockColorPage)
+    PROP_ENTRY(&#147;ForeColor&#148;, DISPID_FORECOLOR, CLSID_StockColorPage)
+END_PROP_MAP()
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>Stock properties are implemented using the <small>PROP_ENTRY</SMALL> macro. <small>PROP_ENTRY</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The description of the stock property
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>DISPID</SMALL> for the stock property
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>CLSID</SMALL> of the property page used for entering the property (or <small>CLSID_NULL</SMALL> if no property page is used)
+</DL>
+<p>Each stock property has a specific <small>DISPID</SMALL> that refers to the property. For example, <small>DISPID_BACKCOLOR</SMALL> is the dispatch ID for the control&#146;s background color. The ATL Object Wizard knows all about these names&#151;if you&#146;re adding a stock property by hand, you have two choices:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Create a dummy project and then add the stock property. You can add the stock property by hand using the <small>DISPID</SMALL> that the ATL Object Wizard used.
+<dd><b>&#149;</B>&nbsp;&nbsp;Look in the Platform SDK&#146;s <small>OleCtl.h</SMALL> header file for standard <small>DISPID</SMALL>s. This file contains all the standard Automation <small>DISPID</SMALL>s. Search for <small>DISPID_AUTOSIZE</SMALL>, which is at the start of the list.
+</DL>
+<p>In addition to adding an entry to the property map, the ATL Object Wizard also adds a member variable to your class declaration for every property. However, the ATL Object Wizard doesn&#146;t add any code that attaches the member variable to the property map entry&#151;it&#146;s not needed.
+</P>
+<p>The mapping between stock properties and member variables is done in the ATL class library. Every stock property is mapped to a particular member of an anonymous union declared in the ATL <small>CComControlBase</SMALL> class. When implementing a stock property by hand, you again have two choices:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Create a dummy project, as described earlier, and use the variable name selected by the ATL Object Wizard
+<dd><b>&#149;</B>&nbsp;&nbsp;Look in the anonymous union declared in the <small>CComControlBase</SMALL> class and select the proper variable yourself
+</DL>
+<p>Whichever method you choose, make sure you name the variable correctly. If you define a different name for the variable, your project will compile, but your property variable won&#146;t be updated correctly.
+</P>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Implementing Custom Properties Using ATL</FONT></H4>
+<p>Implementing custom properties is similar to implementing stock properties. One obvious difference between stock and custom properties is that you must name the custom properties yourself. Custom properties are added by right-clicking the IDL icon in the ClassView window and selecting the Add Properties item from the pop-up menu. A dialog box will be displayed, as shown in Figure 18.11.
+</P>
+<p><a name="Fig11"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-11.jpg',366,405 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-11t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch18/images/18-11.jpg',366,405)"><font color="#000077"><b>Figure 18.11</B></FONT></A>&nbsp;&nbsp;Adding a property to an ATL object.</P>
+<p>The dialog box shown in Figure 18.11 is used to add the named property, the necessary IDL statements, and the necessary glue code in your class so that the property can be exposed to the outside world.
+</P>
+<p>You must provide the following values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Property Type</I>. The Automation-compatible type that contains the property.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Property Name</I>. The name of the property as it will be exposed to the outside world. This is the name that VB will display in its property page for your control.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Parameters</I>. Any additional parameters you would like to have applied to the property.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Get Function</I>. If checked, this option causes a function to be generated to retrieve the property from the control. If this option is cleared, the property cannot be read.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Put Function</I>. If checked, this option causes a function to be generated to set the control&#146;s property. If this option is cleared, the property is read-only.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>PropPut</I><i>PropPutRef</I>. If the PropPutRef radio button is selected, the property is set by reference, which is more efficient for large objects.
+</DL>
+<p>The Attributes button allows you to set IDL attributes, such as <small>hidden</SMALL> or <small>call_as</SMALL>, for the property.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

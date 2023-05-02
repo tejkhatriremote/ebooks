@@ -1,0 +1,251 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Asynchronous COM</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=19//-->
+<!--PAGES=629-633//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="19-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using ISynchronize to Wait for Asynchronous Completion</B></FONT></P>
+<p>The <small>ISynchronize</SMALL> interface is used to provide a client with information about the current state of an asynchronous method call. The call object usually exposes <small>ISynchronize</SMALL> by aggregating a system-provided synchronization object. The <small>ISynchronize</SMALL> interface is used by the client to determine whether the asynchronous method has been completed.</P>
+<p>A simplified definition of the <small>ISynchronize</SMALL> interface is provided in Listing 19.5.</P>
+<p><b>Listing 19.5</B> The <small>ISynchronize</SMALL> Interface<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+interface ISynchronize : public IUnknown
+{
+public:
+    HRESULT Wait(DWORD dwFlags, DWORD dwMilliseconds);
+    HRESULT Signal();
+    HRESULT Reset();
+
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p><small>ISynchronize</SMALL> contains three methods:</P>
+<dl>
+<dd>&#149;	<small>Wait</SMALL>
+<dd>&#149;	<small>Signal</SMALL>
+<dd>&#149;	<small>Reset</SMALL>
+</DL>
+<p>The <small>Wait</SMALL> method has two parameters:</P>
+<dl>
+<dd>&#149;	<small>dwFlags</SMALL> is normally set to <small>COWAIT_ALL</SMALL>, although you can use any value from the <small>COWAIT_FLAGS</SMALL> enumeration. The only other member of this enumeration is <small>COWAIT_ALERTABLE</SMALL>, which is signaled after an Asynchronous Procedure Call is queued.
+<dd>&#149;	<small>dwMilliseconds</SMALL> is the amount of time the calling thread is prepared to wait for the method to complete. You can pass <small>INFINITE</SMALL> to wait forever, or you can pass a value of zero to test the current condition of the method without waiting.
+</DL>
+<p>The <small>Wait</SMALL> method returns <small>S_OK</SMALL> if the asynchronous method has completed. It returns <small>RPC_S_CALLPENDING</SMALL> if the method has not completed before the timeout period expires. Note that <small>RPC_S_CALLPENDING</SMALL> is a successful return code, so the <small>FAILED</SMALL> and <small>SUCCEEDED</SMALL> macros can&#146;t be used to differentiate between it and <small>S_OK</SMALL>.</P>
+<p>The <small>Signal</SMALL> method is used by the call object to indicate that the asynchronous method call has completed.</P>
+<p>The <small>Reset</SMALL> method is used by the call object to restore the <small>ISynchronize</SMALL> interface to a new &#147;unsignaled&#148; state.</P>
+<p><font size="+1"><b>Using ICancelMethodCalls to Cancel an Asynchronous Method Call</B></FONT></P>
+<p>The <small>ICancelMethodCalls</SMALL> interface is exposed by a call object and is used to cancel an outstanding asynchronous method call. You can also use <small>ICancelMethodCalls</SMALL> to determine whether a method call has already been cancelled.</P>
+<p>A simplified definition of the <small>ICancelMethodCalls</SMALL> interface is provided in Listing 19.6.</P>
+<p><b>Listing 19.6</B> The <small>ICancelMethodCalls</SMALL> Interface<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+interface ICancelMethodCalls: public IUnknown
+{
+public:
+    HRESULT Cancel(ULONG ulSeconds);
+    HRESULT TestCancel(void);
+
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p><small>ICancelMethodCalls</SMALL> contains two methods:</P>
+<dl>
+<dd>&#149;	<small>Cancel</SMALL>
+<dd>&#149;	<small>TestCancel</SMALL>
+</DL>
+<p>The <small>Cancel</SMALL> method has one parameter that&#146;s used to indicate how long the client is prepared to wait for the server to acknowledge the cancellation request. You can pass a value of <small>RPC_C_CANCEL_INFINITE_TIMEOUT</SMALL> to specify that the client will wait forever, or you can pass a value of zero to force an immediate return to the client.</P>
+<p>The <small>Cancel</SMALL> method is only a cancellation request. It does not mean that the server will actually stop processing work. It many cases, the asynchronous behavior may be implemented in a proxy that&#146;s working with an EXE server that does not natively support asynchronous method calls.</P>
+<p>The <small>TestCancel</SMALL> method is used to determine whether an asynchronous call has been canceled. You can use this method to poll the call object to determine whether a cancellation request has been completed. If the method has been canceled, <small>TestCancel</SMALL> will return <small>RPC_E_CALL_CANCELED</SMALL>. If the method is still executing, <small>TestCancel</SMALL> will return <small>RPC_S_CALL_PENDING</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading6"></A><font color="#000077">Making Fire-and-Forget Method Calls</FONT></H4>
+<p>A commonly used programming pattern that employs asynchronous COM is known as Fire and Forget. This pattern allows you to make numerous asynchronous method calls without waiting for the method to complete. In fact, you don&#146;t even call the completion half of the asynchronous method.
+</P>
+<p>To use Fire and Forget, follow these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Create an instance of the call object and retrieve a pointer to your desired interface.
+<dd><b>2.</B>&nbsp;&nbsp;Call a <small>Begin_</SMALL><i>xxxx</I> method to start an asynchronous method call.
+<dd><b>3.</B>&nbsp;&nbsp;Immediately release the call object instance.
+</DL>
+<p>This pattern is useful when a server needs to communicate with a large number of clients and doesn&#146;t need to retrieve the results of the operation. The limitation is that there&#146;s no way for you to know whether your function call was successful.
+</P>
+<h3><a name="Heading7"></A><font color="#000077">An Asynchronous COM Example</FONT></H3>
+<p>The CD-ROM that accompanies the book contains several examples that demonstrate asynchronous method calls. There are four project subdirectories used in this chapter:
+</P>
+<dl>
+<dd>&#149; <i>AsyncTest</I> contains an ATL project named AsyncTest. This project builds a COM server that&#146;s used for the examples in this chapter.
+<dd>&#149;	<i>SyncClient</I> contains a console-mode project that uses the synchronous interface exposed by AsyncTest.
+<dd>&#149;	<i>AsyncProxy</I> contains a modified proxy/stub DLL that implements asynchronous method calls for the AsyncTest COM server.
+<dd>&#149;	<i>AsyncClient</I> uses the asynchronous proxy to make asynchronous method calls to the AsyncTest COM server.
+</DL>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">The IShop Interface</FONT></H4>
+<p>The examples in this chapter use the IShop interface, which is provided in Listing 19.7 in IDL.
+</P>
+<p><b>Listing 19.7</B> The <small>IShop</SMALL> Interface Definition<hr></P>
+<!-- CODE //-->
+<pre>
+import &#147;oaidl.idl&#148;;
+import &#147;ocidl.idl&#148;;
+    [
+        object,
+        uuid(C57B11E4-AF61-11D2-9935-00104B36573E),
+
+        helpstring(&#147;IShop Interface&#148;),
+        pointer_default(unique)
+    ]
+    interface IShop : IUnknown
+    {
+        [helpstring(&#147;method FindSalesClerk&#148;)]
+        HRESULT FindSalesClerk([out] BSTR* bstrClerkName);
+    };
+
+[
+    uuid(C57B11D6-AF61-11D2-9935-00104B36573E),
+    version(1.0),
+    helpstring(&#147;AsyncTest 1.0 Type Library&#148;)
+]
+library ASYNCTESTLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+
+    [
+        uuid(C57B11E5-AF61-11D2-9935-00104B36573E),
+        helpstring(&#147;Shop Class&#148;)
+    ]
+    coclass Shop
+    {
+        [default] interface IShop;
+    };
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>IShop</SMALL> interface contains one method: <small>FindSalesClerk</SMALL>. <small>FindSalesClerk</SMALL> takes a nontrivial amount of time to execute due to a call to the Win32 <small>Sleep</SMALL> function, which simulates the time required to actually find a sales clerk. <small>FindSalesClerk</SMALL> also has an <small>[out]</SMALL> parameter, which will be filled with the name of the sales clerk when the function returns.</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">The AsyncTest Project</FONT></H4>
+<p>The AsyncTest project is an ATL-based EXE server. AsyncTest contains one simple COM object named <small>Shop</SMALL>. The values used in the Names property sheet for the <small>Shop</SMALL> object are listed in Table 19.1.</P>
+<table width="100%"><caption align="LEFT" valign="TOP"><b>Table 19.1</B> Names Property Sheet Values for the <small>Shop</SMALL> COM Object
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Field</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Name</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Short Name
+<td align="LEFT" valign="TOP">Shop
+<tr>
+<td align="LEFT" valign="TOP">Class
+<td align="LEFT" valign="TOP">CShop
+<tr>
+<td align="LEFT" valign="TOP">.H File
+<td align="LEFT" valign="TOP">Shop.h
+<tr>
+<td align="LEFT" valign="TOP">.CPP File
+<td align="LEFT" valign="TOP">Shop.cpp
+<tr>
+<td align="LEFT" valign="TOP">CoClass
+<td align="LEFT" valign="TOP">Shop
+<tr>
+<td align="LEFT" valign="TOP">Interface
+<td align="LEFT" valign="TOP">IShop
+<tr>
+<td align="LEFT" valign="TOP">Type
+<td align="LEFT" valign="TOP">Shop Class
+<tr>
+<td align="LEFT" valign="TOP">Prog ID
+<td align="LEFT" valign="TOP">AsyncTest.Shop
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="19-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="19-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

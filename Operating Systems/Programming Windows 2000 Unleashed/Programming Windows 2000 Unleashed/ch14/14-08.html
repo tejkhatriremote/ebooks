@@ -1,0 +1,231 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=467-471//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="14-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch15/15-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 14.8</B> Initializing the Automation Object</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+Private Sub Form_Load()
+    Set BubbleMachine = CreateObject(&#147;AutoBub.Document&#148;)
+End Sub
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>After the Automation object has been used, it must be released by assigning the <small>BubbleMachine</SMALL> object the special value of <small>Nothing</SMALL>. Add the code provided in Listing 14.9 as the <small>Unload</SMALL> procedure for the <small>Form</SMALL> object.</P>
+<p><b>Listing 14.9</B> Releasing an Automation Object</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+Private Sub Form_Unload(Cancel As Integer)
+    Set BubbleMachine = Nothing
+End Sub
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p>In order to close the AutoBasic application, <small>End</SMALL> must be called. In the AutoBasic project, the <small>Click</SMALL> procedure for the <small>cmd</SMALL> control array handles the Apply and Close buttons. If an index of zero is passed, the Apply button is pressed. If an index of one is passed, the Close button is clicked. The source code for <small>cmd_Click</SMALL> is provided in Listing 14.10.</P>
+<p><b>Listing 14.10</B> Creating a New Bubble via Automation</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+Private Sub cmd_Click(Index As Integer)
+    Static ColorRef As Long, R As Integer, G As Integer, B As Integer
+    Static nX As Integer, nY As Integer, nRadius As Integer
+
+    If Index = 0 Then
+        &#145; Make the COLORREF from the RGB components
+        R = Val(txtRed) And &amp;HFF&amp;
+        G = Val(txtGreen) And &amp;HFF&amp;
+        B = Val(txtBlue) And &amp;HFF&amp;
+        ColorRef = RGB(R, G, B)
+AAU        &#145; Save the position coords as ints
+        nX = Val(txtXPos)
+        nY = Val(txtYPos)
+        nRadius = Val(txtRadius)
+        &#145; Create a new bubble
+        BubbleMachine.Add ColorRef, nX, nY, nRadius
+
+    Else
+        End
+    End If
+
+End Sub
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>An instance of the AutoBub application is displayed when you run the AutoBasic project. Remember that this isn&#146;t the default behavior&#151;usually an MFC-based Automation server remains hidden. Use the AutoBasic dialog box to add bubbles to AutoBub. Figure 14.10 shows both applications running after a few bubbles have been added.</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-10.jpg',800,600 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-10.jpg',800,600)"><font color="#000077"><b>Figure 14.10</B></FONT></A>&nbsp;&nbsp;The AutoBasic and AutoBub applications after a few bubbles have been added.</P>
+<h3><a name="Heading14"></A><font color="#000077">Using Automation in VBScript</FONT></H3>
+<p>The <small>IDispatch</SMALL> interface was originally created for use by clients that relied on scripting languages. A commonly used scripting language is VBScript, which is commonly used on Web pages and can also be used to script the Windows 2000 shell via the Windows Scripting Host (WSH).</P>
+<p>The Windows Scripting Host and VBScript enable you to write scripts that use any Automation server. These scripts are executed inside the Windows shell using the Windows Scripting Host. The Windows Scripting Host is an extendable scripting engine that has access to the Windows shell and COM interfaces. Today, WSH ships with support for VBScript. Third-party vendors are working on support for Perl and other scripting languages.</P>
+<p>An example of using VBScript inside WSH is provided in Listing 14.11. This script creates an instance of the AutoBub server and adds a number of bubbles.</P>
+<p><b>Listing 14.11</B> A VBScript Automation Example That Runs in the Windows Scripting Host</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+&#145;    BubbleScript.vbs
+&#145;
+&#145;    VBScript that runs inside the Windows Scripting Host and
+&#145;    controls the AutoBub Automation controller. The controller
+&#145;    is launched, several bubbles are displayed, then the script
+&#145;    displays a message box.
+&#145;
+&#145;    This example is from &#147;Programming Windows 2000 Unleashed&#148;,
+&#145;    by Mickey Williams.
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+Option Explicit
+On Error Resume Next
+
+Dim bubbleMachine
+Set bubbleMachine = CreateObject(&#147;AutoBub.Document&#148;)
+if(err &lt;&gt; 0) then
+    errmsgtrace &#147;CreateObject&#148;
+    Quit
+end if
+
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+&#145; Make some bubbles
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+bubbleMachine.Add vbRed, 50,  50, 10
+bubbleMachine.Add vbGreen, 60, 200, 40
+bubbleMachine.Add vbBlue, 80, 350, 20
+bubbleMachine.Add vbMagenta, 120, 100, 20
+bubbleMachine.Add vbCyan, 100, 300, 10
+bubbleMachine.Add vbYellow, 200, 50, 20
+bubbleMachine.Add vbBlack, 220, 500, 40
+bubbleMachine.Add vbRed, 250, 300, 20
+bubbleMachine.Add vbGreen, 280, 400, 100
+bubbleMachine.Add vbBlue,  300, 200, 20
+bubbleMachine.Add vbMagenta, 320, 300, 10
+bubbleMachine.Add vbCyan, 350, 100, 70
+bubbleMachine.Add vbYellow, 380, 200, 10
+bubbleMachine.Add vbBlack, 400, 400, 100
+bubbleMachine.Add vbRed, 420, 50, 20
+bubbleMachine.Add vbGreen, 440, 120, 10
+bubbleMachine.Add vbBlue,  450, 300, 20
+
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+&#145; Display completion message - this also keeps the controller up
+&#145; so the bubbles are visible.
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+msgtrace &#147;done&#148;
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+&#145; End of the script&#146;s main flow.
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+Quit
+
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+&#145; Subroutines:
+&#145;
+&#145; msgTrace - displays the current time and a message in a message
+&#145;            box.
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+Sub msgTrace(msg)
+    WScript.Echo Now &amp; &#147; - &#147; &amp; msg
+End Sub
+
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+&#145; errMsgTrace - displays the current time,  an error message and a
+&#145;               message string in a message box.
+&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#145;&#146;
+Sub errMsgTrace(msg)
+   WScript.Echo Now &amp; &#147;. Error Code: &#148; &amp; Hex(Err) &amp; &#147; - &#148; &amp; msg
+
+End Sub
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>If you save this script as <small>AutoScript.vbs</SMALL>, the Windows Scripting Host will run the script when it&#146;s double-clicked.</P>
+<h3><a name="Heading15"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed Automation and the <small>IDispatch</SMALL> interface. Automation is the most widely used COM technology, because it allows you to easily expose parts of your applications to the outside world. Automation servers such as Excel, Word, and Visio can easily be controlled by Automation controllers, such as Visual Basic and VBScript. In this chapter, examples of an Automation server and Automation controllers were created.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="14-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch15/15-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

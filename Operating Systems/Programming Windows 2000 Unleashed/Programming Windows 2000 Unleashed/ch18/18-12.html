@@ -1,0 +1,246 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Developing ActiveX Controls</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=18//-->
+<!--PAGES=612-615//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="18-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The source code provided in Listing 18.23 handles the work of drawing the pop-up button control. Add the entire listing to the <small>CPopButton</SMALL> class.</P>
+<p><b>Listing 18.23</B> Drawing Functions Used by the <small>CPopButton</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+//
+// Draw the flat button, including focus rectangle if the control
+// currently has the focus.
+HRESULT OnDraw(ATL_DRAWINFO&amp di)
+{
+    RECT&amp rc  = *(RECT*)di.prcBounds;
+    HDC   hdc = di.hdcDraw;
+    COLORREF clrFore, clrBack;
+    OleTranslateColor(m_clrForeColor, NULL, &ampclrFore);
+    OleTranslateColor(m_clrBackColor, NULL, &ampclrBack);
+    SetTextColor(hdc, m_clrForeColor);
+    HBRUSH hbrBtn = CreateSolidBrush(m_clrBackColor);
+    FillRect(hdc, &amprc, hbrBtn);
+    DrawEdges(hdc, &amprc);
+    DrawButtonText(hdc, &amprc, m_bstrCaption);
+    if(m_fHasFocus)
+    {
+        InflateRect(&amprc, -2, -2);
+        DrawFocusRect(hdc, &amprc);
+    }
+    DeleteObject(hbrBtn);
+    return 0;
+}
+//
+// Draw the button&#146;s edges, based on the current control state.
+// The button can either be flat, raised, or pushed down, depending
+// on the button&#146;s state.
+void DrawEdges(HDC hdc, LPRECT pRect)
+{
+    if(IsSelected())
+    {
+        // If the button is selected, draw it in the down state.
+        Draw3dRectEdges(hdc,
+                        pRect,
+                        GetSysColor(COLOR_3DSHADOW),
+                        GetSysColor(COLOR_3DHIGHLIGHT),
+                        m_cBevelSize);
+        InflateRect(pRect, -m_cBevelSize, -m_cBevelSize);
+        // Move the button contents to the right to simulate the
+        // button being pushed down.
+        OffsetRect(pRect, m_cBevelSize, m_cBevelSize);
+    }
+    else if(IsRaised())
+    {
+        // If the button is in hover mode, draw it in the up state.
+        Draw3dRectEdges(hdc,
+                        pRect,
+                        GetSysColor(COLOR_3DHIGHLIGHT),
+                        GetSysColor(COLOR_3DSHADOW),
+                        m_cBevelSize);
+        InflateRect(pRect, -m_cBevelSize, -m_cBevelSize);
+    }
+    else
+    {
+        // We&#146;re drawing a flat button, but we&#146;ll still deflate the
+        // rectangle so the button contents don&#146;t move around.
+        InflateRect(pRect, -m_cBevelSize, -m_cBevelSize);
+    }
+}
+// Draw the caption for the button, using the ambient font.
+void DrawButtonText(HDC hdc, LPRECT prc, LPWSTR wstrLabel)
+{
+    COLORREF clrText = GetSysColor(COLOR_BTNTEXT);
+    int nOldBkMode = SetBkMode(hdc, TRANSPARENT);
+    COLORREF clrTextOld = SetTextColor(hdc, clrText);
+    HFONT hCtlFont=NULL;
+    HFONT hOldFont=NULL;
+    CComQIPtr&ltIFont,&ampIID_IFont&gt pFont(m_pFont);
+    if(pFont)
+        pFont-&gtget_hFont(&amphCtlFont);
+    if(hCtlFont)
+        hOldFont = (HFONT)SelectObject(hdc, hCtlFont);
+    DrawTextEx(hdc,
+               wstrLabel,
+               lstrlen(wstrLabel),
+               prc,
+               DT_CENTER|DT_VCENTER|DT_SINGLELINE,
+               NULL);
+    SelectObject(hdc, hOldFont);
+    SetTextColor(hdc, clrTextOld);
+    SetBkMode(hdc, nOldBkMode);
+}
+//
+// Draws the edges for a 3D rectangle. Actually just breaks the
+
+
+// rectangle down into its coordinates, which are passed to the
+// Draw3dCoordsEdges function.
+void Draw3dRectEdges(HDC      hdc,
+                     LPCRECT  pRect,
+                     COLORREF clrTopLeft,
+                     COLORREF clrBottomRight,
+                     int      cBevel)
+{
+    if(!hdc || !pRect) return;
+    Draw3dCoordsEdges(hdc,
+                      pRect-&gtleft,
+                      pRect-&gttop,
+                      pRect-&gtright - pRect-&gtleft,
+                      pRect-&gtbottom - pRect-&gttop,
+                      clrTopLeft,
+                      clrBottomRight,
+                      cBevel);
+}
+//
+// Draws the edges for a 3D rectangle.
+// Accepts parameters for:
+//    The device context
+//    The coordinates for the rectangle to be drawn in 3-D
+//    The color for the left and top edges
+//    The color for the right and bottom edges
+//    The size of the bevel
+// Note that this function doesn&#146;t fill the center of the rect.
+void Draw3dCoordsEdges(HDC      hdc,
+                       int      x,
+                       int      y,
+                       int      cx,
+                       int      cy,
+                       COLORREF clrTopLeft,
+                       COLORREF clrBottomRight,
+                       int      cBevel)
+{
+    FastFillCoords(hdc, x, y, cBevel, cy - cBevel, clrTopLeft);
+    FastFillCoords(hdc, x, y, cx - cBevel, cBevel, clrTopLeft);
+    FastFillCoords(hdc, (x &#43; cx) - cBevel, y, cBevel, cy,
+                                                  clrBottomRight);
+    FastFillCoords(hdc, x, (y &#43; cy) - cBevel, cx, cBevel,
+                                                  clrBottomRight);
+}
+//
+// Given a set of coordinates for a rectangle, quickly fill the
+// area with a color, using ExtTextOut. ETO is the fastest way to
+// fill a small area with color.
+void FastFillCoords(HDC hdc, int x, int y, int cx, int cy,
+                                                   COLORREF clr)
+{
+    if(!hdc) return;
+    COLORREF clrOld = SetBkColor(hdc, clr);
+    RECT rc;
+    rc.left = x;
+    rc.top = y;
+    rc.right = x &#43; cx;
+    rc.bottom = y &#43; cy;
+    ExtTextOut(hdc, 0, 0, ETO_OPAQUE, &amprc, NULL, 0, NULL);
+    SetBkColor(hdc, clrOld);
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="18-11.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="18-13.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

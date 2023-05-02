@@ -1,0 +1,206 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Virtual Memory and Memory Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=02//-->
+<!--PAGES=030-034//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="02-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Committing a Page of Virtual Memory</FONT></H4>
+<p>After you reserve a range of the virtual memory address space, you must commit it before you actually can use it. You must commit virtual memory in multiples of the virtual memory page size; even if you need only part of a page, the entire page is committed. To commit a page of virtual memory, use the <small>VirtualAlloc</SMALL> function with the <small>MEM_COMMIT</SMALL> flag:</P>
+<!-- CODE SNIP //-->
+<pre>
+   pv = VirtualAlloc(pMem, cPageSize, MEM_COMMIT, PAGE_READWRITE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this code, the <small>PAGE_READWRITE</SMALL> flag indicates that the page is now both readable and write enabled. It&#146;s also possible to use the <small>PAGE_NOACCESS</SMALL> flag to prevent the page from being written to or used. If you use this flag, you must change the access rights to a different page-access value before using the page.</P>
+<p>The idea behind reserving a range of virtual memory addresses and committing them as needed is simple enough, but deciding on a mechanism for committing new pages is difficult. You can commit new pages in one of three ways:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Keep track of the number of allocated pages manually and increase the allocation when needed. This involves a lot of bookkeeping, because you need to remember how you&#146;ve committed objects into the committed virtual memory space. This approach adds processing costs to every virtual memory access. <dd><b>&#149;</B>&nbsp;&nbsp;Use guard pages as boundary markers in your virtual memory and commit more pages when a guard page is touched and a structured exception is raised. This approach works well for some types of applications (it&#146;s discussed later in the chapter).
+<dd><b>&#149;</B>&nbsp;&nbsp;Use Windows 2000 structured exception handling to help determine which pages should be committed. Write your code so that all your pages are assumed to be committed and then catch access exceptions. Inside the access exception handler, commit the page and repeat whatever access was made on the page.
+</DL>
+<p>One of the fastest methods for committing pages involves using structured exception handling.
+</P>
+<p><font size="+1"><b>Using Exceptions</B></FONT></P>
+<p>Win32 structured exception handling is discussed in detail in Chapter 5, &#147;Structured Exception Handling.&#148; If you&#146;re unfamiliar with structured exceptions, it&#146;s enough for now for you to know a few basic things about Win32 exceptions:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;If an exception is raised inside a <small>&#151;try</SMALL> block, the operating system will transfer execution to the associated <small>&#151;except</SMALL> block.
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>&#151;except</SMALL> block is never executed unless an exception is raised by the operating system.
+<dd><b>&#149;</B>&nbsp;&nbsp;You can determine the specific exception that&#146;s raised by calling the <small>GetExceptionCode</SMALL> function.
+</DL>
+<p>A simple approach to using structured exceptions is very useful in sparse memory schemes. The basic idea is to attempt to write to a page and, if an access violation exception is raised by the operating system, to commit the page and then write to the page again. Listing 2.1 shows an example of this.
+</P>
+<p><b>Listing 2.1</B> Allocating Virtual Memory as Needed Using Structured Exceptions<hr></P>
+<!-- CODE //-->
+<pre>
+   _ _try
+   {
+       g_ptrGridArray[nGridIndex] = pGrid;
+   }
+   _ _except(GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION)
+   {
+       VirtualAlloc(g_rgGridArray &#43; nGridIndex * sizeof(CGridItem*),
+                    sizeof(CGridItem),
+                    MEM_COMMIT,
+                    PAGE_READWRITE);
+       g_ptrGridArray[nGridIndex] = pGrid;
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 2.1, a pointer to a <small>CGridItem</SMALL> object is stored in the <small>g_ptrGridArray</SMALL> array. If the requested page has not been committed, Windows 2000 generates an <small>EXCEPTION_ACCESS_VIOLATION</SMALL> exception. The exception handler commits the page and stores a pointer to the object on the new page. This approach is very fast because it doesn&#146;t require you to track the currently committed pages.</P>
+<p><font size="+1"><b>Using Guard Pages</B></FONT></P>
+<p>Another approach to committing pages in virtual memory is useful when the memory is used from the &#147;bottom up.&#148; This type of allocation model can take advantage of virtual memory <i>guard pages</I>, which generate exceptions when they are used. Figure 2.4 shows an example of virtual memory using guard pages.</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-04.jpg',494,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch02/images/02-04.jpg',494,420)"><font color="#000077"><b>Figure 2.4</B></FONT></A>&nbsp;&nbsp;Virtual memory using guard pages.</P>
+<p>In Figure 2.4, section A shows a new virtual memory area with two pages committed, one of which is a guard page. Storage is used from the bottom of the committed address space, as shown in section B, and when the first access is made on the guard page in section C, an <small>EXCEPTION_GUARD_PAGE</SMALL> exception is raised by Windows 2000. At this point, your application has two choices:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Allocate additional pages
+<dd><b>&#149;</B>&nbsp;&nbsp;Stop using virtual memory before the storage on the guard page is exhausted
+</DL>
+<p>The <small>EXCEPTION_GUARD_PAGE</SMALL> exception is raised only for the first access made to a guard page. After the exception is raised, no more exceptions are raised for that page, no matter how many times it&#146;s accessed. Listing 2.2 shows an example of using guard pages.</P>
+<p><b>Listing 2.2</B> Using Guard Pages to Efficiently Commit Virtual Memory<hr></P>
+<!-- CODE //-->
+<pre>
+   #include &ltwindows.h&gt
+   #include &lttchar.h&gt
+
+   TCHAR* g_rgChar = NULL;
+   const int nAllocLimit = 0&#215;100000 * sizeof(TCHAR);
+   int main()
+   {
+       SYSTEM_INFO  inf;
+       GetSystemInfo(&ampinf);
+
+       g_rgChar = (TCHAR*)VirtualAlloc(NULL,
+                                       nAllocLimit,
+                                       MEM_RESERVE,
+                                       PAGE_READWRITE);
+       _tprintf(_T(&#147;Reserved range based at %p\n&#148;), g_rgChar);
+       // Commit the first page in the virtual address space,
+       // and mark it as a guard page.
+       VirtualAlloc(g_rgChar,
+                    inf.dwPageSize,
+                    MEM_COMMIT,
+                    PAGE_READWRITE | PAGE_GUARD);
+       int nPagesCommitted = 1;
+       int nIndex;
+       for(nIndex = 0; nIndex * sizeof(TCHAR)&lt nAllocLimit; nIndex<small>&#43;&#43;</SMALL>)
+       {
+           _ _try
+           {
+               g_rgChar[nIndex] = (nIndex%26)&#43;&#146;A&#146;;
+           }
+           _ _except(GetExceptionCode() == EXCEPTION_GUARD_PAGE)
+           {
+               // A guard page has been touched, commit a new one.
+               g_rgChar[nIndex] = (nIndex%26)&#43;&#146;A&#146;;
+               void* pvNewPage;
+               pvNewPage = g_rgChar &#43;
+                           nPagesCommitted * inf.dwPageSize/
+                           sizeof(TCHAR);
+               int n = nPagesCommitted*inf.dwPageSize;
+               if(pvNewPage &lt g_rgChar &#43; nAllocLimit)
+               {
+                   void* pv = VirtualAlloc(pvNewPage,
+                                           inf.dwPageSize,
+                                           MEM_COMMIT,
+                                           PAGE_READWRITE|PAGE_GUARD);
+                   _tprintf(_T(&#147;Committed a new page at %p\n&#148;), pv);
+                   nPagesCommitted<small>&#43;&#43;</SMALL>;
+               }
+           }
+       }
+       VirtualFree(g_rgChar, nAllocLimit, MEM_RELEASE);
+       return 0;
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The console mode program in Listing 2.2 reserves 100KB of virtual address space and then commits one page at a time. Each page is committed as a guard page. The first time the guard page is accessed, an <small>EXCEPTION_GUARD_PAGE</SMALL> exception is raised and an additional guard page is committed.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="02-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="02-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,266 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Controlling Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=10//-->
+<!--PAGES=334-339//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="10-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch11/11-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>CplMain.h</SMALL> header file contains declarations of functions found in the <small>CplMain.c</SMALL> source file. <small>CplMain.h</SMALL> can be found on the CD-ROM that accompanies this book.</P>
+<p>Functions that are unique to the CtlFileSpy applet are located in the <small>FileSpy.c</SMALL> source file. This file includes functions that initialize the dialog box, as well as functions that read and write parameters to the Registry.</P>
+<p>Listing 10.9 is a partial listing of the <small>FileSpy.c</SMALL> source file. The complete source file can be found on this book&#146;s CD-ROM.</P>
+<p><b>Listing 10.9</B> A Partial Listing of <small>FileSpy.<i>c</I></SMALL> from CtlFileSpy, the Control Panel Applet<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+
+#include &#147;filespy.h&#148;
+#include &#147;reg.h&#148;
+#include &#147;resource.h&#148;
+
+extern HANDLE  g_hInstance;
+extern LPCTSTR g_szService;
+extern LPCTSTR g_szModuleName;
+
+/*
+ * Names of parameters stored in the Registry.
+ */
+LPCTSTR rgszParamNames[FNPAR_COUNT] = {
+    _T(&#147;FileNameChange&#148;),
+    _T(&#147;DirNameChange&#148;),
+    _T(&#147;AttributeChange&#148;),
+    _T(&#147;SizeChange&#148;),
+    _T(&#147;LastWriteDateChange&#148;),
+    _T(&#147;SecurityChange&#148;)
+};
+
+/*
+ * Dialog box procedure for the applet. Commands are routed to
+ * a command handler, and the OnInit handler takes care of
+ * initializing the dialog box.
+ */
+BOOL CALLBACK FileSpyDlgFcn(HWND hDlg, UINT msg, WPARAM wParam,
+                            LPARAM lParam)
+{
+    switch(msg)
+    {
+        case WM_INITDIALOG:
+            OnInitDlg(hDlg);
+            return TRUE;
+
+        case WM_COMMAND:
+            return OnFileSpyDlgCommand(hDlg, LOWORD(wParam));
+    }
+    return FALSE;
+}
+
+/*
+ * Command handler for the applet. If the user clicks OK, the
+ * contents of the dialog box are written to the Registry. If
+ * the user clicks Cancel, we just close the dialog box.
+ */
+BOOL WINAPI OnFileSpyDlgCommand(HWND hDlg, WORD nCtlId)
+{
+    switch(nCtlId)
+    {
+        case IDOK:
+            OnOkay(hDlg);
+            EndDialog(hDlg, 0);
+            return TRUE;
+
+        case IDCANCEL:
+            EndDialog(hDlg, 0);
+            return TRUE;
+    }
+    return FALSE;
+}
+
+/*
+ * Fill an FN_PARAMS struct with parameters from the Registry.
+ */
+BOOL LoadParamsFromRegistry(LPCTSTR pszServiceName,
+                            FN_PARAMS* pParams)
+{
+    HKEY hParamsKey  = NULL;
+    HKEY hServiceKey = NULL;
+    int  ndx         = 0;
+    BOOL fRegRead    = FALSE;
+    BOOL fRetVal     = FALSE;
+
+    /*
+     * Use Win32 SEH to make sure that the Registry key handles
+     * are properly cleaned up.
+     */
+    __try
+    {
+        hServiceKey = GetRegServiceKey(pszServiceName);
+        if(!hServiceKey)
+        {
+            __leave;
+        }
+        hParamsKey = GetRegParamKey(hServiceKey);
+        if(!hParamsKey)
+        {
+            __leave;
+        }
+
+        /*
+         * Retrieve the file notification flag
+         * parameters.
+         */
+        for(ndx = 0; ndx &lt FNPAR_COUNT; ndx&#43;&#43;)
+        {
+            fRegRead = GetRegValBool(hParamsKey,
+                                     rgszParamNames[ndx],
+                                     &amppParams-&gtfLogChange[ndx],
+                                     FALSE);
+            if(!fRegRead)
+                __leave;
+        }
+        /*
+         * Retrieve the other service parameters.
+         */
+        fRegRead = GetRegValBool(hParamsKey,
+                                 _T(&#147;IncludeSubdirectories&#148;),
+                                 &amppParams-&gtfSubdirs,
+                                 FALSE);
+        if(!fRegRead)
+            __leave;
+        fRegRead = GetRegValSz(hParamsKey,
+                               _T(&#147;RootDirectory&#148;),
+                               pParams-&gtszRootDir,
+                               _MAX_PATH,
+                               _T(&#147;C:\\&#148;));
+        if(!fRegRead)
+            __leave;
+        fRetVal = TRUE;
+    }
+    __finally
+    {
+        if(hServiceKey)
+            RegCloseKey(hServiceKey);
+        if(hParamsKey)
+            RegCloseKey(hParamsKey);
+    }
+    return fRetVal;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The declarations of functions found in <small>FileSpy.c</SMALL> can be found in the <small>FileSpy.h</SMALL> header file, which is located in the FileSpy project directory on the CD-ROM that accompanies this book.</P>
+<p>Finally, the module definition file for the CtlFileSpy applet must export the following three functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CPlApplet</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FileSpyDlgFcn</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OnFileSpyDlgCommand</SMALL>
+</DL>
+<p>The module definition file for the CtlFileSpy project is provided in Listing 10.10.
+</P>
+<p><b>Listing 10.10</B> The CtlFileSpy Module Definition File<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+LIBRARY   CtlFileSpy
+DESCRIPTION &#147;FileSpy CPL Applet&#148;
+EXPORTS
+   CPlApplet
+   FileSpyDlgFcn
+OnFileSpyDlgCommand
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>Compile and run the CtlFileSpy Control Panel applet. The project included on the CD-ROM will build the DLL with a file extension of <small>.cpl</SMALL> so that it will be recognized as a Control Panel applet. After the applet is compiled, you must copy it to the <small>System32</SMALL> subdirectory so that it will be loaded by the Control Panel. Figure 10.2 shows the CtlFileSpy icon inside the Control Panel.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-02.jpg',465,388 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-02.jpg',465,388)"><font color="#000077"><b>Figure 10.2</B></FONT></A>&nbsp;&nbsp;The CtlFileSpy icon inside the Control Panel.</P>
+<p>Figure 10.3 shows an example of CtlFileSpy running, with the current parameters used by the FileSpy service displayed.
+</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-03.jpg',357,360 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch10/images/10-03.jpg',357,360)"><font color="#000077"><b>Figure 10.3</B></FONT></A>&nbsp;&nbsp;A running example of the CtlFileSpy applet.</P>
+<h3><a name="Heading9"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed managing services for Windows 2000. This chapter also presented complete examples of self-registration code for services and a Control Panel applet used to control a service.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="10-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch11/11-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

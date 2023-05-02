@@ -1,0 +1,168 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Cluster Server</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=29//-->
+<!--PAGES=970-973//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="29-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using Control Code Functions and Control Codes</B></FONT></P>
+<p>The preferred way to manage a resource is to use the cluster object control code functions. Control code functions are preferred because they allow the cluster service to notify resource DLLs of events that occur due to the requested function. This is especially true of functions that impact the cluster database.
+</P>
+<p>Each cluster object type has a separate control code function:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterGroupControl</SMALL>. Manages a cluster group.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterNetworkControl</SMALL>. Manages a cluster network.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterNetInterfaceControl</SMALL>. Manages a network interface.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterNodeControl</SMALL>. Manages a node in the cluster.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceControl</SMALL>. Manages a resource in the cluster. This function cannot be called from a resource DLL because it will cause a deadlock.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ClusterResourceTypeControl</SMALL>. Manages a cluster resource type. This function cannot be called from a resource DLL because it will cause a deadlock.
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>A resource DLL is not allowed to call the <small>ClusterResourceControl</SMALL> or <small>ClusterResourceTypeControl</SMALL> functions, because a deadlock will result. A resource DLL is not allowed to call these functions, even if the target resource is handled by a different DLL.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>All the control code functions have similar parameters. The <small>ClusterGroupControl</SMALL> function is declared as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD WINAPI ClusterGroupControl(HGROUP  hGroup,
+                                 HNODE   hHostNode,
+                                 DWORD   dwControlCode,
+                                 LPVOID  lpInBuffer,
+                                 DWORD   cbInBufferSize,
+                                 LPVOID  lpOutBuffer,
+                                 DWORD   cbOutBufferSize,
+                                 LPDWORD lpcbBytesReturned);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>ClusterResourceTypeControl</SMALL> function has eight parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the group to be managed. This handle is retrieved by calling the <small>OpenClusterGroup</SMALL> function. Other cluster control functions accept different types of handles as their first parameters.
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the cluster node that&#146;s to perform the function. If <small>NULL</SMALL> is passed as this parameter, the node that currently owns the group will handle the function. A node handle is opened with the <small>OpenClusterNode</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;A control code that represents the task to be performed. Information about control codes is discussed later in this section.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a buffer containing input information, if required; otherwise, <small>NULL</SMALL> is passed as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the input buffer, in bytes.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a buffer containing output information, if required; otherwise, <small>NULL</SMALL> is passed as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the output buffer, in bytes.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>DWORD</SMALL> that contains the size of the data actually stored in the output buffer. If this information isn&#146;t provided, you can pass <small>NULL</SMALL> as this parameter.
+</DL>
+<p>Control code functions accept a control code as one of function&#146;s parameters. Because there are dozens of possible control codes, they aren&#146;t individually discussed in this chapter. For a thorough list of all possible control codes, consult the Platform SDK documentation.
+</P>
+<p>Control codes are classed as either internal or external. An external control code is used by an application to manage a cluster object. An internal control code is used by the cluster service to notify a resource DLL that an event has occurred.</P>
+<p>Control codes follow a specific naming convention:</P>
+<!-- CODE SNIP //-->
+<pre>
+CLUSCTL_<i>OBJECT</I>_<i>FUNCTION</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>For example, to retrieve the name of a group, you use the <small>CLUSCTRL_GROUP_GET_NAME</SMALL> control code. To retrieve the name of a resource, you use the <small>CLUSCTRL_RESOURCE_GET_NAME</SMALL> control code. Here are some examples of control codes used with cluster resources:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CLUSCTL_RESOURCE_SET_PRIVATE_PROPERTIES</SMALL>. Sets the value of a cluster resource&#146;s private property
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CLUSCTL_RESOURCE_ENUM_PRIVATE_PROPERTIES</SMALL>. Enumerates the names of private properties that belong to the resource
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CLUSCTL_RESOURCE_GET_PRIVATE_PROPERTIES</SMALL>. Retrieves the value of a private property that belongs to a resource
+</DL>
+<p><font size="+1"><b>Using CClusPropList to Retrieve Properties</B></FONT></P>
+<p>Manipulating cluster object properties is rather difficult using the MSCS API functions. However, it&#146;s greatly simplified with the <small>CClusPropList</SMALL> class, which is generated by the Visual C<small>&#43;&#43;</SMALL> 6.0 Cluster Resource Type Wizard.</P>
+<p>The <small>CClusPropList</SMALL> class is derived from the MFC <small>CObject</SMALL> class and is automatically added to all resource type projects. This class is not documented, and it isn&#146;t part of the standard MFC class library distribution. If you need to use this class outside a wizard-generated project, use the wizard to create a resource type project and then manually copy the <small>proplist.cpp</SMALL> and <small>proplist.h</SMALL> files from the wizard-generated project into the project that requires them.</P>
+<p>The <small>CClusPropList</SMALL> class has the following public member functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Proplist</SMALL>. Returns a pointer to the internal <small>CLUSPROP_BUFFER_HELPER</SMALL> member variable that contains the property list.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>PbProplist</SMALL>. Returns a pointer to the byte array contained in the property list&#146;s internal <small>CLUSPROP_BUFFER_HELPER</SMALL> variable.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>CbPropList</SMALL>. Returns the size of the property list.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Cprops</SMALL>. Returns the number of properties stored in the property list.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>AddProp</SMALL>. Adds a property to the property list. There are four overloaded versions of this method; each version handles a specific data type.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>AllocPropList</SMALL>. Increases the size of the property list to a specified minimum value.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DwGetNodeProperties</SMALL>. Retrieves properties from a cluster node object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DwGetGroupProperties</SMALL>. Retrieves properties from a cluster group object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DwGetResourceProperties</SMALL>. Retrieves properties from a cluster resource object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DwGetResourceTypeProperties</SMALL>. Retrieves properties from a cluster resource type object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DwGetNetworkProperties</SMALL>. Retrieves properties from a cluster network object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DwGetNetInterfaceProperties</SMALL>. Retrieves properties from a cluster network interface object.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="29-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="29-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

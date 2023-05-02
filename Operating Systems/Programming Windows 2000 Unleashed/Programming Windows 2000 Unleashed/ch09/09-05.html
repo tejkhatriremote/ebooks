@@ -1,0 +1,191 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=300-303//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Writing Data to the Windows 2000 Event Log</FONT></H4>
+<p>As discussed earlier, a Windows 2000 service must use the event log to store messages from the service when interesting events occur within the service. Here are some examples of interesting events:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The service has started. A service should avoid this message if it&#146;s meant to run when the computer starts, because the event log will have an extra entry every time it&#146;s restarted.
+<dd><b>&#149;</B>&nbsp;&nbsp;The service fails to start. When a service fails to start, the user is prompted to look in the event log for information. Services that place startup failure information in the event log make it easier for the end user to diagnose and correct the problem.
+<dd><b>&#149;</B>&nbsp;&nbsp;The service begins to run out of a resource, such as a disk quota that&#146;s close to reaching its limit. Placing a warning in the event log is one way to notify a user or administrator that some corrective action must be taken.
+<dd><b>&#149;</B>&nbsp;&nbsp;The service is running and encounters a problem that forces it to stop. In this case, placing as much information as possible into the event log is a very good idea. The user or administrator will probably look into the event log as soon as he or she discovers that the service is no longer running.
+</DL>
+<p><font size="+1"><b>Specifying Event Attributes</B></FONT></P>
+<p>Every event in the event log has a set of attributes that can be used by an administrator to filter or search for particular events:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The event type indicates the severity or general nature of the event message.
+<dd><b>&#149;</B>&nbsp;&nbsp;The event source is the service that generated the event log message.
+<dd><b>&#149;</B>&nbsp;&nbsp;The category is an optional attribute that&#146;s specified by the event source. If provided, this value is displayed in the Event Viewer.
+<dd><b>&#149;</B>&nbsp;&nbsp;The event ID is used when generating the event text.
+</DL>
+<p>You may assign one of the following event types to your message:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Information</I> is used for messages that convey some sort of non&#150;error-related data, such as normal service startup or normal shutdown.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Warning</I> is used to indicate that a minor problem has occurred.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Error</I> is used for messages that indicate a major problem has occurred, such as a primary service function that could not be performed or a failed service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Success audit</I> is used to indicate that a successful security audit event has occurred.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Failure audit</I> is used to indicate that an unsuccessful security audit event has occurred.
+</DL>
+<p>The event ID is used by Windows 2000 to determine how the message should be output to the event log. The event ID is used by Windows 2000 to determine how the message is to be formatted in the log.
+</P>
+<p>The event log facility in Windows 2000 uses a very flexible mechanism to format and translate event messages into different languages. As you&#146;ll see in the next section, every service must have a message resource that contains an entry for each event ID. This entry specifies how the message is formatted for the event log, much like the specifiers used for <small>printf</SMALL> or <small>wsprintf</SMALL>.</P>
+<p><font size="+1"><b>Creating a Message Resource</B></FONT></P>
+<p>If your service doesn&#146;t use a message resource file, messages placed into the event log won&#146;t be properly formatted. If an administrator uses the Event Log Viewer to view the message, it will look like Figure 9.7.
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-07.jpg',404,447 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-07.jpg',404,447)"><font color="#000077"><b>Figure 9.7</B></FONT></A>&nbsp;&nbsp;Viewing an event log message that isn&#146;t properly formatted.</P>
+<p>Think of the message file as containing a series of <small>printf</SMALL> specifiers that describe how your message must be formatted. If you&#146;re only interested in supporting a single language, you need only one entry in your message resource, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+; //Message file for MyService
+MessageID=0
+Language=English
+%1
+.
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this example, <small>MessageID</SMALL> is the same value as the event log event ID. This value is used to identify the message when it&#146;s generated by the service and sent to the event log.</P>
+<p>In the example, <small>Language</SMALL> is set as <small>English</SMALL>. It&#146;s possible, even likely, to have different formatting specifications for different languages.</P>
+<p>The <small>%1</SMALL> found on the fourth line is the description string. This line describes how the event message from the service will be formatted. In this case, the entire event message string from the service will be output to the event log, with no text placed before or after the message. You could also have a description string like this one:</P>
+<!-- CODE SNIP //-->
+<pre>
+The myservice service would like you to know that %1
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this case, each event message would have a standard prefix.
+</P>
+<p>The message file has an <small>.mc</SMALL> file extension and is compiled into a message resource by being run through the message compiler included with the Platform SDK and Visual C<small>&#43;&#43;</SMALL>. To compile the <small>myservice.mc</SMALL> message file, issue the following command:</P>
+<!-- CODE SNIP //-->
+<pre>
+mc myservice.mc
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the message file is successfully compiled into a message resource, the result is two files: a file with a <small>.bin</SMALL> extension and a resource file with an <small>.rc</SMALL> extension that uses the message resource (in this case, <small>myservice.rc</SMALL>). This file must be bound to the service executable or to a DLL that the service is linked with.</P>
+<p><font size="+1"><b>Writing to the Event Log</B></FONT></P>
+<p>A service must call three functions in order to write a message to the event log:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>RegisterEventSource</SMALL> is used to open a handle to an event source.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ReportEvent</SMALL> is used to write a message to the event log, using the handle returned from <small>RegisterEventSource</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DeregisterEventSource</SMALL> is used to close a handle to an event source.
+</DL>
+<p>A short example that shows how these three functions can be used together is provided in Listing 9.5.
+</P>
+<p><b>Listing 9.5</B> Writing a Message to the Windows 2000 Event Log<hr></P>
+<!-- CODE //-->
+<pre>
+HANDLE hEventSrc = RegisterEventSource(NULL, _T(&#147;MyService&#148;));
+if(hEventSrc)
+{
+    ReportEvent(hEventSrc, /* Source handle     */
+                wType,     /* Message type      */
+                0,         /* Category          */
+                0,         /* Event ID          */
+                NULL,      /* SID               */
+                1,         /* Strings in array  */
+                0,         /* Binary data size  */
+                rgStr,     /* String array      */
+                NULL);     /* Binary data       */
+    DeregisterEventSource(hEventSrc);
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>RegisterEventSource</SMALL> function has two parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A UNC path to the machine that hosts the event source, or <small>NULL</SMALL> for the local machine
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the event source that the handle will refer to
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

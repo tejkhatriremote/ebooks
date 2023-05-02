@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=293-296//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>dwCurrentState</SMALL> member variable contains the current state of the service, chosen from the following values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_START_PENDING</SMALL> is used when the service is processing a start request from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_RUNNING</SMALL> indicates that the service is running.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_PAUSE_PENDING</SMALL> is used when the service is processing a pause request from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_PAUSED</SMALL> indicates that the service is paused.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_CONTINUE_PENDING</SMALL> is used when the service is processing a continue request from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_STOP_PENDING</SMALL> is used when the service is processing a stop request from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_STOPPED</SMALL> indicates that the service is not running.
+</DL>
+<p>The <small>dwControlsAccepted</SMALL> member variable contains a combination of zero or more of the following values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_STOP</SMALL> indicates that the service can be stopped, and the service&#146;s control handler will accept the <small>SERVICE_CONTROL_STOP</SMALL> value from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_PAUSE_CONTINUE</SMALL> indicates that the service can be paused and restarted. The service&#146;s control handler will accept the <small>SERVICE_CONTROL_PAUSE</SMALL> and <small>SERVICE_CONTROL_CONTINUE</SMALL> values from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_SHUTDOWN</SMALL> specifies that the service needs to be notified when the system is shutting down, and the service&#146;s control handler will accept the <small>SERVICE_CONTROL_SHUTDOWN</SMALL> value from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_PARAMCHANGE</SMALL> indicates that the service is capable of reading its startup parameters without being stopped and restarted. The service&#146;s control handler will accept the <small>SERVICE_CONTROL_PARAMCHANGE</SMALL> value from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_NETBINDCHANGE</SMALL> indicates that the service is a network component that can accept changes in its binding without being stopped and restarted. The service&#146;s control handler will accept the <small>SERVICE_CONTROL_NETBINDADD</SMALL>, <small>SERVICE_CONTROL_NETBINDREMOVE</SMALL>, <small>SERVICE_CONTROL_NETBINDENABLE</SMALL>, and <small>SERVICE_CONTROL_NETBINDDISABLE</SMALL> values from the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_HARDWAREPROFILECHANGE</SMALL> indicates that the service wants to be notified when the computer&#146;s hardware profile has changed, and the service&#146;s control handler will accept the <small>SERVICE_CONTROL_HARDWAREPROFILECHANGE</SMALL> from the Service Control Manager. This option is only available if the service has called the <small>RegisterServiceCtrlHandlerEx</SMALL> function instead of the <small>RegisterServiceCtrlHandler</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SERVICE_ACCEPT_POWEREVENT</SMALL> indicates that the service wants to be notified when the power status of the computer has changed, and the service&#146;s control handler will accept the <small>SERVICE_CONTROL_POWEREVENT</SMALL> value from the Service Control Manager. This option is only available if the service has called the <small>RegisterServiceCtrlHandlerEx</SMALL> function instead of the <small>RegisterServiceCtrlHandler</SMALL> function.
+</DL>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">The Life Cycle of a Windows 2000 Service</FONT></H4>
+<p>The life cycle of a Windows 2000 service can be broken down into three main phases:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Starting a service
+<dd><b>&#149;</B>&nbsp;&nbsp;Pausing a service
+<dd><b>&#149;</B>&nbsp;&nbsp;Stopping a service
+</DL>
+<p><font size="+1"><b>Starting a Windows 2000 Service</B></FONT></P>
+<p>The startup sequence for a Windows 2000 service is shown in Figure 9.4.
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-04.jpg',201,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch09/images/09-04.jpg',201,420)"><font color="#000077"><b>Figure 9.4</B></FONT></A>&nbsp;&nbsp;The startup sequence for a Windows 2000 service.</P>
+<p>Here are the steps shown in Figure 9.4:
+</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;The Service Control Manager calls the main entry point for the registered executable that contains the service.
+<dd><b>2.</B>&nbsp;&nbsp;The service calls back to the operating system&#146;s <small>StartServiceCtrlDispatcher</SMALL> function.
+<dd><b>3.</B>&nbsp;&nbsp;The Service Control Manager calls the service&#146;s <small>ServiceMain</SMALL> function.
+<dd><b>4.</B>&nbsp;&nbsp;The service registers its service control handler using the <small>RegisterServiceCtrlHandler</SMALL> function.
+<dd><b>5.</B>&nbsp;&nbsp;The service typically launches a thread that performs the work of the service.
+<dd><b>6.</B>&nbsp;&nbsp;The service notifies the Service Control Manager that the service has started.
+</DL>
+<p>In Figure 9.4, step 1 shows the Service Control Manager calling the service&#146;s entry point&#151;<small>main</SMALL>, <small>wmain</SMALL>, or <small>WinMain</SMALL>. The examples in this chapter use the <small>_tmain</SMALL> macro, which evaluates to <small>wmain</SMALL> in Unicode builds and <small>main</SMALL> otherwise.</P>
+<p>In response, the service is expected to call back to the Service Control Manager using the <small>StartServiceCtrlDispatcher</SMALL> function, as shown in step 2 in Figure 9.4. This function has one parameter&#151;an array of <small>SERVICE_TABLE_ENTRY</SMALL> structures that contain the names of the services in this executable as well as the addresses of their <small>ServiceMain</SMALL> functions. Listing 9.1 is a minimal version of a service&#146;s <small>main</SMALL> function.</P>
+<p><b>Listing 9.1</B> A Minimal Version of a Windows 2000 <small>main</SMALL> Function<hr></P>
+<!-- CODE //-->
+<pre>
+int cdecl _tmain()
+{
+    SERVICE_TABLE_ENTRY ste[] =
+    {
+        _T(&#147;MyService&#148;), MyServiceMain,
+        NULL, NULL
+    };
+    StartServiceCtrlDispatcher(ste);
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The <small>SERVICE_TABLE_ENTRY</SMALL> structure has two members:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The name of the service, which can be omitted if the service is registered as <small>SERVICE_WIN32_OWN_PROCESS</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of the service&#146;s <small>ServiceMain</SMALL> function
+</DL>
+<p>If the service module contains multiple services, you&#146;ll have more entries in the array. You must always have an extra entry that contains <small>NULL</SMALL> for both values&#151;the Service Control Manager tests for the double <small>NULL</SMALL> values to find the end of the array.</P>
+<p>The <small>StartServiceCtrlDispatcher</SMALL> will return <small>TRUE</SMALL> if the Service Control Manager attempts to start your service and <small>FALSE</SMALL> otherwise. The unusual thing about this function is that it will return <small>TRUE</SMALL> <i>after</I> the service has finished executing! For this reason, there shouldn&#146;t be any service-related code in <small>main</SMALL> (or <small>_tmain</SMALL> in this example) after the call to <small>StartServiceCtrlDispatcher</SMALL>.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>With a small amount of work, you can make it possible to run your service from the command line. You may have noticed that Listing 9.1 looks like a perfectly reasonable console mode application. As you&#146;ll see later in this chapter&#146;s sample service, if the call to <small>StartServiceCtrlDispatcher</SMALL> returns <small>FALSE</SMALL>, your service can easily convert itself into a console mode application.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

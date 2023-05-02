@@ -1,0 +1,266 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=179-183//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>bash, csh, ksh, sh, tcsh</SMALL></P>
+<h3><a name="Heading20"></A><font color="#000077">5.10 Using Aliases</FONT></H3>
+<h4 align="LEFT"><a name="Heading21"></A><font color="#000077">5.10.1 Description</FONT></H4>
+<p>The <small>alias</SMALL> command is available for users to create their own styles of shorthand to individual commands and to a series of commands.</P>
+<p><font size="+1"><b>Examples</B></FONT></P>
+<p>Flavors: AT&T, BSD
+</P>
+<p>Shells: bash, csh, ksh, tcsh</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+ksh: <b>alias</B> [name [=value]]
+All Others: <b>alias</B> [name [def]]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Aliases can take a rather lengthy command and shorten it to a single word. They are also helpful for turning difficult commands into single-word commands that are easy to understand. You can also pipe (or redirect) a series of commands through and alias to shorten your typing. Global environment variables such as <small>$HOME</SMALL> and <small>$PWD</SMALL> can be used with aliases to make the command more powerful. Here is a list of popular aliases that get used a lot:</P>
+<p># Directory manipulation</P>
+<!-- CODE SNIP //-->
+<pre>
+alias .  &#145;echo $cwd&#146;              # Display the current directory
+alias .. &#145;set dot=$cwd;cd ..&#146;     # Go up one level
+alias ,  &#145;cd $dot &#145;               # Go back to previous directory
+alias cd &#145;cd \!*;pwd&#146;             # Change directories and display
+&#8658;location
+</PRE>
+<!-- END CODE SNIP //-->
+<p># <small>ls</SMALL> variants</P>
+<!-- CODE //-->
+<pre>
+alias l  &#145;ls -lg \!* | cut -c0-79&#146;      # ls that fits on one line of
+&#8658;80 col
+alias la &#147;ls -alg&#148;                      # long listing with groups
+&#8658;included
+alias lf  ls -CFa                       # mark executables and dirs
+&#8658;w/ * &amp /
+alias lh &#147;ls -lg .[a-zA-Z]*&#148;            # ls -lg HIDDEN (.*) files *only*
+alias lsd &#147;ls -lgd&#148;                     # ls -l  this directory
+alias lsds &#147;ls -lg | grep &#145;^d&#146;&#148;         # ls -lg all directories *only*
+alias lsf &#147;ls -lg | grep -v &#145;^d&#146;&#148;       # ls -lg all files *only*
+&#8658;(no dirs)
+</PRE>
+<!-- END CODE //-->
+<p># Terminal related
+</P>
+<!-- CODE //-->
+<pre>
+alias setvt     &#145;set term=vt100&#146;        # Sets the terminal emulation
+&#8658;to vt100
+alias set220    &#145;set term=vt220&#146;        # Sets the terminal emulation
+&#8658;to vt220
+alias bs        &#147;stty erase &#145;^H&#146;&#148;       # Set the backspace
+alias del       &#147;stty erase &#145;^?&#146;&#148;       # Set the backspace
+alias cls       &#147;clear&#148;                 # Clear the screen
+alias ^l        xlock -mode random                # Lock the screen
+alias ^k        &#147;clear&#148;                 # Clean the screen
+</PRE>
+<!-- END CODE //-->
+<p># Miscellaneous commands
+</P>
+<!-- CODE //-->
+<pre>
+alias a         alias                   # Shorten the alias command
+alias s         source                  # Source a startup file
+alias u         unalias                 # Turn aliasing of on a file
+alias d         date                    # The current time and date
+alias v         vi                      # vi a file
+alias date &#147;/bin/date &#145;&#43;DAY: %a, %h %d, 19%y%nHOUR: %r%nDATE:
+&#8658;%m/%d/%y%nTIME: %H:%M:%S&#146;&#148;  # The date explaned
+alias qn        &#145;cat - &gt&gt /tmp/qn.&#145;date &#43;%y%m%d&#145;&#146;    # Write a single
+&#8658;line message
+alias qnl &#145;cat /tmp/qn.&#145;date &#43;%y%m%d&#145;&#146;               # List current
+&#8658;daily single line messages.
+alias h         &#145;history \!* |  more&#146;   # History command piped to more
+alias pd         pushd                  # Pushd
+alias pp         pushd                  #Pushd
+alias lman      &#145;nroff -man \!* | more&#146; # Display local man page
+alias mroe       more                   # Displays more if misspelled
+alias m         more                    # Abbreviated more
+alias lo        exit                    # Logout
+alias mkae      make                    # Misspelled Make
+alias mail      /usr/bsd/Mail           # To get BSD mail client
+alias less      &#145;less -E \!*&#146;           # A less aliases
+alias lps       &#145;/usr/ucb/lpc stat  $1&#146; # status the BSD printer
+</PRE>
+<!-- END CODE //-->
+<p># Filesystem management
+</P>
+<!-- CODE SNIP //-->
+<pre>
+alias df        &#145;df -k&#146;                 # Filesystem status
+alias du        &#145;du -k&#146;                 # Disk Usage Status
+alias psg       &#145;ps -ax | grep \!* | grep -v grep&#146;  # grep the process
+&#8658;table for a pattern
+alias punt      kill                              # Kill a process
+</PRE>
+<!-- END CODE SNIP //-->
+<p># File management
+</P>
+<!-- CODE //-->
+<pre>
+alias psg       &#145;ps -ax | grep \!* | grep -v grep&#146;    # find a task by
+&#8658;name
+alias findg     &#145;find . -print | grep $1&#146;    # Grep a pattern out of a
+&#8658;list of files
+alias ff        &#145;find . -name \!* -print&#146;    # Fast find, list all the
+&#8658;files
+alias rgrep     &#145;find . -type f -print | xargs grep -i $1&#146;  # Recursive
+&#8658;grep through the files
+alias open      &#145;chmod go&#43;r&#146;            # Open Read access to groups
+&#8658;and others
+alias shut      &#145;chmod go-r&#146;            # Deny Read access to groups
+&#8658;and others
+alias &#43;w        &#145;chmod go&#43;w&#146;            # Open Write access to groups
+&#8658;and others
+alias -w        &#145;chmod go-w&#146;            # Deny Write access to groups
+&#8658;and others
+alias x         &#145;chmod &#43;x&#146;              # Add executable permissions
+</PRE>
+<!-- END CODE //-->
+<p># Remote login to common machines
+</P>
+<!-- CODE //-->
+<pre>
+alias tnugu     &#145;telnet ugu.com&#146;        # Telnet to a remote system
+alias tn911    &#145;telnet UNIX911.com&#146;     # Telnet to another remote system
+alias ftp911   &#145;ftp www.UNIX911.com&#146;    # FTP to a remote system
+alias rocket   &#147;rlogin rocket&#148;          # Remotely login to a remote
+&#8658;system
+alias trocket  &#147;telnet rocket&#148;          # Telnet to a remote system
+alias archie   &#147;telnet quiche.cs.mcgill.ca&#148; # Telnet to an application
+&#8658;remotely
+alias r         rlogin             # Remotely login
+alias tn        telnet             # telnet
+</PRE>
+<!-- END CODE //-->
+<p>#For DOS users
+</P>
+<!-- CODE SNIP //-->
+<pre>
+alias dir       ls -l              # Display the current directory
+alias copy      cp                 # Copy a file
+alias rename    mv                 # Rename a file
+alias del       rm                 # Delete a file
+alias help      man                # Get help
+</PRE>
+<!-- END CODE SNIP //-->
+<p># OpenWindows and X
+</P>
+<!-- CODE SNIP //-->
+<pre>
+alias openwin   /usr/openwin/bin/openwin   # open openwindows
+alias setrocket  &#145;setenv DISPLAY rocket:0&#146;  # Display X back on rocket
+alias setsaucer  &#145;setenv DISPLAY saucer:0&#146;  # Display X back on saucer
+alias xmail     &#147;rsh rocket &#145;setenv DISPLAY saucer:0; xmail&#146;&#148;
+&#8658;# remotely run xmail displaying it back on saucer
+alias xterm     &#145;xterm -ut&#146;             # brings up an exterm without
+&#8658;loging it in utmp
+</PRE>
+<!-- END CODE SNIP //-->
+<p># Fun with NIS/YP
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# This command will nicely display all the user information NIS/YP knows about a user
+alias yff &#147;ypmatch \!:* passwd | sed &#145;s/\([^:]*\):\([^:]*\):\([^:]*\):
+&#8658;\([^:]*\):\([^,]*\)[^:]*:\([^:]*\):\([^:]*\)/Login name:     \1\\\
+Real name:      \5\\\
+Home directory: \6\\\
+Shell:          \7\\\
+(uid,gid):      (\3,\4)\\\
+/&#146;&#148;
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>Speed and ease is what it comes down to. Why type a long command when you can type three or four letters? In the beginning there was no such thing as a desktop, no cut and paste, no click of a mouse button. It was all hands on and the pioneers knew how to make it easier for everyone who enjoys working at the command prompt.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

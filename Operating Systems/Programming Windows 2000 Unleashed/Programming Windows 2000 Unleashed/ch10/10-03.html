@@ -1,0 +1,204 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Controlling Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=10//-->
+<!--PAGES=324-327//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="10-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The <small>UnregisterService</SMALL> function opens a handle to the Service Control Manager and then opens a handle to the FileSpy service. The <small>DeleteService</SMALL> function is used to delete the FileSpy service from the SCM database.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">Automatically Restarting Failed Services</FONT></H4>
+<p>In versions of Windows NT prior to Windows 2000, a service that crashed could not be restarted without manual intervention. A crashed service can be a major problem if other applications or even other services depend on it. Beginning with Windows 2000, you can specify the action to be taken if your service stops unexpectedly.
+</P>
+<p>You can configure four options for the SCM to take if your service ends unexpectedly:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Do nothing</I>. This is the default action taken if no option is selected programmatically.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Restart the service</I>. This option attempts to relaunch the failed service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Run a command</I>. The command will run in the same account as the service.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Reboot the computer</I>. This is a rather drastic step and should be undertaken only in the most extreme conditions.
+</DL>
+<p>You can also choose to escalate your recovery actions. For example, even if you have a service that&#146;s so important that the machine must be rebooted (if necessary), you&#146;ll probably want to initially run a command or restart the service.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>This facility makes it very important that you terminate your service correctly. The SCM will mark your service as terminating unexpectedly if the service doesn&#146;t report its service status as <small>SERVICE_STOPPED</SMALL>. Because the administrator can also declaratively set these options via the MMC, a service that doesn&#146;t close correctly might be continuously restarted or even lead to the computer being rebooted.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>You can programmatically change the actions to be taken upon service failure by using the <small>ChangeServiceConfig2</SMALL> function, as shown in the code fragment in Listing 10.4.</P>
+<p><b>Listing 10.4</B> Configuring Two Levels of Recovery Actions for a Service<hr></P>
+<!-- CODE //-->
+<pre>
+SC_ACTION rgActions[2] = {
+    SC_ACTION_RESTART, 60000,
+    SC_ACTION_RUN_COMMAND, 60000
+};
+
+SERVICE_FAILURE_ACTIONS sfa;
+ZeroMemory(&ampsfa, sizeof(sfa));
+sfa.dwResetPeriod = 9000; // 15 minutes
+sfa.lpRebootMsg = NULL;
+sfa.lpCommand = _T(&#147;C:\\Projects\\cleanup.exe&#148;);
+sfa.cActions = sizeof(rgActions)/sizeof(rgActions[0]);
+sfa.lpsaActions = rgActions;
+
+ChangeServiceConfig2(schSvc,
+                     SERVICE_CONFIG_FAILURE_ACTIONS,
+                     &ampsfa);
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><small>ChangeServiceConfig2</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A handle to the Service Control Manager.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>DWORD</SMALL> that specifies the type of configuration to be changed. This parameter must be set to either <small>SERVICE_CONFIG_DESCRIPTION</SMALL>, to change the service description, or SERVICE_CONFIG_FAILURE_ACTIONS, to change the action taken when the service fails.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a structure used to change the service configuration. If <small>SERVICE_CONFIG_FAILURE_ACTIONS</SMALL> is specified in the second parameter, this parameter is the address of a <small>SERVICE_FAILURE_ACTIONS</SMALL> structure.
+</DL>
+<p>The <small>SERVICE_FAILURE_ACTIONS</SMALL> structure is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _SERVICE_FAILURE_ACTIONS {
+    DWORD       dwResetPeriod;
+    LPTSTR      lpRebootMsg;
+    LPTSTR      lpCommand;
+    DWORD       cActions;
+    SC_ACTION * lpsaActions;
+} SERVICE_FAILURE_ACTIONS, *LPSERVICE_FAILURE_ACTIONS;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Here are the structure&#146;s five parameters:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The reset period, in seconds, that marks a single failure period for escalation purposes. If the service fails, this timer is started. If the service fails again before the timer expires, the next action in the escalation procedure is taken.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a string sent to users as a broadcast message if the machine is rebooted. If you never reboot the machine as part of your recovery activity, or if you want to keep the current message, pass <small>NULL</SMALL> as this parameter. If you want to erase the current message, send an empty string as this parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a command-line string that will be executed if a command is executed as part of the recovery activity. As with the broadcast string, pass <small>NULL</SMALL> to keep the current command line unchanged. Pass an empty string to remove the command line.
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>DWORD</SMALL> that provides a count of the number of recovery actions in the next parameter.
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of <small>SC_ACTION</SMALL> structures, one for each new recovery action in an escalation sequence.
+</DL>
+<p>The <small>SC_ACTION</SMALL> structure describes a recovery action and is defined as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _SC_ACTION {
+    SC_ACTION_TYPE  Type;
+    DWORD           Delay;
+} SC_ACTION, *LPSC_ACTION;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In the <small>SC_ACTION</SMALL> structure, the <small>Delay</SMALL> member variable specifies the amount of time, in milliseconds, that the Service Control Manager should wait before taking the indicated action. The <small>Type</SMALL> member variable contains one of the following action values:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SC_ACTION_NONE</SMALL> specifies that no action should be taken by the SCM.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SC_ACTION_RUN_COMMAND</SMALL> specifies that the command found in the <small>SERVICE_FAILURE_ACTION</SMALL> structure should be run by the SCM.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SC_ACTION_RESTART</SMALL> specifies that the service should be restarted.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SC_ACTION_REBOOT</SMALL> specifies that the computer should be rebooted.
+</DL>
+<h3><a name="Heading6"></A><font color="#000077">Writing Control Panel Applets</FONT></H3>
+<p>It&#146;s common practice to use a Control Panel applet to configure a service. Providing runtime access to Registry keys used by your service is much more convenient than forcing the user to edit Registry keys by hand or run the service installation program.
+</P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">The Control Panel Applet Interface</FONT></H4>
+<p>Control Panel applets aren&#146;t standalone applications; instead, they&#146;re DLLs that expose the <small>CPlApplet</SMALL> function as a consistent interface to the system. When a user opens the Control Panel folder or double-clicks the applet icon, the system will send the applet&#146;s <small>CPlApplet</SMALL> messages, which signify events that should be acted upon by the applet. A typical <small>CPlApplet</SMALL> function is shown in Listing 10.5.</P>
+<p><b>Listing 10.5</B> A Skeleton <small>CPlApplet</SMALL> Function<hr></P>
+<!-- CODE //-->
+<pre>
+LONG CALLBACK CPlApplet(HWND   hwnd,
+                        UINT   msg,
+                        LPARAM lParam1,
+                        LPARAM lParam2)
+{
+    switch(msg)
+    {
+        // Handle individual CPL_XXX messages
+          .
+          .
+          .
+        default:
+            break;
+    }
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="10-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

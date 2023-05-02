@@ -1,0 +1,229 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=414-418//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Drag and Drop</FONT></H4>
+<p>Drag and drop is built on top of the uniform data transfer mechanism discussed in the preceding section. OLE provides a large set of functions and interfaces that can be used to manage the transfer of data from one object to another visually, instead of through the Clipboard. Chapter 15, &#147;OLE Drag and Drop,&#148; discusses this in detail.
+</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Integration with Other Applications</FONT></H4>
+<p>In addition to the capabilities discussed earlier, the component object model implies even greater possibilities yet to come. COM defines a model that can extend the services offered by Windows in a general, flexible way. In fact, many of the new technologies released in recent years for various versions of Windows, such as DirectX and TAPI 3.0, use COM interfaces.
+</P>
+<h3><a name="Heading10"></A><font color="#000077">Programming with COM and OLE</FONT></H3>
+<p>Before you look at an example that uses COM and OLE, you should know some of the basics involved with programming using COM and OLE. The following basic topics are discussed in the following sections:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Understanding and using COM interfaces
+<dd><b>&#149;</B>&nbsp;&nbsp;Identifying COM objects and interfaces
+<dd><b>&#149;</B>&nbsp;&nbsp;Using <small>IUnknown</SMALL> and the <small>QueryInterface</SMALL> function
+<dd><b>&#149;</B>&nbsp;&nbsp;Creating COM objects
+</DL>
+<p>After looking at these basic topics, you&#146;ll learn about using COM and OLE to create shell extensions for the Windows 2000 shell.
+</P>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Using COM Interfaces</FONT></H4>
+<p>Under COM, direct access to an object is never permitted. Communication with an object takes place through well-defined interfaces. Restricting access to objects allows COM to be an environment and language-neutral model&#151;nothing in the COM specification restricts you to using C<small>&#43;&#43;</SMALL>. In fact, Visual Basic, Delphi, and C all are used to program OLE and COM applications.</P>
+<p>All interfaces in the component object model begin with <i>I</I> as a standard naming convention (<i>I</I> stands for <i>interface</I>). A COM interface usually is drawn as shown in Figure 13.5.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-05.jpg',448,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-05.jpg',448,420)"><font color="#000077"><b>Figure 13.5</B></FONT></A>&nbsp;&nbsp;Diagramming the interfaces supported by an object.</P>
+<p>The object is shown as a square box, with one or more open circles, representing jacks, extended from it. These jacks symbolize interfaces supported by the object. Because every object implements the <small>IUnknown</SMALL> interface, it usually is shown alone at the top of the box. The names of individual functions on an interface are not shown.</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Identifying COM Interfaces and Objects</FONT></H4>
+<p>As discussed earlier, the component object model specifies that interfaces and objects are identified by 128-bit numbers, known as <i>globally unique identifiers</I> (<i>GUIDs</I>). A GUID can be used to identify two types of items:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A GUID used to identify an interface is known as an <i>interface identifier</I> (<i>IID</I>).
+<dd><b>&#149;</B>&nbsp;&nbsp;A GUID used to identify a type of object is known as a <i>class identifier</I> (<small>ClassID</SMALL>, or <i>CLSID</I>).
+</DL>
+<p>Due to the sheer size of a GUID, it&#146;s very unlikely that two randomly chosen GUIDs will ever be identical. Even given large numbers of randomly chosen GUIDs, the possibility of a name collision is extremely small.
+</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p><i>Never</I> attempt to reuse GUIDs published in books, magazines, or elsewhere. This is much worse than sharing a toothbrush with someone and has the potential of causing you (and others) endless and difficult-to-resolve pain and suffering. The Windows 2000 Registry and COM are not built to handle the possibility of GUID collisions, which never happen as long as everyone plays by the rules.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>To generate your own set of GUIDs, run <small>UUIDGEN</SMALL> from a console window. If you have a network interface card installed on your machine, you&#146;ll receive a unique GUID of your very own, similar to the following:</P>
+<!-- CODE SNIP //-->
+<pre>
+d3d834c1-9a3b-11cf-82a0-00608cca2a2a
+</PRE>
+<!-- END CODE SNIP //-->
+<p>You can display a complete list of <small>UUIDGEN</SMALL> options by using the <small>-?</SMALL> switch. You also can ask for a GUID preformatted into an interface structure as used in the <small>DEFINE_GUID</SMALL> macro by using the <small>-s</SMALL> switch, as shown in Listing 13.1.</P>
+<p>Alternatively, the Visual C<small>&#43;&#43;</SMALL> compiler includes GUIDGEN.EXE, a graphical version of UUIDGEN. GUIDGEN enables you to copy GUIDs to the clipboard, where they can easily be pasted into your source code.</P>
+<p><b>Listing 13.1</B> A Preformatted GUID Generated by <small>UUIDGEN</SMALL><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+INTERFACENAME = { /* d3d834c1-9a3b-11cf-82a0-00608cca2a2a */
+    0xd3d834c1,
+    0x9a3b,
+    0x11cf,
+    {0x82, 0xa0, 0x00, 0x60, 0x8c, 0xca, 0x2a, 0x2a}
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>The <small>DEFINE_GUID</SMALL> macro is used to initialize a class ID or interface ID to be equal to a particular GUID. To define a GUID representing an OLE class named <small>Foo</SMALL>, a <small>CLSID_Foo</SMALL> symbol is initialized using the <small>DEFINE_GUID</SMALL> macro:</P>
+<!-- CODE SNIP //-->
+<pre>
+DEFINE_GUID( CLSID_Foo, 0xd3d834c0, 0x9a3b, 0x11cf, 0x82,
+             0xa0, 0x00, 0x60, 0x8c, 0xca, 0x2a, 0x2a );
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If your machine does not have a network interface card, a pseudo-random GUID is synthesized for you. There&#146;s a slight chance that this GUID may collide with other GUIDs assigned at random to other COM and OLE programmers. If you&#146;re writing an application for distribution, you must install a network interface card for maximum safety. If installing a network card for a few GUIDs is too painful for some reason, drop me an e-mail message at
+</P>
+<!-- CODE SNIP //-->
+<pre>
+mickey.williams@codevtech.com
+</PRE>
+<!-- END CODE SNIP //-->
+<p>I&#146;ll be happy to create some safe GUIDs for you.
+</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Handling GUIDs</FONT></H4>
+<p>Due to the length of a GUID, handling GUIDs tends to be more difficult than passing around 32-bit handles. Listing 13.2 shows the structure of a GUID.
+</P>
+<p><b>Listing 13.2</B> The GUID <small>struct</SMALL> Declaration<hr></P>
+<!-- CODE SNIP //-->
+<pre>
+typedef struct _GUID
+{
+    unsigned long  Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    unsigned char  Data4[8];
+
+}GUID;
+</PRE>
+<!-- END CODE SNIP //-->
+<hr>
+<p>In the Win32 Registry, a GUID is stored with curly braces at each end, like this:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+{d3d834c0&#150;9a3b&#150;11cf&#150;82a0&#150;00608cca2a2a}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The Win32 SDK also provides several functions used to handle GUIDs, which are listed in Table 13.1.
+</P>
+<table width="100%"><caption align="LEFT" colspan="2"><b>Table 13.1</B> Win32 GUID-handling Functions
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<th align="LEFT" valign="TOP"><i>Function</I>
+<th align="LEFT" valign="TOP"><i>Description</I>
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>CLSIDFromString</SMALL>
+<td align="LEFT" valign="TOP">Converts a string into a CLSID
+<tr>
+<td align="LEFT" valign="TOP"><small>CoCreateGuid</SMALL>
+<td align="LEFT" valign="TOP">Generates a new GUID
+<tr>
+<td align="LEFT" valign="TOP"><small>IIDFromString</SMALL>
+<td align="LEFT" valign="TOP">Converts a string into an IID
+<tr>
+<td align="LEFT" valign="TOP"><small>IsEqualCLSID</SMALL>
+<td align="LEFT" valign="TOP">Compares two class IDs
+<tr>
+<td align="LEFT" valign="TOP"><small>IsEqualGUID</SMALL>
+<td align="LEFT" valign="TOP">Compares two GUIDs
+<tr>
+<td align="LEFT" valign="TOP"><small>IsEqualIID</SMALL>
+<td align="LEFT" valign="TOP">Compares two interface IDs
+<tr>
+<td align="LEFT" valign="TOP"><small>StringFromCLSID</SMALL>
+<td align="LEFT" valign="TOP">Converts a CLSID into a string
+<tr>
+<td align="LEFT" valign="TOP"><small>StringFromGUID2</SMALL>
+<td align="LEFT" valign="TOP">Formats a GUID into a supplied buffer
+<tr>
+<td align="LEFT" valign="TOP"><small>StringFromIID</SMALL>
+<td align="LEFT" valign="TOP">Converts an IID into a string
+<tr>
+<td align="LEFT" valign="TOP" colspan="2"><hr>
+</TABLE>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-01.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-03.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

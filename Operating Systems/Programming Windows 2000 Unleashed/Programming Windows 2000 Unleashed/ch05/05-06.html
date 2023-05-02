@@ -1,0 +1,179 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Structured Exception Handling</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=05//-->
+<!--PAGES=179-181//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch06/06-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h3><a name="Heading17"></A><font color="#000077">Integrating Win32 SEH with C&#43;&#43; Exception Handling</FONT></H3>
+<p>Using C<small>&#43;&#43;</SMALL> exceptions and structured exception handling together requires a small amount of planning on your part. The basic problems with mixing these two exception-handling mechanisms follow:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Using SEH can cause an object&#146;s destructor to be bypassed.
+<dd><b>&#149;</B>&nbsp;&nbsp;Failing to handle SEH exceptions makes your application less robust. If you&#146;re writing mission-critical applications, you must handle SEH exceptions.
+<dd><b>&#149;</B>&nbsp;&nbsp;Many ANSI Standard Library functions throw C<small>&#43;&#43;</SMALL> exceptions when they fail. If your compiler doesn&#146;t support this yet, it will&#151;it&#146;s part of the standard.
+</DL>
+<p>Fortunately, there&#146;s a way to integrate SEH with C<small>&#43;&#43;</SMALL> exceptions. Windows 2000 provides the <small>_set_se_translator</SMALL> function, which enables you to define a function that translates SEH exceptions into C<small>&#43;&#43;</SMALL> exceptions. The new translation function must use an <small>unsigned int</SMALL> and a pointer to an <small>EXCEPTION_POINTERS</SMALL> structure as parameters:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void new_xlation_func(unsigned int nCode,
+                          EXCEPTION_POINTERS* pEx);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>These values are used exactly as if they were returned from <small>GetExceptionCode</SMALL> and <small>GetExceptionInformation</SMALL>.</P>
+<p>The <small>_set_se_translator</SMALL> function takes one parameterthe address of the new translation function:</P>
+<!-- CODE SNIP //-->
+<pre>
+   _se_translator_function  fnOld;
+   fnOld = _set_se_translator(new_xlation_func);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The return value from <small>_set_se_translator</SMALL> is the address of the current translation function, if any. You should restore the previous value when exiting your exception-handling code.</P>
+<p>Inside the translation function, you can throw a C<small>&#43;&#43;</SMALL> exception using information about the structured exception that has been raised. You can simply throw a <small>char</SMALL> string or any of the Standard Exception Library exception objects.</P>
+<p>Listing 5.18 contains the source code for the <small>CWin32Except</SMALL> class, which I use when translating a structured exception into a C<small>&#43;&#43;</SMALL> exception.</P>
+<p><b>Listing 5.18</B> The <small>CWin32Except</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+   #include &lteh.h&gt
+   class CWin32Except
+   {
+       unsigned int m_nCode;
+   public:
+       CWin32Except(unsigned int nCode) : m_nCode(nCode) {};
+       unsigned int Code() const { return m_nCode; };
+
+   };
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Listing 5.19 shows an example of using this code in a console mode program. First, a translation function is defined that throws a <small>CWin32Except</SMALL> object. When an SEH exception is sent to this function, the exception code is stored in the <small>CWin32Except</SMALL> object and is caught by a <small>catch</SMALL> expression that specifies a <small>CWin32Except</SMALL> object.</P>
+<p><b>Listing 5.19</B> Using the <small>CWin32Except</SMALL> Class to Handle Structured Exceptions<hr></P>
+<!-- CODE //-->
+<pre>
+   #include &ltiostream&gt
+   #include &ltwindows.h&gt
+   #include &#147;w32ex.h&#148;
+   using namespace std;
+
+   void SEH_TransFunc(unsigned int nCode, EXCEPTION_POINTERS* pExp)
+   {
+       throw CWin32Except(nCode);
+   }
+
+   void DoAccessViolation()
+   {
+       int* p = 0;
+       *p = 42;
+   }
+
+   int main()
+   {
+       // Set the translation function, and save
+       // the previous function address as fnOld.
+       _se_translator_function  fnOld;
+       fnOld = _set_se_translator(SEH_TransFunc);
+       try
+       {
+           DoAccessViolation();
+       }
+       catch(CWin32Except&amp e)
+       {
+           cout.flags(ios::hex);
+           cout &lt&lt &#147;Caught a _ _try exception with CWin32Except.&#148; &lt&lt endl;
+           cout &lt&lt &#147;Exception number &#147; &lt&lt e.Code() &lt&lt endl;
+       }
+       // Restore the previous translation function
+       _set_se_translator(fnOld);
+
+   }
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Before any code in the main function starts executing, the translation function is enabled using the <small>_set_se_translation</SMALL> function. When the access violation occurs, it&#146;s translated into a C<small>&#43;&#43;</SMALL> exception and is caught and handled in the program.</P>
+<h3><a name="Heading18"></A><font color="#000077">Summary</FONT></H3>
+<p>In this chapter, you learned how you can use exception handling to improve the readability and robustness of programs written for Windows 2000. This chapter also discussed using Windows 2000 structured exception handling to create termination and exception handlers, as well as the exception handling built into the C<small>&#43;&#43;</SMALL> language. The Standard Exception Library included in the ANSI Draft C<small>&#43;&#43;</SMALL> Standard also was discussed.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch06/06-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

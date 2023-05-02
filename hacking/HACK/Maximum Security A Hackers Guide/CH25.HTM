@@ -1,0 +1,957 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 25 -- The Remote Attack</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="samsnet.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="ch24.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch24/ch24.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch26.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch26/ch26.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">25</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">The Remote Attack</FONT></H1>
+</CENTER>
+<P>In this chapter, I will examine the remote attack. I will define what such an
+attack is and demonstrate some key techniques employed. Moreover, this chapter will
+serve as a generalized primer for new system administrators, who may have never encountered
+the remote attack in real life.</P>
+<P>The purpose of this chapter is to begin integrating the information that has already
+been offered to this point. In other words, it is time to put the pieces together.
+<H2><FONT COLOR="#000077"><B>What Is a Remote Attack?</B></FONT></H2>
+<P>A <I>remote attack</I> is any attack that is initiated against a machine that
+the attacker does not currently have control over; that is, it is an attack against
+any machine other than the attacker's own (whether that machine is on the attacker's
+subnet or 10,000 miles away). The best way to define a remote machine is this:
+
+<DL>
+	<DD>A <I>remote machine</I> is any machine--other than the one you are now on--that
+	can be reached through some protocol over the Internet or any other network or medium.
+</DL>
+
+<H2><FONT COLOR="#000077"><B>The First Steps</B></FONT></H2>
+<P>The first steps, oddly enough, do not involve much contact with the target. (That
+is, they won't if the cracker is smart.) The cracker's first problem (after identifying
+the type of network, the target machines, and so on) is to determine with whom he
+is dealing. Much of this information can be acquired without disturbing the target.
+(We will assume for now that the target does not run a firewall. Most networks do
+not. Not yet, anyway.) Some of this information is gathered through the following
+techniques:
+
+<UL>
+	<LI>Running a <TT>host</TT> query. Here, the cracker gathers as much information
+	as is currently held on the target in domain servers. Such a query may produce volumes
+	of information (remember the query on Boston University in Chapter 9, &quot;Scanners&quot;?)
+	or may reveal very little. Much depends on the size and the construct of the network.<BR>
+	<BR>
+	
+	<LI>For example, under optimal circumstances of examining a large and well-established
+	target, this will map out the machines and IPs within the domain in a very comprehensive
+	fashion. The names of these machines may give the cracker a clue as to what names
+	are being used in NIS (if applicable). Equally, the target may turn out to be a small
+	outfit, with only two machines; in that case, the information will naturally be sparse.
+	It will identify the name server and the IPs of the two boxes (little more than one
+	could get from a WHOIS query). One interesting note is that the type of operating
+	system can often be discerned from such a query.<BR>
+	<BR>
+	
+	<LI>A WHOIS query. This will identify the technical contacts. Such information may
+	seem innocuous. It isn't. The technical contact is generally the person at least
+	partially responsible for the day-to-day administration of the target. That person's
+	e-mail address will have some value. (Also, between this and the <TT>host</TT> query,
+	you can determine whether the target is a real box, a leaf node, a virtual domain
+	hosted by another service, and so on.)<BR>
+	<BR>
+	
+	<LI>Running some Usenet and Web searches. There are a number of searches the cracker
+	might want to conduct before actually coming into contact with the target. One is
+	to run the technical contact's name through a search engine (using a forced, case-sensitive,
+	this-string-only conditional search). The cracker is looking to see if the administrators
+	and technical contacts sport much traffic in Usenet. Similarly, this address (or
+	addresses) should be run through searchable archives of all applicable security mailing
+	lists.
+</UL>
+
+<P>The techniques mentioned in this list may seem superfluous until you understand
+their value. Certainly, Farmer and Venema would agree on this point:
+
+<DL>
+	<DD>What should you do? First, try to gather information about your (target) host.
+	There is a wealth of network services to look at: finger, showmount, and rpcinfo
+	are good starting points. But don't stop there--you should also utilize DNS, whois,
+	sendmail (smtp), ftp, uucp, and as many other services as you can find.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The preceding paragraph
+	is excerpted from <I>Improving the Security of Your Site by Breaking Into It</I>
+	by Dan Farmer and Wietse Venema. It can be found online at <A HREF="javascript:if(confirm('http://www.craftwork.com/papers/security.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.craftwork.com/papers/security.html'" tppabs="http://www.craftwork.com/papers/security.html"><TT>http://www.craftwork.com/papers/security.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Collecting information about the system administrator is paramount. A system administrator
+is usually responsible for maintaining the security of a site. There are instances
+where the system administrator may run into problems, and many of them cannot resist
+the urge to post to Usenet or mailing lists for answers to those problems. By taking
+the time to run the administrator's address (and any variation of it, as I will explain
+in the next section), you may be able to gain greater insight into his network, his
+security, and his personality. Administrators who make such posts typically specify
+their architecture, a bit about their network topology, and their stated problem.</P>
+<P>Even evidence of a match for that address (or lack thereof) can be enlightening.
+For example, if a system administrator is in a security mailing list or forum each
+day, disputing or discussing various security techniques and problems with fellow
+administrators, this is evidence of knowledge. In other words, this type of person
+knows security well and is therefore likely well prepared for an attack. Analyzing
+such a person's posts closely will tell you a bit about his stance on security and
+how he implements it. Conversely, if the majority of his questions are rudimentary
+(and he often has a difficult time grasping one or more security concepts), it might
+be evidence of inexperience.</P>
+<P>From a completely different angle, if his address does not appear at all on such
+lists or in such forums, there are only a few possibilities why. One is that he is
+lurking through such groups. The other is that he is so bad-ass that he has no need
+to discuss security at all. (Basically, if he is on such lists at all, he DOES receive
+advisories, and that is, of course, a bad sign for the cracker, no matter what way
+you look at it. The cracker has to rely in large part on the administrator's lack
+of knowledge. Most semi-secure platforms can be relatively secure even with a minimal
+effort by a well-trained system administrator.)</P>
+<P>In short, these searches make a quick (and painless) attempt to cull some important
+information about the folks at the other end of the wire.</P>
+<P>You will note that I referred to &quot;any variation&quot; of a system administrator's
+address. <I>Variations</I> in this context mean any possible alternate addresses.
+There are two kinds of alternate addresses. The first kind is the individual's personal
+address. That is, many system administrators may also have addresses at or on networks
+other than their own. (Some administrators are actually foolish enough to include
+these addresses in the fields provided for address on an InterNIC record.) So, while
+they may not use their work address to discuss (or learn about) security, it is quite
+possible that they may be using their home address.</P>
+<P>To demonstrate, I once cracked a network located in California. The administrator
+of the site had an account on AOL. The account on AOL was used in Usenet to discuss
+various security issues. By following this man's postings through Usenet, I was able
+to determine quite a bit. In fact (and this is truly extraordinary), his password,
+I learned, was the name of his daughter followed by the number 1.</P>
+<P>The other example of a variation of an address is this: either the identical address
+or an address assigned to that person's same name on any machine within his network.
+Now, let's make this a little more clear. First, on a network that is skillfully
+controlled, no name is associated with root. That is because root should be used
+as little as possible and viewed as a system ID, not to be invoked unless absolutely
+necessary. (In other words, because <TT>su</TT> and perhaps other commands or devices
+exist that allow an administrator to do his work, root need not be directly invoked,
+except in a limited number of cases.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Attacking a network run on Windows
+	NT is a different matter. In those cases, you <I>are</I> looking to follow root (or
+	rather, Administrator) on each box. The design of NT makes this a necessity, and
+	Administrator on NT is vastly different from root on a UNIX box. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Because root is probably not invoked directly, the system administrator's ID could
+be anything. Let's presume here that you know that ID. Let's suppose it is <TT>walrus</TT>.
+Let us further suppose that on the <TT>host</TT> query that you conducted, there
+are about 150 machines. Each of those machines has a distinct name. For example,
+there might be <TT>mail.victim.net</TT>, <TT>news.victim.net</TT>, <TT>shell.victim.net</TT>,
+<TT>cgi.victim.net</TT>, and so forth. (Although, in practice, they will more likely
+have &quot;theme&quot; names that obscure what the machine actually does, like <TT>sabertooth.victim.net</TT>,
+<TT>bengal.victim.net</TT>, and <TT>lynx.victim.net</TT>.)</P>
+<P>The cracker should try the administrator's address on each machine. Thus, he will
+be trying <TT>walrus@shell.victim.net</TT>, <TT>walrus@sabertooth.victim.net</TT>,
+and so forth. (This is what I refer to as a variation on a target administrator's
+address.) In other words, try this on each box on the network, as well as run all
+the general diagnostic stuff on each of these machines. Perhaps <TT>walrus</TT> has
+a particular machine that he favors, and it is from this machine that he does his
+posting.</P>
+<P>Here's an interesting note: If the target is a provider (or other system that
+one can first gain legitimate access to), you can also gain an enormous amount of
+information about the system administrator simply by watching where he is coming
+in from. This, to some extent, can be done from the outside as well, with a combination
+of finger and rusers. In other words, you are looking to identify <I>foreign</I>
+networks (that is, networks other than the target) on which the system administrator
+has accounts. Obviously, if his last login was from Netcom, he has an account on
+Netcom. Follow that ID for a day or so and see what surfaces.
+<H2><FONT COLOR="#000077"><B>About Finger Queries</B></FONT></H2>
+<P>In the previously referenced paper by Farmer and Venema (a phenomenal and revolutionary
+document in terms of insight), one point is missed: The use of the finger utility
+can be a dangerous announcement of your activities. What if, for example, the system
+administrator is running MasterPlan?
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>MasterPlan is a utility I discuss
+	in Chapter 13, &quot;Techniques to Hide One's Identity.&quot; Its function is to
+	trap and log all finger queries directed to the user; that is, MasterPlan will identify
+	the IP of the party doing the fingering, the time that such fingering took place,
+	the frequency of such fingering, and so forth. It basically attempts to gather as
+	much information about the person fingering you as possible. Also, it is not necessary
+	that they use MasterPlan. The system administrator might easily have written his
+	own hacked finger daemon, one that perhaps even traces the route back to the original
+	requesting party--or worse, fingers them in return. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>To avoid the possibility of their finger queries raising any flags, most crackers
+use <I>finger gateways</I>. Finger gateways are Web pages, and they usually sport
+a single input field that points to a CGI program on the drive of the remote server
+that performs finger lookup functions. In Figure 25.1, I have provided an example
+of one such finger gateway. (This one is located at the University of Michigan Medical
+Center.)</P>
+<A NAME="01"></A>
+<P><B><A HREF="01-13.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch25/01.htm">FIGURE 25.1.</a></B> <I><BR>
+An example of a finger gateway at the University of Michigan.</I></P>
+<P>By using a finger gateway, the cracker can obscure his source address. That is,
+the finger query is initiated by the remote system that hosts the finger gateway.
+(In other words, not the cracker's own machine but some other machine.) True, an
+extremely paranoid system administrator might track down the source address of that
+finger gateway; he might even contact the administrator of the finger gateway site
+to have a look at the access log there. In this way, he could identify the fingering
+party. That this would happen, however, is quite unlikely, especially if the cracker
+staggers his gateways. In other words, if the cracker intends to do any of this type
+of work &quot;by hand,&quot; he should really do each finger query from a different
+gateway. Because there are 3,000+ finger gateways currently on the Web, this is not
+an unreasonable burden. Furthermore, if I were doing the queries, I would set them
+apart by several minutes (or ideally, several hours).
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>One technique involves the redirection
+	of a finger request. This is where the cracker issues a raw finger request to one
+	finger server, requesting information from another. This is referred to as <I>forwarding</I>
+	a finger request. The syntax of such a command is <I><TT>finger</TT></I><TT> <I>user</I>@real_target.com@someother_host.com</TT>.
+	For example, if you wanted to finger a user at <I>primenet.com</I>, you might use<I>
+	</I><TT>deltanet.com</TT>'s finger service to forward the request. However, in today's
+	climate, most system administrators have finger forwarding turned off. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>The Operating System</B></FONT></H2>
+<P>You may have to go through various methods (including but not limited to those
+described in the preceding section) to identify the operating system and version
+being used on the target network. In earlier years, one could be pretty certain that
+the majority of machines on a target network ran similar software on similar hardware.
+Today, it is another ball game entirely. Today, networks may harbor dozens of different
+machines with disparate operating systems and architecture. One would think that
+for the cracker, this would be a hostile and difficult-to-manage environment. Not
+so.</P>
+<P>The more diverse your network nodes are (in terms of operating system and architecture),
+the more likely it is that a security hole exists. There are reasons for this, and
+while I do not intend to explain them thoroughly, I will relate at least this: Each
+operating system has its own set of bugs. Some of these bugs are known, and some
+may be discovered over time. In a relatively large network, where there may be many
+different types of machines and software, you have a better chance of finding a hole.
+The system administrator is, at day's end, only a human being. He cannot be constantly
+reviewing security advisories for each platform in turn. There is a strong chance
+that his security knowledge of this or that system is weak.</P>
+<P>In any event, once having identified the various operating systems and architectures
+available at the target, the next step is study. A checklist should be made that
+lists each operating system and machine type. This checklist will assist you tremendously
+as you go to the next step, which is to identify all known holes on that platform
+and understand each one.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Some analysts might make the argument
+	that tools like ISS and SATAN will identify all such holes automatically and, therefore,
+	research need not be done. This is erroneous, for several reasons. First, such tools
+	may not be complete in their assessment. Here is why: Although both of the tools
+	mentioned are quite comprehensive, they are not perfect. For example, holes emerge
+	each day for a wide range of platforms. True, both tools are extensible, and one
+	can therefore add new scan modules, but the scanning tools that you have are limited
+	to the programmer's knowledge of the holes that existed at the time of the coding
+	of the application.</P>
+	<P>Therefore, to make a new scanning module to be added to these extensible and malleable
+	applications, you must first know that such new holes exist. Second, and perhaps
+	more importantly, simply knowing that a hole exists does not necessarily mean that
+	you can exploit it--you must first understand it. (Unless, of course, the hole is
+	an obvious and self-explanatory one, such as the <TT>-froot</TT> rlogin problem on
+	some versions of the AIX operating system. By initiating an rlogin session with the
+	<TT>-froot</TT> flags, you can gain instant privileged access on many older AIX-based
+	machines.) For these reasons, hauling off and running a massive scan is a premature
+	move. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>To gather this information, you will need to visit a few key sites. The first
+such site you need to visit is the firewalls mailing list archive page.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The firewalls mailing
+	list archive page can be found online at <A HREF="javascript:if(confirm('http://www.netsys.com/firewalls/ascii-index.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.netsys.com/firewalls/ascii-index.html'" tppabs="http://www.netsys.com/firewalls/ascii-index.html"><TT>http://www.netsys.com/firewalls/ascii-index.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>You may initially wonder why this list would be of value, because the subject
+discussed is firewall-related. (Remember, we began this chapter with the presumption
+that the target was not running a firewall.) The firewalls list archive is valuable
+because it is often used--over the objections of many list members--to discuss other
+security-related issues. Another invaluable source of such data is BUGTRAQ, which
+is a searchable archive of known vulnerabilities on various operating systems (though
+largely UNIX.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>BUGTRAQ is located online
+	at <A HREF="javascript:if(confirm('http://www.geek-girl.com/bugtraq/search.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.geek-girl.com/bugtraq/search.html'" tppabs="http://www.geek-girl.com/bugtraq/search.html"><TT>http://www.geek-girl.com/bugtraq/search.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>These searchable databases are of paramount importance. A practical example will
+help tremendously at this point. Suppose that your target is a machine running AIX.
+First, you would go to the ARC Searchable WAIS Gateway for DDN and CERT advisories.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The ARC Searchable WAIS
+	Gateway for DDN and CERT advisories can be found online at <A HREF="javascript:if(confirm('http://info.arc.com/sec_bull/sec_bullsearch.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://info.arc.com/sec_bull/sec_bullsearch.html'" tppabs="http://info.arc.com/sec_bull/sec_bullsearch.html"><TT>http://info.arc.com/sec_bull/sec_bullsearch.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Figure 25.2 shows how the WAIS gateway at this site is configured.</P>
+<A NAME="02"></A><P><B><A HREF="02-11.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch25/02.htm">FIGURE 25.2.</A></B> <I><BR>
+The WAIS gateway at </I><TT>ARC.COM</TT><I> for searching security advisories.</I></P>
+<P>At the bottom of that page is an input field. Into it, I entered the search term
+<TT>AIX</TT>. The results of that search produced a laundry list of AIX vulnerabilities.
+(See Figure 25.3.)</P>
+<A NAME="03"></A>
+<P><B><A HREF="03-11.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch25/03.htm">FIGURE 25.3.</a></B> <I><BR>
+A laundry list of AIX vulnerabilities from the WAIS gateway.</I></P>
+<P>At this stage, you can begin to do some research. After reading the initial advisory,
+if there is no more information than a simple description of the vulnerability, do
+not despair. You just have to go to the next level. The next phase is a little bit
+more complex. After identifying the most recent weakness (and having read the advisory),
+you must extract from that advisory (and all that follow it) the commonly used, often
+abbreviated, or &quot;jargon,&quot; name for the hole. For example, after a hole
+is discovered, it is often referred to by security folks with a name that may not
+reflect the entire problem. (An example would be &quot;the Linux telnetd problem&quot;
+or &quot;AIX's froot hole&quot; or some other, brief term by which the hole becomes
+universally identified.) The extraction process is quickly done by taking the ID
+number of the advisory and running it through one of the abovementioned archives
+like BUGTRAQ or Firewalls. Here is why:</P>
+<P>Typically, when a security professional posts either an exploit script, a tester
+script (tests to see if the hole exists) or a commentary, they will almost always
+include complete references to the original advisory. Thus, you will see something
+similar to this in their message: <TT>Here's a script to test if you are vulnerable
+to the talkd problem talked about in CA-97.04.</TT>.</P>
+<P>This message is referring to CERT Advisory number 97.04, which was first issued
+on January 27, 1997. By using this number as a search expression, you will turn up
+all references to it. After reading 10 or 12 results from such a search, you will
+know what the security crowd is calling that hole. After you have that, you can conduct
+an all-out search in all legitimate and underground database sources to get every
+shred of information about the hole. You are not looking for initial postings in
+particular, but subsequent, trailing ones. (Some archives have an option where you
+can specify a display by thread; these are preferred. This allows you to see the
+initial posting and all subsequent postings about that original message; that is,
+all the &quot;re:&quot; follow-ups.) However, some search engines do not provide
+for an output in threaded form; therefore, you will simply have to rake through them
+by hand.</P>
+<P>The reason that you want these follow-ups is because they usually contain exploit
+or test scripts (programs that automatically test or simulate the hole). They also
+generally contain other technical information related to the hole. For example, one
+security officer might have found a new way to implement the vulnerability, or might
+have found that an associated program (or include file or other dependency) may be
+the real problem or even a great contributor to the hole. The thoughts and reflections
+of these individuals are pure gold, particularly if the hole is a new one. These
+individuals are actually doing all the work for you: analyzing and testing the hole,
+refining attacks against it, and so forth.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>Many exploit and test scripts are
+	posted in standard shell or C language and are therefore a breeze to either reconfigure
+	for your own system or compile for your architecture. In most instances, only minimal
+	work has to be done to make them work on your platform. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>So, to this point, you have defined a portion (or perhaps all) of the following
+chief points:
+
+<UL>
+	<LI>Who the administrator is<BR>
+	<BR>
+	
+	<LI>The machines on the network, and perhaps their functions and domain servers<BR>
+	<BR>
+	
+	<LI>Their operating systems<BR>
+	<BR>
+	
+	<LI>Their probable holes<BR>
+	<BR>
+	
+	<LI>Any discussion by the administrator about the topology, management, policies,
+	construction, or administration of the network
+</UL>
+
+<P>Now you can proceed to the next step.</P>
+<P>One point of interest: It is extremely valuable if you can also identify machines
+that may be co-located. This is, of course, strictly in cases where the target is
+an Internet service provider (ISP). ISPs often offer deals for customers to co-locate
+a machine on their wire. There are certain advantages to this for the customer. One
+of them is cost. If the provider offers to co-locate a box on its T3 for, say, $600
+a month, this is infinitely less expensive than running a machine from your own office
+that hooks into a T1. A T1 runs about $900-$1,200 monthly. You can see why co-location
+is popular: You get speeds far faster for much less money and headache. For the ISP,
+it is nothing more than plugging a box into its Ethernet system. Therefore, even
+setup and administration costs are lower. And, perhaps most importantly of all, it
+takes the local telephone company out of the loop. Thus, you cut even more cost,
+and you can establish a server immediately instead of waiting six weeks.</P>
+<P>These co-located boxes may or may be not be administrated by the ISP. If they
+are not, there is an excellent chance that these boxes may either have (or later
+develop) holes. This is especially likely if the owner of the box employs a significant
+amount of CGI or other self-designed program modules that the ISP has little or no
+control over. By compromising that box, you have an excellent chance of bringing
+the entire network under attack, unless the ISP has purposefully strung the machine
+directly to its own router, a hub (or instituted some other procedure of segmenting
+the co-located boxes from the rest of the network.)
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>This can be determined to some degree
+	using traceroute or whois services. In the case of traceroute, you can identify the
+	position of the machine on the wire by examining the path of the traced route. In
+	a whois query, you can readily see whether the box has its own domain server or whether
+	it is using someone else's (an ISP's). 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Doing a Test Run</B></FONT></H2>
+<P>The test-run portion of the attack is practical only for those individuals who
+are serious about cracking. Your average cracker will not undertake such activity,
+because it involves spending a little money. However, if I were counseling a cracker,
+I would recommend it.</P>
+<P>This step involves establishing a single machine with the identical distribution
+as the target. Thus, if the target is a SPARCstation 2 running Solaris 2.4, you would
+erect an identical machine and string it to the Net via any suitable method (by modem,
+ISDN, Frame Relay, T1, or whatever you have available). After you have established
+the machine, run a series of attacks against it. There are two things you are looking
+for:
+
+<UL>
+	<LI>What the attacks are going to look like from the attacking side<BR>
+	<BR>
+	
+	<LI>What the attacks will look like from the victim's side
+</UL>
+
+<P>There are a number of reasons for this, and some are not so obvious. In examination
+of the logs on the attacking side, the cracker can gain an idea of what the attack
+should look like if his target is basically unprotected--in other words, if the target
+is not running custom daemons. This provides the cracker a little road map to go
+by; certainly, if his ultimate scan and attack of the target do not look nearly identical,
+this is cause for concern. All things being equal, an identically configured machine
+(or, I should say, an <I>apparently</I> identically configured machine) should respond
+identically. If it does not, the folks at the target have something up their sleeve.
+In this instance, the cracker would be wise to tread carefully.</P>
+<P>By examining the victim-side logs, the cracker can get a look at what his footprint
+will look like. This is also important to know. On diverse platforms, there are different
+logging procedures. The cracker should know at a minimum exactly what these logging
+procedures are; that is, he needs to know each and every file (on the identically
+configured machine) that will show evidence of an intrusion. This information is
+paramount, because it serves as a road map also: It shows him exactly what files
+have to be altered to erase any evidence of his attack. The only way to identify
+these files for certain is to conduct a test under a controlled environment and examine
+the logs for themselves.</P>
+<P>In actual attacks, there should be only a few seconds (or minutes at most) before
+root (or some high level of privilege) is obtained. Similarly, it should be only
+seconds thereafter (or minutes at worst) before evidence of that intrusion is erased.
+For the cracker, any other option is a fatal one. They may not suffer from it in
+the short run, but in the long run, they will end up in handcuffs.</P>
+<P>This step is not as expensive as you would think. There are newsgroups (most notably,
+<TT>misc.forsale.computers.workstation</TT>) where one can obtain the identical machine
+(or a close facsimile) for a reasonable price. Generally, the seller of such a machine
+will load a full version of the operating system &quot;for testing purposes only.&quot;
+This is their way of saying &quot;I will give you the operating system, which comes
+without a license and therefore violates the license agreement. If you keep it and
+later come under fire from the vendor, you are on your own.&quot;</P>
+<P>Even licensed resellers will do this, so you can end up with an identical machine
+without going to too much expense. (You can also go to defense contracting firms,
+many of which auction off their workstations for a fraction of their fair market
+value. The only bar here is that you must have the cash ready; you generally only
+get a single shot at a bid.)</P>
+<P>Other possibilities include having friends set up such a box at their place of
+work or even at a university. All you really need are the logs. I have always thought
+that it would be a good study practice to maintain a database of such logs per operating
+system per attack and per scanner--in other words, have a library of what such attacks
+look like, given the aforementioned variables. This, I think, would be a good training
+resource for new system administrators, something like &quot;This is what a SS4 looks
+like when under attack by someone using ISS. These are the log files you need to
+look for and this is how they will appear.&quot;</P>
+<P>Surely, a script could be fashioned (perhaps an automated one) that would run
+a comparative analysis against the files on your workstation. This process could
+be done once a day as a cron job. It seems to me that at least minimal intrusion-detection
+systems could be designed this way. Such tools do exist, but have been criticized
+by many individuals because they can be &quot;fooled&quot; too easily. There is an
+excellent paper that treats this subject, at least with respect to SunOS. It is titled
+<I>USTAT: A Real Time Intrusion Detection System for UNIX</I>. (This paper was, in
+fact, a thesis for the completion of a master's in computer science at the University
+of Santa Barbara, California. It is very good.) In the abstract, the author writes:
+
+<DL>
+	<DD>In this document, the development of the first USTAT prototype, which is for
+	SunOS 4.1.1, is described. USTAT makes use of the audit trails that are collected
+	by the C2 Basic Security Module of SunOS, and it keeps track of only those critical
+	actions that must occur for the successful completion of the penetration. This approach
+	differs from other rule-based penetration identification tools that pattern match
+	sequences of audit records.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The preceding paragraph
+	is excerpted from <I>USTAT: A Real Time Intrusion Detection System for UNIX</I> by
+	Koral Ilgun. It can be found online at <A HREF="javascript:if(confirm('ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/ustat.ps.gz  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/ustat.ps.gz'" tppabs="ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/ustat.ps.gz"><TT>ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/ustat.ps.gz</TT></A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Although we proceeded under the assumption that the target network was basically
+an unprotected, out-of-the-box install, I thought I should mention tools like the
+one described in the paper referenced previously. The majority of such tools have
+been employed on extremely secure networks--networks often associated with classified
+or even secret or top-secret work.</P>
+<P>Another interesting paper lists a few of these tools and makes a brief analysis
+of each. It discusses how
+
+<DL>
+	<DD>Computer security officials at the system level have always had a challenging
+	task when it comes to day-to-day mainframe auditing. Typically the auditing options/features
+	are limited by the mainframe operating system and other system software provided
+	by the hardware vendor. Also, since security auditing is a logical subset of management
+	auditing, some of the available auditing options/features may be of little value
+	to computer security officials. Finally, the relevant auditing information is probably
+	far too voluminous to process manually and the availability of automated data reduction/analysis
+	tools is very limited. Typically, 95% of the audit data is of no security significance.
+	The trick is determining which 95% to ignore.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from <I>Summary of the Trusted Information Systems (TIS) Report on Intrusion
+	Detection Systems</I>, prepared by Victor H. Marshall, Systems Assurance Team Leader,
+	Booz, Allen &amp; Hamilton Inc. This document can be found online at <A HREF="javascript:if(confirm('ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/auditool.txt.Z  \n\nThis file was not retrieved by Teleport Pro, because it did not meet the project\'s file type specifications.  \n\nDo you want to open it from the server?'))window.location='ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/auditool.txt.Z'" tppabs="ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/auditool.txt.Z"><TT>ftp://coast.cs.purdue.edu/pub/doc/intrusion_detection/auditool.txt.Z</TT></A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In any event, this &quot;live&quot; testing technique should be primarily employed
+where there is a single attack point. Typical situations are where you suspect that
+one of the workstations is the most viable target (where perhaps the others will
+refuse all connections from outside the subnet and so forth). Obviously, I am not
+suggesting that you erect an exact model of the target network; that could be cost
+and time prohibitive. What I am suggesting is that in coordination of a remote attack,
+you need to have (at a minimum) some idea of what is supposed to happen. Simulating
+that attack on a host other than the target is a wise thing to do. Otherwise, there
+is no guarantee that you can even marginally ensure that the data you receive back
+has some integrity. Bellovin's paper on Berferd should be a warning to any cracker
+that a simulation of a vulnerable network is not out of the question. In fact, I
+have wondered many times why security technologies have not focused entirely on this
+type of technique, especially since scanners have become so popular.</P>
+<P>What is the difficulty in a system administrator creating his own such system
+on the fly? How difficult would it be for an administrator to write custom daemons
+(on a system where the targeted services aren't even actually running) that would
+provide the cracker with bogus responses? Isn't this better than announcing that
+you have a firewall (or <TT>TCP_WRAPPER</TT>), therefore alerting the attacker to
+potential problems? Never mind passive port-scanning utilities, let's get down to
+the nitty-gritty: This is how to catch a cracker--with a system designed exclusively
+for the purpose of creating logs that demonstrate intent. This, in my opinion, is
+where some new advances ought to be made. These types of systems offer automation
+to the process of evidence gathering.</P>
+<P>The agencies that typically utilize such tools are few. Mostly, they are military
+organizations. An interesting document is available on the Internet in regard to
+military evaluations and intrusion detection. What is truly interesting about the
+document is the flair with which it is written. For instance, sample this little
+excerpt:
+
+<DL>
+	<DD>For 20 days in early spring 1994, Air Force cybersleuths stalked a digital delinquent
+	raiding unclassified computer systems at Griffiss AFB, NY. The investigators had
+	staked out the crime scene--a small, 12-by-12-foot computer room in Rome Laboratory's
+	Air Development Center--for weeks, surviving on Jolt cola, junk food and naps underneath
+	desks. Traps were set by the Air Force Information Warfare Center to catch the bandit
+	in the act, and `silent' alarms sounded each time their man slinked back to survey
+	his handiwork. The suspect, who dubbed himself `Data Stream,' was blind to the surveillance,
+	but despite this, led pursuers on several high-speed chases that don't get much faster--the
+	speed of light. The outlaw was a computer hacker zipping along the ethereal lanes
+	of the Internet, and tailing him was the information superhighway patrol--the Air
+	Force Office of Special Investigations computer crime investigations unit.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from &quot;Hacker Trackers: OSI Computer Cops Fight Crime On-Line&quot;
+	by Pat McKenna. It can be found online at <A HREF="javascript:if(confirm('http://www.af.mil/pa/airman/0496/hacker.htm  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.af.mil/pa/airman/0496/hacker.htm'" tppabs="http://www.af.mil/pa/airman/0496/hacker.htm"><TT>http://www.af.mil/pa/airman/0496/hacker.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The document doesn't give as much technical information as one would want, but
+it is quite interesting, all the same. Probably a more practical document for the
+legal preservation of information in the investigation of intrusions is one titled
+&quot;Investigating and Prosecuting Network Intrusions.&quot; It was authored by
+John C. Smith, Senior Investigator in the Computer Crime Unit of the Santa Clara
+County District Attorney's Office.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Investigating and
+	Prosecuting Network Intrusions&quot; can be found online at <A HREF="javascript:if(confirm('http://www.eff.org/pub/Legal/scda_cracking_investigation.paper  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.eff.org/pub/Legal/scda_cracking_investigation.paper'" tppabs="http://www.eff.org/pub/Legal/scda_cracking_investigation.paper"><TT>http://www.eff.org/pub/Legal/scda_cracking_investigation.paper</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In any event, as I have said, at least some testing should be done beforehand.
+That can only be done by establishing a like box with like software.
+<H2><FONT COLOR="#000077"><B>Tools: About Holes and Other Important Features</B></FONT></H2>
+<P>Next, you need to assemble the tools you will actually use. These tools will most
+probably be scanners. You will be looking (at a minimum) to identify all services
+now running on the target. Based on your analysis of the operating system (as well
+as the other variables I've mentioned in this chapter), you will need to evaluate
+your tools to determine what areas or holes they do not cover.</P>
+<P>In instances where a particular service is covered by one tool but not another,
+it is best to integrate the two tools together. The ease of integration of such tools
+will depend largely on whether these tools can simply be attached as external modules
+to a scanner like SATAN or SAFESuite. Again, here the use of a test run can be extremely
+valuable; in most instances, you cannot simply attach an external program and have
+it work flawlessly.</P>
+<P>To determine the exact outcome of how all these tools will work in concert, it
+is best to do this at least on some machine (even if it is not identical to the target).
+That is because, here, we are concerned with whether the scan will be somehow interrupted
+or corrupted as the result of running two or more modules of disparate design. Remember
+that a real-time scanning attack should be done only once. If you screw it up, you
+might not get a second chance.</P>
+<P>So, you will be picking your tools (at least for the scan) based on what you can
+reasonably expect to find at the other end. In some cases, this is an easy job. For
+example, perhaps you already know that someone on the box is running X Window System
+applications across the Net. (Not bloody likely, but not unheard of.) In that case,
+you will also be scanning for xhost problems, and so it goes.</P>
+<P>Remember that a scanner is a drastic solution. It is the equivalent of running
+up to an occupied home with a crowbar in broad daylight, trying all the doors and
+windows. If the system administrator is even moderately tuned into security issues,
+you have just announced your entire plan.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>There are some measures you can take
+	to avoid that announcement, but they are drastic: You can actually institute the
+	same security procedures that other networks do, including installing software (sometimes
+	a firewall and sometimes not) that will refuse to report your machine's particulars
+	to the target. There are serious problems with this type of technique, however, as
+	they require a high level of skill. (Also, many tools will be rendered useless by
+	instituting such techniques. Some tools are designed so that one or more functions
+	require the ability to go out of your network, through the router, and back inside
+	again.) 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Again, however, we are assuming here that the target is not armored; it's just
+an average site, which means that we needn't stress too much about the scan. Furthermore,
+as Dan Farmer's recent survey suggests, scanning may not be a significant issue anyway.
+According to Farmer (and I have implicit faith in his representations, knowing from
+personal experience that he is a man of honor), the majority of networks don't even
+notice the traffic:
+
+<DL>
+	<DD>...no attempt was made to hide the survey, but only three sites out of more than
+	two thousand contacted me to inquire what was going on when I performed the unauthorized
+	survey (that's a bit over one in one thousand questioning my activity). Two were
+	from the normal survey list, and one was from my random group.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The preceding paragraph
+	is excerpted from the introduction of <I>Shall We Dust Moscow? </I>by Dan Farmer.
+	This document can be found online at <A HREF="javascript:if(confirm('http://www.trouble.org/survey/introduction.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://www.trouble.org/survey/introduction.html'" tppabs="http://www.trouble.org/survey/introduction.html"><TT>http://www.trouble.org/survey/introduction.html</TT></A>
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>That scan involved over 2,000 hosts, the majority of which were fairly sensitive
+sites (for example, banks). You would expect that these sites would be ultra-paranoid,
+filtering every packet and immediately jumping on even the slightest hint of a scan.
+<H2><FONT COLOR="#000077"><B>Developing an Attack Strategy</B></FONT></H2>
+<P>The days of roaming around the Internet, cracking this and that server are basically
+over. Years ago, compromising the security of a system was viewed as a minor transgression
+as long as no damage was done. Today, the situation is different. Today, the value
+of data is becoming an increasingly talked-about issue. Therefore, the modern cracker
+would be wise not to crack without a reason. Similarly, he would be wise to set forth
+cracking a server only with a particular plan.</P>
+<P>The only instance in which this does not apply is where the cracker is either
+located in a foreign state that has no specific law against computer intrusion (Berferd
+again) or one that provides no extradition procedure for that particular offense
+(for example, the NASA case involving a student in Argentina). All other crackers
+would be wise to tread very cautiously.</P>
+<P>Your attack strategy may depend on what you are wanting to accomplish. We will
+assume, however, that the task at hand is basically nothing more than compromise
+of system security. If this is your plan, you need to lay out how the attack will
+be accomplished. The longer the scan takes (and the more machines that are included
+within it), the more likely it is that it will be immediately discovered. Also, the
+more scan data that you have to sift through, the longer it will take to implement
+an attack based upon that data. The time that elapses between the scan and the actual
+attack, as I've mentioned, should be short.</P>
+<P>Some things are therefore obvious (or should be). If you determine from all of
+your data collection that certain portions of the network are segmented by routers,
+switches, bridges, or other devices, you should probably exclude those from your
+scan. After all, compromising those systems will likely produce little benefit. Suppose
+you gained root on one such box in a segment. How far do you think you could get?
+Do you think that you could easily cross a bridge, router, or switch? Probably not.
+Therefore, sniffing will only render relevant information about the other machines
+in the segment, and spoofing will likewise work (reliably) only against those machines
+within the segment. Because what you are looking for is root on the main box (or
+at least, within the largest network segment available), it is unlikely that a scan
+on smaller, more secure segments would prove to be of great benefit.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Of course, if these machines (for
+	whatever reason) happen to be the only ones exposed, by all means, attack them (unless
+	they are completely worthless). For example, it is a common procedure to place a
+	Web server outside the network firewall or make that machine the only one accessible
+	from the void. Unless the purpose of the exercise is to crack the Web server (and
+	cause some limited, public embarrassment to the owners of the Web box), why bother?
+	These machines are typically &quot;sacrificial&quot; hosts--that is, the system administrator
+	has anticipated losing the entire machine to a remote attack, so the machine has
+	nothing of import upon its drives. Nothing except Web pages, that is. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>In any event, once you have determined the parameters of your scan, implement
+it.
+<H2><FONT COLOR="#000077"><B>A Word About Timing Scans</B></FONT></H2>
+<P>When should you implement a scan? The answer to this is really &quot;never.&quot;
+However, if you are going to do it, I would do it late at night relative to the target.
+Because it is going to create a run of connection requests anyway (and because it
+would take much longer if implemented during high-traffic periods), I think you might
+as well take advantage of the graveyard shift. The shorter the time period, the better
+off you are.
+<H3><FONT COLOR="#000077"><B>After the Scan</B></FONT></H3>
+<P>After you have completed the scan, you will be subjecting the data to analysis.
+The first issue you want to get out of the way is whether the information is even
+authentic. (This, to some degree, is established from your sample scans on a like
+machine with the like operating system distribution.)</P>
+<P>Analysis is the next step. This will vary depending upon what you have found.
+Certainly, the documents included in the SATAN distribution can help tremendously
+in this regard. Those documents (tutorials about vulnerabilities) are brief, but
+direct and informative. They address the following vulnerabilities:
+
+<UL>
+	<LI>FTP vulnerabilities
+	<LI>NFS export to unprivileged programs
+	<LI>NFS export via portmapper
+	<LI>NIS password file access
+	<LI>REXD access
+	<LI>SATAN password disclosure
+	<LI>Sendmail vulnerabilities
+	<LI>TFTP file access
+	<LI>Remote shell access
+	<LI>Unrestricted NFS export
+	<LI>Unrestricted X server access
+	<LI>Unrestricted modem
+	<LI>Writeable FTP home directory
+</UL>
+
+<P>In addition to these pieces of information, you should apply any knowledge that
+you have gained through the process of gathering information on the specific platform
+and operating system. In other words, if a scanner reports a certain vulnerability
+(especially a newer one), you should refer back to the database of information that
+you have already built from raking BUGTRAQ and other searchable sources.</P>
+<P>This is a major point: There is no way to become either a master system administrator
+or a master cracker overnight. The hard truth is this: You may spend weeks studying
+source code, vulnerabilities, a particular operating system, or other information
+before you truly understand the nature of an attack and what can be culled from it.
+Those are the breaks. There is no substitute for experience, nor is there a substitute
+for perseverance or patience. If you lack any of these attributes, forget it.</P>
+<P>That is an important point to be made here. Whether we are talking about individuals
+like Kevin Mitnik (cracker) or people like Weitse Venema (hacker), it makes little
+difference. Their work and their accomplishments have been discussed in various news
+magazines and online forums. They are celebrities within the Internet security (and
+in some cases, beyond). However, their accomplishments (good or bad) resulted from
+hard work, study, ingenuity, thought, imagination, and self-application. Thus, no
+firewall will save a security administrator who isn't on top of it, nor will SATAN
+help a newbie cracker to unlawfully breach the security of a remote target. That's
+the bottom line.
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Remote attacks are becoming increasingly common. As discussed in several earlier
+chapters, the ability to run a scan has become more within the grasp of the average
+user. Similarly, the proliferation of searchable vulnerability indexes have greatly
+enhanced one's ability to identify possible security issues.</P>
+<P>Some individuals suggest that the free sharing of such information is itself contributing
+to the poor state of security on the Internet. That is incorrect. Rather, system
+administrators must make use of such publicly available information. They should,
+technically, perform the procedures described here on their own networks. It is not
+so much a matter of cost as it is time.</P>
+<P>One interesting phenomenon is the increase in tools to attack Windows NT boxes.
+Not just scanning tools, either, but sniffers, password grabbers, and password crackers.
+In reference to remote attack tools, though, the best tool available for NT is SAFEsuite
+by Internet Security Systems (ISS). It contains a wide variety of tools, although
+the majority were designed for internal security analysis.</P>
+<P>For example, consider the Intranet Scanner, which assesses the internal security
+of a network tied to a Microsoft Windows NT server. Note here that I write only that
+the network is <I>tied</I> to the NT server. This does not mean that all machines
+on the network must run NT in order for the Intranet Scanner to work. Rather, it
+is designed to assess a network that contains nodes of disparate architecture and
+operating systems. So, you could have boxes running Windows 95, UNIX, or potentially
+other operating systems running TCP/IP. The title of the document is &quot;Security
+Assessment in the Windows NT Environment: A White Paper for Network Security Professionals.&quot;
+It discusses the many features of the product line and a bit about Windows NT security
+in general.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>To get a better idea
+	of what Intranet Scanner offers, check out <A HREF="javascript:if(confirm('http://eng.iss.net/prod/winnt.html  \n\nThis file was not retrieved by Teleport Pro, because it is addressed on a domain or path outside the boundaries set for its Starting Address.  \n\nDo you want to open it from the server?'))window.location='http://eng.iss.net/prod/winnt.html'" tppabs="http://eng.iss.net/prod/winnt.html"><TT>http://eng.iss.net/prod/winnt.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Specific ways to target specific operating systems (as in &quot;How To&quot; sections)
+are beyond the scope of this book, not because I lack the knowledge but because it
+could take volumes to relate. To give you a frame of reference, consider this: The
+Australian CERT (AUSCERT) UNIX Security Checklist consists of at least six pages
+of printed information. The information is extremely abbreviated and is difficult
+to interpret by anyone who is not well versed in UNIX. Taking each point that AUSCERT
+raises and expanding it into a detailed description and tutorial would likely create
+a 400-page book, even if the format contained simple headings such as <TT>Daemon</TT>,
+<TT>Holes</TT>, <TT>Source</TT>, <TT>Impact</TT>, <TT>Platform</TT>, <TT>Examples</TT>,
+<TT>Fix</TT>, and so on. (That document, by the way, discussed elsewhere in this
+book, is the definitive list of UNIX security vulnerabilities. It is described in
+detail in Chapter 17, &quot;UNIX: The Big Kahuna.&quot;)</P>
+<P>In closing, a well-orchestrated and formidable remote attack is not the work of
+some half-cocked cracker. It is the work of someone with a deep understanding of
+the system--someone who is cool, collected, and quite well educated in TCP/IP. (Although
+that education may not have come in a formal fashion.) For this reason, it is a shame
+that crackers usually come to such a terrible end. One wonders why these talented
+folks turn to the dark side.</P>
+<P>I know this, though: It has nothing to do with money. There are money-oriented
+crackers, and they are professionals. But the hobbyist cracker is a social curiosity--so
+much talent and so little common sense. It is extraordinary, really, for one incredible
+reason: It was crackers who spawned most of the tools in this book. Their activities
+gave rise to the more conventional (and more talented) computing communities that
+are coding special security applications. Therefore, the existence of specialized
+tools is really a monument to the cracking community. They have had a significant
+impact, and one such impact was the development of the remote attack. The technique
+not only exists because of these curious people, but also grows in complexity because
+of them.</P>
+<CENTER>
+<P>
+<HR>
+<A HREF="ch24.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch24/ch24.htm"><IMG SRC="previous.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="ch26.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/ch26/ch26.htm"><IMG
+SRC="next.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="index-38.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/index.htm"><IMG SRC="contents.gif" tppabs="http://pbs.mcp.com/ebooks/1575212684/button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+
+<P>&#169; <A HREF="copy.htm" tppabs="http://pbs.mcp.com/ebooks/1575212684/copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

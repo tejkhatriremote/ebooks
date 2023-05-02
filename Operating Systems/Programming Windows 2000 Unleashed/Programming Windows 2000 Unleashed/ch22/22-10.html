@@ -1,0 +1,166 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=761-764//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch23/23-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Object B Calling SetAbort</B></FONT></P>
+<p>In this example, Object A can still call either <small>DisableCommit</SMALL> or <small>EnableCommit</SMALL>. However, Object B has called <small>SetAbort</SMALL> while Object C has called <small>SetComplete</SMALL>. Again, Object A will remain activated, whereas Object B and Object C will be deactivated and available for reuse. The only difference now is that the transaction is doomed for aborting. Object B has clearly stated that its work cannot be committed, so all other work cannot be committed either. Therefore, when in the end Object A calls either <small>SetComplete</SMALL> or <small>SetAbort</SMALL>, all transactional work accomplished will be aborted.</P>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">Error Handling</FONT></H4>
+<p>To stop the wasted processor cycles, you need to handle return codes. This is typically known as the <small>HRESULT</SMALL> code. The COM layer, to indicate what has happened, uses the <small>HRESULT</SMALL> codes. You cannot simply create an error code and then return it. Specific techniques are involved.</P>
+<p>In Visual C<small>&#43;&#43;</SMALL>, the default error to return is <small>S_OK</SMALL>. In Visual Basic, you would do nothing. If something goes wrong, you can return <small>S_FALSE</SMALL> or any other COM error in a Visual C<small>&#43;&#43;</SMALL> program. With Visual Basic, you would set the <small>Err</SMALL> object. With a tuned component, COM&#43; services will pass an error directly as long as it&#146;s not <small>S_OK</SMALL> or <small>S_FALSE</SMALL>. With those errors, COM&#43; services may change the error code to reflect a failed transaction.</P>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Passing Parameters and Interfaces</FONT></H4>
+<p>In a multi-COM&#43; object situation, data is passed back and forth. The question is how to pass parameters and what are the limitations of passing parameters.
+</P>
+<p><font size="+1"><b>Parameter Limitations</B></FONT></P>
+<p>Parameters within COM&#43; objects must support standard marshaling. In other words, if you try to use anything that requires the interface <small>IMarshal</SMALL>, it will not work. COM&#43; services ignore the <small>IMarshal</SMALL> interface.</P>
+<p>The other aspect is the consumer of the parameter, which is exposed by the interface. Let&#146;s say the consumer is Visual C<small>&#43;&#43;</SMALL>. Visual C<small>&#43;&#43;</SMALL> has the ability to understand any data type, which can be expressed using IDL. The only catch is that typelib marshaling cannot be used. You&#146;ll need to create a proxy stub.</P>
+<p>The problem with using this type of interface is that only Visual C<small>&#43;&#43;</SMALL> or a language like it can understand the interface. If the consumer is JavaScript, the interface must support <small>IDispatch. IDispatch</SMALL> adds the constraint that the interface can only use Automation data types.</P>
+<p>For performance purposes, it&#146;s recommended that you pass parameters by value.</P>
+<p><font size="+1"><b>Passing Objects to Other Objects</B></FONT></P>
+<p>You can&#146;t pass a raw COM interface using a method, because the raw COM interface bypasses the context. What you need to do is retrieve and pass the context interface pointer. However, in a previous section, you learned that the transaction context interface pointer cannot be used outside the current COM&#43; object.
+</P>
+<p>The solution to this problem is to use the following method:</P>
+<!-- CODE SNIP //-->
+<pre>
+   void* SafeRef (
+       <b>REFIID <i>riid</I></B>             [in]
+       <b>UNKNOWN* <i>pUnk</I></B> )            [in]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The first parameter is the interface ID that&#146;s being requested. An example could be <small>IID_IUnknown</SMALL>. The second parameter is the COM <small>this</SMALL> pointer or <small>IUnknown</SMALL>. Returned will be either <small>NULL</SMALL> or a valid, safe reference interface pointer. To apply this in an ATL object, consider the following source code:</P>
+<!-- CODE //-->
+<pre>
+       CComPtr&lt IObjectContext&gt pCtxt;
+       CComPtr&lt IChild&gt child;
+       CComPtr&lt IUnknown&gt me;
+
+       GetObjectContext( &amp(pCtxt.p));
+       try {
+           _com_util::CheckError( pCtxt-&gtCreateInstance( CLSID_Child,
+   __uuidof( child.p), (void **)&amp(child.p)));
+
+           me.p = reinterpret_cast&lt IUnknown *&gt(SafeRef( __uuidof( IUnknown),
+           GetUnknown()));
+
+           child-&gtcallChild( me);
+
+           pCtxt-&gtSetComplete();
+       } catch( _com_error err) {
+           pCtxt-&gtSetAbort();
+           return err.Error();
+       }
+       return S_OK;
+</PRE>
+<!-- END CODE //-->
+<p>This method creates a child COM object called <small>child</SMALL>. It&#146;s created using <small>IObjectContext::CreateInstance</SMALL>. This is not a necessary step. It&#146;s only added so that the COM component executes within the same transaction. <small>CoCreateInstance</SMALL> could have been used. Getting back to the source and looking at the highlighted section, note that <small>SafeRef</SMALL> is used to retrieve the <small>IUnknown</SMALL> interface. Again, I tend to always use <small>IUnknown</SMALL> because it&#146;s the easiest interface to work with and to pass from COM object to COM object. Also, it allows decoupling of the components, which makes version changes less dramatic. The first parameter uses the function <small>__uuidof</SMALL> to retrieve the UUID of the interface. This makes it easier because you don&#146;t have to search for the <small>IID_xxx</SMALL> definition. The second parameter uses the ATL template function <small>GetUnknown</SMALL> to retrieve the <small>IUnknown</SMALL> interface of the object. You can use the C<small>&#43;&#43;</SMALL> <small>this</SMALL> pointer, but the problem with <small>this</SMALL> is that it&#146;s not reliable. For nonaggregated COM objects, the <small>this</SMALL> pointer is indeed the correct <small>IUnknown</SMALL> interface pointer. However, that&#146;s the only case, which, again, is applicable to the MTS case, because MTS does not allow aggregation. But according to the original ATL developers, <small>this</SMALL> should not be used because it might not be supported in the future. Therefore, use <small>this</SMALL> at your own risk. Once the method has returned, <small>reinterpret_cast</SMALL> is used to convert the pointer to the <small>IUnknown</SMALL> interface pointer.</P>
+<p>The final interface pointer, <small>me</SMALL>, is now a safe COM object reference. It may be used within an MTS context or external to the MTS context. Before the sample usage is shown, we have something to consider. When a safe reference is retrieved from the object, the reference count is incremented; therefore, <small>Release</SMALL> must be called. To make this easy, I used <small>CComPtr</SMALL> to manage the reference counting. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+   STDMETHODIMP CChild::callChild(IUnknown *parent)
+   {
+       CComPtr&ltIParent&gt correctParent;
+       long retValue;
+
+       parent-&gtQueryInterface( &amp(correctParent.p));
+
+       correctParent-&gtcallbackAdd( 1, 2, &ampretValue);
+
+       return S_OK;
+   }
+</PRE>
+<!-- END CODE //-->
+<p>When the method is called, the interface is converted into <small>IParent</SMALL>. Again, the reference count is managed by the <small>CComPtr</SMALL> class. When the interface has been retrieved, the method <small>callbackAdd</SMALL> is called. Because <small>IObjectContext::CreateInstance</SMALL> has been called, the child and parent may share the same transaction context. But let&#146;s think what this means. When the child is called and it performs some work using the parent as its basis, where does the transaction happen? When the client has the control and it executes within a different transaction (or no transaction), the work done in that scope is specific to the child object. A call back to the parent does not force a transaction context switch, because when the call is made from the child to the parent, the context used is not the original parent but rather the child, if it exists. This also raises another point regarding security. If the child does not have access to the parent object, it cannot perform its work.</P>
+<p>An important note. At the time of this writing, the need for <small>SafeRef</SMALL> was documented. However, there was talk of not needing this function. Therefore, this section may or may not apply. If it does not apply, ignore this section. It will not apply if in the Platform SDK documentation the function <small>SafeRef</SMALL> has been deprecated.</P>
+<p><font size="+1"><b>Passing Other Objects</B></FONT></P>
+<p>If, within an object, other objects have been created using <small>IObjectContext::CreateInstance</SMALL> or <small>CoCreateInstance</SMALL>, they are safe and can be passed as parameters. Another case in which this is okay is when <small>QueryInterface</SMALL> is called on the object. It&#146;s safe to call <small>QueryInterface</SMALL> on a <small>SafeRef</SMALL> interface pointer.</P>
+<h3><a name="Heading21"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter outlined how to build a full-featured COM&#43; object. Although you don&#146;t need to use the transaction context, doing so makes the component more predictable and controllable. Also shown in this chapter were transaction interactions among various COM&#43; objects.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch23/23-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

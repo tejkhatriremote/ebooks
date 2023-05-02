@@ -1,0 +1,150 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using COM[TITLE]#43; with the IIS</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=23//-->
+<!--PAGES=816-819//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="23-15.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch24/24-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Legacy and the Wizard</B></FONT></P>
+<p>A bigger issue involves a problem with the ATL wizard. If the ATL wizard is used to generate an ASP component, it generates the component using the old method of activating an ASP component. The old method uses the methods <small>OnStartPage</SMALL> and <small>OnEndPage</SMALL> and retrieves the various ASP objects from the <small>IScriptingContext interface</SMALL>. This method, although still supported, is considered obsolete and should be avoided.</P>
+<h3><a name="Heading29"></A><font color="#000077">Transacted ASP Pages</FONT></H3>
+<p>Most of the components are called from a Web page, and this is the first contact with the server, which is a good point to start a transaction. With IIS 5.0, you can start transaction-based Web pages. A transaction is identified as follows:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+&lt%@Language=JavaScript transaction=supported%&gt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>transaction</SMALL> keyword must be added to the first line of the ASP script. In this example, the Web page supports transactions. There is also requires new, required, and not supported. The values required and requires new ones start new transactions, whereas the others do not.</P>
+<p>ASP works with transactions at the page level. This means that at the end of a page script, the transaction will be committed or aborted. A transaction instantiated by ASP can last only for the duration of the page. If this is adequate, it&#146;s good to use this type of transaction because multiple components can be used within the same transaction context. This way, whatever action is taken by any of the components can be committed or aborted.</P>
+<p>Consider the following source code:</P>
+<!-- CODE //-->
+<pre>
+&lt%@  Language=JavaScript transaction=required%&gt
+&ltHTML&gt
+&ltHEAD&gt
+&ltMETA NAME=&#148;GENERATOR&#148; Content=&#148;Microsoft Visual Studio 6.0&#148;&gt
+&lt/HEAD&gt
+&ltBODY&gt
+&lth1&gtThe transaction example&lt/h1&gt
+&lt%
+try {
+var tempObject;
+tempObject = Server.CreateObject(&#147;Registration4.UserImpl4.1&#148;);
+tempObject.firstname = &#147;Christian&#148;;
+tempObject.lastname = &#147;Gross&#148;;
+tempObject.email = &#147;me@someone.com&#148;;
+tempObject.password = &#147;cc&#148;;
+tempObject.writeObject();
+Session(&#147;tempObject&#148;) = tempObject;
+} catch( e) {
+%&gt
+&lth2&gtError is &lt%=e%&gt&lt/h2&gt
+&lt%}%&gt
+
+&lt%
+function OnTransactionCommit(){
+    Response.Write( &#147;Transaction Complete&#148;);
+}
+
+function OnTransactionAbort(){
+    Response.Write( &#147;Transaction Abort&#148;);
+}
+%&gt
+&lt/BODY&gt
+&lt/HTML&gt
+</PRE>
+<!-- END CODE //-->
+<p>In this example, a transaction is started when the page is loaded. Then, the object creation and manipulation routines are carried out within a JavaScript exception block. Therefore, if anything goes wrong with any of the methods, an instantiation failure of the <small>tempObject</SMALL> object would occur. The properties are assigned and then finally <small>tempObject.writeObject is called</SMALL>, which writes the properties to the database. After this last script command, the transaction is committed by the ASP framework.</P>
+<p>In the current iteration of the object, the <small>tempObject.writeObject</SMALL> method calls <small>IObjectContext::SetComplete</SMALL>. Therefore, the transaction will complete successfully, and ASP will trigger the event <small>OnTransactionCommit</SMALL>. In this event, you can add whatever code is needed to indicate that the transaction is successful. Consider the situation, though, where <small>tempObject.writeObject</SMALL> calls <small>IObjectContext::DisableCommit</SMALL> like the properties. In this situation, the commit attempted by the ASP page will result in the event <small>OnTransactionAbort</SMALL>, and all the work will be removed. An <small>IObjectContext::EnableCommit</SMALL> would have resulted in <small>OnTransactionCommit</SMALL>.</P>
+<p>In any case, when the ASP page is in control of the transaction, the components involved in the transaction are deactivated. This deactivation is important, because the line <small>Session(&#147;tempObject&#148;) = tempObject</SMALL> will hold an invalid reference, which cannot be accessed.</P>
+<p>If the component needs to survive multiple pages, the ASP page cannot be made transactional. The component is then responsible for starting the transaction. You can now store the object in the <small>Session(&#147;tempObject&#148;)</SMALL> variable and use it on multiple pages. However, the <small>Session</SMALL> object must be cleared, because it will be deactivated when the transaction commits or aborts. You will not get a transaction complete or abort event at the ASP level in this situation.</P>
+<h3><a name="Heading30"></A><font color="#000077">Summary</FONT></H3>
+<p>In this chapter, the topic of building Web applications using the Microsoft Internet Information Server (IIS) was explained. You also received an explanation of what Active Server Pages are, along with a demonstration of the key concepts. Shown throughout the chapter were techniques on how to build practical ASP applications. The chapter discussed how to integrate COM&#43; objects with ASP and also showed some of the practical aspects of building a Web application.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="23-15.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch24/24-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

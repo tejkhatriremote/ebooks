@@ -1,0 +1,270 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=03//-->
+<!--PAGES=108-112//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Example Three: Compression with Missing Headers</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>crypt</B> <i>file</I>
+<b>compress</B> [ <b>-cf</B> ] [ name ]
+<b>uncompress</B> [ <b>-c</B> ] [ name ]
+<b>dd</B> [ <b>bs</B>=n ] [ <b>skip</B>=n ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When compression is applied to a file, it contains a three-byte signature, or header. You can strip this header information with the use of <small>dd</SMALL>. Even if the hacker assumes that the file was compressed when it was encrypted, there is no header information and the file is not decrypted.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% compress -c foo | dd bs=3 skip=1 | crypt &gt foo.cpt
+45+0 records in
+45+0 records out
+Enter key:
+
+rocket 2% (compress -cf /dev/null; crypt &lt foo.cpt |
+&#8658;uncompress &gt foo.new
+Enter key:
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Compression writes the contents of foo to STDOUT, strips out the three-byte header, and encrypts the file into foo.cpt. To decrypt the file, <small>compress</SMALL> writes the nonexistent contents of /dev/null to extract the three-byte header after decrypting foo.cpt. It can now be uncompressed properly. Looks kind of different, huh?</P>
+<p><font size="+1"><b>Example Five: Multiple Encryptions</B></FONT></P>
+<!-- CODE SNIP //-->
+<pre>
+<b>crypt</B> <i>file</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A file can be encrypted any number of times using a different key through each stage of the process. Every time a key is entered, if it does not match the existing key, the file is transformed once more. Don&#146;t forget the order in which the keys were applied.
+</P>
+<!-- CODE //-->
+<pre>
+rocket 1% crypt &lt foo &gt foo.1
+Enter key: <i>[key1]</I>
+rocket 2% crypt &lt foo.1 &gt foo.2
+Enter key: <i>[key2]</I>
+rocket 3% crypt &lt foo.2 &gt foo.3
+Enter key: <i>[key3]</I>
+rocket 4% crypt &lt foo.3 &gt foo.2
+Enter key: <i>[key3]</I>
+rocket 5% crypt &lt foo.2 &gt foo.1
+Enter key: <i>[key2]</I>
+rocket 6% crypt &lt foo.1 &gt foo.new
+Enter key: <i>[key1]</I>
+</PRE>
+<!-- END CODE //-->
+<p>If all the keys are entered in the correct order, the encrypted file should decrypt without any problems.
+</P>
+<p><font size="+1"><b>Example Five: Hiding Within tar</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>crypt</B> <i>file</I>
+<b>tar</B> key [ file|buffer ] [name name ... ]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>One last technique is to archive your data file with random data using <small>tar</SMALL> and encrypt the entire tar file or pass it through the buffer.</P>
+<p>Encrypting a tar file:</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% tar cf foo.tar rand1 foo rand2 rand3
+rocket 2% crypt &lt foo.tar &gt foo.cpt
+Enter key:
+rocket 3% crypt &lt foo.cpt &gt foo.tar
+Enter key:
+rocket 4% tar xf foo.tar
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This two-step process of creating the tar file and encrypting it can be joined by one command.
+</P>
+<!-- CODE //-->
+<pre>
+rocket 1% tar cvf - rand1 foo rand2 rand3 | crypt &gt foo.cpt
+a rand1 1 block
+a foo 1 block
+a rand2 1 block
+a rand3 1 block
+Enter key:
+
+rocket 2% crypt &lt foo.cpt | tar xvf -
+x rand1 1 block
+x foo 1 block
+x rand2 1 block
+x rand3 1 block
+Enter key:
+</PRE>
+<!-- END CODE //-->
+<p>By passing the packaged archive into the buffer with the dash symbol, the archive can be directly passed to the crypt program and vice-versa.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>If you would like to keep any files more secure than by having permission locking the file down, this makes sure that even those with root cannot see your files.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Whichever method you choose, remain consistent. I once got to the point where I never knew which method a file was encrypted into. I decided to incorporate the method of my choice into a script that both encrypts and decrypts so that I always remain consistent as long as I use that script.
+</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<p><small>compress</SMALL>, <small>crypt</SMALL>, <small>dd</SMALL>, <small>tar</SMALL>, <small>uncompress</SMALL></P>
+<h3><a name="Heading18"></A><font color="#000077">3.9 Clear and Lock</FONT></H3>
+<h4 align="LEFT"><a name="Heading19"></A><font color="#000077">3.9.1 Description</FONT></H4>
+<p>When away from your screen clear and lock it up.
+</P>
+<p><font size="+1"><b>Example One: Clear the Screen</B></FONT></P>
+<p>Flavors: AT&ampT, BSD
+</P>
+<p>Shells: sh, ksh</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>clear</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Try to get into the habit of clearing the screen or terminal as much as possible. Using the <small>clear</SMALL> command reads the information about your terminal from the termcap or terminfo entry to erase the contents of the screen that is locked to the particular tty terminal device. Set up an alias so the screen can be cleared at a moments notice. Control-K is a good character, but you can use anything.</P>
+<!-- CODE SNIP //-->
+<pre>
+alias    ^k    clear
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you are away from your terminal and access your system remotely, a signal can be sent to any one of the terminal device sessions that are open as long as you are the owner of that device. This is done by redirecting the <small>clear</SMALL> command to the device. To find the current device you are typing in, use the <small>tty</SMALL> command.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% tty
+/dev/ttyq1
+rocket 2% clear &gt /dev/ttyq1
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To see a complete list of all devices and who is using which tty devices on the system, the <small>who</SMALL> command shows this information.</P>
+<!-- CODE SNIP //-->
+<pre>
+rocket 1% who
+victor     ttyq0        Sep 29 18:09
+gloria     ttyq1        Sep 29 20:53
+kate       ttyq2        Sep 29 22:04
+paul       ttyq4        Sep  4 13:26
+scott      ttyq6        Sep 28 10:59
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Taking this one step further, a simple script can collect all the terminal devices that you are using and send a clear signal to erase the screen associated with each device. The script could be called <small>clearall</SMALL>.</P>
+<!-- CODE SNIP //-->
+<pre>
+#! /bin/sh
+
+who | grep $USER | awk &#145;{print $2}&#146; | while read tty
+do
+  clear &gt /dev/$tty
+done
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Set up the shell to be used.
+</P>
+<p>Line 3: Find out who is on the system, strip out the user running the script and collect all her open tty devices, and then begin going through each one.</P>
+<p>Line 5: Clear the terminal device for each one in the list collected.</P>
+<p>Line 6: The script continues until the list has been fully processed.</P>
+<p>Rather than clearing a terminal session from a single keystroke, all the windows could be cleared from a single Control-K keystroke.</P>
+<!-- CODE SNIP //-->
+<pre>
+alias   ^k   clear
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Example Two: Lock the Screen</B></FONT></P>
+<p>Flavor: AT&ampT, BSD
+</P>
+<p>Shell: sh, ksh</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>xlock</B>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If you plan to leave any terminals unattended for a period of time and there is a window manager running on the console, lock the console with <small>xlock</SMALL>. Prior to a windows environment in the PC world, policies dictated that all users would log out of the computers when away from the desk. This was mandatory. With the introduction to window-based environments on PCs, company policies are changing to locking. It is always safer and more secure to log out whenever possible though.</P>
+<p>Because the <small>xlock</SMALL> program is a program or process running on the computer, it is possible to kill the process remotely and gain access to the account. This really isn&#146;t a good thing.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>The whole point here is to keep your information and data secure, hidden, and protected from others in the best possible way.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,252 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=091-096//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><b>Listing 3.9</B> The Dining Philosophers Problem Using Windows 2000 Synchronization Primitives<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+long  g_fDone = FALSE;
+typedef struct tagCPhilosopher
+{
+    int     m_nID;
+    HANDLE  m_hSticks[2];
+    int     m_nMeals;
+}CPhilosopher;
+
+#define nMaxPhil 63
+
+void SayEat(CPhilosopher* pPhilo)
+{
+    _tprintf(_T(&#147;Philosopher %d eats a while\n&#148;), pPhilo-&gtm_nID);
+    pPhilo-&gtm_nMeals&#43;&#43;;
+}
+
+void SayThink(int nPhilo)
+{
+    _tprintf(_T(&#147;Philosopher %d thinks a while\n&#148;), nPhilo);
+}
+
+void SayDone(CPhilosopher* pPhilo)
+{
+    _tprintf(_T(&#147;Philosopher %d had %d meals\n&#148;),
+             pPhilo-&gtm_nID,
+             pPhilo-&gtm_nMeals);
+}
+
+long WINAPI WaitToEat(long lParam)
+{
+    CPhilosopher* pPhilo = (CPhilosopher*)lParam;
+    DWORD dwEatTime = 1000 &#43; GetCurrentThreadId();
+
+    _tprintf(_T(&#147;Philosopher %d is alive!\n&#148;), pPhilo-&gtm_nID);
+    while(g_fDone == FALSE)
+    {
+        // Wait for my two chopsticks.
+        WaitForMultipleObjects(2,
+                               pPhilo-&gtm_hSticks,
+                               TRUE,
+                               INFINITE);
+        //
+
+        // Wait satisfied - I have both chopsticks
+        SayEat(pPhilo);
+        Sleep(dwEatTime);
+        SayThink(pPhilo-&gtm_nID);
+        // Release both chopsticks.
+        ReleaseMutex(pPhilo-&gtm_hSticks[1]);
+        ReleaseMutex(pPhilo-&gtm_hSticks[0]);
+    }
+    return 0;
+}
+
+int _tmain()
+{
+    unsigned long  nThread;
+    unsigned int   ndxStick;
+    unsigned int   ndxPhilo;
+
+    HANDLE          rghSticks[nMaxPhil];
+    CPhilosopher    rgPhilos[nMaxPhil];
+
+    for(ndxStick = 0; ndxStick &lt nMaxPhil; ndxStick&#43;&#43;)
+        rghSticks[ndxStick] = CreateMutex(NULL,FALSE,NULL);
+
+    // Kick off the philosopher threads, using WaitToEat
+    // as the thread function.
+    for(ndxPhilo = 0; ndxPhilo &lt nMaxPhil; ndxPhilo&#43;&#43;)
+    {
+        HANDLE hThread;
+        rgPhilos[ndxPhilo].m_nID = ndxPhilo;
+        rgPhilos[ndxPhilo].m_nMeals = 0;
+        rgPhilos[ndxPhilo].m_hSticks[0] = rghSticks[ndxPhilo];
+        if(ndxPhilo &lt nMaxPhil-1)
+          rgPhilos[ndxPhilo].m_hSticks[1] = rghSticks[ndxPhilo&#43;1];
+        else
+          rgPhilos[ndxPhilo].m_hSticks[1] = rghSticks[0];
+        hThread = CreateThread(NULL,
+                               0,
+                               (LPTHREAD_START_ROUTINE)WaitToEat,
+                               (void*)&amprgPhilos[ndxPhilo],
+                               0,
+                               &ampnThread);
+        CloseHandle(hThread);
+    }
+    Sleep(100000);  // Run for ~ 100 seconds
+    g_fDone = TRUE;
+    Sleep(8000);    // Wait ~ 8 seconds for thread completion.
+
+    for(ndxPhilo = 0; ndxPhilo &lt nMaxPhil; ndxPhilo&#43;&#43;)
+    {
+        SayDone(&amprgPhilos[ndxPhilo]);
+        CloseHandle(rghSticks[ndxPhilo]);
+    }
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h3><a name="Heading24"></A><font color="#000077">Semaphores</FONT></H3>
+<p>The <i>semaphore</I> was one of the first synchronization primitives described in computer science literature. Semaphores were invented by Edsger Dijkstra (pronounced <i>Dike-stra</I>) as a tool to be used in multithreaded computing, which was a new field in the mid-1960s. A semaphore is like a counter that acts as a guardian over a section of code or a resource. In fact, semaphores are sometimes referred to as <i>Dijkstra counters</I>.</P>
+<p>The semaphore maintains an internal counter that&#146;s decremented or incremented as operations are performed on the semaphore. If the semaphore&#146;s internal counter reaches zero, any new thread attempting to decrement the counter must wait until another thread increments it. Two operations can be performed on a semaphore:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>P</I>, sometimes called <i>DOWN</I>, is used to indicate that a resource is not available. P is short for &#147;&#148;proberen te verlagen,&#148; a Dutch phrase that roughly translates to &#147;&#148;attempt to decrease.&#148;
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>V</I>, sometimes called <i>UP</I>, is used to indicate that a resource has become available. P is short for &#147;&#148;verhogen,&#148; a Dutch word that translates to &#147;increase.&#148;
+</DL>
+<h4 align="LEFT"><a name="Heading25"></A><font color="#000077">Semaphores and Wait Functions</FONT></H4>
+<p>Before using a resource guarded by a semaphore, a thread must always perform a wait on the semaphore&#146;s handle. This enables the thread to be blocked if the semaphore is not signaled. It also enables the semaphore&#146;s internal counter to be decremented after the thread&#146;s wait is completed. This is the &#147;P&#148; or &#147;attempt to decrease&#148; function described in the previous section.
+</P>
+<p>When a thread is finished using a controlled resource, the semaphore is released by calling the <small>ReleaseSemaphore</SMALL> function. This function increases the semaphore&#146;s internal counter and enables another waiting thread to take control of the semaphore. This is the &#147;V&#148; or &#147;increase&#148; function described in the preceding section.</P>
+<p>Figure 3.8 illustrates how a semaphore is initialized, used, and released.</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-08.jpg',461,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-08.jpg',461,420)"><font color="#000077"><b>Figure 3.8</B></FONT></A>&nbsp;&nbsp;Using a semaphore to control resources.</P>
+<p>A semaphore can be used with either of the wait functions discussed earlier in this chapter. A semaphore is considered to be signaled when its counter is greater than zero; it&#146;s not signaled as long as the count equals zero.
+</P>
+<p>The semaphore&#146;s internal counter should always reflect the number of resources available for consumption. Any threads that take possession of a resource controlled by a semaphore must perform a wait function on the semaphore object. If the semaphore counter is zero, no resources are available, and the thread is blocked until it times out or a resource becomes available.</P>
+<h4 align="LEFT"><a name="Heading26"></A><font color="#000077">Applications for Semaphores</FONT></H4>
+<p>A semaphore is more flexible than a critical section because it enables a quantity of resources to be guarded, rather than enabling a single thread&#146;s access to a certain part of the code. For example, a typical exercise in multithreaded computing deals with allocating scarce resources to a group of consumers, as shown in Figure 3.9.
+</P>
+<p>In Figure 3.9, a group of barbers is controlled using a semaphore. Initially, this semaphore is set with a maximum value of 3, to indicate that three barber resources are available. As customers enter the barber shop, the semaphore is decremented (see Figure 3.10).</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-09.jpg',500,395 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-09.jpg',500,395)"><font color="#000077"><b>Figure 3.9</B></FONT></A>&nbsp;&nbsp;Three available barbers controlled by a semaphore.</P>
+<p><a name="Fig10"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-10.jpg',500,399 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-10t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-10.jpg',500,399)"><font color="#000077"><b>Figure 3.10</B></FONT></A>&nbsp;&nbsp;Consuming a barber resource decrements the semaphore counter.</P>
+<p>As the semaphore is decremented for each new customer, eventually the semaphore&#146;s internal counter reaches zero, indicating that no barbers are available, as shown in Figure 3.11.
+</P>
+<p><a name="Fig11"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-11.jpg',500,399 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-11t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-11.jpg',500,399)"><font color="#000077"><b>Figure 3.11</B></FONT></A>&nbsp;&nbsp;Blocking access to the barbers using a semaphore.</P>
+<p>As a barber finishes with a customer, that customer releases the semaphore, thus allowing the internal counter to increase and one more customer to be served, as shown in Figure 3.12.
+</P>
+<p><a name="Fig12"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-12.jpg',500,399 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-12t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-12.jpg',500,399)"><font color="#000077"><b>Figure 3.12</B></FONT></A>&nbsp;&nbsp;Releasing a semaphore enables a new customer to be served.</P>
+<p>These are the basic steps in the lifecycle of a producer/consumer application. The barbers are &#147;producing&#148; haircuts, and the customers in line are &#147;consuming&#148; them. Later in this chapter, a dialog-based application that uses semaphores in a similar manner is introduced.
+</P>
+<h3><a name="Heading27"></A><font color="#000077">Creating Semaphores</FONT></H3>
+<p>A semaphore is created by calling <small>CreateSemaphore</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hsemBarbers = CreateSemaphore(NULL,
+                                      0,
+                                      5,
+                                      NULL);
+if(hsemBarbers == NULL)
+{
+    // Handle Error
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

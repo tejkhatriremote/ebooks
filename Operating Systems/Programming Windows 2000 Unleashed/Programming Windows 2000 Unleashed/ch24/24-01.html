@@ -1,0 +1,157 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Using the COM[TITLE]#43; In-Memory Database</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=24//-->
+<!--PAGES=821-825//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch23/23-16.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="24-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 24<br>Using the COM&#43; In-Memory Database
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>In-Memory Database (IMDB) <i>822</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>A Simple Example <i>827</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b>Some Details on IMDB <i>830</I></B>
+</DL>
+<p>This chapter focuses on the COM&#43; in-memory database (IMDB). IMDB is a new technology that has been released for the first time with Windows 2000. This chapter explains why there&#146;s a need for IMDB. It also discusses how to use IMDB with either Visual Basic or Visual C<small>&#43;&#43;</SMALL>.</P>
+<h3><a name="Heading2"></A><font color="#000077">In-Memory Database (IMDB)</FONT></H3>
+<p>IMDB is a RAM-based, ISAM-based database. It serves one purpose: It makes it possible to access read-mostly data. You may be wondering what read-mostly data is.
+</P>
+<p>To answer this question, consider the following scenario: Some company has an internal order-processing application. The number of products that this company sells might number a few thousand. When the details of the application are filled out, the most time taken involves retrieving product numbers. A standard database would optimize by caching the product information within RAM. Now consider the situation where another table is loaded into RAM. However, there is not enough room for both the products table and the new table. What does the database do? It will automatically start an optimization algorithm and decide what information to keep in RAM. The problem is that the new table is only referenced five times and it can be part of a slower transaction. So now your optimized system is not so optimized. It will experience a moment of slowness until the new table can be unloaded again.</P>
+<p>With IMDB you can force load all the data into memory. It will never be unloaded to the hard disk. This way the application using the data will always be fast. What happens when you run out of RAM? The system becomes incredibly slow because it is constantly swapping data other than the IMDB. However, IMDB is an application that is based on your tuning.</P>
+<h4 align="LEFT"><a name="Heading3"></A><font color="#000077">Architecture of IMDB</FONT></H4>
+<p>Tuning is required, and this tuning involves IMDB. With IMDB, you can load a table from a database into memory or keep state information in memory. It&#146;s an optimized situation. Therefore, the size of the cache and information stored within it must be calculated; otherwise, IMDB becomes a liability. To understand IMDB, imagine IMDB as a giant piece of RAM cache. And within that RAM cache you store data and tables.
+</P>
+<p><font size="+1"><b>Types of Storage</B></FONT></P>
+<p>Tables from other OLE DB providers can load directly into cache. This cache model is called <i>write through</I>. Here are its advantages:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It&#146;s a real table that has added performance from being RAM-based.
+<dd><b>&#149;</B>&nbsp;&nbsp;The data can be updated. This updates the source of the data, which is transparent from the original client.
+</DL>
+<p>The other way of working with IMDB is to create tables directly. These tables are considered standalone tables, because there&#146;s no association with any durable data. It&#146;s like state management without the costs of the hard disk I/O. However, remember that the data is not durable, and any machine failure will cause the state to be deleted. To avoid this situation, you should use clustering techniques.
+</P>
+<p>The client accesses the data in IMDB using OLE DB. IMDB is a Level 1 OLE DB provider. This means it does not support the <small>ICommand</SMALL> interface. It supports only table-level access. There is no SQL for IMDB. The architecture of IMDB is shown in Figure 24.1.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-01.jpg',202,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch24/images/24-01.jpg',202,420)"><font color="#000077"><b>Figure 24.1</B></FONT></A>&nbsp;&nbsp;IMDB architecture.</P>
+<p>The IMDB cache is a piece of shared memory. When a remote client, such as HTTP, or DCOM accesses the shared memory, it must do so through a local component. The local component and the cache must be on the same machine; otherwise, the performance benefits will be negated. The local component must be a DLL as well as COM&#43; compatible, because the IMDB core may need to use transactions.
+</P>
+<p><font size="+1"><b>IMDB Proxy</B></FONT></P>
+<p>When the component accesses the cache, the IMDB proxy is loaded in the component&#146;s process space. The IMDB core does this. The proxy is implemented in <small>MSIMDBPR.DLL</SMALL>. This proxy is the interface to the IMDB core and the interface to the shared memory.</P>
+<p>The IMDB proxy has the intelligence to know whether data is being read or written. This makes it possible to perform some speedups. When data is read, the proxy will read it directly from the shared memory. That data is mostly read, which makes for a dramatic speed improvement, because the overhead of some DB core or caching algorithm is avoided.</P>
+<p>However, when it&#146;s necessary to update a table, the proxy hands the request to the IMDB core. The IMDB core will then do all the legwork regarding the locking management. NT&#146;s Fast LPC services ensure that the communication between the IMDB proxy and IMDB core stays fast. Of course, because this is an update, it&#146;s slower than a read operation. Overall, though, it&#146;s still faster than a durable database.</P>
+<p><font size="+1"><b>IMDB Core</B></FONT></P>
+<p>The IMDB core is implemented in <small>MSIMDBCR.DLL</SMALL> and has the following responsibilities:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Populating cached tables
+<dd><b>&#149;</B>&nbsp;&nbsp;Managing indexes
+<dd><b>&#149;</B>&nbsp;&nbsp;Coordinating communication between the various IMDB proxies
+<dd><b>&#149;</B>&nbsp;&nbsp;Coordinating the various locks for access to the data
+<dd><b>&#149;</B>&nbsp;&nbsp;Managing transactions
+<dd><b>&#149;</B>&nbsp;&nbsp;Persisting a change (when necessary)
+<dd><b>&#149;</B>&nbsp;&nbsp;Managing the connection to the IMDB proxy DLLs
+</DL>
+<p>A DLL does not magically load itself. The IMDB service (<small>IMDBSRV.EXE</SMALL>) is the server process that loads the core.</P>
+<p><font size="+1"><b>Isolation</B></FONT></P>
+<p>IMDB supports the following transaction-isolation models:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Optimistic</I>. Rarely blocks for access. Aborts on discovery of isolation violation.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Pessimistic</I>. Isolation violation is prevented by blocking access to data. Aborts only for deadlocks.
+</DL>
+<p>The following transaction-isolation levels are possible for IMDB:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Read Committed</I>. No locking is required for reading because of the cache versions of noncommitted data.
+<dd><b>&#149;</B>&nbsp;&nbsp;<i>Repeatable Read</I>. When data is locked, read, unlocked, and then locked and read again, the same data will be read.
+</DL>
+<p>The preferred and default isolation level for the IMDB is Read Committed. In this mode, the client is allowed to read data from the cache without a read lock. Information has to be communicated between the client and the IMDB server process, and the Read-Committed isolation level is, by far, the most efficient method.
+</P>
+<p><font size="+1"><b>64-bit Memory Space</B></FONT></P>
+<p>With Windows 2000, it&#146;s possible to access 64-bit memory. This is called the <i>Very Large Memory (VLM) architecture</I>. To use VLM from a 32-bit operating system requires extra programming effort. With IMDB, that memory space is just a really big cache. This means you can take advantage of the 64-bit memory space without having to write 64-bit code.</P>
+<p>For applications that use the 3GB model, a utility must be used to switch the <small>LARGE_ADDRESS_AWARE_BIT</SMALL>. The <small>BOOT.INI</SMALL> file must be updated to use 3GB of memory.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch23/23-16.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="24-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

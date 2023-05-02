@@ -1,0 +1,54 @@
+Cracking for the Beginner - Last Part 
+
+by YOSHi 
+
+Yes, you read me correctly; this is almost the last part. Well, on password cracking, anyway. I feel that by the end of this
+tutorial, you should be able to find and remove most basic password protections. Next tutorial, I might actually use real
+programs (not ones written to be cracked). Without further ado, I introduce test1.com and try_me2.com. 
+
+                                            Test1.com
+
+
+LordByte seems to want to help us; he has made five different programs for us to try to crack, asking for the password, not a
+patch. In this tut, I show how to find hard-wired passwords (passwords not scrambled or rotated or anything). Ok, I use ldr to
+load up the program and I enter a dummy password. I typed in "s ds:0 l ffff "1234"". Hmm, one result; we will call it xxxx:xxxx.
+I first checked it out with a ed xxxx:xxxx. Definately my password. I then typed in "bpr (the value of xxxx:[xxxx - 20]) (the
+value of xxxx:[xxxx + 20]) rw" (thanks Intruder for teaching me the finer points of this trick.) Rw means "all read or write
+access to the area between the two given addresses". 
+
+Ok, I typed "x" and it brought me back to S-ice. Then, my caffine rush kicked, and suddenly I didn't want to crack anymore.
+So I pressed x a few times, watching the dump window as I did, and at my last "x", I saw the word "hardware" written next to
+my password. Odd, so I ran test1 again w/o ldr, and I typed "hardware" as my password. It told me good job, ask LordByte
+for the next task. I'll do that eventually. 
+
+"The crack?" you might ask. Well, when s-ice pops up, you'll see some code (obviously) and in this code there will be a
+conditional jump to the address of the bad_ps termination. Simply change it to "jmp location_of_good_termination". But why
+do that? I gave you the password. 
+
+                                          Try_me2.com
+
+  You cand find try_me2.com on Lord Caligo's page This was an extremely easy crack; I'll only show you how I found the
+ password. I loaded up try_me2.com into PSEDIT, my hexeditor, and I was looking for the strings that showed if the pass was
+                                        good or bad. I see: 
+
+                                         ...123...blah
+                                         ..blah.blah.b
+                                         .....etc.....
+
+ Is this serious? Anyway, I quit psedit and re-ran try_me2.com, with the pass "123", and what do you know, it worked. Next
+                                time, Lord C, at least xor it with something.
+
+ (Comment by Lord Caligo: I didn´t crypt the pwd, because you should crack the file so everybody could enter *every* word... I knew that the
+                           pwd is included in the .com, btw, it´s the same in Try ME v1.0) 
+
+                                        Contacting the Author
+
+ NOTE: To the observant reader, I've changed my nick to YOSHi (you can have your fucking nick Y0SHI, I think
+  you suck and are a lame liar - "I've got friends in LOA (hacking group.)" Yeah, right. I personally know all the
+             members of LOA, and I've talked to them about your lameness. This is war fucker. 
+
+ To contact me on IRC, DON'T look for Y0SHi, this is some stupid bot for y0shi.parodius.com (no, that's not my web page).
+                                     Look for YOSHi on EfNet.
+
+                                      Email: gargos@juno.com
+

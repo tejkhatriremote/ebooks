@@ -1,0 +1,150 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Active Directory</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=27//-->
+<!--PAGES=925-927//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="27-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch28/28-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>Listing 27.5 contains a Visual Basic subroutine that enumerates the users in a domain using the <small>IADsUser</SMALL> interface. This subroutine is part of a small Visual Basic project named VBFuncs, which can be found on this book&#146;s accompanying CD-ROM.</P>
+<p><b>Listing 27.5</B> Using the <small>IADsUser</SMALL> Interface to Enumerate Users in a Domain<hr></P>
+<!-- CODE //-->
+<pre>
+Private Sub EnumerateUsers(strDomain As String)
+
+    Dim Users As IADsContainer
+    Dim User As IADsUser
+    Dim obj As IADs
+    Dim strPath As String
+
+    &#145;Clear the results listbox
+    lst.Clear
+
+    strPath = &#147;LDAP://CN=Users,&#148; &amp strDomain
+    Set Users = GetObject(strPath)
+    Users.Filter = Array(&#147;User&#148;)
+
+    For Each User In Users
+        Set obj = User
+        lst.AddItem User.Name + &#147; - (&#148; + obj.ADsPath + &#147;)&#148;
+    Next
+End Sub
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>In Listing 27.5, the <small>EnumerateUsers</SMALL> subroutine takes the default naming context as the <small>strDomain</SMALL> string parameter. In the VBFuncs project, the default naming context is cached so that it can be easily used without requiring a function call to ADSI. The <small>EnumerateUsers</SMALL> subroutine uses <small>strDomain</SMALL> to bind to the Users node in the directory. Next, the function sets a filter on the Users container and enumerates each user, adding name and path information about each user to a list box.</P>
+<p><font size="+1"><b>Using ADSI Dynamic-Object Interfaces</B></FONT></P>
+<p>Some objects in the directory are transient rather than permanent. The following dynamic-object interfaces are used to manage these objects:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsComputerOperations</SMALL>. An interface that can be used to determine the current state of a remote computer or perform a shutdown remotely
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsFileServiceOperations</SMALL>. An interface used to return the currently open sessions or resources for a file service
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsPrintJobOperations</SMALL>. An interface used to examine, interrupt, or resume a network print job
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsPrintQueueOperations</SMALL>. An interface used to manage the current state of a print queue
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsResource</SMALL>. An interface used to manage an open file service resource, such as a file opened on a remote network share
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsServiceOperations</SMALL>. An interface used to manage installed system services
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsSession</SMALL>. An interface used to manage an open network file service session
+</DL>
+<p><font size="+1"><b>Using ADSI Security Interfaces</B></FONT></P>
+<p>ADSI includes interfaces that support managing security descriptors, ACLs, and ACEs for directory objects. Here&#146;s a list of these interfaces:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsSecurityDescriptor</SMALL>. An interface used to manage or copy a security descriptor for an object in the directory
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsAccessControlList</SMALL>. An interface used to manage an ACL for an object in the directory
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IADsAccessControlEntry</SMALL>. An interface used to manage an ACE for an object in the directory
+</DL>
+<h3><a name="Heading11"></A><font color="#000077">Additional Resources</FONT></H3>
+<p>Here&#146;s a list of some sources on the Web for information about ADSI and Active Directory:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Probably the best place to get ADSI information is <a href="www.15seconds.com">www.15seconds.com</A>. This Web site is primarily focused on Active Server development issues, but its section on ADSI is first-rate, with numerous articles and how-to&#146;s as well as useful links to the Microsoft Web site.
+<dd><b>&#149;</B>&nbsp;&nbsp;Microsoft has Active Directory and ADSI Web sites; however, the URLs for these sites are incredibly long and likely to change by the time you read this. As of this writing, most Windows 2000 technology sites still have NT5 embedded in their URLs. The easiest way to navigate to the Microsoft site is to visit <small>msdn.microsoft.com</SMALL> first and then navigate to the ADSI or Windows 2000 pages.
+<dd><b>&#149;</B>&nbsp;&nbsp;A great page for general LDAP information can be found at the University of Michigan at <a href="www.umich.edu/~dirsvcs/ldap">www.umich.edu/~dirsvcs/LDAP</A>. The Web site doesn&#146;t have any information on ADSI, but it has links to all sorts of LDAP, X.500, and general directory information.
+</DL>
+<h3><a name="Heading12"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter discussed using Active Directory and ADSI. The chapter began with an overview of the major features of Active Directory and the LDAP protocol. The major ADSI interfaces and functions were also discussed, and several examples in Visual Basic and Visual C<small>&#43;&#43;</SMALL> were presented.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="27-06.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch28/28-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

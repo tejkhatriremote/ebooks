@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Writing Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=09//-->
+<!--PAGES=303-305//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="09-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>If the call to <small>RegisterEventSource</SMALL> is successful, a handle to a message source is returned. If an error occurs, <small>NULL</SMALL> is returned.</P>
+<p>The <small>ReportEvent</SMALL> function has nine parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The handle to the message source opened by calling the <small>RegisterEventSource</SMALL> function.
+<dd><b>&#149;</B>&nbsp;&nbsp;The message type for the message to be added to the event log. This value is <small>EVENTLOG_ERROR_TYPE</SMALL>, <small>EVENTLOG_WARNING_TYPE</SMALL>, <small>EVENTLOG_INFORMATION_TYPE</SMALL>, <small>EVENTLOG_AUDIT_SUCCESS</SMALL>, or <small>EVENTLOG_AUDIT_FAILURE</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;The category for the message or zero if no category is used.
+<dd><b>&#149;</B>&nbsp;&nbsp;The event ID for the message.
+<dd><b>&#149;</B>&nbsp;&nbsp;The security identifier for the process writing to the event log.
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of strings in the string array used to build the message.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size, in bytes, of the binary data attached to the message.
+<dd><b>&#149;</B>&nbsp;&nbsp;An array of strings that contain the message.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to binary data that will be appended to the message.
+</DL>
+<p>If the message is written to the event log, <small>ReportEvent</SMALL> returns <small>TRUE</SMALL>; if an error occurs, <small>ReportEvent</SMALL> returns <small>FALSE</SMALL>.</P>
+<p>The <small>DeregisterEventSource</SMALL> has one parameter: the handle to the event source that&#146;s to be closed. If the handle can be closed, the function returns <small>TRUE</SMALL>; otherwise, it returns <small>FALSE</SMALL>.</P>
+<h3><a name="Heading15"></A><font color="#000077">An Example of a Windows 2000 Service</FONT></H3>
+<p>The remaining sections in this chapter present a sample service named FileSpy. The FileSpy service is an adaptation of the FileChange example presented in Chapter 4, &#147;Files.&#148; The FileSpy service places information about changes into the event log. A Control Panel applet is included in the next chapter that enables a user to define the behavior of the service.
+</P>
+<h4 align="LEFT"><a name="Heading16"></A><font color="#000077">FileSpy: An Example of a Windows 2000 Service</FONT></H4>
+<p>The FileSpy project is used to build the FileSpy service. FileSpy is a service that can also be run as a console mode application from the command line.
+</P>
+<p>There are a total of 10 files that play a part in the FileSpy project:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SvcMain.c</SMALL> contains the core service functions and data that are generic for most services. Much of this source file can be reused in services you create.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>SvcMain.h</SMALL> contains declarations for <small>SvcMain.h</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FSpy.c</SMALL> contains functions that are specific to the FileSpy service. Although this file contains a great deal of code that&#146;s specific to the FileSpy service, you can use it as a skeleton for your own services.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FSpy.h</SMALL> contains declarations for <small>FSpy.c</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FSpy.rc</SMALL> is a resource file for the FileSpy service. This file contains one resource&#151;<small>MSG00001.bin</SMALL>, the binary message resource file generated by the message compiler. In fact, the message compiler generates this resource file also. The source code for this file is not presented in this chapter because it&#146;s generated by the message compiler.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>MSG00001.bin</SMALL> is the binary message resource created by the message compiler, as discussed earlier. Because this is a binary file generated by the message compiler, the contents of this file aren&#146;t presented in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Reg.c</SMALL> contains reusable functions that are used to access the system Registry. This file is also used in the CtlFileSpy Control Panel applet presented later in this chapter.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Reg.h</SMALL> contains declarations for <small>Reg.c</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Util.c</SMALL> contains reusable functions that are useful when writing services, such as functions that update the service&#146;s status with the SCM, write to the event log, and handle security structures.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Util.h</SMALL> contains declarations for <small>Util.c</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FSpy.mc</SMALL> is not really part of the project, but it&#146;s the source file that&#146;s compiled using the message compiler. The output from the compilation includes the <small>FSpy.rc</SMALL> and <small>MSG00001.bin</SMALL> files.
+</DL>
+<p>The complete source files for FileSpy and other projects in this chapter are available on the CD-ROM. Due to the amount of source code in these projects, some source listings in this chapter are edited to conserve space.
+</P>
+<p>The generic functions used in the FileSpy service, such as the service&#146;s main entry point, the <small>ServiceMain</SMALL> function, and related functions, are found in <small>SvcMain.c</SMALL>. Part of the source code for <small>SvcMain.c</SMALL> is shown in Listing 9.6. The CD-ROM that accompanies this book contains the complete listing.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="09-05.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="09-07.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

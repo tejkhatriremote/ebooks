@@ -1,0 +1,312 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=560-565//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The custom proxy will look very much like the <small>SystemInfo</SMALL> COM object. Unlike the <small>SystemInfo</SMALL> COM object, where <small>GetSystemInfo</SMALL> is called in <small>FinalConstruct</SMALL>, the proxy will set the value of <small>m_info</SMALL> by reading it directly from the marshaling packet provided by the <small>IStream</SMALL> in <small>UnmarshalInterface</SMALL>.</P>
+<p>The custom marshaling proxy is implemented in an ATL DLL project named SysInfoMbv, which can be found on the CD-ROM accompanying this book. The project was created with the same parameters used for the SysInfo project, except that the SysInfoMbv project creates a DLL server instead of an EXE.</P>
+<p>After the SysInfoMbv project was created, a new ATL object named <small>SystemInfo</SMALL> was added to the project with the same parameters used earlier in this chapter to add the <small>SystemInfo</SMALL> object to the SysInfo project.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B><p>When implementing MBV, it&#146;s a good idea to use the threading model &#147;Both&#148; for your custom proxy. This allows your proxy to be created inside the apartment of the client. Otherwise, your custom proxy might need to be marshaled into the client&#146;s apartment, thus erasing any potential performance gains you might have achieved.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>It&#146;s very important that the proxy support exactly the same interfaces implemented by the <small>SystemInfo</SMALL> COM object. Edit the IDL for the SysInfoMbv project so that it looks like the source code provided in Listing 17.10. Modified lines are shown in bold.</P>
+<p><b>Listing 17.10</B> IDL for the SysInfoMbv ATL Project<hr></P>
+<!-- CODE //-->
+<pre>
+// SysInfoMbv.idl : IDL source for SysInfoMbv.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (SysInfoMbv.tlb) and marshaling code.
+
+import &#147;oaidl.idl&#148;;
+import &#147;ocidl.idl&#148;;
+
+<b>typedef enum tagPprocessorType
+{
+   Intel386 = 0,
+   Intel486,
+   IntelPentium,
+   IntelPentiumPro,
+   MipsR4000,
+   Alpha21064,
+   Alpha21066,
+   Alpha21164,
+   PPC601,
+   PPC603,
+   PPC604,
+   PPC603plus,
+   PPC604plus,
+   PPC620,
+}ProcessorType;
+[
+    object,
+    uuid(96848BCE-A68F-11D2-B886-00104B36573E),
+
+    helpstring(&#147;ISystemInfo Interface&#148;),
+    pointer_default(unique)
+]
+interface ISystemInfo : IUnknown
+{
+    [helpstring(&#147;method GetPageSize&#148;)]
+    HRESULT GetPageSize([out] unsigned long* pdwPageSize);
+
+    [helpstring(&#147;method GetProcessorType&#148;)]
+    HRESULT GetProcessorType([out]ProcessorType* pType);
+
+    [helpstring(&#147;method GetAddressSpaceBounds&#148;)]
+    HRESULT GetAddressSpaceBounds([out]unsigned long* pdwLowAddr,
+                                  [out]unsigned long* pdwHighAddr);
+
+    [helpstring(&#147;method GetProcessorCount&#148;)]
+    HRESULT GetProcessorCount([out]short* pCount);
+
+    [helpstring(&#147;method GetProcessorMask&#148;)]
+    HRESULT GetProcessorMask([out]long* pMask);
+
+    [helpstring(&#147;method GetProcessorRevisionString&#148;)]
+    HRESULT GetProcessorRevisionString([out]BSTR* strRevision);
+
+
+    [helpstring(&#147;method GetVmAllocationGranularity&#148;)]
+    HRESULT GetVmAllocationGranularity([out]unsigned long* pdwSize);
+};</B>
+[
+    uuid(A1B192CF-A8BE-11D2-B887-00104B36573E),
+    version(1.0),
+    helpstring(&#147;SysInfoMbv 1.0 Type Library&#148;)
+]
+library SYSINFOMBVLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+
+    [
+        uuid(A1B192DC-A8BE-11D2-B887-00104B36573E),
+        helpstring(&#147;SystemInfo Proxy Class&#148;)
+    ]
+    coclass SystemInfo
+    {
+        [default] interface ISystemInfo;
+    };
+
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The header file for the <small>SystemInfo</SMALL> COM object is found in <small>SystemInfo.h</SMALL> and is provided in Listing 17.11. In addition to the <small>ISystemInfo</SMALL> interface, the <small>SystemInfo</SMALL> COM object will also implement <small>IMarshal</SMALL>. Modified and added lines are shown in bold.</P>
+<p><b>Listing 17.11</B> The Header File for the SystemInfo COM Object in the Custom Proxy<hr></P>
+<!-- CODE //-->
+<pre>
+// SystemInfo.h : Declaration of the CSystemInfo
+
+#ifndef __SYSTEMINFO_H_
+#define __SYSTEMINFO_H_
+
+#include &#147;resource.h&#148;       // main symbols
+
+/////////////////////////////////////////////////////////
+// CSystemInfo
+class ATL_NO_VTABLE CSystemInfo :
+    public CComObjectRootEx&ltCComMultiThreadModel&gt,
+    public CComCoClass&ltCSystemInfo, &ampCLSID_SystemInfo&gt,
+    <b>public ISystemInfo, // add a comma on this line
+    public IMarshal</B>
+{
+public:
+    CSystemInfo()
+    {
+    }
+
+DECLARE_REGISTRY_RESOURCEID(IDR_SYSTEMINFO)
+
+DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+BEGIN_COM_MAP(CSystemInfo)
+    COM_INTERFACE_ENTRY(ISystemInfo)
+    <b>COM_INTERFACE_ENTRY(IMarshal)</B>
+END_COM_MAP()
+
+<b>// ISystemInfo
+public:
+    STDMETHOD(GetVmAllocationGranularity)(unsigned long* pdwSize);
+    STDMETHOD(GetProcessorRevisionString)(BSTR* strRevision);
+    STDMETHOD(GetProcessorMask)(long* pMask);
+    STDMETHOD(GetProcessorCount)(short* pCount);
+    STDMETHOD(GetAddressSpaceBounds)(unsigned long* pdwLowAddr,
+                                     unsigned long* pdwHighAddr);
+    STDMETHOD(GetProcessorType)(ProcessorType* pType);
+    STDMETHOD(GetPageSize)(unsigned long* pdwPageSize);
+
+// IMarshal
+public:
+    STDMETHOD(GetUnmarshalClass)(REFIID riid, void *pv,
+                                 DWORD dwDestContext,
+                                 void *pvDestContext,
+                                 DWORD mshlflags, CLSID *pCid);
+    STDMETHOD(GetMarshalSizeMax)(REFIID riid, void *pv,
+                                 DWORD dwDestContext,
+                                 void *pvDestContext,
+                                 DWORD mshlflags, DWORD *pSize);
+    STDMETHOD(MarshalInterface)(IStream* pStm, REFIID riid,
+                                void *pv, DWORD dwDestContext,
+                                void *pvDestContext,
+                                DWORD mshlflags);
+    STDMETHOD(UnmarshalInterface)(IStream *pStm, REFIID riid,
+                                  void **ppv);
+    STDMETHOD(ReleaseMarshalData)(IStream *pStm);
+    STDMETHOD(DisconnectObject)(DWORD dwReserved);
+protected:
+    SYSTEM_INFO m_info;
+};</B>
+
+#endif //__SYSTEMINFO_H_
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The implementation file for the <small>SystemInfo</SMALL> COM object is found in <small>SystemInfo.cpp</SMALL>. Most of this file is identical to the file provided earlier in Listing 17.4. The new portion of the file that deals with the <small>IMarshal</SMALL> interface in the proxy is provided in Listing 17.12. The complete source file for <small>SystemInfo.cpp</SMALL> can be found on the CD-ROM.</P>
+<p><b>Listing 17.12</B> Marshaling Code for the Custom Proxy from <small>SystemInfo.cpp</SMALL> in the SysInfoMbv Project<hr></P>
+<!-- CODE //-->
+<pre>
+STDMETHODIMP CSystemInfo::GetUnmarshalClass(REFIID riid,
+                                            void *pv,
+                                            DWORD dwDestContext,
+                                            void *pvDestContext,
+                                            DWORD mshlflags,
+                                            CLSID *pCid)
+{
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::GetMarshalSizeMax(REFIID riid,
+                                            void *pv,
+                                            DWORD dwDestContext,
+                                            void *pvDestContext,
+                                            DWORD mshlflags,
+                                            DWORD *pSize)
+{
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::MarshalInterface(IStream* pStm,
+                                           REFIID riid,
+                                           void *pv,
+                                           DWORD dwDestContext,
+                                           void *pvDestContext,
+                                           DWORD mshlflags)
+{
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::UnmarshalInterface(IStream *pStm,
+                                             REFIID riid,
+                                             void **ppv)
+{
+    pStm-&gtRead((void*)&ampm_info, sizeof(SYSTEM_INFO), NULL);
+    return QueryInterface(riid, ppv);
+}
+
+STDMETHODIMP CSystemInfo::ReleaseMarshalData(IStream *pStm)
+{
+    return S_OK;
+}
+
+STDMETHODIMP CSystemInfo::DisconnectObject(DWORD dwReserved)
+{
+    return S_OK;
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

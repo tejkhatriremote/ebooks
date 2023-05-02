@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=062-066//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using CreateThread to Start a New Thread</B></FONT></P>
+<p>A thread is created by calling the <small>CreateThread</SMALL> function. Here&#146;s an example:</P>
+<!-- CODE //-->
+<pre>
+long WINAPI ThreadEntry(LPARAM lparam)
+{
+    // ...
+}
+unsigned long nThreadID;
+HANDLE hThread = CreateThread(NULL,
+                               0,
+                               (LPTHREAD_START_ROUTINE)ThreadEntry,
+                               (void*)szHello,
+                               0,
+                               &ampnThreadID);
+</PRE>
+<!-- END CODE //-->
+<p>The <small>CreateThread</SMALL> function takes six parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_ATTRIBUTES</SMALL> structure that specifies the security attributes for the new thread. Using <small>NULL</SMALL> for this parameter causes the operating system to give the new thread a default security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;The initial stack size for the new thread. If <small>0</SMALL> is passed as this parameter, the new thread is given a stack the same size as the primary thread. This is usually a good value to use as a default, because Windows 2000 will increase the size of the stack if necessary.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a start function where the thread begins executing.
+<dd><b>&#149;</B>&nbsp;&nbsp;A 32-bit parameter passed to the new thread&#146;s start function. The new thread begins executing in this function; when the thread exits this function, it&#146;s terminated.
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies how the thread is created. This flag can either be <small>CREATE_SUSPENDED</SMALL>, which creates the flag in a suspended state, or <small>0</SMALL>, which enables the thread to begin executing. A thread that&#146;s suspended does not execute until the <small>ResumeThread</SMALL> function has been called for it.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a 32-bit variable that&#146;s filled with the thread ID when <small>CreateThread</SMALL> returns.
+</DL>
+<p>If your thread uses C runtime library functions, you should not use <small>CreateThread</SMALL>. In some cases, using it will result in small memory leaks when the thread terminates, due to the way <small>CreateThread</SMALL> interacts with the C runtime library. If you must use C runtime library functions, you should use <small>_beginthread</SMALL> or <small>_beginthreadex</SMALL>, as discussed in the next section.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Using the C Runtime Library Thread Functions</FONT></H4>
+<p>The Visual C<small>&#43;&#43;</SMALL> compiler offers two extensions to the C runtime library for creating threads:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>_beginthread</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>_beginthreadex</SMALL>
+</DL>
+<blockquote>
+<p><font size="-1"><hr><b>Note:&nbsp;&nbsp;</B>
+<p>These functions require you to use one of the multithreaded versions of the C runtime library. If you&#146;re using the Visual C<small>&#43;&#43;</SMALL> IDE, you can specify the runtime library by selecting Settings from the Project menu to display the Project Settings dialog box. Click the C<small>&#43;&#43;</SMALL> tab and then select the Code Generation category from the drop-down list. You can select the runtime library your project will use from the Use Runtime Library drop-down list.</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>Both functions enable you to create a thread that can safely interact with the C runtime library. Of the two functions, <small>_beginthread</SMALL> is the simplest function to use, as shown in Listing 3.1.</P>
+<p><b>Listing 3.1</B> Using <small>_beginthread</SMALL> to Launch a Worker Thread<hr></P>
+<!-- CODE //-->
+<pre>
+/* Compile this listing using the multi-threaded C runtime library */
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#include &ltprocess.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+void threadFunc(void* pv);
+
+int _tmain()
+{
+    ULONG tid = 0;
+    _tprintf(_T(&#147;Hello from the main thread\n&#148;));
+    tid = _beginthread(threadFunc, 0, NULL);
+    if(tid == -1)
+    {
+        /* handle error */
+    }
+    WaitForSingleObject((HANDLE)tid, INFINITE);
+    _tprintf(_T(&#147;Goodbye from the main thread\n&#148;));
+    return 0;
+}
+
+void threadFunc(void* pv)
+{
+    _tprintf(_T(&#147;Hello from the worker thread\n&#148;));
+    _tprintf(_T(&#147;Work, work, work\n&#148;));
+    _tprintf(_T(&#147;Goodbye from the worker thread\n&#148;));
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>As shown in Listing 3.1, <small>_beginthread</SMALL> has three parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a thread&#146;s start function where the new thread will start executing
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the stack for the new thread or <small>0</SMALL> if the C runtime library should automatically manage the stack
+<dd><b>&#149;</B>&nbsp;&nbsp;A <small>void*</SMALL> that can optionally contain an argument to be passed to the thread&#146;s start function
+</DL>
+<p>The <small>_beginthread</SMALL> function returns a handle to the thread that was started or <small>-1</SMALL> if the thread could not be launched.</P>
+<p>The <small>_beginthread</SMALL> function does not provide many of the options available with <small>CreateThread</SMALL>, such as the ability to create a thread in the suspended state and the ability to provide a security descriptor for the new thread.</P>
+<p>The <small>_beginthreadex</SMALL> function, shown in Listing 3.2, is somewhat more complicated than <small>_beginthread</SMALL>, but it more closely models the Win32 <small>CreateThread</SMALL> function.</P>
+<p><b>Listing 3.2</B> Using <small>_beginthreadex</SMALL> to Launch a Worker Thread<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#include &ltprocess.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+unsigned __stdcall threadFunc(void* pv);
+
+int _tmain()
+{
+    ULONG hThread = 0;
+    unsigned threadId = 0;
+
+    /* Initialize security descriptor for worker thread */
+    SECURITY_DESCRIPTOR* psd;
+    psd = (SECURITY_DESCRIPTOR*)LocalAlloc(LPTR,
+                                   SECURITY_DESCRIPTOR_MIN_LENGTH);
+    InitializeSecurityDescriptor(psd,SECURITY_DESCRIPTOR_REVISION);
+    SetSecurityDescriptorDacl(psd, TRUE, NULL, FALSE);
+
+    _tprintf(_T(&#147;Hello from the main thread\n&#148;));
+    /* Create thread in a suspended state */
+    hThread = _beginthreadex(psd,
+                             0,
+                             threadFunc,
+                             NULL,
+                             CREATE_SUSPENDED,
+                             &ampthreadId);
+    if(!hThread)
+    {
+        /* handle error */
+    }
+    /* Wake up the worker thread */
+    ResumeThread((HANDLE)hThread);
+    WaitForSingleObject((HANDLE)hThread, INFINITE);
+    _tprintf(_T(&#147;Goodbye from the main thread\n&#148;));
+
+    CloseHandle((HANDLE)hThread);
+    LocalFree(psd);
+
+    return 0;
+}
+
+unsigned _ _stdcall threadFunc(void* pv)
+{
+    _tprintf(_T(&#147;Hello from the worker thread\n&#148;));
+    _tprintf(_T(&#147;Work, work, work\n&#148;));
+    _tprintf(_T(&#147;Goodbye from the worker thread\n&#148;));
+    return NO_ERROR;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>As shown in Listing 3.2, <small>_beginthreadex</SMALL> has six parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>SECURITY_DESCRIPTOR</SMALL> structure for the new thread or <small>NULL</SMALL> to use a default security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;The size of the stack for the new thread or <small>0</SMALL> if the C runtime library should automatically manage the stack.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a thread&#146;s start function where the new thread will start executing
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a list of arguments to be passed to the thread or <small>NULL</SMALL> if no arguments are used.
+<dd><b>&#149;</B>&nbsp;&nbsp;The initial startup state of the thread&#151;either <small>CREATE_SUSPENDED</SMALL> to create the thread in a suspended state or <small>0</SMALL> to create the thread in an immediately runnable state.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of an unsigned <small>int</SMALL> variable that will be filled with the thread ID for the new thread.
+</DL>
+<p>The <small>_beginthread</SMALL> function returns a handle to the thread that was started or <small>0</SMALL> if the thread could not be launched.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

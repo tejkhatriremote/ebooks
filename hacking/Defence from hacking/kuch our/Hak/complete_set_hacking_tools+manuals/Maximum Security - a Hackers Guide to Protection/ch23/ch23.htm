@@ -1,0 +1,898 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+<HEAD>
+	
+	<TITLE>Maximum Security -- Ch 23 -- An Introduction to Breaching a Server Internally</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<CENTER>
+<H1><IMG SRC="../button/samsnet.gif" WIDTH="171" HEIGHT="66" ALIGN="BOTTOM" BORDER="0"><BR>
+<FONT COLOR="#000077">Maximum Security: </FONT></H1>
+</CENTER>
+<CENTER>
+<H2><FONT COLOR="#000077">A Hacker's Guide to Protecting Your Internet Site and Network</FONT></H2>
+</CENTER>
+<CENTER>
+<P><A HREF="../ch22/ch22.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch24/ch24.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> 
+<HR>
+
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">23</FONT></H1>
+</CENTER>
+<CENTER>
+<H1><FONT COLOR="#000077">An Introduction to Breaching a Server Internally</FONT></H1>
+</CENTER>
+<P>This chapter briefly discusses the internal breach. An <I>internal breach</I>
+can be defined as any breach of security on a network to which the hacker or cracker
+has some access, on which he is a user with a valid account, or where he is a member
+of a company that maintains such a network.</P>
+<P>Whether you are a victim or a perpetrator of an internal breach, know this: Authorized
+users have access to an enormous amount of information that remote (and unauthorized)
+users and crackers work hard to acquire. For example, building a list of users on
+a UNIX system is only a few keystrokes away for the authorized user. It can be done
+as simply as this:</P>
+<PRE><FONT COLOR="#0066FF">ypcat passwd || cat /etc/passwd) | sed -e `s/:.*//'
+</FONT></PRE>
+<P>Compare this with building a reliable username list from the outside. This might
+entail writing a script that routinely issues <TT>finger</TT> and <TT>ruser</TT>
+requests, checks the data against an outfile, and discards dupes. Even if the network
+you are targeting is small, you could spend a lot of time trying to obtain a decent
+list. In contrast, larger networks such as ISPs might render hundreds of names at
+a time. It depends on how lazy the system administrator is at that location. As I
+discuss in Chapter 13, &quot;Techniques to Hide One's Identity,&quot; if the system
+administrator has failed to install a hacked finger daemon or failed to restrict
+finger access either marginally or completely, a huge user list can be obtained with
+a single command line. So my first point is this: Local users who have even limited
+but authorized access can obtain quite a bit of information about users.</P>
+<P>Additionally, they have access to tools that are unavailable to remote, unauthorized
+users. Exactly what those tools are depends on the system; but in most UNIX-based
+environments, this includes at least shell language access and probably Perl access.
+If the network in question is an ISP, it probably also includes access to a C compiler.
+If that ISP is running Linux, there is a strong chance that a laundry list of compilers
+is available. Most system administrators who use Linux install the majority of, if
+not all, development packages. Certainly, TCL will be available. This will probably
+be accompanied by gcc and g++, a BASIC development package, and perhaps Pascal, Python,
+FORTRAN, and others. Aren't Linux and GNU wonderful?</P>
+<P>Nevertheless, the shell languages alone are enough. These, coupled with awk and
+sed, formulate a formidable programming environment. And this doesn't apply exclusively
+to UNIX, either. Here are some power-packed development tools that could empower
+a user on other networks or platforms:
+
+<UL>
+	<LI>C and C++
+	<LI>Qbasic, BASIC, or VB
+	<LI>Envelop
+	<LI>Pascal
+	<LI>Assembly
+	<LI>Perl
+</UL>
+
+<P>In fact, user access to programming tools is an even more critical issue in the
+Windows 95 environment. NT, providing it is installed correctly, boasts strong access
+control. This control is at least as strong as in most implementations of non-trusted
+UNIX. In contrast, Windows 95 has no access control.</P>
+<P>Because of this, a local user can install such development packages on his workstation
+at any time. Most of these tools now exist in free form, either from GNU or some
+other organization or vendor. There are even TCL interpreters for Windows 95, so
+the user need not spend $400 for a development package. Contrast this with the UNIX
+and NT environments. A local user installing such packages on a local workstation
+has serious problems. For example, access control policies can prevent users from
+executing programs in certain directories. Also, disk quotas are often instituted
+on such networks. Thus, a user only gets (for example) 8MB of space for himself.
+This precludes all but the smallest compilers, and even then, installation is tricky.</P>
+<P>Conversely, a user can install anything he likes on a Windows 95 network; however,
+he probably doesn't even have to. If a full distribution of Office is available and
+no third-party access-control product has been installed, the local user will at
+least have access to WordBasic or other tools that, while not generally characterized
+as full-fledged development tools, can offer increased levels of access and control.
+Let's not even <I>consider</I> the possibilities if Java is available.</P>
+<P>Moreover, local users have an immediate avenue to the network. They are therefore
+prime candidates to place a sniffer on the drive or drives. As discussed in earlier
+chapters, this allows them to obtain (at the very least) the usernames and passwords
+of those located on the same network segment.</P>
+<P>There are other advantages of being a local user. One is simply that you are authorized
+to be there. Think of this not in terms of computers but in terms of real life. An
+individual who is about to commit a burglary late at night is already in a compromised
+position. If he is found loitering about the grounds of a local resident's home,
+he already appears suspicious. However, if he lives inside the house as a guest,
+he has every right to be lurking about at 3:00 a.m.</P>
+<P>Similarly, a local user with authorized access (who intends to exceed that access)
+is supposed to be there. Although it might seem odd for someone to be logged on in
+the middle of the night, normal user activity during the day is perfectly acceptable.</P>
+<P>With this right comes certain amenities. One is that the user's presence on the
+system need not be hurried. In contrast, a cracker who tries to leverage the simple
+access he has gained may be forced to spend only short periods on the network. Until
+he gains root (or a reasonably facsimile thereof), he is constantly under pressure
+and the threat of being discovered. In contrast, a local, authorized user can crack
+at his leisure. He need not hurry at all. In fact, he could spread his activity over
+a period of months.</P>
+<P>Furthermore, local users have the ability to use perfectly innocuous techniques
+(that in themselves cannot be deemed unauthorized) to derive information about the
+system. A user can quietly run netstat, arp, ifconfig, and other queries without
+anyone thinking twice. Therefore, he has the luxury of building an enormous knowledge
+base about the system using techniques that will likely never be logged. The system
+administrator who ends up investigating a breach that started this way can only hope
+that some of these queries were redirected to outfiles or hope for other tangible
+evidence.</P>
+<P>That said, being a local user does have its disadvantages. For instance, cracking
+under an authorized account places the user in a compromised position if trouble
+does eventually surface; the system administrator can easily determine who has been
+doing the cracking. If the cracker is unaware that his activity has been detected
+(and the system administrator has been logging that activity), he is basically up
+the creek without a paddle. Subsequent testimony of co- workers can at least establish
+that this user was sitting at that desk all day long.</P>
+<P>Moreover, the local user is under a lot of pressure to avoid leaving materials
+or evidence behind. The remote user needn't worry about this. For example, a remote
+user can issue a finger query from his local prompt and redirect the information
+to a file. No one will be scanning the remote user's directories for such files.
+In contrast, the local user cannot safely leave that information on the drive. In
+fact, if the situation is sufficiently serious, the local user shouldn't place the
+information on the drive at all, even if he intends to delete it later. Data recovery
+techniques are now sufficiently advanced that if the local user discards or otherwise
+deletes the information, it can probably be recovered. In such an instance, the smart
+local cracker will at least encrypt the data before discarding it. However, this
+may even be a wasted effort, depending on the operating system, the version, the
+type of file, and so forth.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Ever heard of MicroZap?
+	If not, you should become familiar with it. It is a utility that will obliterate
+	trace elements of files that have been (or are about to be) deleted. You can get
+	information on this utility online at <A HREF="http://www.govtech.net/"><TT>http://www.govtech.net/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>For an interesting (albeit brief) look into this problem, I suggest you read the
+article &quot;Erased Files Often Aren't,&quot; by Michael Anderson. In it, he reports
+how he received some floppy disks from a consortium of executives in law enforcement.
+He wrote:
+
+<DL>
+	<DD>As you can surmise, curiosity killed the cat and I put on my forensic computer
+	science hat and took a `forensic peek' at the diskettes. That brief examination revealed
+	the diskettes had been sanitized and the files on all of the diskettes had been &quot;erased&quot;
+	using standard DOS commands. The recovery of the erased files took just a few minutes
+	and the content of the actual files dealt with information that would not be considered
+	sensitive. However, my further examination of the diskettes revealed quite a bit
+	of sensitive data which had been written to the file slack associated with the erased
+	files.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>You can find &quot;Erased
+	Files Often Aren't,&quot; by Michael Anderson (published in <I>Government Technology
+	Magazine</I>, January, 1997) online at <A HREF="http://www.govtech.net/1997/gt/jan/jan-justice&technology2/jan-justice&technology2.shtm"><TT>http://www.govtech.net/1997/gt/jan/jan-justice&amp;technology2/jan-justice&amp;technology2.shtm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Perhaps crackers reading this aren't thoroughly convinced; perhaps that example
+was a bit too benign. What about this case, then:
+
+<DL>
+	<DD>The employees had been using the company's software illegally to manufacture
+	and market products based on the employer's proprietary program. In an attempt to
+	hide traces of their wrongdoing, the employees reformatted the hard drives on their
+	PCs before leaving their employment. The company knew that some of the information
+	on the drives might contain the electronic trail that they needed to stop the illegal
+	use of their intellectual property. They sent the drives to Ontrack's lab in Minneapolis,
+	MN, where the data was reconstructed, leading them to contact outside counsel to
+	pursue action against the former employees.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from an article by Richard K. Moher titled &quot;Computer Crime: Tips
+	on Securing and Recovering Electronic Data&quot; (originally published by New York
+	Law Publishing Company). This article can be found online at <A HREF="http://www.ljextra.com/securitynet/articles/121796s2.html"><TT>http://www.ljextra.com/securitynet/articles/121796s2.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Anatomy of a Local Crack</B></FONT></H2>
+<P>At the beginning of this book, I discussed the types of holes that exist, why
+they exist, and what impact they can have on Internet security. If you remember,
+I pointed out that local holes were far and away more common than remote ones.</P>
+<P>Remote holes are matters of extreme concern. In fact, when a remote hole surfaces,
+crackers have to work to capitalize on that hole within the first few days of its
+reporting. If they fail to do so, the hole will be swiftly closed, precluding further
+exploitation. Moreover, programmers are extremely careful when coding remote applications,
+be they client or server. Big vendors are likewise careful because applications that
+offer remote access form the very binding thread of the Internet. If these applications
+could not be trusted, the Internet would come to a grinding halt. Lastly, because
+so much focus has been on remote applications (particularly by crackers who do often
+crack across borders or even continents), it is rare to find a remote hole that can
+result in root or even privileged access.</P>
+<P>In contrast, internal applications may often be flawed. It's not that programmers
+who work on internal applications are less careful than their counterparts who code
+remote applications; rather, programmers who work on internal applications have a
+more difficult task. For example, client/server applications are generally limited
+in their scope. True, these applications may call others, but their scope is typically
+limited to a handful of operations that occur outside the client/server relationship.</P>
+<P>In contrast, local internal applications may be required to interface with dozens
+of system utilities or processes. As I mentioned at the beginning of the book, many
+don't expect these utilities or processes to have security implications. Finally,
+internal applications could be coded by anybody. Third-party vendors abound for local
+internal applications. Conversely, there are only so many vendors that design fully
+fledged server packages for a given platform. In the UNIX community, this is especially
+so. How many HTTP servers are there for UNIX? Compare this to the number of text
+editors, CD-ROM utilities, and printing tools. The latter exceed the former by a
+huge margin.</P>
+<P>This is less so in the IBM-compatible and Macintosh communities. However, these
+communities have still other problems. For example, in Windows 95, a malicious cracker
+could easily attack the underlying database system by removing just a few key files.
+So there is no comfortable trade-off.
+<H2><FONT COLOR="#000077"><B>Gathering Information</B></FONT></H2>
+<P>The internal cracker need not concern himself with complex techniques, such as
+scanning, and tools. He simply needs to know the system and its holes. This is not
+a complicated matter.</P>
+<P>Much depends upon the type of network he is attempting to crack. However, one
+thing remains universal, regardless of the platform with which he is working: known
+holes. To obtain known holes, the cracker may have to do either a little research
+or a lot (probably a little less now that this book exists).</P>
+<P>For information about internal (and remote) holes, BUGTRAQ is a great source.
+The technical level of the information available there is generally very high. Moreover,
+there are often detailed analyses of tools and techniques for a wide variety of platforms.
+A perfect example is a September 1996 posting by a software engineer from Indiana.
+He begins his posting as follows:
+
+<DL>
+	<DD>I have successfully implemented this attack against a 3.12 server, the exploit
+	is available on my web page in the Novell section. A brief explanation of the attack
+	follows... The NetWare login protocol consists of three packet exchanges between
+	the server and the client. First the client sends a request for a login key, the
+	server generates a random eight byte value and sends it to the client. Then the client
+	sends a request for the user ID of the user logging in, the server looks up the user
+	ID in the bindery and sends it to the client...
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from &quot;An Attack Against the NetWare Login Protocol,&quot; by G.
+	Miller. It can be found online at <A HREF="http://geek-girl.com/bugtraq/1996_3/0530.html"><TT>http://geek-girl.com/bugtraq/1996_3/0530.html</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>The posting continues for about three typewritten pages, complete with diagrams
+showing the methods through which keys are exchanged on a Novell NetWare login. At
+the conclusion of the posting, the author leaves his WWW page address, where one
+can find other tools to test (or circumvent) network security.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Some (though not all) of Mr. Miller's
+	tools are on the CD-ROM that accompanies this book. Two such tools are Miller's spoofing
+	utility and his C source for attacking the Novell login procedure. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>What is even more extraordinary about BUGTRAQ is that readers post to it with
+detailed information about this or that hole. When a posting like the one referenced
+previously appears, it is immediately followed by commentary from other members of
+the list. Much of the time, other members take code, policy, or theory and test it
+out in their own environment. This yields even further information about the discussed
+attack.</P>
+<P>The fact is, the majority of information posted to BUGTRAQ refers to secondary
+holes that can only be exploited by local users. Tracking a few such advisories can
+be instructive. Suppose we take HP-UX as an example; a search through BUGTRAQ looking
+for pure security advisories or holes produces some very interesting information.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>A <I>pure</I> advisory or hole is
+	any top-level posting (a posting that is the first in a series). It is quite literally
+	the first mention of that particular hole. Subsequent threads can also be significant,
+	but here I am simply demonstrating the nature of the data, not the value of it. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Have a look at a few listings:
+
+<UL>
+	<LI>December 1996: A CERT advisory is posted, reporting that the passwd utility in
+	HP-UX is flawed and contains a buffer overflow weakness. The same advisory reports
+	that two more programs (fpkg2swpkg and newgrp, respectively) contain similar flaws.
+	The bottom line? &quot;Vulnerabilities may allow local users to gain root privileges.&quot;<BR>
+	<BR>
+	
+	<LI>November 1996: CIAC Bulletin H-03 reports that several programs in HP-UX are
+	run suid root. &quot;Using these vulnerabilities, any normal user can compromise
+	security and get root access to a system or can destroy system owned files.&quot;<BR>
+	<BR>
+	
+	<LI>October 1996: An individual posts the names of 119 programs that also run suid
+	root under HP-UX, suggesting that most of them are security risks (for example, if
+	any of them have buffer overflows, they offer a local cracker root access). This
+	posting can be found online at <A HREF="http://geek-girl.com/bugtraq/1996_4/0004.html"><TT>http://geek-girl.com/bugtraq/1996_4/0004.html</TT></A>.<BR>
+	<BR>
+	
+	<LI>October 1996: CIAC Bulletin G-45 reveals a weakness in HP-VUE, a windowing system
+	in use on HP-UX. The result? &quot;By exploiting these vulnerabilities, a local user
+	can obtain root access.&quot; This bulletin can be found online at <A HREF="http://geek-girl.com/bugtraq/1996_3/0506.html"><TT>http://geek-girl.com/bugtraq/1996_3/0506.html</TT></A>.
+</UL>
+
+<P>These types of advisories are posted each day. Many of them contain explicit instructions
+for testing your state of vulnerability. These instructions generally include source
+or shell code. A local cracker need not be a genius to exploit this information.
+In fact, if a cracker is a subscriber of BUGTRAQ (and perhaps a dozen other public
+security mailing lists), he doesn't even need to search for the information. As soon
+as a vulnerability hits the wire, it is automatically mailed out to all members of
+the list. If the cracker is such a member, he gets this news hot off the press. So
+the information is there. This situation, therefore, breaks the local crack into
+two categories or classifications:
+
+<UL>
+	<LI>The crack of opportunity<BR>
+	<BR>
+	
+	<LI>The average crack
+</UL>
+
+<H3><FONT COLOR="#000077"><B>The Crack of Opportunity</B></FONT></H3>
+<P>An opportunity crack is one that suddenly emerges. This is where the cracker has
+been monitoring or at least receiving security advisories on a regular basis. He
+cranks up his browser one morning and a new vulnerability is available. This situation
+is very common.
+<H3><FONT COLOR="#000077"><B>The Average Crack</B></FONT></H3>
+<P>If an <I>average crack</I> occurs on your network, it is your fault and not the
+cracker's. That is because the average crack involves exploitation of known vulnerabilities.
+This brings us to an issue of some concern: Just what is a &quot;known vulnerability,&quot;
+and what is the time period after which your security personnel or system administrator
+should be aware of it?</P>
+<P>A known vulnerability is any vulnerability that has been <I>papered</I>. Technically,
+a vulnerability should not be deemed known until some authoritative source has acknowledged
+it. Examples of an authoritative source would be CERT, CIAC, or the vendor. However,
+you should not cast this in stone. Sometimes, vendors hide from the inevitable. They
+may know the hole exists, but may stall the publication of it until a fix has been
+found. Even though such a hole has not been papered, it is an existing, known vulnerability.
+If it has been circulated within the cracker community, it makes little difference
+whether the vendor is hiding or not. If crackers have started using the hole to exploit
+systems, and if the first case of this activity has been reported to a security group,
+the hole is real and known.</P>
+<P>Situations like this <I>do</I> arise, and you <I>can</I> identify them. They usually
+surface as follows: An individual system administrator whose site has been successfully
+attacked via the hole independently posts to a security list or newsgroup. That post
+is vague about the particulars but explains that the vendor was contacted. The post
+indicates that the vendor said it was working on a fix and an advisory. The individual
+system administrator then requests information, such as whether anyone has had similar
+experiences.</P>
+<P>In general, your system administrator or security personnel should know about
+a papered hole within one week of its discovery. That is what they are paid to do:
+Discover holes and the fixes for them. If your network gets cracked because of an
+age-old hole that has been papered for more than a year, you have a problem.
+<H3><FONT COLOR="#000077"><B>Extremely Local Users: Hardware Considerations</B></FONT></H3>
+<P>Many companies do not pay enough attention to hardware considerations. If you
+have machines that are located in such a manner that local users can tamper with
+them, expect trouble. Suppose you use a (fictional) operating system called the BOG
+operating system. (I hope no such operating system exists. If it does, I apologize.
+I have not heard of the BOG system, in any case.) Figure 23.1 shows the construction
+of this fictional operating system.</P>
+<P><A NAME="01"></A><A HREF="01.htm"><B>FIGURE 23.1.</B></A> <BR>
+<I>The fictional BOG system network.</I></P>
+<P>This figure shows a three-station network consisting of a server and two workstations.
+Suppose the BOG operating system has strong access control; the access control is
+so strong that the user on Workstation 2 (who has high access privileges) has files
+located on the drive of Workstation 1. These files can be accessed only by Workstation
+2 or root. In other words, a portion of Workstation 1's drive is owned by Workstation
+2 and root.</P>
+<P>Say Workstation 1 operates on a SCSI drive that is attached to an adapter (or
+even on board, if you like). The system administrator has installed software that
+prevents any user from booting from a floppy disk. The SCSI disk is attached to the
+desk via a locking device (these are common. I see a lot of them on Mac networks).
+The BOG operating system boots directly to a login prompt, and the local single user
+password has been disabled. It's a pretty tight setup.</P>
+<P>Now suppose Workstation 1 is located in a room on its own. Well, that's it then;
+all the security measures are for naught. The user can tamper with the equipment
+without fear of being discovered. As long as a user can chain an additional disk
+to the SCSI adapter, he can circumvent this security. He may not be able to do it
+using a disk loaded with the BOG operating system, though; he may have to use another.
+To demonstrate, assume Workstation 1 is running Windows NT. Assume the user brings
+in a SCSI disk loaded with Linux and changes the SCSI ID numbers so the adapter catches
+the Linux disk first. No further effort need be made. The Linux disk will boot to
+a login prompt, and the user logs in as root. At the time of boot, Linux will catch
+the other partition. The user need only mount the NT partition in the local (Linux)
+directory of his choice. The Linux user is root, after all. He can do anything. A
+True Story: The system administrator for a Windows for Workgroups network with third-party
+access control installed was baffled by changes in the file system. He had a logging
+utility, but the logs showed very little activity that could be deemed suspicious.
+After a few weeks, the system administrator placed a bogus database file in a directory
+and waited for someone to take the bait. The database file had a password to another
+portion of the network, where a few old, tired NetWare legacy machines were located.
+On the Novell box in question, the system administrator logged heavily. Evidence
+surfaced that someone had indeed logged in using the bait ID, but for whatever reason,
+the system administrator could not determine the identity of the user.</P>
+<P>Here comes the good part: I get called in on a Sunday morning to take a look.
+After hours of trying to determine the problem, I discovered a hidden directory on
+one machine. In that directory were several files, including <TT>gzip.exe</TT> and
+<TT>rawrite</TT>, and a hidden batch file. In the batch file were commands to load
+a Linux file system. After seeing this, I rebooted the machine and went into CMOS.
+Then, I proceeded to kick myself several times. CMOS reported a second disk. I rebooted
+again and ran the hidden batch file. This immediately caused Linux to begin loading
+on the second disk. Apparently, the user had found adequate time to lift the cover
+and install a second IDE hard disk drive. Naturally, Windows didn't see the second
+disk because the file system was exotic (at least, exotic to Windows). During lunch
+hours (or other available times), the user would load Linux and roam a while. Bizarre.</P>
+<P>For those of you who care: The employee was using a Slackware version of Linux.
+That file system was crawling with many different files plundered from the network.
+You may wondering how we, without having root, managed to peruse this disk. Make
+a note: Always carry boot disks. They are the modern equivalent of a bazooka. Any
+type of software that will circumvent the security of your system can effectively
+be put on or within proximity of your system in a manner sufficient to produce that
+breach. For example, suppose you have removed the floppy disk drive so that no one
+can load software. Safe or not? No. If your operating system carries native drivers
+for multiple devices, you have a problem. Perhaps another SCSI drive can be introduced.
+Perhaps a Zip drive can be introduced.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>TIP:</B></FONT><B> </B>On networks that use some form of
+	DOS, Plan 9 will soon become a likely hidden operating system. It is especially useful
+	because the basic distribution is so small. It would also be popular because the
+	system is exotic and not easily manipulated by a neophyte, even if he stumbles across
+	it. Most PC users wouldn't know what they were looking at.</P>
+	<P>However, for a cracker to implement this, he must either introduce a second disk
+	or he must introduce Plan 9 when the workstation is established (for example, when
+	the DOS installation occurs). The only other possibility is if he has adequate space
+	to transfer the contents of the drive temporarily while he re-partitions and installs
+	Plan 9. Depending on the speed of the network, drives, and processor, this could
+	be done in a reasonable amount of time. Detecting this could be a problem if the
+	cracker is skilled. The most reliable way would be to check the partition table or
+	compare the reported size of the disk with the actual size. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Even if the native drivers do not exist, as long as you offer your users access
+to the Internet, they can get that software in. For example, many systems may not
+natively support a Zip interface, but iomega has a site with drives for all sorts
+of systems. Here, even the existence of a serial port is a security risk.</P>
+<P>Access to the Internet for local users presents such a wide range of security
+problems, it would be difficult to fix on one particular thing. Security in this
+situation is a two-way street. For example, you don't necessarily have to have your
+network compromised. It could be your hard work instead. Here is a post to the mailing
+list maintained at <TT>firewalls@GreatCircle.COM</TT>. The author was a system administrator
+responsible for information security, and the date of the post was Friday, March
+28, 1997. The author writes:
+
+<DL>
+	<DD>I'm up through the five month statistics on what was caught outbound via the
+	firewall...over 400,000 lines of proprietary source code for one thing. All the people
+	had legitimate access internally. It makes me feel (almost) that all the regular
+	UNIX security work I've done had no meaning. Who cares if they break root if distributed
+	thieves and idiots simply email out what they already have access to?
+</DL>
+
+<P>For crackers, that is the beauty of the Internet. The best way to get through
+a firewall is to have someone inside send out the necessary information. I know individuals
+who have taken passwords and other information from companies this way. Typically,
+one member gets a contract (or a temp job) working inside. He shoots out information
+that could not be easily acquired in any other way through the firewall. One group
+I know did it to Pacific Bell. Another did it to Chevron. These are not your average
+Mom and Pop outfits.</P>
+<P>One thing that can at least stop these internal thieves from moving your valuable
+data out is Secure Computing Corporation's Secure Network Server (SNS). This National
+Security Agency-approved module filters e-mail. The system employs proprietary technology
+and, according to documentation provided by Secure Computing Corporation, the system
+
+<DL>
+	<DD>...provides Multilevel Security (MLS) by allowing the exchange of SBU or unclassified
+	information between Secret networks and SBU or Unclassified networks. The SNS customized
+	filtering and FORTEZZA digital signature capability ensures only authorized e-mail
+	is released from the protected environment.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Check out SNS online
+	at <A HREF="http://www.nsa.gov:8080/programs/missi/scc_sns.html"><TT>http://www.nsa.gov:8080/programs/missi/scc_sns.html</TT></A>.
+	It's awesome. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Indeed, there are problems even if your local users are not actively trying to
+crack your system. They may be cruising the Net as part of their job, not realizing
+that some valuable or proprietary information has inadvertently slipped out of your
+network. One example is the recent Shockwave controversy. It was recently learned
+that Shockwave can be used to breach the security of networks cruising a page:
+
+<DL>
+	<DD>A developer can use Shockwave to access the user's Netscape email folders. This
+	is done assuming the name and path to the mailbox on the users hard drive. For example
+	names such as: Inbox, Outbox, Sent and Trash are all default names for mail folders.
+	The default path to the `Inbox' on Win 95/NT would be: `C:/Program Files/Netscape/Navigator/Mail/Inbox'.
+	Then the developer can use the Shockwave command GETNETTEXT to call Navigator to
+	query the email folder for an email message. The results of this call can then be
+	fed into a variable, and later processed and sent to a server.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>The previous paragraph
+	is excerpted from an article by David de Vitry, titled &quot;Shockwave Can Read User's
+	Email.&quot; It was originally posted online at <A HREF="http://www.webcomics.com/shockwave/"><TT>http://www.webcomics.com/shockwave/</TT></A>,
+	and can also be found at <A HREF="http://www.ntsecurity.net/"><TT>http://www.ntsecurity.net/</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<H2><FONT COLOR="#000077"><B>Remote Local Users</B></FONT></H2>
+<P>A <I>remote local user</I> is a user who possesses an account on your system but
+has no physical access to it. In some respect, we are all remote local users because
+we have accounts on boxes located within the offices of our ISPs. That is, we are
+local because we are logged to the system and have a user ID and a password, but
+we are physically remote to the box itself.</P>
+<P>This is now becoming more common on private networks and is no longer simply an
+issue for ISPs and software development firms. People all over the country (even
+the world) are now doing much of their work at home or on the road. I, for one, haven't
+seen the inside of an office for over two years. Indeed, this entire book was authored,
+submitted, and edited without me ever meeting my editors; all of it was done over
+the Internet. Large firms now have their employees telecommute on a regular basis.
+AT&amp;T, for example, reported that in 1994, over 22,500 of its employees worked
+at home.</P>
+<P>A recent report titled &quot;Two Years Later A Report on the State of Telecommuting&quot;
+was released on the subject. A sample of at least 13 Fortune 500 companies revealed
+that formal telecommuting agreements between firms and employees were exceedingly
+common:
+
+<DL>
+	<DD>11 of the 13 companies have or are in the process of implementing formal telecommuting
+	programs. Two companies are conducting pilots while five companies have programs
+	that have been in place four years or longer.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>&quot;Two Years Later
+	A Report on the State of Telecommuting&quot; (1996, Smart Valley, Inc.) can be found
+	online at <A HREF="http://www.svi.org/PROJECTS/TCOMMUTE/telrpt.pdf"><TT>http://www.svi.org/PROJECTS/TCOMMUTE/telrpt.pdf</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Most of these telecommuters are logging into some type of server. These are what
+I would characterize as remote local users. Naturally, these users will probably
+have less power at a remote terminal than they would at their own. However, this
+is not always the case. Much depends on the software they are using to connect. If
+the software is identical to what they would be using without telecommuting, then
+yes, they will have essentially the same power as they would if they were sitting
+right in front of the server at the office.
+<H2><FONT COLOR="#000077"><B>The Process</B></FONT></H2>
+<P>Whether a user is a local user or a remote local user, his basic attack will be
+pretty much the same. The only tactical advantage that a true local user has is that
+he can manipulate hardware and perhaps gain access to certain tools that cannot be
+used remotely.</P>
+<P>Examples of such tools include any X applications. Although X applications can
+be maintained nicely over the Internet, this is rarely done in practice. First, it
+is a security risk; second, the client's transmission speed is usually insufficient
+(if the remote user is cruising with a 28.8 modem). The same can be said for running
+Windows or Windows NT over the Internet. Unless you have at least an ISDN at both
+ends, it's not worth the trouble. True, some applications--notably those designed
+by Microsoft--only move the underlying data as opposed to all that graphical material,
+but the larger portion of applications aren't designed that way.
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>NOTE:</B></FONT><B> </B>Note that a user's remoteness in
+	no way alters his capability to use development tools that support a CLI. 
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>Much depends on your topology and what the cracker is after. There are certain
+situations in which even the cracker's user status may not assist him in taking a
+direct route (a direct route being that of logging into his workstation at work and
+marching off from that point throughout the network). In these instances, even a
+semi-privileged user may have to come in using the same techniques as an attacker
+without an account. This typically occurs when the cracker is seeking access to a
+network segment in which he does not belong.</P>
+<P>No matter what platform you use, the only cure for these types of intrusions is
+to log heavily. Because these users have at least some level of access, there is
+a good chance that you might not be able to easily discern an attack. Remember what
+I said earlier: They have a reason and a right to be there. The following sections
+introduce some tools that might assist you in preventing (or at worst, recording)
+an internal intrusion.
+<H3><FONT COLOR="#000077"><B>The Kane Security Monitor</B></FONT></H3>
+<P>The Kane Security Monitor is available for Windows NT, and a sister application
+is available for Novell NetWare. The Kane system is extremely flexible, offering
+system administrators the ability to define their own security events. That is, you
+can assign significance to a wide range of events that might occur that, in your
+opinion, constitute a security breach. (This is in some ways the equivalent of the
+access control alarm model available in VMS.) As reported by Intrusion Detection,
+Inc., the company that developed the software:
+
+<DL>
+	<DD>A network administrator or security officer can easily set a system warning when
+	security events occur. For example, the administrator might want to be notified if
+	a new administrative account is created or deleted. Or if a user ID turned off the
+	audit trail, reset a password or accessed the CEO's desktop and copied several sensitive
+	files.
+</DL>
+
+
+
+<BLOCKQUOTE>
+	<P>
+<HR>
+<FONT COLOR="#000077"><B>Cross Reference:</B></FONT><B> </B>Find the paper from which
+	the preceding paragraph is excerpted at <A HREF="http://www.intrusion.com/ksm.htm"><TT>http://www.intrusion.com/ksm.htm</TT></A>.
+	
+<HR>
+
+
+</BLOCKQUOTE>
+
+<P>A fully functional trial version is available at
+
+<UL>
+	<LI><A HREF="ftp://ftp.intrusion.com/pub/ntev402.exe"><TT>ftp://ftp.intrusion.com/pub/ntev402.exe</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>NetXRay Protocol Analyzer and Network Monitor Software</B></FONT></H3>
+<P>Using Windows 95, are we? Try NetXRay by CINCO. This truly is a well-coded package.
+It allows monitoring of multiple network segments, and supports multiple instances
+of the monitor and capture (and analysis) of just about any type of packet you can
+dream of. What's more, you can take it for a test drive (but it will only record
+a handful of packets; it's only a demo). To do so, point your browser here:
+
+<UL>
+	<LI><A HREF="http://www.cinco.com/register.html"><TT>http://www.cinco.com/register.html</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>LANWatch Network Analyzer for DOS</B></FONT></H3>
+<P>LANWatch Network Analyzer for DOS is a well-coded utility that provides over 400
+separate filters for LAN traffic. Moreover, LANWatch screens provide color coding
+of all events and statistics. It has facilities for ongoing, real-time monitoring
+as well as snapshots for close examination of a particular event. It also runs on
+very, very low overhead. Requirements are DOS 3.3 and 512KB. This is an ideal tool
+for DOS-based network management or for anyone trying to code a utility to run over
+a network. If you are writing a custom network application for a DOS network, you
+can verify the efficacy of the application using LANWatch by watching your code in
+action. Information on LANWatch can be obtained here:
+
+<UL>
+	<LI><A HREF="http://www.guesswork.com/lwhome.html"><TT>http://www.guesswork.com/lwhome.html</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>inftp.pl</B></FONT></H3>
+<P>inftp.pl is a Perl script that records incoming FTP sessions. It was written by
+Stephen Northcutt, a system administrator on a military network. Northcutt is the
+developer of a few finely coded utilities. This utility (perhaps used in conjunction
+with another from Northcutt, called inpattern.pl) allows you to incisively log FTP
+traffic. The combination of the two utilities results in logs that trap specific
+events or patterns. Both are available at the location listed here, as is a document
+authored by Northcutt titled &quot;What Do Castles Have in Common with Corporate
+Networks?&quot; The document offers a brief (but surprisingly clear) treatment of
+firewalls. Northcutt provides some good links in the meantime. The scripts are here:
+
+<UL>
+	<LI><A HREF="http://pokey.nswc.navy.mil/Docs/intrusion.html"><TT>http://pokey.nswc.navy.mil/Docs/intrusion.html</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>SWATCH</B></FONT></H3>
+<P>SWATCH (the name is derived from the term <I>system watcher</I>) is a popular
+utility created by Stephen Hansen and Todd Atkins at Stanford. To get a closer look
+at what a SWATCH record looks like, you should go to Stephen Northcutt's site. He
+has a log posted here:
+
+<UL>
+	<LI><A HREF="http://pokey.nswc.navy.mil/SRN/intru_example.html"><TT>http://pokey.nswc.navy.mil/SRN/intru_example.html</TT></A>
+</UL>
+
+<P>The cool thing about SWATCH is that it can handle many systems. It is a quick
+and painless way to integrate the merging of data from the syslog utilities of several
+machines. SWATCH is available here:
+
+<UL>
+	<LI><A HREF="ftp://coast.cs.purdue.edu/pub/tools/unix/swatch/"><TT>ftp://coast.cs.purdue.edu/pub/tools/unix/swatch/</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>NOCOL Network Operations Center OnLine</B></FONT></H3>
+<P>NOCOL, which is for UNIX systems, monitors traffic on the network. It is a big
+package and has many important features. It uses a standard Curses-based interface,
+but has support for additional Perl modules written by the user. (It even has a Perl
+interface. Appropriately enough, it is called PerlNOCOL.) Authored by Vikas Aggarwal
+and released in late 1994, NOCOL is not something you can set up in 10 minutes. This
+is a complex and complete package, with separate monitors for each different interface.
+Check it out here:
+
+<UL>
+	<LI><A HREF="ftp://ftp.navya.com/pub/vikas/nocol.tar.gz"><TT>ftp://ftp.navya.com/pub/vikas/nocol.tar.gz</TT></A>
+</UL>
+
+<H3><FONT COLOR="#000077"><B>NeTraMet</B></FONT></H3>
+<P>NeTraMet is an interesting utility. It is a bit dated, but it works nicely and
+supports both PCs and SunOS. The distribution comes with source for both SunOS and
+IRIX, as well as pre-built executables for DOS. You can also obtain the source for
+the PC version if desired. (This is a rules-based filter and analysis tool. Be forewarned,
+however, that the documentation is in PostScript. Get an interpreter.) NeTraMet is
+here:
+
+<UL>
+	<LI><A HREF="ftp://ftp.fc.ul.pt/pub/networking/snmp/NeTraMet/"><TT>ftp://ftp.fc.ul.pt/pub/networking/snmp/NeTraMet/</TT></A>
+</UL>
+
+<H2><FONT COLOR="#000077"><B>Summary</B></FONT></H2>
+<P>Internal network breaches are far more common than you think. The problem is,
+they are not reported as fastidiously as other types of cracking activity. This is
+due primarily to the need for corporate secrecy. Many in-house crackers are caught
+and simply discharged with little fanfare.</P>
+<P>In past years, internal network security has been a concern primarily for large
+institutions or corporations. However, the rise of the personal computer changed
+that climate. Today, most businesses have some form of network. Thus, even if you
+maintain a small company, you may want to reevaluate your computer security policies.
+Disgruntled employees account for a high percentage of internal damage and theft
+of proprietary data. You should have some form of protection and--if possible--a
+disaster recovery plan.
+<H3><FONT COLOR="#000077"><B>Resources</B></FONT></H3>
+<P><B>A Guide to Understanding Data Remanence in Automated Information Systems.</B>
+NCSC-TG-025 Library No. 5-236,082. Version 2.
+
+<UL>
+	<LI><A HREF="http://bilbo.isu.edu/security/isl/drinais.html"><TT>http://bilbo.isu.edu/security/isl/drinais.html</TT></A>
+</UL>
+
+<P><B>Erased Files Often Aren't. </B>M.R. Anderson. <I>Government Technology Magazine</I>,
+January, 1997.
+
+<UL>
+	<LI><A HREF="http://www.govtech.net/1997/gt/jan/jan-justice&technology2/jan-justice&technology2.shtm"><TT>http://www.govtech.net/1997/gt/jan/jan-justice&amp;technology2/jan-justice&amp;technology2.shtm</TT></A>
+</UL>
+
+<P><B>Computer Crime: Tips on Securing and Recovering Electronic Data.</B> Richard
+K. Moher. Law Journal Extra and Law Technology Product News, originally published
+by New York Law Publishing Company.
+
+<UL>
+	<LI><A HREF="http://www.ljextra.com/securitynet/articles/121796s2.html"><TT>http://www.ljextra.com/securitynet/articles/121796s2.html</TT></A>
+</UL>
+
+<P><B>CIAC Bulletin G-45: Vulnerability in HP VUE.</B>
+
+<UL>
+	<LI><A HREF="http://geek-girl.com/bugtraq/1996_3/0506.html"><TT>http://geek-girl.com/bugtraq/1996_3/0506.html</TT></A>
+</UL>
+
+<P><B>Some Remarks on Protecting Weak Secrets and Poorly Chosen Keys from Guessing
+Attacks.</B> Gene Tsudik and Els Van Herreweghen.
+
+<UL>
+	<LI><A HREF="http://www.zurich.ibm.com/Technology/Security/publications/1993/tv93a.ps.Z"><TT>http://www.zurich.ibm.com/Technology/Security/publications/1993/tv93a.ps.Z</TT></A>
+</UL>
+
+<P><B>CERT Guidelines for Responding to a Root Compromise on a UNIX System.</B> Version
+2.0, March 1996.
+
+<UL>
+	<LI><A HREF="http://www.sevenlocks.com/Root_com.htm"><TT>http://www.sevenlocks.com/Root_com.htm</TT></A>
+</UL>
+
+<P><B>Running a Secure Server.</B> Lincoln D. Stein. Whitehead Institute/MIT Center
+for Genome Research.
+
+<UL>
+	<LI><A HREF="http://www.sevenlocks.com/secservr.htm"><TT>http://www.sevenlocks.com/secservr.htm</TT></A>
+</UL>
+
+<P><B>Securing Internet Information Servers.</B> CIAC 2308.
+
+<UL>
+	<LI><A HREF="http://ciac.llnl.gov/ciac/documents/ciac2308.html"><TT>http://ciac.llnl.gov/ciac/documents/ciac2308.html</TT></A>
+</UL>
+
+<P><B>UNIX Incident Guide How to Detect an Intrusion.</B> CIAC-2305.
+
+<UL>
+	<LI><A HREF="http://ciac.llnl.gov/ciac/documents/CIAC-2305_UNIX_Incident_Guide_How_to_Detect_an_Intrusion.pdf"><TT>http://ciac.llnl.gov/ciac/documents/CIAC-2305_UNIX_Incident_Guide_How_to_Detect_an_Intrusion.pdf</TT></A>
+</UL>
+
+<P><B>CERT(sm) Coordination Center Generic Security Information.</B> January 1995.
+
+<UL>
+	<LI><A HREF="http://www.sevenlocks.com/CERTGenericInfo.htm"><TT>http://www.sevenlocks.com/CERTGenericInfo.htm</TT></A>
+</UL>
+
+<P><B>Implementation of a Discretionary Access Control Model for Script-Based Systems.</B>
+T. Jaeger and A. Prakash. 8th IEEE Computer Security Foundations Workshop, 1995.
+
+<UL>
+	<LI><A HREF="ftp://ftp.eecs.umich.edu/people/aprakash/collaboration/papers/csfw95.ps.Z"><TT>ftp://ftp.eecs.umich.edu/people/aprakash/collaboration/papers/csfw95.ps.Z</TT></A>
+</UL>
+
+<P><B>The Distributed Compartment Model for Resource Management and Access Control
+Technical Report.</B> Steven J. Greenwald and Richard E. Newman-Wolfe. University
+of Florida, Number TR94-035, 1994.
+
+<UL>
+	<LI><A HREF="ftp://ftp.cis.ufl.edu/cis/tech-reports/tr94/tr94-035.ps.Z"><TT>ftp://ftp.cis.ufl.edu/cis/tech-reports/tr94/tr94-035.ps.Z</TT></A>
+</UL>
+
+<P><B>An Access Model for Shared Interfaces.</B> G. Smith and T. Rodden. Research
+report. Lancaster University, Computing Department, Number CSCW/8/1994, 1994.
+
+<UL>
+	<LI><A HREF="http://www.lpac.ac.uk/SEL-HPC/Articles/GeneratedHtml/hci.cscw.html"><TT>http://www.lpac.ac.uk/SEL-HPC/Articles/GeneratedHtml/hci.cscw.html</TT></A>
+</UL>
+
+<CENTER>
+<P>
+<HR>
+<A HREF="../ch22/ch22.htm"><IMG SRC="../button/previous.gif" WIDTH="128" HEIGHT="28"
+ALIGN="BOTTOM" ALT="Previous chapter" BORDER="0"></A><A HREF="../ch24/ch24.htm"><IMG
+SRC="../button/next.gif" WIDTH="128" HEIGHT="28" ALIGN="BOTTOM" ALT="Next chapter"
+BORDER="0"></A><A HREF="../index.htm"><IMG SRC="../button/contents.gif" WIDTH="128"
+HEIGHT="28" ALIGN="BOTTOM" ALT="Contents" BORDER="0"></A> <BR>
+<BR>
+<BR>
+<IMG SRC="../button/corp.gif" WIDTH="284" HEIGHT="45" ALIGN="BOTTOM" ALT="Macmillan Computer Publishing USA"
+BORDER="0"></P>
+
+<P>&#169; <A HREF="../copy.htm">Copyright</A>, Macmillan Computer Publishing. All
+rights reserved.
+</CENTER>
+
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,248 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Topics in Administration</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=01//-->
+<!--PAGES=045-050//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="01-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In looking at the examples for the two commands, you can see right away that <small>echo</SMALL> doesn&#146;t output any of the file description labels. The real <small>ls</SMALL> command won&#146;t display the file description labels either. These labels help to identify the type of files, which are directories (<small>/</SMALL>), soft links (<small>@</SMALL>), or executables (<small>*</SMALL>).</P>
+<p>So why do they show up on the <small>ls</SMALL> command? These description labels appear when the <small>-F</SMALL> argument is passed to <small>ls</SMALL>. A lot of vendors and admins like to set an alias entry in the user startup login scripts as a convenience to help identify what the files are. Check the login script that you are using&#151;.login, .profile, .cshrc, or .alias&#151;and you will see an entry similar to</P>
+<!-- CODE SNIP //-->
+<pre>
+alias ls    ls -CF
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Reasons</B></FONT></P>
+<p>There might come a time when you will not be able to use the <small>ls</SMALL> command. It might not even be accessible from miniroot. Script writing is easier without having to unalias the <small>ls</SMALL> command all the time. Using <small>echo</SMALL> displays a clean list of files within a given directory.</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>Hard system crashes or drives dying can bring systems down to the point where filesystems are so corrupted that they are unable to mount. When this occurs, at times the only way to see the system files is to use <small>echo</SMALL> for displaying the files and directories.</P>
+<p>In writing scripts for users or for the system, you never know whether the account that the script runs under has spurious alias definitions. Some users and admins can get creative with their aliases and pass multiple commands or pipe several commands together within an alias entry. To avoid having to set an <small>unalias</SMALL> in your scripts, use the <small>echo</SMALL> command. Here are some examples where <small>echo</SMALL> might be used within scripts.</P>
+<p>A variable definition:</P>
+<!-- CODE SNIP //-->
+<pre>
+list=&#145;echo *&#145;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To pass files through a loop:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+for $list in &#145;echo *&#145;
+do
+  <i>source code</I>
+done
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+alias, echo, ls
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading30"></A><font color="#000077">1.15 Building Large Dummy Files</FONT></H3>
+<h4 align="LEFT"><a name="Heading31"></A><font color="#000077">1.15.1 Description</FONT></H4>
+<p>Create large files, up to or even larger than 100MB, for testing various system functions.
+</P>
+<p><font size="+1"><b>Example One: dd</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>dd if=</B><i>file</I> <b>of=</B><i>file</I> <b>bs=</B><i>n</I> <b>count=</B><i>n</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>dd</SMALL> command has many uses. Not only will it convert files but it will also copy files. So where do you find a file over 100MB to copy or convert with <small>dd</SMALL>?</P>
+<p>Zero. Zero? Yes, there is a wonderful device called /dev/zero. This device reads from a special file that always returns a buffer full of zeros. The best thing about it is that you can use an endless amount:</P>
+<!-- CODE SNIP //-->
+<pre>
+% dd if=/dev/zero of=100megs bs=10000 count=10000
+100&#43;0 records in
+100&#43;0 records out
+
+% ls -al 100megs
+-rw-r--r--     1 foo staff      100000000 Sep 26, 01:48 100megs
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This <small>dd</SMALL> command takes 10,000 blocks of buffered zeros and copies it 10,000 times into the file called 100megs. In no time you will have a file that is exactly 100MB. The numbers can be tweaked to create a file even larger or smaller, depending on your needs.</P>
+<p><font size="+1"><b>Example Two: Scripting dd</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>Shells: All</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>bingfile.sh</B> <i>n</I>
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A quick one-line shell script called bigfile.sh can be written to pass any size in megabytes to the <small>dd</SMALL> command:</P>
+<!-- CODE SNIP //-->
+<pre>
+dd if=/dev/zero of=${1}megs bs=10000000 count=$1
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Line 1: Creates the file using a 1MB block the same number of times the script was passed.
+</P>
+<p>The value, <small>100</SMALL>, is passed to the bigfile.sh script and the <small>dd</SMALL> command creates a file called 100megs with 100 blocks, each 1MB in size, of buffered zeros.</P>
+<!-- CODE SNIP //-->
+<pre>
+% bigfile.sh 100
+100&#43;0 records in
+100&#43;0 records out
+
+% ls -al 100megs
+-rw-r--r--     1 foo staff      100000000 Sep 26, 02:02 100megs
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Any value can now be passed to the script and that exact size in megabytes will be created. This allows you the versatility to build files of any size quickly.
+</P>
+<p><font size="+1"><b>Example Three: The Perl Way</B></FONT></P>
+<p>Flavors All:
+</P>
+<p>Shells: Perl</P>
+<p>Syntax:</P>
+<!-- CODE SNIP //-->
+<pre>
+<b>bigfile.pl</B> [n]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>In this method you can use Perl to generate the 100MB file. The script fills up a file with asterisks (<small>*</SMALL>) to the exact size in megabytes that is passed to the script. It then names the file after the size that was passed to it.</P>
+<!-- CODE //-->
+<pre>
+#! /usr/local/bin/perl
+
+$SIZE=shift(@ARGV);
+$LIST=&#147;&#148;;
+
+open (FILE, &#147;&gt; megfile&#148;);
+{
+  for ($CNT = 0; $CNT &lt; 100000; $CNT&#43;&#43; )
+    { print FILE &#147;**********&#148;; }
+}
+close(FILE);
+
+for ($CNT = 0; $CNT &lt; $SIZE; $CNT&#43;&#43; )
+  { $LIST=&#147;$LIST megfile&#148; }
+
+&#145;cat $LIST &gt; ${SIZE}megs&#145;;
+</PRE>
+<!-- END CODE //-->
+<p>Line 1: Define the location and Perl script being used.
+</P>
+<p>Line 3: Read in the size, in megabytes, that the file will be.</P>
+<p>Line 4: Null the 1MB file count variable.</P>
+<p>Lines 6&#150;11: Create the first 1MB and call it <i>megfile.</P>
+<p></I>Lines 13&#150;14: Duplicate the 1MB file the same number of times as the amount that is being passed to the program into the file count variable.</P>
+<p>Line 16: Perform a <small>cat</SMALL> and duplicate the 1MB file into the final file that will contain it.</P>
+<p>To have this script generate a 100MB file, type the following command:</P>
+<!-- CODE SNIP //-->
+<pre>
+% bigfile.pl 100
+% ls -al 100*
+-rw-r--r--     1 foo staff      100000000 Sep 26, 02:55 100megs
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The script automatically builds a 1MB file and copies it 100 times. The file that results is called 100megs.
+</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>There is always a need for creating large files. The most common is for testing purposes. You always need to test new disks, controllers, SCSI buses, and network bandwidth timing issues.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>There is nothing worse than to see a disk drive about to die. On occasion, you might see a read/write IO error on your console or in your system logs, but the disks appear to be fine. One simple test&#151;moving a very large file across filesystems, through controllers, and SCSI buses&#151;can help diagnose where the problem resides. Small files often can&#146;t make the problem appear.
+</P>
+<p>Creating a very large file and using <small>ftp, rcp</SMALL>, or NFS to copy the file across the network helps in monitoring the network traffic and bandwidth when a packet sniffer is attached to a network. In diagnosing problems on a network, small files aren&#146;t enough sometimes to see where the problem exists. At times there is so much traffic moving across the network that small transfers can be the needle in a haystack while trying to sniff for the problem.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+dd, zero
+</PRE>
+<!-- END CODE SNIP //-->
+<h3><a name="Heading32"></A><font color="#000077">1.16 Burning-in Disk Drives</FONT></H3>
+<h4 align="LEFT"><a name="Heading33"></A><font color="#000077">1.16.1 Description</FONT></H4>
+<p>There are various burn-in methods for testing new drives. These include creating a very large file and then coping it a number times in an endless loop in various ways.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="01-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="01-11.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

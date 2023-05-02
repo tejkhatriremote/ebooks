@@ -1,0 +1,165 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Windows 2000 Debugging</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=08//-->
+<!--PAGES=263-267//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="../ch07/07-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h2><a name="Heading1"></A><font color="#000077">Chapter 8<br>Windows 2000 Debugging
+</FONT></H2>
+<p><big><b>In This Chapter</B></BIG></P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Windows Debugging Strategies <i>264</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Making Your Code More Easily Debuggable <i>265</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Windows 2000 Debugging Overview <i>269</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Using the Visual C<small>&#43;&#43;</SMALL> Integrated Debugger <i>270</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Using WINDBG, the Windows Debugger <i>277</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Using SoftIce to Debug Programs <i>278</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Using Dr. Watson to Find the Cause of Crashes <i>279</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Using BugTrapper to Find the Cause of Crashes <i>282</I></B>
+<dd><b>&#149;</B>&nbsp;&nbsp;<b> Sources for Third-party Tools <i>282</I></B>
+</DL>
+<p>This chapter discusses debugging tools and strategies that are available to you as a Windows 2000 developer. You probably already have most of the tools discussed in this chapter, because many of them are supplied by Microsoft with Visual Studio and the Platform SDK. This chapter also discusses some of the more popular third-party development tools, such as the SoftIce debugger from NuMega.
+</P>
+<h3><a name="Heading2"></A><font color="#000077">Windows Debugging Strategies</FONT></H3>
+<p>You can debug a software application in many ways. The best debugging and testing tips, however, apply to activities that occur before a bug is discovered. There are a few software quality, testing, and debugging tips that most experienced developers are aware of. Here are some of my favorite software quality tips:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;It&#146;s much better to find a bug early in the development process than later. A bug discovered after a product is released is expensive to correct and will cost you (or your organization) customer goodwill. It also eats up time better spent developing new products.
+<dd><b>&#149;</B>&nbsp;&nbsp;A bug found early is easier to detect, trap, and correct. On your development station, you probably have the Visual C<small>&#43;&#43;</SMALL> compiler and integrated debugger. If you have the Platform SDK, you also have the Microsoft kernel debuggers and other bug-trapping tools. If you develop products commercially, you may have already invested in third-party tools. Any bugs found on your development station are much easier to analyze and correct than bugs found on machines without debugging tools.
+<dd><b>&#149;</B>&nbsp;&nbsp;Good development and testing tools make a difference. Third-party testing and debugging tools such as BoundsChecker, Visual Test, SoftIce, and BugTrapper may each cost more than your C<small>&#43;&#43;</SMALL> compiler, but they can pay for themselves many times over by enabling you to discover bugs early&#151;while they&#146;re still on your development station.
+<dd><b>&#149;</B>&nbsp;&nbsp;Understand the amount of code coverage you achieve during your testing. It&#146;s not unusual for applications to have a great deal of untested code, unless a code-coverage tool is used to identify portions of your source code that have not been tested. Who should execute that code first, you or your customer?
+</DL>
+<h3><a name="Heading3"></A><font color="#000077">Making Your Code More Easily Debuggable</FONT></H3>
+<p>The most important step you can take to improve your debugging efficiency is to develop applications that are easily debuggable. You can do this by taking advantage of application-level support that&#146;s built into the operating system to enable your application to communicate with the debugger. You can also take advantage of the support in your development tools in order to catch bugs early&#151;before they cause a problem for one of your customers.
+</P>
+<h4 align="LEFT"><a name="Heading4"></A><font color="#000077">Debugging Support for Windows 2000</FONT></H4>
+<p>Windows 2000 offers a number of functions that an application can use to communicate with a debugger:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>OutputDebugString</SMALL>. Sends a string to the debugger, which can display the string in an output window.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DebugBreak</SMALL>. Creates a user breakpoint exception, causing the debugger to stop at the line that calls <small>DebugBreak</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IsDebuggerPresent</SMALL>. Returns <small>TRUE</SMALL> if the current process is running in the context of a debugger.
+</DL>
+<p>The <small>OutputDebugString</SMALL> function is used to send display information to the debugger. Messages sent to the debugger typically include trace information about the internal state of the program as well as diagnostic information about errors that occur at runtime.</P>
+<p>The <small>OutputDebugString</SMALL> function has one parameter&#151;the string to be passed to the debugger:</P>
+<!-- CODE SNIP //-->
+<pre>
+OutputDebugString(_T(&#147;Can&#146;t find Po&#148;));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If a debugger isn&#146;t attached to the process, the function is ignored.
+</P>
+<p>The <small>DebugBreak</SMALL> function is used to create a hard-coded breakpoint in your application. If you&#146;re running in the debugger, it will halt inside a call to <small>DebugBreak</SMALL>. If you&#146;re not running in the debugger, a message box similar to the one shown in Figure 8.1 will be displayed.</P>
+<p><a name="Fig1"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-01.jpg',391,163 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-01t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-01.jpg',391,163)"><font color="#000077"><b>Figure 8.1</B></FONT></A>&nbsp;&nbsp;A call to <small>DebugBreak</SMALL> will cause the just-in-time debugging message box to be displayed.
+</P>
+<p>Clicking OK terminates the application. Clicking Cancel attaches the default debugger to the process. <small>DebugBreak</SMALL> will cause a breakpoint exception even in non-debug builds.</P>
+<p>The <small>IsDebuggerPresent</SMALL> function is used to determine whether the application is running in a debugger. If the application is not attached to a debugger, <small>IsDebuggerPresent</SMALL> returns <small>FALSE</SMALL>. If the application is running in a debugger, the function returns a nonzero value.</P>
+<h4 align="LEFT"><a name="Heading5"></A><font color="#000077">MFC Support for Debugging</FONT></H4>
+<p>If you&#146;re writing applications using MFC, you can take advantage of three macros to help you test and debug your code:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>ASSERT</SMALL> macro is used to test an assumption in your code that should be true. The <small>ASSERT</SMALL> macro is only evaluated in debug MFC builds; the macro has no effect when compiling a release build.
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>VERIFY</SMALL> macro is used to test the result of an expression. The expression contained inside the <small>VERIFY</SMALL> macro is included in both release and debug builds. However, the macro takes no action in release builds.
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>TRACE</SMALL> macro is used to send messages to the debug terminal and is basically a sophisticated C<small>&#43;&#43;</SMALL> macro wrapped around a call to <small>OutputDebugString</SMALL>.
+</DL>
+<p>The <small>ASSERT</SMALL> and <small>VERIFY</SMALL> macros are used to verify whether expressions are true. If an expression inside an <small>ASSERT</SMALL> or <small>VERIFY</SMALL> macro isn&#146;t true, a message box similar to the one shown in Figure 8.2 is displayed.</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-02.jpg',366,215 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch08/images/08-02.jpg',366,215)"><font color="#000077"><b>Figure 8.2</B></FONT></A>&nbsp;&nbsp;A failed expression inside an <small>ASSERT</SMALL> macro will cause a message box to be displayed.
+</P>
+<p>Use the <small>ASSERT</SMALL> macro whenever a statement will only be tested in debug builds. Any statements included inside an <small>ASSERT</SMALL> macro are removed for release builds, so you can be generous with <small>ASSERT</SMALL> macros and still have a slimmed-down executable as your final release.</P>
+<p>The <small>VERIFY</SMALL> statement is used when you want to test the return value from a function that&#146;s necessary in a release build. The <small>VERIFY</SMALL> macro is typically applied tofunctions that return <small>BOOL</SMALL> or <small>HANDLE</SMALL> values, such as the <small>CDC::FromHandle</SMALL> member function:</P>
+<!-- CODE SNIP //-->
+<pre>
+CDC* pdcTemp;
+VERIFY(pdcTemp = CDC::FromHandle(hDC));
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If <small>pdcTemp</SMALL> is <small>NULL</SMALL> in a debug build, the <small>VERIFY</SMALL> macro will take the same action as a failed <small>ASSERT</SMALL> macro&#151;the Failed Assertion message box will be displayed to the user.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="../ch07/07-10.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="08-02.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,220 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Distributed Security</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=07//-->
+<!--PAGES=259-262//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="07-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch08/08-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Using the ConvertAccessToSecurityDescriptor Function</B></FONT></P>
+<p>The process of converting an access control list into a security descriptor has been simplified in Windows 2000. If you&#146;re using trustee-based access control lists, you can simply call the <small>ConvertAccessToSecurityDescriptor</SMALL> function to create a security descriptor that contains access control list, owner, and group information that you pass as parameters.</P>
+<p>The <small>ConvertAccessToSecurityDescriptor</SMALL> function is declared as follows:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD ConvertAccessToSecurityDescriptor(PACTRL_ACCESS pAccessList,
+                            PACTRL_AUDIT pAuditList,
+                            LPCTSTR lpOwner,
+                            LPCTSTR lpGroup,
+                            PSECURITY_DESCRIPTOR *ppSecDescriptor);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>ConvertAccessToSecurityDescriptor</SMALL> has five parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>PACTRL_ACCESS</SMALL> structure that will be used to create the <small>DACL</SMALL> of the security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>PACTRL_AUDIT</SMALL> structure that will be used to create the <small>SACL</SMALL> of the security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that contains the owner&#146;s name for the security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that contains the primary group name for the security descriptor.
+<dd><b>&#149;</B>&nbsp;&nbsp;The <small>ConvertAccessToSecurityDescriptor</SMALL> function returns zero, if successful, or a Win32 error code upon failure.
+</DL>
+<p>An example of using the <small>ConvertAccessToSecurityDescriptor</SMALL> and other trustee-based access control functions is provided in Listing 7.9. The function in Listing 7.9 creates a security descriptor for a named pipe that denies access to the author.</P>
+<p><b>Listing 7.9</B> Creating a Security Descriptor for a Named Pipe</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+/*
+ * Create a security descriptor that restricts the author from
+ * accessing a named pipe. The caller must use LocalFree to release
+ * the memory used by the security descriptor.
+ */
+PSECURITY_DESCRIPTOR CreateAntiAuthorSecurityDescriptor(void)
+{
+
+    ACTRL_ACCESS_ENTRY   ae;
+    PACTRL_ACCESS        pal = NULL;
+    PSECURITY_DESCRIPTOR psd = NULL;
+    DWORD                dwErr = 0;
+
+    __try
+    {
+        ZeroMemory(&ampae, sizeof(ae));
+        BuildTrusteeWithName(&ampae.Trustee,
+                             _T(&#147;codevtech.com\\mickeyw&#148;));
+
+        ae.Inheritance = NO_INHERITANCE;
+        ae.fAccessFlags = ACTRL_ACCESS_DENIED;
+        ae.Access = ACTRL_FILE_CREATE_PIPE;
+        dwErr = SetEntriesInAccessList(1,
+                                       &ampae,
+                                       SET_ACCESS,
+                                       NULL,
+                                       NULL,
+                                       &amppal);
+        if(dwErr) __leave;
+        dwErr = ConvertAccessToSecurityDescriptor(pal,
+                                                  NULL,
+                                                  NULL,
+                                                  NULL,
+                                                  &amppsd);
+        if(dwErr) __leave;
+    }
+    __finally
+    {
+        if(dwErr)
+            HandleError(_T(&#147;Security&#148;));
+        if(pal) LocalFree(pal);
+        return psd;
+    }
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 7.9, the function starts by calling the <small>BuildTrusteeWithName</SMALL> function to initialize an <small>ACTRL_ACCESS_ENTRY</SMALL> structure. Next, an <small>ACTRL_ACCESS</SMALL> structure is created. Then it&#146;s converted into a security descriptor with the <small>ConvertAccessToSecurityDescriptor</SMALL> function.</P>
+<h3><a name="Heading18"></A><font color="#000077">Impersonating a Client</FONT></H3>
+<p>As discussed at the beginning of this chapter, servers typically impersonate a client in order to access secured objects. During the impersonation process, the server&#146;s impersonation token will assume the security characteristics of the client. This simplifies the security model, because Windows 2000 will simply use the thread&#146;s impersonation token to perform access checks.
+</P>
+<p>To begin impersonation, the server calls one of the following impersonation functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ImpersonateNamedPipeClient</SMALL>. Used when the client and server are connected via a named pipe
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ImpersonateLoggedOnUser</SMALL>. Used when the client is the currently logged-on user
+</DL>
+<p>After a server has finished accessing resources on behalf of the client, it stops impersonating the client by calling the <small>RevertToSelf</SMALL> function.</P>
+<p>As an example of how a server process uses impersonation to use the client&#146;s security context, the CD-ROM that accompanies this book includes the following projects:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FilePipeServer</SMALL>. A console mode application that hosts a named pipe and attempts to open files on behalf on clients that connect to the pipe.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FilePipeClient</SMALL>. A console mode application that connects to <small>FilePipeServer</SMALL> through a named pipe and sends it the names of files that should be opened using its access token.
+</DL>
+<p>If you don&#146;t understand how named pipes work, don&#146;t worry. Named pipes are discussed in detail in Chapter 26, &#147;Pipes.&#148; The only function in the <small>FilePipeServer</SMALL> project that relates to security is provided in Listing 7.10. In the <small>TestFileForAccess</SMALL> function, the server impersonates the named-pipe client and attempts to open a filename passed as a parameter.</P>
+<p><b>Listing 7.10</B> A Function That Impersonates a Client Before Attempting File Access</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+BOOL TestFileForAccess(HANDLE hPipe, LPCTSTR szFileName)
+{
+    HANDLE hFile;
+    BOOL   fAllowed = FALSE;
+    // impersonate the client
+    ImpersonateNamedPipeClient(hPipe);
+
+    // Open file for reading and writing
+    hFile = CreateFile(szFileName,
+                       GENERIC_READ|GENERIC_WRITE,
+                       0,
+                       NULL,
+                       OPEN_EXISTING,
+                       FILE_ATTRIBUTE_NORMAL,
+                       NULL);
+    if(hFile != INVALID_HANDLE_VALUE)
+    {
+        fAllowed = TRUE;
+        CloseHandle(hFile);
+    }
+
+    // Revert to primary access token
+    RevertToSelf();
+    return fAllowed;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In Listing 7.10, the <small>TestFileForAccess</SMALL> function begins by impersonating the client located on the other end of the named pipe. Next, the function attempts to open the file using the filename passed as a parameter. The file is accessed using the client&#146;s access token rather than the server&#146;s. Before returning, the function calls <small>RevertToSelf</SMALL> to start using the server&#146;s access token rather than the impersonation token.</P>
+<p>It&#146;s very easy to run the <small>FilePipeServer</SMALL> and <small>FilePipeClient</SMALL> programs. You can run these programs on the same computer or on separate computers on a network. Start the <small>FilePipeServer</SMALL> program first, then the <small>FilePipeClient</SMALL>. The <small>FilePipeClient</SMALL> will prompt you for the name of the remote server and the name of the file to be opened. The server will then try to open the file, and the client and server programs will display the results. When you&#146;re finished, enter <small>Quit</SMALL> when prompted for a filename by the client.</P>
+<h3><a name="Heading19"></A><font color="#000077">Summary</FONT></H3>
+<p>This chapter has discussed Windows 2000 security, including both the traditional low-level security structures and functions and the newer trustee-based access control functions offered by Windows 2000. This chapter also included an example of how a server can use impersonation to properly handle access requests from a client.
+</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="07-09.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="../ch08/08-01.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

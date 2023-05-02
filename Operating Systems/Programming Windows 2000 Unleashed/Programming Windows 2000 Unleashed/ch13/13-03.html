@@ -1,0 +1,156 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:COM and OLE Concepts</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=13//-->
+<!--PAGES=418-421//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="13-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading14"></A><font color="#000077">Handling the Versioning Problem</FONT></H4>
+<p>The notion of interfaces in COM is meant to solve two common problems that occur when trying to develop component-based software: tracking versions and maintaining backward compatibility.
+</P>
+<p>After a traditional software component is released, its interfaces must be frozen. Any changes to the component&#146;s interface risk breaking existing programs that depend on the current interface. Any change to an existing interface may make the new interface unusable to existing clients of the component. Additionally, any new interfaces remain undiscovered until the client program is rebuilt.</P>
+<p>COM removes these issues by defining <i>interfaces</I> as groups of one or more related functions that can be applied to an object. Once defined, an interface is never changed. Modifying an interface does not create a new version of an existing interface; instead, it creates a brand new interface, with a new identity and responsibilities.</P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Using the IUnknown Interface</FONT></H4>
+<p>Every COM object supports the <small>IUnknown</SMALL> interface. Every COM interface also includes the <small>IUnknown</SMALL> interface, which is used as a starting point for all communication in COM. The <small>IUnknown</SMALL> interface has three simple but very important functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>AddRef</SMALL>. Increments an internal reference counter and is called once for every pointer created to a COM interface. Reference counting is discussed in the next section.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>Release</SMALL>. Decrements an internal reference counter and is called when pointers to COM interfaces are released. When the counter reaches 0, the object destroys itself.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>QueryInterface</SMALL>. Returns a pointer to other COM interfaces supported by the same object. This is the mechanism used to move on past the <small>IUnknown</SMALL> interface; it&#146;s discussed later in the section titled &#147;Querying for Another Interface.&#148;
+</DL>
+<p><font size="+1"><b>Reference Counting</B></FONT></P>
+<p>The lifetime of a COM object is strictly controlled by an internal reference count maintained by the object that represents the number of pointers clients have created to its interfaces. Several general rules apply to reference counting:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When an object is created, its constructor sets the reference count to 0.
+<dd><b>&#149;</B>&nbsp;&nbsp;Whenever a pointer to an interface is provided to a client of the object, the reference count is incremented by the function that creates the pointer (usually by calling the <small>AddRef</SMALL> function).
+<dd><b>&#149;</B>&nbsp;&nbsp;When a pointer no longer is used, the internal reference count is decremented by calling <small>Release</SMALL>. This enables each object to know how many external clients currently are connected to it. When the internal counter transitions to 0, the object is no longer used, and it usually destroys itself.
+</DL>
+<p>These steps can be optimized for objects that aren&#146;t created on the heap. For statically created objects, the reference-counting operations are essentially empty operations. However, this is an implementation decision that&#146;s made by the server&#151;the client must still follow the rules for reference counting.
+</P>
+<p>As an example, look at the COM interfaces involved in ringing a simulated telephone. In Figure 13.6, a <small>TelephoneCall</SMALL> object is created by calling the <small>CoCreateInstance</SMALL> function (this function is discussed later in the section titled &#147;Creating an Object&#148;). Because this function returns a pointer to the <small>IUnknown</SMALL> interface for the <small>TelephoneCall</SMALL> object, the reference count for the object is already incremented when the pointer is returned. At this point, the reference count is 1, because there&#146;s one pointer to the <small>TelephoneCall</SMALL> object.</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-06.jpg',500,275 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-06.jpg',500,275)"><font color="#000077"><b>Figure 13.6</B></FONT></A>&nbsp;&nbsp;A <small>TelephoneCall</SMALL> object is created with one interface pointer, and the reference count is set to 1.
+</P>
+<p>You now have a pointer to an interface for the <small>TelephoneCall</SMALL> object, but it&#146;s a pointer to its <small>IUnknown</SMALL> interface. Note that the pointer does not point to the <small>TelephoneCall</SMALL> object; rather, it points to an interface.</P>
+<p>In order to get a pointer to the <small>ITerminating</SMALL> interface, you must ask your current interface for a pointer to <small>ITerminating</SMALL>. When this pointer is passed back to you, the interface count on the <small>TelephoneCall</SMALL> object is incremented, as shown in Figure 13.7.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-07.jpg',500,275 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-07.jpg',500,275)"><font color="#000077"><b>Figure 13.7</B></FONT></A>&nbsp;&nbsp;A new pointer to a <small>TelephoneCall</SMALL> interface is created, and the reference count is incremented.
+</P>
+<p>After you have the pointer to the <small>ITerminating</SMALL> interface, you can start performing useful work, such as ringing the telephone. You don&#146;t need the original <small>IUnknown</SMALL> interface pointer, however. Before discarding or overwriting this pointer, you must call the <small>IUnknown::Release</SMALL> function, which decrements the <small>TelephoneCall</SMALL> object&#146;s reference count back to 1, as shown in Figure 13.8.</P>
+<p>For the purposes of this simple example, assume that the telephone remains unanswered. After you decide to stop ringing the telephone, you call <small>Release</SMALL> through the <small>ITerminating</SMALL> interface pointer, thus decrementing the <small>TelephoneCall</SMALL> object&#146;s reference count to 0 and destroying the object, as shown in Figure 13.9.</P>
+<p>In practice, there&#146;s no way to reliably determine whether you have the last interface pointer to an object. Although <small>Release</SMALL> returns the current reference count, in a multithreaded environment, this information is useful only if you&#146;re looking for the last call to <small>Release</SMALL>, which always returns 0. For that reason, it&#146;s considered a poor practice to use an interface pointer after calling <small>Release</SMALL>.</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-08.jpg',500,275 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-08.jpg',500,275)"><font color="#000077"><b>Figure 13.8</B></FONT></A>&nbsp;&nbsp;A <small>TelephoneCall</SMALL> interface pointer is destroyed, and the reference count is decremented.
+</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-09.jpg',500,275 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch13/images/13-09.jpg',500,275)"><font color="#000077"><b>Figure 13.9</B></FONT></A>&nbsp;&nbsp;The last interface pointer to a <small>TelephoneCall</SMALL> object is released, and the object is destroyed.
+</P>
+<p><font size="+1"><b>Querying for Another Interface</B></FONT></P>
+<p>A pointer to any interface supported by an object can be retrieved by calling <small>QueryInterface</SMALL>. Along with <small>AddRef</SMALL> and <small>Release</SMALL>, <small>QueryInterface</SMALL> is part of the <small>IUnknown</SMALL> interface, so it&#146;s safe to call <small>QueryInterface</SMALL> through any interface pointer. <small>QueryInterface</SMALL> accepts two parameters and returns a handle to a result code, as shown in Listing 13.3.</P>
+<p><b>Listing 13.3</B> Using <small>QueryInterface</SMALL> to Get a Pointer to <small>IFoo</SMALL><hr></P>
+<!-- CODE //-->
+<pre>
+IFoo    *pFoo;
+HRESULT hr;
+hr=pIUnknown-&gtQueryInterface( IID_IFoo, &amppFoo );
+if( FAILED(hr) )
+{
+    // Interface not obtainable, report error or work
+    // with other interfaces.
+}
+else
+{
+    // Use the IFoo interface, and release it when finished.
+    pFoo-&gtRelease();
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="13-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="13-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

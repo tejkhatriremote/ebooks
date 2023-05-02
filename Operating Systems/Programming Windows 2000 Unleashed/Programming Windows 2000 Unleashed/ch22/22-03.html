@@ -1,0 +1,194 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Building Components for COM[TITLE]#43; Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=22//-->
+<!--PAGES=734-739//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="22-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading7"></A><font color="#000077">Creating a General Transaction Component</FONT></H4>
+<p>The simplest COM object to create is one that supports transactions but does not explicitly call the transaction context. This way of creating objects is okay, but it allows for less tuning (see Figure 22.4).
+</P>
+<p><a name="Fig4"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-04.jpg',205,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-04t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-04.jpg',205,420)"><font color="#000077"><b>Figure 22.4</B></FONT></A>&nbsp;&nbsp;Single COM&#43; object being called.</P>
+<p>A client creates a single object. This object is added to the COM&#43; application with the attribute <small>-Requires a transaction</SMALL>. Here&#146;s some JavaScript code that could be used to call this client:</P>
+<!-- CODE SNIP //-->
+<pre>
+   var objClient;
+   objClient = WScript.CreateObject(&#147;Sample.Object.1&#148;);
+   objClient.method1();
+   objClient.method2();
+   objClient = null;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>When the object is instantiated in the script, a transaction is started. When <small>method1</SMALL> and <small>method2</SMALL> are called, the transaction context is not manipulated. In these situations, COM&#43; services will consider the methods as part of an activity and not deactivate the object. The object is deactivated when the reference to the object is destroyed, as is done in the last JavaScript line. At this point, COM&#43; services will instantiate a two-phase commit and attempt to make the data durable.</P>
+<p>What did that code show? It is not necessary to call the transaction context. This means it is not necessary to convert old business objects. There is a problem with this approach. The old business objects assume that the transaction or activity is limited to the calling of method1 and method2. Now suppose a new script writer who does not understand the business objects or transactions properly decides to call method3 in the same script. COM&#43; transaction says, great, the transaction includes method3. The bug is that at an abstraction level the activity is only method1 and method2. method3 belongs to another activity.</P>
+<p>So you see that although it is easy to run and execute a transaction, sometimes it may have undesirable side effects. And the side effects are what will add bugs to your system. Therefore when using old business objects, make sure that they are activity based.</P>
+<p>This approach is best used for simple situations. It&#146;s also appropriate for legacy situations where rewriting the COM object may be too much work.</P>
+<h4 align="LEFT"><a name="Heading8"></A><font color="#000077">Creating a Transaction COM&#43; Object Using Visual C&#43;&#43;</FONT></H4>
+<p>The most effective way to create a COM&#43; services object is to create it using ATL. To create a COM object, start the Visual C<small>&#43;&#43;</SMALL> environment. From the menu bar, select File, New. The resulting dialog box is shown in Figure 22.5.</P>
+<p>From the Project tab, select ATL COM AppWizard and enter the Project name VCBookStore. Then click the OK button.</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-05.jpg',559,400 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-05.jpg',559,400)"><font color="#000077"><b>Figure 22.5</B></FONT></A>&nbsp;&nbsp;Creating a Visual C&#43;&#43; COM component project.</P>
+<p>In the first AppWizard screen, make sure the Support MTS box is checked (see Figure 22.6). This will include all the MTS headers that you&#146;ll need. This brings up a bit of an issue. Windows 2000 does not require you to include <small>mts.h</SMALL>. Instead, you can include <small>autosvcs.h</SMALL>. However, there&#146;s no support from the wizard; therefore, anything you add will have to be done manually. Click the Finish button and let the wizard generate the project.</P>
+<p><a name="Fig6"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-06.jpg',477,383 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-06t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-06.jpg',477,383)"><font color="#000077"><b>Figure 22.6</B></FONT></A>&nbsp;&nbsp;Defining the type of project.</P>
+<blockquote>
+<p><font size="-1"><hr><b>Tip:&nbsp;&nbsp;</B>
+<p>Do not combine MFC and ATL haphazardly. Although it&#146;s possible, MFC is a great user interface library. Its role as a server framework is limited. ATL is much better for business objects that do not have a GUI.
+</P>
+</FONT><hr>
+</BLOCKQUOTE>
+<p>The next step is to create a component. From the class view, right-click and select New ATL Object from the pop-up menu.
+</P>
+<p>By default, the dialog box selects the category &#147;Objects&#148; and the object type &#147;SimpleObject,&#148; as shown in Figure 22.7. This is correct. Click on the Next button.</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-07.jpg',413,257 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-07.jpg',413,257)"><font color="#000077"><b>Figure 22.7</B></FONT></A>&nbsp;&nbsp;Adding a COM&#43; object.</P>
+<p>In the short name type NIOrder, as shown in Figure 22.8. Then, click on the Attributes tab to get the dialog box shown in Figure 22.9.
+</P>
+<p><a name="Fig8"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-08.jpg',420,276 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-08t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-08.jpg',420,276)"><font color="#000077"><b>Figure 22.8</B></FONT></A>&nbsp;&nbsp;Identifying the name of the COM&#43; object.</P>
+<p><a name="Fig9"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-09.jpg',420,276 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-09t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch22/images/22-09.jpg',420,276)"><font color="#000077"><b>Figure 22.9</B></FONT></A>&nbsp;&nbsp;Defining the COM&#43; object properties.</P>
+<p>Keep all the default settings, but check the Support ISupportErrorInfo check box.
+</P>
+<p>One option is to select Both as the Threading Model setting. Only select this if you want your component to be able to run as a free threaded object. Finally, click the OK button. Now you have a COM&#43; services component. The next step is to add some plumbing.</P>
+<p><font size="+1"><b>Specifying the Transaction Attribute</B></FONT></P>
+<p>With COM&#43;, the transactional attribute is specified at the IDL level. Here&#146;s an example:
+</P>
+<!-- CODE //-->
+<pre>
+       [
+           object,
+           uuid(AD8A2F1F-9D18-11D2-86DF-0000B45FCBCB),
+           dual,
+           helpstring(&#147;IICaller Interface&#148;),
+           pointer_default(unique),
+           TRANSACTION_REQUIRED
+       ]
+       interface IICaller : IDispatch
+       {
+           [id(1), helpstring(&#147;method callChild&#148;)] HRESULT callChild();
+       };
+</PRE>
+<!-- END CODE //-->
+<p>The attribute <small>TRANSACTION_REQUIRED</SMALL> is added to the property list of the interface. COM&#43; services will pick up this information and set the default transaction characteristic. Here are the various options:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRANSACTION_REQUIRED</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRANSACTION_SUPPORTED</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRANSACTION_NOT_SUPPORTED</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TRANSACTION_REQUIRES_NEW</SMALL>
+</DL>
+<p><font size="+1"><b>Retrieving the Transaction Context Interface</B></FONT></P>
+<p>In our development, whenever a method or property is called, the transaction context must be retrieved. It&#146;s retrieved using the following function:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   HRESULT GetObjectContext (
+       IObjectContext** ppInstanceContext );         [out]
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This function returns an <small>IObjectContext</SMALL> interface pointer. You can&#146;t use this function from within the C<small>&#43;&#43;</SMALL> class constructor, destructor, or any method within the <small>IUnknown</SMALL> interface. This is because at that point, the transaction context might not be valid. However, because we&#146;re using ATL, <small>IUnknown</SMALL> will not be a topic of discussion.</P>
+<p>For every method or property, the prototype implementation would be as follows:</P>
+<!-- CODE //-->
+<pre>
+   STDMETHODIMP CIntroUser::add(BSTR firstName, BSTR lastName,
+   BSTR email, BSTR password)
+   {
+       CdbouserAdd2001 var;
+       IObjectContext *pCtxt;
+
+       GetObjectContext( &amppCtxt);
+       // Some work
+       pCtxt-&gtRelease();
+       return S_OK;
+   }
+</PRE>
+<!-- END CODE //-->
+<p>The <small>IObjectContext</SMALL> interface pointer is a raw interface and therefore must be released using <small>IUnknown::Release</SMALL>.</P>
+<p>When this function is called, it returns an <small>S_OK</SMALL> if the interface has been retrieved and is valid. However, consider the case where the component has not yet been imported into the MTS catalog. Calling this function will result in <small>CONTEXT_E_NOCONTEXT</SMALL> being returned. The returned interface pointer in <small>ppInstanceContext</SMALL> will not be valid and should not be used. Otherwise, a GPF could result. For other circumstances, either <small>E_INVALIDARG</SMALL> or <small>E_UNEXPECTED</SMALL> may be returned. If either of these return codes are returned, the interface is not valid and should not be used. Once all operations on the context are complete, the <small>Release</SMALL> method must be called.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="22-02.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="22-04.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

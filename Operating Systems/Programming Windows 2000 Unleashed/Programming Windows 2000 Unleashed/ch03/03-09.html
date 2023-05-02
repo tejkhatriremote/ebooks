@@ -1,0 +1,237 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=086-090//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Waiting on Multiple Handles</B></FONT></P>
+<p>The <small>WaitForMultipleObjects</SMALL> function is similar to <small>WaitForSingleObject</SMALL>, except that it works with an array of handles. All handles are supervised at the same time, and none are favored with respect to the others. The call to <small>WaitForMultipleObjects</SMALL> looks like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hEvents[2];
+.
+.
+.
+DWORD dw = WaitForMultipleObjects(2, hEvents, TRUE, INFINITE);
+</PRE>
+<!-- END CODE SNIP //-->
+<p><small>WaitForMultipleObjects</SMALL> has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;The number of object handles to be tested
+<dd><b>&#149;</B>&nbsp;&nbsp;The base address of the handle array
+<dd><b>&#149;</B>&nbsp;&nbsp;A flag that specifies whether all handles must be signaled or just one. In this case, <small>TRUE</SMALL> indicates that all event handles must be signaled
+<dd><b>&#149;</B>&nbsp;&nbsp;A timeout value, in milliseconds, or <small>INFINITE</SMALL> for no time-out limit
+</DL>
+<p>If <small>TRUE</SMALL> is specified as the third parameter to <small>WaitForMultipleObjects</SMALL>, no event handle has its state altered unless all handles are available. This is necessary to prevent deadlock conditions that might occur if threads were allowed to take control of a subset of the threads needed to continue.</P>
+<p>The return values for <small>WaitForMultipleObjects</SMALL> are slightly more complex than those <small>WaitForSingleObject</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WAIT_OBJECT_0</SMALL> through <small>WAIT_OBJECT_0</SMALL> &#43; (number of handles &#150;1) is returned when the handle is signaled. The return value indicates the index of the lowest numbered handle that has become signaled.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WAIT_TIMEOUT</SMALL> is returned when the handle is not signaled and the timeout limit has expired.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>WAIT_ABANDONED_0</SMALL> through <small>WAIT_ABANDONED_0</SMALL> &#43; (number of handles &#150;1) is returned only when a thread is waiting on a mutex handle.
+</DL>
+<p>If you&#146;re interested in exactly which handle has been signaled, use a code fragment like this:
+</P>
+<!-- CODE //-->
+<pre>
+HANDLE rghEvents[63];
+.
+.
+.
+DWORD dw = WaitForMultipleObjects(63, rghEvents, FALSE, 0x10000);
+
+if((dw &gt= WAIT_OBJECT_0)&amp&amp(dw &lt= WAIT_OBJECT_0 &#43; 63))
+{
+    int ndx = dw - WAIT_OBJECT_0;
+    HANDLE hSignaled = rghEvents[ndx];
+    .
+    // Use hSignaled
+    .
+}
+</PRE>
+<!-- END CODE //-->
+<p><font size="+1"><b>Using Event Handles Across a Process Boundary</B></FONT></P>
+<p>As discussed earlier, you can use event handles between processes. An event handle can be inherited, passed to a new process during <small>CreateProcess</SMALL>, or duplicated using <small>DuplicateHandle</SMALL>.</P>
+<p>In addition, if an event object was created with an optional name, you can use <small>CreateEvent</SMALL> or <small>OpenEvent</SMALL> to get a handle to that event object from another process. For example, assume that an event object was created with the name &#147;Shared&#148;:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hEvent = CreateEvent(NULL, FALSE, FALSE, &#147;Shared&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Another process can get a handle to the same event by calling <small>CreateEvent</SMALL> with the same parameters. The <small>OpenEvent</SMALL> function also can be used by another process:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hEvent = OpenEvent(EVENT_ALL_ACCESS, FALSE, &#147;Shared&#148;);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Two small console mode applications on the CD-ROM provide examples of using an event handle across process boundaries. The WaitEvent project creates an event handle and waits for it to be signaled. The SigEvent project opens a copy of this event handle and signals it, thus allowing WaitEvent to complete its execution.
+</P>
+<p>The complete source code for WaitEvent is provided in Listing 3.7.</P>
+<p><b>Listing 3.7</B> The WaitEvent Program<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+int _tmain()
+{
+    HANDLE hEvent = CreateEvent(NULL, FALSE,
+                                FALSE, _T(&#147;WaitEvent&#148;));
+    _tprintf(_T(&#147;Waiting for SigEvent\n&#148;));
+    WaitForSingleObject(hEvent, INFINITE);
+    _tprintf(_T(&#147;Caught event handle, all done.\n&#148;));
+    CloseHandle(hEvent);
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The complete source code for SigEvent is provided in Listing 3.8.</P>
+<p><b>Listing 3.8</B> The SigEvent Program<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+int _tmain()
+{
+    HANDLE hEvent = OpenEvent(EVENT_ALL_ACCESS,
+                              FALSE, _T(&#147;WaitEvent&#148;));
+    _tprintf(_T(&#147;Signaling WaitEvent handle\n&#148;));
+    SetEvent(hEvent);
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Compile both programs. Run the WaitEvent program first. The console displays the following:</P>
+<!-- CODE SNIP //-->
+<pre>
+Waiting for SigEvent
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Launching the SigEvent program in a different console window displays the following:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Signaling WaitEvent handle
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The SigEvent program signals the event handle and enables the WaitEvent program to finish. The WaitEvent console window displays the following:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+Caught event handle, all done
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Figure 3.7 shows two console mode windows used to run these two programs at the same time.
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-07.jpg',697,440 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-07.jpg',697,440)"><font color="#000077"><b>Figure 3.7</B></FONT></A>&nbsp;&nbsp;Running the WaitEvent and SigEvent programs.</P>
+<h4 align="LEFT"><a name="Heading23"></A><font color="#000077">Mutexes and Mutual Exclusion</FONT></H4>
+<p>A <i>mutex</I> is a Windows 2000 object used as a mutual exclusion primitive. As is the case with critical sections, only one thread can have possession of a mutex object. However, unlike critical sections, mutexes are Windows 2000 objects and are managed by the operating system. They can also be named and shared between processes.</P>
+<p>To take possession of a mutex, a thread must perform a wait on the mutex handle. A mutex is considered &#147;signaled&#148; when available and &#147;not signaled&#148; when in use.</P>
+<p>A common synchronization example that illustrates mutual exclusion is the &#147;dining philosophers&#148; problem. Several philosophers are sitting at a table, with one chopstick between each philosopher. A philosopher must have possession of two chopsticks before eating and must put down both chopsticks before thinking. Each philosopher will spend an arbitrary amount of time thinking and eating.</P>
+<p>The problem is to design the program such that these conditions are met:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;No philosopher goes hungry or, literally, is starved for both CPU cycles and food.
+<dd><b>&#149;</B>&nbsp;&nbsp;No philosopher is forced to eat continuously and is prevented from thinking.
+<dd><b>&#149;</B>&nbsp;&nbsp;Most importantly, no deadlock condition is created.
+</DL>
+<p>The mutual exclusion part of the dining philosophers problem occurs when two philosophers attempt to gain control of the same chopstick. Mutual exclusion can be used to ensure that only one of the philosophers can grab a free chopstick.
+</P>
+<p>When you&#146;re designing an algorithm for selecting a chopstick, care must be taken to avoid deadlocks. If the philosophers are able to grab one chopstick and wait for the other chopstick to become free, every philosopher could have one chopstick and a deadlock situation could occur.</P>
+<p>One solution to the dining philosophers problem has been included on the CD-ROM. The Philo project is a console mode program that uses mutex objects to represent the chopsticks used by the dining philosophers. When a philosopher wants to eat, <small>WaitForMultipleObjects</SMALL> is used to wait for both mutex handles at the same time. Because neither mutex is acquired until both are ready, deadlock conditions are avoided.</P>
+<p>The source code for the solution on the CD-ROM is provided in Listing 3.9. This version of the source code models 63 philosophers. You can change the number of philosophers by changing the value of <small>nMaxPhil</SMALL>.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-08.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-10.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

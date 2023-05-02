@@ -1,0 +1,152 @@
+<html>
+<head>
+<meta name=vsisbn content="0782124488">
+<meta name=vstitle content="Mastering Windows 2000 Professional">
+<meta name=vsauthor content="Mark Minasi, Todd Phillips">
+<meta name=vspublisher content="Sybex, Inc.">
+<meta name=vspubdate content="01/01/00">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Mastering Windows 2000 Professional:Advanced Troubleshooting Methodology</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+<script language="JavaScript1.2">
+<!--
+function checkForQuery(fm) {
+  /* get the query value */
+  var i = escape(fm.query.value);
+  if (i == "") {
+      alert('Please enter a search word or phrase');
+      return false;
+  }                  /* query is blank, dont run the .jsp file */
+  else return true;  /* execute the .jsp file */
+}
+//--></script>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0782124488.gif" width=60 height=73 alt="Mastering Windows 2000 Professional" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Mastering Windows 2000 Professional</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Mark Minasi, Todd Phillips</i>
+    <br>
+    Sybex, Inc.
+    <br>
+    <b>ISBN:</b>&nbsp;0782124488<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;01/01/00</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0782124488//-->
+<!--TITLE=Mastering Windows 2000 Professional//-->
+<!--AUTHOR=Mark Minasi//-->
+<!--AUTHOR=Todd Phillips//-->
+<!--PUBLISHER=SYBEX//-->
+<!--CHAPTER=32//-->
+<!--PAGES=10511054//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="1048-1051.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="1054-1057.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>The process that TCP/IP uses to communicate between two computers is shown in Figure 32.2. At the Application layer, the user types in a Universal Resource Locator (URL) to browse a favorite Web site. The user&#146;s computer is configured to use a certain Domain Name System (DNS) server that is responsible for resolving the name in the URL to an IP address. Then TCP/IP uses ARP to resolve that IP address to a unique physical address. Every network card has a unique hexadecimal number assigned to it when it is manufactured. That&#146;s the physical address or MAC address of the card.
+</P>
+<p><a name="Fig2"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch32/images/32-02.jpg',360,465)"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/0782124488/ch32/images/32-02t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/0782124488/ch32/images/32-02.jpg',360,465)"><font color="#000077"><b>Figure 32.2</B></FONT></A>&nbsp;&nbsp;Name resolution in TCP/IP networking</P>
+<p>When ARP resolves an IP address to a unique hardware address, it stores the resolution in its cache. One thing you can do to improve the connection speed to a server that you use frequently is to make a static entry in the ARP cache. The command string below will add a static entry for a computer:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+   ARP -s 10.1.0.1 00-40-05-16-DA-8A
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <tt>-s</TT> switch tells the ARP command to make the entry permanent. You should be aware that <i>permanent</I> in this case means only until the computer is rebooted. If you want this entry to really be permanent, you must use the ARP command in a logon script or batch file in your Startup group.</P>
+<p><b>TraceRT</B>&nbsp;&nbsp;The Trace Route (TraceRT) command is very much like Ping in that it bounces several packets of information off of a remote computer. But TraceRT does more than that. It also shows a response from every router that the packets go through on their way to the remote computer.</P>
+<p>This can be especially useful when dealing with communications issues with a remote host that is very far away (as in many routers away). TCP/IP uses a mechanism called a Time To Live (TTL) to determine how long a packet of data should be allowed on the network. If we didn&#146;t drop packets after a set period of time, packets would still be roaming the Internet from 20 years ago or more. The TTL is decremented automatically (by at least one) at each and every router it passes through, also called a <i>hop</I>. If a packet is forced to wait in a router due to network congestion, its TTL may be decremented by more than one.</P>
+<p>TraceRT can reveal when the default TTL isn&#146;t high enough to allow for network congestion on the way to the remote host. The TTL setting can be adjusted in Windows 2000 through the Registry at this location:</P>
+<!-- CODE SNIP //-->
+<pre>
+   HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services
+   \Tcpip\Parameters
+   Value name: DefaultTTL
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The maximum setting for this value is 255.
+</P>
+<p>The following troubleshooting scenario is a common support call in most networks. This time, imagine that you are the support person for a group of users on your company network and are attempting to correct a problem with network connectivity.</P>
+<p><font size="+1"><b>Scenario 5: Unable to &#147;See&#148; My Server</B></FONT></P>
+<p>You have just received a call from a coworker, Mary, who is having trouble retrieving e-mail from her server. When you talk with her at her office, you learn that she is unable to open her e-mail application without receiving an error that the server could not be found. She is using TCP/IP as the only network protocol.
+</P>
+<dl>
+<dd><b>Has it ever worked before?</B>&nbsp;&nbsp;Mary tells you that she was able to get e-mail until yesterday when someone installed the latest version of the e-mail client. Ever since then, no luck.
+<dd><b>Track possible approaches.</B>&nbsp;&nbsp;The problem could be the e-mail client but is more likely a simple configuration problem. You decide to do the following:
+<dl>
+<br>
+<dd><b>1.</B>&nbsp;&nbsp;Verify IP address and configuration.
+<dd><b>2.</B>&nbsp;&nbsp;Test communication with server.
+<dd><b>3.</B>&nbsp;&nbsp;Test communication with another computer other than the server.
+</DL>
+<br>
+</DL>
+<p>The first thing to do is run <tt>ipconfig/all</TT> to verify the computer&#146;s current settings. You do this and find that the computer&#146;s IP address, subnet mask, and default gateway are all correct.</P>
+<p>Next you try pinging the server and get no response. You now try using Ping in a methodical process to determine where the failure is. You try pinging the default gateway (router) and you do receive a response. You don&#146;t know if there is another router between your default gateway and the e-mail server, but you can find out by using TraceRT. TraceRT returns success messages from three routers but fails to find the e-mail server.</P>
+<p>You now know that the local computer&#146;s configuration is fine and that the default gateway is up and running. You know that at least three routers between the local computer and the e-mail server are functional. What you need to know is whether the last router is passing the information directly to the e-mail server and the e-mail server is down, or if there is another router beyond the third router that may be down.</P>
+<p>When you pinged the e-mail server earlier, you did it by IP address. Now you try pinging by host name. The attempt fails, but it does resolve the name to an IP address, so you can tell that name resolution is happening correctly. Looking at the address of the e-mail server, you try another address that should be another server on that same section of the network. The Ping attempt to that address does respond.</P>
+<blockquote>
+<p><font size="-1"><hr><b>NOTE:&nbsp;&nbsp;</B>Many network designers assign IP addresses in a set, predictable pattern. One common pattern is to find all routers assigned to the first 5 addresses on a subnet, and servers to the last 20 addresses.<hr></FONT>
+</BLOCKQUOTE>
+<p>What you know now is that the network is working correctly all the way to the remote subnet where the server is located, but the server itself is still not responding. This would be a great time to call the administrator of that server to see if the server is running. Another possible solution is that the server may have an incorrect TCP/IP configuration. If the server <i>is</I> running, you should verify the configuration on the server to see if it can communicate with any other computer.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="1048-1051.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="1054-1057.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,257 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Dynamic Link Libraries</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=06//-->
+<!--PAGES=199-204//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="06-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><font size="+1"><b>Creating the FuncDll DLL Project</B></FONT></P>
+<p>The first version of the FuncDll project exports a single function: <small>GetCounter</SMALL>. The AppWizard included with Visual C<small>&#43;&#43;</SMALL> 6.0 was used to create FuncDll as a Win32 dynamic link library project.</P>
+<p>Two files are used in the first version of the project:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FuncDll.c</SMALL>. Contains the DLL source code
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>FuncDll.h</SMALL>. Contains the declarations for <small>FuncDll.c</SMALL>
+</DL>
+<p>Listing 6.7 provides the source code for the <small>FuncDll.h</SMALL> source file.</P>
+<p><b>Listing 6.7</B> The <small>FuncDll.h</SMALL> Header File Used by FuncDll</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#ifdef __cplusplus
+extern &#147;C&#148; {
+#endif
+// Define FUNC_DECL to be either an imported or exported
+// library symbol, depending on whether we are building the
+// DLL or using it in a client.
+#ifdef FUNCDLL_DLL
+// export function from library
+#define FUNC_DECL  __declspec(dllexport)
+#else
+// import function from library
+#define FUNC_DECL  __declspec(dllimport)
+#endif
+int FUNC_DECL GetCounter(void);
+#ifdef __cplusplus
+}
+
+#endif
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>The <small>FuncDll.h</SMALL> header file is used by the <small>FuncDll.c</SMALL> source file, as well as by any applications that use load-time or implicit linking to the DLL. When used in <small>FuncDll.c</SMALL>, the symbol <small>FUNCDLL_DLL</SMALL> is defined, causing <small>GetCounter</SMALL> to be exported. All other users of the header file do not define this symbol, so <small>GetCounter</SMALL> is imported.</P>
+<p>Listing 6.8 contains the <small>FuncDll.c</SMALL> source file. This is the main source file used by the FuncDll project. Enter the source code as shown here and save it in the project directory. After saving the file, add it to the project.</P>
+<p><b>Listing 6.8</B> The <small>FuncDll.c</SMALL> Source File Used by FuncDll</P>
+<p><hr></P>
+<!-- CODE SNIP //-->
+<pre>
+#define  FUNCDLL_DLL
+#include &#147;funcdll.h&#148;
+
+int GetCounter(void)
+{
+    return 42;
+
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p><hr></P>
+<p><small>FuncDll.c</SMALL> defines no DLL entry point because no initialization is performed. All FuncDll does is export a simple function from a DLL.</P>
+<p>If you compile the project using Visual C<small>&#43;&#43;</SMALL>, the compiler will create the DLL and LIB files and store them in the project&#146;s <small>Debug</SMALL> subdirectory.</P>
+<p><font size="+1"><b>Using FuncDll in a Console Mode Application</B></FONT></P>
+<p>The simplest type of Windows 2000 program that can use a DLL is a console mode application. The CD-ROM includes a console mode project named CallFunc that demonstrates how to use a DLL in a console mode application.
+</P>
+<p>The CallFunc project directory includes two files from the FuncDll project: the <small>FuncDll.h</SMALL> header file and the <small>FuncDll.LIB</SMALL> import library, which is used by the linker to generate a list of DLLs on which CallFunc depends. You must add the <small>FuncDll.LIB</SMALL> file to the project in order to call functions in the DLL.</P>
+<p>Only one source file exists in the CallFunc project. Listing 6.9 provides the source code for <small>CallFunc.c</SMALL>.</P>
+<p><b>Listing 6.9</B> The <small>CallFunc.c</SMALL> Source File Used by CallFunc</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &lttchar.h&gt
+#include &#147;funcdll.h&#148;
+#ifndef UNICODE
+    #include &ltstdio.h&gt
+#endif
+
+int main()
+{
+    int nCounter = GetCounter();
+    _tprintf(_T(&#147;The counter is %d\n&#148;), nCounter);
+    return 0;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Build the CallFunc project. If there are no errors, you can start the CallFunc application. You first must copy the FuncDll into the CallFunc project&#146;s <small>Debug</SMALL> subdirectory, however. This ensures that FuncDll is found when the application is started.</P>
+<p>Open an MS-DOS console and change to the CallFunc project&#146;s <small>Debug</SMALL> subdirectory. Start the application by typing <b>CallFunc</B> at the DOS prompt. If everything goes as planned, the following output appears:</P>
+<!-- CODE SNIP //-->
+<pre>
+The counter is 42
+</PRE>
+<!-- END CODE SNIP //-->
+<p><font size="+1"><b>Using FuncDll in an MFC Application</B></FONT></P>
+<p>Using a DLL such as FuncDll in an MFC application is very simple. In fact, you follow exactly the same steps used in the console mode example. If your DLL does not use any of the MFC Class Library, just use exactly the same steps outlined in the earlier sections. Situations in which you need access to the MFC Class Library in your DLL are covered later in this chapter, in the section titled &#147;Using MFC and DLLs.&#148;
+</P>
+<p><font size="+1"><b>Adding Shared Memory Functions to FuncDll</B></FONT></P>
+<p>A second version of FuncDll demonstrates how shared memory can be added to a DLL, as discussed earlier in this chapter. The new version of FuncDll stores a global counter in a shared memory section named <small>.shared</SMALL> that&#146;s incremented every time the <small>GetCounter</SMALL> function is called.</P>
+<p>Listing 6.10 contains a module definition file for FuncDll, including the necessary declarations for a shared memory section.</P>
+<p><b>Listing 6.10</B> The Module Definition File for FuncDll</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+LIBRARY      &#147;FUNCDLL&#148;
+DESCRIPTION  &#145;FUNCDLL Windows Dynamic Link Library&#146;
+
+SECTIONS
+    .shared  READ WRITE SHARED
+
+EXPORTS
+
+    ; Explicit exports can go here
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>In addition, the FuncDll.c source file must be edited. Listing 6.11 shows the new version of FuncDll.c.</P>
+<p><b>Listing 6.11</B> The New Version of <small>FuncDll.c</SMALL></P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#define  FUNCDLL_DLL
+#include &#147;funcdll.h&#148;
+
+#pragma data_seg(&#147;.shared&#148;)
+int nCounter = 0;
+#pragma data_seg()
+
+int GetCounter(void)
+{
+    InterlockedIncrement(&ampnCounter);
+    return nCounter;
+
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Build the new version of the FuncDll project and copy the DLL and LIB files into the CallFunc <small>Debug</SMALL> subdirectory. To test the new version of FuncDll, start several instances of the CallFunc project created earlier. Every time <small>GetCounter</SMALL> is called, it returns a higher value. You can also modify the CallFunc project to call <small>GetCounter</SMALL> repeatedly, like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+int i = 0;
+for(i = 0; i &lt 5000; &#43;&#43;i)
+{
+     int nCounter = GetCounter();
+    _tprintf(_T(&#147;The counter is %d\n&#148;), nCounter);
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Several versions of CallFunc modified in this way are shown running in Figure 6.5.
+</P>
+<p><a name="Fig5"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-05.jpg',640,480 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-05t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch06/images/06-05.jpg',640,480)"><font color="#000077"><b>Figure 6.5</B></FONT></A>&nbsp;&nbsp;Several instances of CallFunc using shared memory in FuncDll.</P>
+<h4 align="LEFT"><a name="Heading15"></A><font color="#000077">Using C&#43;&#43; and DLLs</FONT></H4>
+<p>The previous DLL examples export C functions because they are the simplest functions to export. You can also export C<small>&#43;&#43;</SMALL> classes and member functions from a DLL, however. If you use a C<small>&#43;&#43;</SMALL> interface in your DLL, be warned: A DLL that exports classes created with Visual C<small>&#43;&#43;</SMALL> cannot be used by applications created with a compiler that uses different object-management or name-mangling schemes.</P>
+<p>When exporting class or member function symbols, you use <small>__declspec</SMALL> much the same as you do for standard C functions. To export a class, you follow the <small>class</SMALL> keyword with <small>__declspec:</SMALL></P>
+<!-- CODE SNIP //-->
+<pre>
+class __declspec(dllexport) CLatte {
+// class info here
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To export an individual function from a class, you include <small>__declspec</SMALL> in the function declaration:</P>
+<!-- CODE SNIP //-->
+<pre>
+class CLatte{
+public:
+    int __declspec(dllexport) GetFoamDensity() const;
+};
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="06-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="06-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

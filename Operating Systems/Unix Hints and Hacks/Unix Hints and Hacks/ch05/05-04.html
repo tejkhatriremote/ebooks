@@ -1,0 +1,178 @@
+<html>
+<head>
+<meta name=vsisbn content="0789719274">
+<meta name=vstitle content="Unix Hints & Hacks">
+<meta name=vsauthor content="Kirk Waingrow">
+<meta name=vsimprint content="Que">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="04/20/99">
+<meta name=vscategory content="Operating Systems: UNIX">
+
+
+
+
+<title>UNIX Hints and Hacks:Account Management</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/0789719274.gif" width=60 height=73 alt="Unix Hints & Hacks" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Unix Hints & Hacks</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by Kirk Waingrow</i>
+    <br>
+    Que,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;0789719274<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;04/20/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=0789719274//-->
+<!--TITLE=UNIX Hints and Hacks//-->
+<!--AUTHOR=Kirk Waingrow//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=que//-->
+<!--CHAPTER=05//-->
+<!--PAGES=166-169//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="05-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>If a user has files only in their home directory to change the GID on, a recursive <small>chgrp</SMALL> is all that is needed.</P>
+<!-- CODE SNIP //-->
+<pre>
+# chgrp -R  520 /home/tom
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Some flavors of UNIX enable you to pass the GID along with the UID at the same time with the <small>chown</SMALL> command (check your man pages to see whether your <small>chown</SMALL> supports this feature):</P>
+<!-- CODE SNIP //-->
+<pre>
+# chown -R tom.500 /home/tom
+</PRE>
+<!-- END CODE SNIP //-->
+<p>If the user has a large collection of files spread throughout the system or across the network to other fileservers, you might want to perform a search for all their files. Approach the user and discuss what will and won&#146;t happen to the files. The user might be able to provide more insight into how his or her files are grouped and make the conversion process easier in the end.
+</P>
+<!-- CODE SNIP //-->
+<pre>
+# find /disk2 -print -user tom &gt /usr/tmp/files.txt
+</PRE>
+<!-- END CODE SNIP //-->
+<p>Redirect the list out to a file, so you can discuss the user&#146;s directory tree and the settings of the files. If the group for all the files that the user owns needs to be changed, execute a <small>find</SMALL> command to search for all the users&#146; files and execute the <small>chgrp</SMALL> command on them</P>
+<!-- CODE SNIP //-->
+<pre>
+# find /disk2 -user tom -exec chgrp 500 {} \;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This particular <small>find</SMALL> command searches /disk2 for any file being owned by the user tom and changes the GID of the file to 500.</P>
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>If this is not controlled, an internal security risk to your user&#146;s files and your environment might exist.
+</P>
+<p><font size="+1"><b>Real World Experiences</B></FONT></P>
+<p>Watch for system GID conflicts when different flavors of UNIX are cross-mounted. In the group file, where the group with the ID number 2 could be <i>bin</I> on one flavor of UNIX and <i>daemon</I> on another flavor. This takes place when multiple flavors coexist on the same network. If you are running NIS/YP between multiple flavors you are almost guaranteed to see this. Before you go into production, attempt to merge the system group IDs into one working table.</P>
+<p><font size="+1"><b>Other Resources</B></FONT></P>
+<p>Man pages:
+</P>
+<small>chown, find, group</SMALL>
+<h3><a name="Heading10"></A><font color="#000077">5.5 GECOS Field</FONT></H3>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">5.5.1 Description</FONT></H4>
+<p>The fifth field in the password file, not the name of a baseball playing field.
+</P>
+<p><font size="+1"><b>Example</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>This is often referred to as the comments field. The GECOS field holds all the necessary contact information on a user. Each piece of information entered is delimited by a comma. The comma is an optional character that has been somewhat considered the standard; there isn&#146;t any well-defined syntax for this field yet. When the field is full of information it contains the following:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;User&#146;s full name or an Application name
+<dd><b>&#149;</B>&nbsp;&nbsp;Building number and room location or contact person for the application
+<dd><b>&#149;</B>&nbsp;&nbsp;Office telephone number
+<dd><b>&#149;</B>&nbsp;&nbsp;Any other contact information (pager, fax, and so on)
+</DL>
+<p>Not all the information is required in the password file. In most environments you see the user&#146;s full name entered. If an application has an account on the system, provide necessary information in the field that helps an administrator contact the person if there is a problem with their application. Any part of the field can be used to provide information that helps in the future to administrate the account. Here are some useful ways to use this field.
+</P>
+<!-- CODE //-->
+<pre>
+root:NqM5kgsU0o./6:0:0:<b>Root - Steve
+Mitchel,Bldg04,x5555:</B>/root:/bin/tcsh
+root-pt:4tK2yr/5.UWtI:0:0:<b>Root - Paul
+Thomas,Bldg37,x1212:</B>/root:/bin/tcsh
+ftp:*:404:1:<b>FTP Admin,Markus Martin,x4744:</B>/home/ftp:/bin/bash
+apache:ALlDn9wGSFY3Y:4000:40:<b>Web GOD, Bill
+McAdam,x2010:</B>/usr/local/httpd:/bin/tc
+gtromero:Gjask2j340ff:100:12:<b>Gloria
+Romero,x0413:</B>/home/gtromero:/bin/bash
+bxredmon:FC6XUtvRxVcWU:222:20:<b>Bill
+Redmond:</B>/home/bxredmond:/bin/csh
+</PRE>
+<!-- END CODE //-->
+<p><font size="+1"><b>Reason</B></FONT></P>
+<p>General Electric had a system that ran GECOS (General Electric Comprehensive Operating System). The original intent of this field was to hold the login information for batch jobs that were sent to the GECOS system.
+</P>
+<p><font size="+1"><b>Real World Experience</B></FONT></P>
+<p>If you can keep all the information filled in and up to date, it provides a useful tool in the future. UNIX administrators are often the last to know about anything, including when employees exit the company. One thing that helps keep the list current and is good PR for you as an administrator is to call one person in the password file each and every day. I know a three-minute call is a lot to ask, because we don&#146;t get much time to take proactive steps. In large installations though, a three-minute phone call can tell you a wealth of information.
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Does the employee still work there?
+<dd><b>&#149;</B>&nbsp;&nbsp;Is there a new user that has taken over the system?
+<dd><b>&#149;</B>&nbsp;&nbsp;Is the system still in the same location?
+<dd><b>&#149;</B>&nbsp;&nbsp;Is all the contact information correct?
+<dd><b>&#149;</B>&nbsp;&nbsp;Is their system exhibiting any problems?
+<dd><b>&#149;</B>&nbsp;&nbsp;Is the user experiencing any problems?
+</DL>
+<p>In some instances these simple questions can make you look like a hero in the eyes of the users. Sometimes a new user might have acquired the machine and didn&#146;t even know that there was help for them available. All because you wanted to update the information. I know in the end it sounds like you created more work for yourself, but the gratitude can outweigh the workload sometimes.
+</P>
+<h3><a name="Heading12"></A><font color="#000077">5.6 Home Directories</FONT></H3>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">5.6.1 Description</FONT></H4>
+<p>Every account needs a place to call home and there is more than one way to build your home in UNIX. Where a user&#146;s home directory is configured greatly depends on the individual environment.
+</P>
+<p><font size="+1"><b>Example One: Living Locally</B></FONT></P>
+<p>Flavors: All
+</P>
+<p>A local directory is a home directory that is locally configured on the workstation or server that is being used by the users. If a user logs in to a system they won&#146;t be going over the network to get to their files. It&#146;s your basic textbook definition. A local home directory gives a user the fastest transfer rates they can get. If there is problem with the network, their files are still accessible. Many times, users complain that the network to a file server is too slow. If there is a bottleneck anywhere, it is in the network, they say. They often ask why can&#146;t they work locally on their workstations. But this can often come at a price.</P>
+<p>There are limitations to working local versus working remotely off a file server. Most local workstations don&#146;t have the hot-swap, fault-tolerant, spare raided drives that the newer disk arrays have that are being implemented into servers. As the size of system drives keep growing, users want to put their files onto the system drive to use all the extra space. If a disk failure were to occur on the local workstation, in most companies there would be insufficient low-level maintenance support on the workstations, versus the 24/7 high-level support that the servers have. The user might be down until the disk can be shipped, repaired, and returned. Large installations that regularly work with system engineers from various vendors usually receive special treatment and get a drive out that day or the next. When the new drive comes in, the system and its configurations have to be rebuilt or restored from tape, and all the users&#146; files, as well. This is true providing, of course, that a backup solution was in place on the workstation to a local or remote tape device.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="05-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="05-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

@@ -1,0 +1,318 @@
+                          .a้ฅ้a.   .a้@้a.   .a้@้a.
+                   ::::: ;@@@@@@@; ;@@@@@@@; ;@@@@@@@; ::::
+                   ::::: ้@@@ @@@้    .a@ü'  @@@@ @@ü' ::::
+                   ::::: @@@@ü@@@@ .a@@@aa@; @@@@ü@@@a ::::
+                         `ฆü๘ ๘üฆ' `ฆüüüüüฆ' `ฆü๘ ๘üฆ' ๚gE!
+
+            "reverse engineering napster: changing your client's id"
+           -- originally released on 07/30/00, updated on ../../.. --
+
+== ( introduction ) ======================================================/\==
+
+  by now you've probably noticed that some people aren't running versions
+  of napster that match the familiar "v2.0 BETA 6" or "TekNap-v1.0" id tags.
+  you've most likely seen "v3.0 Elite", "v3.5 eLiTe" and "HackNap" (among
+  others) when you issue a /whois command from a napster server.
+
+  this document is a manual of sorts for napster users who want to alter
+  their client's id using a simple hex editor, and for those users who want
+  to take this concept a bit further and use a slightly longer string than
+  the eleven characters alotted by napster.
+
+  the techniques described in this document are meant for Napster v2.0
+  BETA 7 for Windows, however they can be easily applied to any other
+  version.
+
+== ( tools required ) ====================================================/\==
+
+  Hacker's View v6.30
+  ~~~~~~~~~~~~~~~~~~~
+  go to http://ftpsearch.lycos.com/ or http://www.altavista.com/ and search
+  for 'hiew630.zip'
+
+  Windows Disassembler v8.9x
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  go to http://ftpsearch.lycos.com/ or http://www.altavista.com/ and search
+  for 'w32dsm89.zip'
+
+== ( part one: precautions ) =============================================/\==
+
+  before you start playing with napster, make a backup of NAPSTER.EXE in
+  another directory or just copy it to NAPSTER.BAK. if you mess up, you'll
+  still have a working copy to fall back on.
+
+== ( part two: quick hex patch ) =========================================/\==
+
+  the easiest way to change your client's version number is to load
+  NAPSTER.EXE into hacker's view (referred to as 'hiew' from now on). make
+  sure napster is NOT RUNNING when you attempt to do this. when hiew loads,
+  make sure you're viewing the file in hex mode by pressing F4 and selecting
+  'hex':
+
+  ษอออออ Select mode อออออป
+  บ         Text          บ
+  บ         Hex           บ
+  บ         Decode        บ
+  ศอออออออออออออออออออออออผ
+
+  after switching into hex mode, press CTRL+F7. this will bring up the search
+  box. enter "BETA 7" in the ascii textfield:
+
+  ษอ[Forward /Full  ]ออออออออออออออออออออออออออออออออออออออออออออออออออป
+  บ ASCII: BETA 7ฐฐฐฐฐฐฐฐฐฐฐฐฐฐ                                        บ
+  บ                                                                    บ
+  บ   Hex: 42 45 54 41 20 37 ฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐบ
+  ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+
+  press enter to begin searching. you'll see the following hex code:
+
+  A9 20 31 39-39 39 2C 20-32 30 30 30-20 4E 61 70  ฉ 1999, 2000 Nap
+  73 74 65 72-20 49 6E 63-2E 00 00 00-42 75 69 6C  ster Inc.   Buil
+  64 00 00 00-52 65 6C 65-61 73 65 20-56 65 72 73  d   Release Vers
+  69 6F 6E 00-76 32 2E 30-20 42 45 54-41 20 37 00  ion v2.0 BETA 7
+  43 75 72 72-65 6E 74 20-54 72 61 6E-73 66 65 72  Current Transfer
+  73 00 00 00-25 64 20 44-6F 77 6E 6C-6F 61 64 69  s   %d Downloadi
+  6E 67 2C 20-25 64 20 55-70 6C 6F 61-64 69 6E 67  ng, %d Uploading
+
+  this is where you can change "v2.0 BETA 7" to anything you like, up to
+  a maximum of eleven characters. to do this, press F3; now hiew is in
+  edit mode. move the blinking cursor to the "v" in "v2.0 BETA 7" and just
+  type right over top of this string. make sure you don't erase parts of
+  the "Current Transfers" string!
+
+  below i've changed my "v2.0 BETA 7" into "v3.0 Elite":
+
+  A9 20 31 39-39 39 2C 20-32 30 30 30-20 4E 61 70  ฉ 1999, 2000 Nap
+  73 74 65 72-20 49 6E 63-2E 00 00 00-42 75 69 6C  ster Inc.   Buil
+  64 00 00 00-52 65 6C 65-61 73 65 20-56 65 72 73  d   Release Vers
+  69 6F 6E 00-76 33 2E 30-20 45 4C 49-54 45 20 00  ion v3.0 Elite
+  43 75 72 72-65 6E 74 20-54 72 61 6E-73 66 65 72  Current Transfer
+  73 00 00 00-25 64 20 44-6F 77 6E 6C-6F 61 64 69  s   %d Downloadi
+  6E 67 2C 20-25 64 20 55-70 6C 6F 61-64 69 6E 67  ng, %d Uploading
+
+  once you're happy with the changes you've made, press F9 to save them
+  and press ESC to exit hiew. that's all it takes to modify your napster's
+  client id when people perform a /whois on you. if you want a 20 character
+  string instead, read on..
+
+== ( part three : advanced patch ) =======================================/\==
+
+  in part two we were limited to a maximum of eleven characters. it was
+  easy to do. anyone with a hex editor can make those changes. why settle for
+  eleven characters, when you could have twenty? 
+
+  most users are running a version of napster for windows. this version of
+  napster can display a maximum of twenty characters in the /whois query
+  box. you can determine this yourself if you try and fit a string longer
+  than twenty characters in its place.. it will get cut off at the twenty
+  character mark.
+
+  from here on in, i'll assume you know how to use Windows Disassembler
+  (dasm). if not, find a tutorial on the net or ask someone with experience.
+    
+  disassemble NAPSTER.EXE in dasm.
+
+  now, here's the tough part. we need to identify which instance of "v2.0
+  BETA 7" (there are many of them) to modify before it gets pushed onto the
+  stack. to do this, look at NAPSTER.TXT that comes with the OpenNap server
+  software. if you want to read the entire text file to see how napster's
+  client and server work, get a copy at http://opennap.sourceforge.net/
+
+  if you're not that good at assembly, don't worry about having to "push"
+  anything anywhere.. this tutorial is meant so that users without knowledge
+  of assembly can change their version id string without having to learn
+  anything new.
+
+  here's the important part from NAPSTER.TXT:
+
+-----
+  2       login [CLIENT]
+
+          Format: <nick> <password> <port> "<client-info>" <link-type>
+                  [ <num> ]
+
+          <port> is the port the client is listening on for data transfer. if
+                 this value is 0, it means that the client is behind a
+                 firewall and can only push files outward. it is expected
+                 that requests for downloads be made using the 500 message
+                 (see below)
+          <client-info> is a string containing the client version info
+          <link-type> is an integer indicating the client's bandwidth
+                 0  unknown
+                 1  14.4 kbps
+                 2  28.8 kpbs
+                 3  33.6 kbps
+                 4  56.7 kbps
+                 5  64K ISDN
+                 6  128K ISDN
+                 7  Cable
+                 8  DSL
+                 9  T1
+                 10 T3 or greater
+          <num> build number for the windows client [optional]
+		
+  Example:
+
+  foo badpass 6699 "nap v0.8" 3
+-----
+
+  when you login to a napster server, your client sends the number "2" along
+  with some other important information: mainly your username and password.
+  the string that gets sent to the server also contains the "<client info>"
+  parameter. all we have to do is locate where this string is pushed onto
+  the stack within NAPSTER.EXE and trace back in the code a bit until we find
+  a reference to "v2.0 BETA 7".
+
+  if you look at the example above, you'll notice the format of the entire
+  command that's being passed to the server goes something like:
+
+    string string number "string" number...
+
+  since napster was programmed in C, this can be represented as
+
+    %s %s %d "%s" %d...
+
+  looking through the string refs in dasm you'll notice that "%s %s %d "%s"
+  %d %lu %d" occurs somewhere in the dead listing. why the extra %lu and
+  %d? remember from the textfile that there's an extra parameter that
+  specifies the build number. the last %d is extra; i'm not exactly sure what
+  it does.
+
+  double clicking the string in dasm's string ref window brings you here:
+
+  * Referenced by a CALL at Addresses:
+  |:004376FD   , :00437BAF   
+  |
+  :004242D0 81ECE4000000            sub esp, 000000E4
+  :004242D6 56                      push esi
+  :004242D7 8BF1                    mov esi, ecx
+  :004242D9 57                      push edi
+  :004242DA B91F000000              mov ecx, 0000001F
+  :004242DF 33C0                    xor eax, eax
+  :004242E1 8D7C246D                lea edi, dword ptr [esp+6D]
+  :004242E5 C644246C00              mov [esp+6C], 00
+  :004242EA 8B96403A0200            mov edx, dword ptr [esi+00023A40]
+  :004242F0 F3                      repz
+  :004242F1 AB                      stosd
+  :004242F2 8B8E883A0200            mov ecx, dword ptr [esi+00023A88]
+  :004242F8 66AB                    stosw
+  :004242FA AA                      stosb
+  :004242FB 8B8604010000            mov eax, dword ptr [esi+00000104]
+  :00424301 50                      push eax
+  :00424302 68710E0000              push 00000E71
+  :00424307 51                      push ecx
+
+  * Possible StringData Ref from Data Obj ->"v2.0 BETA 7"
+                                    |
+->:00424308 6894104800              push 00481094       ; here!
+  :0042430D 8D86F03C0200            lea eax, dword ptr [esi+00023CF0]
+  :00424313 52                      push edx
+  :00424314 8D8E783C0200            lea ecx, dword ptr [esi+00023C78]
+  :0042431A 50                      push eax
+  :0042431B 51                      push ecx
+
+  * Possible StringData Ref from Data Obj ->"%s %s %d "%s" %d %lu %d"
+                                    |
+  :0042431C 68C4424800              push 004842C4
+  :00424321 6A02                    push 00000002
+  :00424323 E818AAFFFF              call 0041ED40
+  :00424328 8D54242C                lea edx, dword ptr [esp+2C]
+  :0042432C 6A64                    push 00000064
+  :0042432E 52                      push edx
+  :0042432F E80CA9FFFF              call 0041EC40
+  :00424334 83C42C                  add esp, 0000002C
+  :00424337 83F8FF                  cmp eax, FFFFFFFF
+  :0042433A 750D                    jne 00424349
+  :0042433C 5F                      pop edi
+  :0042433D 33C0                    xor eax, eax
+  :0042433F 5E                      pop esi
+  :00424340 81C4E4000000            add esp, 000000E4
+  :00424346 C20400                  ret 0004
+
+  look at line 00424308. that's our magic string that gets pushed onto
+  the stack before getting passed as a parameter to the call at 00424323.
+
+  how do you get a longer string? use hiew again to look for "BETA 7". you'll
+  see this in hex view (Ctrl+F7 to search):
+
+  66 20 74 68-65 20 71 75-65 75 65 21-00 00 00 00  f the queue!
+->45 46 6E 65-74 3A 20 23-77 69 6E 33-32 2C 20 23  EFnet: #win32, # <-
+  77 69 6E 70-72 6F 67 00-28 63 6F 6E-74 69 6E 75  winprog (continu
+  ...
+  6F 6D 00 00-43 6F 70 79-72 69 67 68-74 00 00 00  om  Copyright
+  A9 20 31 39-39 39 2C 20-32 30 30 30-20 4E 61 70  ฉ 1999, 2000 Nap
+  73 74 65 72-20 49 6E 63-2E 00 00 00-42 75 69 6C  ster Inc.   Buil
+  64 00 00 00-52 65 6C 65-61 73 65 20-56 65 72 73  d   Release Vers
+  69 6F 6E 00-76 32 2E 30-20 42 45 54-41 20 37 00  ion v2.0 BETA 7
+
+  look above "v2.0 BETA 7" and check out the string "EFnet: #win32,
+  #winprog". this string is actually 23 characters long, which means it's
+  perfect for changing.
+
+  using hiew, change the "EFnet..." string to read something like
+  "Hacked Up Napster v0" (F3 to edit, F9 to save): 
+
+  48 61 63 6B-65 64 20 55-70 20 4E 61-70 73 74 65  Hacked Up Napste
+  72 20 76 30-20 20 20 00-28 63 6F 6E-74 69 6E 75  r v0    (continu
+  65 64 29 00-43 72 61 73-68 54 65 73-74 2C 20 53  ed) CrashTest, S
+  49 6E 65 56-61 6C 2C 20-6C 75 64 64-65 00 00 00  IneVal, ludde
+
+  now, for the most important part. once you've saved your changes,
+  DON'T EXIT hiew just yet. press F3 again to get back into edit mode
+  and go to the first character of your new version id. in my case,
+  it's "H". The number (offset) for Napster v2.0 BETA 7 is 00080FB0 for
+  this example. write this number down somewhere.
+
+  remember how the old string is pushed onto the stack? if you bring your
+  cursor in hiew over to the "v" in "v2.0 BETA 7" you'll see it's at offset
+  00081094 in the file.
+
+  * Possible StringData Ref from Data Obj ->"v2.0 BETA 7"
+                                    |
+  :00424308 6894104800              push 00481094       ; here!
+
+  notice that we 'push 00481094' here. what's the difference between the
+  file offset and the value we push onto the stack? the first three digits
+  are 004 instead of 000. this is because the program's image base starts
+  at 00400000h (check dasm at the very top of the dead listing).
+
+  so, using a bit of logic, we can assume that if we wanted to push the
+  string located at 00080FB0 onto the stack, the new command would look
+  something like this in assembly:
+
+  * Possible StringData Ref from Data Obj ->"Hacked Up Napster v0   "
+                                    |
+  :00424308 6894104800              push 00480FB0       ; here!
+
+  so, to make this change with hiew, load up NAPSTER.EXE if you've closed
+  it and press F5. type in ".00024308" and press enter. press F4 and select
+  "decode". now make sure it looks like this:
+
+  .00424308: 6840444800                   push      00481094 ;" HD@"
+  .0042430D: 8D86F03C0200                 lea       eax,[esi][000023CF0]
+  .00424313: 52                           push      edx
+  .00424314: 8D8E783C0200                 lea       ecx,[esi][000023C78]
+  .0042431A: 50                           push      eax
+  .0042431B: 51                           push      ecx
+
+  move your cursor up to offset (or line) .00424308 and press F3 then F2.
+  now change the command from "push 00481094" to "push 00480FB0". press F9
+  to save your changes. press ESC and start using your hacked up copy of
+  napster!
+
+== ( final notes ) =======================================================/\==
+
+  this document isn't intended to be a guide to software reverse engineering;
+  you'll notice that i didn't go into the sort of in-depth explanations that
+  you'd usually see in a cracking tutorial. this was written for beginners
+  who want to show off a little.
+
+  to those who wanted a more technical doc, i apologize.. but it had to be
+  simple so everyone could understand.
+
+  personal greets go out to Octavian, !_go0zeGg_! for the jaw-dropping
+  graphics in wrapster v2.0 and as always, 1995.
+
+  tantrum (a2ure), 07/30/00
+
+== ( end ) ===============================================================/\==

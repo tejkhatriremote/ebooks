@@ -1,0 +1,208 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Threads and Processes</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=03//-->
+<!--PAGES=066-070//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="03-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Ending a Thread</FONT></H4>
+<p>There are three ways to end a thread. The &#147;normal&#148; way to end a thread is to call the <small>ExitThread</SMALL> function from within the thread that&#146;s ending. When <small>ExitThread</SMALL> is called, a thread exit code is passed as a parameter:</P>
+<!-- CODE SNIP //-->
+<pre>
+ExitThread(NO_ERROR);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The second method is to allow the thread to exit its thread function. The <small>ExitThread</SMALL> function is called implicitly when you exit from the thread&#146;s start function. For example, the following thread function executes a <small>for</SMALL> loop five times and then returns <small>NO_ERROR</SMALL> as the thread&#146;s exit code:</P>
+<!-- CODE SNIP //-->
+<pre>
+long WINAPI ThreadFunc(long lParam)
+{
+    for(int n = 0; n &lt 5; n&#43;&#43;)
+    {
+        // Work with thread
+    }
+    return NO_ERROR;
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The third, and least preferred, method to end a thread is to use <small>TerminateThread</SMALL>. Calling <small>TerminateThread</SMALL> does not give a thread a chance to clean up any partially completed work; the thread may own critical sections that are not released, or it may have partially completed work that cannot be concluded. The call to <small>TerminateThread</SMALL> looks like this:</P>
+<!-- CODE SNIP //-->
+<pre>
+HANDLE hThread = CreateThread(....);
+.
+.
+TerminateThread(hThread, NO_ERROR);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>TerminateThread</SMALL> function has two parameters: the thread handle and an exit code for the thread.</P>
+<p>If any of these methods is used to kill the last remaining thread owned by a process, the process terminates.</P>
+<p>The exit code for a thread can be retrieved by calling <small>GetExitCodeThread</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+DWORD dwResult;
+GetExitCodeThread(hThread, &ampdwResult);
+if(dwResult != NO_ERROR)
+{
+    // Handle error case
+}
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>GetExitCodeThread</SMALL> function has two parameters: the thread handle and the address of a 32-bit variable that will be filled with the thread&#146;s exit code. If the <small>GetExitCode</SMALL> thread is called for a thread that has not yet exited, the return value is <small>STILL_ACTIVE</SMALL>.</P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Fetching and Changing a Thread&#146;s Priority</FONT></H4>
+<p>Windows 2000 enables you to dynamically change the priority of a thread. You should take extreme care when changing the priority of a thread&#151;it&#146;s easy to severely impact the performance of your entire system by raising a thread&#146;s priority too high.
+</P>
+<p>Windows 2000 offers six process priority classes:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IDLE_PRIORITY_CLASS</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>BELOW_NORMAL_PRIORITY_CLASS</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>NORMAL_PRIORITY_CLASS</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>ABOVE_NORMAL_PRIORITY_CLASS</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>HIGH_PRIORITY_CLASS</SMALL>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>REALTIME_PRIORITY_CLASS</SMALL>
+</DL>
+<p>Every thread can be set to run within a range of five priority levels, regardless of its priority class:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_LOWEST</SMALL> is two steps below the priority class assigned to the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_BELOW_NORMAL</SMALL> is one step below the priority class assigned to the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_NORMAL</SMALL> is the same as the priority class assigned to the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_ABOVE_NORMAL</SMALL> is one step above the priority class assigned to the process.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_HIGHEST</SMALL> is two steps above the priority class assigned to the process.
+</DL>
+<p>In addition, two special priority levels can be passed to <small>SetThreadPriority</SMALL>:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_IDLE</SMALL> always sets the thread&#146;s priority level to <small>1</SMALL>, unless the process priority class is <small>REALTIME_PRIORITY_CLASS</SMALL>, in which case it&#146;s set to <small>16</SMALL>.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>THREAD_PRIORITY_TIME_CRITICAL</SMALL> always sets the thread&#146;s priority to <small>15</SMALL>, unless the process priority class is <small>REALTIME_PRIORITY_CLASS</SMALL>, in which case it is set to <small>31</SMALL>. This is the only way a thread can run at priority level 31.
+</DL>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">Thread-local Storage</FONT></H4>
+<p>Automatic variables, such as the variables declared inside a function body, are created in the context of the currently running thread. This means that every thread has its own copy of every automatic variable. This is normally a good thing, because you don&#146;t need to synchronize access to variables created on the stack.
+</P>
+<p>When it&#146;s necessary to use global variables, threads tend to complicate your life quite a bit. First, access to the variable must be synchronized so that multiple threads don&#146;t attempt to modify the variable at the same time. Second, a normal global variable is shared between all threads&#151;unless you use an array, there&#146;s no way to store data on a per-thread basis.</P>
+<p>Windows 2000 has a specific way of dealing with this problem. <i>Thread-local storage</I> enables you to create variables that are maintained on a per-thread basis, with very little bookkeeping or maintenance required on your part. There are two types of thread-local storage:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;Static thread-local storage
+<dd><b>&#149;</B>&nbsp;&nbsp;Dynamic thread-local storage
+</DL>
+<p>The advantages of both of methods are discussed in the next two sections.
+</P>
+<h4 align="LEFT"><a name="Heading12"></A><font color="#000077">Using Static Thread-local Storage</FONT></H4>
+<p>Static thread-local storage is very easy to use. There are no functions to call, no special precautions to take, and no weird compiler switches to set.
+</P>
+<p>Static thread-local storage lives in a special memory section named <small>.tls</SMALL>, created in the address space of your process. When a new thread is created, Windows 2000 makes a new copy of the thread-local storage for the new thread and destroys the block of memory when the thread is killed. A thread can only access the thread-local variables used for its thread.</P>
+<p>To declare a thread-local storage variable, use <small>__declspec</SMALL><small>(thread)</SMALL> as part of the variable&#146;s declaration:</P>
+<!-- CODE SNIP //-->
+<pre>
+_ _declspec(thread) int nMeals = 0;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>To make your code more readable, you can also use a <small>typedef</SMALL>:</P>
+<!-- CODE SNIP //-->
+<pre>
+typedef _ _declspec(thread) TLS;
+TLS int nMeals = 0;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>A thread-local storage variable is used just like any other variable. You can read to it, write to it, or take its address, just as you can with other global variables. You don&#146;t need to synchronize access to it, because only one thread can touch it.
+</P>
+<p>A thread-local storage variable can be declared in global scope or as a static variable in a function. It can never be declared as a plain automatic variable.</P>
+<h4 align="LEFT"><a name="Heading13"></A><font color="#000077">Using Dynamic Thread-local Storage</FONT></H4>
+<p>Dynamic thread-local storage is created and used at runtime by your application. Although it&#146;s slightly more complex than static thread-local storage, dynamic thread-local storage is much more flexible, because it can be allocated and freed as needed.
+</P>
+<p>Windows 2000 maintains the dynamic thread-local storage, and each process accesses the thread-local storage using indexes, as shown in Figure 3.3.</P>
+<p><a name="Fig3"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-03.jpg',461,420 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-03t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch03/images/03-03.jpg',461,420)"><font color="#000077"><b>Figure 3.3</B></FONT></A>&nbsp;&nbsp;Thread-local storage uses indexes maintained by Windows 2000.</P>
+<p>Each thread in a process has its own copy of the thread-local storage. Windows 2000 maintains a status flag for each thread-local storage index and allocates a new one for any process requesting a new storage index. There are four functions used to manage the thread-local storage:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TlsAlloc</SMALL> is used to request a new thread-local storage index from Windows 2000.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TlsSetValue</SMALL> is used by a thread to store a 32-bit value in its copy of the thread-local storage.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TlsGetValue</SMALL> is used by a thread to retrieve a 32-bit value previously stored in thread-local storage.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>TlsFree</SMALL> is used to notify Windows 2000 that a process no longer needs a particular thread-local storage index.
+</DL>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="03-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="03-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

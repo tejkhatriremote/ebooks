@@ -1,0 +1,293 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Automation</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=14//-->
+<!--PAGES=457-460//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="14-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<h4 align="LEFT"><a name="Heading9"></A><font color="#000077">Modifications to the Document Class</FONT></H4>
+<p>A <small>CBubble</SMALL> structure is used to model each bubble displayed by the AutoBub application. In addition to this structure, the <small>CAutoBubDoc</SMALL> class must be modified to provide functions to add, count, and retrieve bubble objects. Modifications to the <small>AutoBubDoc.h</SMALL> file are shown in Listing 14.1. Changed lines are shown in bold type, and most lines created by AppWizard are not shown.</P>
+<p><b>Listing 14.1</B> Modifications to the <small>CAutoBubDoc</SMALL> Class Declaration</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+<b>struct CBubble
+{
+    COLORREF    m_clr;
+    int         m_nRadius;
+    CPoint      m_ptCenter;
+};</B>
+
+class CAutoBubDoc : public CDocument
+{
+.
+.
+.
+// Operations
+public:
+    <b>void AddBubble(const CBubble&amp; bub);
+    BOOL GetBubble(int nBubble, CBubble* pBub);
+    int  GetCount() const;</B>
+.
+.
+.
+// Implementation
+protected:
+    <b>CArray&lt;CBubble,CBubble&gt; m_rgBubble;</B>
+.
+.
+.
+};
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<p>Because the <small>CArray</SMALL> class is used, you must add the following line to the <small>stfafx.h</SMALL> header file:</P>
+<!-- CODE SNIP //-->
+<pre>
+#include &lt;afxtempl.h&gt;
+</PRE>
+<!-- END CODE SNIP //-->
+<p>This includes the declarations for the MFC template-based collection classes.
+</P>
+<p>Listing 14.2 contains the implementations of three new member functions for the <small>CAutoBubDoc</SMALL> class. These functions handle adding and retrieving <small>CBubble</SMALL> objects into the <small>CArray</SMALL> structure maintained by the document.</P>
+<p><b>Listing 14.2</B> New and Modified Functions for the <small>CAutoBubDoc</SMALL> Class</P>
+<p><hr></P>
+<!-- CODE //-->
+<pre>
+void CAutoBubDoc::AddBubble(const CBubble&amp; bub)
+{
+    m_rgBubble.Add(bub);
+}
+
+BOOL CAutoBubDoc::GetBubble(int nIndex, CBubble* pBub)
+{
+    BOOL fReturn = FALSE;
+    if(nIndex &lt; GetCount())
+    {
+        *pBub = m_rgBubble.GetAt(nIndex);
+        fReturn = TRUE;
+    }
+    return fReturn;
+}
+
+int CAutoBubDoc::GetCount() const
+{
+    return m_rgBubble.GetSize();
+}
+</PRE>
+<!-- END CODE //-->
+<p><hr></P>
+<h4 align="LEFT"><a name="Heading10"></A><font color="#000077">Creating a Dialog Box for AutoBub</FONT></H4>
+<p>The AutoBub project includes a dialog box used to add bubbles to its document. Figure 14.7 shows the Add Bubble dialog box.
+</P>
+<p><a name="Fig7"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-07.jpg',285,216 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-07t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch14/images/14-07.jpg',285,216)"><font color="#000077"><b>Figure 14.7</B></FONT></A>&nbsp;&nbsp;The Add Bubble dialog box used by AutoBub.</P>
+<p>The resource ID for the dialog box is <small>IDD_ADD_BUBBLE</SMALL>. Properties for the controls added to the dialog box are listed in Table 14.2 (in tab order).</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 14.2</B> Property Values for Controls in the Add Bubble Dialog Box
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Resource ID</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP">Center Group
+<td align="LEFT" valign="TOP"><small>IDC_STATIC</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">X Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_X</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Y Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_Y</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Color Group
+<td align="LEFT" valign="TOP"><small>IDC_STATIC</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Red Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_RED</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Green Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_GREEN</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Blue Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_BLUE</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Radius Edit control
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_RADIUS</SMALL>
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The <small>CAddBubDlg</SMALL> class is derived from <small>CDialog</SMALL> and manages the <small>IDD_ADD_BUBBLE</SMALL> dialog box. ClassWizard was used to add the <small>CAddBubDlg</SMALL> class to the AutoBub project, using the values from Table 14.3.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="2"><b>Table 14.3</B> Values Used for the <small>CAddBubDlg</SMALL> Class
+<tr>
+<td colspan="2"><hr>
+<tr>
+<th width="40%" align="LEFT" valign="TOP"><i>Control</I>
+<th width="60%" align="LEFT" valign="TOP"><i>Value</I>
+<tr>
+<td colspan="2"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>Name</SMALL>
+<td align="LEFT" valign="TOP"><small>CAddBubDlg</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>Base Class</SMALL>
+<td align="LEFT" valign="TOP"><small>CDialog</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>File name</SMALL>
+<td align="LEFT" valign="TOP"><small>AddBubDlg.cpp</SMALL>
+<tr>
+<td align="LEFT" valign="TOP"><small>Dialog ID</SMALL>
+<td align="LEFT" valign="TOP"><small>IDD_ADD_BUBBLE</SMALL>
+<tr>
+<td align="LEFT" valign="TOP">Automation
+<td align="LEFT" valign="TOP">None
+<tr>
+<td colspan="2"><hr>
+</TABLE>
+<p>The <small>CAddBubDlg</SMALL> class includes member variables that are associated with dialog box controls, as shown in Table 14.4.</P>
+<table width="100%"><caption align="LEFT" valign="TOP" colspan="6"><b>Table 14.4</B> Values for New Member Variables in <small>CAddBubDlg</SMALL>
+<tr>
+<td colspan="6"><hr>
+<tr>
+<th width="25%" align="LEFT" vlaign="TOP"><i>Control ID</I>
+<th width="25%" align="LEFT" vlaign="TOP"><i>Variable Name</I>
+<th width="20%" align="LEFT" vlaign="TOP"><i>Category</I>
+<th width="10%" align="LEFT" vlaign="TOP"><i>Type</I>
+<th width="10%" align="LEFT" vlaign="TOP"><i>Min</I>
+<th width="10%" align="LEFT" vlaign="TOP"><i>Max</I>
+<tr>
+<td colspan="6"><hr>
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_X</SMALL>
+<td align="LEFT" valign="TOP"><small>m_nX</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<td align="LEFT" valign="TOP">
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_Y</SMALL>
+<td align="LEFT" valign="TOP"><small>m_nY</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<td align="LEFT" valign="TOP">
+<td align="LEFT" valign="TOP">
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_RED</SMALL>
+<td align="LEFT" valign="TOP"><small>m_nRed</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<td align="LEFT" valign="TOP">0
+<td align="LEFT" valign="TOP">255
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_GREEN</SMALL>
+<td align="LEFT" valign="TOP"><small>m_nGreen</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<td align="LEFT" valign="TOP">0
+<td align="LEFT" valign="TOP">255
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_BLUE</SMALL>
+<td align="LEFT" valign="TOP"><small>m_nBlue</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<td align="LEFT" valign="TOP">0
+<td align="LEFT" valign="TOP">255
+<tr>
+<td align="LEFT" valign="TOP"><small>IDC_EDIT_RADIUS</SMALL>
+<td align="LEFT" valign="TOP"><small>m_nRadius</SMALL>
+<td align="LEFT" valign="TOP">Value
+<td align="LEFT" valign="TOP"><small>int</SMALL>
+<td align="LEFT" valign="TOP">0
+<td align="LEFT" valign="TOP">32000
+<tr>
+<td colspan="6"><hr>
+</TABLE>
+<p>In order to select the Add Bubble dialog box, the AutoBub menu resource contains a new menu item. The resource ID for the menu item is <small>ID_EDIT_ADD_BUBBLE</SMALL>, and its caption is &#147;&amp;Add Bubble...&#148;. The new menu item is shown inside the Visual C<small>&#43;&#43;</SMALL> menu editor in Figure 14.8.</P><p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="14-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="14-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

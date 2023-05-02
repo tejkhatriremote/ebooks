@@ -1,0 +1,388 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Advanced Graphical Device Interface Programming</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=11//-->
+<!--PAGES=356-362//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="11-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p>In addition, two messages related to palettes are sent to your application:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;When a window moves into the foreground, Windows 2000 sends it a <small>WM_QUERYNEWPALETTE</SMALL> message. In response to this message, your application should realize its palette.
+<dd><b>&#149;</B>&nbsp;&nbsp;If the system palette is changed, all windows in the background will receive a <small>WM_PALETTECHANGED</SMALL> message. An application in the background should again realize its palette to attempt to reassert colors in the system palette. If no free positions in the system palette are available, the palette manager maps the requested color to the closest palette entry.
+</DL>
+<p>In any case, you should invalidate any parts of your application that depend on your logical palette if the system palette is updated.
+</P>
+<h3><a name="Heading10"></A><font color="#000077">The DIB Example</FONT></H3>
+<p>As an example of how 256-color bitmaps are displayed, the CD-ROM that accompanies this book includes an MFC sample project named Dib. The design of the Dib project uses a basic AppWizard SDI skeleton with these modifications:
+</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A class, <small>CDIBitmap</SMALL>, that handles the display of DIBs
+<dd><b>&#149;</B>&nbsp;&nbsp;A class, <small>CBmpPalette</SMALL>, that handles creating a new 256-color palette
+<dd><b>&#149;</B>&nbsp;&nbsp;Additional palette message-handling functions
+</DL>
+<h4 align="LEFT"><a name="Heading11"></A><font color="#000077">The CDIBitmap Class</FONT></H4>
+<p>The <small>CDIBitmap</SMALL> class does most of the work in the Dib project. The <small>CDIBitmap</SMALL> class provides an easy-to-use interface for handling 256-color DIBs. The class interface for <small>CDIBitmap</SMALL> is shown in Listing 11.1. It&#146;s also included in the Dib project as <small>dib256.h</SMALL>.</P>
+<p><b>Listing 11.1</B> The <small>CDIBitmap</SMALL> Class Interface<hr></P>
+<!-- CODE //-->
+<pre>
+#ifndef DIBMP_UNLEASHED
+#define DIBMP_UNLEASHED
+
+class CDIBitmap
+{
+    friend class CBmpPalette;
+//constructors
+public:
+    CDIBitmap();
+    virtual ~CDIBitmap();
+private:
+    CDIBitmap(const CDIBitmap&amp dbmp);
+
+//operations
+public:
+    inline BITMAPINFO* GetHeaderPtr();
+    inline BYTE* GetPixelPtr();
+    virtual void DrawDIB(CDC* pDC, int x, int y);
+    virtual BOOL Load(CFile* pFile);
+    virtual BOOL Load(HINSTANCE hInstance, UINT nResourceID);
+    int GetPixelCount() const;
+
+    RGBQUAD* GetColorTablePtr();
+
+protected:
+    int GetPalEntries() const;
+    int GetPalEntries(BITMAPINFOHEADER&amp infoHeader) const;
+    int GetWidth() const;
+    int GetHeight() const;
+
+//implementation
+private:
+    BITMAPINFO* m_pInfo;
+    BYTE*       m_pPixels;
+};
+#endif
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Note that <small>CDIBitmap</SMALL> isn&#146;t derived from <small>CBitmap</SMALL>, or <small>CObject</SMALL> for that matter. The class itself consumes only a few bytes, requiring space for two pointers and a virtual function table.</P>
+<p><small>CDIBitmap</SMALL> has six public functions:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetHeaderPtr</SMALL> returns a pointer to the <small>BITMAPINFO</SMALL> structure.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetPixelPtr</SMALL> returns a pointer to the beginning of the pixel image array.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>DrawDIB</SMALL> draws the DIB at a specified location.
+<dd><b>&#149;</B>&nbsp;&nbsp;A version of <small>Load</SMALL> reads a DIB from an MFC <small>CFile</SMALL> file associated with a BMP file and initializes the <small>CDIBitmap</SMALL> object.
+<dd><b>&#149;</B>&nbsp;&nbsp;Another version of <small>Load</SMALL> reads a DIB from a bitmap resource and initializes the <small>CDIBitmap</SMALL> object.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>GetColorTablePtr</SMALL> returns a pointer to the color table.
+</DL>
+<p>The source code for the implementation of <small>CDIBitmap</SMALL> is provided in Listing 11.2. Remember, you don&#146;t actually have to type all this source code yourself, because it&#146;s located on the CD-ROM in the Dib project as <small>dib256.cpp</SMALL>.</P>
+<p><b>Listing 11.2</B> The Implementation of the <small>CDIBitmap</SMALL> Class<hr></P>
+<!-- CODE //-->
+<pre>
+#include &#147;stdafx.h&#148;
+#include &#147;dib256.h&#148;
+
+CDIBitmap::CDIBitmap()
+{
+    m_pInfo = 0;
+    m_pPixels = 0;
+}
+
+CDIBitmap::~CDIBitmap()
+{
+    delete [] (BYTE*)m_pInfo;
+    delete [] m_pPixels;
+}
+
+BOOL CDIBitmap::Load(HINSTANCE hInstance, UINT nResourceID)
+{
+    try
+    {
+       HRSRC hRes = FindResource(hInstance,
+                                 MAKEINTRESOURCE(nResourceID),
+                                 RT_BITMAP);
+        if(hRes == NULL)
+            throw TEXT(&#147;Error:Can&#146;t find resource.\n&#148;);
+
+        HGLOBAL hGlob = LoadResource(hInstance, hRes);
+        if(hGlob == NULL)
+            throw TEXT(&#147;Error:Can&#146;t find load resource.\n&#148;);
+
+       BYTE* pBitmapBlock = NULL;
+       pBitmapBlock = reinterpret_cast&ltBYTE*&gt(LockResource(hGlob));
+        if(pBitmapBlock == NULL)
+            throw TEXT(&#147;Error:Can&#146;t find lock resource.\n&#148;);
+
+        BITMAPINFOHEADER infoHeader;
+        MoveMemory(&ampinfoHeader, pBitmapBlock, sizeof(infoHeader));
+        if(infoHeader.biSize != sizeof(infoHeader))
+            throw TEXT(&#147;Error:OS2 PM BMP Format not supported\n&#148;);
+
+        // Store the sizes of the DIB structures
+        int cPaletteEntries = GetPalEntries(infoHeader);
+        int cColorTable = 256 * sizeof(RGBQUAD);
+        int cInfo = sizeof(BITMAPINFOHEADER) &#43; cColorTable;
+        int cPixels = 0;
+
+        if(infoHeader.biSizeImage &gt 0)
+            cPixels = infoHeader.biSizeImage;
+        else if(infoHeader.biHeight &gt 0) // top down or bottom-up
+            cPixels = infoHeader.biWidth * infoHeader.biHeight;
+        else
+            cPixels = infoHeader.biWidth * -infoHeader.biHeight;
+
+        //
+        // Allocate space for a new bitmap info header, and copy
+        // the info header that was loaded from the resource table.
+        m_pInfo = (BITMAPINFO*)new BYTE[cInfo];
+        MoveMemory(m_pInfo, &ampinfoHeader, sizeof(BITMAPINFOHEADER));
+
+        pBitmapBlock &#43;= sizeof(infoHeader);
+        MoveMemory(((BYTE*)m_pInfo) &#43; sizeof(BITMAPINFOHEADER),
+                   pBitmapBlock,
+                   cColorTable);
+        //
+        // Allocate space for the pixel area, and load the pixel
+        // info from the file.
+        m_pPixels = new BYTE[cPixels];
+        pBitmapBlock &#43;= cColorTable;
+        MoveMemory(m_pPixels, pBitmapBlock, cPixels);
+    }
+    catch(TCHAR* psz)
+    {
+        TRACE(psz);
+        return FALSE;
+    }
+    return TRUE;
+}
+
+BOOL CDIBitmap::Load(CFile* pFile)
+{
+    ASSERT(pFile);
+    BOOL fReturn = TRUE;
+    try
+    {
+        delete [] (BYTE*)m_pInfo;
+        delete [] m_pPixels;
+        m_pInfo = 0;
+        m_pPixels = 0;
+        DWORD       dwStart = pFile-&gtGetPosition();
+        //
+        // Check to make sure we have a bitmap. The first two bytes must
+        // be &#145;B&#146; and &#145;M&#146;.
+        BITMAPFILEHEADER fileHeader;
+        pFile-&gtRead(&ampfileHeader, sizeof(fileHeader));
+        if( fileHeader.bfType != 0x4D42 )
+            throw TEXT(&#147;Error:Unexpected file type, not a DIB\n&#148;);
+
+        BITMAPINFOHEADER infoHeader;
+        pFile-&gtRead(&ampinfoHeader, sizeof(infoHeader));
+        if(infoHeader.biSize != sizeof(infoHeader))
+            throw TEXT(&#147;Error:OS2 PM BMP Format not supported\n&#148;);
+
+        // Store the sizes of the DIB structures
+        int cPaletteEntries = GetPalEntries(infoHeader);
+        int cColorTable = 256 * sizeof(RGBQUAD);
+        int cInfo = sizeof(BITMAPINFOHEADER) &#43; cColorTable;
+        int cPixels = fileHeader.bfSize - fileHeader.bfOffBits;
+        //
+        // Allocate space for a new bitmap info header, and copy
+        // the info header that was loaded from the file. Read the
+        // file and store the results in the color table.
+        m_pInfo = (BITMAPINFO*)new BYTE[cInfo];
+        memcpy(m_pInfo, &ampinfoHeader, sizeof(BITMAPINFOHEADER));
+        pFile-&gtRead(((BYTE*)m_pInfo) &#43; sizeof(BITMAPINFOHEADER),
+                     cColorTable);
+        //
+        // Allocate space for the pixel area, and load the pixel
+        // info from the file.
+        m_pPixels = new BYTE[cPixels];
+        pFile-&gtSeek(dwStart &#43; fileHeader.bfOffBits, CFile::begin);
+        pFile-&gtRead(m_pPixels, cPixels);
+    }
+    catch(TCHAR* psz)
+    {
+        TRACE(psz);
+        fReturn = FALSE;
+    }
+    return fReturn;
+}
+
+//
+// DrawDib uses StretchDIBits to display the bitmap.
+void CDIBitmap::DrawDIB(CDC* pDC, int x, int y)
+{
+    ASSERT(pDC);
+    HDC     hdc = pDC-&gtGetSafeHdc();
+    if(m_pInfo)
+       StretchDIBits(hdc,
+                     x,
+                     y,
+                     GetWidth(),
+                     GetHeight(),
+                     0,
+                     0,
+                     GetWidth(),
+                     GetHeight(),
+                     GetPixelPtr(),
+                     GetHeaderPtr(),
+                     DIB_RGB_COLORS,
+                     SRCCOPY);
+}
+
+BITMAPINFO* CDIBitmap::GetHeaderPtr()
+{
+    ASSERT(m_pInfo);
+    ASSERT(m_pPixels);
+    return m_pInfo;
+}
+
+RGBQUAD* CDIBitmap::GetColorTablePtr()
+{
+    ASSERT(m_pInfo);
+    ASSERT(m_pPixels);
+    RGBQUAD* pColorTable = 0;
+    if(m_pInfo != 0)
+    {
+        int cOffset = sizeof(BITMAPINFOHEADER);
+        pColorTable = (RGBQUAD*)(((BYTE*)(m_pInfo)) &#43; cOffset);
+    }
+    return pColorTable;
+}
+
+BYTE* CDIBitmap::GetPixelPtr()
+{
+    ASSERT(m_pInfo);
+    ASSERT(m_pPixels);
+    return m_pPixels;
+}
+
+int CDIBitmap::GetWidth() const
+{
+    ASSERT(m_pInfo);
+    return m_pInfo-&gtbmiHeader.biWidth;
+}
+
+int CDIBitmap::GetHeight() const
+{
+    ASSERT(m_pInfo);
+    return m_pInfo-&gtbmiHeader.biHeight;
+}
+
+int CDIBitmap::GetPixelCount() const
+{
+    ASSERT(m_pInfo);
+    if(m_pInfo-&gtbmiHeader.biSizeImage &gt 0)
+        return m_pInfo-&gtbmiHeader.biSizeImage;
+    else
+        return m_pInfo-&gtbmiHeader.biHeight * m_pInfo-&gtbmiHeader.biWidth;
+}
+
+int CDIBitmap::GetPalEntries() const
+{
+    ASSERT(m_pInfo);
+    return GetPalEntries(*(BITMAPINFOHEADER*)m_pInfo);
+}
+
+int CDIBitmap::GetPalEntries(BITMAPINFOHEADER&amp infoHeader) const
+{
+    int nReturn;
+    if(infoHeader.biClrUsed == 0)
+    {
+        nReturn = (1 &lt&lt infoHeader.biBitCount);
+    }
+    else
+        nReturn = infoHeader.biClrUsed;
+
+    return nReturn;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="11-03.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="11-05.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

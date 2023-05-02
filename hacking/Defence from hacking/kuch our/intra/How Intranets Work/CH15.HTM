@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 15 -- How Proxy Servers Work</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;15</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>How Proxy Servers Work</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HowProxyServersWork">
+How Proxy Servers Work</A>
+</UL>
+
+<HR>
+<P>
+There are certain risks associated with allowing people from inside
+an intranet to directly contact Internet servers and resources.
+An intranet user might obtain a file from the Internet that could
+damage the files on their computer and the entire intranet. Additionally,
+when intranet users are allowed unfettered access to the Internet,
+it is difficult for intranet administrators to guard against intruders
+who attempt to take over an intranet computer or server.
+<P>
+A common way to block this kind of access is to use <I>proxy servers</I>.
+These servers sit inside a firewall, frequently on a <I>bastion
+host</I> (see <A HREF="ch16.htm" >Chapter 16</A> for more on how bastion hosts work).
+They balance the two functions of providing intranet users with
+easy access to the Internet and keeping the network secure. When
+someone inside the intranet wants to contact the Internet to get
+information or a resource-for example, to visit a Web page-they
+don't actually contact the Internet directly. Instead, they contact
+a proxy server inside an intranet firewall, and the proxy server
+contacts the Internet (in this instance, a Web server). The Web
+server sends the proxy server the page, and the proxy server then
+sends that page to the requester on the intranet. 
+<P>
+Proxy servers can log all actions they take so that intranet administrators
+can check for attacks. Proxy servers offer other benefits as well.
+They can cache Internet Web pages in their memory, so that when
+someone on the intranet wants to get back to a Web page they've
+accessed before, the Web page will be delivered directly from
+the proxy server, and the requester won't have to go out across
+the Internet. Since intranet connections are often made at higher
+speeds than Internet connections, that means quicker response
+and faster viewing of Web pages and other Internet resources.
+However, this would not be an acceptable response for time-sensitive
+items like stock quotes, because the cached Web pages are not
+the most current version.
+<P>
+There may be multiple proxy servers on a single intranet. There
+may be separate proxy servers for the Web, Telnet, FTP, and other
+Internet services. Often on an intranet, some services will require
+a proxy server, while others will not. For example, this includes
+anything involving Telnet or FTP, because they involve file transferring,
+and they would be likely to be on a proxy server. When a new Internet
+resource is first made available, such as streaming multimedia
+files, proxy servers usually can't be used because proxy server
+technology has not yet been developed for it. The intranet administrator
+will have to decide whether to block those services completely
+or let them be used until proxy software catches up to the new
+technology.
+<P>
+Sometimes special proxy client software has to be used in concert
+with proxy services. This can be a problem because not all operating
+systems have proxy clients for all Internet services. Other possible
+problems include nonstandard client software, which can be difficult
+to use. A better approach is to use standard, off-the-shelf software
+such as Netscape Navigator, and use a configuration screen that
+tells the software where the proxy server can be found. The software
+and server will then take care of the rest. 
+<H2><A NAME="HowProxyServersWork"><FONT SIZE=5 COLOR=#FF0000>
+How Proxy Servers Work</FONT></A></H2>
+<P>
+An integral part of many intranet security systems is a <I>proxy
+server</I>. A proxy server is software and a server that sits
+in a firewall and acts as a go-between among computers on an intranet
+and the Internet. Proxy servers often run on bastion hosts. (See
+<A HREF="ch16.htm" >Chapter 16</A> for more information on bastion hosts.) Only the proxy
+server-instead of the many individual computers on the intranet-interact
+with the Internet, so security can be maintained because the server
+can be kept more secure than can hundreds of individual intranet
+computers. Intranet administrators can set up proxy servers to
+be used for many services, such as FTP, the Web, and Telnet. Intranet
+administrators decide which Internet services must go through
+a proxy server, and which do not have to. Specific proxy server
+software is required for each different kind of Internet service.
+<OL>
+<LI>When a computer on the intranet makes a request out to the
+Internet-such as to retrieve a Web page from a Web server-the
+internal computer actually contacts the proxy server, which in
+turn contacts the Internet server. The Internet server sends the
+Web page to the proxy server, which then forwards the page to
+the computer on the intranet.
+<LI>Proxy servers log all traffic between the Internet and the
+intranet. For example, a Telnet proxy server could track every
+single keystroke hit in every Telnet session on the intranet-and
+could also track how the external server on the Internet reacts
+to those keystrokes. Proxy servers can log every IP address, date
+and time of access, URL, number of bytes downloaded, and so on.
+This information can be used to analyze any attacks launched against
+the network. It can also help intranet administrators build better
+access and services for employees.
+<LI>Some proxy servers must work with special proxy clients. A
+more popular approach is to use off-the-shelf clients such as
+Netscape with proxy servers. When such an off-the-shelf package
+is used, it must be specially configured to work with proxy servers
+from a configuration menu. Then the intranet employee uses the
+client software as usual. The client software knows to go out
+to a proxy server to get the data, instead of to the Internet.
+<LI>Proxy servers can do more than relay requests back and forth
+between an intranet and the Internet. They can also implement
+security schemes. For example, an FTP proxy server could be set
+up to allow files to be sent from the Internet to a computer on
+the intranet, but to block files from being sent from the corporate
+network out to the Internet-or vice versa. In this way, intranet
+administrators can block anyone outside the corporation from downloading
+vital corporate data. Or they can stop intranet users from downloading
+files which may contain viruses.
+<LI>Proxy servers can also be used to speed up the performance
+of some Internet services by caching data-keeping copies of the
+requested data. For example, a Web proxy server could cache many
+Web pages, so that whenever someone from the intranet wanted to
+get one of those Web pages, they could get it directly from the
+proxy server across high-speed intranet lines, instead of having
+to go out across the Internet and get the page at a lower speed
+from Internet lines.
+</OL>
+<HR>
+
+<CENTER><P><A HREF="ch14.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch16.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

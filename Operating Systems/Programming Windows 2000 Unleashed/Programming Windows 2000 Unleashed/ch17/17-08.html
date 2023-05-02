@@ -1,0 +1,251 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Custom COM Objects</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=17//-->
+<!--PAGES=551-556//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="17-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+<p><small>CreateClassMoniker</SMALL> returns an <small>HRESULT</SMALL>, which should be tested using the <small>SUCCEEDED</SMALL> or <small>FAILED</SMALL> macros. Remember to release the <small>IMoniker</SMALL> pointer when you&#146;re finished with the moniker.</P>
+<p>The source code provided in Listing 17.7 creates and prints a display name for the <small>TestFunc</SMALL> COM class from Chapter 16.</P>
+<p><b>Listing 17.7</B> Creating a Display Name from a Moniker<hr></P>
+<!-- CODE //-->
+<pre>
+#define _WIN32_WINNT 0x0500
+#include &ltwindows.h&gt
+#include &ltwchar.h&gt
+
+#include &#147;exesta_i.c&#148;
+#include &#147;exesta.h&#148;
+
+void   HandleError(LPCWSTR strTitle, HRESULT hr);
+
+int wmain()
+{
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CoInit Failed&#148;, hr);
+        return 0;
+    }
+
+    // Create moniker for the TestFunc COM class.
+    IMoniker* pMk = NULL;
+    hr = CreateClassMoniker(CLSID_TestFunc, &amppMk);
+    if(FAILED(hr))
+    {
+        HandleError(L&#148;CreateMoniker Failed&#148;, hr);
+        return 0;
+    }
+
+    // Generate a display name for the class moniker, and
+    // print it to the console.
+    LPOLESTR pszDisplayName;
+    hr = pMk-&gtGetDisplayName(NULL, NULL, &amppszDisplayName);
+    if(SUCCEEDED(hr))
+    {
+        wprintf(L&#148;%s\n&#148;, pszDisplayName);
+        CoTaskMemFree(pszDisplayName);
+    }
+    pMk-&gtRelease();
+
+    CoUninitialize();
+    return 0;
+}
+
+
+/*
+ * Error handling routine
+ */
+void HandleError(LPCWSTR strTitle, HRESULT hr)
+{
+    LPVOID lpMsgBuf;
+
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+                  FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL,
+                  hr,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPWSTR)&amplpMsgBuf,
+                  0,
+                  NULL);
+    MessageBoxW(NULL,
+               (LPCWSTR)lpMsgBuf,
+               strTitle,
+               MB_OK | MB_ICONINFORMATION);
+    LocalFree(lpMsgBuf);
+
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<h4 align="LEFT"><a name="Heading20"></A><font color="#000077">Creating a Moniker from a Display Name</FONT></H4>
+<p>To retrieve a pointer to a COM object from a display name, the <small>MkParseDisplayName</SMALL> API function is used:</P>
+<!-- CODE SNIP //-->
+<pre>
+HRESULT hr = MkParseDisplayName(pBindContext,
+                                pszDisplayName,
+                                &ampcbEaten,
+                                &amppMoniker);
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The <small>MkParseDisplayName</SMALL> function has four parameters:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to an <small>IBindContext</SMALL> interface, which is used to store information about how the moniker should be processed. Using binding context is described later.
+<dd><b>&#149;</B>&nbsp;&nbsp;A string that contains the display name for the moniker.
+<dd><b>&#149;</B>&nbsp;&nbsp;A pointer to a <small>ULONG</SMALL> that will be filled with the number of characters removed from the display name. As a client of the moniker, you don&#146;t need to use this information.
+<dd><b>&#149;</B>&nbsp;&nbsp;The address of a pointer to the <small>IMoniker</SMALL> interface, which will be set if the function succeeds.
+</DL>
+<p><small>MkParseDisplayName</SMALL> works with all types of monikers, even custom monikers not provided by Windows 2000.</P>
+<h3><a name="Heading21"></A><font color="#000077">Connection Points</FONT></H3>
+<p>Connection points are used by <i>connectable objects</I> to establish bi-directional communication. Connectable objects communicate with their clients through connection-point interfaces. These are back-channel interfaces that allow a COM server to notify its clients of events. There are two interfaces implemented by a connectable object:</P>
+<dl>
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IConnectionPoint</SMALL> is implemented by a control or other COM object and allows a container or client of the COM object to request event notifications.
+<dd><b>&#149;</B>&nbsp;&nbsp;<small>IConnectionPointContainer</SMALL> is used by a client to query the COM object about <small>IConnectionPoint</SMALL> interfaces supported by the object. This interface includes functions that return a pointer to a known <small>IConnectionPoint</SMALL> interface or enumerate <small>IConnectionPoint</SMALL> interfaces supported by a control.
+</DL>
+<p>Most ActiveX controls are connectable objects. However, other types of COM objects can implement the <small>IConnectionPointContainer</SMALL> and <small>IConnectionPoint</SMALL> interfaces and thus become connectable objects. The coupling between a connectable client and server is shown in Figure 17.11.</P>
+<p><a name="Fig11"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-11.jpg',1000,359 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-11t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-11.jpg',1000,359)"><font color="#000077"><b>Figure 17.11</B></FONT></A>&nbsp;&nbsp;The interfaces used to implement connectable objects.</P>
+<p>A client interested in a specific <small>IConnectionPoint</SMALL> interface first invokes <small>QueryInterface</SMALL>, requesting the <small>IConnectionPointContainer</SMALL> interface. If an interface pointer is returned, the particular <small>IConnectionPoint</SMALL> interface is requested through <small>IConnectionPointContainer</SMALL>. If the request is successful, the client passes a pointer to its notification sink to the server through the <small>IConnectionPoint</SMALL> interface. The server transmits event notifications to the client using the pointer to the notification sink.</P>
+<p>To support connection points in an ATL object, you must select the Support Connection Points option when creating the object using the ATL Object Wizard. A definition of an outgoing interface will be added to the project IDL file. Listing 17.8 is a fragment of an IDL file with an example of an outgoing interface for a COM object named <small>Bothway</SMALL>:</P>
+<p><b>Listing 17.8</B> Defining an Outgoing Interface for a Connectable Object<hr></P>
+<!-- CODE //-->
+<pre>
+library ConnectExampleLib
+{
+    importlib(&#147;stdole32.tlb&#148;);
+    importlib(&#147;stdole2.tlb&#148;);
+
+    [
+        uuid(9E0F306C-AA28-11D2-B887-00104B36573E),
+        helpstring(&#147;_IBothwayEvents Interface&#148;)
+    ]
+    dispinterface _IBothwayEvents
+    {
+        properties:
+        methods:
+    };
+
+    [
+        uuid(9E0F306B-AA28-11D2-B887-00104B36573E),
+        helpstring(&#147;Bothway Class&#148;)
+    ]
+    coclass Bothway
+    {
+        [default] interface IBothway;
+        [default, source] dispinterface _ _IBothwayEvents;
+    };
+};
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Note that the outgoing interface is named <small>_IBothwayEvents</SMALL>. The outgoing interface is prefixed with <small>_I</SMALL> and has <small>Events</SMALL> added to the name of the COM object.</P>
+<p>In order to implement connection-point methods, you must follow these steps:</P>
+<dl>
+<dd><b>1.</B>&nbsp;&nbsp;Add methods and properties to the IDL definition for the outgoing interface.
+<dd><b>2.</B>&nbsp;&nbsp;Compile the IDL using the MIDL compiler to create a type library containing the connection-point information&#151;the easiest way to do this is to build the project.
+<dd><b>3.</B>&nbsp;&nbsp;Right-click the ATL object&#146;s icon in the ClassView window and select Implement Connection Points from the pop-up menu. A dialog box will be displayed, as shown in Figure 17.12.
+<dd><b>4.</B>&nbsp;&nbsp;As shown in Figure 17.12, the dialog box contains a list of interfaces that can be used to implement connection points. In most cases, this dialog box will contain only one entry&#151;check the outgoing interface and click OK.
+</DL>
+<p><a name="Fig12"></A><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-12.jpg',424,336 )"><img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-12t.jpg"></A>
+<br><a href="javascript:displayWindow('../WebStripper/protected.html#link=http://corpitk.earthweb.com/reference/pro/067231486x/ch17/images/17-12.jpg',424,336)"><font color="#000077"><b>Figure 17.12</B></FONT></A>&nbsp;&nbsp;Implementing connection points for an ATL object.</P>
+<p>The connection-point class is created with a name generated by prefixing <small>CProxy</SMALL> to the interface name. For the <small>_IBothwayEvents</SMALL> example, the generated class is named <small>CProxy_IBothwayEvents</SMALL>. The connection-point class contains member functions that can be used to generate events that are sent to the container. These functions are named by prefixing <small>Fire_</SMALL> to the name of the outgoing interface method defined in IDL. For an outgoing method named <small>SayHey</SMALL>, the connection-point class will contain a function with the following name:</P>
+<!-- CODE SNIP //-->
+<pre>
+Fire_SayHey()
+</PRE>
+<!-- END CODE SNIP //-->
+<p>The new connection-point class is added to the multiple inheritance list for the control. This allows you to fire any event directly. Here&#146;s an example:
+</P>
+<!-- CODE SNIP //-->
+<pre>
+if(eyesShut &amp&amp snoringLoudly)
+    Fire_DadIsSleeping();
+</PRE>
+<!-- END CODE SNIP //-->
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="17-07.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="17-09.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>

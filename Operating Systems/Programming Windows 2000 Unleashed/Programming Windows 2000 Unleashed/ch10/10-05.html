@@ -1,0 +1,266 @@
+<html>
+<head>
+<meta name=vsisbn content="067231486x">
+<meta name=vstitle content="Programming Microsoft Windows 2000 Unleashed">
+<meta name=vsauthor content="MICKEY WILLIAMS">
+<meta name=vsimprint content="Sams">
+<meta name=vspublisher content="Macmillan Computer Publishing">
+<meta name=vspubdate content="06/21/99">
+<meta name=vscategory content="Operations Systems: Windows 2000">
+
+
+
+<title>Programming Microsoft Windows 2000 Unleashed:Controlling Windows 2000 Services</TITLE>
+<!-- BEGIN HEADER -->
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<script>
+<!--
+function displayWindow(url, width, height) {
+        var Win = window.open(url,"displayWindow",'width=' + width +
+',height=' + height + ',resizable=1,scrollbars=yes');
+}
+//--></SCRIPT>
+
+<!-- HEADER -->
+<style type="text/css">
+<!--
+A:hover { color:red }
+-->
+</STYLE>
+
+<!-- HEADER -->
+<style type="text/css"> 
+ <!--
+ A:hover  {
+ 	color : Red;
+ }
+ -->
+ </STYLE>
+
+</HEAD>
+<BODY bgcolor=#FFFFFF><FONT size=2 face="Arial, verdana, helvetica"><table width=100% border=0 cellspacing=0 cellpadding=2><tr bgcolor=#000000><td width=100% align=right><b><font color=#FFFFFF>Gotcha</font></b></td></tr></table><br><!--Begin Content Column -->
+
+<table border=0 cellspacing=0 cellpadding=0>
+<tr>
+<td width=75 valign=top>
+<img webstripperattrwas="src" webstripperlinkwas="http://corpitk.earthweb.com/images/sm_covers/067231486x.gif" width=60 height=73 alt="Programming Microsoft Windows 2000 Unleashed" border="1">
+</td>
+<td align="left">
+    <font face="arial, helvetica" size="-1" color="#336633"><b>Programming Microsoft Windows 2000 Unleashed</b></font>
+    <br>
+    <font face="arial, helvetica" size="-1"><i>by MICKEY WILLIAMS</i>
+    <br>
+    Sams,&nbsp;Macmillan Computer Publishing
+    <br>
+    <b>ISBN:</b>&nbsp;067231486x<b>&nbsp;&nbsp;&nbsp;Pub Date:</b>&nbsp;06/21/99</font>
+</td>
+</tr>
+</table>
+<p>
+<!-- Empty Reference Subhead-->
+
+<!--ISBN=067231486x//-->
+<!--TITLE=Programming Microsoft Windows 2000 Unleashed//-->
+<!--AUTHOR=Mickey Williams//-->
+<!--PUBLISHER=Macmillan Computer Publishing//-->
+<!--IMPRINT=sams//-->
+<!--CHAPTER=10//-->
+<!--PAGES=330-334//-->
+<!--UNASSIGNED1//-->
+<!--UNASSIGNED2//-->
+
+<center>
+<table border>
+<tr>
+<td><a href="10-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+<p><br></P>
+</P>
+<p>The resource file for the CtlFileSpy project defines the dialog box in Figure 10.1, as well as the string table and icon resources used by the applet. The <small>CtlFileSpy.rc</SMALL> resource file is provided in Listing 10.6.</P>
+<p><b>Listing 10.6</B> The <small>CtlFileSpy.rc</SMALL> Resource File<hr></P>
+<!-- CODE //-->
+<pre>
+#include &#147;resource.h&#148;
+#include &#147;windows.h&#148;
+
+IDI_FILESPY             ICON    DISCARDABLE     &#147;filespy.ico&#148;
+
+IDD_FILESPY DIALOG DISCARDABLE  0, 0, 234, 206
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION &#147;FileSpy Parameters&#148;
+FONT 8, &#147;MS Sans Serif&#148;
+BEGIN
+    GROUPBOX        &#147;Target directory&#148;,IDC_STATIC,23,13,179,51
+    EDITTEXT        IDC_EDIT_DIRECTORY,29,27,164,14,ES_AUTOHSCROLL
+    CONTROL         &#147;&ampInclude Subdirectories&#148;,IDC_CHK_SUBDIR,
+                    &#147;Button&#148;, BS_AUTOCHECKBOX | WS_TABSTOP,
+                    30,47,83,10
+    GROUPBOX        &#147;Change notifications&#148;,IDC_STATIC,26,102,177,73
+    CONTROL         &#147;&ampFile name&#148;,IDC_CHK_FILENAME,&#148;Button&#148;,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,44,117,46,10
+    CONTROL         &#147;&ampDirectory name&#148;,IDC_CHK_DIRNAME,&#148;Button&#148;,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,44,134,63,10
+    CONTROL         &#147;&ampAttribute&#148;,IDC_CHK_ATTRIBUTE,&#148;Button&#148;,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,44,152,42,10
+    CONTROL         &#147;File si&ampze&#148;,IDC_CHK_FILESIZE,&#148;Button&#148;,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,114,116,41,10
+    CONTROL         &#147;&ampLast-write date&#148;,IDC_CHK_LASTWRITE,&#148;Button&#148;,
+                    BS_AUTOCHECKBOX | WS_TABSTOP,114,133,62,10
+    CONTROL         &#147;&ampSecurity descriptor&#148;,IDC_CHK_SECURITY,
+                    &#147;Button&#148;, BS_AUTOCHECKBOX | WS_TABSTOP,
+                    114,152,74,10
+    DEFPUSHBUTTON   &#147;OK&#148;,IDOK,59,185,50,14
+    PUSHBUTTON      &#147;Cancel&#148;,IDCANCEL,125,185,50,14
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_FILESPY             &#147;FileSpy Control Applet&#148;
+    IDS_FILESPY_DESC        &#147;Controls the FileSpy service.&#148;
+END
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>Resource symbols used by the CtlFileSpy applet are found in the <small>resource.h</SMALL> header file, which is shown in Listing 10.7.</P>
+<p><b>Listing 10.7</B> The <small>resource.h</SMALL> Header File Used by CtlFileSpy<hr></P>
+<!-- CODE //-->
+<pre>
+#define IDS_FILESPY                     1
+#define IDS_FILESPY_DESC                2
+#define IDI_FILESPY                     101
+#define IDD_FILESPY                     102
+#define IDC_STATIC                      -1
+#define IDC_CHK_SUBDIR                  1000
+#define IDC_CHK_FILENAME                1001
+#define IDC_CHK_DIRNAME                 1002
+#define IDC_CHK_ATTRIBUTE               1003
+#define IDC_CHK_FILESIZE                1004
+#define IDC_CHK_LASTWRITE               1005
+#define IDC_CHK_SECURITY                1006
+#define IDC_BTN_BROWSE                  1008
+#define IDC_LAB_DIRECTORY               1009
+#define IDC_EDIT_DIRECTORY              1010
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p>The functions and interfaces common to most Control Panel applets are located in the <small>CplMain.c</SMALL> source file. A partial listing of this file is provided in Listing 10.8 (the CD-ROM contains the full source).</P>
+<p><b>Listing 10.8</B> Part of the Contents of the <small>CplMain.c</SMALL> Source File, Which Contains the Basic Control Panel Applet Interfaces<hr></P>
+<!-- CODE //-->
+<pre>
+#include &ltwindows.h&gt
+#include &ltcpl.h&gt
+#include &lttchar.h&gt
+#include &#147;resource.h&#148;
+
+#include &#147;cplmain.h&#148;
+#include &#147;filespy.h&#148;
+
+HANDLE  g_hInstance = NULL;
+LPCTSTR g_szService = _T(&#147;FileSpyService&#148;);
+LPCTSTR g_szModuleName = _T(&#147;CtlFileSpy.CPL&#148;);
+const   g_nAppletCount = 1;
+
+LONG CALLBACK CPlApplet(HWND   hwnd,
+                        UINT   msg,
+                        LPARAM lParam1,
+                        LPARAM lParam2)
+{
+    switch(msg)
+    {
+        case CPL_INIT:
+            return OnCplInit();
+
+        case CPL_GETCOUNT:
+            return OnCplGetCount();
+
+        case CPL_INQUIRE:
+            return OnCplInquire((UINT)lParam1, (LPCPLINFO)lParam2);
+
+        case CPL_NEWINQUIRE:
+            return OnCplNewInquire((UINT)lParam1,
+                                   (LPNEWCPLINFO)lParam2);
+
+        case CPL_DBLCLK:
+            return OnCplDblClick(hwnd, (UINT)lParam1, (LONG)lParam2);
+
+        case CPL_STOP:
+            return OnCplStop();
+
+        case CPL_EXIT:
+            return OnCplExit();
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+/*
+ * The applet DLL has been loaded, save the global instance
+ * handle, and perform any other global initializations that
+ * are required.
+ */
+LONG WINAPI OnCplInit(void)
+{
+    g_hInstance = GetModuleHandle(g_szModuleName);
+    return 1;
+}
+
+/*
+ * Return the number of applets in this module.
+ */
+LONG WINAPI OnCplGetCount(void)
+{
+    return g_nAppletCount;
+}
+
+/*
+ * Called once - information is cached. If the information needs to
+ * change dynamically, set these values to CPL_DYNAMIC_RES. Control
+ * Panel will not cache the information and will instead make
+ * frequent calls via CPL_NEWINQUIRE.
+ */
+LONG WINAPI OnCplInquire(UINT uAppNo, LPCPLINFO pCplInfo)
+{
+    if(pCplInfo)
+    {
+        pCplInfo-&gtidIcon = IDI_FILESPY;
+        pCplInfo-&gtidName = IDS_FILESPY;
+        pCplInfo-&gtidInfo = IDS_FILESPY_DESC;
+        pCplInfo-&gtlData = 0;
+        return 0;
+    }
+    return 1;
+}
+
+/*
+ * The user is launching the applet.
+ */
+LONG WINAPI OnCplDblClick(HWND hWndParent, UINT uAppNo, LONG lAppData)
+{
+    DialogBox(g_hInstance,
+              MAKEINTRESOURCE(IDD_FILESPY),
+              hWndParent,
+              FileSpyDlgFcn);
+    return 0;
+}
+</PRE>
+<!-- END CODE //-->
+<hr>
+<p><br></P>
+<center>
+<table border>
+<tr>
+<td><a href="10-04.html">Previous</A></TD>
+<td><a href="../ewtoc.html">Table of Contents</A></TD>
+<td><a href="10-06.html">Next</A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+
+</font></BODY></HTML>
